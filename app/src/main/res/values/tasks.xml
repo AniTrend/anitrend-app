@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="youtube_loader">4500</integer>
+    <integer name="airing_anime">4510</integer>
+    <integer name="activity_replies">4520</integer>
+</resources>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Status"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:layout_alignParentEnd="true"
+            android:id="@+id/dia_current_status"
+            android:textColor="?attr/drawer_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Volumes Read"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <EditText
+            android:id="@+id/dia_current_volumes"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="sans-serif-condensed"
+            android:inputType="number"
+            android:textColor="?attr/drawer_color"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Chapters Read"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <EditText
+            android:id="@+id/dia_current_chapters"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="sans-serif-condensed"
+            android:inputType="number"
+            android:textColor="?attr/drawer_color"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Reread"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <EditText
+            android:id="@+id/dia_current_reread"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="sans-serif-condensed"
+            android:inputType="number"
+            android:textColor="?attr/drawer_color"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Score (0 - 100)"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/dia_current_score"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="sans-serif-condensed"
+            android:inputType="number"
+            android:textColor="?attr/drawer_color"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Private"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/dia_current_privacy"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Increment Chapters"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/dia_current_progress_increment"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:text="++"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/dia_current_notes"
+            android:hint="Enter your notes"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/drawer_color"
+            android:fontFamily="sans-serif-condensed"
+            android:inputType="textCapSentences|textAutoComplete|textAutoCorrect"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

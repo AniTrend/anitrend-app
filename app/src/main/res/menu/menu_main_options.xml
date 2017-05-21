@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:mContext="com.mxt.anitrend.MainActivity">
+
+    <item
+        android:id="@+id/action_create_post"
+        android:orderInCategory="100"
+        android:title="New Activity Post"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_changelog"
+        android:orderInCategory="101"
+        android:title="Changelog"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="102"
+        android:title="Settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="103"
+        android:title="About"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_help"
+        android:orderInCategory="104"
+        android:title="Help"
+        app:showAsAction="never" />
+
+</menu>

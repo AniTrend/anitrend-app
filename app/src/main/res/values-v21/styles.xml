@@ -1,0 +1,164 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorLightKnight</item>
+        <item name="colorPrimaryDark">@color/colorDarkKnight</item>
+        <item name="colorAccent">@color/colorAccent_Alternative</item>
+        <item name="android:windowBackground">@color/colorDarkKnight</item>
+
+        <item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:navigationBarColor">@color/black_transparent</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorLightKnight</item>
+        <item name="colorPrimaryDark">@color/colorDarkKnight</item>
+        <item name="colorAccent">@color/colorTextWarningRed</item>
+        <item name="android:windowBackground">@color/colorAccent_dark</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:navigationBarColor">@color/colorLightKnight</item>
+
+    </style>
+
+    <style name="DarkTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorLightKnight</item>
+        <item name="colorPrimaryDark">@color/colorDarkKnight</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="root_color">@color/colorRoot_dark</item>
+        <item name="line_color">@color/colorLine_dark</item>
+        <item name="title_color">@color/colorTextTitle_dark</item>
+        <item name="subtitle_color">@color/colorTextSubtitle_dark</item>
+        <item name="content_color">@color/colorTextContent_dark</item>
+        <item name="card_color">@color/white</item>
+        <item name="drawer_color">@color/colorPrimaryDark_dark</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowBackground">@color/colorAccent_dark</item>
+        <item name="android:textColorPrimary">?attr/content_color</item>
+        <item name="android:navigationBarColor">@color/colorDarkKnight</item>
+
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+
+    <style name="DarkTheme_DarkSide" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorLightKnight</item>
+        <item name="colorPrimaryDark">@color/colorDarkKnight</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="card_color">@color/colorLightKnight</item>
+        <item name="drawer_color">@color/colorPrimaryText</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowBackground">@color/colorDarkKnight</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:navigationBarColor">@color/colorDarkKnight</item>
+
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+
+    <!-- User Theme application theme. -->
+    <style name="UserTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorLightKnight</item>
+        <item name="colorPrimaryDark">@color/colorDarkKnight</item>
+        <item name="android:windowBackground">@color/colorDarkKnight</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:navigationBarColor">@color/colorStatusDark</item>
+    </style>
+
+    <style name="AboutTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorLightKnight</item>
+        <item name="colorPrimaryDark">@color/colorDarkKnight</item>
+        <item name="colorAccent">@color/colorAccent_Alternative</item>
+        <item name="root_color">@color/colorRoot_dark</item>
+        <item name="line_color">@color/colorLine_dark</item>
+        <item name="title_color">@color/colorTextTitle_dark</item>
+        <item name="subtitle_color">@color/colorTextSubtitle_dark</item>
+        <item name="content_color">@color/colorTextContent_dark</item>
+        <item name="card_color">@color/colorPrimaryDark_dark</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowBackground">@color/colorAccent_dark</item>
+        <item name="android:textColorPrimary">?attr/content_color</item>
+        <item name="android:navigationBarColor">@color/colorDarkKnight</item>
+    </style>
+
+    <style name="LightTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary_light</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_light</item>
+        <item name="colorAccent">@color/colorAccent_light</item>
+        <item name="root_color">@color/colorRoot_light</item>
+        <item name="line_color">@color/colorLine_light</item>
+        <item name="title_color">@color/colorTextTitle_light</item>
+        <item name="subtitle_color">@color/colorTextSubtitle_light</item>
+        <item name="content_color">@color/colorTextContent_light</item>
+        <item name="card_color">@color/colorRoot_light</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:textColorPrimary">?attr/content_color</item>
+    </style>
+
+    <style name="AppTheme_Light.Translucent" parent="LightTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:textColorPrimary">?attr/actionMenuTextColor</item>
+    </style>
+
+    <style name="AppTheme_Dark.Translucent" parent="DarkTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--Customizations-->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+    <style name="AppImagePreview" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:windowBackground">@color/colorDarkKnight</item>
+        <!--<item name="android:windowActivityTransitions">true</item>-->
+        <!--<item name="android:windowContentTransitions">true</item>-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
+        <!--<item name="android:windowSharedElementEnterTransition">@transition/move_transition</item>-->
+        <!--<item name="android:windowSharedElementExitTransition">@transition/move_transition</item>-->
+
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+
+    </style>
+
+    <style name="TipButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+</resources>
+
+

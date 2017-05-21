@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nguyenhoanglam.progresslayout.ProgressLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_notification"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:mContext="com.mxt.anitrend.view.index.activity.NotificationActivity"
+    tools:showIn="@layout/activity_notification">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/notification_pull_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.mxt.anitrend.custom.StatefulRecyclerView
+            android:id="@+id/notification_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</com.nguyenhoanglam.progresslayout.ProgressLayout>

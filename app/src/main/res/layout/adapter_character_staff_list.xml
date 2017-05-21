@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="5dp"
+    android:layout_width="200dp"
+    android:layout_height="@dimen/new_style_height"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/character_model_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:foreground="?selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/character_model_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/white"
+        android:typeface="serif"
+        android:textSize="15sp"
+        android:textIsSelectable="true"
+        android:textAlignment="center"
+        android:layout_above="@+id/character_model_role"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorBackground"/>
+
+    <TextView
+        android:id="@+id/character_model_role"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:textIsSelectable="true"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBackground"/>
+
+</RelativeLayout>

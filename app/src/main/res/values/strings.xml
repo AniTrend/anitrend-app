@@ -1,0 +1,599 @@
+<resources>
+
+    <!--
+        What You'll Need:
+
+        1. A good text editor I recommend Atom (https://atom.io/), Sublime (https://www.sublimetext.com/), Brackets (http://brackets.io/) if you want to use something else no problem
+        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information
+        3. Know what character escaping is, because you cannot use characters like ' or , or ; or & or $ or % e.t.c without escaping them. e.g.
+           What\'s Trending should become What\'s Trending (Refer to http://www.ascii.cl/htmlcodes.htm look at the HTML Name Column for some conventions) not what i am looking for?
+           Contact me on the AniTrend Discord server (https://discord.gg/nqsFGgX) under the #translators channel
+
+        Just a quick note for translators, if you see some text that has %s or %d or %f just leave those as they are those are place holders:
+        %s - is a place holder for text most likely coming from AniList, e.g. %s liked your status post -> will be wax911 or Josh liked your status post
+        %d - is a place holder for a number, e.g. You have %d notifications -> will be You have 1 or 3 or 10 notifications
+        %f - is also a place holder for a decimal number works exactly as the others mentioned above
+
+        I know different languages have different rules so if you need to change the %s or %d or %f you can still do so just don't remove the % sign
+
+        N.B. If any of the tags <string e.t.c ></string> has an attribute labeled translatable="false" it means you should not translate it!
+        So you can just omit those fields
+
+        Special Cases:
+
+        1. There are some cases I used <![CDATA[ some text ]]>don't worry about that, it's just a way that helps me to write long text in a nicer fashion, just replace the text inside
+    -->
+
+    <string name="app_id" translatable="false">ca-app-pub-8751804675656134~3435950207</string>
+    <string name="ad_native_id" translatable="false">ca-app-pub-8751804675656134/5133009404</string>
+
+    <string name="app_name" translatable="false">AniTrend</string>
+
+    <string name="title_pop"> Popularity: %d</string>
+
+    <string name="app_description">
+        <![CDATA[
+        AniTrend is an AniList android client that helps you manage your manga and anime lists from your mobile device.
+        AniTrend offers many features that make it easier for you to discover anime or manga by making content easily available.\n\n
+        Most of the basic anime or manga management features have been ported to AniTrend to improve the users experience!
+        ]]>
+    </string>
+
+    <string-array name="feed_titles">
+        <item>progress</item>
+        <item>status</item>
+        <item>public status</item>
+    </string-array>
+
+    <string-array name="seasons_titles">
+        <item>winter</item>
+        <item>spring</item>
+        <item>summer</item>
+        <item>fall</item>
+    </string-array>
+
+    <string-array name="trending_title">
+        <item>being watched</item>
+        <item>recently added</item>
+    </string-array>
+
+    <string-array name="airing_title">
+        <item>airing anime</item>
+        <item>latest episodes</item>
+    </string-array>
+
+    <string-array name="myanime_title">
+        <item>w.t.g</item>
+        <item>p.t.w</item>
+        <item>o.h.d</item>
+        <item>c.m.p</item>
+        <item>d.r.p</item>
+    </string-array>
+
+    <string-array name="mymanga_title">
+        <item>r.d.g</item>
+        <item>p.t.r</item>
+        <item>o.h.d</item>
+        <item>c.m.p</item>
+        <item>d.r.p</item>
+    </string-array>
+
+    <string-array name="reviews_title">
+        <item>new</item>
+        <item>loved</item>
+        <item>unloved</item>
+        <item>disputed</item>
+    </string-array>
+
+    <string-array name="hub_title">
+        <item>suggestions</item>
+        <!--<item>episodes</item>
+        <item>playlist</item>-->
+    </string-array>
+
+    <string-array name="manga_title">
+        <item>manga list</item>
+        <item>recently added</item>
+    </string-array>
+
+    <string-array name="search_titles_auth">
+        <item>anime</item>
+        <item>manga</item>
+        <item>studio</item>
+        <item>users</item>
+    </string-array>
+
+    <string-array name="search_titles">
+        <item>anime</item>
+        <item>manga</item>
+        <item>studio</item>
+    </string-array>
+
+    <string-array name="anime_listing_status">
+        <item>Watching</item>
+        <item>Plan To Watch</item>
+        <item>Completed</item>
+        <item>On Hold</item>
+        <item>Dropped</item>
+    </string-array>
+
+    <string-array name="manga_listing_status">
+        <item>Reading</item>
+        <item>Plan To Read</item>
+        <item>Completed</item>
+        <item>On Hold</item>
+        <item>Dropped</item>
+    </string-array>
+
+    <string name="tba_placeholder" translatable="false">TBA</string>
+
+    <string name="app_provider" translatable="false">Powered By AniList</string>
+
+    <string name="app_splash_api_unavailable">Unable to connect to server :( Swipe Down To Retry!</string>
+    <string name="app_splash_authentication_failed">Auth Failed. Swipe Down To Retry!</string>
+    <string name="app_splash_authenticating">Authenticating..</string>
+    <string name="app_splash_fetching">Requesting Extra Data..</string>
+    <string name="app_splash_profile">Requesting Profile..</string>
+    <string name="app_splash_loading">Application Initializing..</string>
+
+    <string name="app_splash_authenticating_message">
+        <![CDATA[
+        <p>
+        <b>AniTrend</b> has failed to authenticate with the server more than once! Please check that you internet connection is
+        working and also check if the <a href="https://anilist.co"><b>AniList Website</b></a> is available before tapping YES!
+        </p>
+
+        If the website is available then would you like <b>AniTrend</b> to reset itself by signing you out, assuming you were signed in before?
+        You will just have to sign in again.
+        ]]>
+    </string>
+
+    <string-array name="series_sort_types">
+        <item>Title</item>
+        <item>Score</item>
+        <item>Popularity</item>
+        <item>Start Date</item>
+        <item>End Date</item>
+    </string-array>
+
+    <string-array name="order_by_types">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+
+    <string-array name="anime_status_types">
+        <item>All Listings</item>
+        <item>Ended</item>
+        <item>Ongoing</item>
+        <item>Upcoming</item>
+        <item>Cancelled</item>
+    </string-array>
+
+    <string-array name="series_types">
+        <item>All Listings</item>
+        <item>TV</item>
+        <item>TV Short</item>
+        <item>Movie</item>
+        <item>Special</item>
+        <item>OVA</item>
+        <item>ONA</item>
+        <item>Manga</item>
+        <item>Novel</item>
+        <item>One Shot</item>
+        <item>Doujin</item>
+        <item>Manhua</item>
+        <item>Manhwa</item>
+    </string-array>
+
+    <string name="campaign_link">
+        <![CDATA[
+        Track all your favourite Anime & Manga with AniTrend\n\n
+        Get it on Play Store:\n
+        https://play.google.com/store/apps/details?id=com.mxt.anitrend
+        ]]>
+    </string>
+
+    <string name="login_message">
+        <![CDATA[
+        <p>You can access more options such as Editing, Adding &
+        Removing Anime or Manga items from your lists by long pressing the item to get more options.</p>
+
+        You can also add/remove items from your favourites on your list by tapping the heart icon.
+        ]]>
+    </string>
+    <string name="app_intro_guide">
+        <![CDATA[
+        <p>You can view the details of any of the above listings by tapping on the image or the card,
+        you can also sign into the application using your AniList account to get access to more features!</p>
+
+        If you do not have an AniList account the application will give you an option to sign up from the login screen
+        ]]>
+    </string>
+    <string name="app_intro_title">How To?</string>
+
+    <string name="login_welcome_title">Welcome %s</string>
+
+    <string name="login_welcome_text">Your login was a success</string>
+
+
+    <string name="drawer_title_home">Home</string>
+    <string name="drawer_title_anime">Discover Anime</string>
+    <string name="drawer_title_manga">Discover Manga</string>
+    <string name="drawer_title_trending">What\'s Trending</string>
+    <string name="drawer_title_airing">Airing Anime</string>
+    <string name="drawer_title_myanime">My Anime List</string>
+    <string name="drawer_title_mymanga">My Manga List</string>
+    <string name="drawer_title_reviews">Series Reviews</string>
+    <string name="drawer_title_anime_reviews">Anime Reviews</string>
+    <string name="drawer_title_manga_reviews">Manga Reviews</string>
+    <string name="drawer_title_hub">AniTrend Hub</string>
+
+    <string name="drawer_section_configuration">Configuration</string>
+    <string name="drawer_title_filter">Filter</string>
+    <string name="drawer_light_theme">Light Theme</string>
+    <string name="drawer_title_quality">Quality</string>
+    <string name="drawer_title_style">New List Style</string>
+
+    <string name="drawer_section_account">Account</string>
+    <string name="drawer_title_sign_in">Sign In</string>
+    <string name="drawer_title_profile">Profile</string>
+    <string name="drawer_title_sign_out">Sign Out</string>
+
+    <string name="drawer_section_extras">Extras</string>
+    <string name="drawer_title_share">Share</string>
+    <string name="drawer_title_update">Update</string>
+    <string name="layout_empty_response">No data to display</string>
+    <string name="title_activity_notification">Notification Hub</string>
+    <string name="title_activity_message">Message Hub</string>
+    <string name="title_activity_user_list_view">User Lists</string>
+    <string name="title_activity_studio">Studio</string>
+
+    <string name="notification_default">Undefined Activity</string>
+    <string name="notification_series">New EP</string>
+    <string name="notification_user_follow_activity">New Follower</string>
+    <string name="notification_user_like_forum">Forum Like</string>
+    <string name="notification_user_like_activity">Activity Like</string>
+    <string name="notification_user_comment_forum">Comment on Forum</string>
+    <string name="notification_user_reply_forum">Reply on Forum</string>
+    <string name="notification_user_reply_activity">Comment on Activity</string>
+    <string name="notification_user_activity_message">Direct Message</string>
+    <string name="notification_user_activity_mention">Mention You</string>
+    <string name="notification_user_like_comment">Comment Like</string>
+
+    <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
+    <string name="notification_episode" formatted="false">Episode %s of %s Has Just Been Aired!</string>
+    <string name="notification_episode_short" formatted="false">EP %s of %s Just Aired!</string>
+
+    <!-- Transition Names -->
+    <string name="transition_user_banner">trans_banner_img</string>
+    <string name="transition_image_preview">trans_image_preview</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Settings for Application -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_header_general_summary">Configure basic application behavior</string>
+
+    <string name="pref_title_auto_increment">Smart Progress Increment</string>
+    <string name="pref_key_auto_increment">general_auto_increment</string>
+    <string name="pref_summary_auto_increment">
+        <![CDATA[
+        Automatically increment the episode or chapter number when you
+        tap on it using new list styles on your airing, anime & manga lists,
+        rather than opening a dialog.
+        ]]>
+    </string>
+
+
+    <string name="pref_title_startup_page">Startup Page</string>
+    <string name="pref_key_startup_page">general_startup_page</string>
+
+    <string-array name="pref_titles_menu_entries">
+        <item>Home</item>
+        <item>Discover Anime</item>
+        <item>Discover Manga</item>
+        <item>What\'s Trending</item>
+        <item>Airing Anime</item>
+        <item>My Anime List</item>
+        <item>My Manga List</item>
+        <item>AniTrend Hub</item>
+        <item>Series Reviews</item>
+    </string-array>
+
+    <string-array name="pref_values_menu_entries">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+
+    <!-- Settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications_summary">Configure how notifications are handled</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_key_new_message_notifications">notifications_new_message</string>
+
+    <string name="pref_title_ringtone">Notification Ringtone</string>
+    <string name="pref_key_ringtone">notifications_new_message_ringtone</string>
+
+    <string name="pref_ringtone_silent">Silent</string>
+
+
+    <!-- Settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync_summary">Configure the notification check frequency</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string name="pref_key_sync_frequency">sync_frequency</string>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+    </string-array>
+
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+    </string-array>
+
+
+    <string name="login_notice">
+        <![CDATA[
+            <p>
+              Newly created accounts may encounter <b>error code 104</b>, which means no anime or manga listings were found on the users profile.
+            </p>
+
+            <p>
+              In such a case you will need to sign into your AniList account via the web browser then add some anime and manga listings to your account, just minimum of 4 will do.
+            </p>
+
+            <p>
+              After adding the new content click <a href="https://anilist.co/settings/list"><b>HERE</b></a> and click the <b>Updating User Stats</b> button. This will
+              force synchronization of the changes to the API and the application should allow you to sign in. If you encounter any further problems please head over to
+              the <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> for more assistance, I or other users will be more than willing to help :)
+            </p>
+        ]]>
+    </string>
+
+    <string name="create_account">Do you want to create an account?</string>
+    <string name="title_activity_reply">Reply Composer</string>
+    <string name="dialog_confirm_delete">Confirm Delete!</string>
+    <string name="dialog_delete_message">Are you sure you want to proceed with this action? There will be no undoing after the request is sent!</string>
+
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Ok">OK</string>
+
+    <string name="Dismiss">Dismiss</string>
+    <string name="Cancel">Cancel</string>
+
+    <string name="title_bottom_sheet_likes">Total Likes: %d</string>
+
+    <string name="dialog_unfollow_message">You are about to unfollow this user, are you sure about this?</string>
+
+    <string name="info_login_req">Please sign in to access this feature!</string>
+    <string name="button_try_again">Try Again</string>
+
+    <string name="dialog_add_title">
+        <![CDATA[
+        <small>Add: %s</small>
+        ]]>
+    </string>
+    <string name="dialog_edit_title">
+        <![CDATA[
+        <small>Update: %s</small>
+        ]]>
+    </string>
+    <string name="title_view_likes">View Likes</string>
+    <string name="Loading">Loading</string>
+    <string name="Sending">Sending..</string>
+    <string name="input_empty_warning">Input cannot be empty!</string>
+    <string name="completed_success">Action completed successfully</string>
+
+    <string name="drawer_update_title">Update AniTrend?</string>
+    <string name="drawer_update_text">
+        <![CDATA[
+        Checks if you have the latest version. If not a newer version will download from <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
+        <br/><br/>
+        <b>N.B.</b> If you downloaded this app from the <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        then there is no need to use this feature. Do still you wish to continue with checking &amp; updating to the latest build?
+        ]]>
+    </string>
+    <string name="drawer_signout_title">Confirm Sign Out!</string>
+    <string name="drawer_signout_text">Are you sure you want to sign out of the application, you\'ll have to reauthorize the application again next time?</string>
+    <string name="login_title">Let\'s Get Started!</string>
+
+    <string name="login_error_title">Unexpected State!</string>
+    <string name="login_error_text">
+        <![CDATA[
+        <p>Looks like the app resumed from an unexpected state while processing your login information. This can occur on low spec with less than 1GB of RAM.</p>
+
+        The application will now try to restart in hopes to resolve the error, after the restart please try signing in again, and if this issue persists please feel free to head over to the
+        <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> for more assistance.
+        ]]>
+        </string>
+    <string name="app_update">
+        <![CDATA[
+        <b>Get: <i>v%s</i></b>
+        ]]>
+    </string>
+
+    <string name="app_no_date">You have the latest version of AniTrend!</string>
+
+    <string name="title_permission_write">Permission Required</string>
+
+    <string name="text_permission_write">AniTrend requires permission to save any downloaded files to the device downloads location, continue?</string>
+
+    <string name="init_youtube_missing">Consider installing the YouTube App if you want to see trailers!</string>
+
+    <string name="text_confirm_exit">Press back again to exit the app</string>
+
+    <string name="text_filter_applying">Applying Changes..</string>
+
+    <string name="text_filter_restriction">Filters not applicable on this page</string>
+
+    <string name="text_quality_changed">Content List Quality Changed!</string>
+
+    <string name="text_review_changed">Changed Review Type!</string>
+
+    <string name="text_auth_unknown">Unexpected application state, Please restart the application to fix this!</string>
+
+    <string name="title_bottom_sheet_followers">Followers: %d</string>
+    <string name="title_bottom_sheet_following">Following: %d</string>
+    <string name="text_no_likes">No likes to display</string>
+
+    <string name="text_user_anime_time">Watched %s of Anime</string>
+    <string name="text_user_manga_chapters">Read %s chapters of Manga</string>
+    <string name="text_notification">%d Notification</string>
+    <string name="text_notifications">%d Notifications</string>
+    <string name="alerter_notification_title">Notifications Available</string>
+    <string name="alerter_notification_text">You have one or more unread notifications!</string>
+
+    <string name="title_new_features">New Features!</string>
+    <string name="text_new_features">
+        <![CDATA[
+        Following and followers are accessible by tapping on the labels below the user description.
+        You can also tap on the Anime, Anime Time & Manga labels below for more content!
+        ]]>
+     </string>
+    <string name="text_reply_action_feedback">Tag inserted into input!</string>
+    <string name="busy_please_wait">Busy, please wait!</string>
+    <string name="warning_empty_input">Empty input is not allowed</string>
+    <string name="text_experimental_feature">This is an experimental feature!</string>
+    <string name="text_premium_show">Premium show. Link not available!</string>
+    <string name="Watch">Watch</string>
+    <string name="text_link_unavailable">Link for this episode is unavailable</string>
+    <string name="error_episode_fetch">Encountered error code: %d</string>
+    <string name="Retry">Retry</string>
+    <string name="waring_missing_episode_links">Current series does not have any Crunchyroll links</string>
+    <string name="Follow">Follow</string>
+    <string name="Unfollow">Unfollow</string>
+    <string name="text_play_video">Play Video</string>
+    <string name="text_multiple_images">Multiple Images</string>
+    <string name="text_multiple_videos">Multiple Videos</string>
+    <string name="text_insufficient_genres">Too little genres at the moment!</string>
+    <string name="TBA">TBA</string>
+    <string name="text_checking_collection">Searching In Your Library..</string>
+    <string name="text_processing_request">Processing Request..</string>
+    <string name="text_permission_required">AniTrend was not granted permission!</string>
+    <string name="text_read_more">Read More</string>
+    <string name="text_reviewed_by">By: %s</string>
+    <string name="Help">Help!</string>
+    <string name="Sync_Changes">Sync Changes</string>
+    <string name="title_anitrend_help">AniTrend Help</string>
+    <string name="text_waiting_for_response">Waiting For Response</string>
+    <string name="text_operation_unsuccessful">Operation was unsuccessful!</string>
+    <string name="text_almost_finished">Almost Finished!</string>
+    <string name="canceled_by_user">Canceled By User!</string>
+    <string name="text_processing">Processing..</string>
+    <string name="text_already_authenticated">You Are Already Logged In!</string>
+    <string name="text_please_sign_in">Please Sing In</string>
+    <string name="text_login_error">AniTrend has failed to retrieve your login details!</string>
+    <string name="link_anitrend_forum">https://anilist.co/forum/thread/2081</string>
+    <string name="text_search_empty">Search content cannot be empty</string>
+    <string name="text_user_model">User Model Error!</string>
+    <!-- Application Tips -->
+    <string name="tip_options_text">Get access to the application settings, help, changelog and post activity status. \n\nTap Here To Dismiss</string>
+    <string name="tip_options_title">Options Menu</string>
+    <string name="tip_search_title">Search Bar</string>
+    <string name="tip_search_message">Search for various anime &amp; manga listings, searchable by name keywords. \n\nTap Here To Dismiss</string>
+    <string name="tip_navigation_title">Navigation</string>
+    <string name="tip_navigation_text">Access the navigation drawer to view different content with in the application. \n\nTap Here To Dismiss</string>
+    <string name="tip_series_options_message">Favourite, add to your list and share this current listing with friends. \n\nTap Here To Dismiss</string>
+    <string name="tip_series_options_title">Options Available</string>
+    <string name="tip_character_options_title">Favourite</string>
+    <string name="tip_character_options_message">Toggle the favourite state of this character. \n\nTap Here To Dismiss</string>
+    <string name="tip_messsages_title">Messages</string>
+    <string name="tip_messages_text">View all your messages sent to you and the ones you sent. \n\nTap Here To Dismiss</string>
+    <string name="tip_status_post_title">Create Status Post</string>
+    <string name="tip_status_post_text">Post a status message for everyone to see. \n\nTap Here To Dismiss</string>
+    <string name="tip_notifications_title">Notifications</string>
+    <string name="tip_notifications_text">Access all the notifications from one place. \n\nTap Here To Dismiss</string>
+    <string name="tip_more_actions_title">More Actions</string>
+    <string name="tip_more_actions_text">Tap here for more options such as viewing likes. \n\nTap Here To Dismiss</string>
+    <string name="tip_compose_message_title">Compose Message</string>
+    <string name="tip_compose_message_text">Send a message to this current user. \n\nTap Here To Dismiss</string>
+
+    <string name="text_signed_out">Signed Out E(104) Swipe down to reload</string>
+    <string name="text_unknown_error">Unable to provide information regarding the error, please try again!</string>
+    <string name="text_emoticons_scroll">Emoticons: Scroll Sideways</string>
+    <string name="text_post_information">Post Information</string>
+    <string name="text_sending_request">Sending request..</string>
+    <string name="text_error_auth_login">Something went wrong and the application was unable to authorize your request</string>
+    <string name="text_error_capture_login">Unable to save response from server! Please try again later</string>
+    <string name="text_login_success_with_error">Login complete but your account has no listings! AniTrend has signed you out This has been done to avoid error 104 Please add at least one anime from AniList</string>
+    <string name="text_error_login">Something went wrong trying to log you in!</string>
+    <string name="text_login_canceled">Login complete but canceled</string>
+    <string name="text_go_back">Go Back</string>
+    <string name="text_activity_loading">Activity may still be loading, or no data is present!</string>
+    <string name="text_removed_from_favourites">Removed From Favourites</string>
+    <string name="text_add_to_favourites">Added To Favourites!</string>
+    <string name="text_feature_on_hold">Feature on hold, due to technical reasons!</string>
+    <string name="text_share_series" formatted="false">
+        <![CDATA[
+            Check out this series: %s %s \n\n
+            https://anilist.co/anime/%d \n\n
+            Track all your favourite Anime & Manga with AniTrend \n\n
+            Get it on Play Store: \n
+            %s
+        ]]>
+    </string>
+    <string name="text_item_in_favourtites">Already in favourites</string>
+    <string name="text_item_not_in_favourites">Not in favourites</string>
+    <string name="text_error_request">Could not complete request successfully</string>
+    <string name="Close">Close</string>
+    <string name="Apply">Apply</string>
+    <string name="Reset">Reset</string>
+    <string name="text_what_is_new">What\'s New!</string>
+    <string name="text_enter_text">Enter some text here</string>
+    <string name="text_unable_set_text">Unable to set text..</string>
+    <string name="edit_status_title">Edit Activity Status</string>
+    <string name="edit_status_text">Alter your previously created activity status post!</string>
+    <string name="create_status_title">Create Activity Status</string>
+    <string name="create_status_text">Compose your status post, what\'s on your mind?</string>
+    <string name="text_changes_saved">Changes saved!</string>
+    <string name="Add">Add</string>
+    <string name="Delete">Delete</string>
+    <string name="Update">Update</string>
+    <string name="dialog_action_null">The item passed to DialogManager was null!</string>
+    <string name="text_unable_to_increment_episodes">Increment episode beyond total episode count not allowed!</string>
+    <string name="text_unable_to_increment_chapters">Increment chapters beyond total chapter count not allowed!</string>
+    <string name="title_anime_list">Users Anime List</string>
+    <string name="title_manga_list">Users Manga List</string>
+    <string name="title_favourites_list">Users Favourites</string>
+    <string name="text_anime_episodes">%d Episodes</string>
+    <string name="text_anime_length">%d Minutes</string>
+    <string name="text_anime_score">%.1f %% Avg</string>
+    <string name="attach_media">Insert Media</string>
+    <string name="attach_link_title">Insert Web Link</string>
+    <string name="attach_link_text">Enter web url e.g: https://anilist.co/forum/thread/2459/1</string>
+    <string name="attach_image_title">Insert Image Link</string>
+    <string name="attach_image_text">Enter image url e.g: https://media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
+    <string name="attach_youtube_title">Insert Youtube Id</string>
+    <string name="attach_youtube_text">Enter youtube id from a the video you want to share e.g: https://www.youtube.com/watch?v=izdhszFZy-c or https://youtu.be/izdhszFZy-c Only Leave: izdhszFZy-c</string>
+    <string name="attach_webm_title">Insert Video Link</string>
+    <string name="attach_webm_text">Enter link of where the video can be found e.g: http://dl1.webmfiles.org/big-buck-bunny_trailer.webm</string>
+    <string name="text_message_to">Send a message to %s</string>
+    <string name="title_bottom_sheet_favourites">User Favourites</string>
+    <string name="warning_anime_is_airing">Anime is still airing!</string>
+    <string name="warning_anime_not_airing">Anime hasn\'t aired yet!</string>
+    <string name="warning_manga_publishing">Manga is still publishing!</string>
+    <string name="warning_manga_not_publishing">Manga hasn\'t been published yet!</string>
+    <string name="text_update_check_failed">Unable to check for updates</string>
+    <string name="text_downloading_update">Downloading latest version of AniTrend!</string>
+
+</resources>

@@ -1,0 +1,21 @@
+<com.nguyenhoanglam.progresslayout.ProgressLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/generic_progress_state"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/generic_pull_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+            <com.mxt.anitrend.custom.StatefulRecyclerView
+                android:id="@+id/generic_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</com.nguyenhoanglam.progresslayout.ProgressLayout>

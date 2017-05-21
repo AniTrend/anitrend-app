@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- style -->
+    <declare-styleable name="root_color">
+        <attr name="root_color" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="line_color">
+        <attr name="line_color" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="title_color">
+        <attr name="title_color" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="subtitle_color">
+        <attr name="subtitle_color" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="content_color">
+        <attr name="content_color" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="card_color">
+        <attr name="card_color" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="drawer_color">
+        <attr name="drawer_color" format="reference|color" />
+    </declare-styleable>
+</resources>

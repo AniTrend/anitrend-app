@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:mContext="com.mxt.anitrend.view.index.activity.MessageActivity">
+
+    <item
+        android:id="@+id/action_compose"
+        android:orderInCategory="100"
+        android:visible="true"
+        android:icon="@drawable/ic_textsms_white_24dp"
+        android:title="Compose Message"
+        app:showAsAction="always" />
+
+</menu>

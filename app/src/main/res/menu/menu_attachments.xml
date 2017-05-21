@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_link"
+        android:icon="@drawable/ic_menu_link"
+        android:title="Link" />
+
+    <item
+        android:id="@+id/action_image"
+        android:icon="@drawable/ic_menu_image"
+        android:title="Image" />
+
+    <item
+        android:id="@+id/action_youtube"
+        android:icon="@drawable/ic_menu_youtube"
+        android:title="Youtube" />
+
+    <item
+        android:id="@+id/action_webm"
+        android:icon="@drawable/ic_menu_webm"
+        android:title="WebM" />
+
+</menu>

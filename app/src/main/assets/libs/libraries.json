@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Retrofit v2.1.0",
+    "description": "Type-safe HTTP client for Android and Java by Square, Inc.",
+    "link": "http://square.github.io/retrofit/"
+  },
+  {
+    "name": "Glide v3.7.0",
+    "description": "Glide is a fast and efficient open source media management and image loading framework for Android that wraps media decoding, memory and disk caching, and resource pooling into a simple and easy to use interface.",
+    "link": "https://github.com/bumptech/glide"
+  },
+  {
+    "name": "Butter Knife v8.4.0",
+    "description": "Field and method binding for Android views",
+    "link": "http://jakewharton.github.io/butterknife/"
+  },
+  {
+    "name": "Pretty Time v4.0.1.Final",
+    "description": "PrettyTime is an OpenSource time formatting library. Completely customizable, it creates human readable, relative timestamps like those seen on Digg, Twitter, and Facebook. Get started “right now!” and in over 30 languages!",
+    "link": "http://www.ocpsoft.org/prettytime/"
+  },
+  {
+    "name": "Finest Web View",
+    "description": "Beautiful and customizable Android Activity that shows web pages within an app.",
+    "link": "https://github.com/TheFinestArtist/FinestWebView-Android"
+  },
+  {
+    "name": "Bottom Sheet Builder",
+    "description": "A simple library that creates BottomSheets according to the Material Design specs: https://material.google.com/components/bottom-sheets.html.",
+    "link": "https://github.com/rubensousa/BottomSheetBuilder"
+  },
+  {
+    "name": "Circle Image View",
+    "description": "A fast circular ImageView perfect for profile images. This is based on RoundedImageView from Vince Mi which itself is based on techniques recommended by Romain Guy.",
+    "link": "https://github.com/hdodenhof/CircleImageView"
+  },
+  {
+    "name": "Material Dialogs",
+    "description": "A beautiful, fluid, and customizable dialogs API.",
+    "link": "https://github.com/afollestad/material-dialogs"
+  },
+  {
+    "name": "Material Search Bar",
+    "description": "Material Design Search Bar for Android.",
+    "link": "https://github.com/mancj/MaterialSearchBar"
+  },
+  {
+    "name": "Ahoy! Onboarding",
+    "description": "Onboarding library for android with Gradient, Image or Solid color backgrounds.",
+    "link": "https://github.com/codemybrainsout/ahoy-onboarding"
+  },
+  {
+    "name": "Navigation Tab Strip",
+    "description": "Navigation tab strip with smooth interaction.",
+    "link": "https://github.com/DevLight-Mobile-Agency/NavigationTabStrip"
+  },
+  {
+    "name": "Material Tap Target Prompt",
+    "description": "A Tap Target implementation in Android based on Material Design Onboarding guidelines.",
+    "link": "https://github.com/sjwall/MaterialTapTargetPrompt"
+  },
+  {
+    "name": "SuperToasts Library",
+    "description": "The SuperToasts library enhances and builds upon the Android Toast class. This library includes support for context sensitive SuperActivityToasts that can show progress and handle button clicks as well as non-context sensitive SuperToasts which offer many customization options over the standard Android Toast class.",
+    "link": "https://github.com/JohnPersano/SuperToasts"
+  },
+  {
+    "name": "Floating Toolbar",
+    "description": "A toolbar that morphs from a FloatingActionButton, Inspired by the material design spec: https://material.io/guidelines/components/buttons-floating-action-button.html.",
+    "link": "https://github.com/rubensousa/FloatingToolbar"
+  },
+  {
+    "name": "Progress Layout",
+    "description": "An extension of RelativeLayout that helps show loading, empty and error layout.",
+    "link": "https://github.com/nguyenhoanglam/ProgressLayout"
+  },
+  {
+    "name": "Circular Anim",
+    "description": "Android ripple animation helper, easy to create Circular Reveal.",
+    "link": "https://github.com/XunMengWinter/CircularAnim"
+  },
+  {
+    "name": "ChangeLog Library",
+    "description": "ChangeLog Library provides an easy way to display a change log in your Android app.",
+    "link": "https://github.com/gabrielemariotti/changeloglib"
+  },
+  {
+    "name": "Polygon Progress View",
+    "description": "A custom view that display multiple attributes by a polygon shape.",
+    "link": "https://github.com/TacticalTwerking/PolygonProgressView"
+  },
+  {
+    "name": "PhotoView",
+    "description": "PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.",
+    "link": "https://github.com/chrisbanes/PhotoView"
+  },
+  {
+    "name": "Alerter",
+    "description": "An Android Alerting Library. This library aims to overcome the limitations of Toasts and Snackbars, while reducing the complexity of your layouts.",
+    "link": "https://github.com/Tapadoo/Alerter"
+  },
+  {
+    "name": "JieCaoVideoPlayer",
+    "description": "Android VideoPlayer MediaPlayer VideoView MediaView Float View And Fullscreen.",
+    "link": "https://github.com/lipangit/JieCaoVideoPlayer"
+  },
+  {
+    "name": "Lightweight Stream API",
+    "description": "Stream API from Java 8 rewritten on iterators for Java 7 and below",
+    "link": "https://github.com/aNNiMON/Lightweight-Stream-API"
+  },
+  {
+    "name": "EventBus",
+    "description": "Android optimized event bus that simplifies communication between Activities, Fragments, Threads, Services, etc. Less code, better quality",
+    "link": "https://github.com/greenrobot/EventBus"
+  },
+  {
+    "name": "emoji4j",
+    "description": "Java library to convert short codes, emoticons, html entities, emoticons to emojis and vice-versa",
+    "link": "https://github.com/kcthota/emoji4j"
+  }
+]

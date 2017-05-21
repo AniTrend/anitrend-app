@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_white_36dp"
+        android:title="Sorting" />
+
+    <item
+        android:id="@+id/action_order"
+        android:icon="@drawable/ic_filter_list_white_36dp"
+        android:title="Order" />
+
+    <item
+        android:id="@+id/action_type"
+        android:icon="@drawable/ic_multiline_chart_white_36dp"
+        android:title="Types" />
+
+</menu>

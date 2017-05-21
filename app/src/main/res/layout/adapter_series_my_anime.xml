@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_gravity="center"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    card_view:contentPadding="5dp"
+    card_view:cardPreventCornerOverlap="true"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardBackgroundColor="?attr/card_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_romanji"
+            android:textIsSelectable="true"
+            android:textAlignment="center"
+            android:layout_marginTop="2dp"
+            android:textSize="13sp"
+            android:layout_marginBottom="5dp"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:id="@+id/line"
+            android:layout_below="@+id/txt_romanji"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/colorBlueGrey100"/>
+
+        <ImageView
+            android:id="@+id/img_lge"
+            android:layout_below="@+id/line"
+            android:layout_marginTop="5dp"
+            android:layout_width="140dp"
+            android:layout_height="@dimen/series_ep_height"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
+
+        <!--Anime Small Details-->
+        <LinearLayout
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/img_lge"
+            android:layout_alignTop="@+id/img_lge"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/txt_eng_title"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Anime Type:" />
+
+            <TextView
+                android:id="@+id/txt_anime_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Episodes:" />
+
+            <TextView
+                android:id="@+id/txt_anime_eps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Watched EP:" />
+
+            <TextView
+                android:id="@+id/txt_ep_watched"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/txt_airing"
+            android:textAllCaps="true"
+            android:textSize="10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/line2"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="italic"
+            />
+
+        <View
+            android:id="@+id/line2"
+            android:layout_below="@+id/img_lge"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="1dp"
+            android:background="@color/colorBlueGrey100"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:id="@+id/txt_popularity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_graphic_eq_black_18dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="11sp"
+            android:layout_alignTop="@+id/line2"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:id="@+id/txt_rated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:drawableEnd="@drawable/ic_show_chart_black_18dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="11sp"
+            android:layout_alignTop="@+id/line2"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

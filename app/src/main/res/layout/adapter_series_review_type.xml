@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="2dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/img_lge"
+        android:clickable="true"
+        android:foreground="?selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height" />
+
+    <FrameLayout
+        android:background="@color/colorBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <TextView
+        android:layout_gravity="end"
+        android:id="@+id/review_read_more"
+        android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:drawableStart="@drawable/ic_arrow_drop_down_white_18dp"
+        android:textColor="@color/white"
+        android:typeface="sans"
+        android:textStyle="bold"
+        android:text="@string/text_read_more"/>
+
+    <LinearLayout
+        android:layout_marginBottom="35dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/review_heading"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-condensed"
+            android:textIsSelectable="true"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/review_summary"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-condensed"
+            android:textIsSelectable="true"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_gravity="bottom"
+            android:id="@+id/review_up_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_thumb_up_green_600_18dp"
+            tools:text=" 20"
+            />
+
+        <TextView
+            android:layout_gravity="bottom"
+            android:id="@+id/review_down_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:layout_marginStart="10dp"
+            android:textAlignment="center"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/ic_thumb_down_deep_orange_600_18dp"
+            tools:text=" 59"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_gravity="bottom|end"
+        android:id="@+id/review_user"
+        android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:text="By: Randomuser0012"
+        />
+
+</FrameLayout>
