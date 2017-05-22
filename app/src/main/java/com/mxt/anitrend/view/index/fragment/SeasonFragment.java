@@ -39,6 +39,7 @@ public class SeasonFragment extends DefaultListFragment<Series> {
         if(getArguments().containsKey(ARG_KEY))
             VIEW_POSITION = getArguments().getInt(ARG_KEY);
         mColumnSize = R.integer.card_col_size_home;
+        isPaginate = true;
         mPresenter = new FragmentPresenter(getContext());
     }
 
@@ -61,37 +62,42 @@ public class SeasonFragment extends DefaultListFragment<Series> {
             VIEW_POSITION = savedInstanceState.getInt(ARG_KEY);
     }
 
-    @Override
     public void updateUI() {
-        if(recyclerView != null) {
-            if(swipeRefreshLayout.isRefreshing())
+        if (recyclerView != null) {
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
-            if(mAdapter == null) {
+            }
+            if (mAdapter == null) {
                 mAdapter = new SeriesAnimeAdapter(model, getActivity(), mPresenter.getAppPrefs());
                 recyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.onDataSetModified(model);
             }
-
             if (mAdapter.getItemCount() > 0) {
                 progressLayout.showContent();
-            } else
+            } else {
                 showEmpty(getString(R.string.layout_empty_response));
+            }
         }
     }
 
     @Override
     public void update() {
         progressLayout.showLoading();
-        onRefresh();
+        makeRequest();
     }
 
-    /**
-     * Called when a swipe gesture triggers a refresh.
-     */
     @Override
-    public void onRefresh() {
-        mPresenter.beginAsync(this, VIEW_POSITION);
+    public void makeRequest() {
+        mPresenter.beginAsync(this, VIEW_POSITION, mPage);
     }
 
+    @Override
+    public void onLoadMore(int currentPage) {
+        if (!isLimit) {
+            mPage = currentPage;
+            swipeRefreshLayout.setRefreshing(true);
+            makeRequest();
+        }
+    }
 }

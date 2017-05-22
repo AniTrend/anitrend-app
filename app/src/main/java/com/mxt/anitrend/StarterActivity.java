@@ -16,12 +16,11 @@ import top.wefor.circularanim.CircularAnim;
 public class StarterActivity extends AhoyOnboarderActivity {
 
     private final AhoyOnboarderCard[] onboarderCards = {
-            new AhoyOnboarderCard("AniTrend", "Anime Trend Features Overview", R.drawable.ic_launcher_web),
-            new AhoyOnboarderCard("Color States", "Colors Representing Anime/Manga Status!", R.drawable.intro_colorstates),
-            new AhoyOnboarderCard("Content", "Multiple Anime & Manga Listings!", R.drawable.intro_anime_manga),
-            new AhoyOnboarderCard("Searching", "Anime & Manga Search Functionality!", R.drawable.intro_search),
-            new AhoyOnboarderCard("Videos", "Using Builtin Youtube Video Player!", R.drawable.intro_youtube),
-            new AhoyOnboarderCard("Web View", "Builtin Web Browser For Viewing Links!", R.drawable.into_webview)
+            new AhoyOnboarderCard(getString(R.string.app_name), getString(R.string.app_greeting), R.drawable.ic_launcher_web),
+            new AhoyOnboarderCard(getString(R.string.app_intro_colors_title), getString(R.string.app_intro_colors_text), R.drawable.intro_colorstates),
+            new AhoyOnboarderCard(getString(R.string.app_intro_content_title), getString(R.string.app_intro_content_text), R.drawable.intro_anime_manga),
+            new AhoyOnboarderCard(getString(R.string.app_intro_search_title), getString(R.string.app_intro_search_text), R.drawable.intro_search),
+            new AhoyOnboarderCard(getString(R.string.app_intro_videos_title), getString(R.string.app_intro_videos_text), R.drawable.intro_youtube)
     };
     private final String KEY_SHORT = "saved_shortcut";
     private int shortcut;
@@ -46,7 +45,7 @@ public class StarterActivity extends AhoyOnboarderActivity {
             tempCards.add(page);
         }
 
-        setFinishButtonTitle("Get Started");
+        setFinishButtonTitle(R.string.get_started);
         setFinishButtonDrawableStyle(ContextCompat.getDrawable(this, R.drawable.starter_finish_button));
         showNavigationControls(true);
         setGradientBackground();

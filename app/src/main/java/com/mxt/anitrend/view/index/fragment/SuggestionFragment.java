@@ -51,6 +51,7 @@ public class SuggestionFragment extends DefaultListFragment<Series> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.card_col_size_home;
+        isPaginate = true;
         mPresenter = new FragmentPresenter(getContext());
     }
 
@@ -127,12 +128,17 @@ public class SuggestionFragment extends DefaultListFragment<Series> {
                     }
                 }
             }, getContext()).execute(AsyncTaskFetch.RequestType.USER_CURRENT_REQ);
-        } else {
-            makeRequest();
+            return;
         }
+        fireRefresh();
     }
 
-    private void makeRequest() {
+    private void fireRefresh() {
+        super.onRefresh();
+    }
+
+    @Override
+    public void makeRequest() {
         UserStats userStats;
         if((userStats = mUser.getStats()) != null) {
             HashMap<String, Integer> genreList = userStats.getFavourite_genres_map();
@@ -147,11 +153,21 @@ public class SuggestionFragment extends DefaultListFragment<Series> {
                         mPresenter.getApiPrefs().getSort(), /*sort*/
                         mPresenter.getApiPrefs().getOrder(), /*order*/
                         true, /*airing data*/
-                        true, /*full page true: no pagination; false: paginate using the page variable*/
-                        null /*page*/));
+                        false, /*full page true: no pagination; false: paginate using the page variable*/
+                        mPage /*page*/));
                 return;
             }
         }
         showEmpty(getString(R.string.text_insufficient_genres));
     }
+
+    @Override
+    public void onLoadMore(int nextPage) {
+        if (!isLimit) {
+            mPage = nextPage;
+            swipeRefreshLayout.setRefreshing(true);
+            makeRequest();
+        }
+    }
+
 }

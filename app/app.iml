@@ -104,11 +104,9 @@
     <orderEntry type="library" exported="" name="transition-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-gass-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="alerter-1.0.7" level="project" />
-    <orderEntry type="library" exported="" name="finestwebview-1.2.7" level="project" />
     <orderEntry type="library" exported="" name="converter-simplexml-2.2.0" level="project" />
     <orderEntry type="library" exported="" name="named-regexp-0.2.4" level="project" />
     <orderEntry type="library" exported="" name="PhotoView-2.0.0" level="project" />
-    <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" name="retrofit-2.2.0" level="project" />
     <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
@@ -117,7 +115,6 @@
     <orderEntry type="library" exported="" name="circleimageview-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="txtmark-0.16" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-10.2.1" level="project" />
-    <orderEntry type="library" exported="" name="utils-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="supertoasts-2.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javawriter-2.1.1" level="project" />
@@ -152,7 +149,6 @@
     <orderEntry type="library" exported="" name="library-1.4.0" level="project" />
     <orderEntry type="library" exported="" name="glide-3.7.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsr305-2.0.1" level="project" />
-    <orderEntry type="library" exported="" name="annotations-0.9.0" level="project" />
     <orderEntry type="library" exported="" name="support-core-utils-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-fragment-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="MaterialSearchBar--SNAPSHOT" level="project" />

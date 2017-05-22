@@ -2,6 +2,7 @@ package com.mxt.anitrend.presenter.index;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.github.johnpersano.supertoasts.library.Style;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
@@ -12,6 +13,7 @@ import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.async.TokenReference;
 import com.mxt.anitrend.presenter.CommonPresenter;
+import com.mxt.anitrend.utils.ErrorHandler;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
 
 import retrofit2.Call;
@@ -71,8 +73,15 @@ public class LoginPresenter extends CommonPresenter {
         @Override
         protected Call<User> doInBackground(Void... voids) {
             try {
-                notification_count = ServiceGenerator.createService(UserModel.class, mActivity).fetchNotificationCount().execute().body();
-                return ServiceGenerator.createService(UserModel.class, mActivity).fetchCurrentUser();
+                UserModel model = ServiceGenerator.createService(UserModel.class, mActivity);
+                Response<Integer> mNotificationCall = model.fetchNotificationCount().execute();
+                if (mNotificationCall.isSuccessful()) {
+                    notification_count = mNotificationCall.body();
+                } else {
+                    Log.e("Auth-doInBackground", ErrorHandler.getError(mNotificationCall).toString());
+                    notification_count = 0;
+                }
+                return model.fetchCurrentUser();
             } catch (Exception e) {
                 e.printStackTrace();
             }

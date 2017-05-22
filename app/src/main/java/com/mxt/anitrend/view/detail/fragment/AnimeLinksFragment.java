@@ -1,7 +1,9 @@
 package com.mxt.anitrend.view.detail.fragment;
 
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,7 +23,6 @@ import com.mxt.anitrend.api.structure.ExternalLink;
 import com.mxt.anitrend.async.YoutubeInitializer;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.event.InteractionListener;
-import com.thefinestartist.finestwebview.FinestWebView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,6 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
     @BindView(R.id.ranking_recycler) RecyclerView mRankingRecycler;
 
     private Series model;
-    private FinestWebView.Builder WebView;
     private YoutubeFragment youFragment;
     private Unbinder unbinder;
     private YoutubeInitializer initializer;
@@ -92,37 +92,7 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
         mRankingRecycler.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank)));
         mRankingRecycler.setNestedScrollingEnabled(false);
         mRankingRecycler.setHasFixedSize(true);
-        createWebView();
         UpdateUI();
-    }
-
-    /** Creates a builder for the web view */
-    private void createWebView() {
-        WebView = new FinestWebView.Builder(getContext())
-                .theme(R.style.FinestWebViewTheme)
-                .toolbarScrollFlags(0)
-                .statusBarColorRes(R.color.blackPrimaryDark_WebView)
-                .toolbarColorRes(R.color.blackPrimary_WebView)
-                .titleColorRes(R.color.finestWhite)
-                .urlColorRes(R.color.blackPrimaryLight_WebView)
-                .iconDefaultColorRes(R.color.finestWhite)
-                .progressBarColorRes(R.color.finestWhite)
-                .swipeRefreshColorRes(R.color.blackPrimaryDark_WebView)
-                .showSwipeRefreshLayout(true)
-                .menuSelector(R.drawable.selector_light_theme)
-                .menuTextGravity(Gravity.CENTER_VERTICAL | Gravity.START)
-                .menuTextPaddingRightRes(R.dimen.defaultMenuTextPaddingLeft)
-                .dividerHeight(2)
-                .gradientDivider(true)
-                .webViewJavaScriptEnabled(true)
-                .webViewUseWideViewPort(false)
-                .webViewSupportZoom(true)
-                .webViewBuiltInZoomControls(true)
-                .webViewJavaScriptCanOpenWindowsAutomatically(false)
-                //.setCustomAnimations(R.anim.slide_up, R.anim.hold, R.anim.hold, R.anim.slide_down)
-                //.setCustomAnimations(R.anim.slide_left_in, R.anim.hold, R.anim.hold, R.anim.slide_right_out)
-                .setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_medium, R.anim.fade_in_medium, R.anim.fade_out_fast)
-                .disableIconMenu(false);
     }
 
     public void UpdateUI() {
@@ -205,6 +175,8 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
     @Override
     public void onItemClick(int index) {
         ExternalLink external = model.getExternal_links().get(index);
-        WebView.titleDefault(external.getSite()).show(external.getUrl());
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(external.getUrl()));
+        startActivity(intent);
     }
 }

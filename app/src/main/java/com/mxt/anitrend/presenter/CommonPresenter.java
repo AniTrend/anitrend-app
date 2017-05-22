@@ -243,6 +243,10 @@ public abstract class CommonPresenter <T> extends ScrollListener {
         //Empty method body, not mandatory to implement
     }
 
+    public void beginAsync(Callback<T> callback, int id, int page) {
+        //Empty method body, not mandatory to implement
+    }
+
     public void beginAsync(Callback<T> callback, int page, String type) {
         //Empty method body, not mandatory to implement
     }
