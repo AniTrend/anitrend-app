@@ -1,6 +1,7 @@
 package com.mxt.anitrend.api.service;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -82,7 +83,7 @@ public class ServiceGenerator {
      * <br/>
      * @return Retrofit Class from the serviceClass param
      */
-    public static <S> S createService(Class<S> serviceClass, Context mContext) {
+    public static <S> S createService(@NonNull Class<S> serviceClass, Context mContext) {
         try {
             Token mToken = TokenReference.getInstance();
             if (mToken == null) {
@@ -97,13 +98,8 @@ public class ServiceGenerator {
                 return ani_ret.create(serviceClass);
             }
 
-            AuthInterceptor interceptor = new AuthInterceptor(mToken);
-            if (httpClient.interceptors().size() > 0) {
-                httpClient.interceptors().clear();
-                httpClient.addInterceptor(interceptor);
-            } else {
-                httpClient.addInterceptor(interceptor);
-            }
+            httpClient.interceptors().clear();
+            httpClient.addInterceptor(new AuthInterceptor(mToken));
             ani_ret = builder.client(httpClient.build()).build();
         } catch (Exception e) {
             e.printStackTrace();

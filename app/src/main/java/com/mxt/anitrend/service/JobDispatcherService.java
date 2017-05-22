@@ -3,6 +3,8 @@ package com.mxt.anitrend.service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
@@ -100,12 +102,18 @@ public class JobDispatcherService extends JobService implements Callback<List<Us
             userModel = new AsyncTask<Void, Void, UserModel> () {
                 @Override
                 protected UserModel doInBackground(Void... params) {
+                    if(isCancelled())
+                        return null;
+
                     return ServiceGenerator.createService(UserModel.class, getApplicationContext());
                 }
             }.execute().get();
-            Call<Integer> call = userModel.fetchNotificationCount();
-            call.enqueue(notificationCountCallback);
-            return true;
+
+            if(userModel != null) {
+                Call<Integer> call = userModel.fetchNotificationCount();
+                call.enqueue(notificationCountCallback);
+                return true;
+            }
         } catch (Exception e) {
             Log.e("onStartJob", e.getLocalizedMessage());
             e.printStackTrace();
@@ -132,11 +140,11 @@ public class JobDispatcherService extends JobService implements Callback<List<Us
     }
 
     @Override
-    public void onResponse(Call<List<UserNotification>> call, Response<List<UserNotification>> response) {
+    public void onResponse(Call<List<UserNotification>> call, @Nullable Response<List<UserNotification>> response) {
         try {
-            if(response.isSuccessful()) {
+            if(response != null && response.isSuccessful()) {
                 List<UserNotification> notifications = response.body();
-                if(notifications.size() > 0) {
+                if(notifications != null && notifications.size() > 0) {
                     ArrayList<UserNotification> range_filter = new ArrayList<>(notifications.subList(0, mNotificationCount));
                     Intent intent = new Intent(PostNotificationBroadcaster.BROADCAST);
                     intent.putParcelableArrayListExtra(PostNotificationBroadcaster.RESPONSE_KEY, range_filter);

@@ -2,11 +2,14 @@ package com.mxt.anitrend.presenter.index;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.call.RepoModel;
@@ -16,6 +19,7 @@ import com.mxt.anitrend.event.ApplicationInitListener;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.utils.AppVersionTracking;
 import com.mxt.anitrend.utils.DateTimeConverter;
+import com.mxt.anitrend.utils.ErrorHandler;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -93,38 +97,43 @@ public class MainPresenter extends CommonPresenter {
         @Override
         protected void onPostExecute(Boolean desc) {
             //dc.closeConnection();
-            if(desc != null) {
-                if (desc) {
-                    callbackBase.onUpdatedVersion();
-                } else {
-                    callbackBase.onNewInstallation();
-                }
-            }
+            if(isCancelled())
+                return;
 
             try {
+                if(desc != null)
+                    if (desc) {
+                        callbackBase.onUpdatedVersion();
+                    } else {
+                        callbackBase.onNewInstallation();
+                    }
+
                 RepoModel repo = ServiceGenerator.createRepoService();
                 repo.checkVersion().enqueue(new Callback<AppVersionTracking>() {
                     @Override
-                    public void onResponse(Call<AppVersionTracking> call, Response<AppVersionTracking> response) {
+                    public void onResponse(@NonNull Call<AppVersionTracking> call, @NonNull Response<AppVersionTracking> response) {
                         if(response.isSuccessful() && response.body() != null) {
-                            if(mContext != null) {
                                 AppVersionTracking repo_version = response.body();
-                                if (repo_version.checkAgainstCurrent()) {
+                                if (repo_version != null && repo_version.checkAgainstCurrent()) {
                                     getAppPrefs().saveRepoVersion(repo_version);
                                     callbackBase.onNormalStart();
                                 }
-                            }
-                        }
+                        } else
+                            Log.e("MainPst<->onPost", ErrorHandler.getError(response).toString());
                     }
 
                     @Override
-                    public void onFailure(Call<AppVersionTracking> call, Throwable t) {
+                    public void onFailure(@NonNull Call<AppVersionTracking> call, @NonNull Throwable t) {
                         t.printStackTrace();
+                        if(mContext != null)
+                            Toast.makeText(mContext, R.string.text_update_check_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Toast.makeText(mContext, R.string.text_update_check_failed, Toast.LENGTH_SHORT).show();
+                FirebaseCrash.report(ex);
+                if(mContext != null)
+                    Toast.makeText(mContext, R.string.text_update_check_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }

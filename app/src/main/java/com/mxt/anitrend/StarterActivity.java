@@ -15,19 +15,20 @@ import top.wefor.circularanim.CircularAnim;
 
 public class StarterActivity extends AhoyOnboarderActivity {
 
-    private final AhoyOnboarderCard[] onboarderCards = {
-            new AhoyOnboarderCard(getString(R.string.app_name), getString(R.string.app_greeting), R.drawable.ic_launcher_web),
-            new AhoyOnboarderCard(getString(R.string.app_intro_colors_title), getString(R.string.app_intro_colors_text), R.drawable.intro_colorstates),
-            new AhoyOnboarderCard(getString(R.string.app_intro_content_title), getString(R.string.app_intro_content_text), R.drawable.intro_anime_manga),
-            new AhoyOnboarderCard(getString(R.string.app_intro_search_title), getString(R.string.app_intro_search_text), R.drawable.intro_search),
-            new AhoyOnboarderCard(getString(R.string.app_intro_videos_title), getString(R.string.app_intro_videos_text), R.drawable.intro_youtube)
-    };
     private final String KEY_SHORT = "saved_shortcut";
     private int shortcut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AhoyOnboarderCard[] onboarderCards = {
+                new AhoyOnboarderCard(getString(R.string.app_name), getString(R.string.app_greeting), R.drawable.ic_launcher_web),
+                new AhoyOnboarderCard(getString(R.string.app_intro_colors_title), getString(R.string.app_intro_colors_text), R.drawable.intro_colorstates),
+                new AhoyOnboarderCard(getString(R.string.app_intro_content_title), getString(R.string.app_intro_content_text), R.drawable.intro_anime_manga),
+                new AhoyOnboarderCard(getString(R.string.app_intro_search_title), getString(R.string.app_intro_search_text), R.drawable.intro_search),
+                new AhoyOnboarderCard(getString(R.string.app_intro_videos_title), getString(R.string.app_intro_videos_text), R.drawable.intro_youtube)
+        };
 
         if(savedInstanceState == null){
             Intent intent = getIntent();

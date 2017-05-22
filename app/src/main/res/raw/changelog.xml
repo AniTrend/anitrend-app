@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="0.9.9r7.3" changeDate="Beta">
+    <changelogversion versionName="0.9.9r7.4" changeDate="Beta">
+        <changelogtext>[b]Feature[/b] Infinite scrolling on discover, hub and trending pages</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] Authentication problems fixed? Please let me know</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] Crashes on new installation</changelogtext>
         <changelogtext>[b]Bug Fixes[/b] Multiple bug fixes from the previous version</changelogtext>
     </changelogversion>
 

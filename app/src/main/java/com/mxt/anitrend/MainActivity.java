@@ -803,7 +803,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onUpdatedVersion() {
-        new DialogManager(this).createChangeLog();
+        new DialogManager(MainActivity.this).createChangeLog();
         if(mPresenter.getAppPrefs().getMainTip()) {
             mBuilder = new BottomSheetMessage.Builder()
                     .setTitle(R.string.app_intro_title)
