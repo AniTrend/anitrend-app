@@ -20,11 +20,6 @@
     "link": "http://www.ocpsoft.org/prettytime/"
   },
   {
-    "name": "Finest Web View",
-    "description": "Beautiful and customizable Android Activity that shows web pages within an app.",
-    "link": "https://github.com/TheFinestArtist/FinestWebView-Android"
-  },
-  {
     "name": "Bottom Sheet Builder",
     "description": "A simple library that creates BottomSheets according to the Material Design specs: https://material.google.com/components/bottom-sheets.html.",
     "link": "https://github.com/rubensousa/BottomSheetBuilder"
@@ -100,9 +95,9 @@
     "link": "https://github.com/Tapadoo/Alerter"
   },
   {
-    "name": "JieCaoVideoPlayer",
-    "description": "Android VideoPlayer MediaPlayer VideoView MediaView Float View And Fullscreen.",
-    "link": "https://github.com/lipangit/JieCaoVideoPlayer"
+    "name": "Easy Video Player",
+    "description": "Video playback on Android, made easy, wrapping around the stock MediaPlayer API.",
+    "link": "https://github.com/afollestad/easy-video-player"
   },
   {
     "name": "Lightweight Stream API",

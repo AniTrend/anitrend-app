@@ -181,14 +181,14 @@ public abstract class CommonPresenter <T> extends ScrollListener {
     }
 
     /**
-     * Create an Alerter which will run for 5 seconds
+     * Create an Alerter which will run for 6.5 seconds
      */
     public void createAlerter(Activity mContext, String mTitle, String mText, @DrawableRes int mIcon, @ColorRes int mColor) {
         mAlerter = Alerter.create(mContext)
                 .setTitle(mTitle)
                 .setText(mText)
                 .setIcon(mIcon)
-                .setDuration(5000)
+                .setDuration(6500)
                 .setBackgroundColor(mColor);
         mAlerter.show();
     }
@@ -240,6 +240,10 @@ public abstract class CommonPresenter <T> extends ScrollListener {
     }
 
     public void beginAsync(Callback<T> callback) {
+        //Empty method body, not mandatory to implement
+    }
+
+    public void beginAsync(Callback<T> callback, int id, int page) {
         //Empty method body, not mandatory to implement
     }
 

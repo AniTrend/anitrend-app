@@ -29,7 +29,7 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
     }
 
     @Override
-    public void beginAsync(Callback<List<Series>> callback) {
+    public void beginAsync(Callback<List<Series>> callback, int page) {
             searchModel = new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], /*anime or manga*/
                  null, /*year*/
                  null, /*season*/
@@ -41,12 +41,12 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
                  getApiPrefs().getOrder(), /*order*/
                  true, /*airing data*/
                  false, /*full page true: no pagination; false: paginate using the page variable*/
-                 null);/*page*/
+                 page);/*page*/
 
         new HomePageFetch(callback, searchModel, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void beginAsyncTrend(Callback<List<Series>> callback) {
+    public void beginAsyncTrend(Callback<List<Series>> callback, int page) {
         searchModel = new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], /*anime or manga*/
                 null, /*year*/
                 null, /*season*/
@@ -58,7 +58,7 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
                 null, /*order*/
                 true, /*airing data*/
                 false, /*full page true: no pagination; false: paginate using the page variable*/
-                null);/*page*/
+                page);/*page*/
 
         new HomePageFetch(callback, searchModel, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

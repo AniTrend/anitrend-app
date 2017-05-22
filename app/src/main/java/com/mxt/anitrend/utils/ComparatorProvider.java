@@ -87,7 +87,7 @@ public class ComparatorProvider {
                             }
                             return s1.getAnime().getTitle_english().compareTo(s2.getAnime().getTitle_english());
                         case "score":
-                            return s1.getScore_raw() > s2.getScore_raw()? 1:-1;
+                            return s1.getScore_raw() < s2.getScore_raw()? 1:-1;
                         case "popularity":
                             return s1.getAnime().getPopularity() > s2.getAnime().getPopularity()? 1:-1;
                         case "start_date":
@@ -114,7 +114,7 @@ public class ComparatorProvider {
                         }
                         return s1.getAnime().getTitle_english().compareTo(s2.getAnime().getTitle_english());
                     case "score":
-                        return s1.getScore_raw() > s2.getScore_raw()? 1:-1;
+                        return s1.getScore_raw() < s2.getScore_raw()? 1:-1;
                     case "popularity":
                         return s1.getAnime().getPopularity() > s2.getAnime().getPopularity()? 1:-1;
                     case "start_date":

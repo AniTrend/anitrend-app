@@ -18,6 +18,7 @@ import com.mxt.anitrend.async.SortHelper;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.FragmentCallback;
+import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.utils.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -53,7 +54,7 @@ import retrofit2.Response;
  * mListener - Must be assigned before super.onStart() inside the inheriting class
  * mFragmentPresenter - Must be assigned before super.onStart() inside the inheriting class
  */
-public abstract class DefaultListFragment <T extends Parcelable> extends Fragment implements Callback<List<T>>,
+public abstract class DefaultListFragment <T extends Parcelable> extends Fragment implements Callback<List<T>>, RecyclerLoadListener,
         SwipeRefreshLayout.OnRefreshListener, FragmentCallback<String>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public @BindView(R.id.generic_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
@@ -63,10 +64,17 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
     protected final static String ARG_KEY = "arg_data";
 
     private final String KEY_MODEL_STATE = "model_key";
+    private final String MODEL_LIMIT = "loading_limit_reached";
+    private final String MODEL_PAGE = "current_page_number";
+    private final String KEY_PAGINATE = "allowed_paginate";
 
     protected CommonPresenter<List<T>> mPresenter;
     protected Unbinder unbinder;
     protected List<T> model;
+
+    protected int mPage = 1;
+    protected boolean isLimit;
+    protected boolean isPaginate;
 
     protected RecyclerViewAdapter<T> mAdapter;
     private GridLayoutManager mLayoutManager;
@@ -103,6 +111,19 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
         return root;
     }
 
+    protected void addScrollLoadTrigger() {
+        if (recyclerView != null && !recyclerView.hasOnScrollListener() && isPaginate) {
+            mPresenter.initListener(mLayoutManager, mPage, this);
+            recyclerView.addOnScrollListener(mPresenter);
+        }
+    }
+
+    protected void removeScrollLoadTrigger() {
+        if (recyclerView != null && isPaginate) {
+            recyclerView.clearOnScrollListeners();
+        }
+    }
+
     /**
      * Called when the Fragment is visible to the user.  This is generally
      * tied to Activity.onStart of the containing
@@ -132,20 +153,29 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(model != null && model.size() < 45)
+        if (model != null && model.size() < 45) {
             outState.putParcelableArrayList(KEY_MODEL_STATE, (ArrayList<? extends Parcelable>) model);
+            outState.putBoolean(MODEL_LIMIT, isLimit);
+            outState.putInt(MODEL_PAGE, mPage);
+        }
+        outState.putBoolean(KEY_PAGINATE, isPaginate);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null)
+        if(savedInstanceState != null) {
             model = savedInstanceState.getParcelableArrayList(KEY_MODEL_STATE);
+            mPage = savedInstanceState.getInt(MODEL_PAGE);
+            isLimit = savedInstanceState.getBoolean(MODEL_LIMIT);
+            isPaginate = savedInstanceState.getBoolean(KEY_PAGINATE);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        removeScrollLoadTrigger();
         mPresenter.getApiPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
         mPresenter.destroySuperToast();
@@ -154,6 +184,7 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
     @Override
     public void onResume() {
         super.onResume();
+        addScrollLoadTrigger();
         mPresenter.getApiPrefs().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         if(mPresenter.getSavedParse() != null)
             recyclerView.onRestoreInstanceState(mPresenter.getSavedParse());
@@ -198,7 +229,13 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
     public void onResponse(Call<List<T>> call, Response<List<T>> response) {
         if(isVisible() && (!isDetached() || !isRemoving()))
             if(response.isSuccessful() && response.body() != null) {
-                model = response.body();
+                if (!isPaginate) {
+                    model = response.body();
+                } else if (model == null) {
+                    model = response.body();
+                } else {
+                    model.addAll(response.body());
+                }
                 updateUI();
             } else {
                 showError(response);
@@ -223,7 +260,14 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
      * Called when a swipe gesture triggers a refresh.
      */
     @Override
-    public abstract void onRefresh();
+    public void onRefresh() {
+        mPage = 1;
+        model = null;
+        if (mPresenter != null) {
+            mPresenter.onRefreshPage();
+        }
+        makeRequest();
+    }
 
     /**
      * Called when a shared preference is changed, added, or removed. This
@@ -237,8 +281,23 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        mPage = 1;
+        model = null;
+        if (mPresenter != null)
+            mPresenter.onRefreshPage();
         update();
     }
+
+    /**
+     * All new or updated network requests should be handled in this method
+     */
+    public abstract void makeRequest();
+
+    /**
+     * Provides the next page number
+     * @param next next page
+     */
+    public abstract void onLoadMore(int next);
 
     /**
      * Normal fragments

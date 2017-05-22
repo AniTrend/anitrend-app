@@ -31,41 +31,48 @@ public class MangaFragment extends DefaultListFragment<Series> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.card_col_size_home;
+        isPaginate = true;
         mPresenter = new MangaPresenter(getContext());
     }
 
     @Override
     public void updateUI() {
-        if(recyclerView != null) {
-            if(swipeRefreshLayout.isRefreshing())
+        if (recyclerView != null) {
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
-            if(mAdapter == null) {
+            }
+            if (mAdapter == null) {
                 mAdapter = new SeriesMangaAdapter(model, getActivity(), mPresenter.getAppPrefs());
                 recyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.onDataSetModified(model);
             }
-
             if (mAdapter.getItemCount() > 0) {
                 progressLayout.showContent();
-            } else
+            } else {
                 showEmpty(getString(R.string.layout_empty_response));
+            }
         }
     }
-
 
     @Override
     public void update() {
         progressLayout.showLoading();
-        onRefresh();
+        makeRequest();
     }
 
-    /**
-     * Called when a swipe gesture triggers a refresh.
-     */
     @Override
-    public void onRefresh() {
-        mPresenter.beginAsync(this);
+    public void onLoadMore(int nextPage) {
+        if (!isLimit) {
+            mPage = nextPage;
+            swipeRefreshLayout.setRefreshing(true);
+            makeRequest();
+        }
+    }
+
+    @Override
+    public void makeRequest() {
+        mPresenter.beginAsync(this, mPage);
     }
 
 }

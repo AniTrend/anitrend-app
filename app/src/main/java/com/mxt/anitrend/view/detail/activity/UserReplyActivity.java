@@ -72,7 +72,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -407,7 +406,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
     protected void onPause() {
         super.onPause();
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        JCVideoPlayer.releaseAllVideos();
     }
 
     @Override

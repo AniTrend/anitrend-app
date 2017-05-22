@@ -28,56 +28,46 @@ public class NewAnimeFragment extends DefaultListFragment<Series> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.card_col_size_home;
-        mPresenter = new TrendingPresenter(getContext());
+        isPaginate = true;
+        mPresenter = new TrendingPresenter(getContext(), "id-desc", null);
     }
 
-    /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to {@link Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onStart() {
-        mSearch = ((TrendingPresenter)mPresenter).getDefaultSearch();
-        super.onStart();
-    }
-
-    @Override
     public void updateUI() {
-        if(recyclerView != null) {
-            if(swipeRefreshLayout.isRefreshing())
+        if (recyclerView != null) {
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
-            if(mAdapter == null) {
+            }
+            if (mAdapter == null) {
                 mAdapter = new SeriesAnimeAdapter(model, getActivity(), mPresenter.getAppPrefs());
                 recyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.onDataSetModified(model);
             }
-
             if (mAdapter.getItemCount() > 0) {
                 progressLayout.showContent();
-            } else
+            } else {
                 showEmpty(getString(R.string.layout_empty_response));
+            }
         }
     }
 
-
-    /**
-     * Called when a swipe gesture triggers a refresh.
-     */
-    @Override
-    public void onRefresh() {
-        mSearch.setSort_by("id-desc");
-        mSearch.setAiring_data(null);
-        mSearch.setItem_status(null);
-        mPresenter.beginAsync(this, mSearch);
-    }
-
-    /**
-     * Normal fragments
-     */
     @Override
     public void update() {
+        progressLayout.showLoading();
+        makeRequest();
+    }
 
+    @Override
+    public void onLoadMore(int nextPage) {
+        if (!isLimit) {
+            mPage = nextPage;
+            swipeRefreshLayout.setRefreshing(true);
+            makeRequest();
+        }
+    }
+
+    @Override
+    public void makeRequest() {
+        mPresenter.beginAsync(this, mPage);
     }
 }

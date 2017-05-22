@@ -28,6 +28,7 @@ public class ApplicationPrefs {
     private final String KEY_LOGIN_TIP = "app_login_tip";
     private final String KEY_HEADER_TIP = "app_header_tip";
     private final String KEY_USER_PROFILE_TIP = "app_user_profile_tip";
+    private final String KEY_REVIEW_TYPE_TIP = "app_review_type_tip";
 
     /*Base Application Values*/
     private final String KEY_VERSION_CODE = "app_code";
@@ -326,5 +327,15 @@ public class ApplicationPrefs {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_REVIEW_TYPES, isAnime);
         editor.apply();
+    }
+
+    public void setReviewsTip() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(KEY_REVIEW_TYPE_TIP, false);
+        editor.apply();
+    }
+
+    public boolean getReviewsTip() {
+        return sharedPreferences.getBoolean(KEY_REVIEW_TYPE_TIP, true);
     }
 }

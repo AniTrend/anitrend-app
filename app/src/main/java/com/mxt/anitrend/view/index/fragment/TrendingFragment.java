@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
+import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.presenter.base.TrendingPresenter;
 import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;
@@ -14,8 +15,6 @@ import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;
  * @see DefaultListFragment
  */
 public class TrendingFragment extends DefaultListFragment<Series> {
-
-    private Search mSearch;
 
     public TrendingFragment() {
         // Required empty public constructor
@@ -29,18 +28,8 @@ public class TrendingFragment extends DefaultListFragment<Series> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.card_col_size_home;
-        mPresenter = new TrendingPresenter(getContext());
-    }
-
-    /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to {@link Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onStart() {
-        mSearch = ((TrendingPresenter)mPresenter).getDefaultSearch();
-        super.onStart();
+        isPaginate = true;
+        mPresenter = new TrendingPresenter(getContext(), "popularity-desc", FilterTypes.AnimeStatusTypes[FilterTypes.AnimeStatusType.CURRENTLY_AIRING.ordinal()]);
     }
 
     @Override
@@ -62,22 +51,24 @@ public class TrendingFragment extends DefaultListFragment<Series> {
         }
     }
 
-    /**
-     * Called when a swipe gesture triggers a refresh.
-     */
-    @Override
-    public void onRefresh() {
-        mSearch.setSort_by("popularity-desc");
-        mSearch.setAiring_data(true);
-        mPresenter.beginAsync(TrendingFragment.this, mSearch);
-    }
-
-    /**
-     * Normal fragments
-     */
     @Override
     public void update() {
+        progressLayout.showLoading();
+        makeRequest();
+    }
 
+    @Override
+    public void onLoadMore(int nextPage) {
+        if (!isLimit) {
+            mPage = nextPage;
+            swipeRefreshLayout.setRefreshing(true);
+            makeRequest();
+        }
+    }
+
+    @Override
+    public void makeRequest() {
+        mPresenter.beginAsync(this, mPage);
     }
 
 }

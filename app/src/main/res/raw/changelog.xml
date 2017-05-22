@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="0.9.9r7.3" changeDate="Beta">
+        <changelogtext>[b]Bug Fixes[/b] Multiple bug fixes from the previous version</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="0.9.9r7" changeDate="Beta">
         <changelogtext>[b]Feature[/b] View other users anime and manga lists by tapping on the labels on their profiles</changelogtext>
         <changelogtext>[b]Feature[/b] View non YouTube videos (webm) on status posts directly from the app</changelogtext>

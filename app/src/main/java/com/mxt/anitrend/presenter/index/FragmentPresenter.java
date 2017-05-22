@@ -29,20 +29,33 @@ public class FragmentPresenter extends CommonPresenter<List<Series>> {
 
     @Override
     public void beginAsync(Callback<List<Series>> callback, int viewPosition) {
-           Search searchModel = new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], /*anime or manga*/
-                   getApiPrefs().getYear(), /*year*/
-                   SeasonTitles[viewPosition], /*season*/
-                   getApiPrefs().getShowType(), /*Type e.g. TV or Movie e.t.c*/
-                   getApiPrefs().getStatus(), /*status*/
-                   getApiPrefs().getGenres(), /*genre */
-                   getApiPrefs().getExcluded(), /*genre exclude*/
-                   getApiPrefs().getSort(), /*sort*/
-                   getApiPrefs().getOrder(), /*order*/
-                   true, /*airing data*/
-                   false, /*full page true: no pagination; false: paginate using the page variable*/
-                   null);/*page*/
+        new HomePageFetch(callback, new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], /*anime or manga*/
+                getApiPrefs().getYear(), /*year*/
+                SeasonTitles[viewPosition], /*season*/
+                getApiPrefs().getShowType(), /*Type e.g. TV or Movie e.t.c*/
+                getApiPrefs().getStatus(), /*status*/
+                getApiPrefs().getGenres(), /*genre */
+                getApiPrefs().getExcluded(), /*genre exclude*/
+                getApiPrefs().getSort(), /*sort*/
+                getApiPrefs().getOrder(), /*order*/
+                true, /*airing data*/
+                false, /*full page true: no pagination; false: paginate using the page variable*/
+                null)/*page*/, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-        new HomePageFetch(callback, searchModel, mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    public void beginAsync(Callback<List<Series>> callback, int viewPosition, int page) {
+        new HomePageFetch(callback, new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()],
+                getApiPrefs().getYear(),
+                FilterTypes.SeasonTitles[viewPosition],
+                getApiPrefs().getShowType(),
+                getApiPrefs().getStatus(),
+                getApiPrefs().getGenres(),
+                getApiPrefs().getExcluded(),
+                getApiPrefs().getSort(),
+                getApiPrefs().getOrder(),
+                true,
+                false,
+                page), mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

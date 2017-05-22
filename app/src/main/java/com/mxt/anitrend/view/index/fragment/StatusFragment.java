@@ -44,7 +44,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -146,7 +145,6 @@ public class StatusFragment extends Fragment implements Callback<List<UserActivi
     @Override
     public void onPause() {
         super.onPause();
-        JCVideoPlayer.releaseAllVideos();
         recyclerView.clearOnScrollListeners();
         mFragmentPresenter.setParcelable(recyclerView.onSaveInstanceState());
     }
