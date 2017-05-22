@@ -7,8 +7,8 @@ android {
         applicationId "com.mxt.anitrend"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 46
-        versionName '0.9.9r7'
+        versionCode 47
+        versionName '0.9.9r7.3'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

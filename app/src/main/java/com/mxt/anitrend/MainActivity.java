@@ -288,6 +288,11 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 ReviewPageAdapter mReviews = new ReviewPageAdapter(getSupportFragmentManager());
                 mViewPager.setAdapter(mReviews);
                 mNavigationTabStrip.setViewPager(mViewPager);
+                if(mPresenter.getAppPrefs().getReviewsTip()) {
+                    mPresenter.createAlerter(MainActivity.this, getString(R.string.title_new_feature), getString(R.string.text_reviews_feature),
+                            R.drawable.ic_bookmark_white_24dp, R.color.colorStateBlue);
+                    mPresenter.getAppPrefs().setReviewsTip();
+                }
                 break;
             case R.id.nav_filter:
                 if(mFilterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
@@ -1050,11 +1055,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 recreate();
                 break;
             case R.id.app_review_type:
-                mPresenter.createSuperToast(MainActivity.this,
-                        getString(R.string.text_review_changed),
-                        R.drawable.ic_done_all_white_24dp,
-                        Style.FRAME_LOLLIPOP, Style.DURATION_VERY_SHORT,
-                        PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_LIGHT_GREEN));
                 mPresenter.getAppPrefs().setReviewType(state);
                 mReviewMenu.setTitle(state?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
                 break;
