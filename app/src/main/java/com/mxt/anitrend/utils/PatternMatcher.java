@@ -12,7 +12,7 @@ public class PatternMatcher {
     public static final String KEY_IMG = "img";
     public static final String KEY_WEB = "webm";
     public static final String KEY_YOU = "youtube";
-    public static final String NO_THUMBNAIL = "http://placehold.it/350x150?text=No+Preview+Available";
+    public static final String NO_THUMBNAIL = "http://placehold.it/450x250?text=No+Preview+Available";
 
 
     private static final String VID_THUMB = "https://img.youtube.com/vi/%s/hqdefault.jpg";
@@ -43,6 +43,8 @@ public class PatternMatcher {
     }
 
     static String findUserTags(String text) {
+        if(text == null)
+            return text;
         Matcher matcher = Pattern.compile(PATTERN_USER_TAGS).matcher(text);
         while (matcher.find()) {
             String match = matcher.group();

@@ -113,7 +113,6 @@
     <orderEntry type="library" exported="" name="retrofit-2.2.0" level="project" />
     <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.annotation-api-1.2" level="project" />
-    <orderEntry type="library" exported="" name="jiecaovideoplayer-5.5.4" level="project" />
     <orderEntry type="library" exported="" name="converter-gson-2.2.0" level="project" />
     <orderEntry type="library" exported="" name="circleimageview-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="txtmark-0.16" level="project" />
@@ -143,6 +142,7 @@
     <orderEntry type="library" exported="" name="cardview-v7-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="changelog-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="material-tap-target-prompt-1.10.0" level="project" />
+    <orderEntry type="library" exported="" name="easyvideoplayer-0.3.0" level="project" />
     <orderEntry type="library" exported="" name="support-v13-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="palette-v7-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-lite-10.2.1" level="project" />

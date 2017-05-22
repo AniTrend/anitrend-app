@@ -125,7 +125,7 @@ public final class DateTimeConverter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return "TBA";
+        return String.valueOf(date);
     }
 
     /**

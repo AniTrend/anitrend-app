@@ -42,6 +42,7 @@ import com.mxt.anitrend.utils.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.FavouriteActivity;
 import com.mxt.anitrend.view.base.activity.GalleryPreviewActivity;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
+import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.io.IOException;
@@ -55,8 +56,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +89,6 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
     @BindView(R.id.extra_holder) View mContainer;
     @BindView(R.id.extra_img) ImageView mExtra;
     @BindView(R.id.extra_img_gallery) TextView mGallery;
-    @BindView(R.id.embed_video_player) JCVideoPlayerStandard jcVideoPlayer;
 
     @BindView(R.id.user_followers_container) View mFollowersContainer;
     @BindView(R.id.user_following_container) View mFollowingContainer;
@@ -316,31 +314,6 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
                 }
             });
 
-            /*UserStats userStats;
-            if((userStats = mModel.getStats()) != null) {
-                final GenreList genreList;
-                if((genreList = userStats.getFavourite_genres()) != null)
-                    mUser_Stats.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                        try {
-                            KeyValueTemp result = genreList.getFavouriteGenres();
-                            mUser_Stats.initial(result.keys.length, result.values, result.keys);
-                            mUser_Stats.animateProgress();
-                        } catch (Exception ex){
-                            Toast.makeText(getActivity(), ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                        }
-                    });
-                else
-                    mUser_Stats.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                        Toast.makeText(getActivity(), R.string.text_insufficient_genres, Toast.LENGTH_LONG).show();
-                        }
-                    });
-            }*/
-
             UserStats userStats = mModel.getStats();
             HashMap<String, Integer> genreList = null;
             if(userStats != null)
@@ -391,17 +364,16 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
                 mContainer.setVisibility(View.VISIBLE);
                 boolean isVideo = !mTypes.get(0).equals(PatternMatcher.KEY_IMG);
                 if(isVideo) {
+                    mGallery.setText(R.string.text_play_video);
                     switch (mTypes.get(0)) {
                         case PatternMatcher.KEY_WEB:
-                            jcVideoPlayer.setUp(mLinks.get(0), JCVideoPlayer.SCREEN_LAYOUT_LIST, "Video posted by: "+mModel.getDisplay_name());
                             Glide.with(getContext())
                                     .load(PatternMatcher.NO_THUMBNAIL)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .centerCrop()
-                                    .into(jcVideoPlayer.thumbImageView);
+                                    .into(mExtra);
                             break;
                         default:
-                            mGallery.setText(R.string.text_play_video);
                             Glide.with(getContext())
                                     .load(PatternMatcher.getYoutubeThumb(mLinks.get(0)))
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -418,17 +390,9 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
                     mGallery.setText(R.string.text_multiple_images);
                 }
 
-                if (mCount > 1 || isVideo)
-                    switch (mTypes.get(0)) {
-                        case PatternMatcher.KEY_WEB:
-                            jcVideoPlayer.setVisibility(View.VISIBLE);
-                            mExtra.setVisibility(View.GONE);
-                            break;
-                        default:
-                            jcVideoPlayer.setVisibility(View.GONE);
+                if (mCount > 1 || isVideo) {
                             mExtra.setVisibility(View.VISIBLE);
                             mGallery.setVisibility(View.VISIBLE);
-                            break;
                     }
                 else {
                     mGallery.setVisibility(View.GONE);
@@ -481,17 +445,6 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     /**
-     * Called when the Fragment is no longer resumed.  This is generally
-     * tied to {@link Activity#onPause() Activity.onPause} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        jcVideoPlayer.release();
-    }
-
-    /**
      * Called when a swipe gesture triggers a refresh.
      */
     @Override
@@ -516,6 +469,34 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
             intent.putExtra(ImagePreviewActivity.IMAGE_SOURCE, mLinks.get(0));
             startActivity(intent);
         }
+    }
+
+    void handleAction() {
+        Intent intent;
+        if (this.mLinks.size() > 1) {
+            showSlide();
+            return;
+        }
+
+        if (mTypes.get(0).equals(PatternMatcher.KEY_IMG)) {
+            intent = new Intent(getContext(), ImagePreviewActivity.class);
+            intent.putExtra(ImagePreviewActivity.IMAGE_SOURCE, mLinks.get(0));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return;
+        }
+        switch (mTypes.get(0)) {
+            case PatternMatcher.KEY_WEB:
+                intent = new Intent(getContext(), VideoPlayerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(VideoPlayerActivity.URL_VIDEO_LINK, mLinks.get(0));
+                break;
+            default:
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(mLinks.get(0)));
+                break;
+        }
+        startActivity(intent);
     }
 
     private void toggleFollowState() {
@@ -548,43 +529,10 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
         Intent intent;
         switch (v.getId()) {
             case R.id.extra_img_gallery:
-                if(!mTypes.get(0).equals(PatternMatcher.KEY_IMG)) {
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    switch (mTypes.get(0)) {
-                        case PatternMatcher.KEY_WEB:
-                            intent.setDataAndType(Uri.parse(mLinks.get(0)), "video/*");
-                            break;
-                        default:
-                            intent.setData(Uri.parse(mLinks.get(0)));
-                            break;
-                    }
-                    startActivity(intent);
-                }
-                else
-                    showSlide();
+                handleAction();
                 return;
             case R.id.extra_img:
-                if(mLinks.size() > 1) {
-                    showSlide();
-                    return;
-                }
-                if(!mTypes.get(0).equals(PatternMatcher.KEY_IMG)) {
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    switch (mTypes.get(0)) {
-                        case PatternMatcher.KEY_WEB:
-                            intent.setDataAndType(Uri.parse(mLinks.get(0)), "video/*");
-                            break;
-                        default:
-                            intent.setData(Uri.parse(mLinks.get(0)));
-                            break;
-                    }
-                    startActivity(intent);
-                }
-                else {
-                    intent = new Intent(getContext(), ImagePreviewActivity.class);
-                    intent.putExtra(ImagePreviewActivity.IMAGE_SOURCE, mLinks.get(0));
-                    startActivity(intent);
-                }
+                handleAction();
                 return;
             case R.id.user_profile_image:
                 intent = new Intent(getActivity(), ImagePreviewActivity.class);

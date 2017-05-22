@@ -30,14 +30,12 @@ import com.mxt.anitrend.utils.ApplicationPrefs;
 import com.mxt.anitrend.utils.PatternMatcher;
 import com.mxt.anitrend.view.base.activity.GalleryPreviewActivity;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
+import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
-
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 /**
  * Created by max on 2017/03/12.
@@ -92,7 +90,6 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
         private ImageView mAvatar, mStatusExtra;
         private View mLikesViewer, mStatusContainer;
         private TextView mUser, mTime, mLike, mComment, mContent, mEdit, mDelete, mGallery;
-        private JCVideoPlayerStandard jcVideoPlayer;
 
         String type;
 
@@ -111,7 +108,6 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
             mContent = (TextView) view.findViewById(R.id.status_text);
             mEdit = (TextView) view.findViewById(R.id.status_edit);
             mDelete = (TextView) view.findViewById(R.id.status_delete);
-            jcVideoPlayer = (JCVideoPlayerStandard) itemView.findViewById(R.id.embed_video_player);
             mContent.setMovementMethod(LinkMovementMethod.getInstance());
             mContent.setFocusable(false);
             mLikesViewer.setOnClickListener(this);
@@ -131,8 +127,6 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
             UserSmall user = model.getUsers().get(0);
             List<UserSmall> likes = model.getLikes();
             Matcher matcher = PatternMatcher.findMedia(model.getValue());
-
-            jcVideoPlayer.setVisibility(View.GONE);
 
             mComment.setText(String.format(Locale.getDefault(), " %d", model.getReply_count()));
             mLike.setText(String.format(Locale.getDefault(), " %d", likes.size()));
@@ -180,17 +174,16 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
                 mStatusContainer.setVisibility(View.VISIBLE);
                 boolean isVideo = !mDesc.get(0).equals(PatternMatcher.KEY_IMG);
                 if(isVideo) {
+                    mGallery.setText((mCount > 1)?R.string.text_multiple_videos:R.string.text_play_video);
                     switch (mDesc.get(0)) {
                         case PatternMatcher.KEY_WEB:
-                            jcVideoPlayer.setUp(mLinks.get(0), JCVideoPlayer.SCREEN_LAYOUT_LIST, "Video posted by: "+user.getDisplay_name());
                             Glide.with(mContext)
                                     .load(PatternMatcher.NO_THUMBNAIL)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .centerCrop()
-                                    .into(jcVideoPlayer.thumbImageView);
+                                    .into(mStatusExtra);
                             break;
                         default:
-                            mGallery.setText((mCount > 1)?R.string.text_multiple_videos:R.string.text_play_video);
                             Glide.with(mContext)
                                     .load(PatternMatcher.getYoutubeThumb(mLinks.get(0)))
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -207,18 +200,10 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
                     mGallery.setText(R.string.text_multiple_images);
                 }
 
-                if (mCount > 1 || isVideo)
-                    switch (mDesc.get(0)) {
-                        case PatternMatcher.KEY_WEB:
-                            jcVideoPlayer.setVisibility(View.VISIBLE);
-                            mStatusExtra.setVisibility(View.GONE);
-                            break;
-                        default:
-                            jcVideoPlayer.setVisibility(View.GONE);
-                            mStatusExtra.setVisibility(View.VISIBLE);
-                            mGallery.setVisibility(View.VISIBLE);
-                            break;
-                    }
+                if (mCount > 1 || isVideo) {
+                    mStatusExtra.setVisibility(View.VISIBLE);
+                    mGallery.setVisibility(View.VISIBLE);
+                }
                 else {
                     mGallery.setVisibility(View.GONE);
                     mStatusExtra.setVisibility(View.VISIBLE);
@@ -231,10 +216,6 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
             Glide.clear(mAvatar);
             if(mStatusExtra.getVisibility() == View.VISIBLE)
                 Glide.clear(mStatusExtra);
-            if(jcVideoPlayer.getVisibility() == View.VISIBLE) {
-                Glide.clear(jcVideoPlayer.thumbImageView);
-                jcVideoPlayer.release();
-            }
         }
 
         @Override
@@ -266,49 +247,41 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
                     }
                     break;
                 case R.id.status_extra_img_gallery:
-                    type = mDesc.get(0);
-                    if(!type.equals(PatternMatcher.KEY_IMG) && mLinks.size() < 2) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        switch (type) {
-                            case PatternMatcher.KEY_WEB:
-                                intent.setDataAndType(Uri.parse(mLinks.get(0)), "video/*");
-                                break;
-                            default:
-                                intent.setData(Uri.parse(mLinks.get(0)));
-                                break;
-                        }
-                        mContext.startActivity(intent);
-                    }
-                    else
-                        showSlide();
+                    handleAction();
                     return;
                 case R.id.status_extra_img:
-                    if(mLinks.size() > 1) {
-                        showSlide();
-                        return;
-                    }
-                    type = mDesc.get(0);
-                    if(!type.equals(PatternMatcher.KEY_IMG)) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        switch (type) {
-                            case PatternMatcher.KEY_WEB:
-                                intent.setDataAndType(Uri.parse(mLinks.get(0)), "video/*");
-                                break;
-                            default:
-                                intent.setData(Uri.parse(mLinks.get(0)));
-                                break;
-                        }
-                        mContext.startActivity(intent);
-                    }
-                    else {
-                        Intent intent = new Intent(mContext, ImagePreviewActivity.class);
-                        intent.putExtra(ImagePreviewActivity.IMAGE_SOURCE, mLinks.get(0));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mContext.startActivity(intent);
-                    }
+                    handleAction();
                     return;
             }
             mListener.onItemClick(getAdapterPosition(), view.getId());
+        }
+
+        void handleAction() {
+            Intent intent;
+            if (this.mLinks.size() > 1) {
+                showSlide();
+                return;
+            }
+            this.type = this.mDesc.get(0);
+            if (this.type.equals(PatternMatcher.KEY_IMG)) {
+                intent = new Intent(mContext, ImagePreviewActivity.class);
+                intent.putExtra(ImagePreviewActivity.IMAGE_SOURCE, this.mLinks.get(0));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+                return;
+            }
+            switch (type) {
+                case PatternMatcher.KEY_WEB:
+                    intent = new Intent(mContext, VideoPlayerActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(VideoPlayerActivity.URL_VIDEO_LINK, mLinks.get(0));
+                    break;
+                default:
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(mLinks.get(0)));
+                    break;
+            }
+            mContext.startActivity(intent);
         }
 
         void showSlide() {

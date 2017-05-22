@@ -9,8 +9,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.utils.ApplicationPrefs;
 import com.mxt.anitrend.utils.PatternMatcher;
 
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-
 /**
  * Created by max on 2017/03/26.
  * AppCompatActivity extender to make activity changes on start
@@ -40,8 +38,6 @@ public abstract class DefaultActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        if (JCVideoPlayer.backPress())
-            return;
         super.onBackPressed();
     }
 

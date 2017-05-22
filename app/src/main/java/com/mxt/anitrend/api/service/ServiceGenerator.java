@@ -85,20 +85,26 @@ public class ServiceGenerator {
     public static <S> S createService(Class<S> serviceClass, Context mContext) {
         try {
             Token mToken = TokenReference.getInstance();
-            final long currentTime = (System.currentTimeMillis()/1000L);
-
-            if(mToken == null || mToken.getExpires() < currentTime) {
+            if (mToken == null) {
                 mToken = new TokenReference(mContext).reInitInstance();
-                httpClient.interceptors().clear();
-            } else
-                if (mToken.getExpires() > currentTime && ani_ret != null)
-                    return ani_ret.create(serviceClass);
+            }
+            long currentTime = System.currentTimeMillis() / 1000;
+            long expires = mToken.getExpires();
+
+            if (currentTime > expires)
+                mToken = new TokenReference(mContext).reInitInstance();
+            else if (expires > currentTime && ani_ret != null) {
+                return ani_ret.create(serviceClass);
+            }
 
             AuthInterceptor interceptor = new AuthInterceptor(mToken);
-            if(!httpClient.interceptors().contains(interceptor)) {
+            if (httpClient.interceptors().size() > 0) {
+                httpClient.interceptors().clear();
                 httpClient.addInterceptor(interceptor);
-                ani_ret = builder.client(httpClient.build()).build();
+            } else {
+                httpClient.addInterceptor(interceptor);
             }
+            ani_ret = builder.client(httpClient.build()).build();
         } catch (Exception e) {
             e.printStackTrace();
         }

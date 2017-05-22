@@ -21,16 +21,15 @@
 
     <TextView
         android:layout_gravity="end"
-        android:id="@+id/review_read_more"
+        android:id="@+id/review_user"
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
-        android:drawableStart="@drawable/ic_arrow_drop_down_white_18dp"
         android:textColor="@color/white"
-        android:typeface="sans"
         android:textStyle="bold"
-        android:text="@string/text_read_more"/>
+        tools:text="By: Randomuser0012"
+        />
 
     <LinearLayout
         android:layout_marginBottom="35dp"
@@ -96,16 +95,18 @@
 
     </LinearLayout>
 
+
     <TextView
         android:layout_gravity="bottom|end"
-        android:id="@+id/review_user"
+        android:id="@+id/review_read_more"
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
+        android:drawableStart="@drawable/ic_arrow_drop_down_white_18dp"
         android:textColor="@color/white"
+        android:typeface="sans"
         android:textStyle="bold"
-        tools:text="By: Randomuser0012"
-        />
+        android:text="@string/text_read_more"/>
 
 </FrameLayout>
