@@ -111,7 +111,7 @@ public class MainPresenter extends CommonPresenter {
                 RepoModel repo = ServiceGenerator.createRepoService();
                 repo.checkVersion().enqueue(new Callback<AppVersionTracking>() {
                     @Override
-                    public void onResponse(@NonNull Call<AppVersionTracking> call, @NonNull Response<AppVersionTracking> response) {
+                    public void onResponse(Call<AppVersionTracking> call, Response<AppVersionTracking> response) {
                         if(response.isSuccessful() && response.body() != null) {
                                 AppVersionTracking repo_version = response.body();
                                 if (repo_version != null && repo_version.checkAgainstCurrent()) {
@@ -123,7 +123,7 @@ public class MainPresenter extends CommonPresenter {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<AppVersionTracking> call, @NonNull Throwable t) {
+                    public void onFailure(Call<AppVersionTracking> call, Throwable t) {
                         t.printStackTrace();
                         if(mContext != null)
                             Toast.makeText(mContext, R.string.text_update_check_failed, Toast.LENGTH_SHORT).show();

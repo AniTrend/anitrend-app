@@ -7,8 +7,8 @@ android {
         applicationId "com.mxt.anitrend"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 48
-        versionName '0.9.9r7.4'
+        versionCode 49
+        versionName '0.9.9r7.5'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,7 +40,7 @@ configurations.all {
 }
 
 def design_support = '25.3.1'
-def retro_fit = '2.3.0'
+def retro_fit = '2.2.0'
 def fire_base = '10.2.6'
 
 dependencies {
@@ -73,7 +73,7 @@ dependencies {
     compile 'com.annimon:stream:1.1.7'
     compile 'com.firebase:firebase-jobdispatcher:0.6.0'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.3'
     compile 'com.codemybrainsout.onboarding:onboarder:1.0.3'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
@@ -88,7 +88,7 @@ dependencies {
     compile 'com.github.tony19:named-regexp:0.2.4'
     compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
     compile 'com.jakewharton:butterknife:8.6.0'
-    compile 'com.tapadoo.android:alerter:1.0.8'
+    compile 'com.tapadoo.android:alerter:1.0.7'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'org.hamcrest:hamcrest-library:1.3'

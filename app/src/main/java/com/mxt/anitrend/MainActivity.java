@@ -850,7 +850,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         switch (item.getItemId()) {
 
             case R.id.action_sort:
-                new DialogManager(this).createDialogSelection("Sort By?", R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
@@ -867,7 +867,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 break;
 
             case R.id.action_order:
-                new DialogManager(this).createDialogSelection("Order By?", R.array.order_by_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_order), R.array.order_by_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
@@ -884,7 +884,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 break;
 
             case R.id.action_genre:
-                new DialogManager(this).createDialogChecks("Show Which Genres", mPresenter.getGenres(), new MaterialDialog.ListCallbackMultiChoice() {
+                new DialogManager(this).createDialogChecks(getString(R.string.app_filter_genres), mPresenter.getGenres(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         /**
@@ -914,7 +914,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 break;
 
             case R.id.action_type:
-                new DialogManager(this).createDialogSelection("Filter Type", R.array.series_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_show_type), R.array.series_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
@@ -931,7 +931,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 break;
 
             case R.id.action_year:
-                new DialogManager(this).createDialogSelection("Filter Year", DateTimeConverter.getYearRanges(), new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_year), DateTimeConverter.getYearRanges(), new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
@@ -948,7 +948,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 break;
 
             case R.id.action_status:
-                new DialogManager(this).createDialogSelection("Show Only?", R.array.anime_status_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_status), R.array.anime_status_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
