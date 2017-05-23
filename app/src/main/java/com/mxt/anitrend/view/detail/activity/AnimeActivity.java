@@ -105,7 +105,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
             updateUI();
         else {
             if(mId == 0)
-                progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.text_go_back), new View.OnClickListener() {
+                progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.Go_Back), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         finish();
@@ -157,7 +157,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                 finish();
                 break;
             case R.id.action_favor_state:
-                mPresenter.displayMessage(mSeries.isFavourite()?getString(R.string.text_item_in_favourtites):getString(R.string.text_item_not_in_favourites), this);
+                mPresenter.displayMessage(mSeries.isFavourite()?getString(R.string.text_item_in_favourites):getString(R.string.text_item_not_in_favourites), this);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -261,7 +261,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                 updateUI();
             } else {
                 appBarLayout.setExpanded(false, false);
-                progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.text_go_back), new View.OnClickListener() {
+                progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.Go_Back), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                     finish();
@@ -280,7 +280,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
      */
     @Override
     public void onFailure(Call<Series> call, Throwable t) {
-        progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), t.getMessage(), getString(R.string.text_go_back), new View.OnClickListener() {
+        progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), t.getMessage(), getString(R.string.Go_Back), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

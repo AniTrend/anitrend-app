@@ -145,7 +145,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
             volumes.setText(String.valueOf(model.getManga().getTotal_volumes()));
             chapters.setText(model.getManga().getTotal_chapters() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getManga().getTotal_chapters()));
             publishing.setText(model.getManga().getPublishing_status());
-            popularity.setText(mContext.getString(R.string.title_pop, model.getManga().getPopularity()));
+            popularity.setText(mContext.getString(R.string.text_popularity, model.getManga().getPopularity()));
             rated.setText(model.getScore());
             read_chaps.setText(String.valueOf(model.getChapters_read()));
             read_volumes.setText(String.valueOf(model.getVolumes_read()));
@@ -306,7 +306,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
             volumes.setText(String.valueOf(model.getManga().getTotal_volumes()));
             chapters.setText(model.getManga().getTotal_chapters() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getManga().getTotal_chapters()));
             publishing.setText(model.getManga().getPublishing_status());
-            popularity.setText(mContext.getString(R.string.title_pop, model.getManga().getPopularity()));
+            popularity.setText(mContext.getString(R.string.text_popularity, model.getManga().getPopularity()));
             rated.setText(model.getScore());
             read_chaps.setText(String.valueOf(model.getChapters_read()));
             read_volumes.setText(String.valueOf(model.getVolumes_read()));

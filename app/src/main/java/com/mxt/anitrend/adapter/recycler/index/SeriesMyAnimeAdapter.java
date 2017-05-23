@@ -222,7 +222,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
             type.setText(model.getAnime().getType());
             eps.setText(model.getAnime().getTotal_episodes() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getAnime().getTotal_episodes()));
             airing.setText(model.getAnime().getAiring_status());
-            popularity.setText(mContext.getString(R.string.title_pop, model.getAnime().getPopularity()));
+            popularity.setText(mContext.getString(R.string.text_popularity, model.getAnime().getPopularity()));
             rated.setText(model.getScore());
             watched.setText(String.valueOf(model.getEpisodes_watched()));
 
@@ -387,7 +387,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
             type.setText(model.getAnime().getType());
             eps.setText(model.getAnime().getTotal_episodes() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getAnime().getTotal_episodes()));
             airing.setText(model.getAnime().getAiring_status());
-            popularity.setText(mContext.getString(R.string.title_pop, model.getAnime().getPopularity()));
+            popularity.setText(mContext.getString(R.string.text_popularity, model.getAnime().getPopularity()));
             rated.setText(model.getScore());
             watched.setText(String.valueOf(model.getEpisodes_watched()));
 

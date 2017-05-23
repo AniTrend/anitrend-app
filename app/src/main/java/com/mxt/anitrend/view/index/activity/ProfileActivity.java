@@ -228,7 +228,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                 .setFocalColourFromRes(R.color.colorAccent)
                 .setBackgroundColourFromRes(R.color.colorDarkKnight)
                 .setTarget(messages_item)
-                .setPrimaryText(R.string.tip_messsages_title)
+                .setPrimaryText(R.string.tip_messages_title)
                 .setSecondaryText(R.string.tip_messages_text)
                 .setOnHidePromptListener(new MaterialTapTargetPrompt.OnHidePromptListener() {
                     @Override

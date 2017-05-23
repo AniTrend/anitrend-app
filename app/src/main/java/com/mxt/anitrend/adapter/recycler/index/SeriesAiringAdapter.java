@@ -105,7 +105,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
             type.setText(model.getAnime().getType());
             eps.setText(String.format(Locale.getDefault(), "Watched %s/%s", model.getEpisodes_watched(),model.getAnime().getTotal_episodes() < 1?"?":model.getAnime().getTotal_episodes()));
             airing.setText(model.getAnime().getAiring_status());
-            popularity.setText(mContext.getString(R.string.title_pop, model.getAnime().getPopularity()));
+            popularity.setText(mContext.getString(R.string.text_popularity, model.getAnime().getPopularity()));
             starting.setText(String.format("%s",model.getScore()));
             nxt_ep.setText(DateTimeConverter.getNextEpDate(model.getAnime().getAiring()));
 

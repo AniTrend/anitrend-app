@@ -3,6 +3,7 @@ package com.mxt.anitrend.api.service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
@@ -94,16 +95,19 @@ public class ServiceGenerator {
 
             if (currentTime > expires)
                 mToken = new TokenReference(mContext).reInitInstance();
-            else if (expires > currentTime && ani_ret != null) {
-                return ani_ret.create(serviceClass);
-            }
+            else
+                if (expires > currentTime && ani_ret != null)
+                    return ani_ret.create(serviceClass);
 
             httpClient.interceptors().clear();
             httpClient.addInterceptor(new AuthInterceptor(mToken));
             ani_ret = builder.client(httpClient.build()).build();
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
+        if(ani_ret == null)
+            ani_ret = builder.client(httpClient.build()).build();
         return ani_ret.create(serviceClass);
     }
 

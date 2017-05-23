@@ -132,7 +132,7 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
             type.setText(model.getType());
             eps.setText(model.getTotal_episodes() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getTotal_episodes()));
             airing.setText(model.getAiring_status());
-            popularity.setText(mContext.getString(R.string.title_pop, model.getPopularity()));
+            popularity.setText(mContext.getString(R.string.text_popularity, model.getPopularity()));
             starting.setText(String.format("%s: %s",DateTimeConverter.getStartTitle(model.getStart_date_fuzzy()), DateTimeConverter.convertDate(model.getStart_date_fuzzy())));
             nxt_ep.setText(DateTimeConverter.getNextEpDate(model.getNextAiring()));
 
