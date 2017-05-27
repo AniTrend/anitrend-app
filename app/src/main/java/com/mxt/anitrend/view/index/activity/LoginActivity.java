@@ -22,7 +22,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.presenter.index.LoginPresenter;
-import com.mxt.anitrend.utils.DialogManager;
+import com.mxt.anitrend.util.DialogManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -20,7 +20,7 @@ import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.FragmentCallback;
 import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.FragmentReviewPresenter;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import org.greenrobot.eventbus.EventBus;

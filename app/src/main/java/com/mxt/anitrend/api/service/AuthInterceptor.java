@@ -1,7 +1,5 @@
 package com.mxt.anitrend.api.service;
 
-import android.support.annotation.NonNull;
-
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.api.core.Token;
 
@@ -17,9 +15,9 @@ import okhttp3.Response;
 
 class AuthInterceptor implements Interceptor {
 
-    private final Token authToken;
+    private Token authToken;
 
-    AuthInterceptor(@NonNull Token token) {
+    AuthInterceptor(Token token) {
         this.authToken = token;
     }
 
@@ -36,7 +34,6 @@ class AuthInterceptor implements Interceptor {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof AuthInterceptor &&
-                ((AuthInterceptor) obj).authToken.getExpires() == this.authToken.getExpires();
+        return obj instanceof AuthInterceptor && ((AuthInterceptor) obj).authToken.getAccess_token().equals(this.authToken.getAccess_token());
     }
 }

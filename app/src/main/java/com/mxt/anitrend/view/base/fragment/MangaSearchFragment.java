@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.utils.ComparatorProvider;
-import com.mxt.anitrend.utils.FilterProvider;
+import com.mxt.anitrend.util.ComparatorProvider;
+import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.viewmodel.fragment.SearchFragment;
 
 import java.util.List;

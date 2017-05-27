@@ -13,7 +13,7 @@ import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.async.TokenReference;
 import com.mxt.anitrend.presenter.CommonPresenter;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
 
 import retrofit2.Call;

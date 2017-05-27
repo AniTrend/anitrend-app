@@ -35,10 +35,9 @@ import com.mxt.anitrend.custom.PolygonView;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetUsers;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.MarkDown;
-import com.mxt.anitrend.utils.PatternMatcher;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.PatternMatcher;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.FavouriteActivity;
 import com.mxt.anitrend.view.base.activity.GalleryPreviewActivity;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
@@ -564,7 +563,7 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
                     toggleFollowState();
                 break;
             case R.id.user_followers_container:
-                if(mFollowersList == null)
+                if(mFollowersList == null || mFollowers == null)
                     mPresenter.createSuperToast(getActivity(), getString(R.string.text_activity_loading), R.drawable.ic_info_outline_white_18dp, Style.TYPE_STANDARD);
                 else
                     if(mFollowers > 0) {
@@ -575,7 +574,7 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
                         mPresenter.createSuperToast(getActivity(), getString(R.string.layout_empty_response), R.drawable.ic_info_outline_white_18dp, Style.TYPE_STANDARD);
                 break;
             case R.id.user_following_container:
-                if(mFollowingList == null)
+                if(mFollowingList == null || mFollowing == null)
                     mPresenter.createSuperToast(getActivity(), getString(R.string.text_activity_loading), R.drawable.ic_info_outline_white_18dp, Style.TYPE_STANDARD);
                 else
                     if(mFollowing > 0) {

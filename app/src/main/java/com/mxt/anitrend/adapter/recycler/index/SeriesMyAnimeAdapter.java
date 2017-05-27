@@ -24,8 +24,8 @@ import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.RecyclerViewHolder;
 import com.mxt.anitrend.event.SeriesInteractionListener;
-import com.mxt.anitrend.utils.ApiPreferences;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApiPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 
 import java.util.ArrayList;

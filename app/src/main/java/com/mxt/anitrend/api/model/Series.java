@@ -9,7 +9,7 @@ import com.mxt.anitrend.api.structure.ExternalLink;
 import com.mxt.anitrend.api.structure.Relations;
 import com.mxt.anitrend.api.structure.SeriesListStats;
 import com.mxt.anitrend.api.structure.Tag;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.MarkDown;
 
 import java.util.HashMap;
 import java.util.List;

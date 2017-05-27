@@ -13,7 +13,7 @@ import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
-import com.mxt.anitrend.utils.Recommendation;
+import com.mxt.anitrend.util.Recommendation;
 import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;
 
 import java.util.HashMap;

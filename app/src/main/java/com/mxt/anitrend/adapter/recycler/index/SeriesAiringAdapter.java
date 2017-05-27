@@ -19,9 +19,9 @@ import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.RecyclerViewHolder;
 import com.mxt.anitrend.event.SeriesInteractionListener;
-import com.mxt.anitrend.utils.ApiPreferences;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DateTimeConverter;
+import com.mxt.anitrend.util.ApiPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DateTimeConverter;
 
 import java.util.List;
 import java.util.Locale;

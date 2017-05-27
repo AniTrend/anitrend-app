@@ -18,8 +18,8 @@ import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.Tag;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 
 import java.util.List;

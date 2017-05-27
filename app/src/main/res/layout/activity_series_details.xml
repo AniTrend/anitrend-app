@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_behavior="com.mxt.anitrend.utils.ScrollAwareFab"
+        app:layout_behavior="com.mxt.anitrend.util.ScrollAwareFab"
         app:rippleColor="@color/colorAccent_Ripple"
         app:srcCompat="@drawable/ic_games_white_24dp" />
 

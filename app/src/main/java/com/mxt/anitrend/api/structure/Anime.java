@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mxt.anitrend.api.model.StaffSmall;
-import com.mxt.anitrend.utils.DateTimeConverter;
+import com.mxt.anitrend.util.DateTimeConverter;
 
 import java.util.List;
 

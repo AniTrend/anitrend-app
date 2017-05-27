@@ -2,7 +2,6 @@ package com.mxt.anitrend.presenter.index;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,9 +16,9 @@ import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.event.ApplicationInitListener;
 import com.mxt.anitrend.presenter.CommonPresenter;
-import com.mxt.anitrend.utils.AppVersionTracking;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.AppVersionTracking;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.ErrorHandler;
 
 import org.greenrobot.eventbus.EventBus;
 

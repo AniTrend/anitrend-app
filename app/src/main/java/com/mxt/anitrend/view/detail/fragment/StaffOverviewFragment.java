@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Staff;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.viewmodel.fragment.DefaultFragment;
 

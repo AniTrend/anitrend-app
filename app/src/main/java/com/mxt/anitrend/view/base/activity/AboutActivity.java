@@ -16,7 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.LibrariesAdapter;
 import com.mxt.anitrend.api.structure.LibraryRep;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
 import java.io.BufferedReader;

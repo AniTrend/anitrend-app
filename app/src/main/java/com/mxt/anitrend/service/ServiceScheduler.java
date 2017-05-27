@@ -11,8 +11,8 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DefaultPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
 
 /**
  * Created by Maxwell on 12/4/2016.

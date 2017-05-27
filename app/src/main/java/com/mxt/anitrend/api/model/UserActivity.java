@@ -5,8 +5,8 @@ import android.os.Parcelable;
 import android.text.Spanned;
 
 import com.mxt.anitrend.api.structure.UserActivityReply;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.MarkDown;
 
 import java.util.List;
 

@@ -32,8 +32,8 @@ import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.event.MultiInteractionListener;
 import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -234,6 +234,10 @@ public class PublicStatusFragment extends Fragment implements Callback<List<User
     @Override
     public void onItemClick(final int index, int viewId) {
         Intent intent;
+        if(mData == null) {
+            Toast.makeText(getContext(), "Null exception! Please refresh", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final UserActivity mItem = mData.get(index);
         switch (viewId) {
             case R.id.status_avatar:

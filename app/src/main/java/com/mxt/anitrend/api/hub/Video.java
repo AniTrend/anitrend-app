@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Spanned;
 
-import com.mxt.anitrend.utils.HubUtil;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.HubUtil;
+import com.mxt.anitrend.util.MarkDown;
 
 import java.util.List;
 

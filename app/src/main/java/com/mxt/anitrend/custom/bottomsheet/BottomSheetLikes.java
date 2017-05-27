@@ -19,7 +19,7 @@ import com.mxt.anitrend.adapter.recycler.user.UserListAdapter;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.SheetStateChangeListener;
-import com.mxt.anitrend.utils.ScreenUtil;
+import com.mxt.anitrend.util.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;

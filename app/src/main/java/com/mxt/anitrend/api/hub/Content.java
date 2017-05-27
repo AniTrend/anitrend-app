@@ -3,7 +3,7 @@ package com.mxt.anitrend.api.hub;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.utils.HubUtil;
+import com.mxt.anitrend.util.HubUtil;
 
 /**
  * Created by max on 2017/05/14.

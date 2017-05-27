@@ -70,12 +70,12 @@ import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.event.ApplicationInitListener;
 import com.mxt.anitrend.presenter.index.MainPresenter;
 import com.mxt.anitrend.service.ServiceScheduler;
-import com.mxt.anitrend.utils.AppVersionTracking;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.ImeAction;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.AppVersionTracking;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.ImeAction;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.AboutActivity;
 import com.mxt.anitrend.view.base.activity.SearchResultActivity;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
@@ -351,7 +351,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                                                     break;
                                                 case NEGATIVE:
                                                     dialog.dismiss();
-                                                    Toast.makeText(MainActivity.this, "Aborting action!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
                                                     break;
                                             }
                                         }

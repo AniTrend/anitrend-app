@@ -23,7 +23,9 @@
 
         Special Cases:
 
-        1. There are some cases I used <![CDATA[ some text here ]]> don't worry about that, it's just a way that helps me to write long text in a nicer fashion, just replace the text inside
+        1. There are some cases I used <![CDATA[ some text here ]]>  CDATA sections are used to escape blocks of text containing characters that would otherwise be regarded as markup.
+        The only delimiter that is recognized in a CDATA section is the "]]>" string that ends the CDATA section. CDATA sections cannot be nested.
+        Their primary purpose is for including material such as XML fragments, without needing to escape all the delimiters.
 
         Uploading your files:
 

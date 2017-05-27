@@ -18,14 +18,12 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.johnpersano.supertoasts.library.Style;
-import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.MyAnimePageAdapter;
 import com.mxt.anitrend.adapter.pager.index.MyMangaPageAdapter;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
-import com.mxt.anitrend.utils.DialogManager;
+import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
 import java.util.Arrays;

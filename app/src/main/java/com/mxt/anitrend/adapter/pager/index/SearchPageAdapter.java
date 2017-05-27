@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.view.base.fragment.AnimeSearchFragment;
 import com.mxt.anitrend.view.base.fragment.MangaSearchFragment;
 import com.mxt.anitrend.view.base.fragment.StudioSearchFragment;

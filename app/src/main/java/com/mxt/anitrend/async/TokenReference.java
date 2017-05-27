@@ -8,7 +8,7 @@ import com.mxt.anitrend.api.core.Cache;
 import com.mxt.anitrend.api.core.Token;
 import com.mxt.anitrend.api.service.AuthService;
 import com.mxt.anitrend.custom.RequestRunner;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;

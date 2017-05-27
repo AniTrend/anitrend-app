@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.mxt.anitrend.utils.ScreenUtil;
+import com.mxt.anitrend.util.ScreenUtil;
 
 /**
  * Created by jameson on 8/30/16.

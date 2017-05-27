@@ -20,9 +20,9 @@ import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.event.ReviewClickListener;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.ArrayList;

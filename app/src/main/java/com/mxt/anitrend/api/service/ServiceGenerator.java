@@ -74,6 +74,7 @@ public class ServiceGenerator {
             BuildConfig.RESPONSE_TYPE);
 
     private static Retrofit ani_ret;
+    private static Token mToken;
 
     /**
      * Method returns a Call<S> to perform retrofit operations on
@@ -86,28 +87,19 @@ public class ServiceGenerator {
      */
     public static <S> S createService(@NonNull Class<S> serviceClass, Context mContext) {
         try {
-            Token mToken = TokenReference.getInstance();
-            if (mToken == null) {
+            if ((mToken = TokenReference.getInstance()) == null || mToken.getExpires() < (System.currentTimeMillis()/1000L)) {
                 mToken = new TokenReference(mContext).reInitInstance();
+                httpClient.interceptors().clear();
+                httpClient.addInterceptor(new AuthInterceptor(mToken));
             }
-            long currentTime = System.currentTimeMillis() / 1000;
-            long expires = mToken.getExpires();
+            if(httpClient.interceptors().size() < 1)
+                httpClient.addInterceptor(new AuthInterceptor(mToken));
 
-            if (currentTime > expires)
-                mToken = new TokenReference(mContext).reInitInstance();
-            else
-                if (expires > currentTime && ani_ret != null)
-                    return ani_ret.create(serviceClass);
-
-            httpClient.interceptors().clear();
-            httpClient.addInterceptor(new AuthInterceptor(mToken));
-            ani_ret = builder.client(httpClient.build()).build();
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
-        if(ani_ret == null)
-            ani_ret = builder.client(httpClient.build()).build();
+        ani_ret = builder.client(httpClient.build()).build();
         return ani_ret.create(serviceClass);
     }
 

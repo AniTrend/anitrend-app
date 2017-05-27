@@ -25,8 +25,8 @@ import com.mxt.anitrend.custom.RecyclerViewHolder;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
 import com.mxt.anitrend.event.MultiInteractionListener;
-import com.mxt.anitrend.utils.ApiPreferences;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApiPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.util.List;
 import java.util.Locale;

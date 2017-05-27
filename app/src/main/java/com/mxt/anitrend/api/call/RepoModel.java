@@ -1,6 +1,6 @@
 package com.mxt.anitrend.api.call;
 
-import com.mxt.anitrend.utils.AppVersionTracking;
+import com.mxt.anitrend.util.AppVersionTracking;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

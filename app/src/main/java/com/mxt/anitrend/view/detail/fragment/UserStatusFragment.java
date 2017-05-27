@@ -31,8 +31,8 @@ import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.MultiInteractionListener;
 import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -213,14 +213,14 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                 progressLayout.showContent();
                 addScrollLoadTrigger();
             } else
-                progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), "No results found", skipIds);
+                progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.layout_empty_response), skipIds);
         }
     }
 
     @Override
     public void onFailure(Call<List<UserActivity>> call, Throwable t) {
         if(isVisible() && !isRemoving() || !isDetached())
-            progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), "Try Again", new View.OnClickListener() {
+            progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.try_again), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     progressLayout.showLoading();

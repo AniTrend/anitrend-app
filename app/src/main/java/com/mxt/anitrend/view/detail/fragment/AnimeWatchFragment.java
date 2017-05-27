@@ -29,9 +29,9 @@ import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.InteractionListener;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.EpisodesHelper;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.EpisodesHelper;
+import com.mxt.anitrend.util.MarkDown;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.ArrayList;

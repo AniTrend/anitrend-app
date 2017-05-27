@@ -19,7 +19,7 @@ import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.NotificationClickListener;
 import com.mxt.anitrend.presenter.index.NotificationPresenter;
-import com.mxt.anitrend.utils.DialogManager;
+import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;

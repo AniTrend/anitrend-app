@@ -17,7 +17,7 @@ import com.mxt.anitrend.api.structure.UserNotification;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.RecyclerViewHolder;
 import com.mxt.anitrend.event.NotificationClickListener;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 
 import java.util.List;

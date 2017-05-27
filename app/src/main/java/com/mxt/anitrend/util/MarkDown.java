@@ -1,16 +1,12 @@
-package com.mxt.anitrend.utils;
+package com.mxt.anitrend.util;
 
-import android.content.Context;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
 import com.github.rjeschke.txtmark.Processor;
-
-import org.xml.sax.XMLReader;
 
 /**
  * Created by max on 2017/03/26.
@@ -31,7 +27,7 @@ public final class MarkDown {
     public static Spanned convert(String input) {
         SpannableStringBuilder spanned = fromMD(PatternMatcher.findUserTags(input));
 
-        if(!input.isEmpty())
+        if(input != null && !input.isEmpty())
             while (spanned.charAt(spanned.length() - 1) == '\n')
                 spanned = spanned.delete(spanned.length() - 1, spanned.length());
 

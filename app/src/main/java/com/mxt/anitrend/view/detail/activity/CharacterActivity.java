@@ -30,9 +30,9 @@ import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 

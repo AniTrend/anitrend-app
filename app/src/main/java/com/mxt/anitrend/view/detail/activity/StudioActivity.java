@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.johnpersano.supertoasts.library.Style;
-import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
@@ -33,9 +31,9 @@ import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.FilterProvider;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 

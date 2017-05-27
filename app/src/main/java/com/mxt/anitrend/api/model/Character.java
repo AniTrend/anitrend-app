@@ -6,7 +6,7 @@ import android.text.Spanned;
 
 import com.mxt.anitrend.api.structure.Anime;
 import com.mxt.anitrend.api.structure.Manga;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.MarkDown;
 
 import java.util.List;
 

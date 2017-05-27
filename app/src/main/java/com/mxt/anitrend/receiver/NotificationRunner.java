@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.mxt.anitrend.service.ServiceScheduler;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DefaultPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
 
 /**
  * Created by max on 2017/03/03.

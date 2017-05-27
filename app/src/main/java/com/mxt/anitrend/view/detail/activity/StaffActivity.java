@@ -23,7 +23,7 @@ import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 

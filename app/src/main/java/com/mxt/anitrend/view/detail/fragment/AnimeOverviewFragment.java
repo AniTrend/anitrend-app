@@ -25,8 +25,8 @@ import com.mxt.anitrend.api.model.StudioSmall;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.Tag;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.detail.activity.StudioActivity;
 
@@ -185,7 +185,7 @@ public class AnimeOverviewFragment extends Fragment implements View.OnClickListe
                         public boolean test(StudioSmall value) {
                             return value.getMain_studio() == 1;
                         }
-                    }).findSingle();
+                    }).findFirst();
             if(result.isPresent())
                 studio = result.get();
             if(studio != null) {

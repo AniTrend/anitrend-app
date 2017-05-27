@@ -3,7 +3,7 @@ package com.mxt.anitrend.api.structure;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.utils.ComparatorProvider;
+import com.mxt.anitrend.util.ComparatorProvider;
 
 import java.util.Collections;
 import java.util.HashMap;
