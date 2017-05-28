@@ -1,5 +1,7 @@
 package com.mxt.anitrend.api.service;
 
+import android.util.Log;
+
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.api.core.Token;
 
@@ -24,12 +26,15 @@ class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
+        if(authToken != null) {
+            Request.Builder builder = original.newBuilder()
+                    .header(BuildConfig.HEADER_KEY, authToken.getHeaderValuePresets());
 
-        Request.Builder builder = original.newBuilder()
-                .header(BuildConfig.HEADER_KEY, authToken.getHeaderValuePresets());
-
-        Request request = builder.build();
-        return chain.proceed(request);
+            Request request = builder.build();
+            return chain.proceed(request);
+        }
+        Log.w("AuthInterceptor", "auth token is null");
+        return chain.proceed(original);
     }
 
     @Override
