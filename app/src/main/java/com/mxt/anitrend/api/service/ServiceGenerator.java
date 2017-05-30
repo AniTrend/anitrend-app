@@ -87,13 +87,10 @@ public class ServiceGenerator {
      */
     public static <S> S createService(@NonNull Class<S> serviceClass, Context mContext) {
         try {
-            if ((mToken = TokenReference.getInstance()) == null || mToken.getExpires() < (System.currentTimeMillis()/1000L)) {
+            if ((mToken = TokenReference.getInstance()) == null || mToken.getExpires() < (System.currentTimeMillis()/1000L))
                 mToken = new TokenReference(mContext).reInitInstance();
-                httpClient.interceptors().clear();
-                httpClient.addInterceptor(new AuthInterceptor(mToken));
-            }
             if(httpClient.interceptors().size() < 1)
-                httpClient.addInterceptor(new AuthInterceptor(mToken));
+                httpClient.addInterceptor(new AuthInterceptor());
 
         } catch (Exception e) {
             FirebaseCrash.report(e);

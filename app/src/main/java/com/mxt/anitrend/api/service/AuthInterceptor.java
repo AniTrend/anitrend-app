@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.api.core.Token;
+import com.mxt.anitrend.async.TokenReference;
 
 import java.io.IOException;
 
@@ -17,28 +18,22 @@ import okhttp3.Response;
 
 class AuthInterceptor implements Interceptor {
 
-    private Token authToken;
-
-    AuthInterceptor(Token token) {
-        this.authToken = token;
+    AuthInterceptor() {
+        //empty constructor
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
-        if(authToken != null) {
+        final Token temp = TokenReference.getInstance();
+        if(temp != null) {
             Request.Builder builder = original.newBuilder()
-                    .header(BuildConfig.HEADER_KEY, authToken.getHeaderValuePresets());
+                    .header(BuildConfig.HEADER_KEY, temp.getHeaderValuePresets());
 
             Request request = builder.build();
             return chain.proceed(request);
         }
-        Log.w("AuthInterceptor", "auth token is null");
+        Log.e("AuthInterceptor", "Authentication reference is null, this should not happen under normal conditions");
         return chain.proceed(original);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof AuthInterceptor && ((AuthInterceptor) obj).authToken.getAccess_token().equals(this.authToken.getAccess_token());
     }
 }
