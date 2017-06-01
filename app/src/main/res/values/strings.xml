@@ -654,7 +654,7 @@
 
     <string name="text_login_error">AniTrend has failed to retrieve your login details!</string>
 
-    <string name="link_anitrend_forum">https://anilist.co/forum/thread/2081</string>
+    <string translatable="false" name="link_anitrend_forum">https://discord.gg/nqsFGgX</string>
 
     <string name="text_search_empty">Search content cannot be empty</string>
 
@@ -737,5 +737,4 @@
         All new strings will be appended after this line,
         so it's easier for everyone to update thier respective translation files :)
     -->
-
 </resources>

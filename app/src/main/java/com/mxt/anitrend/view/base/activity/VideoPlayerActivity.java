@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.mxt.anitrend.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class VideoPlayerActivity extends AppCompatActivity implements EasyVideoCallback {
 

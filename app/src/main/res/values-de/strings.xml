@@ -629,8 +629,6 @@
 
     <string name="text_login_error">AniTrend konnte deine Logindaten nicht abrufen!</string>
 
-    <string name="link_anitrend_forum">https://anilist.co/forum/thread/2081</string>
-
     <string name="text_search_empty">Die Suchanfrage darf nicht leer sein</string>
 
     <string name="text_user_model">Unerwartetes Format der Userdaten</string>

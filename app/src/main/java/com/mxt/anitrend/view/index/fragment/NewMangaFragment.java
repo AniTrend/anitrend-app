@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.index.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMangaAdapter;

@@ -1,5 +1,3 @@
-
-
 # __AniTrend v0.9.9r8__ [![Build Status](https://travis-ci.org/wax911/AniTrendApp.svg?branch=master)](https://travis-ci.org/wax911/AniTrendApp)
 
 <p align="center"><a href='https://play.google.com/store/apps/details?id=com.mxt.anitrend&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a></p>
@@ -20,3 +18,16 @@ ___
 - __~~Manga relations not displayed properly in v0.8.5~~__
 
 # __<p align="center"><a href="https://github.com/wax911/AniTrend">More Screenshots, Resources and Translation Files Click HERE</a></p>__
+
+___
+# __License__
+<p align="center">GNU LESSER GENERAL PUBLIC LICENSE</p>
+<p align="center">Version 3, 29 June 2007<p>
+
+ <p>Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.</p>
+
+ ___
+ # __Labraries Used__
+ [Labraries Used Here](https://github.com/wax911/AniTrendApp/blob/master/app/src/main/assets/libs/libraries.json)

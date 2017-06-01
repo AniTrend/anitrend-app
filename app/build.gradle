@@ -30,6 +30,9 @@ android {
             it.buildConfigField("String", "APP_REPO", APP_REPO)
             it.buildConfigField("String", "HUB_BASE_LINK", HUB_BASE_LINK)
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
     productFlavors {
     }

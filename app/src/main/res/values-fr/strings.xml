@@ -632,8 +632,6 @@
 
     <string name="text_login_error">AniTrend a échoué à récupérer vos données !</string>
 
-    <string name="link_anitrend_forum">https://anilist.co/forum/thread/2081</string>
-
     <string name="text_search_empty">Le contenu de la recherche ne peut-être vide !</string>
 
     <string name="text_user_model">Échec dans la récupération des données de l\'Utilisateur !</string>

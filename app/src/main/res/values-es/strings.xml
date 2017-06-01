@@ -628,8 +628,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="text_login_error">¡AniTrend no ha podido comprobar sus datos en el inicio de sesión!</string>
 
-    <string name="link_anitrend_forum">https://anilist.co/forum/thread/2081</string>
-
     <string name="text_search_empty">Por Favor inserte una búsqueda</string>
 
     <string name="text_user_model">¡Error de usuario!</string>

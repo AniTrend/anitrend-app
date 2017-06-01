@@ -628,8 +628,6 @@
 
     <string name="text_login_error">Anitrend non è riuscita a completare il login!</string>
 
-    <string name="link_anitrend_forum">https://anilist.co/forum/thread/2081</string>
-
     <string name="text_search_empty">La barra di ricerca non può essere vuota</string>
 
     <string name="text_user_model">Modello utente errato!</string>
