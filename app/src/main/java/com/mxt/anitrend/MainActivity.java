@@ -261,16 +261,18 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
             case R.id.nav_myanime:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_myanime));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.myanime_title));
-                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId());
+                String[] nav_myanime = getResources().getStringArray(R.array.myanime_title);
+                mNavigationTabStrip.setTitles(nav_myanime);
+                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_myanime);
                 mViewPager.setAdapter(myAnimePageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_mymanga:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_mymanga));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.mymanga_title));
-                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId());
+                String[] nav_mymanga = getResources().getStringArray(R.array.mymanga_title);
+                mNavigationTabStrip.setTitles(nav_mymanga);
+                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_mymanga);
                 mViewPager.setAdapter(myMangaPageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;

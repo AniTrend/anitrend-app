@@ -16,7 +16,7 @@ import okhttp3.Response;
  * Created by max on 2017/05/09.
  */
 
-class AuthInterceptor implements Interceptor {
+final class AuthInterceptor implements Interceptor {
 
     AuthInterceptor() {
         //empty constructor

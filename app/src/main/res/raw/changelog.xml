@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="0.9.9r8" changeDate="Pre-Beta">
+        <changelogtext>[b]Feature[/b] Multi-language support for Arabic, Dutch, Spanish, French &amp; Italian</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] Authentication issues have been fixed</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="0.9.9r7.5" changeDate="Beta">
         <changelogtext>[b]Bug Fix[/b] Reverted plugin version from updated versions should resolve most crashes</changelogtext>
         <changelogtext>[b]Bug Fix[/b] Authentication problems fixed? Please let me know</changelogtext>

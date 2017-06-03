@@ -86,7 +86,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @Override
     protected void updateUI() {
         setFavIcon();
-        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff);
+        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff, getResources().getStringArray(R.array.staff_page_titles));
         mViewPager.setAdapter(mStaffViewAdapter);
         tabLayout.setupWithViewPager(mViewPager);
         progressLayout.showContent();

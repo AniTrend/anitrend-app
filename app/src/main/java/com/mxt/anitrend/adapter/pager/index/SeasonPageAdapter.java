@@ -45,31 +45,4 @@ public class SeasonPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return pages;
     }
-
-    /**
-     * This method may be called by the ViewPager to obtain a title string
-     * to describe the specified page. This method may return null
-     * indicating no title for this page. The default implementation returns
-     * null.
-     *
-     * @param position The position of the title requested
-     *
-     * @return A title for the requested page
-     */
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        switch (position)
-        {
-            case 0:
-                return "winter".toUpperCase(locale);
-            case 1:
-                return "spring".toUpperCase(locale);
-            case 2:
-                return "summer".toUpperCase(locale);
-            case 3:
-                return "fall".toUpperCase(locale);
-        }
-        return null;
-    }
 }

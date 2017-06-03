@@ -110,7 +110,6 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
 
         if(mCurrentUser != null) {
             mPresenter = new UserProfilePresenter(ProfileActivity.this, mCurrentUser.getId());
-            mActionBar.setTitle(mCurrentUser.getDisplay_name());
             user_anime_time.setText(mCurrentUser.getAnime_time());
             user_manga_chap.setText(mCurrentUser.getManga_chap());
             user_anime_total.setText("0");
@@ -144,7 +143,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
 
-        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser);
+        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
         mViewPager.setAdapter(mOverViewAdapter);
         tabLayout.setupWithViewPager(mViewPager);
     }

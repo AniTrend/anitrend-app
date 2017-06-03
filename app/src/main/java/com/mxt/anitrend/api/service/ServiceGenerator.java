@@ -96,7 +96,8 @@ public class ServiceGenerator {
             FirebaseCrash.report(e);
             e.printStackTrace();
         }
-        ani_ret = builder.client(httpClient.build()).build();
+        if(ani_ret == null)
+            ani_ret = builder.client(httpClient.build()).build();
         return ani_ret.create(serviceClass);
     }
 

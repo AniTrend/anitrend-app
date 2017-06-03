@@ -20,12 +20,15 @@ import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.event.NotificationClickListener;
 import com.mxt.anitrend.presenter.index.NotificationPresenter;
 import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.NotificationDispatcher;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -89,6 +92,11 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
         RecyclerViewAdapter mAdapter = new UserNotificationAdapter(mListNotifications, getApplicationContext(), mPresenter.getAppPrefs(),this);
         recyclerView.setAdapter(mAdapter);
         progressLayout.showContent();
+        /*
+        Testing notifications
+        ArrayList<UserNotification> range_filter = new ArrayList<>(mListNotifications.subList(0, 3));
+        NotificationDispatcher.createNotification(getApplicationContext(), range_filter);
+        */
     }
 
     /**
@@ -103,25 +111,17 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
     @Override
     public void onResponse(Call<List<UserNotification>> call, Response<List<UserNotification>> response) {
         if(!isDestroyed() || !isFinishing()) {
-            if(response.body() != null) {
+            if(response.isSuccessful() && response.body() != null) {
                 mListNotifications = response.body();
                 updateUI();
-            } else {
-                if(response.errorBody() != null) {
-                    try {
-                        progressLayout.showError(ContextCompat.getDrawable(getApplicationContext(), R.drawable.request_error), response.errorBody().string(), "Try Again", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mPresenter.beginAsync(NotificationActivity.this);
-                            }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            } else
+                progressLayout.showError(ContextCompat.getDrawable(getApplicationContext(), R.drawable.request_error),
+                        ErrorHandler.getError(response).toString(), getString(R.string.try_again), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPresenter.beginAsync(NotificationActivity.this);
                     }
-                } else {
-                    progressLayout.showEmpty(ContextCompat.getDrawable(getApplicationContext(), R.drawable.request_error), "No Data Found");
-                }
-            }
+                });
         }
     }
 
@@ -135,7 +135,7 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
     @Override
     public void onFailure(Call<List<UserNotification>> call, Throwable t) {
         if(!isDestroyed() || !isFinishing()) {
-            progressLayout.showError(ContextCompat.getDrawable(getApplicationContext(), R.drawable.request_error), t.getLocalizedMessage(), "Try Again", new View.OnClickListener() {
+            progressLayout.showError(ContextCompat.getDrawable(getApplicationContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.try_again), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(mPresenter != null) {
@@ -175,8 +175,7 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
     public void onNotificationClick(int index) {
         UserNotification notification = mListNotifications.get(index);
         Intent starter;
-
-        switch (notification.getObject_type()){
+        switch (notification.getObject_type()) {
             case NotificationClickListener.TYPE_AIRING:
                 starter = new Intent(getApplicationContext(), AnimeActivity.class);
                 starter.putExtra(AnimeActivity.MODEL_BANNER_KEY, notification.getSeries().getImage_url_banner());

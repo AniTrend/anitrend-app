@@ -57,7 +57,7 @@ public final class NotificationDispatcher {
 
             String url_load;
 
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.remote_notification);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.remote_notification_v2);
             NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_new_releases_white_24dp)
                     .setSound(Uri.parse(getNotificationSound(context)))
@@ -66,7 +66,7 @@ public final class NotificationDispatcher {
                     .setPriority(Notification.PRIORITY_DEFAULT);
 
             remoteViews.setImageViewResource(R.id.notification_img, R.drawable.ic_launcher);
-            remoteViews.setCharSequence(R.id.notification_time, "setText", String.format(Locale.getDefault(), "%s ", DateTimeConverter.getCurrentTime()));
+            //remoteViews.setCharSequence(R.id.notification_time, "setText", String.format(Locale.getDefault(), "%s ", DateTimeConverter.getCurrentTime()));
             if(model.getObject_type() != NotificationClickListener.TYPE_AIRING) {
                 url_load = model.getUser().getImage_url_lge();
                 switch (model.getObject_type()){

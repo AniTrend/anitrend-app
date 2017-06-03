@@ -520,7 +520,7 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
             }
         }, FilterTypes.ActionType.ACTION_FOLLOW_TOGGLE, payload);
         action.execute();
-        mPresenter.createSuperToast(getActivity(),"Sending request..", R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
+        mPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
     }
 
     @Override

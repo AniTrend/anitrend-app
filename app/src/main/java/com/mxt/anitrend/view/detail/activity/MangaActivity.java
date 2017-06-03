@@ -178,7 +178,7 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
     }
 
     public void setAdapters() {
-        viewPager.setAdapter(new MangaPageAdapter(getSupportFragmentManager(), mSeries));
+        viewPager.setAdapter(new MangaPageAdapter(getSupportFragmentManager(), mSeries, getResources().getStringArray(R.array.manga_page_titles)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setupWithViewPager(viewPager);

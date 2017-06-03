@@ -6,6 +6,5 @@
         android:id="@+id/action_favor_state"
         android:visible="false"
         android:icon="@drawable/ic_favorite_white_24dp"
-        app:showAsAction="always"
-        android:title="Tap For More Info"/>
+        app:showAsAction="always"/>
 </menu>

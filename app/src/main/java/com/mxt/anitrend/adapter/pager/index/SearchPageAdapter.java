@@ -48,21 +48,4 @@ public class SearchPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return mPrefs.isAuthenticated()?pages:pages-1;
     }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        switch (position)
-        {
-            case 0:
-                return "Anime".toUpperCase(locale);
-            case 1:
-                return "Manga".toUpperCase(locale);
-            case 2:
-                return "Studio".toUpperCase(locale);
-            case 3:
-                return "Users".toUpperCase(locale);
-        }
-        return null;
-    }
 }

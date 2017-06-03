@@ -178,7 +178,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
     }
 
     public void setAdapters(){
-        viewPager.setAdapter(new AnimePageAdapter(getSupportFragmentManager(), mSeries));
+        viewPager.setAdapter(new AnimePageAdapter(getSupportFragmentManager(), mSeries, getResources().getStringArray(R.array.anime_page_titles)));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
     }

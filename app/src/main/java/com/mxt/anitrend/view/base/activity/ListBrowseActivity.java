@@ -102,10 +102,10 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     protected void updateUI() {
         if (mContentType == SeriesType.ANIME.ordinal()) {
             mActionBar.setTitle(R.string.title_anime_list);
-            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId));
+            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.anime_listing_status)));
         } else {
             mActionBar.setTitle(R.string.title_manga_list);
-            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId));
+            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.manga_listing_status)));
         }
         mViewPager.setOffscreenPageLimit(3);
         mNavigationTab.setupWithViewPager(mViewPager);

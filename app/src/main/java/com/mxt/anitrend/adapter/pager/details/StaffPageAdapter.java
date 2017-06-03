@@ -17,24 +17,26 @@ import java.util.Locale;
  */
 public class StaffPageAdapter extends FragmentStatePagerAdapter {
 
-    private Staff mStaff;
+    private Staff model;
+    private final String[] mTitles;
 
-    public StaffPageAdapter(FragmentManager fm, Staff mStaff) {
-        super(fm);
-        this.mStaff = mStaff;
+    public StaffPageAdapter(FragmentManager manager, Staff model, String[] titles) {
+        super(manager);
+        this.model = model;
+        mTitles = titles;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return StaffOverviewFragment.newInstance(mStaff);
+                return StaffOverviewFragment.newInstance(model);
             case 1:
-                return StaffAnimeFragment.newInstance(mStaff);
+                return StaffAnimeFragment.newInstance(model);
             case 2:
-                return StaffMangaFragment.newInstance(mStaff);
+                return StaffMangaFragment.newInstance(model);
             case 3:
-                return StaffOverviewFragment.newInstance(mStaff);
+                return StaffOverviewFragment.newInstance(model);
         }
         return null;
     }
@@ -49,16 +51,6 @@ public class StaffPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "overview".toUpperCase(locale);
-            case 1:
-                return "anime roles".toUpperCase(locale);
-            case 2:
-                return "manga roles".toUpperCase(locale);
-            case 3:
-                return "staff roles".toUpperCase(locale);
-        }
-        return null;
+        return mTitles[position].toUpperCase(locale);
     }
 }
