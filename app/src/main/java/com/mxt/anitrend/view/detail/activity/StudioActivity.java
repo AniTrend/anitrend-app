@@ -151,7 +151,7 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
                 finish();
                 break;
             case R.id.action_filter:
-                new DialogManager(this).createDialogSelection("Sort By?", R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);

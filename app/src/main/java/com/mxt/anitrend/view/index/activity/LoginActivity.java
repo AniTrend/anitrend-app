@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
                                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://anilist.co/settings/list")));
                                             break;
                                         case NEGATIVE:
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://anilist.co/forum/thread/2081")));
+                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/nqsFGgX")));
                                             break;
                                     }
                                 }

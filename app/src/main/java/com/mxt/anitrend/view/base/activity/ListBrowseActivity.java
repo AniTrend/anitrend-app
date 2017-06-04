@@ -137,7 +137,7 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter:
-                new DialogManager(this).createDialogSelection("Sort By?", R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);
