@@ -27,9 +27,15 @@ public final class MarkDown {
     public static Spanned convert(String input) {
         SpannableStringBuilder spanned = fromMD(PatternMatcher.findUserTags(input));
 
-        if(input != null && !input.isEmpty())
-            while (spanned.charAt(spanned.length() - 1) == '\n')
-                spanned = spanned.delete(spanned.length() - 1, spanned.length());
+        try {
+            if(input != null && !input.isEmpty()) {
+                while (spanned.charAt(spanned.length() - 1) == '\n') {
+                    spanned = spanned.delete(spanned.length() - 1, spanned.length());
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         return spanned;
     }
