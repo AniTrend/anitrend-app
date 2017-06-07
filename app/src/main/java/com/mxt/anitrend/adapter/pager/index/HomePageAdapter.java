@@ -49,19 +49,4 @@ public class HomePageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return pages;
     }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        switch (position)
-        {
-            case 0:
-                return "progress".toUpperCase(locale);
-            case 1:
-                return "status".toUpperCase(locale);
-            case 3:
-                return "public status".toUpperCase(locale);
-        }
-        return null;
-    }
 }

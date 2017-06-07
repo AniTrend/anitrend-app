@@ -17,9 +17,9 @@ import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.custom.ScrollListener;
-import com.mxt.anitrend.utils.ApiPreferences;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DefaultPreferences;
+import com.mxt.anitrend.util.ApiPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.Arrays;

@@ -3,7 +3,6 @@ package com.mxt.anitrend.service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.PowerManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 

@@ -24,8 +24,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.RecyclerViewHolder;
 import com.mxt.anitrend.custom.cardgallary.CardAdapterHelper;
-import com.mxt.anitrend.utils.PatternMatcher;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.PatternMatcher;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 
 import java.util.List;

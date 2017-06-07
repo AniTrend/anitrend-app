@@ -1,4 +1,4 @@
-package com.mxt.anitrend.utils;
+package com.mxt.anitrend.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -23,7 +23,7 @@ import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -86,7 +86,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @Override
     protected void updateUI() {
         setFavIcon();
-        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff);
+        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff, getResources().getStringArray(R.array.staff_page_titles));
         mViewPager.setAdapter(mStaffViewAdapter);
         tabLayout.setupWithViewPager(mViewPager);
         progressLayout.showContent();
@@ -106,10 +106,8 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                         .setFocalColourFromRes(R.color.colorAccent)
                         .setBackgroundColourFromRes(R.color.colorDarkKnight)
                         .setTarget(toolbar.getChildAt(toolbar.getChildCount() - 1))
-                        .setPrimaryText("Favourite")
-                        .setSecondaryText("Toggle the favourite state of this person!\n" +
-                                "\n" +
-                                "Tap Here To Dismiss")
+                        .setPrimaryText(R.string.tip_character_options_title)
+                        .setSecondaryText(R.string.tip_character_options_message)
                         .setOnHidePromptListener(new MaterialTapTargetPrompt.OnHidePromptListener() {
                             @Override
                             public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
@@ -142,7 +140,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                 break;
             case R.id.action_favor_state:
                 if(!prefs.isAuthenticated()) {
-                    Snackbar.make(coordinatorLayout, "Please sign into the application.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, R.string.text_please_sign_in, Snackbar.LENGTH_LONG).show();
                     return super.onOptionsItemSelected(item);
                 }
 
@@ -152,7 +150,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(!isDestroyed() || !isFinishing()) {
                             if (response.isSuccessful() && response.body() != null) {
-                                Snackbar.make(coordinatorLayout, mStaff.isFavourite() ? "Removed from favourites.." : "Added to favourites..", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(coordinatorLayout, mStaff.isFavourite() ? R.string.text_removed_from_favourites : R.string.text_add_to_favourites, Snackbar.LENGTH_SHORT).show();
                                 mStaff.setFavourite(!mStaff.isFavourite());
                                 setFavIcon();
                             }
@@ -194,7 +192,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @Override
     public void onFailure(Call<Staff> call, Throwable t) {
         if(!isDestroyed() || !isFinishing()) {
-            progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), t.getLocalizedMessage(), "Retry", new View.OnClickListener() {
+            progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.try_again), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                 new AsyncTaskFetch<>(StaffActivity.this, getApplicationContext(), mStaffSmall.getId()).execute(AsyncTaskFetch.RequestType.STAFF_INFO_REQ);

@@ -1,7 +1,6 @@
 package com.mxt.anitrend;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,10 +12,10 @@ import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.async.TokenReference;
 import com.mxt.anitrend.presenter.index.SplashPresenter;
 import com.mxt.anitrend.service.ServiceScheduler;
-import com.mxt.anitrend.utils.ApiPreferences;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DefaultPreferences;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.ApiPreferences;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
+import com.mxt.anitrend.util.ErrorHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

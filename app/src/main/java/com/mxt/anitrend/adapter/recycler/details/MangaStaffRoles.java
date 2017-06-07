@@ -16,7 +16,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.RecyclerViewHolder;
-import com.mxt.anitrend.utils.ApiPreferences;
+import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
 
 import java.util.List;

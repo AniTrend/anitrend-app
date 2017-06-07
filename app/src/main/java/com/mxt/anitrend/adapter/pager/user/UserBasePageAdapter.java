@@ -15,10 +15,12 @@ import java.util.Locale;
 public class UserBasePageAdapter extends FragmentStatePagerAdapter {
 
     private User user;
+    private final String[] mTitles;
 
-    public UserBasePageAdapter(FragmentManager fm, User model) {
+    public UserBasePageAdapter(FragmentManager fm, User model, String[] titles) {
         super(fm);
         this.user = model;
+        mTitles = titles;
     }
 
     @Override
@@ -42,14 +44,6 @@ public class UserBasePageAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "overview".toUpperCase(locale);
-            case 1:
-                return "progress".toUpperCase(locale);
-            case 2:
-                return "status".toUpperCase(locale);
-        }
-        return null;
+        return mTitles[position].toUpperCase(locale);
     }
 }

@@ -16,12 +16,13 @@ import java.util.Locale;
 
 public class FavouritesPageAdapter extends FragmentStatePagerAdapter {
 
-    private static final int pages = 5;
     private Favourite model;
+    private String[] mTitles;
 
-    public FavouritesPageAdapter(FragmentManager manager, Favourite model) {
+    public FavouritesPageAdapter(FragmentManager manager, Favourite model, String[] titles) {
         super(manager);
         this.model = model;
+        mTitles = titles;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class FavouritesPageAdapter extends FragmentStatePagerAdapter {
      */
     @Override
     public int getCount() {
-        return pages;
+        return 5;
     }
 
     /**
@@ -72,18 +73,6 @@ public class FavouritesPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "anime".toUpperCase(locale);
-            case 1:
-                return "characters".toUpperCase(locale);
-            case 2:
-                return "manga".toUpperCase(locale);
-            case 3:
-                return "staff".toUpperCase(locale);
-            case 4:
-                return "studios".toUpperCase(locale);
-        }
-        return null;
+        return mTitles[position].toUpperCase(locale);
     }
 }

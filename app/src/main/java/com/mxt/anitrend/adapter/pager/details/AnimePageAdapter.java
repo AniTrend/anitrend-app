@@ -20,12 +20,13 @@ import java.util.Locale;
 
 public class AnimePageAdapter extends FragmentPagerAdapter {
 
-    private static final int pages = 5;
     private Series model;
+    private String[] mTitles;
 
-    public AnimePageAdapter(FragmentManager manager, Series model) {
+    public AnimePageAdapter(FragmentManager manager, Series model, String[] titles) {
         super(manager);
         this.model = model;
+        mTitles = titles;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class AnimePageAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return pages;
+        return 5;
     }
 
     /**
@@ -76,18 +77,6 @@ public class AnimePageAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "info".toUpperCase(locale);
-            case 1:
-                return "links".toUpperCase(locale);
-            case 2:
-                return "episodes".toUpperCase(locale);
-            case 3:
-                return "extras".toUpperCase(locale);
-            case 4:
-                return "reviews".toUpperCase(locale);
-        }
-        return null;
+        return mTitles[position].toUpperCase(locale);
     }
 }

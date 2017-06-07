@@ -20,7 +20,7 @@ import com.mxt.anitrend.api.call.RepoModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.event.SheetStateChangeListener;
 import com.mxt.anitrend.service.ServiceScheduler;
-import com.mxt.anitrend.utils.Downloader;
+import com.mxt.anitrend.util.Downloader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

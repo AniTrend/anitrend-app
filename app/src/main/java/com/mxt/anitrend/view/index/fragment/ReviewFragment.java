@@ -81,7 +81,7 @@ public class ReviewFragment extends DefaultReviewFragment<ReviewType> {
 
     @Override
     public void updateUI() {
-        if(recyclerView != null) {
+        if(recyclerView != null && model != null) {
             if(swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(false);
             if(mAdapter == null) {
@@ -95,7 +95,8 @@ public class ReviewFragment extends DefaultReviewFragment<ReviewType> {
                 progressLayout.showContent();
             } else
                 showEmpty();
-        }
+        } else
+            showEmpty();
     }
 
     @Override

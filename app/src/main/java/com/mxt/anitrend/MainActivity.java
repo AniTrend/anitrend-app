@@ -24,6 +24,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -70,12 +71,12 @@ import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.event.ApplicationInitListener;
 import com.mxt.anitrend.presenter.index.MainPresenter;
 import com.mxt.anitrend.service.ServiceScheduler;
-import com.mxt.anitrend.utils.AppVersionTracking;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.ImeAction;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.AppVersionTracking;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.ImeAction;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.AboutActivity;
 import com.mxt.anitrend.view.base.activity.SearchResultActivity;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
@@ -260,16 +261,18 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
             case R.id.nav_myanime:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_myanime));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.myanime_title));
-                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId());
+                String[] nav_myanime = getResources().getStringArray(R.array.myanime_title);
+                mNavigationTabStrip.setTitles(nav_myanime);
+                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_myanime);
                 mViewPager.setAdapter(myAnimePageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_mymanga:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_mymanga));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.mymanga_title));
-                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId());
+                String[] nav_mymanga = getResources().getStringArray(R.array.mymanga_title);
+                mNavigationTabStrip.setTitles(nav_mymanga);
+                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_mymanga);
                 mViewPager.setAdapter(myMangaPageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -351,7 +354,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                                                     break;
                                                 case NEGATIVE:
                                                     dialog.dismiss();
-                                                    Toast.makeText(MainActivity.this, "Aborting action!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
                                                     break;
                                             }
                                         }

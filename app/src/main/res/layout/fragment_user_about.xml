@@ -127,7 +127,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Following"
+                                android:text="@string/following"
                                 android:layout_gravity="center"
                                 android:fontFamily="sans-serif-condensed"
                                 android:textSize="14sp"/>
@@ -137,7 +137,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="Loading"
+                                android:text="@string/Loading"
                                 android:textStyle="bold"
                                 android:fontFamily="sans-serif-condensed"
                                 android:textSize="14sp"/>
@@ -158,7 +158,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="Followers"
+                                android:text="@string/followers"
                                 android:fontFamily="sans-serif-condensed"
                                 android:textSize="14sp"
                                 android:id="@+id/textView"
@@ -170,7 +170,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:textStyle="bold"
-                                android:text="Loading"
+                                android:text="@string/Loading"
                                 android:fontFamily="sans-serif-condensed"
                                 android:textSize="14sp"/>
 
@@ -189,7 +189,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Favourites"
+                                android:text="@string/favourites"
                                 android:layout_gravity="center"
                                 android:fontFamily="sans-serif-condensed"
                                 android:textSize="14sp"/>
@@ -199,7 +199,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
-                                android:text="Loading"
+                                android:text="@string/Loading"
                                 android:layout_gravity="center"
                                 android:fontFamily="sans-serif-condensed"
                                 android:textSize="14sp"/>
@@ -220,7 +220,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:layout_gravity="center_horizontal"
                     android:textSize="24sp"
-                    android:text="Top Genres:"
+                    android:text="@string/text_top_genres"
                     />
 
                 <TextView
@@ -228,7 +228,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
                     android:layout_gravity="center_horizontal"
-                    android:text="Tap On Item Below To View Stats!"
+                    android:text="@string/text_tap_on_item_below_to_view_stats"
                     />
 
                 <android.support.v4.widget.Space

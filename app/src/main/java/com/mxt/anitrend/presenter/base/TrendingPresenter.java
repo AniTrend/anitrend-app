@@ -13,7 +13,7 @@ import java.util.List;
 
 import retrofit2.Callback;
 
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesType.*;
+import static com.mxt.anitrend.api.structure.FilterTypes.SeriesType.ANIME;
 
 /**
  * Created by Maxwell on 11/1/2016.

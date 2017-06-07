@@ -28,8 +28,8 @@ import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -178,7 +178,7 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
     }
 
     public void setAdapters() {
-        viewPager.setAdapter(new MangaPageAdapter(getSupportFragmentManager(), mSeries));
+        viewPager.setAdapter(new MangaPageAdapter(getSupportFragmentManager(), mSeries, getResources().getStringArray(R.array.manga_page_titles)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setupWithViewPager(viewPager);

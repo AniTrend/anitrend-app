@@ -20,10 +20,12 @@ public class MyMangaPageAdapter extends FragmentStatePagerAdapter {
 
     private static final int pages = 5;
     private int user_id;
+    private final String[] mTitles;
 
-    public MyMangaPageAdapter(FragmentManager manager, int id) {
+    public MyMangaPageAdapter(FragmentManager manager, int id, String[] titles) {
         super(manager);
         user_id = id;
+        mTitles = titles;
     }
 
     /**
@@ -61,19 +63,6 @@ public class MyMangaPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         Locale locale = Locale.getDefault();
-        switch (position)
-        {
-            case 0:
-                return "Reading".toUpperCase(locale);
-            case 1:
-                return "Plan To Read".toUpperCase(locale);
-            case 2:
-                return "On Hold".toUpperCase(locale);
-            case 3:
-                return "Completed".toUpperCase(locale);
-            case 4:
-                return "Dropped".toUpperCase(locale);
-        }
-        return null;
+        return mTitles[position].toUpperCase(locale);
     }
 }

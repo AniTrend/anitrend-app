@@ -8,7 +8,7 @@
         android:orderInCategory="100"
         android:visible="true"
         android:icon="@drawable/ic_textsms_white_24dp"
-        android:title="Compose Message"
+        android:title="@string/menu_title_compose_message"
         app:showAsAction="always" />
 
 </menu>

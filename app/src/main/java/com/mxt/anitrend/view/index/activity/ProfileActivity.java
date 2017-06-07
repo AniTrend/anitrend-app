@@ -32,9 +32,9 @@ import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.base.activity.ListBrowseActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
@@ -110,7 +110,6 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
 
         if(mCurrentUser != null) {
             mPresenter = new UserProfilePresenter(ProfileActivity.this, mCurrentUser.getId());
-            mActionBar.setTitle(mCurrentUser.getDisplay_name());
             user_anime_time.setText(mCurrentUser.getAnime_time());
             user_manga_chap.setText(mCurrentUser.getManga_chap());
             user_anime_total.setText("0");
@@ -144,7 +143,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
 
-        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser);
+        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
         mViewPager.setAdapter(mOverViewAdapter);
         tabLayout.setupWithViewPager(mViewPager);
     }

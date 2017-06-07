@@ -6,7 +6,7 @@ import android.text.Spanned;
 
 import com.mxt.anitrend.api.structure.UserLists;
 import com.mxt.anitrend.api.structure.UserStats;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.MarkDown;
 
 import java.util.List;
 import java.util.Locale;

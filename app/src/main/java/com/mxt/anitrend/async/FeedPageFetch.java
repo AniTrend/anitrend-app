@@ -8,7 +8,7 @@ import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.util.List;
 

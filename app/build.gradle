@@ -7,8 +7,8 @@ android {
         applicationId "com.mxt.anitrend"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 49
-        versionName '0.9.9r7.5'
+        versionCode 50
+        versionName '0.9.9r8'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,6 +29,9 @@ android {
             it.buildConfigField("String", "FEEDS_LINK", FEEDS_LINK)
             it.buildConfigField("String", "APP_REPO", APP_REPO)
             it.buildConfigField("String", "HUB_BASE_LINK", HUB_BASE_LINK)
+        }
+        debug {
+            testCoverageEnabled = true
         }
     }
     productFlavors {

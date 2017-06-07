@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.johnpersano.supertoasts.library.Style;
-import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
@@ -33,9 +31,9 @@ import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.ErrorHandler;
-import com.mxt.anitrend.utils.FilterProvider;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -153,7 +151,7 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
                 finish();
                 break;
             case R.id.action_filter:
-                new DialogManager(this).createDialogSelection("Sort By?", R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);

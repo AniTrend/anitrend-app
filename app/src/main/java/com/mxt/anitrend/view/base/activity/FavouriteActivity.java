@@ -81,7 +81,7 @@ public class FavouriteActivity  extends DefaultActivity {
 
     @Override
     protected void updateUI() {
-        mViewPager.setAdapter(new FavouritesPageAdapter(getSupportFragmentManager(), mFavourite));
+        mViewPager.setAdapter(new FavouritesPageAdapter(getSupportFragmentManager(), mFavourite, getResources().getStringArray(R.array.favorites_page_titles)));
         mViewPager.setOffscreenPageLimit(3);
         mNavigationTab.setupWithViewPager(mViewPager);
     }

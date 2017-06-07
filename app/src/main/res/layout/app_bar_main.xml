@@ -16,7 +16,6 @@
 
         <com.mancj.materialsearchbar.MaterialSearchBar
             app:mt_speechMode="false"
-            app:mt_hint="What To Find?"
             app:mt_placeholder="AniTrend"
             app:mt_navIconEnabled="true"
             app:mt_maxSuggestionsCount="5"

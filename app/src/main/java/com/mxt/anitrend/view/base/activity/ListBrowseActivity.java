@@ -18,14 +18,12 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.johnpersano.supertoasts.library.Style;
-import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.MyAnimePageAdapter;
 import com.mxt.anitrend.adapter.pager.index.MyMangaPageAdapter;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
-import com.mxt.anitrend.utils.DialogManager;
+import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
 import java.util.Arrays;
@@ -104,10 +102,10 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     protected void updateUI() {
         if (mContentType == SeriesType.ANIME.ordinal()) {
             mActionBar.setTitle(R.string.title_anime_list);
-            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId));
+            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.anime_listing_status)));
         } else {
             mActionBar.setTitle(R.string.title_manga_list);
-            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId));
+            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.manga_listing_status)));
         }
         mViewPager.setOffscreenPageLimit(3);
         mNavigationTab.setupWithViewPager(mViewPager);
@@ -139,7 +137,7 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter:
-                new DialogManager(this).createDialogSelection("Sort By?", R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
+                new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);

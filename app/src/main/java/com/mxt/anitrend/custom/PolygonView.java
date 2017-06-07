@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.utils.ApplicationPrefs;
+import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

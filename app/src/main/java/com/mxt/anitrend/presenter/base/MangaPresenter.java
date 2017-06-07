@@ -31,7 +31,7 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
     @Override
     public void beginAsync(Callback<List<Series>> callback, int page) {
             searchModel = new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], /*anime or manga*/
-                 null, /*year*/
+                 getApiPrefs().getYear(), /*year*/
                  null, /*season*/
                  getApiPrefs().getShowType(), /*Type, e.g. TV, Movie e.t.c*/
                  decodeStatus(getApiPrefs().getStatus()), /*status*/

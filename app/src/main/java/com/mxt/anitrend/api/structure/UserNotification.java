@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.utils.DateTimeConverter;
+import com.mxt.anitrend.util.DateTimeConverter;
 
 import java.io.Serializable;
 

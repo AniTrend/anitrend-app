@@ -35,8 +35,8 @@ import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
-import com.mxt.anitrend.utils.DialogManager;
-import com.mxt.anitrend.utils.TransitionHelper;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.base.activity.ListBrowseActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
@@ -107,21 +107,16 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
             user_manga_chap.setText(R.string.Loading);
             user_anime_total.setText(R.string.Loading);
             user_manga_total.setText(R.string.Loading);
-            if(mIntentData != null && mTempUser == null) {
-                mActionBar.setTitle(mIntentData);
+            if(mIntentData != null && mTempUser == null)
                 new AsyncTaskFetch<>(this, getApplicationContext(), mIntentData).execute(AsyncTaskFetch.RequestType.USER_ACCOUNT_REQ);
-            }
-            else {
-                mActionBar.setTitle(mTempUser.getDisplay_name());
+            else
                 new AsyncTaskFetch<>(this, getApplicationContext(), mTempUser.getId()).execute(AsyncTaskFetch.RequestType.USER_ACCOUNT_REQ);
-            }
         }
     }
 
     @Override
     protected void startInit() {
         if(mCurrentUser != null) {
-            mActionBar.setTitle(mCurrentUser.getDisplay_name());
             user_anime_time.setText(mCurrentUser.getAnime_time());
             user_manga_chap.setText(mCurrentUser.getManga_chap());
             user_anime_total.setText("0");
@@ -155,7 +150,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
         user_manga_chap_container.setOnClickListener(this);
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
-        UserPageAdapter mOverViewAdapter = new UserPageAdapter(getSupportFragmentManager(), mCurrentUser);
+        UserPageAdapter mOverViewAdapter = new UserPageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
         mViewPager.setAdapter(mOverViewAdapter);
         tabLayout.setupWithViewPager(mViewPager);
     }

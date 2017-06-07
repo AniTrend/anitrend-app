@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.utils.DateTimeConverter;
+import com.mxt.anitrend.util.DateTimeConverter;
 
 import java.util.List;
 

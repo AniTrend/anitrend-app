@@ -37,17 +37,4 @@ public class TrendingPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return pages;
     }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        switch (position)
-        {
-            case 0:
-                return "Trending".toUpperCase(locale);
-            case 1:
-                return "Newly Added".toUpperCase(locale);
-        }
-        return null;
-    }
 }

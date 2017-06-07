@@ -7,8 +7,8 @@ import android.text.Spanned;
 import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.api.structure.Anime;
 import com.mxt.anitrend.api.structure.Manga;
-import com.mxt.anitrend.utils.DateTimeConverter;
-import com.mxt.anitrend.utils.MarkDown;
+import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.MarkDown;
 
 /**
  * Created by Max on 10/4/2016.

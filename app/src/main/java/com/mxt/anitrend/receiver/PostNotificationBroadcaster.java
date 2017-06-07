@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.mxt.anitrend.api.structure.UserNotification;
-import com.mxt.anitrend.utils.NotificationDispatcher;
+import com.mxt.anitrend.util.NotificationDispatcher;
 
 import java.util.ArrayList;
 

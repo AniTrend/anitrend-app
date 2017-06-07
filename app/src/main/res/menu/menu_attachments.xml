@@ -4,21 +4,21 @@
     <item
         android:id="@+id/action_link"
         android:icon="@drawable/ic_menu_link"
-        android:title="Link" />
+        android:title="@string/text_attach_link" />
 
     <item
         android:id="@+id/action_image"
         android:icon="@drawable/ic_menu_image"
-        android:title="Image" />
+        android:title="@string/text_attach_image" />
 
     <item
         android:id="@+id/action_youtube"
         android:icon="@drawable/ic_menu_youtube"
-        android:title="Youtube" />
+        android:title="@string/text_youtube_link" />
 
     <item
         android:id="@+id/action_webm"
         android:icon="@drawable/ic_menu_webm"
-        android:title="WebM" />
+        android:title="@string/text_webm_link" />
 
 </menu>

@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Anime"
+                    android:text="@string/anime"
                     android:layout_gravity="center"
                     android:fontFamily="sans-serif-condensed"
                     android:textSize="14sp"/>
@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Anime Time"
+                    android:text="@string/anime_time"
                     android:fontFamily="sans-serif-condensed"
                     android:textSize="14sp"
                     android:id="@+id/textView"
@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Manga"
+                    android:text="@string/manga"
                     android:layout_gravity="center"
                     android:fontFamily="sans-serif-condensed"
                     android:textSize="14sp"/>
@@ -150,7 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Chapters"
+                    android:text="@string/chapters"
                     android:fontFamily="sans-serif-condensed"
                     android:textSize="14sp"/>
 

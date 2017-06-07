@@ -22,7 +22,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.presenter.index.LoginPresenter;
-import com.mxt.anitrend.utils.DialogManager;
+import com.mxt.anitrend.util.DialogManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
                                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://anilist.co/settings/list")));
                                             break;
                                         case NEGATIVE:
-                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://anilist.co/forum/thread/2081")));
+                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/nqsFGgX")));
                                             break;
                                     }
                                 }

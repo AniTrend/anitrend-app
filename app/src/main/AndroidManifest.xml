@@ -121,12 +121,13 @@
 
         <activity
             android:name=".view.index.activity.ProfileActivity"
-            android:label="Profile"
+            android:label=""
             android:parentActivityName=".MainActivity"
             android:theme="@style/UserTheme" />
 
         <activity
             android:name=".view.index.activity.UserProfileActivity"
+            android:label=""
             android:theme="@style/UserTheme" >
 
             <intent-filter>

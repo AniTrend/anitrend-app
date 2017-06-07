@@ -15,8 +15,8 @@ import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.Genre;
 import com.mxt.anitrend.custom.emoji4j.EmojiManager;
 import com.mxt.anitrend.data.DataCentre;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.DialogManager;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DialogManager;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.List;

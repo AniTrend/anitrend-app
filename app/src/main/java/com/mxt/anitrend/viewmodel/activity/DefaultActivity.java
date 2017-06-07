@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.utils.ApplicationPrefs;
-import com.mxt.anitrend.utils.PatternMatcher;
+import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.PatternMatcher;
 
 /**
  * Created by max on 2017/03/26.

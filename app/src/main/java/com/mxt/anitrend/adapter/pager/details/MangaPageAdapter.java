@@ -18,12 +18,13 @@ import java.util.Locale;
  */
 public class MangaPageAdapter extends FragmentPagerAdapter {
 
-    private static final int pages = 4;
     private Series model;
+    private final String[] mTitles;
 
-    public MangaPageAdapter(FragmentManager manager, Series model) {
+    public MangaPageAdapter(FragmentManager manager, Series model, String[] titles) {
         super(manager);
         this.model = model;
+        mTitles = titles;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class MangaPageAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return pages;
+        return 4;
     }
 
     /**
@@ -72,16 +73,6 @@ public class MangaPageAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "Info".toUpperCase(locale);
-            case 1:
-                return "Stats".toUpperCase(locale);
-            case 2:
-                return "Extras".toUpperCase(locale);
-            case 3:
-                return "Reviews".toUpperCase(locale);
-        }
-        return null;
+        return mTitles[position].toUpperCase(locale);
     }
 }

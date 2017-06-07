@@ -5,22 +5,22 @@
     <item
         android:id="@+id/action_favourite"
         android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="Favourite This"
+        android:title="@string/series_favourite_this"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_add_to_list"
         android:icon="@drawable/ic_bookmark_white_24dp"
-        android:title="Add To list"
+        android:title="@string/series_add_to_list"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_write_review"
         android:icon="@drawable/ic_rate_review_white_24dp"
-        android:title="Write A Review"
+        android:title="@string/series_write_a_review"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white_24dp"
-        android:title="Share"
+        android:title="@string/series_share"
         app:showAsAction="always" />
 </menu>

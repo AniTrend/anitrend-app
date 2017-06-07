@@ -44,19 +44,4 @@ public class HubPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return pages;
     }
-
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "Suggestions".toUpperCase(locale);
-            case 1:
-                return "Episodes".toUpperCase(locale);
-            case 2:
-                return "Playlist".toUpperCase(locale);
-        }
-        return null;
-    }
 }

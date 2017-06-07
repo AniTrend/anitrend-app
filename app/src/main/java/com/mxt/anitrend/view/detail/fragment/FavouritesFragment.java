@@ -24,7 +24,7 @@ import com.mxt.anitrend.custom.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.presenter.detail.GenericPresenter;
-import com.mxt.anitrend.utils.ErrorHandler;
+import com.mxt.anitrend.util.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.ArrayList;

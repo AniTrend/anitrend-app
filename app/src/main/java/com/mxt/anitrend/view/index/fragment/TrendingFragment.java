@@ -7,7 +7,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.presenter.base.TrendingPresenter;
 import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;
 

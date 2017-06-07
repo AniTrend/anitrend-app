@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mxt.anitrend.utils.ScreenUtil;
+import com.mxt.anitrend.util.ScreenUtil;
 
 /**
  * adapter中调用onCreateViewHolder, onBindViewHolder

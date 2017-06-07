@@ -48,21 +48,4 @@ public class ReviewPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return pages;
     }
-
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        switch (position) {
-            case 0:
-                return "New".toUpperCase(locale);
-            case 1:
-                return "Loved".toUpperCase(locale);
-            case 2:
-                return "UnLoved".toUpperCase(locale);
-            case 3:
-                return "Disputed".toUpperCase(locale);
-        }
-        return null;
-    }
 }
