@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "630671731625",
+    "firebase_url": "https://admob-app-id-2288743007.firebaseio.com",
+    "project_id": "admob-app-id-2288743007",
+    "storage_bucket": "admob-app-id-2288743007.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630671731625:android:1adde25f370d4728",
+        "android_client_info": {
+          "package_name": "com.mxt.linearprogrammingsolver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630671731625-0o1nbnes2hl555pq028aj700bi1v6rko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mxt.linearprogrammingsolver",
+            "certificate_hash": "a50cee2f8c0cfd9dfb085e7afc751f28b30265d3"
+          }
+        },
+        {
+          "client_id": "630671731625-5vege6r8krdcmboibuhj4bnqpf6ma4k7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mxt.linearprogrammingsolver",
+            "certificate_hash": "94118d1569a6fc2a9ea9c6fa8f9c24278e1c6219"
+          }
+        },
+        {
+          "client_id": "630671731625-fflq34bccd1keol5nvs0itilm7n31u1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630671731625:android:386058dd738c4601",
+        "android_client_info": {
+          "package_name": "com.mxt.anitrend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630671731625-8u5h8pr23jb9jbdumtmlis1u1td83dsc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mxt.anitrend",
+            "certificate_hash": "22d9f98c607e896f40a9eae5d60e300ba2260a84"
+          }
+        },
+        {
+          "client_id": "630671731625-fflq34bccd1keol5nvs0itilm7n31u1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
