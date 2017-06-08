@@ -46,7 +46,7 @@ cache:
 
 script:
     - ./gradlew clean
-    - ./gradlew build
+#    - ./gradlew build
 #    - ./gradlew build connectedCheck
 #    - ./gradlew test
 
