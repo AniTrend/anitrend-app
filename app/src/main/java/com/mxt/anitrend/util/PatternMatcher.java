@@ -76,11 +76,14 @@ public class PatternMatcher {
     }
 
     /**
-     * Builds a full youtube link from either
+     * Builds a full youtube link from either an id or a valid youtube link
      */
     public static String buildYoutube(String id) {
-        if(!id.contains("youtube"))
+        if(!id.contains("youtube")) {
+            if (id.contains("youtu.be"))
+                return Youtube + id.replace("https://youtu.be/", "");
             return Youtube + id;
+        }
         return id;
     }
 
