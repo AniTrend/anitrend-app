@@ -42,9 +42,9 @@ public class MyAnimePageAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return PlanToWatchFragment.newInstance(user_id);
             case 2:
-                return OnHoldAnimeFragment.newInstance(user_id);
-            case 3:
                 return CompletedAnimeFragment.newInstance(user_id);
+            case 3:
+                return OnHoldAnimeFragment.newInstance(user_id);
             case 4:
                 return DroppedAnimeFragment.newInstance(user_id);
         }

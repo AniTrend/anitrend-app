@@ -61,7 +61,7 @@ public abstract class ScrollListener extends RecyclerView.OnScrollListener {
                 mPreviousTotal = mTotalItemCount;
             }
         }
-        int mVisibleThreshold = 2; //minimum allowed threshold before next page reload request
+        int mVisibleThreshold = 6; //minimum allowed threshold before next page reload request
         if (!mLoading && (mTotalItemCount - mVisibleItemCount)
                 <= (mFirstVisibleItem + mVisibleThreshold)) {
             // End has been reached

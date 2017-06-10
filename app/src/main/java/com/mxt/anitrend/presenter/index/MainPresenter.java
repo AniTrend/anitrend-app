@@ -73,10 +73,9 @@ public class MainPresenter extends CommonPresenter {
         @Override
         protected Boolean doInBackground(Void... voids) {
             FirebaseApp.initializeApp(mContext);
+            MobileAds.initialize(mContext.getApplicationContext(), mContext.getResources().getString(R.string.app_id));
             FirebaseAnalytics.getInstance(mContext).setAnalyticsCollectionEnabled(true);
             FirebaseAnalytics.getInstance(mContext).setMinimumSessionDuration(2000);
-            MobileAds.initialize(mContext.getApplicationContext(), mContext.getResources().getString(R.string.app_id));
-
             //dc.getGenres(null, null);
 
             AppVersionTracking current = new AppVersionTracking(BuildConfig.VERSION_CODE, BuildConfig.VERSION_NAME);
@@ -118,7 +117,7 @@ public class MainPresenter extends CommonPresenter {
                                     callbackBase.onNormalStart();
                                 }
                         } else
-                            Log.e("MainPst<->onPost", ErrorHandler.getError(response).toString());
+                            Log.e("MainPresenter{onPost}", ErrorHandler.getError(response).toString());
                     }
 
                     @Override
