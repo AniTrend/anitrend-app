@@ -42,9 +42,9 @@ public class MyMangaPageAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return PlanToReadFragment.newInstance(user_id);
             case 2:
-                return OnHoldMangaFragment.newInstance(user_id);
-            case 3:
                 return CompletedMangaFragment.newInstance(user_id);
+            case 3:
+                return OnHoldMangaFragment.newInstance(user_id);
             case 4:
                 return DroppedMangaFragment.newInstance(user_id);
         }
