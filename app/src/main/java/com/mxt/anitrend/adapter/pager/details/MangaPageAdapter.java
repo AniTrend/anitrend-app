@@ -10,21 +10,22 @@ import com.mxt.anitrend.view.detail.fragment.MangaExtrasFragment;
 import com.mxt.anitrend.view.detail.fragment.MangaLinksFragment;
 import com.mxt.anitrend.view.detail.fragment.MangaOverviewFragment;
 import com.mxt.anitrend.view.detail.fragment.MangaReviewFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
 /**
  * Created by Maxwell on 11/3/2016.
  */
-public class MangaPageAdapter extends FragmentPagerAdapter {
+public class MangaPageAdapter extends DefaultStatePagerAdapter {
 
     private Series model;
-    private final String[] mTitles;
 
     public MangaPageAdapter(FragmentManager manager, Series model, String[] titles) {
         super(manager);
         this.model = model;
         mTitles = titles;
+        mPages = 4;
     }
 
     @Override

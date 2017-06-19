@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.view.detail.fragment.FavouritesFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -14,15 +15,15 @@ import java.util.Locale;
  * Created by max on 2017/05/16.
  */
 
-public class FavouritesPageAdapter extends FragmentStatePagerAdapter {
+public class FavouritesPageAdapter extends DefaultStatePagerAdapter {
 
     private Favourite model;
-    private String[] mTitles;
 
     public FavouritesPageAdapter(FragmentManager manager, Favourite model, String[] titles) {
         super(manager);
         this.model = model;
         mTitles = titles;
+        mPages = 5;
     }
 
     @Override
@@ -50,14 +51,6 @@ public class FavouritesPageAdapter extends FragmentStatePagerAdapter {
                 return FavouritesFragment.newInstance(model.getStudio(), 4);
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return 5;
     }
 
     /**

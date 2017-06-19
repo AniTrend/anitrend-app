@@ -9,6 +9,7 @@ import com.mxt.anitrend.view.index.fragment.DroppedMangaFragment;
 import com.mxt.anitrend.view.index.fragment.OnHoldMangaFragment;
 import com.mxt.anitrend.view.index.fragment.PlanToReadFragment;
 import com.mxt.anitrend.view.index.fragment.ReadingFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -16,16 +17,15 @@ import java.util.Locale;
  * Created by Maxwell on 12/23/2016.
  */
 
-public class MyMangaPageAdapter extends FragmentStatePagerAdapter {
+public class MyMangaPageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 5;
     private int user_id;
-    private final String[] mTitles;
 
     public MyMangaPageAdapter(FragmentManager manager, int id, String[] titles) {
         super(manager);
         user_id = id;
         mTitles = titles;
+        mPages = 5;
     }
 
     /**
@@ -50,15 +50,6 @@ public class MyMangaPageAdapter extends FragmentStatePagerAdapter {
         }
         return null;
     }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return pages;
-    }
-
 
     @Override
     public CharSequence getPageTitle(int position) {

@@ -259,6 +259,7 @@ public class CommentAdapter extends RecyclerViewAdapter<UserActivityReply> {
                     break;
                 default:
                     intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setData(Uri.parse(mLinks.get(0)));
                     break;
             }

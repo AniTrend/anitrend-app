@@ -35,6 +35,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
     private ApplicationPrefs mPrefs;
     private ApiPreferences mApiPrefs;
     private SeriesInteractionListener interactionListener;
+    private final boolean isHD;
 
     public SeriesAiringAdapter(List<ListItem> adapter, FragmentActivity context, ApplicationPrefs prefs, ApiPreferences apiPrefs,SeriesInteractionListener callback) {
         super(adapter, context);
@@ -43,6 +44,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         interactionListener = callback;
         mApiPrefs = apiPrefs;
         mPrefs = prefs;
+        isHD = mPrefs.isHD();
     }
 
     @Override
@@ -95,11 +97,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         @Override
         public void onBindViewHolder(ListItem model) {
 
-            Glide.with(mContext).load(mPrefs.isHD()?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
-                    .into(image);
-
             eng.setText(model.getAnime().getTitle_english());
             romanji.setText(model.getAnime().getTitle_romaji());
             type.setText(model.getAnime().getType());
@@ -113,6 +110,11 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
                 line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorStateOrange));
             else
                 line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBlueGrey100));
+
+            Glide.with(mContext).load(isHD?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .into(image);
         }
 
         @Override
@@ -154,12 +156,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         @Override
         public void onBindViewHolder(ListItem model) {
 
-            Glide.with(mContext).load(mPrefs.isHD()?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.drawable.toolbar_shadow)
-                    .centerCrop()
-                    .into(image);
-
             switch (mApiPrefs.getTitleLanguage()) {
                 case "romaji":
                     title.setText(model.getAnime().getTitle_romaji());
@@ -178,6 +174,12 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
                 line.setVisibility(View.VISIBLE);
             else
                 line.setVisibility(View.GONE);
+
+            Glide.with(mContext).load(isHD?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.toolbar_shadow)
+                    .centerCrop()
+                    .into(image);
         }
 
         @Override

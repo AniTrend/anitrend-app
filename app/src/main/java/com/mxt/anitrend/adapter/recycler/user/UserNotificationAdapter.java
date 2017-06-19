@@ -149,7 +149,7 @@ public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotificatio
                     if(model.getUser() != null)
                         notificationHeader.setText(model.getUser().getDisplay_name());
                     else
-                        notificationHeader.setText("Unknown origin");
+                        notificationHeader.setText(mContext.getString(R.string.notification_default));
                     notificationContent.setText(String.format("%s", model.getMeta_value()));
                     break;
             }

@@ -8,6 +8,7 @@ import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.api.structure.ExternalLink;
 import com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment;
 import com.mxt.anitrend.view.index.fragment.AiringFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,11 @@ import java.util.Locale;
 /**
  * Created by max on 2017/03/04.
  */
-public class AiringPageAdapter extends FragmentStatePagerAdapter {
-
-    private static final int pages = 2;
+public class AiringPageAdapter extends DefaultStatePagerAdapter {
 
     public AiringPageAdapter(FragmentManager manager) {
         super(manager);
+        mPages = 2;
     }
 
     /**
@@ -44,10 +44,16 @@ public class AiringPageAdapter extends FragmentStatePagerAdapter {
     }
 
     /**
-     * Return the number of views available.
+     * This method may be called by the ViewPager to obtain a title string
+     * to describe the specified page. This method may return null
+     * indicating no title for this page. The default implementation returns
+     * null.
+     *
+     * @param position The position of the title requested
+     * @return A title for the requested page
      */
     @Override
-    public int getCount() {
-        return pages;
+    public CharSequence getPageTitle(int position) {
+        return null;
     }
 }

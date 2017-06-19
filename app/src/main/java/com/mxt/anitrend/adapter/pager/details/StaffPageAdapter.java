@@ -8,6 +8,7 @@ import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.view.detail.fragment.StaffAnimeFragment;
 import com.mxt.anitrend.view.detail.fragment.StaffMangaFragment;
 import com.mxt.anitrend.view.detail.fragment.StaffOverviewFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -15,15 +16,15 @@ import java.util.Locale;
  * Created by max on 2017/04/09.
  * This class should dynamically decide which pages to display
  */
-public class StaffPageAdapter extends FragmentStatePagerAdapter {
+public class StaffPageAdapter extends DefaultStatePagerAdapter {
 
     private Staff model;
-    private final String[] mTitles;
 
     public StaffPageAdapter(FragmentManager manager, Staff model, String[] titles) {
         super(manager);
         this.model = model;
         mTitles = titles;
+        mPages = getPages();
     }
 
     @Override
@@ -41,11 +42,8 @@ public class StaffPageAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
-    @Override
-    public int getCount() {
-        /*return mStaff.getAnime() != null &&
-                mStaff.getAnime().size() > 0 ? 3 : 2;*/
-        return 3;
+    private int getPages() {
+        return model != null && model.getAnime() != null && model.getAnime().size() > 0? 3 : 4;
     }
 
     @Override

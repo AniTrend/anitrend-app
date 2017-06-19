@@ -10,6 +10,7 @@ import com.mxt.anitrend.view.base.fragment.AnimeSearchFragment;
 import com.mxt.anitrend.view.base.fragment.MangaSearchFragment;
 import com.mxt.anitrend.view.base.fragment.StudioSearchFragment;
 import com.mxt.anitrend.view.base.fragment.UserSearchFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -17,16 +18,14 @@ import java.util.Locale;
  * Created by Maxwell on 11/6/2016.
  */
 
-public class SearchPageAdapter extends FragmentStatePagerAdapter {
+public class SearchPageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 4;
     private final String query;
-    private ApplicationPrefs mPrefs;
 
     public SearchPageAdapter(FragmentManager fm, String query, Context mContext) {
         super(fm);
         this.query = query;
-        this.mPrefs = new ApplicationPrefs(mContext);
+        mPages = new ApplicationPrefs(mContext).isAuthenticated()?4:4-1;
     }
 
     @Override
@@ -44,8 +43,17 @@ public class SearchPageAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
+    /**
+     * This method may be called by the ViewPager to obtain a title string
+     * to describe the specified page. This method may return null
+     * indicating no title for this page. The default implementation returns
+     * null.
+     *
+     * @param position The position of the title requested
+     * @return A title for the requested page
+     */
     @Override
-    public int getCount() {
-        return mPrefs.isAuthenticated()?pages:pages-1;
+    public CharSequence getPageTitle(int position) {
+        return null;
     }
 }

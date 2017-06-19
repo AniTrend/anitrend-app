@@ -9,21 +9,22 @@ import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.view.detail.fragment.UserAboutFragment;
 import com.mxt.anitrend.view.detail.fragment.UserProgressFragment;
 import com.mxt.anitrend.view.detail.fragment.UserStatusFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
 /**
  * Created by max on 2017/04/03.
  */
-public class UserPageAdapter extends FragmentStatePagerAdapter {
+public class UserPageAdapter extends DefaultStatePagerAdapter {
 
     private User user;
-    private final String[] mTitles;
 
     public UserPageAdapter(FragmentManager fm, User model, String[] titles) {
         super(fm);
         this.user = model;
         mTitles = titles;
+        mPages = 3;
     }
 
     @Override
@@ -39,11 +40,6 @@ public class UserPageAdapter extends FragmentStatePagerAdapter {
                 return UserStatusFragment.newInstance(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()], user.getDisplay_name());*/
         }
         return null;
-    }
-
-    @Override
-    public int getCount() {
-        return 3;
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.view.index.fragment.ProgressFragment;
 import com.mxt.anitrend.view.index.fragment.PublicStatusFragment;
 import com.mxt.anitrend.view.index.fragment.StatusFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -15,12 +16,11 @@ import java.util.Locale;
  * Created by max on 2017/03/09.
  */
 
-public class HomePageAdapter extends FragmentStatePagerAdapter {
-
-    private static final int pages = 3;
+public class HomePageAdapter extends DefaultStatePagerAdapter {
 
     public HomePageAdapter(FragmentManager fm) {
         super(fm);
+        mPages = 3;
     }
 
     /**
@@ -43,10 +43,16 @@ public class HomePageAdapter extends FragmentStatePagerAdapter {
     }
 
     /**
-     * Return the number of views available.
+     * This method may be called by the ViewPager to obtain a title string
+     * to describe the specified page. This method may return null
+     * indicating no title for this page. The default implementation returns
+     * null.
+     *
+     * @param position The position of the title requested
+     * @return A title for the requested page
      */
     @Override
-    public int getCount() {
-        return pages;
+    public CharSequence getPageTitle(int position) {
+        return null;
     }
 }

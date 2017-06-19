@@ -5,18 +5,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mxt.anitrend.view.index.fragment.SuggestionFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
 /**
  * Created by max on 2017/05/02.
  */
-public class HubPageAdapter extends FragmentStatePagerAdapter {
-
-    private static final int pages = 1;
+public class HubPageAdapter extends DefaultStatePagerAdapter {
 
     public HubPageAdapter(FragmentManager manager) {
         super(manager);
+        mPages = 1;
     }
 
     /**
@@ -38,10 +38,16 @@ public class HubPageAdapter extends FragmentStatePagerAdapter {
     }
 
     /**
-     * Return the number of views available.
+     * This method may be called by the ViewPager to obtain a title string
+     * to describe the specified page. This method may return null
+     * indicating no title for this page. The default implementation returns
+     * null.
+     *
+     * @param position The position of the title requested
+     * @return A title for the requested page
      */
     @Override
-    public int getCount() {
-        return pages;
+    public CharSequence getPageTitle(int position) {
+        return null;
     }
 }

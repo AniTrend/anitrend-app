@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.mxt.anitrend.view.index.fragment.MangaFragment;
 import com.mxt.anitrend.view.index.fragment.NewMangaFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -14,32 +15,11 @@ import java.util.Locale;
  * Created by Maxwell on 11/1/2016.
  */
 
-public class MangaPageAdapter extends FragmentStatePagerAdapter {
-
-    private static final int pages = 2;
+public class MangaPageAdapter extends DefaultStatePagerAdapter {
 
     public MangaPageAdapter(FragmentManager manager) {
         super(manager);
-    }
-
-    @Override
-    public void startUpdate(ViewGroup container) {
-        super.startUpdate(container);
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
-    }
-
-    @Override
-    public void finishUpdate(ViewGroup container) {
-        super.finishUpdate(container);
+        mPages = 2;
     }
 
     /**
@@ -60,10 +40,16 @@ public class MangaPageAdapter extends FragmentStatePagerAdapter {
     }
 
     /**
-     * Return the number of views available.
+     * This method may be called by the ViewPager to obtain a title string
+     * to describe the specified page. This method may return null
+     * indicating no title for this page. The default implementation returns
+     * null.
+     *
+     * @param position The position of the title requested
+     * @return A title for the requested page
      */
     @Override
-    public int getCount() {
-        return pages;
+    public CharSequence getPageTitle(int position) {
+        return null;
     }
 }

@@ -11,6 +11,7 @@ import com.mxt.anitrend.view.detail.fragment.AnimeLinksFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeOverviewFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeReviewsFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -18,20 +19,15 @@ import java.util.Locale;
  * Created by Maxwell on 10/17/2016.
  */
 
-public class AnimePageAdapter extends FragmentPagerAdapter {
+public class AnimePageAdapter extends DefaultStatePagerAdapter {
 
     private Series model;
-    private String[] mTitles;
 
     public AnimePageAdapter(FragmentManager manager, Series model, String[] titles) {
         super(manager);
         this.model = model;
         mTitles = titles;
-    }
-
-    @Override
-    public void startUpdate(ViewGroup container) {
-        super.startUpdate(container);
+        mPages = 5;
     }
 
     /**
@@ -54,14 +50,6 @@ public class AnimePageAdapter extends FragmentPagerAdapter {
                 return AnimeReviewsFragment.newInstance(model.getId());
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return 5;
     }
 
     /**
