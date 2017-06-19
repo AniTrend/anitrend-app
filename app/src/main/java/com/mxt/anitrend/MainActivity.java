@@ -401,7 +401,12 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         if(requestCode == REQUEST_CODE) {
             if(grantResults.length > 0)
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    Display(R.id.nav_check_update);
+                    try {
+                        Display(R.id.nav_check_update);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 else
                     Toast.makeText(this, R.string.text_permission_required, Toast.LENGTH_SHORT).show();
         }
