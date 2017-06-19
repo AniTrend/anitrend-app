@@ -76,7 +76,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
     private List<Integer> skipIds = new ArrayList<>();
 
 
-    private UserActivityPresenter mPresenter;
+    private UserActivityPresenter mFragmentPresenter;
 
     private RecyclerViewAdapter<UserActivity> mAdapter;
 
@@ -100,7 +100,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
         model_type = args.getString(CONTENT_DESCRIPTION);
         model_user = args.getString(CONTENT_USER);
         skipIds.add(R.id.generic_recycler);
-        mPresenter = new UserActivityPresenter(getContext());
+        mFragmentPresenter = new UserActivityPresenter(getContext());
     }
 
     @Override
@@ -124,15 +124,15 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
     public void onStart() {
         super.onStart();
         if(mData == null)
-            mPresenter.beginAsync(this, mPage, model_type, model_user);
+            mFragmentPresenter.beginAsync(this, mPage, model_type, model_user);
         else
             showData();
     }
 
     private void addScrollLoadTrigger() {
         if(!recyclerView.hasOnScrollListener()) {
-            mPresenter.initListener(mLayoutManager, mPage, this);
-            recyclerView.addOnScrollListener(mPresenter);
+            mFragmentPresenter.initListener(mLayoutManager, mPage, this);
+            recyclerView.addOnScrollListener(mFragmentPresenter);
         }
     }
 
@@ -147,14 +147,14 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
     public void onPause() {
         super.onPause();
         recyclerView.clearOnScrollListeners();
-        mPresenter.setParcelable(recyclerView.onSaveInstanceState());
+        mFragmentPresenter.setParcelable(recyclerView.onSaveInstanceState());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(mPresenter.getSavedParse() != null)
-            recyclerView.onRestoreInstanceState(mPresenter.getSavedParse());
+        if(mFragmentPresenter.getSavedParse() != null)
+            recyclerView.onRestoreInstanceState(mFragmentPresenter.getSavedParse());
         addScrollLoadTrigger();
     }
 
@@ -185,7 +185,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
             if(swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(false);
             if(mAdapter == null) {
-                mAdapter = new ProgressAdapter(mData, getContext(), mPresenter.getAppPrefs(), mPresenter.getApiPrefs(), this);
+                mAdapter = new ProgressAdapter(mData, getContext(), mFragmentPresenter.getAppPrefs(), mFragmentPresenter.getApiPrefs(), this);
                 recyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.onDataSetModified(mData);
@@ -204,9 +204,9 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
         if(isVisible() && !isRemoving() || !isDetached()) {
             if (response.body() != null && response.body().size() > 0) {
                 if (mData == null)
-                    mData = FilterProvider.getUserActivityFilter(mPresenter.getCurrentUser().getId(), response.body());
+                    mData = FilterProvider.getUserActivityFilter(mFragmentPresenter.getCurrentUser().getId(), response.body());
                 else
-                    mData.addAll(FilterProvider.getUserActivityFilter(mPresenter.getCurrentUser().getId(), response.body()));
+                    mData.addAll(FilterProvider.getUserActivityFilter(mFragmentPresenter.getCurrentUser().getId(), response.body()));
             } else if (response.isSuccessful() && response.body() != null && mPage != 1) {
                 isLimit = true;
             }
@@ -221,7 +221,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
                 @Override
                 public void onClick(View view) {
                     progressLayout.showLoading();
-                    mPresenter.beginAsync(UserProgressFragment.this, mPage, model_type, model_user);
+                    mFragmentPresenter.beginAsync(UserProgressFragment.this, mPage, model_type, model_user);
                 }
             });
     }
@@ -233,8 +233,8 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
     public void onRefresh() {
         mPage = 1;
         mData = null;
-        mPresenter.onRefreshPage();
-        mPresenter.beginAsync(this, mPage, model_type, model_user);
+        mFragmentPresenter.onRefreshPage();
+        mFragmentPresenter.beginAsync(this, mPage, model_type, model_user);
     }
 
     @Override
@@ -278,10 +278,10 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
                             if (response.isSuccessful() && response.body() != null) {
                                 List<UserSmall> mItemLikes = mItem.getLikes();
 
-                                if(mItemLikes.contains(mPresenter.getCurrentUser()))
-                                    mItemLikes.remove(mPresenter.getCurrentUser());
+                                if(mItemLikes.contains(mFragmentPresenter.getCurrentUser()))
+                                    mItemLikes.remove(mFragmentPresenter.getCurrentUser());
                                 else
-                                    mItemLikes.add(mPresenter.getCurrentUser());
+                                    mItemLikes.add(mFragmentPresenter.getCurrentUser());
                                 mData.set(index, mItem);
                                 mAdapter.onItemChanged(mData, index);
                             } else {
@@ -313,7 +313,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
         if(!isLimit) {
             mPage = currentPage;
             swipeRefreshLayout.setRefreshing(true);
-            mPresenter.beginAsync(this, mPage, model_type, model_user);
+            mFragmentPresenter.beginAsync(this, mPage, model_type, model_user);
         }
     }
 }
