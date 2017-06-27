@@ -175,7 +175,7 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
                     if (mFlipper.getDisplayedChild() == 0)
                         mFlipper.showNext();
                     else {
-                        Toast.makeText(mContext, "Busy, please wait!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     break;
