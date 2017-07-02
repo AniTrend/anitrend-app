@@ -1,10 +1,13 @@
 package com.mxt.anitrend.viewmodel.pager;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import java.util.Locale;
 
 /**
  * Created by max on 2017/06/19.
@@ -13,10 +16,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public abstract class DefaultStatePagerAdapter extends FragmentStatePagerAdapter {
 
     protected String[] mTitles;
-    protected int mPages;
+    protected Context mContext;
 
-    public DefaultStatePagerAdapter(FragmentManager fragmentManager) {
+    public DefaultStatePagerAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
+        mContext = context;
     }
 
     @Override
@@ -39,7 +43,7 @@ public abstract class DefaultStatePagerAdapter extends FragmentStatePagerAdapter
      */
     @Override
     public int getCount() {
-        return mPages;
+        return mTitles.length;
     }
 
     /**
@@ -52,5 +56,8 @@ public abstract class DefaultStatePagerAdapter extends FragmentStatePagerAdapter
      * @return A title for the requested page
      */
     @Override
-    public abstract CharSequence getPageTitle(int position);
+    public CharSequence getPageTitle(int position) {
+        Locale locale = Locale.getDefault();
+        return mTitles[position].toUpperCase(locale);
+    }
 }

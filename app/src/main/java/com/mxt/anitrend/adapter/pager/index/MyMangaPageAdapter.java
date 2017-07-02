@@ -1,9 +1,11 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.view.index.fragment.CompletedMangaFragment;
 import com.mxt.anitrend.view.index.fragment.DroppedMangaFragment;
 import com.mxt.anitrend.view.index.fragment.OnHoldMangaFragment;
@@ -21,11 +23,10 @@ public class MyMangaPageAdapter extends DefaultStatePagerAdapter {
 
     private int user_id;
 
-    public MyMangaPageAdapter(FragmentManager manager, int id, String[] titles) {
-        super(manager);
+    public MyMangaPageAdapter(FragmentManager fragmentManager, int id, Context context) {
+        super(fragmentManager, context);
         user_id = id;
-        mTitles = titles;
-        mPages = 5;
+        mTitles = context.getResources().getStringArray(R.array.manga_listing_status);
     }
 
     /**
@@ -49,11 +50,5 @@ public class MyMangaPageAdapter extends DefaultStatePagerAdapter {
                 return DroppedMangaFragment.newInstance(user_id);
         }
         return null;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
     }
 }

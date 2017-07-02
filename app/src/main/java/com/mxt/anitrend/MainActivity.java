@@ -43,7 +43,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
@@ -83,6 +82,7 @@ import com.mxt.anitrend.view.index.activity.LoginActivity;
 import com.mxt.anitrend.view.index.activity.NotificationActivity;
 import com.mxt.anitrend.view.index.activity.ProfileActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -117,7 +117,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     private MainPresenter mPresenter;
 
     @BindView(R.id.page_container) ViewPager mViewPager;
-    @BindView(R.id.nts_center) NavigationTabStrip mNavigationTabStrip;
+    @BindView(R.id.nts_center) SmartTabLayout mNavigationTabStrip;
     @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.searchBar) MaterialSearchBar searchBar;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
@@ -221,74 +221,64 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
             case R.id.nav_home:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_home));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.feed_titles));
-                HomePageAdapter mHomePageAdapter = new HomePageAdapter(getSupportFragmentManager());
+                HomePageAdapter mHomePageAdapter = new HomePageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mHomePageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_anime:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_anime));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.seasons_titles));
-                SeasonPageAdapter mSeasonPageAdapter = new SeasonPageAdapter(getSupportFragmentManager());
+                SeasonPageAdapter mSeasonPageAdapter = new SeasonPageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mSeasonPageAdapter);
-                mNavigationTabStrip.setViewPager(mViewPager,mPageIndex);
+                mNavigationTabStrip.setViewPager(mViewPager);
+                mViewPager.setCurrentItem(mPageIndex, true);
                 break;
             case R.id.nav_manga:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_manga));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.manga_title));
-                MangaPageAdapter mMangaPageAdapter = new MangaPageAdapter(getSupportFragmentManager());
+                MangaPageAdapter mMangaPageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mMangaPageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_trending:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_trending));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.trending_title));
-                TrendingPageAdapter mTrendingPagedAdapter = new TrendingPageAdapter(getSupportFragmentManager());
+                TrendingPageAdapter mTrendingPagedAdapter = new TrendingPageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mTrendingPagedAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_airing:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_airing));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.airing_title));
-                AiringPageAdapter mAiringPagedAdapter = new AiringPageAdapter(getSupportFragmentManager());
+                AiringPageAdapter mAiringPagedAdapter = new AiringPageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mAiringPagedAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_myanime:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_myanime));
                 mNavigationIndex = id;
-                String[] nav_myanime = getResources().getStringArray(R.array.myanime_title);
-                mNavigationTabStrip.setTitles(nav_myanime);
-                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_myanime);
+                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), getApplicationContext());
                 mViewPager.setAdapter(myAnimePageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_mymanga:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_mymanga));
                 mNavigationIndex = id;
-                String[] nav_mymanga = getResources().getStringArray(R.array.mymanga_title);
-                mNavigationTabStrip.setTitles(nav_mymanga);
-                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_mymanga);
+                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), getApplicationContext());
                 mViewPager.setAdapter(myMangaPageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_hub:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_hub));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.hub_title));
-                HubPageAdapter mAniTrendHub = new HubPageAdapter(getSupportFragmentManager());
+                HubPageAdapter mAniTrendHub = new HubPageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mAniTrendHub);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
             case R.id.nav_reviews:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_reviews));
                 mNavigationIndex = id;
-                mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.reviews_title));
-                ReviewPageAdapter mReviews = new ReviewPageAdapter(getSupportFragmentManager());
+                ReviewPageAdapter mReviews = new ReviewPageAdapter(getSupportFragmentManager(), getApplicationContext());
                 mViewPager.setAdapter(mReviews);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 if(mPresenter.getAppPrefs().getReviewsTip()) {

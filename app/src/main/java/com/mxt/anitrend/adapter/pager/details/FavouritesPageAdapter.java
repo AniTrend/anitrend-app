@@ -1,10 +1,12 @@
 package com.mxt.anitrend.adapter.pager.details;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.view.detail.fragment.FavouritesFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
@@ -19,16 +21,10 @@ public class FavouritesPageAdapter extends DefaultStatePagerAdapter {
 
     private Favourite model;
 
-    public FavouritesPageAdapter(FragmentManager manager, Favourite model, String[] titles) {
-        super(manager);
+    public FavouritesPageAdapter(FragmentManager fragmentManager, Favourite model, Context context) {
+        super(fragmentManager, context);
         this.model = model;
-        mTitles = titles;
-        mPages = 5;
-    }
-
-    @Override
-    public void startUpdate(ViewGroup container) {
-        super.startUpdate(container);
+        mTitles = context.getResources().getStringArray(R.array.favorites_page_titles);
     }
 
     /**
@@ -51,21 +47,5 @@ public class FavouritesPageAdapter extends DefaultStatePagerAdapter {
                 return FavouritesFragment.newInstance(model.getStudio(), 4);
         }
         return null;
-    }
-
-    /**
-     * This method may be called by the ViewPager to obtain a title string
-     * to describe the specified page. This method may return null
-     * indicating no title for this page. The default implementation returns
-     * null.
-     *
-     * @param position The position of the title requested
-     *
-     * @return A title for the requested page
-     */
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
     }
 }

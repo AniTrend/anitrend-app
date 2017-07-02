@@ -16,6 +16,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.details.FavouritesPageAdapter;
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +32,7 @@ public class FavouriteActivity  extends DefaultActivity {
     private String KEY_MODEL = "model_key";
 
     @BindView(R.id.page_container) ViewPager mViewPager;
-    @BindView(R.id.nts_center) TabLayout mNavigationTab;
+    @BindView(R.id.nts_center) SmartTabLayout mNavigationTab;
     @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -81,9 +82,9 @@ public class FavouriteActivity  extends DefaultActivity {
 
     @Override
     protected void updateUI() {
-        mViewPager.setAdapter(new FavouritesPageAdapter(getSupportFragmentManager(), mFavourite, getResources().getStringArray(R.array.favorites_page_titles)));
+        mViewPager.setAdapter(new FavouritesPageAdapter(getSupportFragmentManager(), mFavourite, getApplicationContext()));
         mViewPager.setOffscreenPageLimit(3);
-        mNavigationTab.setupWithViewPager(mViewPager);
+        mNavigationTab.setViewPager(mViewPager);
     }
 
     /**

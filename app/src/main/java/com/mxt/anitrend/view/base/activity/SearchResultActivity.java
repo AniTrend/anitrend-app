@@ -10,11 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.SearchPageAdapter;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -35,7 +35,7 @@ public class SearchResultActivity extends DefaultActivity implements SearchView.
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.search_pager) ViewPager mViewPager;
-    @BindView(R.id.search_tab_strip) NavigationTabStrip mNavigationTabStrip;
+    @BindView(R.id.nts_center) SmartTabLayout mNavigationTabStrip;
 
     private SearchView searchView;
     private ApplicationPrefs mPrefs;
@@ -70,7 +70,6 @@ public class SearchResultActivity extends DefaultActivity implements SearchView.
         mSearchPageAdapter = new SearchPageAdapter(getSupportFragmentManager(), query, getApplicationContext());
         mViewPager.setAdapter(mSearchPageAdapter);
         mViewPager.setOffscreenPageLimit(2);
-        mNavigationTabStrip.setTitles(getResources().getStringArray(mPrefs.isAuthenticated()?R.array.search_titles_auth:R.array.search_titles));
         mNavigationTabStrip.setViewPager(mViewPager);
     }
 

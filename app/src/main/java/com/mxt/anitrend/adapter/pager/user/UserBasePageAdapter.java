@@ -1,8 +1,10 @@
 package com.mxt.anitrend.adapter.pager.user;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.view.detail.fragment.UserAboutFragment;
@@ -16,11 +18,10 @@ public class UserBasePageAdapter extends DefaultStatePagerAdapter {
 
     private User mUser;
 
-    public UserBasePageAdapter(FragmentManager fm, User model, String[] titles) {
-        super(fm);
+    public UserBasePageAdapter(FragmentManager fragmentManager, User model, Context context) {
+        super(fragmentManager, context);
         mUser = model;
-        mTitles = titles;
-        mPages = 3;
+        mTitles = context.getResources().getStringArray(R.array.profile_page_titles);
     }
 
     @Override
@@ -34,11 +35,5 @@ public class UserBasePageAdapter extends DefaultStatePagerAdapter {
                 return UserStatusFragment.newInstance(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.STATUS.ordinal()], mUser.getDisplay_name());
         }
         return null;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
     }
 }

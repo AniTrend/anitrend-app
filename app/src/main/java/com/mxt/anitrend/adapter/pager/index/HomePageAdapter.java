@@ -1,9 +1,11 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.view.index.fragment.ProgressFragment;
 import com.mxt.anitrend.view.index.fragment.PublicStatusFragment;
@@ -18,9 +20,9 @@ import java.util.Locale;
 
 public class HomePageAdapter extends DefaultStatePagerAdapter {
 
-    public HomePageAdapter(FragmentManager fm) {
-        super(fm);
-        mPages = 3;
+    public HomePageAdapter(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager, context);
+        mTitles = context.getResources().getStringArray(R.array.feed_titles);
     }
 
     /**
@@ -39,20 +41,6 @@ public class HomePageAdapter extends DefaultStatePagerAdapter {
             case 2:
                 return PublicStatusFragment.newInstance(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.PUBIC_STATUS.ordinal()]);
         }
-        return null;
-    }
-
-    /**
-     * This method may be called by the ViewPager to obtain a title string
-     * to describe the specified page. This method may return null
-     * indicating no title for this page. The default implementation returns
-     * null.
-     *
-     * @param position The position of the title requested
-     * @return A title for the requested page
-     */
-    @Override
-    public CharSequence getPageTitle(int position) {
         return null;
     }
 }

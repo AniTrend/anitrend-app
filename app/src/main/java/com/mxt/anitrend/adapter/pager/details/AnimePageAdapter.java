@@ -1,10 +1,12 @@
 package com.mxt.anitrend.adapter.pager.details;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.view.detail.fragment.AnimeExtrasFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeLinksFragment;
@@ -23,11 +25,10 @@ public class AnimePageAdapter extends DefaultStatePagerAdapter {
 
     private Series model;
 
-    public AnimePageAdapter(FragmentManager manager, Series model, String[] titles) {
-        super(manager);
+    public AnimePageAdapter(FragmentManager fragmentManager, Series model, Context context) {
+        super(fragmentManager, context);
         this.model = model;
-        mTitles = titles;
-        mPages = 5;
+        mTitles = context.getResources().getStringArray(R.array.anime_page_titles);
     }
 
     /**
@@ -50,21 +51,5 @@ public class AnimePageAdapter extends DefaultStatePagerAdapter {
                 return AnimeReviewsFragment.newInstance(model.getId());
         }
         return null;
-    }
-
-    /**
-     * This method may be called by the ViewPager to obtain a title string
-     * to describe the specified page. This method may return null
-     * indicating no title for this page. The default implementation returns
-     * null.
-     *
-     * @param position The position of the title requested
-     *
-     * @return A title for the requested page
-     */
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
     }
 }

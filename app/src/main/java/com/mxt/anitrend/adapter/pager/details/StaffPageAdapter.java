@@ -1,9 +1,11 @@
 package com.mxt.anitrend.adapter.pager.details;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.view.detail.fragment.StaffAnimeFragment;
 import com.mxt.anitrend.view.detail.fragment.StaffMangaFragment;
@@ -20,11 +22,10 @@ public class StaffPageAdapter extends DefaultStatePagerAdapter {
 
     private Staff model;
 
-    public StaffPageAdapter(FragmentManager manager, Staff model, String[] titles) {
-        super(manager);
+    public StaffPageAdapter(FragmentManager fragmentManager, Staff model, Context context) {
+        super(fragmentManager, context);
         this.model = model;
-        mTitles = titles;
-        mPages = getPages();
+        mTitles = context.getResources().getStringArray(R.array.staff_page_titles);
     }
 
     @Override
@@ -46,9 +47,12 @@ public class StaffPageAdapter extends DefaultStatePagerAdapter {
         return model != null && model.getAnime() != null && model.getAnime().size() > 0? 3 : 4;
     }
 
+    /**
+     * Return the number of views available.
+     */
     @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
+    public int getCount() {
+        return model != null && model.getAnime() != null &&
+                model.getAnime().size() > 0?super.getCount()-1:super.getCount();
     }
 }

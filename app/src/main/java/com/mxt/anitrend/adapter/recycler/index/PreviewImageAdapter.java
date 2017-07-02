@@ -21,8 +21,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.custom.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.RecyclerViewHolder;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.custom.cardgallary.CardAdapterHelper;
 import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.util.TransitionHelper;
@@ -207,14 +207,18 @@ public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
         @Override
         public void onGenerated(Palette palette) {
             int color;
-            if((color = palette.getDominantColor(0)) != 0)
+            if((color = palette.getDominantColor(0)) != 0) {
                 mFrameLayout.setBackgroundColor(color);
-            else if((color = palette.getVibrantColor(0)) != 0)
+            }
+            else if((color = palette.getVibrantColor(0)) != 0) {
                 mFrameLayout.setBackgroundColor(color);
-            else if((color = palette.getDarkVibrantColor(0)) != 0)
+            }
+            else if((color = palette.getDarkVibrantColor(0)) != 0) {
                 mFrameLayout.setBackgroundColor(color);
-            else if((color = palette.getDarkMutedColor(0)) != 0)
+            }
+            else if((color = palette.getDarkMutedColor(0)) != 0) {
                 mFrameLayout.setBackgroundColor(color);
+            }
         }
     }
 
