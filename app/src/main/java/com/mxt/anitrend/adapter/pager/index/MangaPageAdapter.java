@@ -1,12 +1,15 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.view.index.fragment.MangaFragment;
 import com.mxt.anitrend.view.index.fragment.NewMangaFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -14,32 +17,11 @@ import java.util.Locale;
  * Created by Maxwell on 11/1/2016.
  */
 
-public class MangaPageAdapter extends FragmentStatePagerAdapter {
+public class MangaPageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 2;
-
-    public MangaPageAdapter(FragmentManager manager) {
-        super(manager);
-    }
-
-    @Override
-    public void startUpdate(ViewGroup container) {
-        super.startUpdate(container);
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
-    }
-
-    @Override
-    public void finishUpdate(ViewGroup container) {
-        super.finishUpdate(container);
+    public MangaPageAdapter(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager, context);
+        mTitles = context.getResources().getStringArray(R.array.manga_title);
     }
 
     /**
@@ -57,13 +39,5 @@ public class MangaPageAdapter extends FragmentStatePagerAdapter {
                 return NewMangaFragment.newInstance();
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return pages;
     }
 }

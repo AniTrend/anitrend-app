@@ -20,8 +20,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.UserActivityReply;
-import com.mxt.anitrend.custom.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.RecyclerViewHolder;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
 import com.mxt.anitrend.event.MultiInteractionListener;
@@ -259,6 +259,7 @@ public class CommentAdapter extends RecyclerViewAdapter<UserActivityReply> {
                     break;
                 default:
                     intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setData(Uri.parse(mLinks.get(0)));
                     break;
             }

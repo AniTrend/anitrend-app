@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.custom.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.StatefulRecyclerView;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.event.FragmentCallback;
 import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.FragmentReviewPresenter;

@@ -25,6 +25,7 @@ import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Arrays;
 
@@ -45,7 +46,7 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     private String KEY_MODEL_TYPE = "model_type_key";
 
     @BindView(R.id.page_container) ViewPager mViewPager;
-    @BindView(R.id.nts_center) TabLayout mNavigationTab;
+    @BindView(R.id.nts_center) SmartTabLayout mNavigationTab;
     @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -102,13 +103,13 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     protected void updateUI() {
         if (mContentType == SeriesType.ANIME.ordinal()) {
             mActionBar.setTitle(R.string.title_anime_list);
-            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.anime_listing_status)));
+            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId, getApplicationContext()));
         } else {
             mActionBar.setTitle(R.string.title_manga_list);
-            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.manga_listing_status)));
+            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId, getApplicationContext()));
         }
         mViewPager.setOffscreenPageLimit(3);
-        mNavigationTab.setupWithViewPager(mViewPager);
+        mNavigationTab.setViewPager(mViewPager);
     }
 
     @Override

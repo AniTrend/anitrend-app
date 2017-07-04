@@ -1,22 +1,24 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.view.index.fragment.SuggestionFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
 /**
  * Created by max on 2017/05/02.
  */
-public class HubPageAdapter extends FragmentStatePagerAdapter {
+public class HubPageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 1;
-
-    public HubPageAdapter(FragmentManager manager) {
-        super(manager);
+    public HubPageAdapter(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager, context);
+        mTitles = context.getResources().getStringArray(R.array.hub_title);
     }
 
     /**
@@ -35,13 +37,5 @@ public class HubPageAdapter extends FragmentStatePagerAdapter {
                 return null;
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return pages;
     }
 }

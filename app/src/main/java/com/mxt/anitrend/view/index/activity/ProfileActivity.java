@@ -38,6 +38,7 @@ import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.base.activity.ListBrowseActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +55,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
 
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.nts_center) SmartTabLayout tabLayout;
 
 
     @BindView(R.id.user_anime_time_container) View user_anime_time_container;
@@ -143,9 +144,9 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
 
-        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
+        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser, getApplicationContext());
         mViewPager.setAdapter(mOverViewAdapter);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setViewPager(mViewPager);
     }
 
     @Override

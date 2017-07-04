@@ -1,11 +1,14 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.view.index.fragment.ReviewFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -13,12 +16,11 @@ import java.util.Locale;
  * Created by max on 2017/05/02.
  */
 
-public class ReviewPageAdapter extends FragmentStatePagerAdapter {
+public class ReviewPageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 4;
-
-    public ReviewPageAdapter(FragmentManager manager) {
-        super(manager);
+    public ReviewPageAdapter(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager, context);
+        mTitles = context.getResources().getStringArray(R.array.reviews_title);
     }
 
     /**
@@ -39,13 +41,5 @@ public class ReviewPageAdapter extends FragmentStatePagerAdapter {
                 return ReviewFragment.newInstance(FilterTypes.ReviewType.CONTROVERSIAL.ordinal());
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return pages;
     }
 }

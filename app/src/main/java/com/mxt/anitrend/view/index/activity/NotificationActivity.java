@@ -15,20 +15,17 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.user.UserNotificationAdapter;
 import com.mxt.anitrend.api.structure.UserNotification;
-import com.mxt.anitrend.custom.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.StatefulRecyclerView;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.event.NotificationClickListener;
 import com.mxt.anitrend.presenter.index.NotificationPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
-import com.mxt.anitrend.util.NotificationDispatcher;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

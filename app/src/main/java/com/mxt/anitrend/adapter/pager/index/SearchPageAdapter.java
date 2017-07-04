@@ -5,11 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.view.base.fragment.AnimeSearchFragment;
 import com.mxt.anitrend.view.base.fragment.MangaSearchFragment;
 import com.mxt.anitrend.view.base.fragment.StudioSearchFragment;
 import com.mxt.anitrend.view.base.fragment.UserSearchFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -17,16 +19,15 @@ import java.util.Locale;
  * Created by Maxwell on 11/6/2016.
  */
 
-public class SearchPageAdapter extends FragmentStatePagerAdapter {
+public class SearchPageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 4;
     private final String query;
-    private ApplicationPrefs mPrefs;
 
-    public SearchPageAdapter(FragmentManager fm, String query, Context mContext) {
-        super(fm);
+    public SearchPageAdapter(FragmentManager fragmentManager, String query, Context context) {
+        super(fragmentManager, context);
         this.query = query;
-        this.mPrefs = new ApplicationPrefs(mContext);
+        boolean isAuth = new ApplicationPrefs(context).isAuthenticated();
+        mTitles = context.getResources().getStringArray(isAuth ? R.array.search_titles_auth : R.array.search_titles);
     }
 
     @Override
@@ -42,10 +43,5 @@ public class SearchPageAdapter extends FragmentStatePagerAdapter {
                 return UserSearchFragment.newInstance(query);
         }
         return null;
-    }
-
-    @Override
-    public int getCount() {
-        return mPrefs.isAuthenticated()?pages:pages-1;
     }
 }
