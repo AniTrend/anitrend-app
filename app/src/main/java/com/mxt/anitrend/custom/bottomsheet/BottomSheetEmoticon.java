@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.EmoticonAdapter;
-import com.mxt.anitrend.custom.StatefulRecyclerView;
+import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.custom.emoji4j.Emoji;
 import com.mxt.anitrend.event.InteractionListener;
 import com.mxt.anitrend.event.SheetStateChangeListener;

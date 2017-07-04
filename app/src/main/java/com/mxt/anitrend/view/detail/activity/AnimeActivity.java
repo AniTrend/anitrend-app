@@ -177,8 +177,8 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
     }
 
-    public void setAdapters(){
-        viewPager.setAdapter(new AnimePageAdapter(getSupportFragmentManager(), mSeries, getResources().getStringArray(R.array.anime_page_titles)));
+    public void setAdapters() {
+        viewPager.setAdapter(new AnimePageAdapter(getSupportFragmentManager(), mSeries, getApplicationContext()));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
     }

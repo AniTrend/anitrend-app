@@ -26,6 +26,7 @@ import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +44,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @BindView(R.id.parent_coordinator) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.nts_center) SmartTabLayout tabLayout;
 
     private final String KEY_MINI_STAFF = "mini_staff_key";
     private final String KEY_FULL_STAFF = "full_staff_key";
@@ -86,9 +87,9 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @Override
     protected void updateUI() {
         setFavIcon();
-        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff, getResources().getStringArray(R.array.staff_page_titles));
+        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff, getApplicationContext());
         mViewPager.setAdapter(mStaffViewAdapter);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setViewPager(mViewPager);
         progressLayout.showContent();
     }
 

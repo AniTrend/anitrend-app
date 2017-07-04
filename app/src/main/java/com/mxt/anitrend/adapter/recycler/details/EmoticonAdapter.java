@@ -10,8 +10,8 @@ import android.widget.Filter;
 
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.custom.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.RecyclerViewHolder;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.custom.emoji4j.Emoji;
 import com.mxt.anitrend.event.InteractionListener;
 

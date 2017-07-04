@@ -18,8 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemTextColor="?attr/drawer_color"
         app:headerLayout="@layout/nav_main_header_drawer"
+        app:itemTextColor="?attr/drawer_color"
         app:menu="@menu/menu_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

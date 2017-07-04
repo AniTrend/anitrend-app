@@ -56,10 +56,9 @@ public class ServiceGenerator {
                     .baseUrl(BuildConfig.API_LINK)
                     .addConverterFactory(GsonConverterFactory.create(gson));
 
-    private static Retrofit app_repo = new Retrofit.Builder()
-            .baseUrl(BuildConfig.APP_REPO)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(baseClient.build()).build();
+    private static Retrofit.Builder shared = new Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+            .client(baseClient.build());
 
     private static Retrofit.Builder ep_ret = new Retrofit.Builder()
             .addConverterFactory(SimpleXmlConverterFactory.create())
@@ -107,11 +106,14 @@ public class ServiceGenerator {
     }
 
     public static RepoModel createRepoService() {
-        return app_repo.create(RepoModel.class);
+        return shared
+                .baseUrl(BuildConfig.APP_REPO)
+                .build().create(RepoModel.class);
     }
 
     public static Hub createHubService() {
-        return ep_ret.baseUrl(BuildConfig.HUB_BASE_LINK)
+        return shared
+                .baseUrl(BuildConfig.HUB_BASE_LINK)
                 .build().create(Hub.class);
     }
 

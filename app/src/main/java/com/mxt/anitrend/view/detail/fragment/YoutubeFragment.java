@@ -42,24 +42,28 @@ public class YoutubeFragment extends YouTubePlayerSupportFragment {
 
     @Override
     public void onStart() {
-        super.onStart();
-        initializedListener = new YouTubePlayer.OnInitializedListener() {
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult result) {
+        try {
+            super.onStart();
+            initializedListener = new YouTubePlayer.OnInitializedListener() {
+                @Override
+                public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult result) {
 
-            }
-
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                if (!wasRestored && stream_link != null) {
-                    player_reference = player;
-                    player_reference.cueVideo(stream_link);
-                } else if (wasRestored) {
-                    player.seekToMillis(play_position);
                 }
-            }
-        };
-        init();
+
+                @Override
+                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                    if (!wasRestored && stream_link != null) {
+                        player_reference = player;
+                        player_reference.cueVideo(stream_link);
+                    } else if (wasRestored) {
+                        player.seekToMillis(play_position);
+                    }
+                }
+            };
+            init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -70,25 +74,19 @@ public class YoutubeFragment extends YouTubePlayerSupportFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString(LINK_KEY,stream_link);
-        outState.putString(API_LINK_KEY, api_key);
+    public void onPause() {
         if(player_reference != null)
-            outState.putInt(POSITION_KEY, player_reference.getCurrentTimeMillis());
-        super.onSaveInstanceState(outState);
+            player_reference.release();
+        super.onPause();
     }
 
-    private void init() {
-        if(!isDetached() || !isRemoving()) {
+    private void init() throws Exception {
+        if(isVisible() && !isDetached() || !isRemoving()) {
             String reference = getArguments().getString(PARAM_URL);
             if (reference != null && stream_link == null && api_key == null) {
                 stream_link = reference;
                 api_key = getArguments().getString(PARAM_KEY);
-                try {
-                    initialize(api_key, initializedListener);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                initialize(api_key, initializedListener);
             }
         }
     }

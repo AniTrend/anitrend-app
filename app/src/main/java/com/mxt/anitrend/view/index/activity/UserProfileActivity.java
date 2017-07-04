@@ -40,6 +40,7 @@ import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.base.activity.ListBrowseActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +60,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
     @BindView(R.id.container) ViewPager mViewPager;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.nts_center) SmartTabLayout tabLayout;
     @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
 
@@ -139,7 +140,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
             updateUI();
         } else{
-            Toast.makeText(this, "User model was not initialized, received null", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.text_error_request, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -150,9 +151,9 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
         user_manga_chap_container.setOnClickListener(this);
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
-        UserPageAdapter mOverViewAdapter = new UserPageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
+        UserPageAdapter mOverViewAdapter = new UserPageAdapter(getSupportFragmentManager(), mCurrentUser, getApplicationContext());
         mViewPager.setAdapter(mOverViewAdapter);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setViewPager(mViewPager);
     }
 
     @Override

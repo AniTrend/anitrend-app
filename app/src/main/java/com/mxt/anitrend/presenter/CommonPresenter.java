@@ -16,7 +16,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.Search;
-import com.mxt.anitrend.custom.ScrollListener;
+import com.mxt.anitrend.custom.recycler.ScrollListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DefaultPreferences;

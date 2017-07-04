@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.user.UserListAdapter;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.custom.StatefulRecyclerView;
+import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.event.SheetStateChangeListener;
 import com.mxt.anitrend.util.ScreenUtil;
 

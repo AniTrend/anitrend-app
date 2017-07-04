@@ -45,9 +45,9 @@
     "link": "https://github.com/codemybrainsout/ahoy-onboarding"
   },
   {
-    "name": "Navigation Tab Strip",
-    "description": "Navigation tab strip with smooth interaction.",
-    "link": "https://github.com/DevLight-Mobile-Agency/NavigationTabStrip"
+    "name": "SmartTabLayout",
+    "description": "A custom ViewPager title strip which gives continuous feedback to the user when scrolling",
+    "link": "https://github.com/ogaclejapan/SmartTabLayout"
   },
   {
     "name": "Material Tap Target Prompt",

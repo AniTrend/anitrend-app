@@ -69,7 +69,7 @@ public class BaseAppTest {
 
         Call<Result<Playlist>> playlist = aniTrend
                 .getPlaylist("-addedDate", 10, 1,
-                null, null, Hub.filter);
+                        "users.addedBy", null, "{\"videos\":{\"$exists\":true}}");
 
         assertNotNull(playlist);
         Response<Result<Playlist>> result = playlist.execute();

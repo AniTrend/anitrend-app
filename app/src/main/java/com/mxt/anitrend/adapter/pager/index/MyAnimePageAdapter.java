@@ -1,14 +1,17 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.view.index.fragment.CompletedAnimeFragment;
 import com.mxt.anitrend.view.index.fragment.DroppedAnimeFragment;
 import com.mxt.anitrend.view.index.fragment.OnHoldAnimeFragment;
 import com.mxt.anitrend.view.index.fragment.PlanToWatchFragment;
 import com.mxt.anitrend.view.index.fragment.WatchingFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -16,16 +19,14 @@ import java.util.Locale;
  * Created by Maxwell on 11/20/2016.
  */
 
-public class MyAnimePageAdapter extends FragmentStatePagerAdapter {
+public class MyAnimePageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 5;
     private int user_id;
-    private final String[] mTitles;
 
-    public MyAnimePageAdapter(FragmentManager manager, int id, String[] titles) {
-        super(manager);
+    public MyAnimePageAdapter(FragmentManager fragmentManager, int id, Context context) {
+        super(fragmentManager, context);
         user_id = id;
-        mTitles = titles;
+        mTitles = context.getResources().getStringArray(R.array.anime_listing_status);
     }
 
     /**
@@ -49,20 +50,5 @@ public class MyAnimePageAdapter extends FragmentStatePagerAdapter {
                 return DroppedAnimeFragment.newInstance(user_id);
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return pages;
-    }
-
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
     }
 }

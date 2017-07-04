@@ -26,8 +26,9 @@ import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.StatefulRecyclerView;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.view.StatefulRecyclerView;
+import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.event.MultiInteractionListener;
 import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
@@ -303,7 +304,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                 if(editText != null) {
                                     if(!TextUtils.isEmpty(editText.getText())) {
                                         if(model_type.equals(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()])) {
-                                            Payload.ActivityMessage msg = new Payload.ActivityMessage(mItem.getId(), mItem.getMessenger().getId(), editText.getText().toString(), mItem.getUser_id());
+                                            Payload.ActivityMessage msg = new Payload.ActivityMessage(mItem.getId(), mItem.getMessenger().getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id());
                                             RequestApiAction.MessageActions<UserActivity> action = new RequestApiAction.MessageActions<>(getContext(), new Callback<UserActivity>() {
                                                 @Override
                                                 public void onResponse(Call<UserActivity> call, Response<UserActivity> response) {
@@ -329,7 +330,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                             }, FilterTypes.ActionType.DIRECT_MESSAGE_EDIT, msg);
                                             action.execute();
                                         } else {
-                                            Payload.ActivityStruct status = new Payload.ActivityStruct(mItem.getId(), editText.getText().toString(), mItem.getUser_id(), -1);
+                                            Payload.ActivityStruct status = new Payload.ActivityStruct(mItem.getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id(), -1);
                                             RequestApiAction.ActivityActions<UserActivity> action = new RequestApiAction.ActivityActions<>(getContext(), new Callback<UserActivity>() {
                                                 @Override
                                                 public void onResponse(Call<UserActivity> call, Response<UserActivity> response) {

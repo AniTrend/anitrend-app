@@ -1,13 +1,16 @@
 package com.mxt.anitrend.adapter.pager.index;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.view.index.fragment.ProgressFragment;
 import com.mxt.anitrend.view.index.fragment.PublicStatusFragment;
 import com.mxt.anitrend.view.index.fragment.StatusFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -15,12 +18,11 @@ import java.util.Locale;
  * Created by max on 2017/03/09.
  */
 
-public class HomePageAdapter extends FragmentStatePagerAdapter {
+public class HomePageAdapter extends DefaultStatePagerAdapter {
 
-    private static final int pages = 3;
-
-    public HomePageAdapter(FragmentManager fm) {
-        super(fm);
+    public HomePageAdapter(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager, context);
+        mTitles = context.getResources().getStringArray(R.array.feed_titles);
     }
 
     /**
@@ -40,13 +42,5 @@ public class HomePageAdapter extends FragmentStatePagerAdapter {
                 return PublicStatusFragment.newInstance(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.PUBIC_STATUS.ordinal()]);
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return pages;
     }
 }

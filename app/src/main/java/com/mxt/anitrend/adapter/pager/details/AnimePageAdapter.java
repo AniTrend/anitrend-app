@@ -1,16 +1,19 @@
 package com.mxt.anitrend.adapter.pager.details;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.view.detail.fragment.AnimeExtrasFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeLinksFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeOverviewFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeReviewsFragment;
 import com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment;
+import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
 
@@ -18,20 +21,14 @@ import java.util.Locale;
  * Created by Maxwell on 10/17/2016.
  */
 
-public class AnimePageAdapter extends FragmentPagerAdapter {
+public class AnimePageAdapter extends DefaultStatePagerAdapter {
 
     private Series model;
-    private String[] mTitles;
 
-    public AnimePageAdapter(FragmentManager manager, Series model, String[] titles) {
-        super(manager);
+    public AnimePageAdapter(FragmentManager fragmentManager, Series model, Context context) {
+        super(fragmentManager, context);
         this.model = model;
-        mTitles = titles;
-    }
-
-    @Override
-    public void startUpdate(ViewGroup container) {
-        super.startUpdate(container);
+        mTitles = context.getResources().getStringArray(R.array.anime_page_titles);
     }
 
     /**
@@ -54,29 +51,5 @@ public class AnimePageAdapter extends FragmentPagerAdapter {
                 return AnimeReviewsFragment.newInstance(model.getId());
         }
         return null;
-    }
-
-    /**
-     * Return the number of views available.
-     */
-    @Override
-    public int getCount() {
-        return 5;
-    }
-
-    /**
-     * This method may be called by the ViewPager to obtain a title string
-     * to describe the specified page. This method may return null
-     * indicating no title for this page. The default implementation returns
-     * null.
-     *
-     * @param position The position of the title requested
-     *
-     * @return A title for the requested page
-     */
-    @Override
-    public CharSequence getPageTitle(int position) {
-        Locale locale = Locale.getDefault();
-        return mTitles[position].toUpperCase(locale);
     }
 }

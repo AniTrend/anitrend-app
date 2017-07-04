@@ -31,7 +31,7 @@ import com.mxt.anitrend.api.structure.KeyValueTemp;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.PolygonView;
+import com.mxt.anitrend.custom.view.PolygonView;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetUsers;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;

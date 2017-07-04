@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="6dp" />
 
-    <com.mxt.anitrend.custom.StatefulRecyclerView
+    <com.mxt.anitrend.custom.view.StatefulRecyclerView
         android:id="@+id/generic_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

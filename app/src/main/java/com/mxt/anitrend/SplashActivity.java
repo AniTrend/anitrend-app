@@ -110,7 +110,7 @@ public class SplashActivity extends AppCompatActivity implements TokenReference.
     public void onTokenFailure(Throwable cause) {
         Log.e("Splash Screen", "Token Response Callback "+cause.getLocalizedMessage() ,cause);
         cause.printStackTrace();
-        if(cause.getLocalizedMessage().length() < 1)
+        if(cause.getLocalizedMessage() != null && cause.getLocalizedMessage().length() < 1)
             mPresenter.makeAlerterWarning(getString(R.string.text_unknown_error));
         else
             mPresenter.makeAlerterWarning(cause.getLocalizedMessage());
