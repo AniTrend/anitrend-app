@@ -50,15 +50,16 @@ import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.mxt.anitrend.adapter.pager.index.AiringPageAdapter;
-import com.mxt.anitrend.adapter.pager.index.HomePageAdapter;
-import com.mxt.anitrend.adapter.pager.index.HubPageAdapter;
-import com.mxt.anitrend.adapter.pager.index.MangaPageAdapter;
-import com.mxt.anitrend.adapter.pager.index.MyAnimePageAdapter;
-import com.mxt.anitrend.adapter.pager.index.MyMangaPageAdapter;
-import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter;
-import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter;
-import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter;
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
+import com.mxt.anitrend.adapter.pager.AiringStatePageListener;
+import com.mxt.anitrend.adapter.pager.HomeStatePageListener;
+import com.mxt.anitrend.adapter.pager.HubStatePageListener;
+import com.mxt.anitrend.adapter.pager.MangaStatePageListener;
+import com.mxt.anitrend.adapter.pager.MyAnimeStatePageListener;
+import com.mxt.anitrend.adapter.pager.MyMangaStatePageListener;
+import com.mxt.anitrend.adapter.pager.ReviewStatePageListener;
+import com.mxt.anitrend.adapter.pager.SeasonStatePageListener;
+import com.mxt.anitrend.adapter.pager.TrendingStatePageListener;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.Search;
@@ -116,12 +117,18 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
 
     private MainPresenter mPresenter;
 
-    @BindView(R.id.page_container) ViewPager mViewPager;
-    @BindView(R.id.nts_center) NavigationTabStrip mNavigationTabStrip;
-    @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.searchBar) MaterialSearchBar searchBar;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.page_container)
+    ViewPager mViewPager;
+    @BindView(R.id.nts_center)
+    NavigationTabStrip mNavigationTabStrip;
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.searchBar)
+    MaterialSearchBar searchBar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
 
     private BottomSheetBehavior mFilterBehavior;
     private BottomSheetMessage mBuilder;
@@ -154,7 +161,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Intent intent = getIntent();
             mShortcut = intent.getIntExtra(REDIRECT, 0);
             mCurrentUser = intent.getParcelableExtra(USER_PROF);
@@ -177,19 +184,18 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         mPageIndex = DateTimeConverter.getMenuSelect();
         updateUI();
         int res;
-        if(savedInstanceState == null) {
-            if(mPresenter.getAppPrefs().isAuthenticated()) {
-                res = mShortcut == 0? mPresenter.getDefaultPrefs().getStartupPage():mShortcut;
+        if (savedInstanceState == null) {
+            if (mPresenter.getAppPrefs().isAuthenticated()) {
+                res = mShortcut == 0 ? mPresenter.getDefaultPrefs().getStartupPage() : mShortcut;
                 mNavigationView.setCheckedItem(res);
                 Display(res);
-            }
-            else {
-                res = mShortcut == 0?R.id.nav_anime:mShortcut;
+            } else {
+                res = mShortcut == 0 ? R.id.nav_anime : mShortcut;
                 mNavigationView.setCheckedItem(res);
                 Display(res);
             }
         } else {
-            res = mShortcut == 0?mNavigationIndex:mShortcut;
+            res = mShortcut == 0 ? mNavigationIndex : mShortcut;
             mNavigationView.setCheckedItem(res);
             Display(res);
         }
@@ -198,7 +204,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onLowMemory() {
         mOffScreenLimit = 2;
-        if(mViewPager != null) {
+        if (mViewPager != null) {
             mViewPager.setOffscreenPageLimit(mOffScreenLimit);
         }
         super.onLowMemory();
@@ -208,9 +214,9 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if(mNavigationIndex == id)
+        if (mNavigationIndex == id)
             return true;
-        if(id != R.id.nav_account_profile && id != R.id.nav_list_style && id != R.id.nav_light_theme)
+        if (id != R.id.nav_account_profile && id != R.id.nav_list_style && id != R.id.nav_light_theme)
             mDrawer.closeDrawer(GravityCompat.START);
         Display(id);
         return true;
@@ -222,7 +228,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_home));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.feed_titles));
-                HomePageAdapter mHomePageAdapter = new HomePageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mHomePageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 3, new HomeStatePageListener());
                 mViewPager.setAdapter(mHomePageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -230,15 +236,15 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_anime));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.seasons_titles));
-                SeasonPageAdapter mSeasonPageAdapter = new SeasonPageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mSeasonPageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 4, new SeasonStatePageListener());
                 mViewPager.setAdapter(mSeasonPageAdapter);
-                mNavigationTabStrip.setViewPager(mViewPager,mPageIndex);
+                mNavigationTabStrip.setViewPager(mViewPager, mPageIndex);
                 break;
             case R.id.nav_manga:
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_manga));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.manga_title));
-                MangaPageAdapter mMangaPageAdapter = new MangaPageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mMangaPageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 2, new MangaStatePageListener());
                 mViewPager.setAdapter(mMangaPageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -246,7 +252,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_trending));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.trending_title));
-                TrendingPageAdapter mTrendingPagedAdapter = new TrendingPageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mTrendingPagedAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 2, new TrendingStatePageListener());
                 mViewPager.setAdapter(mTrendingPagedAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -254,7 +260,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_airing));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.airing_title));
-                AiringPageAdapter mAiringPagedAdapter = new AiringPageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mAiringPagedAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 2, new AiringStatePageListener());
                 mViewPager.setAdapter(mAiringPagedAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -263,7 +269,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 mNavigationIndex = id;
                 String[] nav_myanime = getResources().getStringArray(R.array.myanime_title);
                 mNavigationTabStrip.setTitles(nav_myanime);
-                MyAnimePageAdapter myAnimePageAdapter = new MyAnimePageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_myanime);
+                GenericFragmentStatePagerAdapter myAnimePageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), nav_myanime, 5, new MyAnimeStatePageListener(mCurrentUser.getId()));
                 mViewPager.setAdapter(myAnimePageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -272,7 +278,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 mNavigationIndex = id;
                 String[] nav_mymanga = getResources().getStringArray(R.array.mymanga_title);
                 mNavigationTabStrip.setTitles(nav_mymanga);
-                MyMangaPageAdapter myMangaPageAdapter = new MyMangaPageAdapter(getSupportFragmentManager(), mCurrentUser.getId(), nav_mymanga);
+                GenericFragmentStatePagerAdapter myMangaPageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), nav_mymanga, 5, new MyMangaStatePageListener(mCurrentUser.getId()));
                 mViewPager.setAdapter(myMangaPageAdapter);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -280,7 +286,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_hub));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.hub_title));
-                HubPageAdapter mAniTrendHub = new HubPageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mAniTrendHub = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 1, new HubStatePageListener());
                 mViewPager.setAdapter(mAniTrendHub);
                 mNavigationTabStrip.setViewPager(mViewPager);
                 break;
@@ -288,17 +294,17 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 searchBar.setPlaceHolder(getString(R.string.drawer_title_reviews));
                 mNavigationIndex = id;
                 mNavigationTabStrip.setTitles(getResources().getStringArray(R.array.reviews_title));
-                ReviewPageAdapter mReviews = new ReviewPageAdapter(getSupportFragmentManager());
+                GenericFragmentStatePagerAdapter mReviews = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), null, 4, new ReviewStatePageListener());
                 mViewPager.setAdapter(mReviews);
                 mNavigationTabStrip.setViewPager(mViewPager);
-                if(mPresenter.getAppPrefs().getReviewsTip()) {
+                if (mPresenter.getAppPrefs().getReviewsTip()) {
                     mPresenter.createAlerter(MainActivity.this, getString(R.string.title_new_feature), getString(R.string.text_reviews_feature),
                             R.drawable.ic_bookmark_white_24dp, R.color.colorStateBlue);
                     mPresenter.getAppPrefs().setReviewsTip();
                 }
                 break;
             case R.id.nav_filter:
-                if(mFilterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                if (mFilterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     mFilterBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 mFilterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 break;
@@ -319,8 +325,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 startActivity(profile_intent);
                 break;
             case R.id.nav_sign_out:
-                mBuilder = new BottomSheetMessage.Builder()
-                        .setTitle(R.string.drawer_signout_title)
+                mBuilder = new BottomSheetMessage.Builder().setTitle(R.string.drawer_signout_title)
                         .setText(R.string.drawer_signout_text)
                         .setPositive(R.string.Yes)
                         .setNegative(R.string.No)
@@ -339,7 +344,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                         mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
                         break;
                     case PERMISSION_DENIED:
-                        if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                             new DialogManager(MainActivity.this).createDialogMessage(getString(R.string.title_permission_write),
                                     getString(R.string.text_permission_write), getString(R.string.Ok),
                                     getString(R.string.Cancel), new MaterialDialog.SingleButtonCallback() {
@@ -359,8 +364,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                                             }
                                         }
                                     });
-                        }
-                        else {
+                        } else {
                             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
                         }
                         break;
@@ -397,10 +401,11 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      * @see #requestPermissions(String[], int)
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == REQUEST_CODE) {
-            if(grantResults.length > 0)
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0)
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     Display(R.id.nav_check_update);
                 else
                     Toast.makeText(this, R.string.text_permission_required, Toast.LENGTH_SHORT).show();
@@ -413,10 +418,10 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == LoginActivity.LOGIN_RESULT && resultCode == RESULT_OK) {
-            if(data != null && data.hasExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN)) {
+        if (requestCode == LoginActivity.LOGIN_RESULT && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN)) {
                 mCurrentUser = data.getParcelableExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN);
-                if(mCurrentUser != null) {
+                if (mCurrentUser != null) {
                     data.getIntExtra(LoginActivity.KEY_NOTIFICATION_COUNT, 0);
                     setUserItems();
                     mBuilder = new BottomSheetMessage.Builder()
@@ -426,7 +431,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                     mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
 
                     // schedule the job to run
-                    if(mPresenter.getDefaultPrefs().isNotificationEnabled())
+                    if (mPresenter.getDefaultPrefs().isNotificationEnabled())
                         new ServiceScheduler(getApplicationContext()).scheduleJob();
 
                     mPresenter.createAlerter(MainActivity.this, getString(R.string.login_welcome_title, mCurrentUser.getDisplay_name()), getString(R.string.login_welcome_text),
@@ -488,8 +493,8 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         searchBar.inflateMenu(R.menu.menu_main_options);
         searchBar.getMenu().setOnMenuItemClickListener(this);
 
-        if(mPresenter.getAppPrefs().isAuthenticated()) {
-            if(mCurrentUser != null) {
+        if (mPresenter.getAppPrefs().isAuthenticated()) {
+            if (mCurrentUser != null) {
                 setUserItems();
                 onNewNotification();
             } else {
@@ -510,7 +515,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         mViewPager.setOffscreenPageLimit(mOffScreenLimit);
 
         mPresenter.startExecution();
-        if(mModel == null)
+        if (mModel == null)
             mModel = mPresenter.getSearchModel();
         user_header.setOnClickListener(this);
     }
@@ -518,9 +523,9 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     /**
      * Runs once to check if users has youtube installed
      */
-    private void checkStatus(){
-        if(!YouTubeIntents.canResolvePlayVideoIntent(this))
-        {
+
+    private void checkStatus() {
+        if (!YouTubeIntents.canResolvePlayVideoIntent(this)) {
             mPresenter.createSuperToast(MainActivity.this,
                     getString(R.string.init_youtube_missing),
                     R.drawable.ic_play_circle_outline_white_24dp,
@@ -543,7 +548,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mModel = (Search)savedInstanceState.getSerializable(MODEL_SAVE_KEY);
+        mModel = (Search) savedInstanceState.getSerializable(MODEL_SAVE_KEY);
     }
 
     /**
@@ -551,7 +556,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     protected void onDestroy() {
-        if(userNotificationCountFetch != null)
+        if (userNotificationCountFetch != null)
             userNotificationCountFetch.cancel(false);
         super.onDestroy();
     }
@@ -562,9 +567,9 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     protected void onPause() {
         mPresenter.getDefaultPrefs().getPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        if(userNotificationCountFetch != null)
+        if (userNotificationCountFetch != null)
             userNotificationCountFetch.cancel(false);
-        if(mPresenter != null)
+        if (mPresenter != null)
             mPresenter.destroySuperToast();
         super.onPause();
     }
@@ -573,13 +578,13 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     protected void onPostResume() {
         super.onPostResume();
         mPresenter.getDefaultPrefs().getPreferences().registerOnSharedPreferenceChangeListener(this);
-        if(mLastSynced == 0L) {
+        if (mLastSynced == 0L) {
             mLastSynced = System.currentTimeMillis();
             return;
         }
-        if(mPresenter.getAppPrefs().isAuthenticated() && !isFinishing() || !isDestroyed()) {
+        if (mPresenter.getAppPrefs().isAuthenticated() && !isFinishing() || !isDestroyed()) {
             //request user notification count after every 5 minutes
-            if(System.currentTimeMillis() / 1000 > mLastSynced / 1000 + (60 * 5)) {
+            if (System.currentTimeMillis() / 1000 > mLastSynced / 1000 + (60 * 5)) {
                 mLastSynced = System.currentTimeMillis();
                 userNotificationCountFetch = new AsyncTaskFetch<>(this, getApplicationContext());
                 userNotificationCountFetch.execute(AsyncTaskFetch.RequestType.USER_NOTIFICATION_COUNT);
@@ -591,18 +596,16 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
-        }
-        else if(mFilterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+        } else if (mFilterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
             mFilterBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        else if(!isClosing) {
+        else if (!isClosing) {
             isClosing = true;
             mPresenter.createSuperToast(MainActivity.this,
                     getString(R.string.text_confirm_exit),
                     R.drawable.ic_info_outline_white_18dp,
                     Style.TYPE_STANDARD, Style.DURATION_MEDIUM,
                     PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_TEAL));
-        }
-        else
+        } else
             super.onBackPressed();
     }
 
@@ -620,7 +623,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onSearchConfirmed(CharSequence charSequence) {
         ImeAction.hideSoftKeyboard(this);
-        if(!TextUtils.isEmpty(charSequence)) {
+        if (!TextUtils.isEmpty(charSequence)) {
             mModel.setQuery(charSequence.toString());
             startSearch();
         } else {
@@ -633,7 +636,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onButtonClicked(int i) {
-        switch (i){
+        switch (i) {
             case MaterialSearchBar.BUTTON_NAVIGATION:
                 //open navigation drawer
                 mDrawer.openDrawer(GravityCompat.START);
@@ -651,8 +654,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         ImeAction.hideSoftKeyboard(this);
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_create_post:
                 if (mPresenter.getAppPrefs().isAuthenticated())
                     new DialogManager(this).createDialogActivityPost(new MaterialDialog.SingleButtonCallback() {
@@ -661,9 +663,9 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                             switch (which) {
                                 case POSITIVE:
                                     EditText editText = dialog.getInputEditText();
-                                    if(editText != null) {
+                                    if (editText != null) {
                                         hideKeyboard();
-                                        if(!TextUtils.isEmpty(editText.getText())) {
+                                        if (!TextUtils.isEmpty(editText.getText())) {
                                             Payload.ActivityStruct status = new Payload.ActivityStruct(EmojiUtils.hexHtmlify(editText.getText().toString()));
                                             RequestApiAction.ActivityActions<ResponseBody> request = new RequestApiAction.ActivityActions<>(getApplicationContext(), new Callback<ResponseBody>() {
                                                 @Override
@@ -672,15 +674,14 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                                                         if (response.isSuccessful() && response.body() != null) {
                                                             dialog.dismiss();
                                                             mPresenter.makeAlerterSuccess(MainActivity.this, getString(R.string.completed_success));
-                                                        }
-                                                        else
+                                                        } else
                                                             Toast.makeText(MainActivity.this, ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
 
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    if(!isFinishing() || !isDestroyed()) {
+                                                    if (!isFinishing() || !isDestroyed()) {
                                                         t.printStackTrace();
                                                         Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                     }
@@ -725,7 +726,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      * When the search query has been submitted
      */
     private void startSearch() {
-        CircularAnim.fullActivity(this, searchBar).colorOrImageRes(mPresenter.getAppPrefs().isLightTheme()?R.color.colorAccent_Ripple:R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
+        CircularAnim.fullActivity(this, searchBar).colorOrImageRes(mPresenter.getAppPrefs().isLightTheme() ? R.color.colorAccent_Ripple : R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
             @Override
             public void onAnimationEnd() {
                 Intent searchAction = new Intent(MainActivity.this, SearchResultActivity.class);
@@ -807,7 +808,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onUpdatedVersion() {
         new DialogManager(MainActivity.this).createChangeLog();
-        if(mPresenter.getAppPrefs().getMainTip()) {
+        if (mPresenter.getAppPrefs().getMainTip()) {
             mBuilder = new BottomSheetMessage.Builder()
                     .setTitle(R.string.app_intro_title)
                     .setText(R.string.app_intro_guide)
@@ -820,7 +821,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onNormalStart() {
         AppVersionTracking remote = mPresenter.getAppPrefs().getRepoVersions();
-        if(remote.checkAgainstCurrent()) {
+        if (remote.checkAgainstCurrent()) {
             // there is a new version of getRepoVersions()
             app_update.setText(Html.fromHtml(getString(R.string.app_update, remote.getVersion())));
             app_update.setVisibility(View.VISIBLE);
@@ -833,9 +834,9 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onNewNotification() {
         int nCount = mCurrentUser.getNotifications();
-        if(nCount > 0) {
+        if (nCount > 0) {
             user_notifications.setVisibility(View.VISIBLE);
-            if(nCount > 1)
+            if (nCount > 1)
                 user_notifications.setText(getString(R.string.text_notifications, nCount));
             else
                 user_notifications.setText(getString(R.string.text_notification, nCount));
@@ -975,7 +976,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-        if(mNavigationIndex == R.id.nav_anime || mNavigationIndex == R.id.nav_manga || mNavigationIndex == R.id.nav_myanime || mNavigationIndex == R.id.nav_mymanga || mNavigationIndex == R.id.nav_hub) {
+        if (mNavigationIndex == R.id.nav_anime || mNavigationIndex == R.id.nav_manga || mNavigationIndex == R.id.nav_myanime || mNavigationIndex == R.id.nav_mymanga || mNavigationIndex == R.id.nav_hub) {
             mPresenter.createSuperToast(MainActivity.this,
                     getString(R.string.text_filter_applying),
                     R.drawable.ic_reset,
@@ -1008,7 +1009,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
             user_notifications = (TextView) mAccountProfile.getActionView().findViewById(R.id.user_notification_count);
             user_notifications.setOnClickListener(this);
 
-            mReviewMenu.setTitle(mPresenter.getAppPrefs().getReviewType()?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
+            mReviewMenu.setTitle(mPresenter.getAppPrefs().getReviewType() ? R.string.drawer_title_anime_reviews : R.string.drawer_title_manga_reviews);
             user_name.setText(mCurrentUser.getDisplay_name());
             Glide.with(this)
                     .load(mCurrentUser.getImage_url_lge())
@@ -1059,7 +1060,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                 break;
             case R.id.app_review_type:
                 mPresenter.getAppPrefs().setReviewType(state);
-                mReviewMenu.setTitle(state?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
+                mReviewMenu.setTitle(state ? R.string.drawer_title_anime_reviews : R.string.drawer_title_manga_reviews);
                 break;
         }
     }
@@ -1069,9 +1070,9 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.banner_clickable:
-                if(mPresenter.getAppPrefs().isAuthenticated()) {
+                if (mPresenter.getAppPrefs().isAuthenticated()) {
                     Intent profile_intent = new Intent(this, ProfileActivity.class);
                     profile_intent.putExtra(ProfileActivity.PROFILE_INTENT_KEY, mCurrentUser);
                     TransitionHelper.startSharedTransitionActivity(MainActivity.this, user_banner, profile_intent);
@@ -1098,15 +1099,15 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onResponse(Call<Integer> call, Response<Integer> response) {
-        if(response.isSuccessful() && response.body() != null && (!isDestroyed() || !isFinishing())) {
+        if (response.isSuccessful() && response.body() != null && (!isDestroyed() || !isFinishing())) {
             try {
                 mCurrentUser.setNotifications(response.body());
-                if(response.body() > 0) {
+                if (response.body() > 0) {
                     user_notifications.setVisibility(View.VISIBLE);
                     mPresenter.createAlerter(MainActivity.this, getString(R.string.alerter_notification_title), getString(R.string.alerter_notification_text),
                             R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
 
-                    if(response.body() > 1)
+                    if (response.body() > 1)
                         user_notifications.setText(getString(R.string.text_notifications, response.body()));
                     else
                         user_notifications.setText(getString(R.string.text_notification, response.body()));
@@ -1128,7 +1129,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onFailure(Call<Integer> call, Throwable t) {
-        if(!isDestroyed() || !isFinishing()) {
+        if (!isDestroyed() || !isFinishing()) {
             call.cancel();
             t.printStackTrace();
         }
@@ -1140,12 +1141,12 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         ServiceScheduler sh = new ServiceScheduler(getApplicationContext());
-        if(key.equals(getString(R.string.pref_key_sync_frequency))) {
-            if(mPresenter.getAppPrefs().isAuthenticated() && sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications),true))
+        if (key.equals(getString(R.string.pref_key_sync_frequency))) {
+            if (mPresenter.getAppPrefs().isAuthenticated() && sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications), true))
                 sh.scheduleJob();
         } else if (key.equals(getString(R.string.pref_key_new_message_notifications))) {
-            if(sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications),true)){
-                if(mPresenter.getAppPrefs().isAuthenticated())
+            if (sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications), true)) {
+                if (mPresenter.getAppPrefs().isAuthenticated())
                     sh.scheduleJob();
             } else {
                 sh.cancelJob();
@@ -1207,4 +1208,5 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     public void afterTextChanged(Editable s) {
         mPresenter.notifyAllItems(s.toString().toLowerCase(Locale.getDefault()));
     }
+
 }

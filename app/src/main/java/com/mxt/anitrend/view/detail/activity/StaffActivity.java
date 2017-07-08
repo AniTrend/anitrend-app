@@ -15,8 +15,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.details.StaffPageAdapter;
+import com.mxt.anitrend.adapter.pager.StaffStatePageListener;
 import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.api.model.StaffSmall;
 import com.mxt.anitrend.api.structure.FilterTypes;
@@ -39,11 +40,16 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
 
     public final static String STAFF_INTENT_KEY = "character_small_intent_key";
 
-    @BindView(R.id.scrollProgressLayout) ProgressLayout progressLayout;
-    @BindView(R.id.parent_coordinator) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.container) ViewPager mViewPager;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.scrollProgressLayout)
+    ProgressLayout progressLayout;
+    @BindView(R.id.parent_coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
     private final String KEY_MINI_STAFF = "mini_staff_key";
     private final String KEY_FULL_STAFF = "full_staff_key";
@@ -63,7 +69,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
         setSupportActionBar(toolbar);
         if ((mActionBar = getSupportActionBar()) != null)
             mActionBar.setDisplayHomeAsUpEnabled(true);
-        if(getIntent().hasExtra(STAFF_INTENT_KEY)) {
+        if (getIntent().hasExtra(STAFF_INTENT_KEY)) {
             mStaffSmall = getIntent().getParcelableExtra(STAFF_INTENT_KEY);
         }
         progressLayout.showLoading();
@@ -73,7 +79,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         prefs = new ApplicationPrefs(this);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mStaff = savedInstanceState.getParcelable(KEY_FULL_STAFF);
             mStaffSmall = savedInstanceState.getParcelable(KEY_MINI_STAFF);
             updateUI();
@@ -86,21 +92,19 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @Override
     protected void updateUI() {
         setFavIcon();
-        StaffPageAdapter mStaffViewAdapter = new StaffPageAdapter(getSupportFragmentManager(), mStaff, getResources().getStringArray(R.array.staff_page_titles));
+        GenericFragmentStatePagerAdapter mStaffViewAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.staff_page_titles), 3, new StaffStatePageListener(mStaff));
         mViewPager.setAdapter(mStaffViewAdapter);
         tabLayout.setupWithViewPager(mViewPager);
         progressLayout.showContent();
     }
 
     private void setFavIcon() {
-        if(favMenuItem != null && mStaff != null) {
+        if (favMenuItem != null && mStaff != null) {
             favMenuItem.setVisible(true);
             favMenuItem.setIcon(
-                    mStaff.isFavourite()?
-                            ContextCompat.getDrawable(this, R.drawable.ic_favorite_white_24dp) :
-                            ContextCompat.getDrawable(this, R.drawable.ic_favorite_border_white_24dp));
+                    ContextCompat.getDrawable(this, mStaff.isFavourite() ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp));
 
-            if(prefs.getStaffTip()){
+            if (prefs.getStaffTip()) {
                 new MaterialTapTargetPrompt.Builder(StaffActivity.this)
                         //or use ContextCompat.getColor(this, R.color.colorAccent)
                         .setFocalColourFromRes(R.color.colorAccent)
@@ -139,7 +143,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                 finish();
                 break;
             case R.id.action_favor_state:
-                if(!prefs.isAuthenticated()) {
+                if (!prefs.isAuthenticated()) {
                     Snackbar.make(coordinatorLayout, R.string.text_please_sign_in, Snackbar.LENGTH_LONG).show();
                     return super.onOptionsItemSelected(item);
                 }
@@ -148,7 +152,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                 RequestApiAction.IdActions userPostActions = new RequestApiAction.IdActions(getApplicationContext(), new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if(!isDestroyed() || !isFinishing()) {
+                        if (!isDestroyed() || !isFinishing()) {
                             if (response.isSuccessful() && response.body() != null) {
                                 Snackbar.make(coordinatorLayout, mStaff.isFavourite() ? R.string.text_removed_from_favourites : R.string.text_add_to_favourites, Snackbar.LENGTH_SHORT).show();
                                 mStaff.setFavourite(!mStaff.isFavourite());
@@ -159,7 +163,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        if(!isDestroyed() || !isFinishing())
+                        if (!isDestroyed() || !isFinishing())
                             Toast.makeText(StaffActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
                 }, FilterTypes.ActionType.STAFF_FAVOURITE, actionIdBased);
@@ -178,12 +182,12 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
 
     @Override
     public void onResponse(Call<Staff> call, Response<Staff> response) {
-        if(response.isSuccessful() && response.body() != null) {
-            if(!isDestroyed() || !isFinishing())
+        if (response.isSuccessful() && response.body() != null) {
+            if (!isDestroyed() || !isFinishing())
                 try {
                     mStaff = response.body();
                     updateUI();
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
         }
@@ -191,14 +195,15 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
 
     @Override
     public void onFailure(Call<Staff> call, Throwable t) {
-        if(!isDestroyed() || !isFinishing()) {
+        if (!isDestroyed() || !isFinishing()) {
             progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.try_again), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                new AsyncTaskFetch<>(StaffActivity.this, getApplicationContext(), mStaffSmall.getId()).execute(AsyncTaskFetch.RequestType.STAFF_INFO_REQ);
+                    new AsyncTaskFetch<>(StaffActivity.this, getApplicationContext(), mStaffSmall.getId()).execute(AsyncTaskFetch.RequestType.STAFF_INFO_REQ);
                 }
             });
             t.printStackTrace();
         }
     }
+
 }

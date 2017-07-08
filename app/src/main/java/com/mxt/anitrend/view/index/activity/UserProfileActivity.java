@@ -25,7 +25,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.user.UserPageAdapter;
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
+import com.mxt.anitrend.adapter.pager.UserStatePageListener;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.FilterTypes;
@@ -57,23 +58,36 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
     public static final String PROFILE_INTENT_KEY = "profile_intent_parcel";
 
-    @BindView(R.id.container) ViewPager mViewPager;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs) TabLayout tabLayout;
-    @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinatorLayout;
 
 
-    @BindView(R.id.user_anime_time_container) View user_anime_time_container;
-    @BindView(R.id.user_manga_chaps_container) View user_manga_chap_container;
-    @BindView(R.id.user_anime_total_container) View user_anime_total_container;
-    @BindView(R.id.user_manga_total_container) View user_manga_total_container;
+    @BindView(R.id.user_anime_time_container)
+    View user_anime_time_container;
+    @BindView(R.id.user_manga_chaps_container)
+    View user_manga_chap_container;
+    @BindView(R.id.user_anime_total_container)
+    View user_anime_total_container;
+    @BindView(R.id.user_manga_total_container)
+    View user_manga_total_container;
 
 
-    @BindView(R.id.profile_banner) ImageView user_banner;
-    @BindView(R.id.user_anime_time) TextView user_anime_time;
-    @BindView(R.id.user_manga_chaps) TextView user_manga_chap;
-    @BindView(R.id.user_anime_total) TextView user_anime_total;
-    @BindView(R.id.user_manga_total) TextView user_manga_total;
+    @BindView(R.id.profile_banner)
+    ImageView user_banner;
+    @BindView(R.id.user_anime_time)
+    TextView user_anime_time;
+    @BindView(R.id.user_manga_chaps)
+    TextView user_manga_chap;
+    @BindView(R.id.user_anime_total)
+    TextView user_anime_total;
+    @BindView(R.id.user_manga_total)
+    TextView user_manga_total;
 
     private final String KEY_FULL_USER = "full_user_model";
     private final String KEY_MINI_USER = "mini_user_model";
@@ -107,7 +121,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
             user_manga_chap.setText(R.string.Loading);
             user_anime_total.setText(R.string.Loading);
             user_manga_total.setText(R.string.Loading);
-            if(mIntentData != null && mTempUser == null)
+            if (mIntentData != null && mTempUser == null)
                 new AsyncTaskFetch<>(this, getApplicationContext(), mIntentData).execute(AsyncTaskFetch.RequestType.USER_ACCOUNT_REQ);
             else
                 new AsyncTaskFetch<>(this, getApplicationContext(), mTempUser.getId()).execute(AsyncTaskFetch.RequestType.USER_ACCOUNT_REQ);
@@ -116,18 +130,18 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
     @Override
     protected void startInit() {
-        if(mCurrentUser != null) {
+        if (mCurrentUser != null) {
             user_anime_time.setText(mCurrentUser.getAnime_time());
             user_manga_chap.setText(mCurrentUser.getManga_chap());
             user_anime_total.setText("0");
             user_manga_total.setText("0");
 
             UserStats userStats = mCurrentUser.getStats();
-            if(userStats != null) {
-                if(userStats.getStatus_distribution() != null)
-                    if(userStats.getStatus_distribution().getAnime() != null)
+            if (userStats != null) {
+                if (userStats.getStatus_distribution() != null)
+                    if (userStats.getStatus_distribution().getAnime() != null)
                         user_anime_total.setText(userStats.getStatus_distribution().getAnime().getTotalAnime());
-                if(userStats.getStatus_distribution().getManga() != null)
+                if (userStats.getStatus_distribution().getManga() != null)
                     user_manga_total.setText(userStats.getStatus_distribution().getManga().getTotalManga());
             }
 
@@ -138,7 +152,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                     .into(user_banner);
 
             updateUI();
-        } else{
+        } else {
             Toast.makeText(this, "User model was not initialized, received null", Toast.LENGTH_LONG).show();
         }
     }
@@ -150,8 +164,8 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
         user_manga_chap_container.setOnClickListener(this);
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
-        UserPageAdapter mOverViewAdapter = new UserPageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
-        mViewPager.setAdapter(mOverViewAdapter);
+        GenericFragmentStatePagerAdapter mUserPageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.profile_page_titles), 3, new UserStatePageListener(mCurrentUser));
+        mViewPager.setAdapter(mUserPageAdapter);
         tabLayout.setupWithViewPager(mViewPager);
     }
 
@@ -180,7 +194,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_user_message, menu);
-        if(mPresenter.getAppPrefs().getComposeTip()) {
+        if (mPresenter.getAppPrefs().getComposeTip()) {
             new MaterialTapTargetPrompt.Builder(this)
                     //or use ContextCompat.getColor(this, R.color.colorAccent)
                     .setFocalColourFromRes(R.color.colorAccent)
@@ -215,7 +229,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                 finish();
                 break;
             case R.id.action_compose:
-                if(mCurrentUser == null) {
+                if (mCurrentUser == null) {
                     Toast.makeText(this, R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -230,15 +244,15 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                         switch (which) {
                             case POSITIVE:
                                 EditText editText = dialog.getInputEditText();
-                                if(editText != null) {
-                                    if(!TextUtils.isEmpty(editText.getText())) {
+                                if (editText != null) {
+                                    if (!TextUtils.isEmpty(editText.getText())) {
                                         Payload.ActivityMessage message = new Payload.ActivityMessage(EmojiUtils.hexHtmlify(editText.getText().toString()), mCurrentUser.getId());
                                         RequestApiAction.MessageActions<ResponseBody> action = new RequestApiAction.MessageActions<>(getApplicationContext(), new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if(response.isSuccessful() && response.body() != null) {
-                                                    if(!isDestroyed() || !isFinishing()) {
-                                                        mPresenter.makeAlerterSuccess(UserProfileActivity.this ,getString(R.string.completed_success));
+                                                if (response.isSuccessful() && response.body() != null) {
+                                                    if (!isDestroyed() || !isFinishing()) {
+                                                        mPresenter.makeAlerterSuccess(UserProfileActivity.this, getString(R.string.completed_success));
                                                         dialog.dismiss();
                                                     }
                                                 }
@@ -246,7 +260,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
                                             @Override
                                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                if(!isDestroyed() || !isFinishing()) {
+                                                if (!isDestroyed() || !isFinishing()) {
                                                     t.printStackTrace();
                                                     Toast.makeText(UserProfileActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                 }
@@ -255,7 +269,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                                         action.execute();
                                         Toast.makeText(UserProfileActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
                                     } else {
-                                        mPresenter.makeAlerterWarning(UserProfileActivity.this ,getString(R.string.input_empty_warning));
+                                        mPresenter.makeAlerterWarning(UserProfileActivity.this, getString(R.string.input_empty_warning));
                                     }
                                 }
                                 break;
@@ -275,12 +289,12 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
     @Override
     public void onResponse(Call<User> call, Response<User> response) {
-        if(response.isSuccessful() && response.body() != null) {
-            if(!isDestroyed() || !isFinishing())
+        if (response.isSuccessful() && response.body() != null) {
+            if (!isDestroyed() || !isFinishing())
                 try {
                     mCurrentUser = response.body();
                     startInit();
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
         }
@@ -288,7 +302,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
     @Override
     public void onFailure(Call<User> call, Throwable t) {
-        if(!isDestroyed() || !isFinishing()) {
+        if (!isDestroyed() || !isFinishing()) {
             Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             t.printStackTrace();
         }
