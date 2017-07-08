@@ -20,8 +20,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.details.AnimePageAdapter;
+import com.mxt.anitrend.adapter.pager.AnimeStatePageListener;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.async.RequestApiAction;
@@ -42,8 +43,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
-public class AnimeActivity extends DefaultActivity implements FloatingToolbar.ItemClickListener, Callback<Series>,
-                                                                       MaterialTapTargetPrompt.OnHidePromptListener{
+public class AnimeActivity extends DefaultActivity implements
+        FloatingToolbar.ItemClickListener,
+        Callback<Series>,
+        MaterialTapTargetPrompt.OnHidePromptListener {
 
     public final static String MODEL_ID_KEY = "MODEL_KEY";
     public final static String MODEL_BANNER_KEY = "MODEL_BANNER_KEY";
@@ -56,19 +59,28 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
     private String mBanner;
     private Series mSeries;
 
-    @BindView(R.id.app_bar) AppBarLayout appBarLayout;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBarLayout;
 
-    @BindView(R.id.sections_tabs) TabLayout tabLayout;
-    @BindView(R.id.sections_viewpager) ViewPager viewPager;
+    @BindView(R.id.sections_tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.sections_viewpager)
+    ViewPager viewPager;
 
 
-    @BindView(R.id.scrollProgressLayout) ProgressLayout progressLayout;
-    @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.floatingToolbar) FloatingToolbar mFloatingToolbar;
-    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.scrollProgressLayout)
+    ProgressLayout progressLayout;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.floatingToolbar)
+    FloatingToolbar mFloatingToolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
-    @BindView(R.id.detail_model_banner) ImageView mBannerImage;
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.detail_model_banner)
+    ImageView mBannerImage;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private ActionBar mActionBar;
     private MenuItem favMenuItem;
 
@@ -82,10 +94,9 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         setSupportActionBar(toolbar);
         if ((mActionBar = getSupportActionBar()) != null)
             mActionBar.setDisplayHomeAsUpEnabled(true);
-        if(mIntentData != null) {
+        if (mIntentData != null) {
             mId = Integer.valueOf(mIntentData);
-        }
-        else {
+        } else {
             Intent intent = getIntent();
             mId = intent.getIntExtra(MODEL_ID_KEY, 0);
             if (intent.hasExtra(MODEL_BANNER_KEY))
@@ -101,10 +112,10 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         viewPager.setOffscreenPageLimit(3);
         attachEventListeners();
         mPresenter = new SeriesPresenter(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], getApplicationContext());
-        if(mId != 0 && mSeries != null)
+        if (mId != 0 && mSeries != null)
             updateUI();
         else {
-            if(mId == 0)
+            if (mId == 0)
                 progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.Go_Back), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -116,7 +127,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         }
 
         setUpBanner();
-        if(mPresenter.getAppPrefs().getDetailTip())
+        if (mPresenter.getAppPrefs().getDetailTip())
             showHelp();
     }
 
@@ -145,7 +156,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_details_main, menu);
         favMenuItem = menu.findItem(R.id.action_favor_state);
-        if(mSeries != null)
+        if (mSeries != null)
             favMenuItem.setVisible(mSeries.isFavourite());
         return true;
     }
@@ -157,7 +168,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                 finish();
                 break;
             case R.id.action_favor_state:
-                mPresenter.displayMessage(mSeries.isFavourite()?getString(R.string.text_item_in_favourites):getString(R.string.text_item_not_in_favourites), this);
+                mPresenter.displayMessage(mSeries.isFavourite() ? getString(R.string.text_item_in_favourites) : getString(R.string.text_item_not_in_favourites), this);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -177,8 +188,8 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
     }
 
-    public void setAdapters(){
-        viewPager.setAdapter(new AnimePageAdapter(getSupportFragmentManager(), mSeries, getResources().getStringArray(R.array.anime_page_titles)));
+    public void setAdapters() {
+        viewPager.setAdapter(new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.anime_page_titles), 5, new AnimeStatePageListener(mSeries)));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
     }
@@ -194,7 +205,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mId = savedInstanceState.getInt(SAVED_INSTANCE_ID_KEY, 0);
             mBanner = savedInstanceState.getString(SAVED_INSTANCE_BANNER_MODEL);
             mSeries = savedInstanceState.getParcelable(SAVED_INSTANCE_SERIES_MODEL);
@@ -203,7 +214,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
 
     @Override
     public void onBackPressed() {
-        if(mFloatingToolbar.isShown())
+        if (mFloatingToolbar.isShown())
             mFloatingToolbar.hide();
         else
             super.onBackPressed();
@@ -228,7 +239,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
      * Called when the use touches the prompt view,
      * but before the prompt is removed from view.
      *
-     * @param event The touch event that triggered the dismiss or finish.
+     * @param event        The touch event that triggered the dismiss or finish.
      * @param tappedTarget True if the prompt focal point was touched.
      */
     @Override
@@ -264,7 +275,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                 progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.Go_Back), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                    finish();
+                        finish();
                     }
                 });
             }
@@ -290,10 +301,10 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
 
     @Override
     protected void updateUI() {
-        if(favMenuItem != null)
+        if (favMenuItem != null)
             favMenuItem.setVisible(mSeries.isFavourite());
-        if(mBanner == null) {
-            if(mSeries.getImage_url_banner() != null) {
+        if (mBanner == null) {
+            if (mSeries.getImage_url_banner() != null) {
                 mBanner = mSeries.getImage_url_banner();
                 setUpBanner();
             }
@@ -304,10 +315,11 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
 
     @Override
     public void onItemClick(MenuItem item) {
-        if(!mPresenter.getAppPrefs().isAuthenticated()) {
+        if (!mPresenter.getAppPrefs().isAuthenticated()) {
             mPresenter.displayMessage(getString(R.string.text_please_sign_in), this);
             return;
-        } if(mSeries == null){
+        }
+        if (mSeries == null) {
             mPresenter.displayMessage(getString(R.string.text_activity_loading), this);
             return;
         }
@@ -318,15 +330,15 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                     RequestApiAction.IdActions userPostActions = new RequestApiAction.IdActions(getApplicationContext(), new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if(response.errorBody() == null) {
+                            if (response.errorBody() == null) {
                                 if (!isDestroyed() || !isFinishing()) {
-                                    mPresenter.displayMessage(mSeries.isFavourite()?getString(R.string.text_removed_from_favourites):getString(R.string.text_add_to_favourites), AnimeActivity.this);
+                                    mPresenter.displayMessage(mSeries.isFavourite() ? getString(R.string.text_removed_from_favourites) : getString(R.string.text_add_to_favourites), AnimeActivity.this);
                                     favMenuItem.setVisible(!mSeries.isFavourite());
                                     mPresenter.beginAsync(new Callback<Series>() {
                                         @Override
                                         public void onResponse(Call<Series> call, Response<Series> response) {
-                                            if(!isDestroyed() || !isFinishing())
-                                                if(response.isSuccessful() && response.body() != null)
+                                            if (!isDestroyed() || !isFinishing())
+                                                if (response.isSuccessful() && response.body() != null)
                                                     mSeries = response.body();
                                                 else
                                                     mPresenter.displayMessage(ErrorHandler.getError(response).toString(), AnimeActivity.this);
@@ -335,7 +347,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
 
                                         @Override
                                         public void onFailure(Call<Series> call, Throwable t) {
-                                            if(!isDestroyed() || !isFinishing())
+                                            if (!isDestroyed() || !isFinishing())
                                                 try {
                                                     mPresenter.displayMessage(t.getLocalizedMessage(), AnimeActivity.this);
                                                 } catch (Exception e) {
@@ -344,13 +356,13 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                                         }
                                     }, mSeries.getId());
                                 }
-                            }
-                            else
+                            } else
                                 mPresenter.displayMessage(ErrorHandler.getError(response).toString(), AnimeActivity.this);
                         }
+
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            if(!isDestroyed() || !isFinishing())
+                            if (!isDestroyed() || !isFinishing())
                                 try {
                                     mPresenter.displayMessage(t.getCause().getMessage(), AnimeActivity.this);
                                 } catch (Exception e) {
@@ -369,7 +381,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                 case R.id.action_share:
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.text_share_series,mSeries.getTitle_english(), mSeries.getTitle_japanese(), mSeries.getId(),getString(R.string.campaign_link)));
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.text_share_series, mSeries.getTitle_english(), mSeries.getTitle_japanese(), mSeries.getId(), getString(R.string.campaign_link)));
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
                     break;
@@ -383,4 +395,5 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
     public void onItemLongClick(MenuItem item) {
 
     }
+
 }

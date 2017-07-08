@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.index.SearchPageAdapter;
+import com.mxt.anitrend.adapter.pager.SearchPageAdapter;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 

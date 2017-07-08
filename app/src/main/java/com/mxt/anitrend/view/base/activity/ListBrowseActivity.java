@@ -18,9 +18,10 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.index.MyAnimePageAdapter;
-import com.mxt.anitrend.adapter.pager.index.MyMangaPageAdapter;
+import com.mxt.anitrend.adapter.pager.MyAnimeStatePageListener;
+import com.mxt.anitrend.adapter.pager.MyMangaStatePageListener;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
 import com.mxt.anitrend.util.DialogManager;
@@ -102,10 +103,10 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     protected void updateUI() {
         if (mContentType == SeriesType.ANIME.ordinal()) {
             mActionBar.setTitle(R.string.title_anime_list);
-            mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.anime_listing_status)));
+            mViewPager.setAdapter(new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.anime_listing_status), 5, new MyAnimeStatePageListener(mUserId)));
         } else {
             mActionBar.setTitle(R.string.title_manga_list);
-            mViewPager.setAdapter(new MyMangaPageAdapter(getSupportFragmentManager(), mUserId, getResources().getStringArray(R.array.manga_listing_status)));
+            mViewPager.setAdapter(new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.manga_listing_status), 5, new MyMangaStatePageListener(mUserId)));
         }
         mViewPager.setOffscreenPageLimit(3);
         mNavigationTab.setupWithViewPager(mViewPager);

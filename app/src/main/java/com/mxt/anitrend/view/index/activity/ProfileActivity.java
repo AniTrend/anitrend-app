@@ -24,7 +24,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.user.UserBasePageAdapter;
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
+import com.mxt.anitrend.adapter.pager.UserBaseStatePageListener;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.UserStats;
@@ -52,22 +53,34 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
 
     public static final String PROFILE_INTENT_KEY = "profile_intent_parcel";
 
-    @BindView(R.id.container) ViewPager mViewPager;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
 
-    @BindView(R.id.user_anime_time_container) View user_anime_time_container;
-    @BindView(R.id.user_manga_chaps_container) View user_manga_chap_container;
-    @BindView(R.id.user_anime_total_container) View user_anime_total_container;
-    @BindView(R.id.user_manga_total_container) View user_manga_total_container;
+    @BindView(R.id.user_anime_time_container)
+    View user_anime_time_container;
+    @BindView(R.id.user_manga_chaps_container)
+    View user_manga_chap_container;
+    @BindView(R.id.user_anime_total_container)
+    View user_anime_total_container;
+    @BindView(R.id.user_manga_total_container)
+    View user_manga_total_container;
 
 
-    @BindView(R.id.profile_banner) ImageView user_banner;
-    @BindView(R.id.user_anime_time) TextView user_anime_time;
-    @BindView(R.id.user_manga_chaps) TextView user_manga_chap;
-    @BindView(R.id.user_anime_total) TextView user_anime_total;
-    @BindView(R.id.user_manga_total) TextView user_manga_total;
+    @BindView(R.id.profile_banner)
+    ImageView user_banner;
+    @BindView(R.id.user_anime_time)
+    TextView user_anime_time;
+    @BindView(R.id.user_manga_chaps)
+    TextView user_manga_chap;
+    @BindView(R.id.user_anime_total)
+    TextView user_anime_total;
+    @BindView(R.id.user_manga_total)
+    TextView user_manga_total;
 
     private final String KEY_USER = "USER_SAVE_INST";
     private User mCurrentUser;
@@ -95,20 +108,19 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         super.onPostCreate(savedInstanceState);
         try {
             onBeginInit(savedInstanceState);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     private void onBeginInit(Bundle savedInstanceState) {
         mViewPager.setOffscreenPageLimit(2);
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             mCurrentUser = getIntent().getParcelableExtra(PROFILE_INTENT_KEY);
-        }
-        else
+        } else
             mCurrentUser = savedInstanceState.getParcelable(KEY_USER);
 
-        if(mCurrentUser != null) {
+        if (mCurrentUser != null) {
             mPresenter = new UserProfilePresenter(ProfileActivity.this, mCurrentUser.getId());
             user_anime_time.setText(mCurrentUser.getAnime_time());
             user_manga_chap.setText(mCurrentUser.getManga_chap());
@@ -116,21 +128,21 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
             user_manga_total.setText("0");
 
             UserStats userStats = mCurrentUser.getStats();
-            if(userStats != null) {
-                if(userStats.getStatus_distribution() != null)
-                    if(userStats.getStatus_distribution().getAnime() != null)
+            if (userStats != null) {
+                if (userStats.getStatus_distribution() != null)
+                    if (userStats.getStatus_distribution().getAnime() != null)
                         user_anime_total.setText(userStats.getStatus_distribution().getAnime().getTotalAnime());
-                    if(userStats.getStatus_distribution().getManga() != null)
-                        user_manga_total.setText(userStats.getStatus_distribution().getManga().getTotalManga());
+                if (userStats.getStatus_distribution().getManga() != null)
+                    user_manga_total.setText(userStats.getStatus_distribution().getManga().getTotalManga());
             }
 
             Glide.with(this)
-                 .load(mCurrentUser.getImage_url_banner())
-                 .centerCrop()
-                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                 .into(user_banner);
+                    .load(mCurrentUser.getImage_url_banner())
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(user_banner);
             updateUI();
-        } else{
+        } else {
             Toast.makeText(this, "User model was not initialized, received null", Toast.LENGTH_LONG).show();
         }
     }
@@ -143,8 +155,8 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         user_anime_total_container.setOnClickListener(this);
         user_manga_total_container.setOnClickListener(this);
 
-        UserBasePageAdapter mOverViewAdapter = new UserBasePageAdapter(getSupportFragmentManager(), mCurrentUser, getResources().getStringArray(R.array.profile_page_titles));
-        mViewPager.setAdapter(mOverViewAdapter);
+        GenericFragmentStatePagerAdapter mUserBasePageAdapter = new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.profile_page_titles), 3, new UserBaseStatePageListener(mCurrentUser));
+        mViewPager.setAdapter(mUserBasePageAdapter);
         tabLayout.setupWithViewPager(mViewPager);
     }
 
@@ -167,23 +179,23 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         messages_item = (ImageView) menu.findItem(R.id.action_message).getActionView();
         activity_post = (ImageView) menu.findItem(R.id.action_status_post).getActionView();
 
-        if(mCurrentUser != null) {
+        if (mCurrentUser != null) {
             menu.findItem(R.id.action_notification).setVisible(true);
             menu.findItem(R.id.action_message).setVisible(true);
             menu.findItem(R.id.action_status_post).setVisible(true);
 
 
-            notification_item.setImageDrawable(mCurrentUser.getNotifications() > 0?
-                                 ContextCompat.getDrawable(this, R.drawable.ic_notifications_active_white_24dp):
-                                 ContextCompat.getDrawable(this, R.drawable.ic_notifications_none_white_24dp)
-                        );
-            notification_item.setPadding(0,0,20,0);
+            notification_item.setImageDrawable(mCurrentUser.getNotifications() > 0 ?
+                    ContextCompat.getDrawable(this, R.drawable.ic_notifications_active_white_24dp) :
+                    ContextCompat.getDrawable(this, R.drawable.ic_notifications_none_white_24dp)
+            );
+            notification_item.setPadding(0, 0, 20, 0);
 
             messages_item.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_mail_outline_white_24dp));
-            messages_item.setPadding(25,0,30,0);
+            messages_item.setPadding(25, 0, 30, 0);
 
             activity_post.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_chat_bubble_outline_white_24dp));
-            activity_post.setPadding(25,0,15,0);
+            activity_post.setPadding(25, 0, 15, 0);
 
             notification_item.setClickable(true);
             activity_post.setClickable(true);
@@ -197,7 +209,6 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         }
         return true;
     }
-
 
 
     private void showTutorial() {
@@ -238,7 +249,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                     @Override
                     public void onHidePromptComplete() {
                         mPresenter.getAppPrefs().setMessageTip();
-                        if(mPresenter.getAppPrefs().getNotificationTip())
+                        if (mPresenter.getAppPrefs().getNotificationTip())
                             notification.show();
                     }
                 });
@@ -259,12 +270,12 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                     @Override
                     public void onHidePromptComplete() {
                         mPresenter.getAppPrefs().setStatusPost();
-                        if(mPresenter.getAppPrefs().getMessageTip())
+                        if (mPresenter.getAppPrefs().getMessageTip())
                             message.show();
                     }
                 });
 
-        if(mPresenter.getAppPrefs().getStatusPostTip())
+        if (mPresenter.getAppPrefs().getStatusPostTip())
             status.show();
         else
             mPresenter.showAlertTip();
@@ -286,7 +297,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                 break;
             case R.id.action_notification:
                 mCurrentUser.setNotifications(0);
-                CircularAnim.fullActivity(ProfileActivity.this, notification_item).colorOrImageRes(mPresenter.getAppPrefs().isLightTheme()?R.color.colorAccent_Ripple:R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
+                CircularAnim.fullActivity(ProfileActivity.this, notification_item).colorOrImageRes(mPresenter.getAppPrefs().isLightTheme() ? R.color.colorAccent_Ripple : R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
                     @Override
                     public void onAnimationEnd() {
                         startActivity(new Intent(ProfileActivity.this, NotificationActivity.class));
@@ -294,7 +305,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                 });
                 break;
             case R.id.action_message:
-                CircularAnim.fullActivity(ProfileActivity.this, messages_item).colorOrImageRes(mPresenter.getAppPrefs().isLightTheme()?R.color.colorAccent_Ripple:R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
+                CircularAnim.fullActivity(ProfileActivity.this, messages_item).colorOrImageRes(mPresenter.getAppPrefs().isLightTheme() ? R.color.colorAccent_Ripple : R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
                     @Override
                     public void onAnimationEnd() {
                         startActivity(new Intent(ProfileActivity.this, MessageActivity.class));
@@ -308,8 +319,8 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                         switch (which) {
                             case POSITIVE:
                                 EditText editText = dialog.getInputEditText();
-                                if(editText != null) {
-                                    if(!TextUtils.isEmpty(editText.getText())) {
+                                if (editText != null) {
+                                    if (!TextUtils.isEmpty(editText.getText())) {
                                         Payload.ActivityStruct status = new Payload.ActivityStruct(EmojiUtils.hexHtmlify(editText.getText().toString()));
                                         RequestApiAction.ActivityActions<ResponseBody> request = new RequestApiAction.ActivityActions<>(getApplicationContext(), new Callback<ResponseBody>() {
                                             @Override
@@ -318,15 +329,14 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                                                     if (response.isSuccessful() && response.body() != null) {
                                                         dialog.dismiss();
                                                         mPresenter.makeAlerterSuccess(ProfileActivity.this, getString(R.string.completed_success));
-                                                    }
-                                                    else
+                                                    } else
                                                         Toast.makeText(ProfileActivity.this, ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
                                                 }
                                             }
 
                                             @Override
                                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                if(!isFinishing() || !isDestroyed()) {
+                                                if (!isFinishing() || !isDestroyed()) {
                                                     t.printStackTrace();
                                                     Toast.makeText(ProfileActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                 }
@@ -335,7 +345,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                                         request.execute();
                                         Toast.makeText(ProfileActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
                                     } else {
-                                        mPresenter.makeAlerterWarning(ProfileActivity.this ,getString(R.string.input_empty_warning));
+                                        mPresenter.makeAlerterWarning(ProfileActivity.this, getString(R.string.input_empty_warning));
                                     }
                                 }
                                 break;

@@ -1,4 +1,4 @@
-package com.mxt.anitrend.adapter.pager.index;
+package com.mxt.anitrend.adapter.pager;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -10,8 +10,6 @@ import com.mxt.anitrend.view.base.fragment.AnimeSearchFragment;
 import com.mxt.anitrend.view.base.fragment.MangaSearchFragment;
 import com.mxt.anitrend.view.base.fragment.StudioSearchFragment;
 import com.mxt.anitrend.view.base.fragment.UserSearchFragment;
-
-import java.util.Locale;
 
 /**
  * Created by Maxwell on 11/6/2016.

@@ -12,8 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mxt.anitrend.adapter.pager.GenericFragmentStatePagerAdapter;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.details.FavouritesPageAdapter;
+import com.mxt.anitrend.adapter.pager.FavouriteStatePageListener;
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
@@ -24,16 +25,20 @@ import butterknife.ButterKnife;
  * Created by max on 2017/05/17.
  */
 
-public class FavouriteActivity  extends DefaultActivity {
+public class FavouriteActivity extends DefaultActivity {
 
     public static final String FAVOURITES_PARAM = "favourites_param";
 
     private String KEY_MODEL = "model_key";
 
-    @BindView(R.id.page_container) ViewPager mViewPager;
-    @BindView(R.id.nts_center) TabLayout mNavigationTab;
-    @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.page_container)
+    ViewPager mViewPager;
+    @BindView(R.id.nts_center)
+    TabLayout mNavigationTab;
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private Snackbar snackbar;
     private ActionBar mActionBar;
@@ -54,7 +59,7 @@ public class FavouriteActivity  extends DefaultActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Intent intent = getIntent();
             mFavourite = intent.getParcelableExtra(FAVOURITES_PARAM);
         }
@@ -66,7 +71,7 @@ public class FavouriteActivity  extends DefaultActivity {
      */
     @Override
     protected void startInit() {
-        if(mFavourite != null)
+        if (mFavourite != null)
             updateUI();
         else {
             snackbar = Snackbar.make(coordinatorLayout, R.string.text_error_request, Snackbar.LENGTH_INDEFINITE).setAction(R.string.Ok, new View.OnClickListener() {
@@ -81,7 +86,7 @@ public class FavouriteActivity  extends DefaultActivity {
 
     @Override
     protected void updateUI() {
-        mViewPager.setAdapter(new FavouritesPageAdapter(getSupportFragmentManager(), mFavourite, getResources().getStringArray(R.array.favorites_page_titles)));
+        mViewPager.setAdapter(new GenericFragmentStatePagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.favorites_page_titles), 5, new FavouriteStatePageListener(mFavourite)));
         mViewPager.setOffscreenPageLimit(3);
         mNavigationTab.setupWithViewPager(mViewPager);
     }
@@ -130,8 +135,9 @@ public class FavouriteActivity  extends DefaultActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mFavourite = savedInstanceState.getParcelable(KEY_MODEL);
         }
     }
+
 }
