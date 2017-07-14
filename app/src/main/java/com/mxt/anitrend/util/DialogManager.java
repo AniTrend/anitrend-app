@@ -42,20 +42,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mxt.anitrend.api.structure.FilterTypes.ActionType.ANIME_LIST_ADD;
-import static com.mxt.anitrend.api.structure.FilterTypes.ActionType.ANIME_LIST_DELETE;
-import static com.mxt.anitrend.api.structure.FilterTypes.ActionType.ANIME_LIST_EDIT;
-import static com.mxt.anitrend.api.structure.FilterTypes.ActionType.MANGA_LIST_ADD;
-import static com.mxt.anitrend.api.structure.FilterTypes.ActionType.MANGA_LIST_DELETE;
-import static com.mxt.anitrend.api.structure.FilterTypes.ActionType.MANGA_LIST_EDIT;
-import static com.mxt.anitrend.api.structure.FilterTypes.AnimeStatusType.FINISHED_AIRING;
-import static com.mxt.anitrend.api.structure.FilterTypes.AnimeStatusType.NOT_YET_AIRED;
-import static com.mxt.anitrend.api.structure.FilterTypes.AnimeStatusTypes;
-import static com.mxt.anitrend.api.structure.FilterTypes.MangaStatusType;
-import static com.mxt.anitrend.api.structure.FilterTypes.MangaStatusTypes;
-import static com.mxt.anitrend.api.structure.FilterTypes.UserAnimeStatus;
-import static com.mxt.anitrend.api.structure.FilterTypes.UserAnimeStatusKeys;
-import static com.mxt.anitrend.api.structure.FilterTypes.UserMangaStatus;
+import static com.mxt.anitrend.util.KeyUtils.ActionType.ANIME_LIST_ADD;
+import static com.mxt.anitrend.util.KeyUtils.ActionType.ANIME_LIST_DELETE;
+import static com.mxt.anitrend.util.KeyUtils.ActionType.ANIME_LIST_EDIT;
+import static com.mxt.anitrend.util.KeyUtils.ActionType.MANGA_LIST_ADD;
+import static com.mxt.anitrend.util.KeyUtils.ActionType.MANGA_LIST_DELETE;
+import static com.mxt.anitrend.util.KeyUtils.ActionType.MANGA_LIST_EDIT;
+import static com.mxt.anitrend.util.KeyUtils.AnimeStatusTypes;
+import static com.mxt.anitrend.util.KeyUtils.FINISHED_AIRING;
+import static com.mxt.anitrend.util.KeyUtils.FINISHED_PUBLISHING;
+import static com.mxt.anitrend.util.KeyUtils.MangaStatusTypes;
+import static com.mxt.anitrend.util.KeyUtils.NOT_YET_AIRED;
+import static com.mxt.anitrend.util.KeyUtils.NOT_YET_PUBLISHED;
+import static com.mxt.anitrend.util.KeyUtils.UserAnimeStatus;
+import static com.mxt.anitrend.util.KeyUtils.UserMangaStatus;
 
 /**
  * Created by Maxwell on 10/31/2015.
@@ -132,7 +132,7 @@ public class DialogManager {
 
             Payload.ListAnimeAction animeAction = new Payload.ListAnimeAction();
             if(episodes == total_episodes) {
-                animeAction.setList_status(UserAnimeStatus[UserAnimeStatusKeys.COMPLETED.ordinal()]);
+                animeAction.setList_status(UserAnimeStatus[KeyUtils.COMPLETED]);
             } else {
                 animeAction.setList_status(item.getList_status());
             }
@@ -190,7 +190,7 @@ public class DialogManager {
 
             Payload.ListMangaAction mangaAction = new Payload.ListMangaAction();
             if(chapters_read == total_chapters) {
-                mangaAction.setList_status(UserMangaStatus[UserAnimeStatusKeys.COMPLETED.ordinal()]);
+                mangaAction.setList_status(UserMangaStatus[KeyUtils.COMPLETED]);
             } else {
                 mangaAction.setList_status(item.getList_status());
             }
@@ -312,13 +312,13 @@ public class DialogManager {
                 //"watching","plan to watch","completed","on hold","dropped"
                     switch (UserAnimeStatus[i]) {
                         case "watching":
-                            if (item.getAnime().getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                            if (item.getAnime().getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                                 Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                             break;
                         case "plan to watch":
                             break;
                         case "completed":
-                            if (!item.getAnime().getAiring_status().equals(AnimeStatusTypes[FINISHED_AIRING.ordinal()])) {
+                            if (!item.getAnime().getAiring_status().equals(AnimeStatusTypes[FINISHED_AIRING])) {
                                 Toast.makeText(mContext, R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
                             } else {
                                 int total = item.getAnime().getTotal_episodes();
@@ -326,11 +326,11 @@ public class DialogManager {
                             }
                             break;
                         case "on hold":
-                            if (item.getAnime().getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                            if (item.getAnime().getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                                 Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                             break;
                         case "dropped":
-                            if (item.getAnime().getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                            if (item.getAnime().getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                                 Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                             break;
                     }
@@ -486,7 +486,7 @@ public class DialogManager {
                 //"watching","plan to watch","completed","on hold","dropped"
                 switch (UserAnimeStatus[i]) {
                     case "watching":
-                        /*if (item.getAiring_status().equals(AnimeStatusTypes[FilterTypes.AnimeStatusType.CURRENTLY_AIRING.ordinal()])) {
+                        /*if (item.getAiring_status().equals(AnimeStatusTypes[KeyUtils.AnimeStatusType.CURRENTLY_AIRING.ordinal()])) {
                             if(item.getNextAiring() != null) {
                                 int total = item.getNextAiring().getNext_episode() - 1;
                                 mProgress.setText(String.valueOf(total));
@@ -496,7 +496,7 @@ public class DialogManager {
                     case "plan to watch":
                         break;
                     case "completed":
-                        if (!item.getAiring_status().equals(AnimeStatusTypes[FINISHED_AIRING.ordinal()])) {
+                        if (!item.getAiring_status().equals(AnimeStatusTypes[FINISHED_AIRING])) {
                             Toast.makeText(mContext, R.string.warning_anime_is_airing, Toast.LENGTH_SHORT).show();
                         } else {
                             int total = item.getTotal_episodes();
@@ -504,11 +504,11 @@ public class DialogManager {
                         }
                         break;
                     case "on hold":
-                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                             Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                         break;
                     case "dropped":
-                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                             Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -625,7 +625,7 @@ public class DialogManager {
                 //"watching","plan to watch","completed","on hold","dropped"
                 switch (UserAnimeStatus[i]) {
                     case "watching":
-                        /*if (item.getAiring_status().equals(AnimeStatusTypes[FilterTypes.AnimeStatusType.CURRENTLY_AIRING.ordinal()])) {
+                        /*if (item.getAiring_status().equals(AnimeStatusTypes[KeyUtils.AnimeStatusType.CURRENTLY_AIRING.ordinal()])) {
                             if(item.getNextAiring() != null) {
                                 int total = item.getNextAiring().getNext_episode() - 1;
                                 mProgress.setText(String.valueOf(total));
@@ -635,7 +635,7 @@ public class DialogManager {
                     case "plan to watch":
                         break;
                     case "completed":
-                        if (!item.getAiring_status().equals(AnimeStatusTypes[FINISHED_AIRING.ordinal()])) {
+                        if (!item.getAiring_status().equals(AnimeStatusTypes[FINISHED_AIRING])) {
                             Toast.makeText(mContext, R.string.warning_anime_is_airing, Toast.LENGTH_SHORT).show();
                         } else {
                             int total = item.getTotal_episodes();
@@ -643,11 +643,11 @@ public class DialogManager {
                         }
                         break;
                     case "on hold":
-                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                             Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                         break;
                     case "dropped":
-                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED.ordinal()]))
+                        if (item.getAiring_status().equals(AnimeStatusTypes[NOT_YET_AIRED]))
                             Toast.makeText(mContext, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -788,14 +788,14 @@ public class DialogManager {
                 
                     switch (UserMangaStatus[i]) {
                         case "reading":
-                            if (item.getManga().getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                            if (item.getManga().getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                                 Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case "plan to read":
                             break;
                         case "completed":
-                            if (!item.getManga().getPublishing_status().equals(MangaStatusTypes[MangaStatusType.FINISHED_PUBLISHING.ordinal()])) {
+                            if (!item.getManga().getPublishing_status().equals(MangaStatusTypes[FINISHED_PUBLISHING])) {
                                 Toast.makeText(mContext, R.string.warning_manga_publishing, Toast.LENGTH_SHORT).show();
                             } else {
                                 int total = item.getManga().getTotal_chapters();
@@ -806,12 +806,12 @@ public class DialogManager {
                             }
                             break;
                         case "on hold":
-                            if (item.getManga().getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                            if (item.getManga().getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                                 Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case "dropped":
-                            if (item.getManga().getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                            if (item.getManga().getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                                 Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                             }
                             break;
@@ -969,14 +969,14 @@ public class DialogManager {
                 //"watching","plan to watch","completed","on hold","dropped"
                 switch (UserMangaStatus[i]) {
                     case "reading":
-                        if (item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                        if (item.getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                             Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "plan to read":
                         break;
                     case "completed":
-                        if (!item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.FINISHED_PUBLISHING.ordinal()])) {
+                        if (!item.getPublishing_status().equals(MangaStatusTypes[FINISHED_PUBLISHING])) {
                             Toast.makeText(mContext, R.string.warning_manga_publishing, Toast.LENGTH_SHORT).show();
                         } else {
                             int total = item.getTotal_chapters();
@@ -984,12 +984,12 @@ public class DialogManager {
                         }
                         break;
                     case "on hold":
-                        if (item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                        if (item.getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                             Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "dropped":
-                        if (item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                        if (item.getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                             Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -1112,14 +1112,14 @@ public class DialogManager {
                 //"watching","plan to watch","completed","on hold","dropped"
                 switch (UserMangaStatus[i]) {
                     case "reading":
-                        if (item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                        if (item.getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                             Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "plan to read":
                         break;
                     case "completed":
-                        if (!item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.FINISHED_PUBLISHING.ordinal()])) {
+                        if (!item.getPublishing_status().equals(MangaStatusTypes[FINISHED_PUBLISHING])) {
                             Toast.makeText(mContext, R.string.warning_manga_publishing, Toast.LENGTH_SHORT).show();
                         } else {
                             int total = item.getTotal_chapters();
@@ -1127,12 +1127,12 @@ public class DialogManager {
                         }
                         break;
                     case "on hold":
-                        if (item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                        if (item.getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                             Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case "dropped":
-                        if (item.getPublishing_status().equals(MangaStatusTypes[MangaStatusType.NOT_YET_PUBLISHED.ordinal()])) {
+                        if (item.getPublishing_status().equals(MangaStatusTypes[NOT_YET_PUBLISHED])) {
                             Toast.makeText(mContext, R.string.warning_manga_not_publishing, Toast.LENGTH_SHORT).show();
                         }
                         break;

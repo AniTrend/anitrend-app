@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +20,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.MyAnimePageAdapter;
 import com.mxt.anitrend.adapter.pager.index.MyMangaPageAdapter;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
@@ -31,8 +30,6 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesType;
 
 /**
  * Created by max on 2017/05/01.
@@ -101,7 +98,7 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
 
     @Override
     protected void updateUI() {
-        if (mContentType == SeriesType.ANIME.ordinal()) {
+        if (mContentType == KeyUtils.ANIME) {
             mActionBar.setTitle(R.string.title_anime_list);
             mViewPager.setAdapter(new MyAnimePageAdapter(getSupportFragmentManager(), mUserId, getApplicationContext()));
         } else {
@@ -141,10 +138,10 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
                 new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);
+                        mPresenter.getApiPrefs().saveSort(KeyUtils.SeriesSortTypes[which]);
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
+                }, this, Arrays.asList(KeyUtils.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
                 break;
             case android.R.id.home:
                 finish();

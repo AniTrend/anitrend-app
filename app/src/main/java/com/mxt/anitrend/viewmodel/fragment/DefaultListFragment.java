@@ -244,7 +244,7 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
 
     @Override
     public void onFailure(Call<List<T>> call, Throwable t) {
-        if(isVisible() && (!isDetached() || !isRemoving())) {
+        if(isAlive()) {
             t.printStackTrace();
             progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.button_try_again), new View.OnClickListener() {
                 @Override
@@ -304,6 +304,10 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
      */
     @Override
     public abstract void update();
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
+    }
 
     /**
      * Search page fragments

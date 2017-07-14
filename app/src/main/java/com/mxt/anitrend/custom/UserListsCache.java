@@ -27,8 +27,8 @@ public class UserListsCache {
      * Save the current manga list of items into your lists
      */
     public void setMangaLists(UserLists userLists) {
-        manga_list = new ArrayList<>();
         if(userLists != null) {
+            manga_list = new ArrayList<>(userLists.getMangaCount());
             if (userLists.getReading() != null)
                 manga_list.addAll(userLists.getReading());
 
@@ -43,7 +43,8 @@ public class UserListsCache {
 
             if (userLists.getDropped() != null)
                 manga_list.addAll(userLists.getDropped());
-        }
+        } else
+            manga_list = new ArrayList<>();
     }
 
     public List<ListItem> getAnimeLists() {
@@ -54,8 +55,8 @@ public class UserListsCache {
      * Save the current anime list of items into your lists
      */
     public void setAnimeLists(UserLists userLists) {
-        anime_list = new ArrayList<>();
         if(userLists != null) {
+            anime_list = new ArrayList<>(userLists.getAnimeCount());
             if (userLists.getWatching() != null)
                 anime_list.addAll(userLists.getWatching());
 
@@ -70,6 +71,7 @@ public class UserListsCache {
 
             if (userLists.getDropped() != null)
                 anime_list.addAll(userLists.getDropped());
-        }
+        } else
+            anime_list = new ArrayList<>();
     }
 }

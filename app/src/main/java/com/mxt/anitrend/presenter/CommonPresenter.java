@@ -14,7 +14,7 @@ import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.custom.recycler.ScrollListener;
 import com.mxt.anitrend.util.ApiPreferences;
@@ -64,7 +64,7 @@ public abstract class CommonPresenter <T> extends ScrollListener {
     }
 
     public List<String> getGenres() {
-        return Arrays.asList(FilterTypes.GenreTypes);
+        return Arrays.asList(KeyUtils.GenreTypes);
     }
 
     public void saveGenres(Integer[] which, CharSequence[] text, Activity mContext) {

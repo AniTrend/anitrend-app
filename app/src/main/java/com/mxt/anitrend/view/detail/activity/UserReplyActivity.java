@@ -42,19 +42,19 @@ import com.mxt.anitrend.adapter.recycler.details.CommentAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.UserActivityReply;
 import com.mxt.anitrend.async.ActivityReplyTaskFetch;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetEmoticon;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
 import com.mxt.anitrend.custom.emoji4j.EmojiManager;
 import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.event.InteractionListener;
 import com.mxt.anitrend.event.MultiInteractionListener;
 import com.mxt.anitrend.presenter.index.MainPresenter;
@@ -225,7 +225,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 mPresenter.createSuperToast(this, getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                 break;
@@ -499,7 +499,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_REPLY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_REPLY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
             case R.id.post_reply:
@@ -541,7 +541,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                                                     Toast.makeText(UserReplyActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_REPLY_DELETE, action);
+                                        }, KeyUtils.ActionType.ACTIVITY_REPLY_DELETE, action);
                                         deleteAction.execute();
                                         break;
                                     case NEUTRAL:
@@ -567,7 +567,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                 Payload.ActivityStruct actionReply = new Payload.ActivityStruct(mReplyKey, replyText, mPassedData.getId());
 
                 RequestApiAction.ActivityActions<ResponseBody> replyAction = new RequestApiAction.ActivityActions<>(getApplicationContext(), this,
-                        mReplyKey==-1?FilterTypes.ActionType.ACTIVITY_REPLY:FilterTypes.ActionType.ACTIVITY_REPLY_EDIT,
+                        mReplyKey==-1? KeyUtils.ActionType.ACTIVITY_REPLY: KeyUtils.ActionType.ACTIVITY_REPLY_EDIT,
                         actionReply);
 
                 replyAction.execute();

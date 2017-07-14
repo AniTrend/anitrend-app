@@ -41,6 +41,10 @@ public abstract class DefaultActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    protected boolean isAlive() {
+        return !isFinishing() || !isDestroyed();
+    }
+
     /**
      * Optionally allowed to override
      */

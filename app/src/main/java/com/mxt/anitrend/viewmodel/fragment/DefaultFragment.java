@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -100,6 +101,10 @@ public abstract class DefaultFragment <T extends Parcelable> extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
     }
 
     /**

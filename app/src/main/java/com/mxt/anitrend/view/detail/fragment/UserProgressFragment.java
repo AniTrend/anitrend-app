@@ -19,7 +19,7 @@ import com.mxt.anitrend.adapter.recycler.index.ProgressAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
@@ -250,7 +250,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
             case R.id.feed_series_img:
                 // Open the clicked series
                 Series series = mItem.getSeries();
-                if(series.getSeries_type().equals(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()])) {
+                if(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME])) {
                     intent = new Intent(getActivity(), AnimeActivity.class);
                     intent.putExtra(AnimeActivity.MODEL_ID_KEY, series.getId());
                     intent.putExtra(AnimeActivity.MODEL_BANNER_KEY, series.getImage_url_banner());
@@ -302,7 +302,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -19,7 +18,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.details.StaffPageAdapter;
 import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.api.model.StaffSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
@@ -163,7 +162,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                         if(!isDestroyed() || !isFinishing())
                             Toast.makeText(StaffActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                }, FilterTypes.ActionType.STAFF_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.STAFF_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }

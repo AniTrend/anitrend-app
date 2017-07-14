@@ -12,7 +12,7 @@ import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.service.ServiceGenerator;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.custom.UserListsCache;
 import com.mxt.anitrend.event.RemoteChangeListener;
@@ -38,7 +38,7 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
     private ApplicationPrefs applicationPrefs;
     private UserListsCache userListsCache;
     private ListItem userListItem;
-    private FilterTypes.SeriesType mSeriesType;
+    private @KeyUtils.SeriesType int mSeriesType;
     private ProgressDialog progressDialog;
     private Series series;
     private UserListModel seriesLists;
@@ -46,21 +46,21 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
     private boolean isAutoIncrement;
     private final UserSmall mCurrent;
 
-    public SeriesActionHelper(Context context, FilterTypes.SeriesType mSeriesType, Series series) {
+    public SeriesActionHelper(Context context, @KeyUtils.SeriesType int mSeriesType, Series series) {
         this.context = context;
         this.mSeriesType = mSeriesType;
         this.series = series;
         mCurrent = new ApplicationPrefs(context).getMiniUser();
     }
 
-    public SeriesActionHelper(Context context, FilterTypes.SeriesType mSeriesType, ListItem userListItem) {
+    public SeriesActionHelper(Context context, @KeyUtils.SeriesType int mSeriesType, ListItem userListItem) {
         this.context = context;
         this.mSeriesType = mSeriesType;
         this.userListItem = userListItem;
         mCurrent = new ApplicationPrefs(context).getMiniUser();
     }
 
-    public SeriesActionHelper(Context context, FilterTypes.SeriesType mSeriesType, ListItem userListItem, RemoteChangeListener mListener, boolean isAutoIncrement) {
+    public SeriesActionHelper(Context context, @KeyUtils.SeriesType int mSeriesType, ListItem userListItem, RemoteChangeListener mListener, boolean isAutoIncrement) {
         this.context = context;
         this.userListItem = userListItem;
         this.mSeriesType = mSeriesType;
@@ -109,7 +109,7 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
     private void prepareTask() {
         try {
             switch (mSeriesType) {
-                case ANIME:
+                case KeyUtils.ANIME:
                     seriesLists.fetchAnimeList(mCurrent.getId()).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
@@ -133,7 +133,7 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
                         }
                     });
                     break;
-                case MANGA:
+                case KeyUtils.MANGA:
                     seriesLists.fetchMangaList(mCurrent.getId()).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
@@ -224,11 +224,11 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
         protected ListItem doInBackground(Void... voids) {
             Integer index;
             switch (mSeriesType) {
-                case ANIME:
+                case KeyUtils.ANIME:
                     if((index = animeItems()) != -1)
                         return userListsCache.getAnimeLists().get(index);
                     return null;
-                case MANGA:
+                case KeyUtils.MANGA:
                     if((index = mangaItems()) != -1)
                         return userListsCache.getMangaLists().get(index);
                     return null;
@@ -251,13 +251,13 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
         private void completePost(ListItem data) {
             DialogManager dialogManager = new DialogManager(context);
             if(data == null) switch (mSeriesType) {
-                case ANIME:
+                case KeyUtils.ANIME:
                     if(series != null)
                         dialogManager.animeAddDialogSmall(series);
                     else
                         dialogManager.animeAddDialogSmall(userListItem.getAnime());
                     break;
-                case MANGA:
+                case KeyUtils.MANGA:
                     if(series != null)
                         dialogManager.mangaAddDialogSmall(series);
                     else
@@ -265,13 +265,13 @@ public class SeriesActionHelper extends AsyncTask<Void,Void,Void> {
                     break;
             }
             else switch (mSeriesType) {
-                case ANIME:
+                case KeyUtils.ANIME:
                     if(isAutoIncrement)
                         dialogManager.episodeAutoUpdate(data, mListener);
                     else
                         dialogManager.animeEditDialogSmall(data, mListener);
                     break;
-                case MANGA:
+                case KeyUtils.MANGA:
                     if(isAutoIncrement)
                         dialogManager.chapterAutoUpdate(data, mListener);
                     else

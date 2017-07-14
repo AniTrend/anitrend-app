@@ -19,6 +19,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMyAnimeAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMyMangaAdapter;
 import com.mxt.anitrend.api.model.User;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.async.SortHelper;
@@ -51,7 +52,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesType;
 import static com.mxt.anitrend.async.AsyncTaskFetch.RequestType;
 
 /**
@@ -241,7 +241,7 @@ public abstract class UserListFragment extends Fragment implements Callback<User
 
     @Override
     public void onFailure(Call<User> call, Throwable t) {
-        if(isVisible() && (!isDetached() || !isRemoving())) {
+        if(isAlive()) {
             t.printStackTrace();
             progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.button_try_again), new View.OnClickListener() {
                 @Override
@@ -303,7 +303,7 @@ public abstract class UserListFragment extends Fragment implements Callback<User
         switch (vId) {
             case R.id.txt_anime_eps:
                 if(mPresenter.getAppPrefs().isAuthenticated())
-                    new SeriesActionHelper(getActivity(), mRequestType == RequestType.USER_ANIME_LIST_REQ? SeriesType.ANIME: SeriesType.MANGA, item, this, mPresenter.getDefaultPrefs().isAutoIncrement()).execute();
+                    new SeriesActionHelper(getActivity(), mRequestType == RequestType.USER_ANIME_LIST_REQ? KeyUtils.ANIME: KeyUtils.MANGA, item, this, mPresenter.getDefaultPrefs().isAutoIncrement()).execute();
                 else
                     mPresenter.createSuperToast(getActivity(), getString(R.string.info_login_req), R.drawable.ic_info_outline_white_18dp, Style.TYPE_STANDARD);
                 break;
@@ -332,7 +332,7 @@ public abstract class UserListFragment extends Fragment implements Callback<User
     @Override
     public void onLongClickSeries(ListItem item) {
         if(mPresenter.getAppPrefs().isAuthenticated())
-            new SeriesActionHelper(getActivity(), mRequestType == RequestType.USER_ANIME_LIST_REQ? SeriesType.ANIME: SeriesType.MANGA, item, this, false).execute();
+            new SeriesActionHelper(getActivity(), mRequestType == RequestType.USER_ANIME_LIST_REQ? KeyUtils.ANIME: KeyUtils.MANGA, item, this, false).execute();
         else
             mPresenter.createSuperToast(getActivity(), getString(R.string.info_login_req), R.drawable.ic_info_outline_white_18dp, Style.TYPE_STANDARD);
     }
@@ -355,6 +355,10 @@ public abstract class UserListFragment extends Fragment implements Callback<User
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         update();
+    }
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
     }
 
     /**

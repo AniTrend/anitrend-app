@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.SeriesReviewAdapter;
 import com.mxt.anitrend.api.model.Review;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
@@ -235,7 +235,7 @@ public class AnimeReviewsFragment extends Fragment implements Callback<List<Revi
                     ex.printStackTrace();
                 }
             }
-        }, FilterTypes.ActionType.REVIEW_ANIME_RATE, payload).execute();
+        }, KeyUtils.ActionType.REVIEW_ANIME_RATE, payload).execute();
     }
 
     @Override
@@ -265,6 +265,6 @@ public class AnimeReviewsFragment extends Fragment implements Callback<List<Revi
                     ex.printStackTrace();
                 }
             }
-        }, FilterTypes.ActionType.REVIEW_ANIME_RATE, payload).execute();
+        }, KeyUtils.ActionType.REVIEW_ANIME_RATE, payload).execute();
     }
 }

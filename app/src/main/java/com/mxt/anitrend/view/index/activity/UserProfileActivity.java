@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +27,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.user.UserPageAdapter;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
@@ -252,7 +251,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                                                     Toast.makeText(UserProfileActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                 }
                                             }
-                                        }, FilterTypes.ActionType.DIRECT_MESSAGE_SEND, message);
+                                        }, KeyUtils.ActionType.DIRECT_MESSAGE_SEND, message);
                                         action.execute();
                                         Toast.makeText(UserProfileActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
                                     } else {
@@ -312,7 +311,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
             case R.id.user_anime_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);
                 intent.putExtra(ListBrowseActivity.USER_ID, mCurrentUser.getId());
-                intent.putExtra(ListBrowseActivity.CONT_TYPE, FilterTypes.SeriesType.ANIME.ordinal());
+                intent.putExtra(ListBrowseActivity.CONT_TYPE, KeyUtils.ANIME);
                 startActivity(intent);
                 break;
             case R.id.user_anime_time_container:
@@ -321,7 +320,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
             case R.id.user_manga_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);
                 intent.putExtra(ListBrowseActivity.USER_ID, mCurrentUser.getId());
-                intent.putExtra(ListBrowseActivity.CONT_TYPE, FilterTypes.SeriesType.MANGA.ordinal());
+                intent.putExtra(ListBrowseActivity.CONT_TYPE, KeyUtils.MANGA);
                 startActivity(intent);
                 break;
             case R.id.user_manga_chaps_container:

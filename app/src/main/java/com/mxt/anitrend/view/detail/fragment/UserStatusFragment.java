@@ -23,12 +23,12 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StatusAdapter;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
+import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
 import com.mxt.anitrend.event.MultiInteractionListener;
 import com.mxt.anitrend.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
@@ -291,7 +291,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
             case R.id.status_edit:
@@ -303,7 +303,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                 EditText editText = dialog.getInputEditText();
                                 if(editText != null) {
                                     if(!TextUtils.isEmpty(editText.getText())) {
-                                        if(model_type.equals(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()])) {
+                                        if(model_type.equals(KeyUtils.ActivtyTypes[KeyUtils.MESSAGE])) {
                                             Payload.ActivityMessage msg = new Payload.ActivityMessage(mItem.getId(), mItem.getMessenger().getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id());
                                             RequestApiAction.MessageActions<UserActivity> action = new RequestApiAction.MessageActions<>(getContext(), new Callback<UserActivity>() {
                                                 @Override
@@ -327,7 +327,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                                         Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
-                                            }, FilterTypes.ActionType.DIRECT_MESSAGE_EDIT, msg);
+                                            }, KeyUtils.ActionType.DIRECT_MESSAGE_EDIT, msg);
                                             action.execute();
                                         } else {
                                             Payload.ActivityStruct status = new Payload.ActivityStruct(mItem.getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id(), -1);
@@ -353,7 +353,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                                         Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
-                                            }, FilterTypes.ActionType.ACTIVITY_EDIT, status);
+                                            }, KeyUtils.ActionType.ACTIVITY_EDIT, status);
                                             action.execute();
                                         }
                                         mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
@@ -406,7 +406,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                                         e.printStackTrace();
                                                     }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_DELETE, action);
+                                        }, KeyUtils.ActionType.ACTIVITY_DELETE, action);
                                         deleteAction.execute();
                                         mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                                         break;

@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.index.fragment;
 
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
 import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.async.AiringTaskFetch;
 import com.mxt.anitrend.async.SeriesActionHelper;
@@ -195,7 +195,7 @@ public class AiringFragment extends Fragment implements SwipeRefreshLayout.OnRef
      * them to you through new calls here.  You should not monitor the
      * data yourself.  For example, if the data is a {@link Cursor}
      * and you place it in a {@link CursorAdapter}, use
-     * the {@link CursorAdapter#CursorAdapter(Context, * Cursor, int)} constructor <em>without</em> passing
+     * the constructor <em>without</em> passing
      * in either {@link CursorAdapter#FLAG_AUTO_REQUERY}
      * or {@link CursorAdapter#FLAG_REGISTER_CONTENT_OBSERVER}
      * (that is, use 0 for the flags argument).  This prevents the CursorAdapter
@@ -253,7 +253,7 @@ public class AiringFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 break;
             case R.id.txt_anime_eps:
                 if(mPresenter.getAppPrefs().isAuthenticated())
-                    new SeriesActionHelper(getContext(), FilterTypes.SeriesType.ANIME, item, this, mPresenter.getDefaultPrefs().isAutoIncrement()).execute();
+                    new SeriesActionHelper(getContext(), KeyUtils.ANIME, item, this, mPresenter.getDefaultPrefs().isAutoIncrement()).execute();
                 else
                     Toast.makeText(getContext(), getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
                 break;
@@ -271,7 +271,7 @@ public class AiringFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onLongClickSeries(ListItem item) {
         if(mPresenter.getAppPrefs().isAuthenticated())
-            new SeriesActionHelper(getContext(), FilterTypes.SeriesType.ANIME, item, this, false).execute();
+            new SeriesActionHelper(getContext(), KeyUtils.ANIME, item, this, false).execute();
         else
             Toast.makeText(getContext(), getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
     }

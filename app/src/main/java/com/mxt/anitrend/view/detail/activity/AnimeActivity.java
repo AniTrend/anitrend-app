@@ -23,7 +23,7 @@ import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.details.AnimePageAdapter;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.Payload;
@@ -100,7 +100,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         progressLayout.showLoading();
         viewPager.setOffscreenPageLimit(3);
         attachEventListeners();
-        mPresenter = new SeriesPresenter(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], getApplicationContext());
+        mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.ANIME], getApplicationContext());
         if(mId != 0 && mSeries != null)
             updateUI();
         else {
@@ -357,11 +357,11 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                                     e.printStackTrace();
                                 }
                         }
-                    }, FilterTypes.ActionType.ANIME_FAVOURITE, actionIdBased);
+                    }, KeyUtils.ActionType.ANIME_FAVOURITE, actionIdBased);
                     userPostActions.execute();
                     break;
                 case R.id.action_add_to_list:
-                    new SeriesActionHelper(this, FilterTypes.SeriesType.ANIME, mSeries).execute();
+                    new SeriesActionHelper(this, KeyUtils.ANIME, mSeries).execute();
                     break;
                 case R.id.action_write_review:
                     mPresenter.displayMessage(getString(R.string.text_feature_on_hold), this);

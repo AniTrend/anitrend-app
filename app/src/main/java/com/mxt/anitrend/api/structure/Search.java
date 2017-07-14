@@ -10,7 +10,7 @@ import java.io.Serializable;
  2016,
  queString*//*"summer"*//*,
         null*//*e.g movie*//*,
-        FilterTypes.AnimeStatusTypes[FilterTypes.AnimeStatusType.FINISHED_AIRING.ordinal()],
+        KeyUtils.AnimeStatusTypes[KeyUtils.AnimeStatusType.FINISHED_AIRING.ordinal()],
         null *//*genre*//*,
         null, *//*genre exclude*//*
         "popularity-desc", *//*sort*//*

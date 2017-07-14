@@ -7,7 +7,7 @@ import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.service.ServiceGenerator;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class FeedPageFetch extends AsyncTask<Void,Void,Call<List<UserActivity>>>
     protected Call<List<UserActivity>> doInBackground(Void... params) {
         UserModel userModel = ServiceGenerator.createService(UserModel.class, mContext);
         if(user == null) {
-            if (!type.equals(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()]))
+            if (!type.equals(KeyUtils.ActivtyTypes[KeyUtils.MESSAGE]))
                 return userModel.fetchCurrentUserActivity(page, type);
 
             return userModel.fetchUserActivity(current.getDisplay_name(), page, type);

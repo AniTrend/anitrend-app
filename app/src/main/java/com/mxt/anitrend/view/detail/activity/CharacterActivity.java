@@ -26,7 +26,7 @@ import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Character;
 import com.mxt.anitrend.api.model.CharacterSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
@@ -143,7 +143,7 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
                         if(!isDestroyed() || !isFinishing())
                             displayMessage(t.getCause().getMessage(), CharacterActivity.this);
                     }
-                }, FilterTypes.ActionType.CHARACTER_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.CHARACTER_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }

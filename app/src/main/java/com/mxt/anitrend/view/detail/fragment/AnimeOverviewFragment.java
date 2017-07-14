@@ -22,7 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.StudioSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Tag;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
 import com.mxt.anitrend.util.DateTimeConverter;
@@ -98,7 +98,7 @@ public class AnimeOverviewFragment extends Fragment implements View.OnClickListe
         if(getArguments() != null) {
             model = getArguments().getParcelable(ARG_KEY);
         }
-        mPresenter = new SeriesPresenter(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], getContext());
+        mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.ANIME], getContext());
     }
 
     @Override

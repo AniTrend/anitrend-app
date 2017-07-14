@@ -24,7 +24,7 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.Studio;
 import com.mxt.anitrend.api.model.StudioSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
@@ -154,10 +154,10 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
                 new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);
+                        mPresenter.getApiPrefs().saveSort(KeyUtils.SeriesSortTypes[which]);
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
+                }, this, Arrays.asList(KeyUtils.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
                 break;
             case R.id.action_favor_state:
                 if(!mPresenter.getAppPrefs().isAuthenticated()) {
@@ -183,7 +183,7 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
                         if(!isDestroyed() || !isFinishing())
                             mPresenter.displayMessage(t.getLocalizedMessage(), StudioActivity.this);
                     }
-                }, FilterTypes.ActionType.STUDIO_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.STUDIO_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }

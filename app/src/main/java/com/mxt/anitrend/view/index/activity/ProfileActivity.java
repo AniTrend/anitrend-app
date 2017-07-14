@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -26,7 +25,7 @@ import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.user.UserBasePageAdapter;
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
@@ -332,7 +331,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                                                     Toast.makeText(ProfileActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                 }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_CREATE, status);
+                                        }, KeyUtils.ActionType.ACTIVITY_CREATE, status);
                                         request.execute();
                                         Toast.makeText(ProfileActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
                                     } else {
@@ -353,7 +352,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
             case R.id.user_anime_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);
                 intent.putExtra(ListBrowseActivity.USER_ID, mPresenter.getCurrentUser().getId());
-                intent.putExtra(ListBrowseActivity.CONT_TYPE, FilterTypes.SeriesType.ANIME.ordinal());
+                intent.putExtra(ListBrowseActivity.CONT_TYPE, KeyUtils.ANIME);
                 startActivity(intent);
                 break;
             case R.id.user_anime_time_container:
@@ -362,7 +361,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
             case R.id.user_manga_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);
                 intent.putExtra(ListBrowseActivity.USER_ID, mPresenter.getCurrentUser().getId());
-                intent.putExtra(ListBrowseActivity.CONT_TYPE, FilterTypes.SeriesType.MANGA.ordinal());
+                intent.putExtra(ListBrowseActivity.CONT_TYPE, KeyUtils.MANGA);
                 startActivity(intent);
                 break;
             case R.id.user_manga_chaps_container:

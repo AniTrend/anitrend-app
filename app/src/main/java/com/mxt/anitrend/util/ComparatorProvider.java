@@ -1,7 +1,6 @@
 package com.mxt.anitrend.util;
 
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.ListItem;
 
 import java.util.Comparator;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 public class ComparatorProvider {
 
     public static Comparator<Series> getSeriesComparator(final ApiPreferences apiPrefs) {
-        if(apiPrefs.getOrder().equals(FilterTypes.OrderTypes[FilterTypes.OrderType.DESC.ordinal()]))
+        if(apiPrefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
             return new Comparator<Series>() {
                 @Override
                 public int compare(Series s1, Series s2) {
@@ -71,7 +70,7 @@ public class ComparatorProvider {
     }
 
     public static Comparator<ListItem> getAnimeComparator(final ApiPreferences apiPrefs) {
-        if(apiPrefs.getOrder().equals(FilterTypes.OrderTypes[FilterTypes.OrderType.DESC.ordinal()]))
+        if(apiPrefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
             return new Comparator<ListItem>() {
                 @Override
                 public int compare(ListItem s1, ListItem s2) {
@@ -128,7 +127,7 @@ public class ComparatorProvider {
     }
 
     public static Comparator<ListItem> getMangaComparator(final ApiPreferences apiPrefs) {
-        if(apiPrefs.getOrder().equals(FilterTypes.OrderTypes[FilterTypes.OrderType.DESC.ordinal()]))
+        if(apiPrefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
             return new Comparator<ListItem>() {
                 @Override
                 public int compare(ListItem s1, ListItem s2) {
@@ -188,7 +187,7 @@ public class ComparatorProvider {
         return new Comparator<HashMap.Entry<String, Integer>>() {
             @Override
             public int compare(HashMap.Entry<String, Integer> o1, HashMap.Entry<String, Integer> o2) {
-                if(apiPrefs.getOrder().equals(FilterTypes.OrderTypes[FilterTypes.OrderType.DESC.ordinal()]))
+                if(apiPrefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
                     return o2.getValue().compareTo(o1.getValue());
                 return o1.getValue().compareTo(o2.getValue());
             }

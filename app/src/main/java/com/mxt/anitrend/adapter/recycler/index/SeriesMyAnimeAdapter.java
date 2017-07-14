@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
@@ -342,7 +342,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
         public boolean onLongClick(View v) {
             switch (v.getId()) {
                 case R.id.img_lge:
-                    new SeriesActionHelper(mContext, FilterTypes.SeriesType.ANIME, mAdapter.get(getAdapterPosition())).execute();
+                    new SeriesActionHelper(mContext, KeyUtils.ANIME, mAdapter.get(getAdapterPosition())).execute();
                     break;
             }
             return true;
@@ -440,10 +440,10 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
         public boolean onLongClick(View v) {
             switch (v.getId()) {
                 case R.id.img_lge:
-                    new SeriesActionHelper(mContext, FilterTypes.SeriesType.ANIME, mAdapter.get(getAdapterPosition())).execute();
+                    new SeriesActionHelper(mContext, KeyUtils.ANIME, mAdapter.get(getAdapterPosition())).execute();
                     break;
                 case R.id.card_view:
-                    new SeriesActionHelper(mContext, FilterTypes.SeriesType.ANIME, mAdapter.get(getAdapterPosition())).execute();
+                    new SeriesActionHelper(mContext, KeyUtils.ANIME, mAdapter.get(getAdapterPosition())).execute();
                     break;
             }
             return true;

@@ -59,7 +59,7 @@ import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter;
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
@@ -680,7 +680,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                                                         Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
-                                            }, FilterTypes.ActionType.ACTIVITY_CREATE, status);
+                                            }, KeyUtils.ActionType.ACTIVITY_CREATE, status);
                                             request.execute();
                                             Toast.makeText(MainActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
                                         } else {
@@ -855,13 +855,13 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);
-                        mModel.setSort_by(FilterTypes.SeriesSortTypes[which]);
+                        mPresenter.getApiPrefs().saveSort(KeyUtils.SeriesSortTypes[which]);
+                        mModel.setSort_by(KeyUtils.SeriesSortTypes[which]);
                         //fire event handler to all child view pagers
                         //mPresenter.notifyAllItems();
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
+                }, this, Arrays.asList(KeyUtils.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
                 break;
 
             case R.id.action_order:
@@ -872,13 +872,13 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        mPresenter.getApiPrefs().saveOrder(FilterTypes.OrderTypes[which]);
-                        mModel.setOrder_by(FilterTypes.OrderTypes[which]);
+                        mPresenter.getApiPrefs().saveOrder(KeyUtils.OrderTypes[which]);
+                        mModel.setOrder_by(KeyUtils.OrderTypes[which]);
                         //fire event handler to all child view pagers
                         //mPresenter.notifyAllItems();
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.OrderTypes).indexOf(mPresenter.getApiPrefs().getOrder()));
+                }, this, Arrays.asList(KeyUtils.OrderTypes).indexOf(mPresenter.getApiPrefs().getOrder()));
                 break;
 
             case R.id.action_genre:
@@ -919,13 +919,13 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        mPresenter.getApiPrefs().saveShowType(FilterTypes.ShowTypes[which]);
-                        mModel.setSeries_type(FilterTypes.ShowTypes[which]);
+                        mPresenter.getApiPrefs().saveShowType(KeyUtils.ShowTypes[which]);
+                        mModel.setSeries_type(KeyUtils.ShowTypes[which]);
                         //fire event handler to all child view pagers
                         //mPresenter.notifyAllItems();
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.ShowTypes).indexOf(mPresenter.getApiPrefs().getShowType()));
+                }, this, Arrays.asList(KeyUtils.ShowTypes).indexOf(mPresenter.getApiPrefs().getShowType()));
                 break;
 
             case R.id.action_year:
@@ -953,13 +953,13 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          */
-                        mPresenter.getApiPrefs().saveStatus(FilterTypes.AnimeStatusTypes[which]);
-                        mModel.setItem_status(FilterTypes.AnimeStatusTypes[which]);
+                        mPresenter.getApiPrefs().saveStatus(KeyUtils.AnimeStatusTypes[which]);
+                        mModel.setItem_status(KeyUtils.AnimeStatusTypes[which]);
                         //fire event handler to all child view pagers
                         //mPresenter.notifyAllItems();
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.AnimeStatusTypes).indexOf(mPresenter.getApiPrefs().getStatus()));
+                }, this, Arrays.asList(KeyUtils.AnimeStatusTypes).indexOf(mPresenter.getApiPrefs().getStatus()));
                 break;
         }
     }

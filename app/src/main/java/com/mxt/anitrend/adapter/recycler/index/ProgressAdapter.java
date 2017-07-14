@@ -18,12 +18,12 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.event.MultiInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
@@ -197,10 +197,10 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
             switch (v.getId()) {
                 case R.id.feed_series_img:
                     Series series = mAdapter.get(getAdapterPosition()).getSeries();
-                    if(series.getSeries_type().equals(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()]))
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.ANIME, series).execute();
+                    if(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
+                        new SeriesActionHelper(mContext, KeyUtils.ANIME, series).execute();
                     else
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, series).execute();
+                        new SeriesActionHelper(mContext, KeyUtils.MANGA, series).execute();
                     break;
             }
             return true;

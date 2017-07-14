@@ -26,14 +26,14 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.KeyValueTemp;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.view.PolygonView;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetUsers;
+import com.mxt.anitrend.custom.view.PolygonView;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.PatternMatcher;
@@ -518,7 +518,7 @@ public class UserAboutFragment extends Fragment implements SwipeRefreshLayout.On
                     Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-        }, FilterTypes.ActionType.ACTION_FOLLOW_TOGGLE, payload);
+        }, KeyUtils.ActionType.ACTION_FOLLOW_TOGGLE, payload);
         action.execute();
         mPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
     }

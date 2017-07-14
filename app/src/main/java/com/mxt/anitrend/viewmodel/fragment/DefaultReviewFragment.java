@@ -206,7 +206,7 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        if(isVisible() && (!isDetached() || !isRemoving())) {
+        if(isAlive()) {
             t.printStackTrace();
             progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.button_try_again), new View.OnClickListener() {
                 @Override
@@ -237,6 +237,10 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         update();
+    }
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
     }
 
     /**

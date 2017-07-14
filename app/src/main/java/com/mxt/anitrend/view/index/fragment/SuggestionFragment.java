@@ -9,6 +9,7 @@ import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.async.AsyncTaskFetch;
@@ -22,8 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesType;
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesTypes;
+import static com.mxt.anitrend.util.KeyUtils.SeriesTypes;
 
 /**
  * Created by ecdv on 2017-05-04.
@@ -143,7 +143,7 @@ public class SuggestionFragment extends DefaultListFragment<Series> {
         if((userStats = mUser.getStats()) != null) {
             HashMap<String, Integer> genreList = userStats.getFavourite_genres_map();
             if (genreList != null) {
-                mPresenter.beginAsync(this, new Search(SeriesTypes[SeriesType.ANIME.ordinal()], /*anime or manga*/
+                mPresenter.beginAsync(this, new Search(SeriesTypes[KeyUtils.ANIME], /*anime or manga*/
                         null, /*year*/
                         null, /*season*/
                         mPresenter.getApiPrefs().getShowType(), /*Type e.g. TV or Movie e.t.c*/

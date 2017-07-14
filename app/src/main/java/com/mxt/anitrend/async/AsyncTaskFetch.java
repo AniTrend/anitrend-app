@@ -12,13 +12,13 @@ import com.mxt.anitrend.api.call.StudioModel;
 import com.mxt.anitrend.api.call.UserListModel;
 import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
+import com.mxt.anitrend.util.KeyUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
 import static com.mxt.anitrend.api.service.ServiceGenerator.createService;
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesType;
-import static com.mxt.anitrend.api.structure.FilterTypes.SeriesTypes;
+import static com.mxt.anitrend.util.KeyUtils.SeriesTypes;
 
 /**
  * Created by max on 2017/04/06.
@@ -108,6 +108,8 @@ public class AsyncTaskFetch <T> extends AsyncTask<AsyncTaskFetch.RequestType, Vo
                 return (Call<T>) createService(UserModel.class, mContext).searchUser(term);
             case CHARACTER_INFO_REQ:
                 return (Call<T>) createService(CharacterModel.class, mContext).fetchCharacterPage(id);
+            case CHARACTER_SEARCH_REQ:
+                return (Call<T>) createService(CharacterModel.class, mContext).findChatacter(term);
             case STAFF_INFO_REQ:
                 return (Call<T>) createService(StaffModel.class, mContext).fetchStaffPage(id);
             case ANIME_REVIEWS_REQ:
@@ -117,9 +119,9 @@ public class AsyncTaskFetch <T> extends AsyncTask<AsyncTaskFetch.RequestType, Vo
             case SERIES_REVIEWS_REQ:
                 return (Call<T>) createService(ReviewModel.class, mContext).fetchSeriesReviews(term, page);
             case ANIME_SEARCH_REQ:
-                return (Call<T>) ServiceGenerator.createService(SeriesModel.class, mContext).findSeries(SeriesTypes[SeriesType.ANIME.ordinal()], term);
+                return (Call<T>) ServiceGenerator.createService(SeriesModel.class, mContext).findSeries(SeriesTypes[KeyUtils.ANIME], term);
             case MANGA_SEARCH_REQ:
-                return (Call<T>) ServiceGenerator.createService(SeriesModel.class, mContext).findSeries(SeriesTypes[SeriesType.MANGA.ordinal()], term);
+                return (Call<T>) ServiceGenerator.createService(SeriesModel.class, mContext).findSeries(SeriesTypes[KeyUtils.MANGA], term);
             case STUDIO_SEARCH_REQ:
                 return (Call<T>) ServiceGenerator.createService(StudioModel.class, mContext).findStudio(term);
             case STUDIO_INFO_REQ:
@@ -159,6 +161,7 @@ public class AsyncTaskFetch <T> extends AsyncTask<AsyncTaskFetch.RequestType, Vo
         USER_MANGA_LIST_REQ,
         USER_SEARCH_REQ,
         CHARACTER_INFO_REQ,
+        CHARACTER_SEARCH_REQ,
         STAFF_INFO_REQ,
         ANIME_REVIEWS_REQ,
         MANGA_REVIEWS_REQ,

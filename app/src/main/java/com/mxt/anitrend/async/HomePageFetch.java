@@ -19,7 +19,7 @@ import retrofit2.Callback;
  * 2016,
  * "summer",
  * null e.g movie,
- * FilterTypes.AnimeStatusTypes[FilterTypes.AnimeStatusType.FINISHED_AIRING.ordinal()],
+ * KeyUtils.AnimeStatusTypes[KeyUtils.AnimeStatusType.FINISHED_AIRING.ordinal()],
  * null genre,
  * null, genre exclude
  * "popularity-desc", sort

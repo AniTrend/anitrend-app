@@ -11,7 +11,7 @@ import com.mxt.anitrend.api.call.StudioModel;
 import com.mxt.anitrend.api.call.UserListModel;
 import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.custom.Payload;
 
 import okhttp3.ResponseBody;
@@ -30,10 +30,10 @@ public class RequestApiAction {
 
         private Context mContext;
         private Callback<ResponseBody> mCallback;
-        private FilterTypes.ActionType mActionType;
+        private KeyUtils.ActionType mActionType;
         private Payload.ActionIdBased actionIdBased;
 
-        public IdActions(Context mContext, Callback<ResponseBody> mCallback, FilterTypes.ActionType mActionType, Payload.ActionIdBased actionIdBased) {
+        public IdActions(Context mContext, Callback<ResponseBody> mCallback, KeyUtils.ActionType mActionType, Payload.ActionIdBased actionIdBased) {
             this.mContext = mContext;
             this.mCallback = mCallback;
             this.mActionType = mActionType;
@@ -57,10 +57,10 @@ public class RequestApiAction {
                         return follow_toggle.followUserToggle(actionIdBased);
                     case ANIME_FAVOURITE:
                         SeriesModel anime = ServiceGenerator.createService(SeriesModel.class, mContext);
-                        return anime.toggleFavourite(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], actionIdBased);
+                        return anime.toggleFavourite(KeyUtils.SeriesTypes[KeyUtils.ANIME], actionIdBased);
                     case MANGA_FAVOURITE:
                         SeriesModel manga = ServiceGenerator.createService(SeriesModel.class, mContext);
-                        return manga.toggleFavourite(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], actionIdBased);
+                        return manga.toggleFavourite(KeyUtils.SeriesTypes[KeyUtils.MANGA], actionIdBased);
                     case CHARACTER_FAVOURITE:
                         CharacterModel character = ServiceGenerator.createService(CharacterModel.class, mContext);
                         return character.toggleFavourite(actionIdBased);
@@ -106,10 +106,10 @@ public class RequestApiAction {
 
         private Context mContext;
         private Callback<T> mCallback;
-        private FilterTypes.ActionType mActionType;
+        private KeyUtils.ActionType mActionType;
         private Payload.ActivityStruct genericAction;
 
-        public ActivityActions(Context mContext, Callback<T> mCallback, FilterTypes.ActionType mActionType, Payload.ActivityStruct genericAction) {
+        public ActivityActions(Context mContext, Callback<T> mCallback, KeyUtils.ActionType mActionType, Payload.ActivityStruct genericAction) {
             this.mContext = mContext;
             this.mCallback = mCallback;
             this.mActionType = mActionType;
@@ -153,10 +153,10 @@ public class RequestApiAction {
 
         private Context mContext;
         private Callback<T> mCallback;
-        private FilterTypes.ActionType mActionType;
+        private KeyUtils.ActionType mActionType;
         private Payload.ActivityMessage messageAction;
 
-        public MessageActions(Context mContext, Callback<T> mCallback, FilterTypes.ActionType mActionType, Payload.ActivityMessage messageAction) {
+        public MessageActions(Context mContext, Callback<T> mCallback, KeyUtils.ActionType mActionType, Payload.ActivityMessage messageAction) {
             this.mContext = mContext;
             this.mCallback = mCallback;
             this.mActionType = mActionType;
@@ -196,10 +196,10 @@ public class RequestApiAction {
 
         private Context mContext;
         private Callback<ResponseBody> mCallback;
-        private FilterTypes.ActionType mActionType;
+        private KeyUtils.ActionType mActionType;
         private Payload.ReviewActions reviewActions;
 
-        public ReviewBasedActions(Context mContext, Callback<ResponseBody> mCallback, FilterTypes.ActionType mActionType, Payload.ReviewActions reviewActions) {
+        public ReviewBasedActions(Context mContext, Callback<ResponseBody> mCallback, KeyUtils.ActionType mActionType, Payload.ReviewActions reviewActions) {
             this.mContext = mContext;
             this.mCallback = mCallback;
             this.mActionType = mActionType;
@@ -239,10 +239,10 @@ public class RequestApiAction {
 
         private Context mContext;
         private Callback<Object> mCallback;
-        private FilterTypes.ActionType mActionType;
+        private KeyUtils.ActionType mActionType;
         private Payload.ListAnimeAction animeAction;
 
-        public AnimeListActions(Context mContext, FilterTypes.ActionType mActionType, Payload.ListAnimeAction animeAction, Callback<Object> mCallback) {
+        public AnimeListActions(Context mContext, KeyUtils.ActionType mActionType, Payload.ListAnimeAction animeAction, Callback<Object> mCallback) {
             this.mContext = mContext;
             this.mCallback = mCallback;
             this.mActionType = mActionType;
@@ -301,10 +301,10 @@ public class RequestApiAction {
 
         private Context mContext;
         private Callback<Object> mCallback;
-        private FilterTypes.ActionType mActionType;
+        private KeyUtils.ActionType mActionType;
         private Payload.ListMangaAction mangaAction;
 
-        public MangaListActions(Context mContext, FilterTypes.ActionType mActionType, Payload.ListMangaAction mangaAction, Callback<Object> mCallback) {
+        public MangaListActions(Context mContext, KeyUtils.ActionType mActionType, Payload.ListMangaAction mangaAction, Callback<Object> mCallback) {
             this.mContext = mContext;
             this.mCallback = mCallback;
             this.mActionType = mActionType;

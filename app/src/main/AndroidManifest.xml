@@ -22,6 +22,10 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
 
+        <meta-data
+            android:name="com.mxt.anitrend.custom.glide.ImageModule"
+            android:value="GlideModule" />
+
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">

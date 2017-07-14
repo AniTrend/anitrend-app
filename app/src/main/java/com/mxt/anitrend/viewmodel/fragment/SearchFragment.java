@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.details.CharacterAdapter;
+import com.mxt.anitrend.adapter.recycler.index.CharacterSearchAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMangaAdapter;
 import com.mxt.anitrend.adapter.recycler.index.StudioAdapter;
 import com.mxt.anitrend.adapter.recycler.user.UserListAdapter;
+import com.mxt.anitrend.api.model.Character;
+import com.mxt.anitrend.api.model.CharacterSmall;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.StudioSmall;
 import com.mxt.anitrend.api.model.UserSmall;
@@ -105,7 +109,12 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(false); //set to false if somethings fail to work properly
-        mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(mRequestType != RequestType.USER_SEARCH_REQ? R.integer.card_col_size_home:R.integer.list_col_size));
+        if(mRequestType != RequestType.USER_SEARCH_REQ)
+            mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.card_col_size_home));
+        if (mRequestType != RequestType.CHARACTER_SEARCH_REQ)
+            mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size));
+        else
+            mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank));
         recyclerView.setLayoutManager(mLayoutManager);
         return root;
     }
@@ -120,7 +129,7 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
         super.onStart();
         EventBus.getDefault().register(this);
         if(query != null && query.length() < 1)
-            progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), "The search query is either empty or invalid", "Back", new View.OnClickListener() {
+            progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.Close), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(v != null)
@@ -213,6 +222,9 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
                     case STUDIO_SEARCH_REQ:
                         mAdapter = new StudioAdapter((List<StudioSmall>) model, getActivity());
                         break;
+                    case CHARACTER_SEARCH_REQ:
+                        mAdapter = new CharacterSearchAdapter((List<Character>) model, getActivity());
+                        break;
                 }
                 recyclerView.setAdapter(mAdapter);
             } else {
@@ -227,7 +239,7 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
     }
 
     public void showError() {
-        progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), "No listing found under the specified criteria", "Back", new View.OnClickListener() {
+        progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), "No listing found under the specified criteria", getString(R.string.Go_Back), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(v != null)
@@ -241,7 +253,7 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
 
     @Override
     public void onFailure(Call<List<T>> call, Throwable t) {
-        if(isVisible() && (!isDetached() || !isRemoving())) {
+        if(isAlive()) {
             t.printStackTrace();
             progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.button_try_again), new View.OnClickListener() {
                 @Override
@@ -264,10 +276,14 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
 
     @Override
     public void onSortComplete(List<T> result) {
-        if(isVisible() && (!isRemoving() || !isDetached())) {
+        if(isAlive()) {
             model = result;
             updateUI();
         }
+    }
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
     }
 
     /**

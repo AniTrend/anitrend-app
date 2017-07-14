@@ -8,14 +8,6 @@ import com.mxt.anitrend.BuildConfig;
 
 public class HubUtil {
 
-    public static String defaultFilter() {
-        return "{\"videoStatus\":\"final\",\"addedBy\":\"UeQuqJ90j3igXB6A\"}";
-    }
-
-    public static String playlistFilter() {
-        return "{\"videos\":{\"$exists\":true},\"addedBy\":\"UeQuqJ90j3igXB6A\"}";
-    }
-
     public static String getSubtitleLink(String id) {
         return String.format("%s/host/%s", BuildConfig.HUB_BASE_LINK, id);
     }

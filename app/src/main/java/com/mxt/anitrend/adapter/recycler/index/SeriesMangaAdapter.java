@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
@@ -190,13 +190,13 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
             switch (v.getId()) {
                 case R.id.img_lge:
                     if(mPrefs.isAuthenticated())
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                        new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     else
                         Toast.makeText(mContext, mContext.getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.card_view:
                     if(mPrefs.isAuthenticated())
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                        new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     else
                         Toast.makeText(mContext, mContext.getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
                     break;
