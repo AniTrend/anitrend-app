@@ -2,7 +2,7 @@
 <menu  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:mContext="com.mxt.anitrend.MainActivity">
+    tools:mContext="com.mxt.anitrend.view.base.activity.MainActivity">
 
     <item
         android:id="@+id/action_create_post"

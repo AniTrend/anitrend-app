@@ -4,7 +4,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
-import com.mxt.anitrend.event.RecyclerLoadListener;
+import com.mxt.anitrend.custom.event.RecyclerLoadListener;
 
 /**
  * Created By Maxwell

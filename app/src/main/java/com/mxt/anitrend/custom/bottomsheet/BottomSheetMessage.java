@@ -15,11 +15,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.SplashActivity;
+import com.mxt.anitrend.view.base.activity.SplashActivity;
 import com.mxt.anitrend.api.call.RepoModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
-import com.mxt.anitrend.event.SheetStateChangeListener;
-import com.mxt.anitrend.service.ServiceScheduler;
+import com.mxt.anitrend.custom.event.SheetStateChangeListener;
+import com.mxt.anitrend.custom.service.ServiceScheduler;
 import com.mxt.anitrend.util.Downloader;
 
 import butterknife.BindView;

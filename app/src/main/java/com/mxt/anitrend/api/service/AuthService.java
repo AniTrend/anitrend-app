@@ -2,8 +2,8 @@ package com.mxt.anitrend.api.service;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.api.call.TokenModel;
-import com.mxt.anitrend.api.core.GrantTypes;
 import com.mxt.anitrend.api.core.Token;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.io.IOException;
 
@@ -12,6 +12,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.mxt.anitrend.util.KeyUtils.GrantTypes;
 
 /**
  * Created by Maxwell on 10/7/2016.
@@ -32,7 +34,7 @@ public final class AuthService {
     public static void requestClientTokenAsync(Callback<Token> tokenCallback) {
         Call<Token> getAccessToken =
                 mBuilder.create((TokenModel.class))
-                        .getAccessToken(ServiceGenerator.API_TOKEN_TYPE[GrantTypes.AUTHENTICATION_TYPE.ordinal()], BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET);
+                        .getAccessToken(GrantTypes[KeyUtils.AUTHENTICATION_TYPE], BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET);
         getAccessToken.enqueue(tokenCallback);
     }
 
@@ -44,7 +46,7 @@ public final class AuthService {
         try {
             Call<Token> getAccessToken =
                     mBuilder.create((TokenModel.class))
-                            .getAccessToken(ServiceGenerator.API_TOKEN_TYPE[GrantTypes.AUTHENTICATION_TYPE.ordinal()],
+                            .getAccessToken(GrantTypes[KeyUtils.AUTHENTICATION_TYPE],
                                     BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET);
 
             Response<Token> response = getAccessToken.execute();
@@ -62,7 +64,7 @@ public final class AuthService {
         try {
             Call<Token> getAuthRequest =
                     mBuilder.create((TokenModel.class))
-                            .getAuthRequest(ServiceGenerator.API_TOKEN_TYPE[GrantTypes.AUTHENTICATION_CODE.ordinal()],
+                            .getAuthRequest(GrantTypes[KeyUtils.AUTHENTICATION_CODE],
                                     BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.REDIRECT_URI, code);
 
             Response<Token> response = getAuthRequest.execute();
@@ -76,7 +78,7 @@ public final class AuthService {
     public static void requestRefreshTokenAsync(Callback<Token> callback, String refresh) {
         Call<Token> getAuthRequest =
                 mBuilder.create((TokenModel.class))
-                        .getAccessToken(ServiceGenerator.API_TOKEN_TYPE[GrantTypes.REFRESH_TYPE.ordinal()],
+                        .getAccessToken(GrantTypes[KeyUtils.REFRESH_TYPE],
                                 BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, refresh);
 
         getAuthRequest.enqueue(callback);
@@ -89,7 +91,7 @@ public final class AuthService {
         try {
             Call<Token> getAuthRequest =
                     mBuilder.create((TokenModel.class))
-                            .getAccessToken(ServiceGenerator.API_TOKEN_TYPE[GrantTypes.REFRESH_TYPE.ordinal()],
+                            .getAccessToken(GrantTypes[KeyUtils.REFRESH_TYPE],
                                     BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, refresh);
 
             Response<Token> response= getAuthRequest.execute();

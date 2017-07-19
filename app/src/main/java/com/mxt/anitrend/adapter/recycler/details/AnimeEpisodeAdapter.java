@@ -16,7 +16,7 @@ import com.mxt.anitrend.api.structure.Channel;
 import com.mxt.anitrend.api.structure.Episode;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.event.InteractionListener;
+import com.mxt.anitrend.custom.event.InteractionListener;
 
 import java.util.Locale;
 

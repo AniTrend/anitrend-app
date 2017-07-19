@@ -27,7 +27,7 @@ import com.mxt.anitrend.api.structure.ExternalLink;
 import com.mxt.anitrend.api.structure.Rss;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.event.InteractionListener;
+import com.mxt.anitrend.custom.event.InteractionListener;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.EpisodesHelper;

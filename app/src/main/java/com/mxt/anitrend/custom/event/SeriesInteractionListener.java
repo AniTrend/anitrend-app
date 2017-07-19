@@ -1,4 +1,4 @@
-package com.mxt.anitrend.event;
+package com.mxt.anitrend.custom.event;
 
 import com.mxt.anitrend.api.structure.ListItem;
 

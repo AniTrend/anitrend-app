@@ -12,21 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.details.CharacterAdapter;
 import com.mxt.anitrend.adapter.recycler.index.CharacterSearchAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMangaAdapter;
 import com.mxt.anitrend.adapter.recycler.index.StudioAdapter;
 import com.mxt.anitrend.adapter.recycler.user.UserListAdapter;
 import com.mxt.anitrend.api.model.Character;
-import com.mxt.anitrend.api.model.CharacterSmall;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.StudioSmall;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.async.SortHelper;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.event.FragmentCallback;
+import com.mxt.anitrend.custom.event.FragmentCallback;
 import com.mxt.anitrend.presenter.base.SearchPresenter;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -109,9 +107,9 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(false); //set to false if somethings fail to work properly
-        if(mRequestType != RequestType.USER_SEARCH_REQ)
+        if(mRequestType == RequestType.ANIME_SEARCH_REQ || mRequestType == RequestType.MANGA_SEARCH_REQ)
             mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.card_col_size_home));
-        if (mRequestType != RequestType.CHARACTER_SEARCH_REQ)
+        else if (mRequestType != RequestType.CHARACTER_SEARCH_REQ)
             mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size));
         else
             mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank));

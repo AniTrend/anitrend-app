@@ -21,7 +21,7 @@ import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.structure.ExternalLink;
 import com.mxt.anitrend.async.YoutubeInitializer;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.event.InteractionListener;
+import com.mxt.anitrend.custom.event.InteractionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

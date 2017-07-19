@@ -15,11 +15,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.UserNotification;
-import com.mxt.anitrend.event.NotificationClickListener;
+import com.mxt.anitrend.custom.event.NotificationClickListener;
 import com.mxt.anitrend.view.index.activity.NotificationActivity;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Maxwell on 1/22/2017.

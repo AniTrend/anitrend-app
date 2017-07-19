@@ -16,8 +16,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.EmoticonAdapter;
 import com.mxt.anitrend.custom.view.StatefulRecyclerView;
 import com.mxt.anitrend.custom.emoji4j.Emoji;
-import com.mxt.anitrend.event.InteractionListener;
-import com.mxt.anitrend.event.SheetStateChangeListener;
+import com.mxt.anitrend.custom.event.InteractionListener;
+import com.mxt.anitrend.custom.event.SheetStateChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;

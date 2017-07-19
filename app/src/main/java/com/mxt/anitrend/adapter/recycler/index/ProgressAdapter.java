@@ -24,7 +24,7 @@ import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.event.MultiInteractionListener;
+import com.mxt.anitrend.custom.event.MultiInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 

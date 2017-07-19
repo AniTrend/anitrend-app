@@ -15,7 +15,7 @@ import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.custom.UserListsCache;
-import com.mxt.anitrend.event.RemoteChangeListener;
+import com.mxt.anitrend.custom.event.RemoteChangeListener;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;

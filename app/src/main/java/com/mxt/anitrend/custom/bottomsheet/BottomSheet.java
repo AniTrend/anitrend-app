@@ -8,7 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.View;
 
-import com.mxt.anitrend.event.SheetStateChangeListener;
+import com.mxt.anitrend.custom.event.SheetStateChangeListener;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
 
 import butterknife.Unbinder;

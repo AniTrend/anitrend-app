@@ -31,7 +31,7 @@ import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.event.RemoteChangeListener;
+import com.mxt.anitrend.custom.event.RemoteChangeListener;
 
 import java.io.IOException;
 import java.util.Arrays;

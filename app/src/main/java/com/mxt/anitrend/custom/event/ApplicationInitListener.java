@@ -1,4 +1,4 @@
-package com.mxt.anitrend.event;
+package com.mxt.anitrend.custom.event;
 
 /**
  * Created by max on 2017/03/08.

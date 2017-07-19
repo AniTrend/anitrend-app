@@ -12,6 +12,7 @@ import com.mxt.anitrend.api.call.Hub;
 import com.mxt.anitrend.api.call.RepoModel;
 import com.mxt.anitrend.api.core.Cache;
 import com.mxt.anitrend.api.core.Token;
+import com.mxt.anitrend.api.interceptor.AuthInterceptor;
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.api.structure.UserAnimeStats;
 import com.mxt.anitrend.api.structure.UserLists;
@@ -29,7 +30,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-import static com.mxt.anitrend.api.core.GrantTypes.AUTHENTICATION_CODE;
+import static com.mxt.anitrend.util.KeyUtils.AUTHENTICATION_CODE;
+import static com.mxt.anitrend.util.KeyUtils.GrantTypes;
 
 /**
  * Created by Maxwell on 10/2/2016.
@@ -64,10 +66,8 @@ public class ServiceGenerator {
             .addConverterFactory(SimpleXmlConverterFactory.create())
             .client(baseClient.build());
 
-    final static String[] API_TOKEN_TYPE = {"client_credentials", "authorization_code", "refresh_token"};
-
     public final static String API_AUTH_LINK = String.format("https://anilist.co/api/auth/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
-            API_TOKEN_TYPE[AUTHENTICATION_CODE.ordinal()],
+            GrantTypes[AUTHENTICATION_CODE],
             BuildConfig.CLIENT_ID,
             BuildConfig.REDIRECT_URI,
             BuildConfig.RESPONSE_TYPE);
@@ -88,9 +88,9 @@ public class ServiceGenerator {
         try {
             if ((mToken = TokenReference.getInstance()) == null || mToken.getExpires() < (System.currentTimeMillis()/1000L))
                 mToken = new TokenReference(mContext).reInitInstance();
-            if(httpClient.interceptors().size() < 1)
+            if(httpClient.interceptors().size() < 1) {
                 httpClient.addInterceptor(new AuthInterceptor());
-
+            }
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();

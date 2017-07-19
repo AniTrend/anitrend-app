@@ -19,7 +19,7 @@ import com.mxt.anitrend.async.AsyncTaskFetch;
 import com.mxt.anitrend.async.RequestApiAction;
 import com.mxt.anitrend.custom.Payload;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.event.ReviewClickListener;
+import com.mxt.anitrend.custom.event.ReviewClickListener;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;

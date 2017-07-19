@@ -1,6 +1,9 @@
 package com.mxt.anitrend;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.google.firebase.FirebaseApp;
 
@@ -27,5 +30,11 @@ public class AniTrend extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
     }
 }

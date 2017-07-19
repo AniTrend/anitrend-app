@@ -1,4 +1,4 @@
-package com.mxt.anitrend.api.service;
+package com.mxt.anitrend.api.interceptor;
 
 import android.util.Log;
 
@@ -16,9 +16,9 @@ import okhttp3.Response;
  * Created by max on 2017/05/09.
  */
 
-final class AuthInterceptor implements Interceptor {
+public final class AuthInterceptor implements Interceptor {
 
-    AuthInterceptor() {
+    public AuthInterceptor() {
         //empty constructor
     }
 

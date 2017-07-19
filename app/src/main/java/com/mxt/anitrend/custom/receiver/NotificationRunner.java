@@ -1,10 +1,10 @@
-package com.mxt.anitrend.receiver;
+package com.mxt.anitrend.custom.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.mxt.anitrend.service.ServiceScheduler;
+import com.mxt.anitrend.custom.service.ServiceScheduler;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DefaultPreferences;
 

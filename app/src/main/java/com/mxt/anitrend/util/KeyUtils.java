@@ -11,7 +11,7 @@ public interface KeyUtils {
     // Unaffiliated values
     String[] ShowTypes = {null, "Tv","Tv Short","Movie","Special","OVA","ONA","Manga","Novel","One Shot","Doujin","Manhua","Manhwa"};
 
-    // Will be removed after the DB is fixed
+    // TODO: 2017/07/19  Will be removed after the DB is fixed
     String[] GenreTypes = {
             "Action",
             "Adventure",
@@ -60,6 +60,13 @@ public interface KeyUtils {
         MANGA_LIST_EDIT,
         MANGA_LIST_DELETE
     }
+
+    // Token grant types
+    int AUTHENTICATION_TYPE = 0, AUTHENTICATION_CODE = 1, REFRESH_TYPE = 2;
+
+    String[] GrantTypes = {"client_credentials", "authorization_code", "refresh_token"};
+    @IntDef({AUTHENTICATION_TYPE, AUTHENTICATION_CODE, REFRESH_TYPE})
+    @interface GrantType {}
 
 
     // Series Types

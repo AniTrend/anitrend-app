@@ -9,7 +9,7 @@
             android:action="android.intent.action.VIEW"
             android:data="anime"
             android:targetPackage="com.mxt.anitrend"
-            android:targetClass="com.mxt.anitrend.SplashActivity" />
+            android:targetClass="com.mxt.anitrend.view.base.activity.SplashActivity" />
         <!-- If your shortcut is associated with multiple intents, include them
              here. The last intent in the list is what the user sees when they
              launch this shortcut. -->
@@ -23,7 +23,7 @@
             android:action="android.intent.action.VIEW"
             android:data="manga"
             android:targetPackage="com.mxt.anitrend"
-            android:targetClass="com.mxt.anitrend.SplashActivity" />
+            android:targetClass="com.mxt.anitrend.view.base.activity.SplashActivity" />
         <!-- If your shortcut is associated with multiple intents, include them
              here. The last intent in the list is what the user sees when they
              launch this shortcut. -->
@@ -37,7 +37,7 @@
             android:action="android.intent.action.VIEW"
             android:data="trending"
             android:targetPackage="com.mxt.anitrend"
-            android:targetClass="com.mxt.anitrend.SplashActivity" />
+            android:targetClass="com.mxt.anitrend.view.base.activity.SplashActivity" />
         <!-- If your shortcut is associated with multiple intents, include them
              here. The last intent in the list is what the user sees when they
              launch this shortcut. -->
