@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/wax911/AniTrendApp.png?label=ready&title=Ready)](https://waffle.io/wax911/AniTrendApp?utm_source=badge)
 # __AniTrend v0.9.9r8__ [![Build Status](https://travis-ci.org/wax911/AniTrendApp.svg?branch=master)](https://travis-ci.org/wax911/AniTrendApp)
 
 <p align="center"><a href='https://play.google.com/store/apps/details?id=com.mxt.anitrend&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a></p>
