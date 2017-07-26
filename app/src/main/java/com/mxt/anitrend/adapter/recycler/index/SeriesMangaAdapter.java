@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 
 /**
@@ -99,24 +100,20 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
     private class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
 
         //declare all view controls here:
-        private TextView eng, romanji, type, chapters, airing, popularity, starting, volumes;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_manga_type) TextView type;
+        @BindView(R.id.txt_manga_chapters) TextView chapters;
+        @BindView(R.id.txt_airing) TextView airing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_startdate) TextView starting;
+        @BindView(R.id.txt_manga_volumes) TextView volumes;
+        @BindView(R.id.line) FrameLayout line;
+        @BindView(R.id.card_view) CardView cardView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            type = (TextView)itemView.findViewById(R.id.txt_manga_type);
-            chapters = (TextView)itemView.findViewById(R.id.txt_manga_chapters);
-            airing = (TextView)itemView.findViewById(R.id.txt_airing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            starting = (TextView)itemView.findViewById(R.id.txt_startdate);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            volumes = (TextView) itemView.findViewById(R.id.txt_manga_volumes);
             image.setOnClickListener(this);
             cardView.setOnClickListener(this);
             image.setOnLongClickListener(this);

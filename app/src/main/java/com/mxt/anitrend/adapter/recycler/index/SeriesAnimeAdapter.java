@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 
 /**
@@ -94,25 +95,20 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
 
     private class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
 
-        //declare all view controls here:
-        private TextView eng, romanji, type, eps, airing, popularity, starting, nxt_ep;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.card_view) CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_anime_type) TextView type;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_airing) TextView airing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_startdate) TextView starting;
+        @BindView(R.id.txt_last_updated) TextView nxt_ep;
+        @BindView(R.id.line) FrameLayout line;
 
         ViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            type = (TextView)itemView.findViewById(R.id.txt_anime_type);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            airing = (TextView)itemView.findViewById(R.id.txt_airing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            starting = (TextView)itemView.findViewById(R.id.txt_startdate);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            nxt_ep = (TextView) itemView.findViewById(R.id.txt_last_updated);
             image.setOnClickListener(this);
             cardView.setOnClickListener(this);
             image.setOnLongClickListener(this);

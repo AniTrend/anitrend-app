@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 
 /**
@@ -106,17 +107,14 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
     private class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView title, eps, rated;
-        private ImageView image;
-        private View line;
+        @BindView(R.id.txt_title) TextView title;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.line) View line;
 
         GridViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.txt_title);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = itemView.findViewById(R.id.line);
             eps.setOnClickListener(this);
             image.setOnClickListener(this);
             image.setOnLongClickListener(this);

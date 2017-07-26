@@ -30,6 +30,8 @@ import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
 
     private CardAdapterHelper mCardAdapterHelper = new CardAdapterHelper();
@@ -65,15 +67,12 @@ public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
 
     private class ViewHolder extends RecyclerViewHolder<String> implements RequestListener<String, GlideDrawable>, Palette.PaletteAsyncListener {
 
-        private ImageView mImageView;
-        private FrameLayout mFrameLayout;
-        private TextView mLabel;
+        @BindView(R.id.image_preview) ImageView mImageView;
+        @BindView(R.id.preview_container) FrameLayout mFrameLayout;
+        @BindView(R.id.preview_label) TextView mLabel;
 
         ViewHolder(final View view) {
             super(view);
-            mFrameLayout = (FrameLayout) view.findViewById(R.id.preview_container);
-            mImageView = (ImageView) view.findViewById(R.id.image_preview);
-            mLabel = (TextView) view.findViewById(R.id.preview_label);
             mImageView.setOnClickListener(this);
         }
 

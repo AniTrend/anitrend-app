@@ -3,6 +3,8 @@ package com.mxt.anitrend.custom.recycler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by max on 2017-04-10.
  */
@@ -10,6 +12,7 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
 
     public RecyclerViewHolder(View view) {
         super(view);
+        ButterKnife.bind(this, view);
     }
 
     /**

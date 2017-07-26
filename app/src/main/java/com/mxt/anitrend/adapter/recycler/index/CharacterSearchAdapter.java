@@ -24,6 +24,9 @@ import com.mxt.anitrend.view.detail.activity.CharacterActivity;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 /**
  * Created by max on 2017/07/14.
  */
@@ -56,13 +59,11 @@ public class CharacterSearchAdapter  extends RecyclerViewAdapter<Character> {
     private class ViewHolder extends RecyclerViewHolder<Character> {
 
         //declare all view controls here:
-        private TextView name;
-        private ImageView model_image;
+        @BindView(R.id.character_model_name) TextView name;
+        @BindView(R.id.character_model_image) ImageView model_image;
 
         ViewHolder(View view) {
             super(view);
-            name = (TextView) view.findViewById(R.id.character_model_name);
-            model_image = (ImageView) view.findViewById(R.id.character_model_image);
             model_image.setOnClickListener(this);
         }
 

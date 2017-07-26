@@ -31,6 +31,8 @@ import com.mxt.anitrend.util.ApplicationPrefs;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+
 /**
  * Created by max on 2017/03/10.
  */
@@ -73,23 +75,19 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
 
     private class ViewHolder extends RecyclerViewHolder<UserActivity> implements View.OnLongClickListener {
 
-        private View mLikesViewer;
-        private ViewFlipper mFlipper;
-        private ImageView mAvatar, mSeriesImage;
-        private TextView mHeading, mLike, mComment, mMainUser, mTime, mContent;
+        @BindView(R.id.likes_viewer) View mLikesViewer;
+        @BindView(R.id.mFlipper) ViewFlipper mFlipper;
+        @BindView(R.id.feed_avatar) ImageView mAvatar;
+        @BindView(R.id.feed_series_img) ImageView mSeriesImage;
+        @BindView(R.id.feed_heading) TextView mHeading;
+        @BindView(R.id.feed_like) TextView mLike;
+        @BindView(R.id.feed_comment) TextView mComment;
+        @BindView(R.id.feed_main_user) TextView mMainUser;
+        @BindView(R.id.feed_time) TextView mTime;
+        @BindView(R.id.feed_content) TextView mContent;
 
         public ViewHolder(View view) {
             super(view);
-            mLikesViewer = view.findViewById(R.id.likes_viewer);
-            mFlipper = (ViewFlipper) view.findViewById(R.id.mFlipper);
-            mAvatar = (ImageView) view.findViewById(R.id.feed_avatar);
-            mSeriesImage = (ImageView) view.findViewById(R.id.feed_series_img);
-            mHeading = (TextView) view.findViewById(R.id.feed_heading);
-            mLike = (TextView) view.findViewById(R.id.feed_like);
-            mComment = (TextView) view.findViewById(R.id.feed_comment);
-            mMainUser = (TextView) view.findViewById(R.id.feed_main_user);
-            mTime = (TextView) view.findViewById(R.id.feed_time);
-            mContent = (TextView) view.findViewById(R.id.feed_content);
             mLikesViewer.setOnClickListener(this);
             mFlipper.setOnClickListener(this);
             mSeriesImage.setOnLongClickListener(this);

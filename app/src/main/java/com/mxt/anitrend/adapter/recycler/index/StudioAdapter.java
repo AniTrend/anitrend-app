@@ -17,6 +17,8 @@ import com.mxt.anitrend.view.detail.activity.StudioActivity;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * Created by max on 2017/05/14.
  */
@@ -49,13 +51,11 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioSmall> {
     private class ViewHolder extends RecyclerViewHolder<StudioSmall> {
 
         //declare all view controls here:
-        private TextView studio;
-        private View studio_container;
+        @BindView(R.id.studio) TextView studio;
+        @BindView(R.id.studio_container) View studio_container;
 
         ViewHolder(View view) {
             super(view);
-            studio = (TextView) view.findViewById(R.id.studio);
-            studio_container = view.findViewById(R.id.studio_container);
             studio_container.setOnClickListener(this);
         }
 

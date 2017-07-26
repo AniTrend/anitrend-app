@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
+import butterknife.BindView;
+
 /**
  * Created by max on 2017/03/12.
  */
@@ -86,28 +88,24 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
 
         private ArrayList<String> mDesc;
         private ArrayList<String> mLinks;
-        private ViewFlipper mFlipper;
-        private ImageView mAvatar, mStatusExtra;
-        private View mLikesViewer, mStatusContainer;
-        private TextView mUser, mTime, mLike, mComment, mContent, mEdit, mDelete, mGallery;
+        @BindView(R.id.mFlipper) ViewFlipper mFlipper;
+        @BindView(R.id.status_avatar) ImageView mAvatar;
+        @BindView(R.id.status_extra_img) ImageView mStatusExtra;
+        @BindView(R.id.likes_viewer) View mLikesViewer;
+        @BindView(R.id.status_extra_holder) View mStatusContainer;
+        @BindView(R.id.status_user) TextView mUser;
+        @BindView(R.id.status_time) TextView mTime;
+        @BindView(R.id.status_like) TextView  mLike;
+        @BindView(R.id.status_comment) TextView mComment;
+        @BindView(R.id.status_text) TextView mContent;
+        @BindView(R.id.status_edit) TextView mEdit;
+        @BindView(R.id.status_delete) TextView mDelete;
+        @BindView(R.id.status_extra_img_gallery) TextView mGallery;
 
         String type;
 
         public ViewHolder(View view) {
             super(view);
-            mLikesViewer = view.findViewById(R.id.likes_viewer);
-            mStatusContainer = view.findViewById(R.id.status_extra_holder);
-            mFlipper = (ViewFlipper) view.findViewById(R.id.mFlipper);
-            mAvatar = (ImageView) view.findViewById(R.id.status_avatar);
-            mStatusExtra = (ImageView) view.findViewById(R.id.status_extra_img);
-            mGallery = (TextView) view.findViewById(R.id.status_extra_img_gallery);
-            mUser = (TextView) view.findViewById(R.id.status_user);
-            mTime = (TextView) view.findViewById(R.id.status_time);
-            mLike = (TextView) view.findViewById(R.id.status_like);
-            mComment = (TextView) view.findViewById(R.id.status_comment);
-            mContent = (TextView) view.findViewById(R.id.status_text);
-            mEdit = (TextView) view.findViewById(R.id.status_edit);
-            mDelete = (TextView) view.findViewById(R.id.status_delete);
             mContent.setMovementMethod(LinkMovementMethod.getInstance());
             mContent.setFocusable(false);
             mLikesViewer.setOnClickListener(this);
