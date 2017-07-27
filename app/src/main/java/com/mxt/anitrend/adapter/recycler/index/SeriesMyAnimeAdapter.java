@@ -18,14 +18,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.async.SeriesActionHelper;
+import com.mxt.anitrend.custom.event.SeriesInteractionListener;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.custom.event.SeriesInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 
 import java.util.ArrayList;
@@ -184,24 +184,20 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
     private class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView eng, romanji, type, eps, airing, popularity, rated, watched;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.card_view) CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_anime_type) TextView type;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_airing) TextView airing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.line) FrameLayout line;
+        @BindView(R.id.txt_ep_watched) TextView watched;
 
         CardViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            type = (TextView)itemView.findViewById(R.id.txt_anime_type);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            airing = (TextView)itemView.findViewById(R.id.txt_airing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            watched = (TextView) itemView.findViewById(R.id.txt_ep_watched);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
             image.setOnClickListener(this);
@@ -260,17 +256,14 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
     private class ExGridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView title, eps, rated;
-        private ImageView image;
-        private View line;
+        @BindView(R.id.txt_title) TextView title;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.line) View line;
 
         ExGridViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.txt_title);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = itemView.findViewById(R.id.line);
             image.setOnClickListener(this);
             image.setOnLongClickListener(this);
         }
@@ -349,24 +342,20 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
     private class ExCardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView eng, romanji, type, eps, airing, popularity, rated, watched;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.card_view) CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_anime_type) TextView type;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_airing) TextView airing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.line) FrameLayout line;
+        @BindView(R.id.txt_ep_watched) TextView watched;
 
         ExCardViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            type = (TextView)itemView.findViewById(R.id.txt_anime_type);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            airing = (TextView)itemView.findViewById(R.id.txt_airing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            watched = (TextView) itemView.findViewById(R.id.txt_ep_watched);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
             image.setOnClickListener(this);

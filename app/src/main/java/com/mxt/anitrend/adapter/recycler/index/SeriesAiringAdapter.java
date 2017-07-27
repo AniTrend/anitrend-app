@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.ListItem;
+import com.mxt.anitrend.custom.event.SeriesInteractionListener;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.custom.event.SeriesInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DateTimeConverter;
@@ -133,7 +133,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
 
     private class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        //declare all view controls here:
         @BindView(R.id.txt_title) TextView title;
         @BindView(R.id.txt_anime_eps) TextView eps;
         @BindView(R.id.txt_anime_info) TextView info;

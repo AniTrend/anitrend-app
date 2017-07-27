@@ -18,15 +18,15 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
 import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.custom.event.MultiInteractionListener;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.custom.event.MultiInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
 import java.util.Locale;

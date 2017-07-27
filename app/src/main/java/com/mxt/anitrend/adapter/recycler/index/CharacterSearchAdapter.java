@@ -1,6 +1,5 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +13,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.details.CharacterAdapter;
 import com.mxt.anitrend.api.model.Character;
-import com.mxt.anitrend.api.model.CharacterSmall;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.view.detail.activity.CharacterActivity;
 
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by max on 2017/07/14.
@@ -58,7 +53,6 @@ public class CharacterSearchAdapter  extends RecyclerViewAdapter<Character> {
 
     private class ViewHolder extends RecyclerViewHolder<Character> {
 
-        //declare all view controls here:
         @BindView(R.id.character_model_name) TextView name;
         @BindView(R.id.character_model_image) ImageView model_image;
 

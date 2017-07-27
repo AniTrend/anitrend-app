@@ -50,7 +50,6 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioSmall> {
 
     private class ViewHolder extends RecyclerViewHolder<StudioSmall> {
 
-        //declare all view controls here:
         @BindView(R.id.studio) TextView studio;
         @BindView(R.id.studio_container) View studio_container;
 

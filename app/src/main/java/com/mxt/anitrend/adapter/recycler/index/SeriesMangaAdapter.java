@@ -18,12 +18,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.async.SeriesActionHelper;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
 
 import java.util.ArrayList;
@@ -99,7 +99,6 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
 
     private class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
 
-        //declare all view controls here:
         @BindView(R.id.img_lge) ImageView image;
         @BindView(R.id.txt_eng_title) TextView eng;
         @BindView(R.id.txt_romanji) TextView romanji;

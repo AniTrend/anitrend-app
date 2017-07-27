@@ -20,6 +20,8 @@ import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * Created by max on 2017/04/11.
  */
@@ -50,16 +52,12 @@ public class UserListAdapter extends RecyclerViewAdapter<UserSmall> {
 
     private class ViewHolder extends RecyclerViewHolder<UserSmall> {
 
-        //declare all view controls here:
-        private TextView user_name;
-        private ImageView user_image;
-        private View container;
+        @BindView(R.id.user_group_holder) View container;
+        @BindView(R.id.user_name) TextView user_name;
+        @BindView(R.id.user_image) ImageView user_image;
 
         ViewHolder(View view) {
             super(view);
-            container = view.findViewById(R.id.user_group_holder);
-            user_name = (TextView) view.findViewById(R.id.user_name);
-            user_image = (ImageView) view.findViewById(R.id.user_image);
             container.setOnClickListener(this);
         }
 

@@ -23,6 +23,8 @@ import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+
 /**
  * Created by Maxwell on 1/9/2017.
  */
@@ -58,17 +60,14 @@ public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotificatio
 
     private class ViewHolder extends RecyclerViewHolder<UserNotification> {
 
-        //declare all view controls here:
-        private TextView notificationSubject ,notificationContent, notificationHeader, notificationTime;
-        private ImageView notificationImg;
+        @BindView(R.id.notification_subject) TextView notificationSubject;
+        @BindView(R.id.notification_time) TextView notificationTime;
+        @BindView(R.id.notification_header) TextView notificationHeader;
+        @BindView(R.id.notification_content) TextView notificationContent;
+        @BindView(R.id.notification_img) ImageView notificationImg;
 
         ViewHolder(View view) {
             super(view);
-            notificationSubject = (TextView) view.findViewById(R.id.notification_subject);
-            notificationTime = (TextView) view.findViewById(R.id.notification_time);
-            notificationHeader = (TextView) view.findViewById(R.id.notification_header);
-            notificationContent = (TextView) view.findViewById(R.id.notification_content);
-            notificationImg = (ImageView) view.findViewById(R.id.notification_img);
             view.setOnClickListener(this);
             notificationImg.setOnClickListener(this);
         }

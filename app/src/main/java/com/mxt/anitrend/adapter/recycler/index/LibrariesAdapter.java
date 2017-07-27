@@ -51,7 +51,6 @@ public class LibrariesAdapter extends RecyclerViewAdapter<LibraryRep> {
 
     private class ViewHolder extends RecyclerViewHolder<LibraryRep> {
 
-        //declare all view controls here:
         @BindView(R.id.library_name) TextView name;
         @BindView(R.id.library_description) TextView description;
         @BindView(R.id.about_container) View container;

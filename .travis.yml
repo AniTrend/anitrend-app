@@ -45,10 +45,12 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-    - ./gradlew clean
-#    - ./gradlew build
-#    - ./gradlew build connectedCheck
+    - ./gradlew test
+#    - ./gradlew build    
+#    - ./gradlew clean
 #    - ./gradlew test
+#    - ./gradlew build connectedCheck
+
 
 before_install:
  - chmod +x gradlew
