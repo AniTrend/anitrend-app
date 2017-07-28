@@ -1231,14 +1231,6 @@ public class DialogManager {
             Toast.makeText(mContext, R.string.text_unable_set_text, Toast.LENGTH_LONG).show();
     }
 
-    public void createDialogReviewPost() {
-
-    }
-
-    public void createDialogReviewEdit() {
-
-    }
-
     public void createDialogAttachMedia(@IdRes int action, final TextInputEditText editor) {
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)

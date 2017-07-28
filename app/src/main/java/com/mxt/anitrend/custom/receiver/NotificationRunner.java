@@ -14,15 +14,12 @@ import com.mxt.anitrend.util.DefaultPreferences;
 
 public class NotificationRunner extends BroadcastReceiver {
 
-    private DefaultPreferences defPrefs;
-
     @Override
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()) {
             case Intent.ACTION_BOOT_COMPLETED:
                 if(new ApplicationPrefs(context).isAuthenticated()) {
-                    defPrefs = new DefaultPreferences(context);
-                    if (defPrefs.isNotificationEnabled())
+                    if (new DefaultPreferences(context).isNotificationEnabled())
                         new ServiceScheduler(context).scheduleJob();
                     else
                         new ServiceScheduler(context).cancelJob();

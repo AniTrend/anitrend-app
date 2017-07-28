@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
+import com.firebase.jobdispatcher.RetryStrategy;
 import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.UserNotification;
@@ -129,7 +130,6 @@ public class JobDispatcherService extends JobService implements Callback<List<Us
      *
      * @return whether the job should be retried
      *
-     * @see Builder#setRetryStrategy(RetryStrategy)
      * @see RetryStrategy
      */
     @Override
