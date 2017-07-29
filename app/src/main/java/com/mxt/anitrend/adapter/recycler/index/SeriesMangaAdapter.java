@@ -97,7 +97,7 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
         };
     }
 
-    private class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
+    class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
 
         @BindView(R.id.img_lge) ImageView image;
         @BindView(R.id.txt_eng_title) TextView eng;

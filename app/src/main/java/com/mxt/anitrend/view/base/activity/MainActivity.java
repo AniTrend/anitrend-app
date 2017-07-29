@@ -558,8 +558,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         mPresenter.getDefaultPrefs().getPreferences().unregisterOnSharedPreferenceChangeListener(this);
         if(userNotificationCountFetch != null)
             userNotificationCountFetch.cancel(false);
-        if(mPresenter != null)
-            mPresenter.destroySuperToast();
         super.onPause();
     }
 

@@ -37,7 +37,6 @@ public class FavouriteActivity  extends DefaultActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     private Snackbar snackbar;
-    private ActionBar mActionBar;
 
     private Favourite mFavourite;
 
@@ -47,9 +46,6 @@ public class FavouriteActivity  extends DefaultActivity {
         setContentView(R.layout.activity_list_browse);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        mActionBar = getSupportActionBar();
-        if (mActionBar != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

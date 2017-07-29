@@ -135,8 +135,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(savedInstanceState != null) {
             mPresentLike = savedInstanceState.getBoolean(MODEL_IS_FAVOURITE);
             mPassedData = savedInstanceState.getParcelable(MODEL_OBJ_PARAM);
@@ -147,10 +145,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        setSupportActionBar(toolbar);
         mPresenter = new MainPresenter(getApplicationContext());
         emoticonLoader = new EmoticonLoader();
         mEmoticonInsert.setVisibility(View.GONE);

@@ -93,7 +93,7 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
         };
     }
 
-    private class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
+    class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
 
         @BindView(R.id.card_view) CardView cardView;
         @BindView(R.id.img_lge) ImageView image;

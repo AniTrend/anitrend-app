@@ -84,7 +84,7 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserActivity> {
+    class ViewHolder extends RecyclerViewHolder<UserActivity> {
 
         private ArrayList<String> mDesc;
         private ArrayList<String> mLinks;

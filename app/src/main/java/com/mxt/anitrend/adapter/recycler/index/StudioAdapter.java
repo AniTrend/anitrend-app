@@ -48,7 +48,7 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioSmall> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<StudioSmall> {
+    class ViewHolder extends RecyclerViewHolder<StudioSmall> {
 
         @BindView(R.id.studio) TextView studio;
         @BindView(R.id.studio_container) View studio_container;

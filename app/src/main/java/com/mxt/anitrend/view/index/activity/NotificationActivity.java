@@ -42,7 +42,6 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
     @BindView(R.id.notification_recycler) StatefulRecyclerView recyclerView;
     @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
     private List<UserNotification> mListNotifications;
-    private ActionBar mActionBar;
     private NotificationPresenter mPresenter;
 
     @Override
@@ -51,8 +50,6 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
         setContentView(R.layout.activity_notification);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

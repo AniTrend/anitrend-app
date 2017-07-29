@@ -69,7 +69,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         return null;
     }
 
-    private class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
         @BindView(R.id.card_view) CardView cardView;
         @BindView(R.id.img_lge) ImageView image;
@@ -131,7 +131,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
         @BindView(R.id.txt_title) TextView title;
         @BindView(R.id.txt_anime_eps) TextView eps;

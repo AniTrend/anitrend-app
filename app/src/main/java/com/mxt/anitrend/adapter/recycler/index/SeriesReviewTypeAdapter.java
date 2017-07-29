@@ -68,7 +68,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
         return null;
     }
 
-    private class ImageViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
+    class ImageViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
 
         @BindView(R.id.img_lge) ImageView review_img;
         @BindView(R.id.review_user) TextView review_user;
@@ -172,7 +172,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
         }
     }
 
-    private class CardViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
+    class CardViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
 
         @BindView(R.id.review_holder) View review_holder;
         @BindView(R.id.review_avatar) ImageView review_avatar;

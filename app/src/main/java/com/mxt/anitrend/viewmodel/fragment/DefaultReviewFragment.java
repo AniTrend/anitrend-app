@@ -156,7 +156,6 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
         super.onPause();
         mPresenter.getAppPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -176,7 +175,6 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
         if(mSorter != null)
             mSorter.cancel(false);
     }

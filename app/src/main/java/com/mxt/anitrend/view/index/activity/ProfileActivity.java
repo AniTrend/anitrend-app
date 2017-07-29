@@ -71,7 +71,6 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
 
     private final String KEY_USER = "USER_SAVE_INST";
     private User mCurrentUser;
-    private ActionBar mActionBar;
     private UserProfilePresenter mPresenter;
 
     private ImageView notification_item;
@@ -84,8 +83,6 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         user_banner.setOnClickListener(this);
 
     }

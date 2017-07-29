@@ -58,7 +58,7 @@ public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotificatio
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserNotification> {
+    class ViewHolder extends RecyclerViewHolder<UserNotification> {
 
         @BindView(R.id.notification_subject) TextView notificationSubject;
         @BindView(R.id.notification_time) TextView notificationTime;

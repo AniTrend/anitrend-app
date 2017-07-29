@@ -178,7 +178,6 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
         removeScrollLoadTrigger();
         mPresenter.getApiPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -200,7 +199,6 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
         if(mSorter != null)
             mSorter.cancel(false);
     }

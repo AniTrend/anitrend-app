@@ -50,7 +50,7 @@ public class UserListAdapter extends RecyclerViewAdapter<UserSmall> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserSmall> {
+    class ViewHolder extends RecyclerViewHolder<UserSmall> {
 
         @BindView(R.id.user_group_holder) View container;
         @BindView(R.id.user_name) TextView user_name;

@@ -63,8 +63,6 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
     @BindView(R.id.notification_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.notification_recycler) StatefulRecyclerView recyclerView;
 
-    private ActionBar mActionBar;
-
     private int mPage = 1;
     private boolean isLimit;
     private List<UserActivity> mData;
@@ -83,8 +81,6 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         setContentView(R.layout.activity_notification);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         mPresenter = new UserActivityPresenter(getApplicationContext());
     }
 

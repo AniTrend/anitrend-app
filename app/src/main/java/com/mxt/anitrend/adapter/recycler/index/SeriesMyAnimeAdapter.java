@@ -105,7 +105,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
         };
     }
 
-    private class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
         @BindView(R.id.txt_title) TextView title;
         @BindView(R.id.txt_anime_eps) TextView eps;
@@ -182,7 +182,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
         @BindView(R.id.card_view) CardView cardView;
         @BindView(R.id.img_lge) ImageView image;
@@ -254,7 +254,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class ExGridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class ExGridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
         @BindView(R.id.txt_title) TextView title;
         @BindView(R.id.img_lge) ImageView image;
@@ -340,7 +340,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class ExCardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class ExCardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
         @BindView(R.id.card_view) CardView cardView;
         @BindView(R.id.img_lge) ImageView image;

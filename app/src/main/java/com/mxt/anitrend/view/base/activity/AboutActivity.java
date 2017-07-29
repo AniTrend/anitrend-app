@@ -46,10 +46,6 @@ public class AboutActivity extends DefaultActivity {
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        ActionBar mActionBar = getSupportActionBar();
-        if (mActionBar != null) {
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override

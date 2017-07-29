@@ -73,7 +73,7 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserActivity> implements View.OnLongClickListener {
+    class ViewHolder extends RecyclerViewHolder<UserActivity> implements View.OnLongClickListener {
 
         @BindView(R.id.likes_viewer) View mLikesViewer;
         @BindView(R.id.mFlipper) ViewFlipper mFlipper;

@@ -49,7 +49,7 @@ public class LibrariesAdapter extends RecyclerViewAdapter<LibraryRep> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<LibraryRep> {
+    class ViewHolder extends RecyclerViewHolder<LibraryRep> {
 
         @BindView(R.id.library_name) TextView name;
         @BindView(R.id.library_description) TextView description;

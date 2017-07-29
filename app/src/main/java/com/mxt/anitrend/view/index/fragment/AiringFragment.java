@@ -101,7 +101,6 @@ public class AiringFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
     }
 
     @Override

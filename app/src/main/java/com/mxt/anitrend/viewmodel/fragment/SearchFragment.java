@@ -176,7 +176,6 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
     public void onPause() {
         super.onPause();
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -194,7 +193,6 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
         if(mSorter != null)
             mSorter.cancel(false);
     }

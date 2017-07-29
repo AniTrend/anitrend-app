@@ -70,7 +70,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
 
     private Studio model;
     private StudioSmall model_temp;
-    private ActionBar mActionBar;
     private MenuItem favMenuItem, filterMenuItem;
 
     private Snackbar snackbar;
@@ -81,8 +80,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
         setContentView(R.layout.activity_studio);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra(STUDIO_PARAM))
             model_temp = getIntent().getParcelableExtra(STUDIO_PARAM);
         mPresenter = new SeriesPresenter(null, StudioActivity.this);
@@ -195,7 +192,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
         super.onPause();
         mPresenter.getApiPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -209,7 +205,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.destroySuperToast();
     }
 
     /**

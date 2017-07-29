@@ -15,6 +15,7 @@ import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.PreviewImageAdapter;
 import com.mxt.anitrend.custom.cardgallary.CardScaleHelper;
+import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by max on 2017-04-07.
  */
-public class GalleryPreviewActivity extends Activity {
+public class GalleryPreviewActivity extends DefaultActivity {
 
     @BindView(R.id.speedRecycler) RecyclerView mRecyclerView;
     private CardScaleHelper mCardScaleHelper = null;
@@ -40,45 +41,46 @@ public class GalleryPreviewActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorBackground));
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+        setTransparentStatusBar();
         ButterKnife.bind(this);
-        if(getIntent().hasExtra(PARAM_IMAGE_LIST))
-            mImages = getIntent().getStringArrayListExtra(PARAM_IMAGE_LIST);
-        if(getIntent().hasExtra(PARAM_TYPE_LIST))
-            mTypes = getIntent().getStringArrayListExtra(PARAM_TYPE_LIST);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if(getIntent().hasExtra(PARAM_IMAGE_LIST))
+            mImages = getIntent().getStringArrayListExtra(PARAM_IMAGE_LIST);
+        if(getIntent().hasExtra(PARAM_TYPE_LIST))
+            mTypes = getIntent().getStringArrayListExtra(PARAM_TYPE_LIST);
         if(savedInstanceState != null) {
             mImages = savedInstanceState.getStringArrayList(IMAGE_LIST_KEY);
             mTypes = savedInstanceState.getStringArrayList(TYPE_LIST_KEY);
         }
-        attachImages();
+        updateUI();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putStringArrayList(IMAGE_LIST_KEY, (ArrayList<String>) mImages);
-        outState.putStringArrayList(TYPE_LIST_KEY, (ArrayList<String>) mTypes);
-        super.onSaveInstanceState(outState);
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (hasFocus) {
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
     }
 
-
-
-    private void attachImages() {
+    @Override
+    protected void updateUI() {
         if(mImages == null) {
             SuperActivityToast.create(this, new com.github.johnpersano.supertoasts.library.Style(), com.github.johnpersano.supertoasts.library.Style.TYPE_STANDARD)
-                    .setText("The list of images received was null!")
+                    .setText(getString(R.string.layout_empty_response))
                     .setTypefaceStyle(Typeface.NORMAL)
                     .setIconPosition(com.github.johnpersano.supertoasts.library.Style.ICONPOSITION_LEFT)
                     .setIconResource(R.drawable.ic_close_24dp)
@@ -92,5 +94,12 @@ public class GalleryPreviewActivity extends Activity {
             mCardScaleHelper = new CardScaleHelper();
             mCardScaleHelper.attachToRecyclerView(mRecyclerView);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putStringArrayList(IMAGE_LIST_KEY, (ArrayList<String>) mImages);
+        outState.putStringArrayList(TYPE_LIST_KEY, (ArrayList<String>) mTypes);
+        super.onSaveInstanceState(outState);
     }
 }

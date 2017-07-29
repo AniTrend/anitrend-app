@@ -65,7 +65,7 @@ public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<String> implements RequestListener<String, GlideDrawable>, Palette.PaletteAsyncListener {
+    class ViewHolder extends RecyclerViewHolder<String> implements RequestListener<String, GlideDrawable>, Palette.PaletteAsyncListener {
 
         @BindView(R.id.image_preview) ImageView mImageView;
         @BindView(R.id.preview_container) FrameLayout mFrameLayout;

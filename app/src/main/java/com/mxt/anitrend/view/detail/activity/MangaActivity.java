@@ -69,7 +69,6 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
 
     @BindView(R.id.detail_model_banner) ImageView mBannerImage;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    private ActionBar mActionBar;
     private MenuItem favMenuItem;
 
     private SeriesPresenter mPresenter;
@@ -80,8 +79,6 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
         setContentView(R.layout.activity_series_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(mIntentData != null) {
             mId = Integer.valueOf(mIntentData);
         }

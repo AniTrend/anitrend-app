@@ -163,7 +163,6 @@ public abstract class UserListFragment extends Fragment implements Callback<User
         super.onPause();
         mPresenter.getApiPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -182,7 +181,6 @@ public abstract class UserListFragment extends Fragment implements Callback<User
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
         if(mSorter != null)
             mSorter.cancel(false);
     }

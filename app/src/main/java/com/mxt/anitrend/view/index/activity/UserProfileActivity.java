@@ -80,7 +80,6 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
 
     private UserSmall mTempUser;
     private User mCurrentUser;
-    private ActionBar mActionBar;
     private UserActivityPresenter mPresenter;
 
     @Override
@@ -89,8 +88,6 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         mPresenter = new UserActivityPresenter(UserProfileActivity.this);
         mTempUser = getIntent().getParcelableExtra(PROFILE_INTENT_KEY);
         user_banner.setOnClickListener(this);

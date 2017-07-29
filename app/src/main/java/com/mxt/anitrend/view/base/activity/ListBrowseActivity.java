@@ -48,7 +48,6 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     private Snackbar snackbar;
-    private ActionBar mActionBar;
 
     private UserProfilePresenter mPresenter;
 
@@ -61,9 +60,6 @@ public class ListBrowseActivity extends DefaultActivity implements MaterialDialo
         setContentView(R.layout.activity_list_browse);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        mActionBar = getSupportActionBar();
-        if (mActionBar != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

@@ -51,7 +51,6 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     private Staff mStaff;
     private StaffSmall mStaffSmall;
 
-    private ActionBar mActionBar;
     private MenuItem favMenuItem;
     private ApplicationPrefs prefs;
 
@@ -61,8 +60,6 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
         setContentView(R.layout.activity_staff_detail);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra(STAFF_INTENT_KEY)) {
             mStaffSmall = getIntent().getParcelableExtra(STAFF_INTENT_KEY);
         }

@@ -51,7 +51,7 @@ public class CharacterSearchAdapter  extends RecyclerViewAdapter<Character> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<Character> {
+    class ViewHolder extends RecyclerViewHolder<Character> {
 
         @BindView(R.id.character_model_name) TextView name;
         @BindView(R.id.character_model_image) ImageView model_image;

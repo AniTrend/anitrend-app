@@ -59,7 +59,6 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
     private Character character;
     private CharacterSmall character_temp;
     private ApplicationPrefs prefs;
-    private ActionBar mActionBar;
     private MenuItem favMenuItem;
 
     @BindView(R.id.parent_coordinator) CoordinatorLayout coordinatorLayout;
@@ -82,8 +81,6 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
         setContentView(R.layout.activity_character);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         mCharacter_Image.setOnClickListener(this);
         mCard_Holder.setOnClickListener(this);
         mActor_Avatar.setOnClickListener(this);
