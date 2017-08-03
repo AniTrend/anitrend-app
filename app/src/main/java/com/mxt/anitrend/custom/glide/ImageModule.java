@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool;
+import com.bumptech.glide.load.engine.cache.ExternalCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.bumptech.glide.load.engine.cache.MemorySizeCalculator;
 import com.bumptech.glide.module.GlideModule;
@@ -31,12 +32,13 @@ public class ImageModule implements GlideModule {
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
         MemorySizeCalculator calculator = new MemorySizeCalculator(context);
-        // Increasing cache and by 65% and pool size by 95% - default is 250MB
-        int memoryCacheSize = (int) (1.65 * calculator.getMemoryCacheSize());
-        int bitmapPoolSize = (int) (1.95 * calculator.getBitmapPoolSize());
+        // Increasing cache & pool by 25% - default is 250MB
+        int memoryCacheSize = (int) (1.25 * calculator.getMemoryCacheSize());
+        int bitmapPoolSize = (int) (1.25 * calculator.getBitmapPoolSize());
 
         builder.setMemoryCache(new LruResourceCache(memoryCacheSize));
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSize));
+        builder.setDiskCache(new ExternalCacheDiskCacheFactory(context, 1024*1024*500));
         builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
     }
 

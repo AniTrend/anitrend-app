@@ -16,7 +16,7 @@ import com.mxt.anitrend.util.DefaultPreferences;
 
 /**
  * Created by Maxwell on 12/4/2016.
- * Handle Notification For AniTrend
+ * Schedules future services via job dispatcher
  */
 public class ServiceScheduler {
 

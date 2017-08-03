@@ -36,7 +36,7 @@ public interface Hub {
                                    @Query("filter") String filter,
                                    @Query("format") String format);
 
-    @GET("playlist")
+    @GET("playlists")
     Call<Result<Playlist>> getPlaylist(@Query("order") String order,
                                        @Query("limit") int limit,
                                        @Query("page") int page,
