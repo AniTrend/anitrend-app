@@ -31,6 +31,18 @@
         tools:text="By: Randomuser0012"
         />
 
+    <TextView
+        android:layout_gravity="start"
+        android:id="@+id/review_rating"
+        android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:text="50/100"
+        />
+
     <LinearLayout
         android:layout_marginBottom="35dp"
         android:layout_gravity="bottom"

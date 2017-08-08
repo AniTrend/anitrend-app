@@ -72,6 +72,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
 
         @BindView(R.id.img_lge) ImageView review_img;
         @BindView(R.id.review_user) TextView review_user;
+        @BindView(R.id.review_rating) TextView review_rating;
         @BindView(R.id.review_heading) TextView review_heading;
         @BindView(R.id.review_summary) TextView review_summary;
         @BindView(R.id.review_up_score) TextView review_up_score;
@@ -136,6 +137,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
             review_heading.setText(title);
             review_summary.setText(model.getSummary());
             review_user.setText(mContext.getString(R.string.text_reviewed_by, model.getUser().getDisplay_name()));
+            review_rating.setText(String.format(Locale.getDefault(), "%d / 100", model.getScore()));
         }
 
         @Override
