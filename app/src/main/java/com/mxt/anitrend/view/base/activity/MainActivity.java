@@ -647,7 +647,8 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         switch (item.getItemId())
         {
             case R.id.action_create_post:
-                if (mPresenter.getAppPrefs().isAuthenticated())
+                startActivity(new Intent(this, ComposerActivity.class));
+                /*if (mPresenter.getAppPrefs().isAuthenticated())
                     new DialogManager(this).createDialogActivityPost(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull final MaterialDialog dialog, @NonNull DialogAction which) {
@@ -696,7 +697,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
                         }
                     });
                 else
-                    Display(R.id.nav_account_action);
+                    Display(R.id.nav_account_action);*/
                 break;
             case R.id.action_changelog:
                 onUpdatedVersion();

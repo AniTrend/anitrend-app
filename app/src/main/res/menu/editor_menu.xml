@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_bold"
+        android:icon="@drawable/ic_format_bold_white_24dp"
+        android:title="Bold"
+        android:titleCondensed="Bold"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_italic"
+        android:icon="@drawable/ic_format_italic_white_24dp"
+        android:title="Italic"
+        android:titleCondensed="Italic"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_strike"
+        android:icon="@drawable/ic_format_strikethrough_white_24dp"
+        android:title="Strike"
+        android:titleCondensed="Strike"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_list"
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:title="Number"
+        android:titleCondensed="Number"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_bullet"
+        android:icon="@drawable/ic_format_list_bulleted_white_24dp"
+        android:title="Bullet"
+        android:titleCondensed="Bullet"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_heading"
+        android:icon="@drawable/ic_format_size_white_24dp"
+        android:title="Heading"
+        android:titleCondensed="Heading"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_center"
+        android:icon="@drawable/ic_format_align_center_white_24dp"
+        android:title="Center Align"
+        android:titleCondensed="Center"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_quote"
+        android:icon="@drawable/ic_format_quote_white_24dp"
+        android:title="Quote"
+        android:titleCondensed="Italic"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/menu_code"
+        android:icon="@drawable/ic_format_quote_white_24dp"
+        android:title="Code"
+        android:titleCondensed="Code"
+        app:showAsAction="ifRoom|withText"/>
+
+</menu>

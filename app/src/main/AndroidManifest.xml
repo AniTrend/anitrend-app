@@ -239,6 +239,14 @@
             android:label="@string/title_activity_studio"
             android:theme="@style/DarkTheme" />
 
+        <activity
+            android:name=".view.base.activity.ComposerActivity"
+            android:theme="@style/DarkTheme"/>
+
+        <activity
+            android:name=".view.base.activity.StreamActivity"
+            android:theme="@style/DarkTheme" />
+
     </application>
 
 </manifest>
