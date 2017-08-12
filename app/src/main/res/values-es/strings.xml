@@ -144,7 +144,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>estudio</item>
-        <item>characters</item>
+        <item>personal de prod.</item>
+        <item>personajes</item>
         <item>usuarios</item>
     </string-array>
 
@@ -153,6 +154,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>estudio</item>
+        <item>personal de prod.</item>
+        <item>personajes</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -806,5 +809,13 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>mangas</item>
         <item>personal de prod.</item>
         <item>estudios</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overview</item>
+        <item>anime roles</item>
+        <item>manga roles</item>
+        <item>actor roles</item>
     </string-array>
 </resources>

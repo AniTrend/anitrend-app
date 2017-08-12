@@ -22,6 +22,7 @@ import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.DefaultPreferences;
 
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +38,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
     private ApplicationPrefs mPrefs;
     private ApiPreferences mApiPrefs;
     private SeriesInteractionListener interactionListener;
-    private final boolean isHD;
 
     public SeriesAiringAdapter(List<ListItem> adapter, FragmentActivity context, ApplicationPrefs prefs, ApiPreferences apiPrefs,SeriesInteractionListener callback) {
         super(adapter, context);
@@ -46,7 +46,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         interactionListener = callback;
         mApiPrefs = apiPrefs;
         mPrefs = prefs;
-        isHD = mPrefs.isHD();
     }
 
     @Override
@@ -108,7 +107,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
             else
                 line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBlueGrey100));
 
-            Glide.with(mContext).load(isHD?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -168,7 +167,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
             else
                 line.setVisibility(View.GONE);
 
-            Glide.with(mContext).load(isHD?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()

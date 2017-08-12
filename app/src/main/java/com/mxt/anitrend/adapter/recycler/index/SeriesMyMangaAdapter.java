@@ -25,6 +25,7 @@ import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
 
@@ -132,7 +133,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -198,7 +199,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()
@@ -286,7 +287,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -376,7 +377,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()

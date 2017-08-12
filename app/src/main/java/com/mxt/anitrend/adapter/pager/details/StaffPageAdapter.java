@@ -43,10 +43,6 @@ public class StaffPageAdapter extends DefaultStatePagerAdapter {
         return null;
     }
 
-    private int getPages() {
-        return model != null && model.getAnime() != null && model.getAnime().size() > 0? 3 : 4;
-    }
-
     /**
      * Return the number of views available.
      */

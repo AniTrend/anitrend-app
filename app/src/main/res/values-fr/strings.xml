@@ -146,6 +146,7 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
         <item>characters</item>
         <item>utilisateurs</item>
     </string-array>
@@ -155,6 +156,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
+        <item>characters</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -811,5 +814,13 @@
         <item>manga</item>
         <item>staff</item>
         <item>studios</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overview</item>
+        <item>anime roles</item>
+        <item>manga roles</item>
+        <item>actor roles</item>
     </string-array>
 </resources>

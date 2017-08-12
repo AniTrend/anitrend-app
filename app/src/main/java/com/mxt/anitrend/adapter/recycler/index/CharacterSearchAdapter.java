@@ -1,5 +1,6 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Character;
+import com.mxt.anitrend.api.model.CharacterSmall;
 import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.view.detail.activity.CharacterActivity;
 
 import java.util.List;
 import java.util.Locale;
@@ -81,11 +84,17 @@ public class CharacterSearchAdapter  extends RecyclerViewAdapter<Character> {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.character_model_image:
-                    Toast.makeText(mContext, R.string.TBA, Toast.LENGTH_SHORT).show();
-                    // TODO: 2017/07/14 send the full object or create a character small object
-                    /*Intent intent = new Intent(mContext, CharacterActivity.class);
-                    intent.putExtra(CharacterActivity.CHARACTER_OBJECT_PARAM, mAdapter.get(getAdapterPosition()));
-                    mContext.startActivity(intent);*/
+                    final Character ch = mAdapter.get(getAdapterPosition());
+                    CharacterSmall sm = new CharacterSmall();
+                    sm.setId(ch.getId());
+                    sm.setImage_url_lge(ch.getImage_url_lge());
+                    sm.setImage_url_med(ch.getImage_url_med());
+                    sm.setName_first(ch.getName_first());
+                    sm.setName_last(ch.getName_last());
+                    sm.setRole(ch.getRole());
+                    Intent intent = new Intent(mContext, CharacterActivity.class);
+                    intent.putExtra(CharacterActivity.CHARACTER_OBJECT_PARAM, sm);
+                    mContext.startActivity(intent);
                     break;
             }
         }

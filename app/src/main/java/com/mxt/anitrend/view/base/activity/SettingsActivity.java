@@ -4,6 +4,7 @@ package com.mxt.anitrend.view.base.activity;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -22,6 +23,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.custom.service.ServiceScheduler;
+import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.util.List;
 

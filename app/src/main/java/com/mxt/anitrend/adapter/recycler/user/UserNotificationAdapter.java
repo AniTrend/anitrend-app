@@ -30,13 +30,11 @@ import butterknife.BindView;
  */
 public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotification> {
 
-    private ApplicationPrefs mPrefs;
     private NotificationClickListener mCallback;
 
-    public UserNotificationAdapter(List<UserNotification> adapter, Context context, ApplicationPrefs prefs, NotificationClickListener callback) {
+    public UserNotificationAdapter(List<UserNotification> adapter, Context context, NotificationClickListener callback) {
         super(adapter, context);
         mCallback = callback;
-        mPrefs = prefs;
     }
 
     @Override
@@ -75,12 +73,12 @@ public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotificatio
         @Override
         public void onBindViewHolder(UserNotification model) {
             if(model.getObject_type() != NotificationClickListener.TYPE_AIRING) {
-                Glide.with(mContext).load(mPrefs.isHD()?model.getUser().getImage_url_lge():model.getUser().getImage_url_med())
+                Glide.with(mContext).load(model.getUser().getImage_url_lge())
                         .centerCrop().crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into(notificationImg);
             } else {
-                Glide.with(mContext).load(mPrefs.isHD()?model.getSeries().getImage_url_lge():model.getSeries().getImage_url_med())
+                Glide.with(mContext).load(model.getSeries().getImage_url_lge())
                         .centerCrop().crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(notificationImg);

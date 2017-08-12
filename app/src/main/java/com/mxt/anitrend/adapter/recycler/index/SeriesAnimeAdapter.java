@@ -23,6 +23,7 @@ import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.DefaultPreferences;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 
@@ -118,7 +119,7 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
         @Override
         public void onBindViewHolder(Series model) {
             //getting a smaller image for memory reasons
-            Glide.with(mContext).load(mPrefs.isHD()?model.getImage_url_lge(): model.getImage_url_med())
+            Glide.with(mContext).load(model.getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);

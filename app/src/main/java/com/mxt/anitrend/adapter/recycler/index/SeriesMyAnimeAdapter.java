@@ -25,6 +25,7 @@ import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 
@@ -122,7 +123,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()
@@ -206,7 +207,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -270,7 +271,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()
@@ -364,7 +365,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);

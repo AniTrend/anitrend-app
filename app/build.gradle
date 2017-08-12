@@ -31,10 +31,14 @@ android {
             it.buildConfigField("String", "HUB_BASE_LINK", HUB_BASE_LINK)
         }
         debug {
-            testCoverageEnabled = true
+            testCoverageEnabled = false
         }
     }
+    dataBinding {
+        enabled = true
+    }
     productFlavors {
+
     }
 }
 

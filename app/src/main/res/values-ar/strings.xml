@@ -146,7 +146,8 @@
         <item>أنيمي</item>
         <item>مانغا</item>
         <item>استوديو</item>
-        <item>characters</item>
+        <item>staff</item>
+        <item>الشخصيات</item>
         <item>مستخدمين</item>
     </string-array>
 
@@ -155,6 +156,8 @@
         <item>أنيمي</item>
         <item>مانغا</item>
         <item>استوديو</item>
+        <item>staff</item>
+        <item>الشخصيات</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -808,5 +811,13 @@
         <item>المانغا</item>
         <item>الطاقم</item>
         <item>الاستوديوهات</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overview</item>
+        <item>anime roles</item>
+        <item>manga roles</item>
+        <item>actor roles</item>
     </string-array>
 </resources>

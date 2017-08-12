@@ -42,10 +42,10 @@
             android:icon="@drawable/ic_group_work_white_24dp"
             android:title="@string/drawer_title_hub" />
         <item
-            android:visible="false"
+            android:visible="true"
             android:id="@+id/nav_reviews"
             android:icon="@drawable/ic_rate_review_white_24dp"
-            tools:title="@string/drawer_title_anime_reviews"
+            android:title="@string/drawer_title_anime_reviews"
             app:actionLayout="@layout/action_view_type"/>
     </group>
 
@@ -55,13 +55,6 @@
                 android:id="@+id/nav_filter"
                 android:icon="@drawable/ic_filter_list_white_24dp"
                 android:title="@string/drawer_title_filter" />
-            <item
-                android:id="@+id/nav_img_quality"
-                android:icon="@drawable/ic_high_quality_white_24dp"
-                android:checked="false"
-                android:title="@string/drawer_title_quality"
-                app:actionLayout="@layout/action_view_quality"
-                />
             <item
                 android:id="@+id/nav_light_theme"
                 android:icon="@drawable/ic_wb_sunny_white_24dp"

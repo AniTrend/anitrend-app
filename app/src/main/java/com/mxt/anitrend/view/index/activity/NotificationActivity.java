@@ -83,7 +83,7 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
 
     @Override
     protected void updateUI() {
-        RecyclerViewAdapter mAdapter = new UserNotificationAdapter(mListNotifications, getApplicationContext(), mPresenter.getAppPrefs(),this);
+        RecyclerViewAdapter mAdapter = new UserNotificationAdapter(mListNotifications, getApplicationContext(), this);
         recyclerView.setAdapter(mAdapter);
         progressLayout.showContent();
         /*

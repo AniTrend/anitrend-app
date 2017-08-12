@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.details.StaffAdapter;
 import com.mxt.anitrend.adapter.recycler.index.CharacterSearchAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMangaAdapter;
@@ -19,6 +20,8 @@ import com.mxt.anitrend.adapter.recycler.index.StudioAdapter;
 import com.mxt.anitrend.adapter.recycler.user.UserListAdapter;
 import com.mxt.anitrend.api.model.Character;
 import com.mxt.anitrend.api.model.Series;
+import com.mxt.anitrend.api.model.Staff;
+import com.mxt.anitrend.api.model.StaffSmall;
 import com.mxt.anitrend.api.model.StudioSmall;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.async.SortHelper;
@@ -107,12 +110,23 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(false); //set to false if somethings fail to work properly
-        if(mRequestType == RequestType.ANIME_SEARCH_REQ || mRequestType == RequestType.MANGA_SEARCH_REQ)
-            mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.card_col_size_home));
-        else if (mRequestType != RequestType.CHARACTER_SEARCH_REQ)
-            mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size));
-        else
-            mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank));
+        switch (mRequestType) {
+            case ANIME_SEARCH_REQ:
+                mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.card_col_size_home));
+                break;
+            case MANGA_SEARCH_REQ:
+                mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.card_col_size_home));
+                break;
+            case CHARACTER_SEARCH_REQ:
+                mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank));
+                break;
+            case STAFF_SEARCH_REQ:
+                mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank));
+                break;
+            default:
+                mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size));
+                break;
+        }
         recyclerView.setLayoutManager(mLayoutManager);
         return root;
     }
@@ -220,6 +234,9 @@ public abstract class SearchFragment<T extends Parcelable> extends Fragment impl
                         break;
                     case CHARACTER_SEARCH_REQ:
                         mAdapter = new CharacterSearchAdapter((List<Character>) model, getActivity());
+                        break;
+                    case STAFF_SEARCH_REQ:
+                        mAdapter = new StaffAdapter((List<StaffSmall>) model, getActivity());
                         break;
                 }
                 recyclerView.setAdapter(mAdapter);

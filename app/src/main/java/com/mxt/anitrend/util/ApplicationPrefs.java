@@ -25,7 +25,6 @@ public class ApplicationPrefs {
     private final String KEY_CHARACTER_TIP = "app_character_tip";
     private final String KEY_STAFF_TIP = "app_staff_tip";
     private final String KEY_STATUS_POST_TIP = "app_status_post_tip";
-    private final String KEY_LOGIN_TIP = "app_login_tip";
     private final String KEY_HEADER_TIP = "app_header_tip";
     private final String KEY_USER_PROFILE_TIP = "app_user_profile_tip";
     private final String KEY_REVIEW_TYPE_TIP = "app_review_type_tip";
@@ -48,7 +47,6 @@ public class ApplicationPrefs {
 
     /*Application Base Options*/
     private final String KEY_LIGHT_THEME = "app_light_theme";
-    private final String KEY_IMG_QUALITY = "app_img_quality";
     private final String KEY_NEW_STYLE = "app_new_style";
     private final String KEY_REVIEW_TYPES = "app_review_type";
 
@@ -83,16 +81,6 @@ public class ApplicationPrefs {
     public void setNotificationTip() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_NOTIFICATION_TIP, false);
-        editor.apply();
-    }
-
-    public boolean getLoginTip() {
-        return sharedPreferences.getBoolean(KEY_LOGIN_TIP, true);
-    }
-
-    public void setLoginTip() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_LOGIN_TIP, false);
         editor.apply();
     }
 
@@ -307,16 +295,6 @@ public class ApplicationPrefs {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_LIGHT_THEME, light);
         editor.apply();
-    }
-
-    public void setQuality(boolean quality) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_IMG_QUALITY, quality);
-        editor.apply();
-    }
-
-    public boolean isHD(){
-        return sharedPreferences.getBoolean(KEY_IMG_QUALITY, true);
     }
 
     public boolean getReviewType() {

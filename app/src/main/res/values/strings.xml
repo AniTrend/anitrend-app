@@ -157,6 +157,7 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
         <item>characters</item>
         <item>users</item>
     </string-array>
@@ -166,6 +167,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
+        <item>characters</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -407,7 +410,6 @@
     <!--Do not translate anything that is starts with pref_key-->
     <string name="pref_key_auto_increment" translatable="false">general_auto_increment</string>
 
-
     <string name="pref_title_startup_page">Startup Page</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -545,7 +547,7 @@
 
     <string name="login_error_text">
         <![CDATA[
-        <p>Looks like the app resumed from an unexpected state while processing your login information. This can occur on low spec with less than 1GB of RAM.</p>
+        <p>Looks like the app resumed from an unexpected state while processing your login information. This can occur on low powered devices 1GB of RAM or less.</p>
 
         The application will now try to restart in hopes to resolve the error, after the restart please try signing in again, and if this issue persists please feel free to head over to the
         <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> for more assistance.
@@ -834,5 +836,13 @@
         <item>manga</item>
         <item>staff</item>
         <item>studios</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overview</item>
+        <item>anime roles</item>
+        <item>manga roles</item>
+        <item>actor roles</item>
     </string-array>
 </resources>

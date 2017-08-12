@@ -66,6 +66,9 @@ public class SplashActivity extends AppCompatActivity implements TokenReference.
                 case "trending":
                     shortcut = R.id.nav_trending;
                     break;
+                case "reviews":
+                    shortcut = R.id.nav_reviews;
+                    break;
             }
         }
         if(status != 0)

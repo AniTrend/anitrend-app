@@ -26,6 +26,7 @@ import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.DefaultPreferences;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
@@ -143,8 +144,7 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
                     header = String.format(Locale.getDefault(), "%s %s %s of:", model.getUsers().get(0).getDisplay_name(), model.getStatus(), model.getValue());
             }
 
-
-            Glide.with(mContext).load(mAppPrefs.isHD() ? model.getSeries().getImage_url_lge() : model.getSeries().getImage_url_med())
+            Glide.with(mContext).load(model.getSeries().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .into(mSeriesImage);

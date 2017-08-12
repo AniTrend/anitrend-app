@@ -112,6 +112,8 @@ public class AsyncTaskFetch <T> extends AsyncTask<AsyncTaskFetch.RequestType, Vo
                 return (Call<T>) createService(CharacterModel.class, mContext).findChatacter(term);
             case STAFF_INFO_REQ:
                 return (Call<T>) createService(StaffModel.class, mContext).fetchStaffPage(id);
+            case STAFF_SEARCH_REQ:
+                return (Call<T>) createService(StaffModel.class, mContext).findStaff(term);
             case ANIME_REVIEWS_REQ:
                 return (Call<T>) createService(ReviewModel.class, mContext).fetchAnimeReviews(id);
             case MANGA_REVIEWS_REQ:
@@ -163,6 +165,7 @@ public class AsyncTaskFetch <T> extends AsyncTask<AsyncTaskFetch.RequestType, Vo
         CHARACTER_INFO_REQ,
         CHARACTER_SEARCH_REQ,
         STAFF_INFO_REQ,
+        STAFF_SEARCH_REQ,
         ANIME_REVIEWS_REQ,
         MANGA_REVIEWS_REQ,
         SERIES_REVIEWS_REQ,

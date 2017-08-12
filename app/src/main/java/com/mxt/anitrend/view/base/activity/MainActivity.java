@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -27,6 +28,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -145,7 +147,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
 
     private ImageView user_banner, user_avatar;
     private TextView user_name, user_notifications, app_update;
-    private SwitchCompat mQualitySwitch, mThemeSwitch, mStyleSwitch, mReviewTypeSwitch;
+    private SwitchCompat mThemeSwitch, mStyleSwitch, mReviewTypeSwitch;
     private AsyncTaskFetch<Integer> userNotificationCountFetch;
 
     @Override
@@ -358,9 +360,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
             case R.id.nav_light_theme:
                 mThemeSwitch.toggle();
                 break;
-            case R.id.nav_img_quality:
-                mQualitySwitch.toggle();
-                break;
             case R.id.nav_list_style:
                 mStyleSwitch.toggle();
                 break;
@@ -401,45 +400,51 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         }
     }
 
+    private void welcomeLogin(Intent data) {
+        if (data != null && data.hasExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN)) {
+            mCurrentUser = data.getParcelableExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN);
+            if (mCurrentUser == null)
+                recreate();
+            data.getIntExtra(LoginActivity.KEY_NOTIFICATION_COUNT, 0);
+            setUserItems();
+            mBuilder = new BottomSheetMessage.Builder()
+                    .setTitle(R.string.login_title)
+                    .setText(R.string.login_message)
+                    .setNegative(R.string.Ok).build();
+            mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
+
+            // schedule the job to run
+            if (mPresenter.getDefaultPrefs().isNotificationEnabled())
+                new ServiceScheduler(getApplicationContext()).scheduleJob();
+
+            mPresenter.createAlerter(MainActivity.this, getString(R.string.login_welcome_title, mCurrentUser.getDisplay_name()), getString(R.string.login_welcome_text),
+                    R.drawable.ic_bubble_chart_white_24dp, R.color.colorStateGreen);
+        } else {
+            mBuilder = new BottomSheetMessage.Builder()
+                    .setTitle(R.string.login_error_title)
+                    .setText(R.string.login_error_text)
+                    .setCallback(BottomSheet.SheetButtonEvents.CALLBACK_SIGN_OUT)
+                    .setPositive(R.string.Ok).build();
+            mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
+        }
+    }
+
     /**
      * After a successful login
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == LoginActivity.LOGIN_RESULT && resultCode == RESULT_OK) {
-            if(data != null && data.hasExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN)) {
-                mCurrentUser = data.getParcelableExtra(LoginActivity.KEY_USER_DEFAULT_LOGIN);
-                if(mCurrentUser != null) {
-                    data.getIntExtra(LoginActivity.KEY_NOTIFICATION_COUNT, 0);
-                    setUserItems();
-                    mBuilder = new BottomSheetMessage.Builder()
-                            .setTitle(R.string.login_title)
-                            .setText(R.string.login_message)
-                            .setNegative(R.string.Ok).build();
-                    mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
-
-                    // schedule the job to run
-                    if(mPresenter.getDefaultPrefs().isNotificationEnabled())
-                        new ServiceScheduler(getApplicationContext()).scheduleJob();
-
-                    mPresenter.createAlerter(MainActivity.this, getString(R.string.login_welcome_title, mCurrentUser.getDisplay_name()), getString(R.string.login_welcome_text),
-                            R.drawable.ic_bubble_chart_white_24dp, R.color.colorStateGreen);
-                }
-            } else {
-                mBuilder = new BottomSheetMessage.Builder()
-                        .setTitle(R.string.login_error_title)
-                        .setText(R.string.login_error_text)
-                        .setCallback(BottomSheet.SheetButtonEvents.CALLBACK_SIGN_OUT)
-                        .setPositive(R.string.Ok).build();
-                mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
-            }
-        }
+        if(resultCode == RESULT_OK)
+            if(requestCode == LoginActivity.LOGIN_RESULT)
+                welcomeLogin(data);
     }
 
     @Override
     protected void updateUI() {
         mPresenter.setOnInitCallback(this);
+
+        boolean review_type = mPresenter.getAppPrefs().getReviewType();
 
         View header_view = mNavigationView.getHeaderView(0);
 
@@ -451,7 +456,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
 
         mReviewTypeSwitch = (SwitchCompat) menuItems.findItem(R.id.nav_reviews).getActionView().findViewById(R.id.app_review_type);
         mThemeSwitch = (SwitchCompat) menuItems.findItem(R.id.nav_light_theme).getActionView().findViewById(R.id.app_theme_light);
-        mQualitySwitch = (SwitchCompat) menuItems.findItem(R.id.nav_img_quality).getActionView().findViewById(R.id.app_content_quality);
 
         mNewStyleMenu = menuItems.findItem(R.id.nav_list_style);
         mStyleSwitch = (SwitchCompat) mNewStyleMenu.getActionView().findViewById(R.id.app_mal_style);
@@ -469,19 +473,17 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         mMyMangaMenu = menuItems.findItem(R.id.nav_mymanga);
         mHubMenu = menuItems.findItem(R.id.nav_hub);
         mReviewMenu = menuItems.findItem(R.id.nav_reviews);
-        mReviewTypeSwitch.setChecked(mPresenter.getAppPrefs().getReviewType());
+        mReviewTypeSwitch.setChecked(review_type);
         mReviewTypeSwitch.setOnCheckedChangeListener(this);
         mThemeSwitch.setChecked(mPresenter.getAppPrefs().isLightTheme());
         mThemeSwitch.setOnCheckedChangeListener(this);
-        mQualitySwitch.setChecked(mPresenter.getAppPrefs().isHD());
-        mQualitySwitch.setOnCheckedChangeListener(this);
         mStyleSwitch.setChecked(mPresenter.getAppPrefs().isNewStyle());
         mStyleSwitch.setOnCheckedChangeListener(this);
         searchBar.setOnSearchActionListener(this);
         searchBar.addTextChangeListener(this);
         searchBar.inflateMenu(R.menu.menu_main_options);
         searchBar.getMenu().setOnMenuItemClickListener(this);
-
+        mReviewMenu.setTitle(review_type?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
         if(mPresenter.getAppPrefs().isAuthenticated()) {
             if(mCurrentUser != null) {
                 setUserItems();
@@ -555,16 +557,16 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     protected void onPause() {
-        mPresenter.getDefaultPrefs().getPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        mPresenter.getDefaultPrefs().getPreferences().unregisterOnSharedPreferenceChangeListener(MainActivity.this);
         if(userNotificationCountFetch != null)
             userNotificationCountFetch.cancel(false);
         super.onPause();
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        mPresenter.getDefaultPrefs().getPreferences().registerOnSharedPreferenceChangeListener(this);
+    protected void onResume() {
+        super.onResume();
+        mPresenter.getDefaultPrefs().getPreferences().registerOnSharedPreferenceChangeListener(MainActivity.this);
         if(mLastSynced == 0L) {
             mLastSynced = System.currentTimeMillis();
             return;
@@ -581,9 +583,8 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
 
     @Override
     public void onBackPressed() {
-        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+        if (mDrawer.isDrawerOpen(GravityCompat.START))
             mDrawer.closeDrawer(GravityCompat.START);
-        }
         else if(mFilterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
             mFilterBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         else if(!isClosing) {
@@ -1000,7 +1001,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
             user_notifications = (TextView) mAccountProfile.getActionView().findViewById(R.id.user_notification_count);
             user_notifications.setOnClickListener(this);
 
-            mReviewMenu.setTitle(mPresenter.getAppPrefs().getReviewType()?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
             user_name.setText(mCurrentUser.getDisplay_name());
             Glide.with(this)
                     .load(mCurrentUser.getImage_url_lge())
@@ -1033,14 +1033,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean state) {
         switch (compoundButton.getId()) {
-            case R.id.app_content_quality:
-                mPresenter.createSuperToast(MainActivity.this,
-                        getString(R.string.text_quality_changed),
-                        R.drawable.ic_done_all_white_24dp,
-                        Style.FRAME_STANDARD, Style.DURATION_VERY_SHORT,
-                        PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_LIGHT_GREEN));
-                mPresenter.getAppPrefs().setQuality(state);
-                break;
             case R.id.app_theme_light:
                 mPresenter.getAppPrefs().setLightTheme(state);
                 recreate();
@@ -1084,9 +1076,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      * <p>
      * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
      * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-     *
-     * @param call
-     * @param response
      */
     @Override
     public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -1114,9 +1103,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     /**
      * Invoked when a network exception occurred talking to the server or when an unexpected
      * exception occurred creating the request or processing the response.
-     *
-     * @param call
-     * @param t
      */
     @Override
     public void onFailure(Call<Integer> call, Throwable t) {
@@ -1131,18 +1117,17 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d(this.getLocalClassName(), "onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)");
         ServiceScheduler sh = new ServiceScheduler(getApplicationContext());
-        if(key.equals(getString(R.string.pref_key_sync_frequency))) {
+        if(key.equals(getString(R.string.pref_key_sync_frequency)))
             if(mPresenter.getAppPrefs().isAuthenticated() && sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications),true))
                 sh.scheduleJob();
-        } else if (key.equals(getString(R.string.pref_key_new_message_notifications))) {
-            if(sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications),true)){
+        else if (key.equals(getString(R.string.pref_key_new_message_notifications)))
+            if(sharedPreferences.getBoolean(getString(R.string.pref_key_new_message_notifications),true))
                 if(mPresenter.getAppPrefs().isAuthenticated())
                     sh.scheduleJob();
-            } else {
+            else
                 sh.cancelJob();
-            }
-        }
     }
 
     /**
@@ -1151,11 +1136,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      * are about to be replaced by new text with length <code>after</code>.
      * It is an error to attempt to make changes to <code>s</code> from
      * this callback.
-     *
-     * @param s
-     * @param start
-     * @param count
-     * @param after
      */
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1168,11 +1148,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      * have just replaced old text that had length <code>before</code>.
      * It is an error to attempt to make changes to <code>s</code> from
      * this callback.
-     *
-     * @param s
-     * @param start
-     * @param before
-     * @param count
      */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -1192,8 +1167,6 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      * you can use {@link Spannable#setSpan} in {@link #onTextChanged}
      * to mark your place and then look up from here where the span
      * ended up.
-     *
-     * @param s
      */
     @Override
     public void afterTextChanged(Editable s) {
