@@ -13,10 +13,20 @@ public class HubUtil {
     }
 
     public static String getEpisodeLink(String location) {
-        return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        try {
+            return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return location;
+        }
     }
 
     public static String getThubnailLink(String location) {
-        return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        try {
+            return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return location;
+        }
     }
 }

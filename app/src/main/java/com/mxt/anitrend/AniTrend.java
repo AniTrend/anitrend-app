@@ -13,6 +13,8 @@ import com.google.firebase.FirebaseApp;
 
 public class AniTrend extends Application {
 
+
+
     /**
      * Called when the application is starting, before any activity, service,
      * or receiver objects (excluding content providers) have been created.

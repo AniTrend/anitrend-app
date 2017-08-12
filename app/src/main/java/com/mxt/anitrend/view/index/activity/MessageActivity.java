@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -95,7 +94,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         recyclerView.setLayoutManager(mLayoutManager);
 
         if(mData == null)
-            mPresenter.beginAsync(this, mPage, KeyUtils.ActivtyTypes[KeyUtils.MESSAGE]);
+            mPresenter.beginAsync(this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
         else
             updateUI();
     }
@@ -181,7 +180,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
             @Override
             public void onClick(View view) {
                 progressLayout.showLoading();
-                mPresenter.beginAsync(MessageActivity.this, mPage, KeyUtils.ActivtyTypes[KeyUtils.MESSAGE]);
+                mPresenter.beginAsync(MessageActivity.this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
             }
         });
     }
@@ -211,7 +210,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         mPage = 1;
         mData = null;
         mPresenter.onRefreshPage();
-        mPresenter.beginAsync(this, mPage, KeyUtils.ActivtyTypes[KeyUtils.MESSAGE]);
+        mPresenter.beginAsync(this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
     }
 
     @Override
@@ -394,7 +393,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         if(!isLimit) {
             mPage = currentPage;
             swipeRefreshLayout.setRefreshing(true);
-            mPresenter.beginAsync(this, mPage, KeyUtils.ActivtyTypes[KeyUtils.MESSAGE]);
+            mPresenter.beginAsync(this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
         }
     }
 

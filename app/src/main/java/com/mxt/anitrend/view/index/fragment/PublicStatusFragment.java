@@ -20,7 +20,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.index.PublicStatusAdapter;
 import com.mxt.anitrend.adapter.recycler.index.StatusAdapter;
+import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.util.KeyUtils;
@@ -34,6 +36,8 @@ import com.mxt.anitrend.custom.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.view.detail.activity.AnimeActivity;
+import com.mxt.anitrend.view.detail.activity.MangaActivity;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -195,7 +199,7 @@ public class PublicStatusFragment extends Fragment implements Callback<List<User
             if(swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(false);
             if(mAdapter == null) {
-                mAdapter = new StatusAdapter(mData, getContext(), mFragmentPresenter.getAppPrefs(), mFragmentPresenter.getApiPrefs(), this);
+                mAdapter = new PublicStatusAdapter(mData, getContext(), mFragmentPresenter.getAppPrefs(), mFragmentPresenter.getApiPrefs(), this);
                 recyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.onDataSetModified(mData);
@@ -205,13 +209,13 @@ public class PublicStatusFragment extends Fragment implements Callback<List<User
                 progressLayout.showContent();
                 addScrollLoadTrigger();
             } else
-                progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), "No results found", skipIds);
+                progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.layout_empty_response), skipIds);
         }
     }
 
     @Override
     public void onFailure(Call<List<UserActivity>> call, Throwable t) {
-        progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), "Try Again", new View.OnClickListener() {
+        progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.try_again), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 progressLayout.showLoading();
@@ -235,7 +239,7 @@ public class PublicStatusFragment extends Fragment implements Callback<List<User
     public void onItemClick(final int index, int viewId) {
         Intent intent;
         if(mData == null) {
-            Toast.makeText(getContext(), "Null exception! Please refresh", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.text_unknown_error, Toast.LENGTH_SHORT).show();
             return;
         }
         final UserActivity mItem = mData.get(index);
@@ -374,6 +378,79 @@ public class PublicStatusFragment extends Fragment implements Callback<List<User
                                         }, KeyUtils.ActionType.ACTIVITY_DELETE, action);
                                         deleteAction.execute();
                                         mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_processing_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
+                                        break;
+                                    case NEUTRAL:
+                                        break;
+                                    case NEGATIVE:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
+                break;
+            case R.id.feed_avatar:
+                intent = new Intent(getContext(), UserProfileActivity.class);
+                intent.putExtra(UserProfileActivity.PROFILE_INTENT_KEY, mItem.getUsers().get(0));
+                startActivity(intent);
+                break;
+            case R.id.feed_series_img:
+                // Open the clicked series
+                Series series = mItem.getSeries();
+                if(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME])) {
+                    intent = new Intent(getActivity(), AnimeActivity.class);
+                    intent.putExtra(AnimeActivity.MODEL_ID_KEY, series.getId());
+                    intent.putExtra(AnimeActivity.MODEL_BANNER_KEY, series.getImage_url_banner());
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), MangaActivity.class);
+                    intent.putExtra(MangaActivity.MODEL_ID_KEY, series.getId());
+                    intent.putExtra(MangaActivity.MODEL_BANNER_KEY, series.getImage_url_banner());
+                    startActivity(intent);
+                }
+                break;
+            case R.id.feed_comment:
+                // Open comment activity
+                intent = new Intent(getActivity(), UserReplyActivity.class);
+                intent.putExtra(UserReplyActivity.USER_ACTIVITY_EXTRA, mItem);
+                startActivity(intent);
+                break;
+            case R.id.feed_delete:
+                new DialogManager(getActivity()).createDialogMessage(getString(R.string.dialog_confirm_delete),
+                        getString(R.string.dialog_delete_message),
+                        getString(R.string.Yes),
+                        getString(R.string.No),
+                        new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                switch (which) {
+                                    case POSITIVE:
+                                        Payload.ActionIdBased action = new Payload.ActionIdBased(mItem.getId());
+                                        RequestApiAction.IdActions deleteAction = new RequestApiAction.IdActions(getContext(), new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if (isVisible() && !isRemoving() || !isDetached()) {
+                                                    if (response.isSuccessful() && response.body() != null) {
+                                                        mData.remove(index);
+                                                        mAdapter.onItemRemoved(mData, index);
+                                                    }
+                                                    else
+                                                        Toast.makeText(getContext(), ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                t.printStackTrace();
+                                                if(isVisible() && !isRemoving() || !isDetached())
+                                                    try {
+                                                        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                            }
+                                        }, KeyUtils.ActionType.ACTIVITY_DELETE, action);
+                                        deleteAction.execute();
+                                        mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                                         break;
                                     case NEUTRAL:
                                         break;

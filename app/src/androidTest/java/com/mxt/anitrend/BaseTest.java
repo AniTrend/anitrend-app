@@ -26,7 +26,7 @@ public class BaseTest {
 
     @Test
     public void crunchyFeedTest() throws IOException {
-        EpisodeModel aniTrend = ServiceGenerator.createCrunchyService(true);
+        EpisodeModel aniTrend = ServiceGenerator.createCrunchyService(true, null);
 
         Call<Rss> rssFeed = aniTrend.getLatestFeed();
 

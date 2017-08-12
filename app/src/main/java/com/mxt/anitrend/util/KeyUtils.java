@@ -61,6 +61,13 @@ public interface KeyUtils {
         MANGA_LIST_DELETE
     }
 
+    // Hub request types
+    int FEED_TYPE = 0, RSS_TYPE = 1, PLAYLIST_TYPE = 2, VIDEO_TYPE = 3;
+
+    String[] HubTypes = {"client_credentials", "authorization_code", "refresh_token"};
+    @IntDef({FEED_TYPE, RSS_TYPE, PLAYLIST_TYPE, VIDEO_TYPE})
+    @interface HubType {}
+
     // Token grant types
     int AUTHENTICATION_TYPE = 0, AUTHENTICATION_CODE = 1, REFRESH_TYPE = 2;
 
@@ -87,7 +94,7 @@ public interface KeyUtils {
     // Activity types
     int PROGRESS = 0, STATUS = 1, PUBIC_STATUS = 2, MESSAGE = 3;
 
-    String[] ActivtyTypes = { "series", "text", "public-status", "message"};
+    String[] ActivityTypes = { "series", "text", "public-status-replies", "message"};
     @IntDef({PROGRESS,STATUS,PUBIC_STATUS,MESSAGE})
     @interface ActivityType {}
 

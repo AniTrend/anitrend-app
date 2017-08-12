@@ -31,11 +31,11 @@ public class UserPageAdapter extends DefaultStatePagerAdapter {
             case 0:
                 return UserAboutFragment.newInstance(user);
             case 1:
-                return UserProgressFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.PROGRESS], user.getDisplay_name());
+                return UserProgressFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.PROGRESS], user.getDisplay_name());
             case 2:
-                return UserStatusFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.STATUS], user.getDisplay_name());
+                return UserStatusFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.STATUS], user.getDisplay_name());
             /*case 3:
-                return UserStatusFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.ActivityType.MESSAGE.ordinal()], user.getDisplay_name());*/
+                return UserStatusFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.ActivityType.MESSAGE.ordinal()], user.getDisplay_name());*/
         }
         return null;
     }

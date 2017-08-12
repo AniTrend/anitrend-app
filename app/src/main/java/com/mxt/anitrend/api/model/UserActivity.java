@@ -7,6 +7,7 @@ import android.text.Spanned;
 import com.mxt.anitrend.api.structure.UserActivityReply;
 import com.mxt.anitrend.util.DateTimeConverter;
 import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.PatternMatcher;
 
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class UserActivity implements Parcelable {
     }
 
     public Spanned getSpannedValue() {
-        return MarkDown.convert(value);
+        return MarkDown.convert(PatternMatcher.removeTags(value));
     }
 
     public String getCreated_at() {

@@ -32,11 +32,11 @@ public class HomePageAdapter extends DefaultStatePagerAdapter {
         switch (position)
         {
             case 0:
-                return ProgressFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.PROGRESS]);
+                return ProgressFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.PROGRESS]);
             case 1:
-                return StatusFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.STATUS]);
+                return StatusFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.STATUS]);
             case 2:
-                return PublicStatusFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.PUBIC_STATUS]);
+                return PublicStatusFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.PUBIC_STATUS]);
         }
         return null;
     }

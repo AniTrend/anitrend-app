@@ -137,16 +137,6 @@
     </string-array>
 
     <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>suggestions</item>
-        <!--
-        These are commented out for the mean tile
-        <item>episodes</item>
-        <item>playlist</item>
-        -->
-    </string-array>
-
-    <!--Try to keep all titles short-->
     <string-array name="manga_title">
         <item>manga list</item>
         <item>recently added</item>
@@ -845,4 +835,12 @@
         <item>manga roles</item>
         <item>actor roles</item>
     </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="hub_title">
+        <item>suggestions</item>
+        <item>most popular</item>
+        <item>playlist</item>
+    </string-array>
+
 </resources>

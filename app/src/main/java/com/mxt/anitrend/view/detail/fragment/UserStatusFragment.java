@@ -303,7 +303,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                 EditText editText = dialog.getInputEditText();
                                 if(editText != null) {
                                     if(!TextUtils.isEmpty(editText.getText())) {
-                                        if(model_type.equals(KeyUtils.ActivtyTypes[KeyUtils.MESSAGE])) {
+                                        if(model_type.equals(KeyUtils.ActivityTypes[KeyUtils.MESSAGE])) {
                                             Payload.ActivityMessage msg = new Payload.ActivityMessage(mItem.getId(), mItem.getMessenger().getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id());
                                             RequestApiAction.MessageActions<UserActivity> action = new RequestApiAction.MessageActions<>(getContext(), new Callback<UserActivity>() {
                                                 @Override

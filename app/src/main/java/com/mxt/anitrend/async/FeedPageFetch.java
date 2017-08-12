@@ -49,7 +49,7 @@ public class FeedPageFetch extends AsyncTask<Void,Void,Call<List<UserActivity>>>
     protected Call<List<UserActivity>> doInBackground(Void... params) {
         UserModel userModel = ServiceGenerator.createService(UserModel.class, mContext);
         if(user == null) {
-            if (!type.equals(KeyUtils.ActivtyTypes[KeyUtils.MESSAGE]))
+            if (!type.equals(KeyUtils.ActivityTypes[KeyUtils.MESSAGE]))
                 return userModel.fetchCurrentUserActivity(page, type);
 
             return userModel.fetchUserActivity(current.getDisplay_name(), page, type);

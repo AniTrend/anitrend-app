@@ -40,7 +40,7 @@ public class AiringPageAdapter extends DefaultStatePagerAdapter {
             case 1:
                 List<ExternalLink> externalLinks = new ArrayList<>(1);
                 externalLinks.add(new ExternalLink(BuildConfig.FEEDS_LINK,null));
-                return AnimeWatchFragment.newInstance(externalLinks);
+                return AnimeWatchFragment.newInstance(externalLinks, false);
         }
         return null;
     }

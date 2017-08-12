@@ -28,9 +28,9 @@ public class UserBasePageAdapter extends DefaultStatePagerAdapter {
             case 0:
                 return UserAboutFragment.newInstance(mUser);
             case 1:
-                return UserProgressFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.PROGRESS], mUser.getDisplay_name());
+                return UserProgressFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.PROGRESS], mUser.getDisplay_name());
             case 2:
-                return UserStatusFragment.newInstance(KeyUtils.ActivtyTypes[KeyUtils.STATUS], mUser.getDisplay_name());
+                return UserStatusFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.STATUS], mUser.getDisplay_name());
         }
         return null;
     }

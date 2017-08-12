@@ -67,10 +67,6 @@ public class RequestApiAction {
                     case STAFF_FAVOURITE:
                         StaffModel staff = ServiceGenerator.createService(StaffModel.class, mContext);
                         return staff.toggleFavourite(actionIdBased);
-                    case ACTIVITY_CREATE:
-                        break;
-                    case ACTIVITY_EDIT:
-                        break;
                     case ACTIVITY_DELETE:
                         UserModel delete = ServiceGenerator.createService(UserModel.class, mContext);
                         return delete.activityDelete(actionIdBased);
@@ -82,8 +78,6 @@ public class RequestApiAction {
                     case ACTIVITY_REPLY_FAVOURITE:
                         UserModel reply = ServiceGenerator.createService(UserModel.class, mContext);
                         return reply.toggleReplyFavourite(actionIdBased);
-                    case ACTIVITY_REPLY_EDIT:
-                        break;
                     case ACTIVITY_REPLY_DELETE:
                         UserModel reply_delete = ServiceGenerator.createService(UserModel.class, mContext);
                         return reply_delete.activityDeleteReply(actionIdBased);

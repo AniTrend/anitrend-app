@@ -48,14 +48,17 @@ import retrofit2.Response;
 public class AnimeWatchFragment extends Fragment implements InteractionListener, Callback<Rss>{
 
     private static final String ARG_PARAM = "external_links";
+    private static final String ARG_POPULAR = "arg_popular";
     private final String KEY_EXTERNAL_TARGET = "target_link_key";
     private final String KEY_EXTERNAL_LINKS = "external_links_key";
+    private final String KEY_POPULAR = "popular_key";
     private final String KEY_RSS = "rss_list_key";
 
     @BindView(R.id.watch_container) ProgressLayout progressLayout;
     @BindView(R.id.detail_watch_recycler) StatefulRecyclerView recyclerView;
 
     private Rss rssFeed;
+    private boolean popular;
     private String targetLink;
     private List<ExternalLink> externalLinks;
 
@@ -69,10 +72,11 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
         // Required empty public constructor
     }
 
-    public static AnimeWatchFragment newInstance(List<ExternalLink> param) {
+    public static AnimeWatchFragment newInstance(List<ExternalLink> param, boolean popular) {
         AnimeWatchFragment fragment = new AnimeWatchFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM, (ArrayList<? extends Parcelable>) param);
+        args.putBoolean(ARG_POPULAR, popular);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,6 +86,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             externalLinks = getArguments().getParcelableArrayList(ARG_PARAM);
+            popular = getArguments().getBoolean(ARG_POPULAR);
         }
         fragmentPresenter = new FragmentPresenter(getContext());
     }
@@ -96,6 +101,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
             externalLinks = savedInstanceState.getParcelableArrayList(KEY_EXTERNAL_LINKS);
             targetLink = savedInstanceState.getString(KEY_EXTERNAL_TARGET);
             rssFeed = savedInstanceState.getParcelable(KEY_RSS);
+            popular = savedInstanceState.getBoolean(KEY_POPULAR);
         }
         return root;
     }
@@ -116,6 +122,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(KEY_EXTERNAL_LINKS, (ArrayList<? extends Parcelable>) externalLinks);
         outState.putString(KEY_EXTERNAL_TARGET, targetLink);
+        outState.putBoolean(KEY_POPULAR, popular);
         outState.putParcelable(KEY_RSS, rssFeed);
         super.onSaveInstanceState(outState);
     }
@@ -145,8 +152,8 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
             progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.waring_missing_episode_links));
         } else {
             boolean feed = (targetLink.startsWith(BuildConfig.FEEDS_LINK));
-            EpisodeModel model = ServiceGenerator.createCrunchyService(feed);
-            Call<Rss> call = feed? model.getLatestFeed() : model.getRSS(targetLink);
+            EpisodeModel model = ServiceGenerator.createCrunchyService(feed, getContext());
+            Call<Rss> call = feed? (popular?model.getPopularFeed():model.getLatestFeed()) : model.getRSS(targetLink);
             call.enqueue(this);
         }
     }

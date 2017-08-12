@@ -35,10 +35,11 @@ public class ImageModule implements GlideModule {
         // Increasing cache & pool by 25% - default is 250MB
         int memoryCacheSize = (int) (1.25 * calculator.getMemoryCacheSize());
         int bitmapPoolSize = (int) (1.25 * calculator.getBitmapPoolSize());
+        int storageCacheSize = 1024*1024*850;
 
         builder.setMemoryCache(new LruResourceCache(memoryCacheSize));
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSize));
-        builder.setDiskCache(new ExternalCacheDiskCacheFactory(context, 1024*1024*500));
+        builder.setDiskCache(new ExternalCacheDiskCacheFactory(context, storageCacheSize));
         builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
     }
 

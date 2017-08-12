@@ -3,7 +3,9 @@ package com.mxt.anitrend.api.call;
 
 import com.mxt.anitrend.api.core.Token;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -38,5 +40,9 @@ public interface TokenModel {
     Call<Token> getAccessToken(@Query("grant_type") String grant_type,
                                @Query("client_id") String client_id,
                                @Query("client_secret") String client_secret);
+
+    @FormUrlEncoded
+    @POST("auth/access_token")
+    Call<ResponseBody> revokeAccessToken(@Query("client_id") String client_id);
 
 }

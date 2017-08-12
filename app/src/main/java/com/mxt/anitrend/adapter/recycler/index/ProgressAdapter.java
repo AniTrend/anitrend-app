@@ -86,6 +86,7 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
         @BindView(R.id.feed_main_user) TextView mMainUser;
         @BindView(R.id.feed_time) TextView mTime;
         @BindView(R.id.feed_content) TextView mContent;
+        @BindView(R.id.feed_delete) TextView mDelete;
 
         public ViewHolder(View view) {
             super(view);
@@ -95,6 +96,7 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
             mSeriesImage.setOnClickListener(this);
             mComment.setOnClickListener(this);
             mAvatar.setOnClickListener(this);
+            mDelete.setOnClickListener(this);
         }
 
         @Override
@@ -155,6 +157,8 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
                 mLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_red_900_18dp, 0, 0, 0);
             else
                 mLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_grey_600_18dp, 0, 0, 0);
+
+            mDelete.setVisibility(model.getUsers().contains(current)?View.VISIBLE:View.GONE);
 
             if(mFlipper.getDisplayedChild() != 0)
                 mFlipper.showPrevious();

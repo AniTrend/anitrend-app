@@ -151,7 +151,7 @@ public class AiringFragment extends Fragment implements SwipeRefreshLayout.OnRef
             if (mAdapter.getItemCount() > 0) {
                 progressLayout.showContent();
             } else
-                progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), "No results to display");
+                progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.layout_empty_response));
         }
     }
 

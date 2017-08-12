@@ -44,7 +44,7 @@ public class AnimePageAdapter extends DefaultStatePagerAdapter {
             case 1:
                 return AnimeLinksFragment.newInstance(model);
             case 2:
-                return AnimeWatchFragment.newInstance(model.getExternal_links());
+                return AnimeWatchFragment.newInstance(model.getExternal_links(), false);
             case 3:
                 return AnimeExtrasFragment.newInstance(model);
             case 4:

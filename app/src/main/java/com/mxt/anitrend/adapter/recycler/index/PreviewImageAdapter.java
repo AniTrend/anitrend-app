@@ -27,6 +27,7 @@ import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
+import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
 
 import java.util.List;
 
@@ -118,8 +119,9 @@ public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
                     Intent intent;
                     switch (type) {
                         case PatternMatcher.KEY_WEB:
-                            intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.parse(mAdapter.get(getAdapterPosition())), "video/*");
+                            intent = new Intent(mContext, VideoPlayerActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra(VideoPlayerActivity.URL_VIDEO_LINK, mAdapter.get(getAdapterPosition()));
                             mContext.startActivity(intent);
                             break;
                         case PatternMatcher.KEY_YOU:

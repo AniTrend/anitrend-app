@@ -2,6 +2,7 @@ package com.mxt.anitrend.api.service;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
@@ -62,9 +63,7 @@ public class ServiceGenerator {
             .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
             .client(baseClient.build());
 
-    private static Retrofit.Builder ep_ret = new Retrofit.Builder()
-            .addConverterFactory(SimpleXmlConverterFactory.create())
-            .client(baseClient.build());
+    private static Retrofit ep_ret;
 
     public final static String API_AUTH_LINK = String.format("https://anilist.co/api/auth/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
             GrantTypes[AUTHENTICATION_CODE],
@@ -100,9 +99,16 @@ public class ServiceGenerator {
         return ani_ret.create(serviceClass);
     }
 
-    public static EpisodeModel createCrunchyService(boolean feeds) {
-        return ep_ret.baseUrl(feeds?BuildConfig.FEEDS_LINK:BuildConfig.CRUNCHY_LINK)
-                .build().create(EpisodeModel.class);
+    public static EpisodeModel createCrunchyService(boolean feeds, @Nullable Context mContext) {
+        if(ep_ret == null) {
+            if(mContext != null)
+                baseClient.cache(Cache.getCache(mContext));
+            ep_ret = new Retrofit.Builder()
+                    .baseUrl(feeds?BuildConfig.FEEDS_LINK:BuildConfig.CRUNCHY_LINK)
+                    .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .client(baseClient.build()).build();
+        }
+        return ep_ret.create(EpisodeModel.class);
     }
 
     public static RepoModel createRepoService() {

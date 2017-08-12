@@ -103,4 +103,8 @@ public class PatternMatcher {
             temp = NO_THUMBNAIL;
         return String.format(VID_THUMB, temp);
     }
+
+    public static String removeTags(String value) {
+        return findImages(findMedia(value).replaceAll("")).replaceAll("").replaceAll("~","");
+    }
 }
