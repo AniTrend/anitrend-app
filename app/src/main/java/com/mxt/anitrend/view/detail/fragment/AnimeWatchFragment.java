@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +153,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
             progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.waring_missing_episode_links));
         } else {
             boolean feed = (targetLink.startsWith(BuildConfig.FEEDS_LINK));
-            EpisodeModel model = ServiceGenerator.createCrunchyService(feed, getContext());
+            EpisodeModel model = ServiceGenerator.createCrunchyService(feed);
             Call<Rss> call = feed? (popular?model.getPopularFeed():model.getLatestFeed()) : model.getRSS(targetLink);
             call.enqueue(this);
         }
@@ -174,6 +175,8 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
                     rssFeed = response.body();
                     updateUI();
                 } else {
+                    if(response.message() != null)
+                        Log.e("Watch "+response.code(), response.message());
                     progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), getString(R.string.error_episode_fetch, response.code()), getString(R.string.Retry), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -191,6 +194,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
     public void onFailure(Call<Rss> call, Throwable t) {
         if(isVisible() && (!isDetached() || !isRemoving())) {
             try {
+                t.printStackTrace();
                 progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.Retry), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

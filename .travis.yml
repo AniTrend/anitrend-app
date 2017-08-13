@@ -18,6 +18,16 @@ android:
     - sys-img-x86-android-$ANDROID_API_LEVEL
     - sys-img-armeabi-v7a-android-22
     - sys-img-x86-android-22
+    - sys-img-armeabi-v7a-android-21
+    - sys-img-x86-android-21
+    - sys-img-armeabi-v7a-android-20
+    - sys-img-x86-android-20
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-x86-android-19
+    - sys-img-armeabi-v7a-android-18
+    - sys-img-x86-android-18
+    - sys-img-armeabi-v7a-android-17
+    - sys-img-x86-android-17
 
     # extras
     - extra-google-google_play_services

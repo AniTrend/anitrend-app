@@ -1,9 +1,11 @@
 package com.mxt.anitrend.viewmodel.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,12 +27,14 @@ public abstract class DefaultActivity<T> extends AppCompatActivity {
     protected String mIntentData;
     protected ActionBar mActionBar;
     protected CommonPresenter<T> mPresenter;
+    protected ShareCompat.IntentReader intentReader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(new ApplicationPrefs(this).isLightTheme() ? R.style.DarkTheme : R.style.DarkTheme_DarkSide);
         super.onCreate(savedInstanceState);
-
+        if(isSharedIntent())
+            intentReader = ShareCompat.IntentReader.from(this);
         Uri data = getIntent().getData();
         if(data != null)
             mIntentData = PatternMatcher.findIntentKey(data.getPath());
@@ -97,6 +101,10 @@ public abstract class DefaultActivity<T> extends AppCompatActivity {
         if((mActionBar = getSupportActionBar()) != null) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private boolean isSharedIntent() {
+        return getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND);
     }
 
     protected void setTransparentStatusBar() {

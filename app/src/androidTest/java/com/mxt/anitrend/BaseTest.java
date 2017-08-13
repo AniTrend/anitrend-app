@@ -26,7 +26,7 @@ public class BaseTest {
 
     @Test
     public void crunchyFeedTest() throws IOException {
-        EpisodeModel aniTrend = ServiceGenerator.createCrunchyService(true, null);
+        EpisodeModel aniTrend = ServiceGenerator.createCrunchyService(true);
 
         Call<Rss> rssFeed = aniTrend.getLatestFeed();
 
@@ -41,7 +41,7 @@ public class BaseTest {
         Hub aniTrend = ServiceGenerator.createHubService();
 
         Call<Result<Video>> rssFeed = aniTrend
-                .getRssFeed("-addedDate", 10, 1,
+                .getRssFeed("-addedDate", 5, 1,
                         null, null,  Hub.filter, "json");
 
         assertNotNull(rssFeed);
@@ -55,7 +55,7 @@ public class BaseTest {
         Hub aniTrend = ServiceGenerator.createHubService();
 
         Call<Result<Video>> videos = aniTrend
-                .getVideos("-addedDate", 10, 1,
+                .getVideos("-addedDate", 5, 1,
                         null, null,  Hub.filter);
 
         assertNotNull(videos);
@@ -69,7 +69,7 @@ public class BaseTest {
         Hub aniTrend = ServiceGenerator.createHubService();
 
         Call<Result<Playlist>> playlist = aniTrend
-                .getPlaylist("-addedDate", 10, 1,
+                .getPlaylist("-addedDate", 5, 1,
                         null, null, Hub.filter);
 
         assertNotNull(playlist);
@@ -83,7 +83,7 @@ public class BaseTest {
         Hub aniTrend = ServiceGenerator.createHubService();
 
         Call<Result<Video>> videos = aniTrend
-                .getVideos("-addedDate", 10, 1,
+                .getVideos("-addedDate", 5, 1,
                         null, null,  Hub.filter);
 
         assertNotNull(videos);

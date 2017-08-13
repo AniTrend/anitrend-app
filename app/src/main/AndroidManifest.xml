@@ -23,7 +23,7 @@
         tools:replace="android:icon">
 
         <meta-data
-            android:name="com.mxt.anitrend.custom.glide.ImageModule"
+            android:name="com.mxt.anitrend.custom.glide.ConfigModule"
             android:value="GlideModule" />
 
         <activity
@@ -241,11 +241,22 @@
 
         <activity
             android:name=".view.base.activity.ComposerActivity"
-            android:theme="@style/DarkTheme"/>
+            android:theme="@style/DarkTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".view.base.activity.StreamActivity"
             android:theme="@style/DarkTheme" />
+
+        <meta-data
+            android:name="com.mxt.anitrend.custom.glide.ConfigModule"
+            android:value="GlideModule" />
 
     </application>
 

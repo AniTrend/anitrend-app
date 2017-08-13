@@ -16,6 +16,7 @@
         android:fontFamily="sans-serif-condensed"
         android:inputType="textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
         android:autoLink="all"
+        android:textColor="?attr/drawer_color"
         android:linksClickable="true"/>
 
 </FrameLayout>

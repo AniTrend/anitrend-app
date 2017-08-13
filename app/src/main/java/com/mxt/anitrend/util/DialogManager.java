@@ -1261,7 +1261,142 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertLink(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                int end = editor.getSelectionEnd();
+                                                editor.append(MarkDown.convertLink(editText.getText()), start, end);
+                                                dialog.dismiss();
+                                            } else {
+                                                Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        break;
+                                    case NEUTRAL:
+                                        break;
+                                    case NEGATIVE:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
+                break;
+            case R.id.action_image:
+                builder.title(R.string.attach_image_title)
+                        .content(R.string.attach_image_text)
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                switch (which) {
+                                    case POSITIVE:
+                                        EditText editText = dialog.getInputEditText();
+                                        if(editText != null) {
+                                            if(!TextUtils.isEmpty(editText.getText())) {
+                                                editor.append(MarkDown.convertImage(editText.getText()));
+                                                dialog.dismiss();
+                                            } else {
+                                                Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        break;
+                                    case NEUTRAL:
+                                        break;
+                                    case NEGATIVE:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
+                break;
+            case R.id.action_youtube:
+                builder.title(R.string.attach_youtube_title)
+                        .content(R.string.attach_youtube_text)
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                switch (which) {
+                                    case POSITIVE:
+                                        EditText editText = dialog.getInputEditText();
+                                        if(editText != null) {
+                                            if(!TextUtils.isEmpty(editText.getText())) {
+                                                editor.append(MarkDown.convertYoutube(editText.getText()));
+                                                dialog.dismiss();
+                                            } else {
+                                                Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        break;
+                                    case NEUTRAL:
+                                        break;
+                                    case NEGATIVE:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
+                break;
+            case R.id.action_webm:
+                builder.title(R.string.attach_webm_title)
+                        .content(R.string.attach_webm_text)
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                switch (which) {
+                                    case POSITIVE:
+                                        EditText editText = dialog.getInputEditText();
+                                        if(editText != null) {
+                                            if(!TextUtils.isEmpty(editText.getText())) {
+                                                editor.append(MarkDown.convertVideo(editText.getText()));
+                                                dialog.dismiss();
+                                            } else {
+                                                Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        break;
+                                    case NEUTRAL:
+                                        break;
+                                    case NEGATIVE:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
+                break;
+        }
+        builder.show();
+    }
+
+    public void createDialogAttachMedia(@IdRes int action, final EditText editor) {
+
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)
+                .positiveText(R.string.Ok)
+                .negativeText(R.string.Cancel)
+                .autoDismiss(false)
+                .buttonRippleColorRes(R.color.colorAccent)
+                .positiveColorRes(R.color.colorStateBlue)
+                .negativeColorRes(R.color.colorStateOrange)
+                .theme(app_prefs.isLightTheme()?Theme.LIGHT:Theme.DARK)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                .input(mContext.getString(R.string.text_enter_text), null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        // on input
+                    }
+                });
+
+        switch (action) {
+            case R.id.action_link:
+                builder.title(R.string.attach_link_title)
+                        .content(R.string.attach_link_text)
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                switch (which) {
+                                    case POSITIVE:
+                                        EditText editText = dialog.getInputEditText();
+                                        if(editText != null) {
+                                            if(!TextUtils.isEmpty(editText.getText())) {
+                                                int start = editor.getSelectionStart();
+                                                int end = editor.getSelectionEnd();
+                                                editor.append(MarkDown.convertLink(editText.getText()), start, end);
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();

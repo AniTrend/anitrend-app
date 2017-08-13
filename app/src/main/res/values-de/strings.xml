@@ -760,6 +760,9 @@
     <string name="anime_time">Anime Time</string>
     <string name="manga">Manga</string>
     <string name="chapters">Chapters</string>
+    <string name="action_attach">Attach</string>
+    <string name="action_send">Send</string>
+    <string name="action_preview">Preview</string>
 
     <!--Profile page titles-->
     <string-array name="profile_page_titles">

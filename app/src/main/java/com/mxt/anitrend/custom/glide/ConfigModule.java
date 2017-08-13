@@ -1,6 +1,8 @@
 package com.mxt.anitrend.custom.glide;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.support.v4.app.ActivityManagerCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
@@ -16,7 +18,7 @@ import com.bumptech.glide.module.GlideModule;
  * Glide module for setting up some options
  */
 
-public class ImageModule implements GlideModule {
+public class ConfigModule implements GlideModule {
 
     /**
      * Lazily apply options to a {@link GlideBuilder} immediately before the Glide singleton is
@@ -31,16 +33,23 @@ public class ImageModule implements GlideModule {
      */
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
+        ActivityManager activityManager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         MemorySizeCalculator calculator = new MemorySizeCalculator(context);
         // Increasing cache & pool by 25% - default is 250MB
         int memoryCacheSize = (int) (1.25 * calculator.getMemoryCacheSize());
         int bitmapPoolSize = (int) (1.25 * calculator.getBitmapPoolSize());
-        int storageCacheSize = 1024*1024*850;
+        int storageCacheSize = 1024 * 1024 * 350;
+        if(context.getExternalCacheDir() != null) {
+            long total = context.getExternalCacheDir().getTotalSpace();
+            storageCacheSize = (int) (total*0.2);
+        }
 
         builder.setMemoryCache(new LruResourceCache(memoryCacheSize));
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSize));
         builder.setDiskCache(new ExternalCacheDiskCacheFactory(context, storageCacheSize));
-        builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
+        builder.setDecodeFormat(ActivityManagerCompat.isLowRamDevice(activityManager) ?
+                DecodeFormat.PREFER_RGB_565 : DecodeFormat.PREFER_ARGB_8888);
     }
 
     /**

@@ -7,6 +7,7 @@ import android.text.Spanned;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.util.DateTimeConverter;
 import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.PatternMatcher;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class UserActivityReply implements Parcelable {
     }
 
     public Spanned getReply_value() {
-        return MarkDown.convert(reply_value);
+        return MarkDown.convert(PatternMatcher.removeTags(reply_value));
     }
 
     public String getReply() {

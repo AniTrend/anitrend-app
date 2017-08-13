@@ -761,6 +761,9 @@
     <string name="anime_time">مدة مشاهدة الأنيمي</string>
     <string name="manga">المانغا</string>
     <string name="chapters">الفصول</string>
+    <string name="action_attach">Attach</string>
+    <string name="action_send">Send</string>
+    <string name="action_preview">Preview</string>
 
     <!--Profile page titles-->
     <string-array name="profile_page_titles">

@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,7 +151,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
         mEmoticonInsert.setVisibility(View.GONE);
         onInit();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -558,7 +558,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
             if (mPostComment.getDisplayedChild() == 0) {
                 mPostComment.showNext();
                 replyText = EmojiUtils.hexHtmlify(replyText);
-                Payload.ActivityStruct actionReply = new Payload.ActivityStruct(mReplyKey, replyText, mPassedData.getId());
+                Payload.ActivityStruct actionReply = new Payload.ActivityStruct(mReplyKey, replyText.replaceAll("\n","<br/>"), mPassedData.getId());
 
                 RequestApiAction.ActivityActions<ResponseBody> replyAction = new RequestApiAction.ActivityActions<>(getApplicationContext(), this,
                         mReplyKey==-1? KeyUtils.ActionType.ACTIVITY_REPLY: KeyUtils.ActionType.ACTIVITY_REPLY_EDIT,
