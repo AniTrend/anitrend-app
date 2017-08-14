@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.async.TokenReference;
+import com.mxt.anitrend.base.custom.async.TokenReference;
+import com.mxt.anitrend.base.custom.service.ServiceScheduler;
 import com.mxt.anitrend.presenter.index.SplashPresenter;
-import com.mxt.anitrend.custom.service.ServiceScheduler;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DefaultPreferences;

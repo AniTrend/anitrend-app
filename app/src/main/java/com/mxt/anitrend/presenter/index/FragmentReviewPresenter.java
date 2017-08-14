@@ -3,7 +3,7 @@ package com.mxt.anitrend.presenter.index;
 import android.content.Context;
 
 import com.mxt.anitrend.api.structure.ReviewType;
-import com.mxt.anitrend.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import retrofit2.Callback;

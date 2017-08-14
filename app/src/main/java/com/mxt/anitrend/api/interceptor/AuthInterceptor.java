@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.api.core.Token;
-import com.mxt.anitrend.async.TokenReference;
+import com.mxt.anitrend.base.custom.async.TokenReference;
 
 import java.io.IOException;
 

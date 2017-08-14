@@ -16,8 +16,8 @@ import com.mxt.anitrend.adapter.recycler.details.MangaDetailAdapter;
 import com.mxt.anitrend.adapter.recycler.details.SeriesCharacterAdapter;
 import com.mxt.anitrend.adapter.recycler.details.SeriesStaffAdapter;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.event.InteractionListener;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.InteractionListener;
 import com.mxt.anitrend.view.detail.activity.StaffActivity;
 
 import butterknife.BindView;

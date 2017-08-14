@@ -5,6 +5,7 @@ import com.mxt.anitrend.api.core.Token;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -42,7 +43,7 @@ public interface TokenModel {
                                @Query("client_secret") String client_secret);
 
     @FormUrlEncoded
-    @POST("auth/access_token")
-    Call<ResponseBody> revokeAccessToken(@Query("client_id") String client_id);
+    @POST("client/revoke")
+    Call<ResponseBody> revokeAccessToken(@Field("id") String client_id);
 
 }

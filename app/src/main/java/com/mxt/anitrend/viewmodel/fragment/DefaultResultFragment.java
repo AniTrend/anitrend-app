@@ -18,15 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.hub.Playlist;
 import com.mxt.anitrend.api.hub.Result;
-import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.custom.event.FragmentCallback;
-import com.mxt.anitrend.custom.event.RecyclerLoadListener;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
+import com.mxt.anitrend.base.custom.async.SortHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.FragmentCallback;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.CommonPresenter;
-import com.mxt.anitrend.presenter.index.FragmentReviewPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 

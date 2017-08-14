@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.api.model.Staff;
-import com.mxt.anitrend.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.viewmodel.fragment.SearchFragment;
 
 import java.util.List;

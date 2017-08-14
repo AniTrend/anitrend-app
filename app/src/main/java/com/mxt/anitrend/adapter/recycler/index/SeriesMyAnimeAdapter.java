@@ -19,13 +19,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.Anime;
 import com.mxt.anitrend.api.structure.ListItem;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.event.SeriesInteractionListener;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.interfaces.event.SeriesInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
-import com.mxt.anitrend.util.DefaultPreferences;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 

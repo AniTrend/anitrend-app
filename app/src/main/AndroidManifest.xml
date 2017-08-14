@@ -23,7 +23,7 @@
         tools:replace="android:icon">
 
         <meta-data
-            android:name="com.mxt.anitrend.custom.glide.ConfigModule"
+            android:name="com.mxt.anitrend.base.custom.glide.ConfigModule"
             android:value="GlideModule" />
 
         <activity
@@ -180,14 +180,14 @@
                 android:value="com.mxt.anitrend.view.base.activity.MainActivity" />
         </activity>
 
-        <receiver android:name=".custom.receiver.NotificationRunner">
+        <receiver android:name=".base.custom.receiver.NotificationRunner">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <receiver
-            android:name=".custom.receiver.PostNotificationBroadcaster"
+            android:name=".base.custom.receiver.PostNotificationBroadcaster"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -196,7 +196,7 @@
         </receiver>
 
         <service
-            android:name=".custom.service.JobDispatcherService"
+            android:name=".base.custom.service.JobDispatcherService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
@@ -253,10 +253,6 @@
         <activity
             android:name=".view.base.activity.StreamActivity"
             android:theme="@style/DarkTheme" />
-
-        <meta-data
-            android:name="com.mxt.anitrend.custom.glide.ConfigModule"
-            android:value="GlideModule" />
 
     </application>
 

@@ -530,7 +530,7 @@
     </string>
 
     <string name="drawer_signout_title">Confirm Sign Out!</string>
-    <string name="drawer_signout_text">Are you sure you want to sign out of the application, you\'ll have to reauthorize the application again next time?</string>
+    <string name="drawer_signout_text">Are you sure you want to sign out of the application? You\'ll have to log into the application again.</string>
     <string name="login_title">Let\'s Get Started!</string>
 
     <string name="login_error_title">Unexpected State!</string>
@@ -789,6 +789,14 @@
     <string name="action_attach">Attach</string>
     <string name="action_send">Send</string>
     <string name="action_preview">Preview</string>
+    <string name="text_hint_comment">Enter your comment</string>
+    <string name="text_edit_mode">Edit Mode Active!</string>
+    <string name="text_preview_mode">Preview Mode Active!</string>
+    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+    <string name="title_download_info">Download Info!</string>
+    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
+    <string name="title_update_info">Update Info!</string>
 
     <!--Profile page titles-->
     <string-array name="profile_page_titles">

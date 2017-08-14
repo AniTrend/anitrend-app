@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.mxt.anitrend.api.call.Hub;
 import com.mxt.anitrend.api.hub.Result;
-import com.mxt.anitrend.async.HubTaskFetch;
+import com.mxt.anitrend.base.custom.async.HubTaskFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.util.KeyUtils;
 

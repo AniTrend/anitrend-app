@@ -23,15 +23,15 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StatusAdapter;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.event.MultiInteractionListener;
-import com.mxt.anitrend.custom.event.RecyclerLoadListener;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
@@ -293,7 +293,8 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
                                 if(editText != null) {
                                     if(!TextUtils.isEmpty(editText.getText())) {
                                         Payload.ActivityStruct status = new Payload.ActivityStruct(editText.getText().toString());
-                                        RequestApiAction.ActivityActions<UserActivity> request = new RequestApiAction.ActivityActions<>(getApplicationContext(), new Callback<UserActivity>() {
+                                        RequestApiAction.ActivityActions<UserActivity> request = new RequestApiAction.
+                                                ActivityActions<>(getApplicationContext(), new Callback<UserActivity>() {
                                             @Override
                                             public void onResponse(Call<UserActivity> call, Response<UserActivity> response) {
                                                 if(!isDestroyed() || !isFinishing()) {

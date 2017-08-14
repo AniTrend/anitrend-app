@@ -12,7 +12,7 @@ import com.github.johnpersano.supertoasts.library.SuperActivityToast;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.PreviewImageAdapter;
-import com.mxt.anitrend.custom.cardgallary.CardScaleHelper;
+import com.mxt.anitrend.base.custom.view.widget.cardgallary.CardScaleHelper;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
 import java.util.ArrayList;

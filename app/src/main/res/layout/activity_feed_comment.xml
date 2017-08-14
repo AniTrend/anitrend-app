@@ -26,34 +26,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/activity_subject_header"
-                    android:padding="5dp"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:orientation="horizontal"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_origin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/activity_avatar"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:scaleType="centerCrop"
-                    app:civ_border_width="1dp"
-                    app:civ_border_color="@color/white" />
-
-                    <TextView
-                        android:id="@+id/activity_heading"
-                        android:layout_marginStart="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-condensed"
-                        android:maxLines="6"
-                        android:ellipsize="end"/>
-
-                </LinearLayout>
+                    android:layout_height="match_parent"/>
 
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
@@ -74,12 +50,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <com.mxt.anitrend.custom.view.StatefulRecyclerView
-                    android:id="@+id/activity_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
+                        android:id="@+id/activity_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
-            </com.nguyenhoanglam.progresslayout.ProgressLayout>
+                </com.nguyenhoanglam.progresslayout.ProgressLayout>
 
         </LinearLayout>
 
@@ -120,14 +96,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <android.support.design.widget.TextInputEditText
+                <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
                     android:id="@+id/comment"
-                    android:hint="Enter your comment"
+                    android:hint="@string/text_hint_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:textColor="?attr/drawer_color"
                     android:fontFamily="sans-serif-condensed"
                     android:inputType="textCapSentences|textMultiLine"
                     android:textSize="16sp"/>

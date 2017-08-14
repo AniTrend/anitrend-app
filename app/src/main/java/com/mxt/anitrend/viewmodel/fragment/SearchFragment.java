@@ -20,14 +20,13 @@ import com.mxt.anitrend.adapter.recycler.index.StudioAdapter;
 import com.mxt.anitrend.adapter.recycler.user.UserListAdapter;
 import com.mxt.anitrend.api.model.Character;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.api.model.StaffSmall;
 import com.mxt.anitrend.api.model.StudioSmall;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.event.FragmentCallback;
+import com.mxt.anitrend.base.custom.async.SortHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.FragmentCallback;
 import com.mxt.anitrend.presenter.base.SearchPresenter;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -45,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mxt.anitrend.async.AsyncTaskFetch.RequestType;
+import static com.mxt.anitrend.base.custom.async.AsyncTaskFetch.RequestType;
 
 /**
  * Created by max on 2017/04/13.

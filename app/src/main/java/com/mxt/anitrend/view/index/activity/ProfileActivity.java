@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -25,15 +24,16 @@ import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.user.UserBasePageAdapter;
 import com.mxt.anitrend.api.model.User;
+import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiUtils;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.UserStats;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.presenter.detail.UserProfilePresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.TransitionHelper;
+import com.mxt.anitrend.view.base.activity.ComposerActivity;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.base.activity.ListBrowseActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
@@ -299,52 +299,9 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                 });
                 break;
             case R.id.action_status_post:
-                new DialogManager(this).createDialogActivityPost(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull final MaterialDialog dialog, @NonNull DialogAction which) {
-                        switch (which) {
-                            case POSITIVE:
-                                EditText editText = dialog.getInputEditText();
-                                if(editText != null) {
-                                    if(!TextUtils.isEmpty(editText.getText())) {
-                                        Payload.ActivityStruct status = new Payload.ActivityStruct(EmojiUtils.hexHtmlify(editText.getText().toString()));
-                                        RequestApiAction.ActivityActions<ResponseBody> request = new RequestApiAction.ActivityActions<>(getApplicationContext(), new Callback<ResponseBody>() {
-                                            @Override
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (!isFinishing() || !isDestroyed()) {
-                                                    if (response.isSuccessful() && response.body() != null) {
-                                                        dialog.dismiss();
-                                                        mPresenter.makeAlerterSuccess(ProfileActivity.this, getString(R.string.completed_success));
-                                                    }
-                                                    else
-                                                        Toast.makeText(ProfileActivity.this, ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                if(!isFinishing() || !isDestroyed()) {
-                                                    t.printStackTrace();
-                                                    Toast.makeText(ProfileActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        }, KeyUtils.ActionType.ACTIVITY_CREATE, status);
-                                        request.execute();
-                                        Toast.makeText(ProfileActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        mPresenter.makeAlerterWarning(ProfileActivity.this ,getString(R.string.input_empty_warning));
-                                    }
-                                }
-                                break;
-                            case NEUTRAL:
-                                // TODO: 2017/05/16 Open bottom bar for inserting media 
-                                break;
-                            case NEGATIVE:
-                                dialog.dismiss();
-                                break;
-                        }
-                    }
-                });
+                intent = new Intent(this, ComposerActivity.class);
+                intent.putExtra(ComposerActivity.ARG_ACTION_TYPE, KeyUtils.ActionType.ACTIVITY_CREATE);
+                startActivity(intent);
                 break;
             case R.id.user_anime_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);

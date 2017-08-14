@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.viewmodel.fragment.UserListFragment;
 
 import retrofit2.Call;

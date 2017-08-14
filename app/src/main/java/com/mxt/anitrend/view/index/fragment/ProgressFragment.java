@@ -23,14 +23,14 @@ import com.mxt.anitrend.adapter.recycler.index.ProgressAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.event.MultiInteractionListener;
-import com.mxt.anitrend.custom.event.RecyclerLoadListener;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.FilterProvider;
@@ -159,7 +159,7 @@ public class ProgressFragment extends Fragment implements Callback<List<UserActi
     public void onSaveInstanceState(Bundle outState) {
         //outState.putParcelable(VIEW_PARCABLE, recyclerView.onSaveInstanceState());
         outState.putString(MODEL_TYPE, model_type);
-        if(mData != null && mData.size() < 20) {
+        if(mData != null && mData.size() < 5) {
             outState.putInt(MODEL_PAGE, mPage);
             outState.putBoolean(MODEL_LIMIT, isLimit);
             outState.putParcelableArrayList(MODEL_CACHE, (ArrayList<? extends Parcelable>) mData);

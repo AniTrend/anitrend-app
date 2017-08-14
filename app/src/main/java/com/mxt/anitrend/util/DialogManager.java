@@ -29,9 +29,9 @@ import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.structure.Anime;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.api.structure.Manga;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.event.RemoteChangeListener;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.interfaces.event.RemoteChangeListener;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -1262,8 +1262,7 @@ public class DialogManager {
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
                                                 int start = editor.getSelectionStart();
-                                                int end = editor.getSelectionEnd();
-                                                editor.append(MarkDown.convertLink(editText.getText()), start, end);
+                                                editor.getEditableText().insert(start, MarkDown.convertLink(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1290,7 +1289,8 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertImage(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                editor.getEditableText().insert(start, MarkDown.convertImage(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1317,7 +1317,8 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertYoutube(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                editor.getEditableText().insert(start, MarkDown.convertYoutube(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1344,7 +1345,8 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertVideo(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                editor.getEditableText().insert(start, MarkDown.convertVideo(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1395,8 +1397,7 @@ public class DialogManager {
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
                                                 int start = editor.getSelectionStart();
-                                                int end = editor.getSelectionEnd();
-                                                editor.append(MarkDown.convertLink(editText.getText()), start, end);
+                                                editor.getEditableText().insert(start, MarkDown.convertLink(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1423,7 +1424,8 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertImage(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                editor.getEditableText().insert(start, MarkDown.convertImage(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1450,7 +1452,8 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertYoutube(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                editor.getEditableText().insert(start, MarkDown.convertYoutube(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -1477,7 +1480,8 @@ public class DialogManager {
                                         EditText editText = dialog.getInputEditText();
                                         if(editText != null) {
                                             if(!TextUtils.isEmpty(editText.getText())) {
-                                                editor.append(MarkDown.convertVideo(editText.getText()));
+                                                int start = editor.getSelectionStart();
+                                                editor.getEditableText().insert(start, MarkDown.convertVideo(editText.getText()));
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(mContext, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();

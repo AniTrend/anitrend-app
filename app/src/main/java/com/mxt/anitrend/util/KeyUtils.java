@@ -34,6 +34,10 @@ public interface KeyUtils {
             "Thriller"
     };
 
+    String MD_BOLD = "__", MD_ITALIC = "_", MD_STRIKE = "~~",
+            MD_NUMBER = "1. ", MD_BULLET = "- ", MD_HEADING = "#",
+            MD_CENTER_ALIGHN = "~~~", MD_QOUTE = ">" ,MD_CODE = "`";
+
     enum ActionType {
         ACTION_FOLLOW_TOGGLE,
         ACTIVITY_CREATE,

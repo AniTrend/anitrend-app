@@ -9,14 +9,14 @@
         android:icon="@drawable/ic_attach_file_white_24dp"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_send"
-        android:title="@string/action_send"
-        android:icon="@drawable/ic_send_white_24dp"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_preview"
         android:title="@string/action_preview"
         android:icon="@drawable/ic_remove_red_eye_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_send"
+        android:title="@string/action_send"
+        android:icon="@drawable/ic_send_white_24dp"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_help"

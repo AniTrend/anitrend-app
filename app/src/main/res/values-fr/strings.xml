@@ -767,6 +767,12 @@
     <string name="action_attach">Attach</string>
     <string name="action_send">Send</string>
     <string name="action_preview">Preview</string>
+    <string name="text_hint_comment">Enter your comment</string>
+    <string name="text_edit_mode">Edit Mode Active!</string>
+    <string name="text_preview_mode">Preview Mode Active!</string>
+    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+    <string name="title_download_info">Download Info!</string>
 
     <!--Profile page titles-->
     <string-array name="profile_page_titles">

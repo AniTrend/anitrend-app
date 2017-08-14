@@ -19,15 +19,15 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMyAnimeAdapter;
 import com.mxt.anitrend.adapter.recycler.index.SeriesMyMangaAdapter;
 import com.mxt.anitrend.api.model.User;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.interfaces.event.FragmentCallback;
+import com.mxt.anitrend.base.interfaces.event.RemoteChangeListener;
+import com.mxt.anitrend.base.interfaces.event.SeriesInteractionListener;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ListItem;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.event.FragmentCallback;
-import com.mxt.anitrend.custom.event.RemoteChangeListener;
-import com.mxt.anitrend.custom.event.SeriesInteractionListener;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.async.SortHelper;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.base.MyListPresenter;
 import com.mxt.anitrend.util.ComparatorProvider;
 import com.mxt.anitrend.util.ErrorHandler;
@@ -52,7 +52,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
-import static com.mxt.anitrend.async.AsyncTaskFetch.RequestType;
+import static com.mxt.anitrend.base.custom.async.AsyncTaskFetch.RequestType;
 
 /**
  * Created by max on 2017/04/13.

@@ -8,7 +8,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:mContext="com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment">
 
-    <com.mxt.anitrend.custom.view.StatefulRecyclerView
+    <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
         android:id="@+id/detail_watch_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

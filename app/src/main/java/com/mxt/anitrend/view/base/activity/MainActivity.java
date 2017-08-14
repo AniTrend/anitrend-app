@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -34,7 +33,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,21 +60,18 @@ import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter;
 import com.mxt.anitrend.api.model.User;
+import com.mxt.anitrend.base.custom.service.ServiceScheduler;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetMessage;
+import com.mxt.anitrend.base.interfaces.event.ApplicationInitListener;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
-import com.mxt.anitrend.async.AsyncTaskFetch;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetMessage;
-import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
-import com.mxt.anitrend.custom.event.ApplicationInitListener;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
 import com.mxt.anitrend.presenter.index.MainPresenter;
-import com.mxt.anitrend.custom.service.ServiceScheduler;
 import com.mxt.anitrend.util.AppVersionTracking;
 import com.mxt.anitrend.util.DateTimeConverter;
 import com.mxt.anitrend.util.DialogManager;
-import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.ImeAction;
 import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
@@ -90,7 +85,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -199,9 +193,8 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
     @Override
     public void onLowMemory() {
         mOffScreenLimit = 2;
-        if(mViewPager != null) {
+        if(mViewPager != null)
             mViewPager.setOffscreenPageLimit(mOffScreenLimit);
-        }
         super.onLowMemory();
     }
 
@@ -634,70 +627,21 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         }
     }
 
-    public void hideKeyboard() {
-        ImeAction.hideSoftKeyboard(this);
-    }
-
     /**
      * Material Search Bar menu items
      */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         ImeAction.hideSoftKeyboard(this);
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_create_post:
-                startActivity(new Intent(this, ComposerActivity.class));
-                /*if (mPresenter.getAppPrefs().isAuthenticated())
-                    new DialogManager(this).createDialogActivityPost(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull final MaterialDialog dialog, @NonNull DialogAction which) {
-                            switch (which) {
-                                case POSITIVE:
-                                    EditText editText = dialog.getInputEditText();
-                                    if(editText != null) {
-                                        hideKeyboard();
-                                        if(!TextUtils.isEmpty(editText.getText())) {
-                                            Payload.ActivityStruct status = new Payload.ActivityStruct(EmojiUtils.hexHtmlify(editText.getText().toString()));
-                                            RequestApiAction.ActivityActions<ResponseBody> request = new RequestApiAction.ActivityActions<>(getApplicationContext(), new Callback<ResponseBody>() {
-                                                @Override
-                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                    if (!isFinishing() || !isDestroyed()) {
-                                                        if (response.isSuccessful() && response.body() != null) {
-                                                            dialog.dismiss();
-                                                            mPresenter.makeAlerterSuccess(MainActivity.this, getString(R.string.completed_success));
-                                                        }
-                                                        else
-                                                            Toast.makeText(MainActivity.this, ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    if(!isFinishing() || !isDestroyed()) {
-                                                        t.printStackTrace();
-                                                        Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            }, KeyUtils.ActionType.ACTIVITY_CREATE, status);
-                                            request.execute();
-                                            Toast.makeText(MainActivity.this, R.string.Sending, Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(MainActivity.this, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                    break;
-                                case NEUTRAL:
-                                    // TODO: 2017/05/16 Open bottom bar for inserting media
-                                    break;
-                                case NEGATIVE:
-                                    dialog.dismiss();
-                                    break;
-                            }
-                        }
-                    });
+                if (mPresenter.getAppPrefs().isAuthenticated()) {
+                    Intent intent = new Intent(this, ComposerActivity.class);
+                    intent.putExtra(ComposerActivity.ARG_ACTION_TYPE, KeyUtils.ActionType.ACTIVITY_CREATE);
+                    startActivity(intent);
+                }
                 else
-                    Display(R.id.nav_account_action);*/
+                    Display(R.id.nav_account_action);
                 break;
             case R.id.action_changelog:
                 onUpdatedVersion();
@@ -734,9 +678,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
      */
     @Override
     public void onNewInstallation() {
-
         checkStatus();
-
         final MaterialTapTargetPrompt.Builder fNavigation = new MaterialTapTargetPrompt.Builder(MainActivity.this)
                 //or use ContextCompat.getColor(this, R.color.colorAccent)
                 .setBackgroundColourFromRes(R.color.colorDarkKnight)

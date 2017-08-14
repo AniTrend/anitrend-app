@@ -16,8 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.hub.Playlist;
 import com.mxt.anitrend.api.hub.Video;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
 
 import java.util.List;
@@ -110,7 +110,7 @@ public class PlaylistAdapter extends RecyclerViewAdapter<Video> {
             switch (v.getId()) {
                 case R.id.episode_image:
                     mAdapter.get(getAdapterPosition()).get_id();
-                    Toast.makeText(mContext, R.string.text_experimental_feature, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, R.string.tba_placeholder, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(mContext, VideoPlayerActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(VideoPlayerActivity.URL_VIDEO_LINK, mAdapter.get(getAdapterPosition()));

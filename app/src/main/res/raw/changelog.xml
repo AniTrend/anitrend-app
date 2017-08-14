@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="0.9.9r9" changeDate="Alpha">
+        <changelogtext>[b]Enhancement[/b] View authors scores for reviews</changelogtext>
+        <changelogtext>[b]Enhancement[/b] Redesign staff &amp; character pages</changelogtext>
+        <changelogtext>[b]Enhancement[/b] Viewing messages, comments, replies redesigned</changelogtext>
+        <changelogtext>[b]Enhancement[/b] Reviews can now be seen even if the user is not signed in</changelogtext>
+        <changelogtext>[b]Feature[/b] Better support for composing &amp; editing posts, [b]select text and apply styling[/b]</changelogtext>
+        <changelogtext>[b]Feature[/b] More results on search page, including characters and actors</changelogtext>
+        <changelogtext>[b]Feature[/b] New AnitrendHub items, including some experimental features which will be available in the next release</changelogtext>
+        <changelogtext>[b]Feature[/b] New and improved WebM video player with gesture support for volume, seek &amp; brightness</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] Editing status posts inside your profile trims text, if emojis are added</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] Navigation tab truncating long titles &amp; missing some characters for languages</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] Crashes with youtube videos in comment screen</changelogtext>
+        <changelogtext>[b]Bug Fix[/b] On hold &amp; completed collections swapped</changelogtext>
+        <changelogtext>[b]Notice![/b] When reporting crashes please include steps to reproduce the crash, if applicable</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="0.9.9r8" changeDate="Beta">
         <changelogtext>[b]Unstable Feature[/b] Multi-language support for Arabic, Deutsch, Spanish, French &amp; Italian [b]N.B[/b] This is still in the alpha phase, which means this feature is bound to break!</changelogtext>
         <changelogtext>[b]Bug Fix[/b] Authentication issues have been fixed</changelogtext>

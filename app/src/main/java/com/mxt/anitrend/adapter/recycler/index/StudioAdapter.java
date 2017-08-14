@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.StudioSmall;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.view.detail.activity.StudioActivity;
 
 import java.util.List;

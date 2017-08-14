@@ -7,7 +7,7 @@ import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.api.structure.UserActivityReply;
 import com.mxt.anitrend.api.structure.UserNotification;
-import com.mxt.anitrend.custom.Payload;
+import com.mxt.anitrend.base.custom.Payload;
 
 import java.util.List;
 

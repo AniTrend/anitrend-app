@@ -15,7 +15,7 @@ import com.google.android.gms.ads.NativeExpressAdView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.SeriesRankingAdapter;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.custom.event.InteractionListener;
+import com.mxt.anitrend.base.interfaces.event.InteractionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

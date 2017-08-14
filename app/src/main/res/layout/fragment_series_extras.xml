@@ -49,7 +49,7 @@
                                     android:layout_height="5dp" />
 
                                 <!--Details Holder-->
-                                <com.mxt.anitrend.custom.view.StatefulRecyclerView
+                                <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                                     android:id="@+id/characters_recycler"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                             android:layout_height="5dp" />
 
                         <!--Details Holder-->
-                        <com.mxt.anitrend.custom.view.StatefulRecyclerView
+                        <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                             android:id="@+id/staff_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                             android:layout_height="5dp" />
 
                         <!--Details Holder-->
-                        <com.mxt.anitrend.custom.view.StatefulRecyclerView
+                        <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                             android:id="@+id/relation_anime_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -186,7 +186,7 @@
                             android:layout_height="5dp" />
 
                         <!--Details Holder-->
-                        <com.mxt.anitrend.custom.view.StatefulRecyclerView
+                        <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                             android:id="@+id/relation_manga_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

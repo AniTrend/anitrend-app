@@ -23,8 +23,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.custom.service.ServiceScheduler;
-import com.mxt.anitrend.util.ApplicationPrefs;
 
 import java.util.List;
 

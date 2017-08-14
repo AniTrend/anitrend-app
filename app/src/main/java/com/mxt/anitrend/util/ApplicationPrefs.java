@@ -25,7 +25,6 @@ public class ApplicationPrefs {
     private final String KEY_CHARACTER_TIP = "app_character_tip";
     private final String KEY_STAFF_TIP = "app_staff_tip";
     private final String KEY_STATUS_POST_TIP = "app_status_post_tip";
-    private final String KEY_HEADER_TIP = "app_header_tip";
     private final String KEY_USER_PROFILE_TIP = "app_user_profile_tip";
     private final String KEY_REVIEW_TYPE_TIP = "app_review_type_tip";
 
@@ -91,16 +90,6 @@ public class ApplicationPrefs {
     public void setStatusPost() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_STATUS_POST_TIP, false);
-        editor.apply();
-    }
-
-    public boolean getHeaderTip() {
-        return sharedPreferences.getBoolean(KEY_HEADER_TIP, true);
-    }
-
-    public void setHeaderTip() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_HEADER_TIP, false);
         editor.apply();
     }
 

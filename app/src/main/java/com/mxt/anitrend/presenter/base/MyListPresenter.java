@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import retrofit2.Callback;

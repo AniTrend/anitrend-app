@@ -12,7 +12,7 @@ import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
 import com.mxt.anitrend.api.structure.UserStats;
-import com.mxt.anitrend.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
 import com.mxt.anitrend.util.Recommendation;
 import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;

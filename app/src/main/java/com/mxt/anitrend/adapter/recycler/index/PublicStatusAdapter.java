@@ -21,12 +21,12 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
-import com.mxt.anitrend.custom.event.MultiInteractionListener;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.KeyUtils;
@@ -42,6 +42,7 @@ import java.util.regex.Matcher;
 
 import butterknife.BindView;
 
+import static com.mxt.anitrend.util.KeyUtils.MESSAGE;
 import static com.mxt.anitrend.util.KeyUtils.PROGRESS;
 import static com.mxt.anitrend.util.KeyUtils.STATUS;
 
@@ -67,7 +68,7 @@ public class PublicStatusAdapter extends RecyclerViewAdapter<UserActivity> {
 
     @Override
     public RecyclerViewHolder<UserActivity> onCreateViewHolder(ViewGroup parent, int viewType) {
-        boolean isStatus = viewType == STATUS;
+        boolean isStatus = viewType == STATUS || viewType == MESSAGE;
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(isStatus?R.layout.adapter_status:R.layout.adapter_user_progress, parent, false);
         if(isStatus)
@@ -91,6 +92,8 @@ public class PublicStatusAdapter extends RecyclerViewAdapter<UserActivity> {
     public int getItemViewType(int position) {
         if(mAdapter.get(position).getActivity_type().equals(KeyUtils.ActivityTypes[STATUS]))
             return STATUS;
+        else if(mAdapter.get(position).getActivity_type().equals(KeyUtils.ActivityTypes[MESSAGE]))
+            return MESSAGE;
         return PROGRESS;
     }
 

@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -27,12 +26,12 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.user.UserPageAdapter;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.model.UserSmall;
+import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiUtils;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.UserStats;
-import com.mxt.anitrend.async.AsyncTaskFetch;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.TransitionHelper;
@@ -229,7 +228,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                                 EditText editText = dialog.getInputEditText();
                                 if(editText != null) {
                                     if(!TextUtils.isEmpty(editText.getText())) {
-                                        Payload.ActivityMessage message = new Payload.ActivityMessage(EmojiUtils.hexHtmlify(editText.getText().toString()), mCurrentUser.getId());
+                                        Payload.ActivityMessage message = new Payload.ActivityMessage(editText.getText().toString(), mCurrentUser.getId());
                                         RequestApiAction.MessageActions<ResponseBody> action = new RequestApiAction.MessageActions<>(getApplicationContext(), new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
