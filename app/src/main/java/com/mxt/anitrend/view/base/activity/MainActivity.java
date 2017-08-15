@@ -123,9 +123,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
 
     private static final int REQUEST_CODE = 128;
 
-    // Create a mechanism to set the offscreen limit when either the
-    // memory is low or the device is a low end device with less ram
-    private int mOffScreenLimit = 4;
+    private int mOffScreenLimit = 3;
 
     private boolean isClosing;
 
@@ -192,7 +190,7 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
 
     @Override
     public void onLowMemory() {
-        mOffScreenLimit = 2;
+        mOffScreenLimit = 1;
         if(mViewPager != null)
             mViewPager.setOffscreenPageLimit(mOffScreenLimit);
         super.onLowMemory();

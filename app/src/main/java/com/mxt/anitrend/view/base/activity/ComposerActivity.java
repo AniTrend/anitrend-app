@@ -1,25 +1,17 @@
 package com.mxt.anitrend.view.base.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.ActionMode;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
@@ -28,21 +20,15 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.base.custom.async.RequestApiAction;
 import com.mxt.anitrend.base.custom.view.editor.MarkdownEditor;
-import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiUtils;
 import com.mxt.anitrend.presenter.detail.GenericPresenter;
-import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.ImeAction;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MarkDown;
-import com.mxt.anitrend.util.PatternMatcher;
-import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,7 +62,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
     private RequestApiAction.ActivityActions<ResponseBody> activityActions;
 
     private int id;
-    private String payload;
     private KeyUtils.ActionType mActionType;
 
     private boolean isPreviewMode;
@@ -89,9 +74,9 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
     private void handleIntent() {
         if(intentReader != null) {
             if(intentReader.getSubject() == null || intentReader.getText().equals(intentReader.getSubject()))
-                editText.setText(intentReader.getText());
+                original = intentReader.getText().toString();
             else
-                editText.setText(String.format("%s %s",intentReader.getSubject(), intentReader.getText()));
+                original = String.format("%s %s",intentReader.getSubject(), intentReader.getText());
         } else {
             if(getIntent() != null) {
                 if(getIntent().hasExtra(ARG_ACTION_TYPE))
@@ -99,7 +84,7 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
                 if(getIntent().hasExtra(ARG_ACTION_ID))
                     id = getIntent().getIntExtra(ARG_ACTION_ID, 0);
                 if(getIntent().hasExtra(ARG_ACTION_PAYLOAD))
-                    payload = getIntent().getStringExtra(ARG_ACTION_PAYLOAD);
+                    original = getIntent().getStringExtra(ARG_ACTION_PAYLOAD);
             }
         }
     }
@@ -113,7 +98,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
         preferences = new ApplicationPrefs(this);
         if(!preferences.isAuthenticated()) {
             Toast.makeText(this, R.string.text_please_sign_in, Toast.LENGTH_LONG).show();
-            startActivity(new Intent(ComposerActivity.this, LoginActivity.class));
             finish();
         } else
             handleIntent();
@@ -140,7 +124,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             original = editText.getText().toString();
         outState.putSerializable(ARG_ACTION_TYPE, mActionType);
         outState.putInt(ARG_ACTION_ID, id);
-        outState.putString(ARG_ACTION_PAYLOAD, payload);
         outState.putBoolean(arg_key_is_preview, isPreviewMode);
         outState.putString(arg_key_editor, original);
         super.onSaveInstanceState(outState);
@@ -152,7 +135,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
         if(savedInstanceState != null) {
             mActionType = (KeyUtils.ActionType) savedInstanceState.getSerializable(ARG_ACTION_TYPE);
             id = savedInstanceState.getInt(ARG_ACTION_ID, 0);
-            payload = savedInstanceState.getString(ARG_ACTION_PAYLOAD);
             isPreviewMode = savedInstanceState.getBoolean(arg_key_is_preview);
             editText.setText(savedInstanceState.getString(arg_key_editor));
         }
@@ -257,8 +239,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
                 .setMenu(R.menu.menu_attachments)
                 .setItemClickListener(this).createView());
         mBehavior.setBottomSheetCallback(null);
-        if(payload != null && original == null)
-            original = payload;
         toggleModes();
     }
 

@@ -43,25 +43,16 @@
                         android:layout_height="match_parent">
 
                         <!--Header Items-->
-                        <RelativeLayout
+                        <LinearLayout
+                            android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="58dp">
-
-                            <TextView
-                                android:text="@{model.name_alt}"
-                                tools:text="Some Other name"
-                                android:layout_centerVertical="true"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="12sp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
 
                             <TextView
                                 tools:text="神谷 浩史"
                                 android:text="@{model.name_japanese}"
                                 android:fontFamily="sans-serif-medium"
-                                android:layout_alignParentStart="true"
+                                android:layout_gravity="start"
                                 android:textIsSelectable="true"
                                 android:layout_marginTop="2dp"
                                 android:textSize="14sp"
@@ -69,7 +60,20 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
 
-                        </RelativeLayout>
+                            <android.support.v4.widget.Space
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp" />
+
+                            <TextView
+                                android:text="@{model.name_alt}"
+                                tools:text="Some Other name"
+                                android:fontFamily="sans-serif-condensed"
+                                android:textSize="12sp"
+                                android:layout_gravity="end"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
 
                         <android.support.v4.widget.Space
                             android:layout_width="wrap_content"
@@ -159,9 +163,19 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
 
+                <TextView
+                    android:text="Role &amp; Summary"
+                    android:fontFamily="sans-serif-condensed"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:background="?colorAccent"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="5dp" />
+                    android:layout_height="10dp" />
 
                 <TextView
                     android:id="@+id/staff_website"
@@ -183,6 +197,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
+                    android:text="Summary"
+                    />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:textIsSelectable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
                     android:text="@{model.info}"
                     tools:text="Summary about the actor or staff"/>
 
