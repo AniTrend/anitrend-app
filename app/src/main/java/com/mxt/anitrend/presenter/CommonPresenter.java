@@ -1,6 +1,7 @@
 package com.mxt.anitrend.presenter;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Parcelable;
@@ -14,9 +15,10 @@ import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.base.custom.recycler.ScrollListener;
+import com.mxt.anitrend.base.interfaces.event.LifeCycleListener;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
-import com.mxt.anitrend.custom.recycler.ScrollListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DefaultPreferences;
@@ -31,7 +33,7 @@ import retrofit2.Callback;
 /**
  * Created by max on 2017/03/06.
  */
-public abstract class CommonPresenter <T> extends ScrollListener {
+public abstract class CommonPresenter <T> extends ScrollListener implements LifeCycleListener {
 
     private ApplicationPrefs applicationPrefs;
     private DefaultPreferences defaultPreferences;
@@ -64,7 +66,7 @@ public abstract class CommonPresenter <T> extends ScrollListener {
     }
 
     public List<String> getGenres() {
-        return Arrays.asList(FilterTypes.GenreTypes);
+        return Arrays.asList(KeyUtils.GenreTypes);
     }
 
     public void saveGenres(Integer[] which, CharSequence[] text, Activity mContext) {
@@ -225,16 +227,6 @@ public abstract class CommonPresenter <T> extends ScrollListener {
         mAlerter.show();
     }
 
-    /**
-     * If an activity is paused or left we must destroy this supertoast
-     */
-    public void destroySuperToast() {
-        if(mToast != null && mToast.isShowing()) {
-            mToast.dismiss();
-            mToast = null;
-        }
-    }
-
     public void beginAsync(Callback<T> callback, int id) {
         //Empty method body, not mandatory to implement
     }
@@ -261,5 +253,33 @@ public abstract class CommonPresenter <T> extends ScrollListener {
 
     public void beginAsync(Callback<T> callback, Search searchModel) {
 
+    }
+
+    /**
+     * Unregister any listeners from fragments or activities
+     */
+    @Override
+    public void onPause() {
+
+    }
+
+    /**
+     * Register any listeners from fragments or activities
+     */
+    @Override
+    public void onResume() {
+
+    }
+
+    /**
+     * Destroy any reference which maybe attached to
+     * our context
+     */
+    @Override
+    public void onDestroy() {
+        if(mToast != null && mToast.isShowing()) {
+            mToast.dismiss();
+            mToast = null;
+        }
     }
 }

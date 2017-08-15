@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -24,15 +23,15 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StatusAdapter;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
-import com.mxt.anitrend.event.MultiInteractionListener;
-import com.mxt.anitrend.event.RecyclerLoadListener;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
@@ -63,8 +62,6 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
     @BindView(R.id.notification_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.notification_recycler) StatefulRecyclerView recyclerView;
 
-    private ActionBar mActionBar;
-
     private int mPage = 1;
     private boolean isLimit;
     private List<UserActivity> mData;
@@ -83,8 +80,6 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         setContentView(R.layout.activity_notification);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         mPresenter = new UserActivityPresenter(getApplicationContext());
     }
 
@@ -99,7 +94,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         recyclerView.setLayoutManager(mLayoutManager);
 
         if(mData == null)
-            mPresenter.beginAsync(this, mPage, FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()]);
+            mPresenter.beginAsync(this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
         else
             updateUI();
     }
@@ -185,7 +180,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
             @Override
             public void onClick(View view) {
                 progressLayout.showLoading();
-                mPresenter.beginAsync(MessageActivity.this, mPage, FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()]);
+                mPresenter.beginAsync(MessageActivity.this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
             }
         });
     }
@@ -215,7 +210,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         mPage = 1;
         mData = null;
         mPresenter.onRefreshPage();
-        mPresenter.beginAsync(this, mPage, FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()]);
+        mPresenter.beginAsync(this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
     }
 
     @Override
@@ -285,7 +280,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
             case R.id.status_edit:
@@ -298,7 +293,8 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
                                 if(editText != null) {
                                     if(!TextUtils.isEmpty(editText.getText())) {
                                         Payload.ActivityStruct status = new Payload.ActivityStruct(editText.getText().toString());
-                                        RequestApiAction.ActivityActions<UserActivity> request = new RequestApiAction.ActivityActions<>(getApplicationContext(), new Callback<UserActivity>() {
+                                        RequestApiAction.ActivityActions<UserActivity> request = new RequestApiAction.
+                                                ActivityActions<>(getApplicationContext(), new Callback<UserActivity>() {
                                             @Override
                                             public void onResponse(Call<UserActivity> call, Response<UserActivity> response) {
                                                 if(!isDestroyed() || !isFinishing()) {
@@ -324,7 +320,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
                                                     }
                                                 }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_EDIT, status);
+                                        }, KeyUtils.ActionType.ACTIVITY_EDIT, status);
                                         request.execute();
                                         mPresenter.createSuperToast(MessageActivity.this, getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                                     } else {
@@ -377,7 +373,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
                                                         e.printStackTrace();
                                                     }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_DELETE, action);
+                                        }, KeyUtils.ActionType.ACTIVITY_DELETE, action);
                                         deleteAction.execute();
                                         mPresenter.createSuperToast(MessageActivity.this, getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                                         break;
@@ -398,7 +394,7 @@ public class MessageActivity extends DefaultActivity implements Callback<List<Us
         if(!isLimit) {
             mPage = currentPage;
             swipeRefreshLayout.setRefreshing(true);
-            mPresenter.beginAsync(this, mPage, FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()]);
+            mPresenter.beginAsync(this, mPage, KeyUtils.ActivityTypes[KeyUtils.MESSAGE]);
         }
     }
 

@@ -4,7 +4,7 @@ package com.mxt.anitrend.api.call;
 
 import com.mxt.anitrend.api.model.Studio;
 import com.mxt.anitrend.api.model.StudioSmall;
-import com.mxt.anitrend.custom.Payload;
+import com.mxt.anitrend.base.custom.Payload;
 
 import java.util.List;
 

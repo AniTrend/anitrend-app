@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
 import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;
 
@@ -21,7 +22,7 @@ public class SeasonFragment extends DefaultListFragment<Series> {
         // Required empty public constructor
     }
 
-    public static DefaultListFragment newInstance(int VIEW_POSITION) {
+    public static DefaultListFragment newInstance(@KeyUtils.SeasonTitle int VIEW_POSITION) {
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_KEY, VIEW_POSITION);
         SeasonFragment mFragment = new SeasonFragment();

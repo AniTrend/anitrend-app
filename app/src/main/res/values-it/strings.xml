@@ -126,16 +126,6 @@
     </string-array>
 
     <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>suggerimenti</item>
-        <!--
-        These are commented out for the mean tile
-        <item>episodes</item>
-        <item>playlist</item>
-        -->
-    </string-array>
-
-    <!--Try to keep all titles short-->
     <string-array name="manga_title">
         <item>lista manga</item>
         <item>aggiunti di recente</item>
@@ -146,6 +136,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
+        <item>characters</item>
         <item>utenti</item>
     </string-array>
 
@@ -154,6 +146,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
+        <item>characters</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -806,4 +800,41 @@
         <item>staff</item>
         <item>studios</item>
     </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overview</item>
+        <item>anime roles</item>
+        <item>manga roles</item>
+        <item>actor roles</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="hub_title">
+        <item>suggerimenti</item>
+        <item>most popular</item>
+        <item>playlist</item>
+    </string-array>
+
+    <!-- Menu title for text composer -->
+    <string name="action_attach">Attach</string>
+    <string name="action_send">Send</string>
+    <string name="action_preview">Preview</string>
+
+    <!-- Some text for comments or composer -->
+    <string name="text_hint_comment">Enter your comment</string>
+    <string name="text_edit_mode">Edit Mode Active!</string>
+    <string name="text_preview_mode">Preview Mode Active!</string>
+
+    <!-- Menu title for text composer -->
+    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+
+    <!-- Some controls will be shown even though they will be disabled -->
+    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+
+    <!-- Dialogs for check updates, etc -->
+    <string name="title_download_info">Download Info!</string>
+    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
+    <string name="title_update_info">Update Info!</string>
+
 </resources>

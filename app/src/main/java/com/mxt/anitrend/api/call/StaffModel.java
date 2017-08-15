@@ -1,7 +1,8 @@
 package com.mxt.anitrend.api.call;
 
 import com.mxt.anitrend.api.model.Staff;
-import com.mxt.anitrend.custom.Payload;
+import com.mxt.anitrend.api.model.StaffSmall;
+import com.mxt.anitrend.base.custom.Payload;
 
 import java.util.List;
 
@@ -17,14 +18,11 @@ import retrofit2.http.Path;
  */
 public interface StaffModel {
 
-    @GET("staff/{id}")
-    Call<Staff> fetchStaff(@Path("id") int id);
-
     @GET("staff/{id}/page")
     Call<Staff> fetchStaffPage(@Path("id") int id);
 
     @GET("staff/search/{query}")
-    Call<List<Staff>> findStaff(@Path("query") String query);
+    Call<List<StaffSmall>> findStaff(@Path("query") String query);
 
     @POST("staff/favourite")
     Call<ResponseBody> toggleFavourite(@Body Payload.ActionIdBased payload);

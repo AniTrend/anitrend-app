@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
-import com.mxt.anitrend.async.HomePageFetch;
+import com.mxt.anitrend.base.custom.async.HomePageFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import java.util.Arrays;
@@ -30,7 +30,7 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
 
     @Override
     public void beginAsync(Callback<List<Series>> callback, int page) {
-            searchModel = new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], /*anime or manga*/
+            searchModel = new Search(KeyUtils.SeriesTypes[KeyUtils.MANGA], /*anime or manga*/
                  getApiPrefs().getYear(), /*year*/
                  null, /*season*/
                  getApiPrefs().getShowType(), /*Type, e.g. TV, Movie e.t.c*/
@@ -47,7 +47,7 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
     }
 
     public void beginAsyncTrend(Callback<List<Series>> callback, int page) {
-        searchModel = new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], /*anime or manga*/
+        searchModel = new Search(KeyUtils.SeriesTypes[KeyUtils.MANGA], /*anime or manga*/
                 null, /*year*/
                 null, /*season*/
                 null, /*Type, e.g. TV, Movie e.t.c*/
@@ -64,6 +64,6 @@ public class MangaPresenter extends CommonPresenter<List<Series>> {
     }
 
     private String decodeStatus(String status) {
-        return FilterTypes.MangaStatusTypes[Arrays.asList(FilterTypes.AnimeStatusTypes).indexOf(status)];
+        return KeyUtils.MangaStatusTypes[Arrays.asList(KeyUtils.AnimeStatusTypes).indexOf(status)];
     }
 }

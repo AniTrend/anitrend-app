@@ -22,8 +22,12 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
 
+        <meta-data
+            android:name="com.mxt.anitrend.base.custom.glide.ConfigModule"
+            android:value="GlideModule" />
+
         <activity
-            android:name=".SplashActivity"
+            android:name=".view.base.activity.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,11 +50,11 @@
         </activity>
 
         <activity
-            android:name=".StarterActivity"
+            android:name=".view.base.activity.StarterActivity"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".view.base.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/DarkTheme" />
@@ -75,7 +79,7 @@
             android:name=".view.base.activity.SearchResultActivity"
             android:label="Search Results"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".view.base.activity.MainActivity"
             android:theme="@style/DarkTheme" />
 
         <activity
@@ -97,13 +101,14 @@
         <activity
             android:name=".view.base.activity.ImagePreviewActivity"
             android:label=""
-            android:theme="@style/AppImagePreview" />
+            android:theme="@style/AppImagePreview"
+            />
 
         <activity
             android:name=".view.index.activity.LoginActivity"
             android:label=""
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".view.base.activity.MainActivity"
             android:theme="@style/DarkTheme_DarkSide">
 
             <intent-filter>
@@ -123,7 +128,7 @@
         <activity
             android:name=".view.index.activity.ProfileActivity"
             android:label=""
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".view.base.activity.MainActivity"
             android:theme="@style/UserTheme" />
 
         <activity
@@ -151,7 +156,7 @@
         <activity
             android:name=".view.base.activity.AboutActivity"
             android:label="About AniTrend"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".view.base.activity.MainActivity"
             android:theme="@style/DarkTheme" />
 
         <activity
@@ -167,22 +172,22 @@
             android:theme="@style/UserTheme" />
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".view.base.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".view.base.activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mxt.anitrend.MainActivity" />
+                android:value="com.mxt.anitrend.view.base.activity.MainActivity" />
         </activity>
 
-        <receiver android:name=".receiver.NotificationRunner">
+        <receiver android:name=".base.custom.receiver.NotificationRunner">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <receiver
-            android:name=".receiver.PostNotificationBroadcaster"
+            android:name=".base.custom.receiver.PostNotificationBroadcaster"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -191,7 +196,7 @@
         </receiver>
 
         <service
-            android:name=".service.JobDispatcherService"
+            android:name=".base.custom.service.JobDispatcherService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
@@ -232,6 +237,21 @@
         <activity
             android:name=".view.detail.activity.StudioActivity"
             android:label="@string/title_activity_studio"
+            android:theme="@style/DarkTheme" />
+
+        <activity
+            android:name=".view.base.activity.ComposerActivity"
+            android:theme="@style/DarkTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.base.activity.StreamActivity"
             android:theme="@style/DarkTheme" />
 
     </application>

@@ -20,11 +20,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
-import com.mxt.anitrend.event.MultiInteractionListener;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.PatternMatcher;
@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
+
+import butterknife.BindView;
 
 /**
  * Created by max on 2017/03/12.
@@ -82,32 +84,28 @@ public class StatusAdapter extends RecyclerViewAdapter<UserActivity> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserActivity> {
+    class ViewHolder extends RecyclerViewHolder<UserActivity> {
 
         private ArrayList<String> mDesc;
         private ArrayList<String> mLinks;
-        private ViewFlipper mFlipper;
-        private ImageView mAvatar, mStatusExtra;
-        private View mLikesViewer, mStatusContainer;
-        private TextView mUser, mTime, mLike, mComment, mContent, mEdit, mDelete, mGallery;
+        @BindView(R.id.mFlipper) ViewFlipper mFlipper;
+        @BindView(R.id.status_avatar) ImageView mAvatar;
+        @BindView(R.id.status_extra_img) ImageView mStatusExtra;
+        @BindView(R.id.likes_viewer) View mLikesViewer;
+        @BindView(R.id.status_extra_holder) View mStatusContainer;
+        @BindView(R.id.status_user) TextView mUser;
+        @BindView(R.id.status_time) TextView mTime;
+        @BindView(R.id.status_like) TextView  mLike;
+        @BindView(R.id.status_comment) TextView mComment;
+        @BindView(R.id.status_text) TextView mContent;
+        @BindView(R.id.status_edit) TextView mEdit;
+        @BindView(R.id.status_delete) TextView mDelete;
+        @BindView(R.id.status_extra_img_gallery) TextView mGallery;
 
         String type;
 
         public ViewHolder(View view) {
             super(view);
-            mLikesViewer = view.findViewById(R.id.likes_viewer);
-            mStatusContainer = view.findViewById(R.id.status_extra_holder);
-            mFlipper = (ViewFlipper) view.findViewById(R.id.mFlipper);
-            mAvatar = (ImageView) view.findViewById(R.id.status_avatar);
-            mStatusExtra = (ImageView) view.findViewById(R.id.status_extra_img);
-            mGallery = (TextView) view.findViewById(R.id.status_extra_img_gallery);
-            mUser = (TextView) view.findViewById(R.id.status_user);
-            mTime = (TextView) view.findViewById(R.id.status_time);
-            mLike = (TextView) view.findViewById(R.id.status_like);
-            mComment = (TextView) view.findViewById(R.id.status_comment);
-            mContent = (TextView) view.findViewById(R.id.status_text);
-            mEdit = (TextView) view.findViewById(R.id.status_edit);
-            mDelete = (TextView) view.findViewById(R.id.status_delete);
             mContent.setMovementMethod(LinkMovementMethod.getInstance());
             mContent.setFocusable(false);
             mLikesViewer.setOnClickListener(this);

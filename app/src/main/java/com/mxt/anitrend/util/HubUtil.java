@@ -8,23 +8,25 @@ import com.mxt.anitrend.BuildConfig;
 
 public class HubUtil {
 
-    public static String defaultFilter() {
-        return "{\"videoStatus\":\"final\",\"addedBy\":\"UeQuqJ90j3igXB6A\"}";
-    }
-
-    public static String playlistFilter() {
-        return "{\"videos\":{\"$exists\":true},\"addedBy\":\"UeQuqJ90j3igXB6A\"}";
-    }
-
     public static String getSubtitleLink(String id) {
         return String.format("%s/host/%s", BuildConfig.HUB_BASE_LINK, id);
     }
 
     public static String getEpisodeLink(String location) {
-        return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        try {
+            return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return location;
+        }
     }
 
     public static String getThubnailLink(String location) {
-        return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        try {
+            return String.format("%s%s", BuildConfig.HUB_BASE_LINK, location.replace("/api/",""));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return location;
+        }
     }
 }

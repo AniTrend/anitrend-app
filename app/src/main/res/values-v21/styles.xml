@@ -44,8 +44,9 @@
         <item name="android:textColorPrimary">?attr/content_color</item>
         <item name="android:navigationBarColor">@color/colorDarkKnight</item>
 
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="DarkTheme_DarkSide" parent="Theme.AppCompat.NoActionBar">
@@ -60,8 +61,9 @@
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:navigationBarColor">@color/colorDarkKnight</item>
 
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <!-- User Theme application theme. -->
@@ -120,8 +122,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--Customizations-->
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <!--<item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>-->
         <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
@@ -139,8 +141,8 @@
         <!--<item name="android:windowSharedElementEnterTransition">@transition/move_transition</item>-->
         <!--<item name="android:windowSharedElementExitTransition">@transition/move_transition</item>-->
 
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
 
     </style>
 

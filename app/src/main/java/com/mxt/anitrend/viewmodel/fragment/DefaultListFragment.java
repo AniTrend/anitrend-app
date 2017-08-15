@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.event.FragmentCallback;
-import com.mxt.anitrend.event.RecyclerLoadListener;
+import com.mxt.anitrend.base.custom.async.SortHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.FragmentCallback;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -178,7 +178,6 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
         removeScrollLoadTrigger();
         mPresenter.getApiPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -200,7 +199,6 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
         if(mSorter != null)
             mSorter.cancel(false);
     }
@@ -244,7 +242,7 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
 
     @Override
     public void onFailure(Call<List<T>> call, Throwable t) {
-        if(isVisible() && (!isDetached() || !isRemoving())) {
+        if(isAlive()) {
             t.printStackTrace();
             progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.button_try_again), new View.OnClickListener() {
                 @Override
@@ -304,6 +302,10 @@ public abstract class DefaultListFragment <T extends Parcelable> extends Fragmen
      */
     @Override
     public abstract void update();
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
+    }
 
     /**
      * Search page fragments

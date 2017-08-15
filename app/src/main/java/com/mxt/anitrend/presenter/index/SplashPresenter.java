@@ -7,14 +7,13 @@ import android.text.Html;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.SplashActivity;
+import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiManager;
+import com.mxt.anitrend.view.base.activity.SplashActivity;
 import com.mxt.anitrend.api.call.SeriesModel;
 import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.Genre;
-import com.mxt.anitrend.custom.emoji4j.EmojiManager;
-import com.mxt.anitrend.data.DataCentre;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
 import com.tapadoo.alerter.Alerter;
@@ -46,9 +45,7 @@ public class SplashPresenter extends AsyncTask<Object, Object, Call<User>> imple
 
     private void persistGenres(List<Genre> genreList){
         if(genreList != null){
-            DataCentre dc = new DataCentre(mContext);
-            dc.addGenres(genreList);
-            dc.closeConnection();
+            // TODO: 2017/07/19 use database
             new ApplicationPrefs(mContext).setGenresSaved();
         }
     }

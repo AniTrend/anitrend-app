@@ -6,7 +6,7 @@ import android.content.Context;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Favourite;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import java.util.List;

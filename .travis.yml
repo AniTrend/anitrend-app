@@ -17,7 +17,8 @@ android:
     - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
     - sys-img-x86-android-$ANDROID_API_LEVEL
     - sys-img-armeabi-v7a-android-22
-    - sys-img-x86-android-22
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-armeabi-v7a-android-17
 
     # extras
     - extra-google-google_play_services
@@ -45,10 +46,12 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-    - ./gradlew clean
-#    - ./gradlew build
-#    - ./gradlew build connectedCheck
+    - ./gradlew test
+#    - ./gradlew build    
+#    - ./gradlew clean
 #    - ./gradlew test
+#    - ./gradlew build connectedCheck
+
 
 before_install:
  - chmod +x gradlew

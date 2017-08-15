@@ -1,14 +1,12 @@
 package com.mxt.anitrend.viewmodel.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.mxt.anitrend.async.SortHelper;
+import com.mxt.anitrend.base.custom.async.SortHelper;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.presenter.index.FragmentPresenter;
 
@@ -54,16 +52,6 @@ public abstract class DefaultFragment <T extends Parcelable> extends Fragment {
     }
 
     /**
-     * Override this as normal the save instance for your model will be managed for you,
-     * so there is no need to to restore the state of your model from save state.
-     */
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    /**
      * Called when the Fragment is visible to the user.  This is generally
      * tied to {@link Activity#onStart() Activity.onStart} of the containing
      * Activity's lifecycle.
@@ -72,6 +60,18 @@ public abstract class DefaultFragment <T extends Parcelable> extends Fragment {
     public void onStart() {
         super.onStart();
         updateUI();
+    }
+
+    /**
+     * Called when the Fragment is no longer resumed.  This is generally
+     * tied to {@link Activity#onPause() Activity.onPause} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mPresenter != null)
+            mPresenter.onPause();
     }
 
     /**
@@ -98,8 +98,14 @@ public abstract class DefaultFragment <T extends Parcelable> extends Fragment {
      */
     @Override
     public void onDestroyView() {
+        if(mPresenter != null)
+            mPresenter.onDestroy();
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
     }
 
     /**

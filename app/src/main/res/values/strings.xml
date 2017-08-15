@@ -137,16 +137,6 @@
     </string-array>
 
     <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>suggestions</item>
-        <!--
-        These are commented out for the mean tile
-        <item>episodes</item>
-        <item>playlist</item>
-        -->
-    </string-array>
-
-    <!--Try to keep all titles short-->
     <string-array name="manga_title">
         <item>manga list</item>
         <item>recently added</item>
@@ -157,6 +147,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
+        <item>characters</item>
         <item>users</item>
     </string-array>
 
@@ -165,6 +157,8 @@
         <item>anime</item>
         <item>manga</item>
         <item>studio</item>
+        <item>staff</item>
+        <item>characters</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -406,7 +400,6 @@
     <!--Do not translate anything that is starts with pref_key-->
     <string name="pref_key_auto_increment" translatable="false">general_auto_increment</string>
 
-
     <string name="pref_title_startup_page">Startup Page</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -537,14 +530,14 @@
     </string>
 
     <string name="drawer_signout_title">Confirm Sign Out!</string>
-    <string name="drawer_signout_text">Are you sure you want to sign out of the application, you\'ll have to reauthorize the application again next time?</string>
+    <string name="drawer_signout_text">Are you sure you want to sign out of the application? You\'ll have to log into the application again.</string>
     <string name="login_title">Let\'s Get Started!</string>
 
     <string name="login_error_title">Unexpected State!</string>
 
     <string name="login_error_text">
         <![CDATA[
-        <p>Looks like the app resumed from an unexpected state while processing your login information. This can occur on low spec with less than 1GB of RAM.</p>
+        <p>Looks like the app resumed from an unexpected state while processing your login information. This can occur on low powered devices 1GB of RAM or less.</p>
 
         The application will now try to restart in hopes to resolve the error, after the restart please try signing in again, and if this issue persists please feel free to head over to the
         <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> for more assistance.
@@ -794,6 +787,7 @@
     <string name="manga">Manga</string>
     <string name="chapters">Chapters</string>
 
+
     <!--Profile page titles-->
     <string-array name="profile_page_titles">
         <item>overview</item>
@@ -834,4 +828,41 @@
         <item>staff</item>
         <item>studios</item>
     </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overview</item>
+        <item>anime roles</item>
+        <item>manga roles</item>
+        <item>actor roles</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="hub_title">
+        <item>suggestions</item>
+        <item>most popular</item>
+        <item>playlist</item>
+    </string-array>
+
+    <!-- Menu title for text composer -->
+    <string name="action_attach">Attach</string>
+    <string name="action_send">Send</string>
+    <string name="action_preview">Preview</string>
+
+    <!-- Some text for comments or composer -->
+    <string name="text_hint_comment">Enter your comment</string>
+    <string name="text_edit_mode">Edit Mode Active!</string>
+    <string name="text_preview_mode">Preview Mode Active!</string>
+
+    <!-- Menu title for text composer -->
+    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+
+    <!-- Some controls will be shown even though they will be disabled -->
+    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+
+    <!-- Dialogs for check updates, etc -->
+    <string name="title_download_info">Download Info!</string>
+    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
+    <string name="title_update_info">Update Info!</string>
+
 </resources>

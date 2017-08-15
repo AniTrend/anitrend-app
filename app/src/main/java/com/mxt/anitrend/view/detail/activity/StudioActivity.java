@@ -9,7 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,12 +23,12 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.Studio;
 import com.mxt.anitrend.api.model.StudioSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.AsyncTaskFetch;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
@@ -70,7 +69,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
 
     private Studio model;
     private StudioSmall model_temp;
-    private ActionBar mActionBar;
     private MenuItem favMenuItem, filterMenuItem;
 
     private Snackbar snackbar;
@@ -81,8 +79,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
         setContentView(R.layout.activity_studio);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra(STUDIO_PARAM))
             model_temp = getIntent().getParcelableExtra(STUDIO_PARAM);
         mPresenter = new SeriesPresenter(null, StudioActivity.this);
@@ -154,10 +150,10 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
                 new DialogManager(this).createDialogSelection(getString(R.string.app_filter_sort), R.array.series_sort_types, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        mPresenter.getApiPrefs().saveSort(FilterTypes.SeriesSortTypes[which]);
+                        mPresenter.getApiPrefs().saveSort(KeyUtils.SeriesSortTypes[which]);
                         return true;
                     }
-                }, this, Arrays.asList(FilterTypes.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
+                }, this, Arrays.asList(KeyUtils.SeriesSortTypes).indexOf(mPresenter.getApiPrefs().getSort()));
                 break;
             case R.id.action_favor_state:
                 if(!mPresenter.getAppPrefs().isAuthenticated()) {
@@ -183,7 +179,7 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
                         if(!isDestroyed() || !isFinishing())
                             mPresenter.displayMessage(t.getLocalizedMessage(), StudioActivity.this);
                     }
-                }, FilterTypes.ActionType.STUDIO_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.STUDIO_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }
@@ -195,7 +191,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
         super.onPause();
         mPresenter.getApiPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -209,7 +204,6 @@ public class StudioActivity extends DefaultActivity implements Callback<Studio>,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.destroySuperToast();
     }
 
     /**

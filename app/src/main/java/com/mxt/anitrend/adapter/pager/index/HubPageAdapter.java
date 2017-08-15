@@ -5,10 +5,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.api.structure.ExternalLink;
+import com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment;
+import com.mxt.anitrend.view.index.fragment.PlaylistFragment;
 import com.mxt.anitrend.view.index.fragment.SuggestionFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -32,9 +38,11 @@ public class HubPageAdapter extends DefaultStatePagerAdapter {
             case 0:
                 return SuggestionFragment.newInstance();
             case 1:
-                return null;
+                List< ExternalLink > externalLinks = new ArrayList<>(1);
+                externalLinks.add(new ExternalLink(BuildConfig.FEEDS_LINK,null));
+                return AnimeWatchFragment.newInstance(externalLinks, true);
             case 2:
-                return null;
+                return PlaylistFragment.newInstance();
         }
         return null;
     }

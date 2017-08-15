@@ -16,15 +16,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.ListItem;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.event.SeriesInteractionListener;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.interfaces.event.SeriesInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DateTimeConverter;
 
 import java.util.List;
 import java.util.Locale;
+
+import butterknife.BindView;
 
 /**
  * Created by max on 2017/03/04.
@@ -35,7 +37,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
     private ApplicationPrefs mPrefs;
     private ApiPreferences mApiPrefs;
     private SeriesInteractionListener interactionListener;
-    private final boolean isHD;
 
     public SeriesAiringAdapter(List<ListItem> adapter, FragmentActivity context, ApplicationPrefs prefs, ApiPreferences apiPrefs,SeriesInteractionListener callback) {
         super(adapter, context);
@@ -44,7 +45,6 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         interactionListener = callback;
         mApiPrefs = apiPrefs;
         mPrefs = prefs;
-        isHD = mPrefs.isHD();
     }
 
     @Override
@@ -67,27 +67,22 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         return null;
     }
 
-    private class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        //declare all view controls here:
-        private TextView eng, romanji, type, eps, airing, popularity, starting, nxt_ep;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.card_view) CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_anime_type) TextView type;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_airing) TextView airing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_startdate) TextView starting;
+        @BindView(R.id.txt_last_updated) TextView nxt_ep;
+        @BindView(R.id.line) FrameLayout line;
 
         CardViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            type = (TextView)itemView.findViewById(R.id.txt_anime_type);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            airing = (TextView)itemView.findViewById(R.id.txt_airing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            starting = (TextView)itemView.findViewById(R.id.txt_startdate);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            nxt_ep = (TextView) itemView.findViewById(R.id.txt_last_updated);
             image.setOnClickListener(this);
             cardView.setOnClickListener(this);
             image.setOnLongClickListener(this);
@@ -111,7 +106,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
             else
                 line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBlueGrey100));
 
-            Glide.with(mContext).load(isHD?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -134,20 +129,16 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        //declare all view controls here:
-        private TextView title, eps, info;
-        private ImageView image;
-        private View line;
+        @BindView(R.id.txt_title) TextView title;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_anime_info) TextView info;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.line) View line;
 
         GridViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.txt_title);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            info = (TextView)itemView.findViewById(R.id.txt_anime_info);
-            line = itemView.findViewById(R.id.line);
             eps.setOnClickListener(this);
             image.setOnClickListener(this);
             image.setOnLongClickListener(this);
@@ -175,7 +166,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
             else
                 line.setVisibility(View.GONE);
 
-            Glide.with(mContext).load(isHD?model.getAnime().getImage_url_lge(): model.getAnime().getImage_url_med())
+            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,9 +14,9 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.user.UserNotificationAdapter;
 import com.mxt.anitrend.api.structure.UserNotification;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.event.NotificationClickListener;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.NotificationClickListener;
 import com.mxt.anitrend.presenter.index.NotificationPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
@@ -42,7 +41,6 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
     @BindView(R.id.notification_recycler) StatefulRecyclerView recyclerView;
     @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
     private List<UserNotification> mListNotifications;
-    private ActionBar mActionBar;
     private NotificationPresenter mPresenter;
 
     @Override
@@ -51,8 +49,6 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
         setContentView(R.layout.activity_notification);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -86,7 +82,7 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
 
     @Override
     protected void updateUI() {
-        RecyclerViewAdapter mAdapter = new UserNotificationAdapter(mListNotifications, getApplicationContext(), mPresenter.getAppPrefs(),this);
+        RecyclerViewAdapter mAdapter = new UserNotificationAdapter(mListNotifications, getApplicationContext(), this);
         recyclerView.setAdapter(mAdapter);
         progressLayout.showContent();
         /*

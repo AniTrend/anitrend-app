@@ -14,7 +14,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.call.RepoModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.Search;
-import com.mxt.anitrend.event.ApplicationInitListener;
+import com.mxt.anitrend.base.interfaces.event.ApplicationInitListener;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.util.AppVersionTracking;
 import com.mxt.anitrend.util.DateTimeConverter;

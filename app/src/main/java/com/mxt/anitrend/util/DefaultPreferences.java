@@ -52,7 +52,7 @@ public class DefaultPreferences {
     }
 
     public boolean isAutoIncrement() {
-        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_auto_increment), false);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_auto_increment), true);
     }
 
     //Returns amount of time in seconds

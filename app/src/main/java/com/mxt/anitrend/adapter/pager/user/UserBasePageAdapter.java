@@ -6,13 +6,11 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.fragment.UserAboutFragment;
 import com.mxt.anitrend.view.detail.fragment.UserProgressFragment;
 import com.mxt.anitrend.view.detail.fragment.UserStatusFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
-
-import java.util.Locale;
 
 public class UserBasePageAdapter extends DefaultStatePagerAdapter {
 
@@ -30,9 +28,9 @@ public class UserBasePageAdapter extends DefaultStatePagerAdapter {
             case 0:
                 return UserAboutFragment.newInstance(mUser);
             case 1:
-                return UserProgressFragment.newInstance(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.PROGRESS.ordinal()], mUser.getDisplay_name());
+                return UserProgressFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.PROGRESS], mUser.getDisplay_name());
             case 2:
-                return UserStatusFragment.newInstance(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.STATUS.ordinal()], mUser.getDisplay_name());
+                return UserStatusFragment.newInstance(KeyUtils.ActivityTypes[KeyUtils.STATUS], mUser.getDisplay_name());
         }
         return null;
     }

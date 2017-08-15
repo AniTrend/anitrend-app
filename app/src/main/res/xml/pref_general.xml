@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:icon="@drawable/ic_fiber_smart_record_grey_900_24dp"
         android:key="@string/pref_key_auto_increment"
         android:summary="@string/pref_summary_auto_increment"

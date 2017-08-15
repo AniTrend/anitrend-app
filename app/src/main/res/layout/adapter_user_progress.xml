@@ -140,6 +140,18 @@
                             android:drawableStart="@drawable/ic_mode_comment_grey_600_18dp"
                             android:layout_marginStart="10dp"/>
 
+                        <TextView
+                            android:id="@+id/feed_delete"
+                            android:padding="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:foreground="?selectableItemBackground"
+                            android:typeface="sans"
+                            android:textStyle="bold"
+                            android:drawableStart="@drawable/ic_delete_grey_600_18dp"
+                            android:layout_marginStart="10dp"/>
+
                     </LinearLayout>
 
                 </FrameLayout>

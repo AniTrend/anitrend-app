@@ -14,27 +14,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.UserNotification;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.event.NotificationClickListener;
-import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.interfaces.event.NotificationClickListener;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 
 import java.util.List;
 import java.util.Locale;
+
+import butterknife.BindView;
 
 /**
  * Created by Maxwell on 1/9/2017.
  */
 public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotification> {
 
-    private ApplicationPrefs mPrefs;
     private NotificationClickListener mCallback;
 
-    public UserNotificationAdapter(List<UserNotification> adapter, Context context, ApplicationPrefs prefs, NotificationClickListener callback) {
+    public UserNotificationAdapter(List<UserNotification> adapter, Context context, NotificationClickListener callback) {
         super(adapter, context);
         mCallback = callback;
-        mPrefs = prefs;
     }
 
     @Override
@@ -56,19 +55,16 @@ public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotificatio
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserNotification> {
+    class ViewHolder extends RecyclerViewHolder<UserNotification> {
 
-        //declare all view controls here:
-        private TextView notificationSubject ,notificationContent, notificationHeader, notificationTime;
-        private ImageView notificationImg;
+        @BindView(R.id.notification_subject) TextView notificationSubject;
+        @BindView(R.id.notification_time) TextView notificationTime;
+        @BindView(R.id.notification_header) TextView notificationHeader;
+        @BindView(R.id.notification_content) TextView notificationContent;
+        @BindView(R.id.notification_img) ImageView notificationImg;
 
         ViewHolder(View view) {
             super(view);
-            notificationSubject = (TextView) view.findViewById(R.id.notification_subject);
-            notificationTime = (TextView) view.findViewById(R.id.notification_time);
-            notificationHeader = (TextView) view.findViewById(R.id.notification_header);
-            notificationContent = (TextView) view.findViewById(R.id.notification_content);
-            notificationImg = (ImageView) view.findViewById(R.id.notification_img);
             view.setOnClickListener(this);
             notificationImg.setOnClickListener(this);
         }
@@ -76,12 +72,12 @@ public class UserNotificationAdapter extends RecyclerViewAdapter<UserNotificatio
         @Override
         public void onBindViewHolder(UserNotification model) {
             if(model.getObject_type() != NotificationClickListener.TYPE_AIRING) {
-                Glide.with(mContext).load(mPrefs.isHD()?model.getUser().getImage_url_lge():model.getUser().getImage_url_med())
+                Glide.with(mContext).load(model.getUser().getImage_url_lge())
                         .centerCrop().crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into(notificationImg);
             } else {
-                Glide.with(mContext).load(mPrefs.isHD()?model.getSeries().getImage_url_lge():model.getSeries().getImage_url_med())
+                Glide.with(mContext).load(model.getSeries().getImage_url_lge())
                         .centerCrop().crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(notificationImg);

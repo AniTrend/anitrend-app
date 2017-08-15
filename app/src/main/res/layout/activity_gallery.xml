@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:mContext="com.mxt.anitrend.view.base.activity.GalleryPreviewActivity">
 
-    <com.mxt.anitrend.custom.cardgallary.SpeedRecyclerView
+    <com.mxt.anitrend.base.custom.view.widget.cardgallary.SpeedRecyclerView
         android:id="@+id/speedRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -3,14 +3,11 @@ package com.mxt.anitrend.adapter.pager.index;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.index.fragment.ReviewFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
-
-import java.util.Locale;
 
 /**
  * Created by max on 2017/05/02.
@@ -32,13 +29,13 @@ public class ReviewPageAdapter extends DefaultStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ReviewFragment.newInstance(FilterTypes.ReviewType.LATEST.ordinal());
+                return ReviewFragment.newInstance(KeyUtils.LATEST);
             case 1:
-                return ReviewFragment.newInstance(FilterTypes.ReviewType.POPULAR.ordinal());
+                return ReviewFragment.newInstance(KeyUtils.POPULAR);
             case 2:
-                return ReviewFragment.newInstance(FilterTypes.ReviewType.NEED_LOVE.ordinal());
+                return ReviewFragment.newInstance(KeyUtils.NEED_LOVE);
             case 3:
-                return ReviewFragment.newInstance(FilterTypes.ReviewType.CONTROVERSIAL.ordinal());
+                return ReviewFragment.newInstance(KeyUtils.CONTROVERSIAL);
         }
         return null;
     }

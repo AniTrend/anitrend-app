@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <com.mxt.anitrend.custom.view.StatefulRecyclerView
+            <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                 android:id="@+id/base_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

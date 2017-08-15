@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.UserActivity;
-import com.mxt.anitrend.async.FeedPageFetch;
+import com.mxt.anitrend.base.custom.async.FeedPageFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import java.util.List;

@@ -17,10 +17,10 @@ import com.mxt.anitrend.api.service.AuthService;
 import com.mxt.anitrend.api.structure.UserAnimeStats;
 import com.mxt.anitrend.api.structure.UserLists;
 import com.mxt.anitrend.api.structure.UserMangaStats;
-import com.mxt.anitrend.custom.deserializer.AnimeStatsDeserializer;
-import com.mxt.anitrend.custom.deserializer.FavouritesDeserializer;
-import com.mxt.anitrend.custom.deserializer.MangaStatsDeserializer;
-import com.mxt.anitrend.custom.deserializer.UserListsDeserializer;
+import com.mxt.anitrend.util.deserializer.AnimeStatsDeserializer;
+import com.mxt.anitrend.util.deserializer.FavouritesDeserializer;
+import com.mxt.anitrend.util.deserializer.MangaStatsDeserializer;
+import com.mxt.anitrend.util.deserializer.UserListsDeserializer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

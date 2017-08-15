@@ -11,12 +11,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -39,34 +40,38 @@ import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.CommentAdapter;
+import com.mxt.anitrend.adapter.recycler.index.PublicStatusAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.UserActivityReply;
-import com.mxt.anitrend.async.ActivityReplyTaskFetch;
-import com.mxt.anitrend.async.AsyncTaskFetch;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetEmoticon;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
-import com.mxt.anitrend.custom.emoji4j.EmojiManager;
-import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
-import com.mxt.anitrend.event.InteractionListener;
-import com.mxt.anitrend.event.MultiInteractionListener;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.async.ActivityReplyTaskFetch;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetEmoticon;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiManager;
+import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiUtils;
+import com.mxt.anitrend.base.interfaces.event.InteractionListener;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
 import com.mxt.anitrend.presenter.index.MainPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.ImeAction;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.view.base.activity.ComposerActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -87,21 +92,27 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
     public final static String USER_ACTIVITY_EXTRA = "user_activity_post_instance";
     public final static String USER_ACTIVITY_NOTIFICATION_EXTRA = "user_notification_id_key";
 
-    @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.activity_avatar) ImageView mAvatar;
-    @BindView(R.id.activity_heading) TextView mHeading;
-    @BindView(R.id.activity_comments) StatefulRecyclerView recyclerView;
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.activity_origin)
+    RecyclerView mActivityOrigin;
+    @BindView(R.id.activity_comments)
+    StatefulRecyclerView recyclerView;
 
-    @BindView(R.id.comment) TextInputEditText mInputEditText;
-    @BindView(R.id.mFlipper) ViewFlipper mPostComment;
-    @BindView(R.id.insert_emoticon) TextView mEmoticonInsert;
-    @BindView(R.id.insert_media) TextView mInsertMedia;
+    @BindView(R.id.comment)
+    MarkdownInputEditor mInputEditText;
+    @BindView(R.id.mFlipper)
+    ViewFlipper mPostComment;
+    @BindView(R.id.insert_emoticon)
+    TextView mEmoticonInsert;
+    @BindView(R.id.insert_media)
+    TextView mInsertMedia;
 
     @BindView(R.id.comment_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.content_comment) ProgressLayout progressLayout;
 
-    @BindView(R.id.activity_subject_header) View mHeaderSubject;
     private ActionBar mActionBar;
 
     private boolean mPresentLike;
@@ -135,8 +146,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(savedInstanceState != null) {
             mPresentLike = savedInstanceState.getBoolean(MODEL_IS_FAVOURITE);
             mPassedData = savedInstanceState.getParcelable(MODEL_OBJ_PARAM);
@@ -147,16 +156,12 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        setSupportActionBar(toolbar);
         mPresenter = new MainPresenter(getApplicationContext());
         emoticonLoader = new EmoticonLoader();
         mEmoticonInsert.setVisibility(View.GONE);
+        getDelegate().setHandleNativeActionModesEnabled(false);
         onInit();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -225,7 +230,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 mPresenter.createSuperToast(this, getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                 break;
@@ -288,14 +293,12 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                         }
                     }
                 }, getApplicationContext(), mModelLookUpKey).execute(AsyncTaskFetch.RequestType.USER_ACTIVITY_REQ);
-                mHeading.setText(R.string.Loading);
+                mActivityOrigin.setVisibility(View.GONE);
             }
         }
     }
 
     private void Begin() {
-        mAvatar.setOnClickListener(this);
-        mHeaderSubject.setOnClickListener(this);
         mPostComment.setOnClickListener(this);
         mEmoticonInsert.setOnClickListener(this);
         mInsertMedia.setOnClickListener(this);
@@ -305,41 +308,63 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
             emoticonLoader.execute();
         else
             enableEmoticonsPicker();
-
-        Glide.with(getApplicationContext()).load(mPassedData.getUsers().get(0).getImage_url_med())
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new BitmapImageViewTarget(mAvatar) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        mAvatar.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
-
-        if(mPassedData.getSeries() == null) {
-            if (mPassedData.getStatus() != null)
-                mHeading.setText(String.format(Locale.getDefault(), "%s: %s %s", mPassedData.getUsers().get(0).getDisplay_name(), mPassedData.getStatus(), mPassedData.getSpannedValue()));
-            else
-                mHeading.setText(String.format(Locale.getDefault(), "%s: %s", mPassedData.getUsers().get(0).getDisplay_name(), mPassedData.getSpannedValue()));
-        } else {
-            Series series = mPassedData.getSeries();
-            String title = null;
-            switch (mPresenter.getApiPrefs().getTitleLanguage()) {
-                case "romaji":
-                    title = series.getTitle_romaji();
-                    break;
-                case "english":
-                    title = series.getTitle_english();
-                    break;
-                case "japanese":
-                    title = series.getTitle_japanese();
-                    break;
+        mActivityOrigin.setVisibility(View.VISIBLE);
+        final List<UserActivity> activitySingle = Collections.singletonList(mPassedData);
+        RecyclerViewAdapter<UserActivity> activityAdapter = new PublicStatusAdapter(activitySingle, UserReplyActivity.this,
+                mPresenter.getAppPrefs(), mPresenter.getApiPrefs(), new MultiInteractionListener() {
+            @Override
+            public void onItemClick(int index, int viewId) {
+                Intent intent;
+                switch (viewId) {
+                    case R.id.status_avatar:
+                        intent = new Intent(UserReplyActivity.this, UserProfileActivity.class);
+                        intent.putExtra(UserProfileActivity.PROFILE_INTENT_KEY, mPassedData.getUsers().get(0));
+                        startActivity(intent);
+                        break;
+                    case R.id.status_comment:
+                        // Open comment activity
+                        Toast.makeText(UserReplyActivity.this, R.string.text_feature_disabled, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.mFlipper:
+                        Toast.makeText(UserReplyActivity.this, R.string.text_feature_disabled, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.status_edit:
+                        Toast.makeText(UserReplyActivity.this, R.string.text_feature_disabled, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.status_delete:
+                        Toast.makeText(UserReplyActivity.this, R.string.text_feature_disabled, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.feed_avatar:
+                        intent = new Intent(UserReplyActivity.this, UserProfileActivity.class);
+                        intent.putExtra(UserProfileActivity.PROFILE_INTENT_KEY, mPassedData.getUsers().get(0));
+                        startActivity(intent);
+                        break;
+                    case R.id.feed_series_img:
+                        // Open the clicked series
+                        if(mPassedData.getSeries().getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME])) {
+                            intent = new Intent(UserReplyActivity.this, AnimeActivity.class);
+                            intent.putExtra(AnimeActivity.MODEL_ID_KEY, mPassedData.getSeries().getId());
+                            intent.putExtra(AnimeActivity.MODEL_BANNER_KEY, mPassedData.getSeries().getImage_url_banner());
+                            startActivity(intent);
+                        } else {
+                            intent = new Intent(UserReplyActivity.this, MangaActivity.class);
+                            intent.putExtra(MangaActivity.MODEL_ID_KEY, mPassedData.getSeries().getId());
+                            intent.putExtra(MangaActivity.MODEL_BANNER_KEY, mPassedData.getSeries().getImage_url_banner());
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.feed_comment:
+                        Toast.makeText(UserReplyActivity.this, R.string.text_feature_disabled, Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.feed_delete:
+                        Toast.makeText(UserReplyActivity.this, R.string.text_feature_disabled, Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
-            mHeading.setText(String.format(Locale.getDefault(), "%s: %s %s - %s", mPassedData.getUsers().get(0).getDisplay_name(), mPassedData.getStatus(), mPassedData.getSpannedValue(), title));
-        }
+        });
+        mActivityOrigin.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mActivityOrigin.setAdapter(activityAdapter);
+
         if(mPassedData.getReplies() == null) {
             if (mPresenter.getSavedParse() == null && mData == null)
                 loaderManager.initLoader(getResources().getInteger(R.integer.activity_replies), null, this);
@@ -372,27 +397,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
             mPresentLike = mPassedData.getLikes().contains(mCurrentUser);
             favMenuItem.setVisible(true);
             favMenuItem.setIcon(ContextCompat.getDrawable(getApplicationContext(), mPresentLike ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp));
-        }
-
-        if(mPresenter.getAppPrefs().getHeaderTip()) {
-            new MaterialTapTargetPrompt.Builder(this)
-                    //or use ContextCompat.getColor(this, R.color.colorAccent)
-                    .setFocalColourFromRes(R.color.colorAccent)
-                    .setBackgroundColourFromRes(R.color.colorDarkKnight)
-                    .setTarget(mHeaderSubject)
-                    .setPrimaryText(R.string.tip_more_actions_title)
-                    .setSecondaryText(R.string.tip_more_actions_text)
-                    .setOnHidePromptListener(new MaterialTapTargetPrompt.OnHidePromptListener() {
-                        @Override
-                        public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
-
-                        }
-
-                        @Override
-                        public void onHidePromptComplete() {
-                            mPresenter.getAppPrefs().setHeaderTip();
-                        }
-                    }).show();
         }
     }
 
@@ -499,16 +503,17 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_REPLY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_REPLY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
             case R.id.post_reply:
-                mInputEditText.append(String.format(Locale.getDefault(), "@%s ", reply.getUser().getDisplay_name()));
+                int start = mInputEditText.getSelectionStart();
+                mInputEditText.getEditableText().insert(start,String.format(Locale.getDefault(), "@%s ", reply.getUser().getDisplay_name()));
                 Toast.makeText(this, R.string.text_reply_action_feedback, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.post_edit:
                 mReplyKey = reply.getId();
-                mInputEditText.setText(reply.getReply_value());
+                mInputEditText.setText(reply.getReply());
                 break;
             case R.id.post_delete:
                 new DialogManager(this).createDialogMessage(getString(R.string.dialog_confirm_delete),
@@ -541,7 +546,7 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                                                     Toast.makeText(UserReplyActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_REPLY_DELETE, action);
+                                        }, KeyUtils.ActionType.ACTIVITY_REPLY_DELETE, action);
                                         deleteAction.execute();
                                         break;
                                     case NEUTRAL:
@@ -563,12 +568,10 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
 
             if (mPostComment.getDisplayedChild() == 0) {
                 mPostComment.showNext();
-                replyText = EmojiUtils.hexHtmlify(replyText);
                 Payload.ActivityStruct actionReply = new Payload.ActivityStruct(mReplyKey, replyText, mPassedData.getId());
 
                 RequestApiAction.ActivityActions<ResponseBody> replyAction = new RequestApiAction.ActivityActions<>(getApplicationContext(), this,
-                        mReplyKey==-1?FilterTypes.ActionType.ACTIVITY_REPLY:FilterTypes.ActionType.ACTIVITY_REPLY_EDIT,
-                        actionReply);
+                        mReplyKey==-1? KeyUtils.ActionType.ACTIVITY_REPLY: KeyUtils.ActionType.ACTIVITY_REPLY_EDIT, actionReply);
 
                 replyAction.execute();
             }
@@ -583,11 +586,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.activity_avatar:
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra(UserProfileActivity.PROFILE_INTENT_KEY, mPassedData.getUsers().get(0));
-                startActivity(intent);
-                break;
             case R.id.mFlipper:
                 attemptPostComment();
                 break;
@@ -597,34 +595,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                 break;
             case R.id.insert_media:
                 mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                break;
-            case R.id.activity_subject_header:
-                new DialogManager(this).createDialogMessage(getString(R.string.text_post_information),
-                        mPassedData.getSpannedValue(),
-                        getString(R.string.title_view_likes),
-                        getString(android.R.string.cancel),
-                        new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                switch (which) {
-                                    case POSITIVE:
-                                        int size = mPassedData.getLikes().size();
-                                        if(size > 0) {
-                                            BottomSheet mSheet = BottomSheetLikes.newInstance(getString(R.string.title_bottom_sheet_likes, size), mPassedData.getLikes());
-                                            mSheet.show(getSupportFragmentManager(), mSheet.getTag());
-                                        } else {
-                                            mPresenter.createSuperToast(UserReplyActivity.this, getString(R.string.text_no_likes), R.drawable.ic_info_outline_white_18dp, Style.TYPE_STANDARD);
-                                        }
-                                        break;
-                                    case NEUTRAL:
-                                        break;
-                                    case NEGATIVE:
-                                        dialog.dismiss();
-                                        break;
-                                }
-                            }
-                        }
-                );
                 break;
         }
     }
@@ -673,7 +643,8 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
 
     @Override
     public void onItemClick(int index) {
-        mInputEditText.append(String.format(Locale.getDefault(), "%s", EmojiManager.data().get(index).getEmoji()));
+        int start = mInputEditText.getSelectionStart();
+        mInputEditText.getEditableText().insert(start, EmojiManager.data().get(index).getEmoji());
     }
 
     @Override

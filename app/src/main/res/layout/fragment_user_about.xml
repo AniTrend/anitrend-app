@@ -235,7 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
 
-                <com.mxt.anitrend.custom.view.PolygonView
+                <com.mxt.anitrend.base.custom.view.widget.PolygonView
                     android:id="@+id/user_stats"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="350dp"

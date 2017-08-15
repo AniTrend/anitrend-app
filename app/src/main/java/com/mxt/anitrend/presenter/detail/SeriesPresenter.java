@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.async.SeriesDetailPageFetch;
+import com.mxt.anitrend.base.custom.async.SeriesDetailPageFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import retrofit2.Callback;

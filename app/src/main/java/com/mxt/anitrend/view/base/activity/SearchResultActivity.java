@@ -46,9 +46,6 @@ public class SearchResultActivity extends DefaultActivity implements SearchView.
         setContentView(R.layout.activity_search_result);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        ActionBar mActionBar = getSupportActionBar();
-        if (mActionBar != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

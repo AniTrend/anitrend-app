@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.view.base.fragment.AnimeSearchFragment;
+import com.mxt.anitrend.view.base.fragment.CharacterSearchFragment;
 import com.mxt.anitrend.view.base.fragment.MangaSearchFragment;
+import com.mxt.anitrend.view.base.fragment.StaffSearchFragment;
 import com.mxt.anitrend.view.base.fragment.StudioSearchFragment;
 import com.mxt.anitrend.view.base.fragment.UserSearchFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
@@ -40,6 +42,10 @@ public class SearchPageAdapter extends DefaultStatePagerAdapter {
             case 2:
                 return StudioSearchFragment.newInstance(query);
             case 3:
+                return StaffSearchFragment.newInstance(query);
+            case 4:
+                return CharacterSearchFragment.newInstance(query);
+            case 5:
                 return UserSearchFragment.newInstance(query);
         }
         return null;

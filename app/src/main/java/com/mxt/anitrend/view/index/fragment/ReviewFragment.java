@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesReviewTypeAdapter;
 import com.mxt.anitrend.api.model.Review;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ReviewType;
 import com.mxt.anitrend.presenter.index.FragmentReviewPresenter;
 import com.mxt.anitrend.viewmodel.fragment.DefaultReviewFragment;
@@ -45,7 +45,7 @@ public class ReviewFragment extends DefaultReviewFragment<ReviewType> {
         if(getArguments().containsKey(ARG_KEY))
             VIEW_POSITION = getArguments().getInt(ARG_KEY);
         mColumnSize = R.integer.card_col_size_home;
-        model_type = FilterTypes.ReviewTypes[VIEW_POSITION];
+        model_type = KeyUtils.ReviewTypes[VIEW_POSITION];
         mPresenter = new FragmentReviewPresenter(getContext());
     }
 

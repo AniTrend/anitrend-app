@@ -17,21 +17,22 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.structure.FilterTypes;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.api.structure.Manga;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.event.SeriesInteractionListener;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.interfaces.event.SeriesInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 
 /**
@@ -106,27 +107,23 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
         };
     }
 
-    private class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView eng, romanji, volumes, chapters, publishing, popularity, rated, read_chaps, read_volumes;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.card_view) CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_manga_volumes) TextView volumes;
+        @BindView(R.id.txt_manga_chapters) TextView chapters;
+        @BindView(R.id.txt_publishing) TextView publishing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.line) FrameLayout line;
+        @BindView(R.id.txt_manga_chapters_read) TextView read_chaps;
+        @BindView(R.id.txt_manga_volumes_read) TextView read_volumes;
 
         CardViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            volumes = (TextView)itemView.findViewById(R.id.txt_manga_volumes);
-            chapters = (TextView)itemView.findViewById(R.id.txt_manga_chapters);
-            publishing = (TextView)itemView.findViewById(R.id.txt_publishing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            read_chaps = (TextView) itemView.findViewById(R.id.txt_manga_chapters_read);
-            read_volumes = (TextView) itemView.findViewById(R.id.txt_manga_volumes_read);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
             image.setOnClickListener(this);
@@ -135,7 +132,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -184,19 +181,16 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView title, eps, rated;
-        private ImageView image;
-        private View line;
+        @BindView(R.id.txt_title) TextView title;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.line) View line;
 
         GridViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.txt_title);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = itemView.findViewById(R.id.line);
             eps.setOnClickListener(this);
             image.setOnClickListener(this);
             image.setOnLongClickListener(this);
@@ -204,7 +198,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()
@@ -267,27 +261,23 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
         }
     }
 
-    private class ExCardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class ExCardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView eng, romanji, volumes, chapters, publishing, popularity, rated, read_chaps, read_volumes;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.card_view) CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_manga_volumes) TextView volumes;
+        @BindView(R.id.txt_manga_chapters) TextView chapters;
+        @BindView(R.id.txt_publishing) TextView publishing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.line) FrameLayout line;
+        @BindView(R.id.txt_manga_chapters_read) TextView read_chaps;
+        @BindView(R.id.txt_manga_volumes_read) TextView read_volumes;
 
         ExCardViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            volumes = (TextView)itemView.findViewById(R.id.txt_manga_volumes);
-            chapters = (TextView)itemView.findViewById(R.id.txt_manga_chapters);
-            publishing = (TextView)itemView.findViewById(R.id.txt_publishing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            read_chaps = (TextView) itemView.findViewById(R.id.txt_manga_chapters_read);
-            read_volumes = (TextView) itemView.findViewById(R.id.txt_manga_volumes_read);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
             image.setOnClickListener(this);
@@ -296,7 +286,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -360,36 +350,33 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
         public boolean onLongClick(View v) {
             switch (v.getId()) {
                 case R.id.img_lge:
-                    new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                    new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     break;
                 case R.id.card_view:
-                    new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                    new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     break;
             }
             return true;
         }
     }
 
-    private class ExGridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    class ExGridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
 
-        private TextView title, eps, rated;
-        private ImageView image;
-        private View line;
+        @BindView(R.id.txt_title) TextView title;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_anime_eps) TextView eps;
+        @BindView(R.id.txt_rated) TextView rated;
+        @BindView(R.id.line) View line;
 
         ExGridViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.txt_title);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eps = (TextView)itemView.findViewById(R.id.txt_anime_eps);
-            rated = (TextView)itemView.findViewById(R.id.txt_rated);
-            line = itemView.findViewById(R.id.line);
             image.setOnClickListener(this);
             image.setOnLongClickListener(this);
         }
 
         @Override
         public void onBindViewHolder(ListItem model) {
-            Glide.with(mContext).load(mPrefs.isHD()?model.getManga().getImage_url_lge(): model.getManga().getImage_url_med())
+            Glide.with(mContext).load(model.getManga().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .centerCrop()
@@ -455,7 +442,7 @@ public class SeriesMyMangaAdapter extends RecyclerViewAdapter<ListItem> {
         public boolean onLongClick(View v) {
             switch (v.getId()) {
                 case R.id.img_lge:
-                    new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                    new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     break;
             }
             return true;

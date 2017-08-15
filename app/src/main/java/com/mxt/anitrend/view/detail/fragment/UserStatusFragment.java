@@ -23,17 +23,18 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StatusAdapter;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.custom.emoji4j.EmojiUtils;
-import com.mxt.anitrend.event.MultiInteractionListener;
-import com.mxt.anitrend.event.RecyclerLoadListener;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.view.widget.emoji4j.EmojiUtils;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.view.base.activity.ComposerActivity;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -167,11 +168,13 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //outState.putParcelable(VIEW_PARCABLE, recyclerView.onSaveInstanceState());
-        outState.putInt(MODEL_PAGE, mPage);
         outState.putString(MODEL_USER, model_user);
         outState.putString(MODEL_TYPE, model_type);
-        outState.putBoolean(MODEL_LIMIT, isLimit);
-        outState.putParcelableArrayList(MODEL_CACHE, (ArrayList<? extends Parcelable>) mData);
+        if(mData != null && mData.size() < 5) {
+            outState.putInt(MODEL_PAGE, mPage);
+            outState.putBoolean(MODEL_LIMIT, isLimit);
+            outState.putParcelableArrayList(MODEL_CACHE, (ArrayList<? extends Parcelable>) mData);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -291,31 +294,30 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
             case R.id.status_edit:
-                new DialogManager(getActivity()).createDialogActivityEdit(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull final MaterialDialog dialog, @NonNull DialogAction which) {
-                        switch (which) {
-                            case POSITIVE:
-                                EditText editText = dialog.getInputEditText();
-                                if(editText != null) {
-                                    if(!TextUtils.isEmpty(editText.getText())) {
-                                        if(model_type.equals(FilterTypes.ActivtyTypes[FilterTypes.ActivityType.MESSAGE.ordinal()])) {
-                                            Payload.ActivityMessage msg = new Payload.ActivityMessage(mItem.getId(), mItem.getMessenger().getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id());
+                if(model_type.equals(KeyUtils.ActivityTypes[KeyUtils.MESSAGE])) {
+                    new DialogManager(getActivity()).createDialogActivityEdit(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull final MaterialDialog dialog, @NonNull DialogAction which) {
+                            switch (which) {
+                                case POSITIVE:
+                                    EditText editText = dialog.getInputEditText();
+                                    if (editText != null) {
+                                        if (!TextUtils.isEmpty(editText.getText())) {
+                                            Payload.ActivityMessage msg = new Payload.ActivityMessage(mItem.getId(), mItem.getMessenger().getId(), editText.getText().toString(), mItem.getUser_id());
                                             RequestApiAction.MessageActions<UserActivity> action = new RequestApiAction.MessageActions<>(getContext(), new Callback<UserActivity>() {
                                                 @Override
                                                 public void onResponse(Call<UserActivity> call, Response<UserActivity> response) {
-                                                    if(isVisible() && !isRemoving() || !isDetached()) {
+                                                    if (isVisible() && !isRemoving() || !isDetached()) {
                                                         if (response.isSuccessful() && response.body() != null) {
                                                             dialog.dismiss();
                                                             mItem.setValue(response.body().getValue());
                                                             mData.set(index, mItem);
                                                             mAdapter.onItemChanged(mData, index);
-                                                        }
-                                                        else
+                                                        } else
                                                             Toast.makeText(getContext(), ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
@@ -327,50 +329,31 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                                         Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
-                                            }, FilterTypes.ActionType.DIRECT_MESSAGE_EDIT, msg);
+                                            }, KeyUtils.ActionType.DIRECT_MESSAGE_EDIT, msg);
                                             action.execute();
+                                            mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                                         } else {
-                                            Payload.ActivityStruct status = new Payload.ActivityStruct(mItem.getId(), EmojiUtils.hexHtmlify(editText.getText().toString()), mItem.getUser_id(), -1);
-                                            RequestApiAction.ActivityActions<UserActivity> action = new RequestApiAction.ActivityActions<>(getContext(), new Callback<UserActivity>() {
-                                                @Override
-                                                public void onResponse(Call<UserActivity> call, Response<UserActivity> response) {
-                                                    if(isVisible() && !isRemoving() || !isDetached()) {
-                                                        if (response.isSuccessful() && response.body() != null) {
-                                                            dialog.dismiss();
-                                                            mItem.setValue(response.body().getValue());
-                                                            mData.set(index, mItem);
-                                                            mAdapter.onItemChanged(mData, index);
-                                                        }
-                                                        else
-                                                            Toast.makeText(getContext(), ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<UserActivity> call, Throwable t) {
-                                                    if(isVisible() && !isRemoving() || !isDetached()) {
-                                                        t.printStackTrace();
-                                                        Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            }, FilterTypes.ActionType.ACTIVITY_EDIT, status);
-                                            action.execute();
+                                            Toast.makeText(getContext(), getString(R.string.input_empty_warning), Toast.LENGTH_SHORT).show();
                                         }
-                                        mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
-                                    } else {
-                                        Toast.makeText(getContext(), getString(R.string.input_empty_warning), Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                                break;
-                            case NEUTRAL:
-                                // TODO: 2017/05/16 Open bottom bar for inserting media
-                                break;
-                            case NEGATIVE:
-                                dialog.dismiss();
-                                break;
+                                    break;
+                                case NEUTRAL:
+                                    // TODO: 2017/05/16 Open bottom bar for inserting media
+                                    break;
+                                case NEGATIVE:
+                                    dialog.dismiss();
+                                    break;
+                            }
                         }
-                    }
-                }, mItem.getSpannedValue());
+                    }, mItem.getSpannedValue());
+                }
+                else {
+                    intent = new Intent(getActivity(), ComposerActivity.class);
+                    intent.putExtra(ComposerActivity.ARG_ACTION_ID, mItem.getId());
+                    intent.putExtra(ComposerActivity.ARG_ACTION_PAYLOAD, mItem.getValue());
+                    intent.putExtra(ComposerActivity.ARG_ACTION_TYPE, KeyUtils.ActionType.ACTIVITY_EDIT);
+                    startActivity(intent);
+                }
                 break;
             case R.id.status_delete:
                 new DialogManager(getActivity()).createDialogMessage(getString(R.string.dialog_confirm_delete),
@@ -406,7 +389,7 @@ public class UserStatusFragment extends Fragment implements Callback<List<UserAc
                                                         e.printStackTrace();
                                                     }
                                             }
-                                        }, FilterTypes.ActionType.ACTIVITY_DELETE, action);
+                                        }, KeyUtils.ActionType.ACTIVITY_DELETE, action);
                                         deleteAction.execute();
                                         mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
                                         break;

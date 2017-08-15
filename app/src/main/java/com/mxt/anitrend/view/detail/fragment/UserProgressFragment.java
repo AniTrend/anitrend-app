@@ -4,6 +4,7 @@ package com.mxt.anitrend.view.detail.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,18 +15,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.ProgressAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.event.MultiInteractionListener;
-import com.mxt.anitrend.event.RecyclerLoadListener;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.presenter.index.UserActivityPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.FilterProvider;
@@ -250,7 +255,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
             case R.id.feed_series_img:
                 // Open the clicked series
                 Series series = mItem.getSeries();
-                if(series.getSeries_type().equals(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()])) {
+                if(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME])) {
                     intent = new Intent(getActivity(), AnimeActivity.class);
                     intent.putExtra(AnimeActivity.MODEL_ID_KEY, series.getId());
                     intent.putExtra(AnimeActivity.MODEL_BANNER_KEY, series.getImage_url_banner());
@@ -267,6 +272,53 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
                 intent = new Intent(getActivity(), UserReplyActivity.class);
                 intent.putExtra(UserReplyActivity.USER_ACTIVITY_EXTRA, mItem);
                 startActivity(intent);
+                break;
+            case R.id.feed_delete:
+                new DialogManager(getActivity()).createDialogMessage(getString(R.string.dialog_confirm_delete),
+                        getString(R.string.dialog_delete_message),
+                        getString(R.string.Yes),
+                        getString(R.string.No),
+                        new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                switch (which) {
+                                    case POSITIVE:
+                                        Payload.ActionIdBased action = new Payload.ActionIdBased(mItem.getId());
+                                        RequestApiAction.IdActions deleteAction = new RequestApiAction.IdActions(getContext(), new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if (isVisible() && !isRemoving() || !isDetached()) {
+                                                    if (response.isSuccessful() && response.body() != null) {
+                                                        mData.remove(index);
+                                                        mAdapter.onItemRemoved(mData, index);
+                                                    }
+                                                    else
+                                                        Toast.makeText(getContext(), ErrorHandler.getError(response).toString(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                t.printStackTrace();
+                                                if(isVisible() && !isRemoving() || !isDetached())
+                                                    try {
+                                                        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                            }
+                                        }, KeyUtils.ActionType.ACTIVITY_DELETE, action);
+                                        deleteAction.execute();
+                                        mFragmentPresenter.createSuperToast(getActivity(), getString(R.string.text_sending_request), R.drawable.ic_info_outline_white_18dp, Style.TYPE_PROGRESS_BAR);
+                                        break;
+                                    case NEUTRAL:
+                                        break;
+                                    case NEGATIVE:
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        });
                 break;
             case R.id.mFlipper:
                 // Like the feed
@@ -302,7 +354,7 @@ public class UserProgressFragment extends Fragment implements Callback<List<User
                                 e.printStackTrace();
                             }
                     }
-                }, FilterTypes.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.ACTIVITY_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }

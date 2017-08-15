@@ -18,18 +18,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
 import top.wefor.circularanim.CircularAnim;
 
 /**
@@ -96,27 +97,22 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
         };
     }
 
-    private class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
+    class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
 
-        //declare all view controls here:
-        private TextView eng, romanji, type, chapters, airing, popularity, starting, volumes;
-        private ImageView image;
-        private FrameLayout line;
-        private CardView cardView;
+        @BindView(R.id.img_lge) ImageView image;
+        @BindView(R.id.txt_eng_title) TextView eng;
+        @BindView(R.id.txt_romanji) TextView romanji;
+        @BindView(R.id.txt_manga_type) TextView type;
+        @BindView(R.id.txt_manga_chapters) TextView chapters;
+        @BindView(R.id.txt_airing) TextView airing;
+        @BindView(R.id.txt_popularity) TextView popularity;
+        @BindView(R.id.txt_startdate) TextView starting;
+        @BindView(R.id.txt_manga_volumes) TextView volumes;
+        @BindView(R.id.line) FrameLayout line;
+        @BindView(R.id.card_view) CardView cardView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.card_view);
-            image = (ImageView)itemView.findViewById(R.id.img_lge);
-            eng = (TextView)itemView.findViewById(R.id.txt_eng_title);
-            romanji = (TextView)itemView.findViewById(R.id.txt_romanji);
-            type = (TextView)itemView.findViewById(R.id.txt_manga_type);
-            chapters = (TextView)itemView.findViewById(R.id.txt_manga_chapters);
-            airing = (TextView)itemView.findViewById(R.id.txt_airing);
-            popularity = (TextView)itemView.findViewById(R.id.txt_popularity);
-            starting = (TextView)itemView.findViewById(R.id.txt_startdate);
-            line = (FrameLayout) itemView.findViewById(R.id.line);
-            volumes = (TextView) itemView.findViewById(R.id.txt_manga_volumes);
             image.setOnClickListener(this);
             cardView.setOnClickListener(this);
             image.setOnLongClickListener(this);
@@ -126,7 +122,7 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
         @Override
         public void onBindViewHolder(Series model) {
 
-            Glide.with(mContext).load(mPrefs.isHD()?model.getImage_url_lge(): model.getImage_url_med())
+            Glide.with(mContext).load(model.getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(image);
@@ -190,13 +186,13 @@ public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
             switch (v.getId()) {
                 case R.id.img_lge:
                     if(mPrefs.isAuthenticated())
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                        new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     else
                         Toast.makeText(mContext, mContext.getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.card_view:
                     if(mPrefs.isAuthenticated())
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, mAdapter.get(getAdapterPosition())).execute();
+                        new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
                     else
                         Toast.makeText(mContext, mContext.getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
                     break;

@@ -30,7 +30,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class LoginActivity extends AppCompatActivity implements LoginPresenter.LoginCallback, View.OnClickListener {
 
-    public static final int LOGIN_RESULT = 56021;
+    public static final int LOGIN_RESULT = 186;
     public static final String KEY_NOTIFICATION_COUNT = "NOTIFICATION_COUNT";
     public static final String KEY_USER_DEFAULT_LOGIN = "USER_DEFAULT_LOGIN";
 
@@ -86,29 +86,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
                 }
             });
             mSnackbar.show();
-
-            if(mPresenter.getAppPrefs().getLoginTip()) {
-                new MaterialTapTargetPrompt.Builder(this)
-                        //or use ContextCompat.getColor(this, R.color.colorAccent)
-                        .setBackgroundColourFromRes(R.color.colorDarkKnight)
-                        .setFocalColourFromRes(R.color.colorAccent)
-                        .setTarget(mHelpButton)
-                        .setPrimaryText("Login Tip")
-                        .setSecondaryText("If the application ever signs you out due to E(104) use this.\n" +
-                                "\n" +
-                                "Tap Here To Dismiss")
-                        .setOnHidePromptListener(new MaterialTapTargetPrompt.OnHidePromptListener() {
-                            @Override
-                            public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
-
-                            }
-
-                            @Override
-                            public void onHidePromptComplete() {
-                                mPresenter.getAppPrefs().setLoginTip();
-                            }
-                        }).show();
-            }
         }
     }
 

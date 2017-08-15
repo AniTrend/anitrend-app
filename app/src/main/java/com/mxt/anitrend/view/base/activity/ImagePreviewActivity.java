@@ -15,12 +15,13 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.github.johnpersano.supertoasts.library.SuperActivityToast;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ImagePreviewActivity extends Activity {
+public class ImagePreviewActivity extends DefaultActivity {
 
     public static final String IMAGE_SOURCE = "model_image";
     private String imageURL;
@@ -29,17 +30,15 @@ public class ImagePreviewActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            View decorView = window.getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorBackground));
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
+        setTransparentStatusBar();
         ButterKnife.bind(this);
+        updateUI();
+    }
+
+    @Override
+    protected void updateUI() {
         if((imageURL = getIntent().getStringExtra(IMAGE_SOURCE)) != null){
             Glide.with(this).load(imageURL)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -56,5 +55,20 @@ public class ImagePreviewActivity extends Activity {
                     .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_RED))
                     .setAnimations(com.github.johnpersano.supertoasts.library.Style.ANIMATIONS_SCALE).show();
         }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (hasFocus) {
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
     }
 }

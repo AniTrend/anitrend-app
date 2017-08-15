@@ -1,16 +1,16 @@
 [
   {
-    "name": "Retrofit v2.1.0",
+    "name": "Retrofit v2.2.0",
     "description": "Type-safe HTTP client for Android and Java by Square, Inc.",
     "link": "http://square.github.io/retrofit/"
   },
   {
-    "name": "Glide v3.7.0",
+    "name": "Glide v3.8.0",
     "description": "Glide is a fast and efficient open source media management and image loading framework for Android that wraps media decoding, memory and disk caching, and resource pooling into a simple and easy to use interface.",
     "link": "https://github.com/bumptech/glide"
   },
   {
-    "name": "Butter Knife v8.4.0",
+    "name": "Butter Knife v8.6.0",
     "description": "Field and method binding for Android views",
     "link": "http://jakewharton.github.io/butterknife/"
   },
@@ -95,9 +95,9 @@
     "link": "https://github.com/Tapadoo/Alerter"
   },
   {
-    "name": "Easy Video Player",
-    "description": "Video playback on Android, made easy, wrapping around the stock MediaPlayer API.",
-    "link": "https://github.com/afollestad/easy-video-player"
+    "name": "JieCaoVideoPlayer",
+    "description": "Android VideoPlayer MediaPlayer VideoView MediaView Float View And Fullscreen",
+    "link": "https://github.com/lipangit/JieCaoVideoPlayer"
   },
   {
     "name": "Lightweight Stream API",

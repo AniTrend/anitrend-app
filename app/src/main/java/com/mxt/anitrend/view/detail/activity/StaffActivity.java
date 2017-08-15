@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +17,10 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.details.StaffPageAdapter;
 import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.api.model.StaffSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.AsyncTaskFetch;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -52,7 +50,6 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     private Staff mStaff;
     private StaffSmall mStaffSmall;
 
-    private ActionBar mActionBar;
     private MenuItem favMenuItem;
     private ApplicationPrefs prefs;
 
@@ -62,8 +59,6 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
         setContentView(R.layout.activity_staff_detail);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra(STAFF_INTENT_KEY)) {
             mStaffSmall = getIntent().getParcelableExtra(STAFF_INTENT_KEY);
         }
@@ -163,7 +158,7 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
                         if(!isDestroyed() || !isFinishing())
                             Toast.makeText(StaffActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
-                }, FilterTypes.ActionType.STAFF_FAVOURITE, actionIdBased);
+                }, KeyUtils.ActionType.STAFF_FAVOURITE, actionIdBased);
                 userPostActions.execute();
                 break;
         }

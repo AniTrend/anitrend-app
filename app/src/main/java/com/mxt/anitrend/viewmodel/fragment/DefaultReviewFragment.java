@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.async.SortHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
-import com.mxt.anitrend.event.FragmentCallback;
-import com.mxt.anitrend.event.RecyclerLoadListener;
+import com.mxt.anitrend.base.custom.async.SortHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
+import com.mxt.anitrend.base.interfaces.event.FragmentCallback;
+import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.presenter.index.FragmentReviewPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -156,7 +156,6 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
         super.onPause();
         mPresenter.getAppPrefs().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mPresenter.setParcelable(recyclerView.onSaveInstanceState());
-        mPresenter.destroySuperToast();
     }
 
     @Override
@@ -176,7 +175,6 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mPresenter.destroySuperToast();
         if(mSorter != null)
             mSorter.cancel(false);
     }
@@ -206,7 +204,7 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        if(isVisible() && (!isDetached() || !isRemoving())) {
+        if(isAlive()) {
             t.printStackTrace();
             progressLayout.showError(ContextCompat.getDrawable(getContext(), R.drawable.request_error), t.getLocalizedMessage(), getString(R.string.button_try_again), new View.OnClickListener() {
                 @Override
@@ -237,6 +235,10 @@ public abstract class DefaultReviewFragment<T extends Parcelable> extends Fragme
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         update();
+    }
+
+    protected boolean isAlive() {
+        return isVisible() && (!isDetached() || !isRemoving());
     }
 
     /**

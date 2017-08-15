@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Tag;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
 import com.mxt.anitrend.util.DateTimeConverter;
@@ -86,7 +86,7 @@ public class MangaOverviewFragment extends Fragment {
         if(getArguments() != null) {
             model = getArguments().getParcelable(ARG_KEY);
         }
-        mPresenter = new SeriesPresenter(FilterTypes.SeriesTypes[FilterTypes.SeriesType.MANGA.ordinal()], getContext());
+        mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.MANGA], getContext());
     }
 
     @Override

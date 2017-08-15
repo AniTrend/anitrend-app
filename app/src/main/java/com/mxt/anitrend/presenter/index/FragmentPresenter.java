@@ -4,16 +4,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.Search;
-import com.mxt.anitrend.async.HomePageFetch;
+import com.mxt.anitrend.base.custom.async.HomePageFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import java.util.List;
 
 import retrofit2.Callback;
 
-import static com.mxt.anitrend.api.structure.FilterTypes.SeasonTitles;
+import static com.mxt.anitrend.util.KeyUtils.SeasonTitles;
 
 /**
  * Created by Maxwell on 10/15/2016.
@@ -29,7 +29,7 @@ public class FragmentPresenter extends CommonPresenter<List<Series>> {
 
     @Override
     public void beginAsync(Callback<List<Series>> callback, int viewPosition) {
-        new HomePageFetch(callback, new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], /*anime or manga*/
+        new HomePageFetch(callback, new Search(KeyUtils.SeriesTypes[KeyUtils.ANIME], /*anime or manga*/
                 getApiPrefs().getYear(), /*year*/
                 SeasonTitles[viewPosition], /*season*/
                 getApiPrefs().getShowType(), /*Type e.g. TV or Movie e.t.c*/
@@ -44,9 +44,9 @@ public class FragmentPresenter extends CommonPresenter<List<Series>> {
     }
 
     public void beginAsync(Callback<List<Series>> callback, int viewPosition, int page) {
-        new HomePageFetch(callback, new Search(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()],
+        new HomePageFetch(callback, new Search(KeyUtils.SeriesTypes[KeyUtils.ANIME],
                 getApiPrefs().getYear(),
-                FilterTypes.SeasonTitles[viewPosition],
+                KeyUtils.SeasonTitles[viewPosition],
                 getApiPrefs().getShowType(),
                 getApiPrefs().getStatus(),
                 getApiPrefs().getGenres(),

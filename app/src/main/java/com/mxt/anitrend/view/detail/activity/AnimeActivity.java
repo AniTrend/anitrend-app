@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,10 +22,10 @@ import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.details.AnimePageAdapter;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.Payload;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.presenter.detail.SeriesPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.TransitionHelper;
@@ -69,7 +68,6 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
 
     @BindView(R.id.detail_model_banner) ImageView mBannerImage;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    private ActionBar mActionBar;
     private MenuItem favMenuItem;
 
     private SeriesPresenter mPresenter;
@@ -80,8 +78,6 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         setContentView(R.layout.activity_series_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if ((mActionBar = getSupportActionBar()) != null)
-            mActionBar.setDisplayHomeAsUpEnabled(true);
         if(mIntentData != null) {
             mId = Integer.valueOf(mIntentData);
         }
@@ -100,7 +96,7 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
         progressLayout.showLoading();
         viewPager.setOffscreenPageLimit(3);
         attachEventListeners();
-        mPresenter = new SeriesPresenter(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()], getApplicationContext());
+        mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.ANIME], getApplicationContext());
         if(mId != 0 && mSeries != null)
             updateUI();
         else {
@@ -357,11 +353,11 @@ public class AnimeActivity extends DefaultActivity implements FloatingToolbar.It
                                     e.printStackTrace();
                                 }
                         }
-                    }, FilterTypes.ActionType.ANIME_FAVOURITE, actionIdBased);
+                    }, KeyUtils.ActionType.ANIME_FAVOURITE, actionIdBased);
                     userPostActions.execute();
                     break;
                 case R.id.action_add_to_list:
-                    new SeriesActionHelper(this, FilterTypes.SeriesType.ANIME, mSeries).execute();
+                    new SeriesActionHelper(this, KeyUtils.ANIME, mSeries).execute();
                     break;
                 case R.id.action_write_review:
                     mPresenter.displayMessage(getString(R.string.text_feature_on_hold), this);

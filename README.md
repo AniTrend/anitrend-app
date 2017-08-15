@@ -1,5 +1,7 @@
-[![Stories in Ready](https://badge.waffle.io/wax911/AniTrendApp.png?label=ready&title=Ready)](https://waffle.io/wax911/AniTrendApp?utm_source=badge)
-# __AniTrend v0.9.9r8__ [![Build Status](https://travis-ci.org/wax911/AniTrendApp.svg?branch=master)](https://travis-ci.org/wax911/AniTrendApp)
+# __AniTrend v0.9.9r8__ &nbsp; <a href='https://ko-fi.com/A3772XCL' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+__Travis-Ci Status:__ [![Build Status](https://travis-ci.org/wax911/AniTrendApp.svg?branch=master)](https://travis-ci.org/wax911/AniTrendApp) &nbsp; __Waffles Status:__ [![Stories in Ready](https://badge.waffle.io/wax911/AniTrendApp.png?label=ready&title=Ready)](https://waffle.io/wax911/AniTrendApp?utm_source=badge)
+
 
 <p align="center"><a href='https://play.google.com/store/apps/details?id=com.mxt.anitrend&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a></p>
 

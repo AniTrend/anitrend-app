@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,8 +17,8 @@ import com.mxt.anitrend.api.model.Review;
 import com.mxt.anitrend.api.structure.Anime;
 import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.api.structure.ReviewType;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
@@ -26,6 +27,8 @@ import com.mxt.anitrend.view.detail.activity.MangaActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
 
 import java.util.Locale;
+
+import butterknife.BindView;
 
 /**
  * Created by max on 2017/05/02.
@@ -65,21 +68,19 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
         return null;
     }
 
-    private class ImageViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
+    class ImageViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
 
-        //declare all view controls here:
-        private ImageView review_img;
-        private TextView review_user, review_heading, review_summary, review_up_score, review_down_score, review_read_more;
+        @BindView(R.id.img_lge) ImageView review_img;
+        @BindView(R.id.review_user) TextView review_user;
+        @BindView(R.id.review_rating) TextView review_rating;
+        @BindView(R.id.review_heading) TextView review_heading;
+        @BindView(R.id.review_summary) TextView review_summary;
+        @BindView(R.id.review_up_score) TextView review_up_score;
+        @BindView(R.id.review_down_score) TextView review_down_score;
+        @BindView(R.id.review_read_more) TextView review_read_more;
 
         ImageViewHolder(View view) {
             super(view);
-            review_img = (ImageView) view.findViewById(R.id.img_lge);
-            review_user = (TextView) view.findViewById(R.id.review_user);
-            review_heading = (TextView) view.findViewById(R.id.review_heading);
-            review_summary = (TextView) view.findViewById(R.id.review_summary);
-            review_up_score = (TextView) view.findViewById(R.id.review_up_score);
-            review_down_score = (TextView) view.findViewById(R.id.review_down_score);
-            review_read_more = (TextView) view.findViewById(R.id.review_read_more);
             review_img.setOnClickListener(this);
             review_read_more.setOnClickListener(this);
         }
@@ -136,6 +137,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
             review_heading.setText(title);
             review_summary.setText(model.getSummary());
             review_user.setText(mContext.getString(R.string.text_reviewed_by, model.getUser().getDisplay_name()));
+            review_rating.setText(String.format(Locale.getDefault(), "%d / 100", model.getScore()));
         }
 
         @Override
@@ -172,24 +174,21 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
         }
     }
 
-    private class CardViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
+    class CardViewHolder extends RecyclerViewHolder<Review> implements View.OnClickListener {
 
-        private View review_holder;
-        private ImageView review_avatar, review_series_img;
-        private TextView review_heading, review_up_score, review_down_score, review_user, review_date, review_content, review_read_more;
+        @BindView(R.id.review_holder) View review_holder;
+        @BindView(R.id.review_avatar) ImageView review_avatar;
+        @BindView(R.id.review_series_img) ImageView review_series_img;
+        @BindView(R.id.review_user) TextView review_user;
+        @BindView(R.id.review_heading) TextView review_heading;
+        @BindView(R.id.review_date) TextView review_date;
+        @BindView(R.id.review_content) TextView review_content;
+        @BindView(R.id.review_up_score) TextView review_up_score;
+        @BindView(R.id.review_down_score) TextView review_down_score;
+        @BindView(R.id.review_read_more) TextView review_read_more;
 
         CardViewHolder(View view) {
             super(view);
-            review_holder = view.findViewById(R.id.review_holder);
-            review_avatar = (ImageView) view.findViewById(R.id.review_avatar);
-            review_series_img = (ImageView) view.findViewById(R.id.review_series_img);
-            review_heading = (TextView) view.findViewById(R.id.review_heading);
-            review_up_score = (TextView) view.findViewById(R.id.review_up_score);
-            review_down_score = (TextView) view.findViewById(R.id.review_down_score);
-            review_user = (TextView) view.findViewById(R.id.review_user);
-            review_date = (TextView) view.findViewById(R.id.review_date);
-            review_content = (TextView) view.findViewById(R.id.review_content);
-            review_read_more = (TextView) view.findViewById(R.id.review_read_more);
             review_avatar.setOnClickListener(this);
             review_holder.setOnClickListener(this);
             review_read_more.setOnClickListener(this);

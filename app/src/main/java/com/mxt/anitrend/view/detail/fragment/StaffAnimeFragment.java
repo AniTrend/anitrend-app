@@ -13,8 +13,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.AnimeStaffRoles;
 import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.view.StatefulRecyclerView;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.viewmodel.fragment.DefaultFragment;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 

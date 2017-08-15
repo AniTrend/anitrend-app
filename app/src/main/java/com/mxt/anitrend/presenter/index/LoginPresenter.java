@@ -11,7 +11,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.call.UserModel;
 import com.mxt.anitrend.api.model.User;
 import com.mxt.anitrend.api.service.ServiceGenerator;
-import com.mxt.anitrend.async.TokenReference;
+import com.mxt.anitrend.base.custom.async.TokenReference;
 import com.mxt.anitrend.presenter.CommonPresenter;
 import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.view.index.activity.LoginActivity;

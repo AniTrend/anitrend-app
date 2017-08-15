@@ -88,7 +88,9 @@ public class Character implements Parcelable {
     }
 
     public String getRole() {
-        return role;
+        if(role != null)
+            return role;
+        return "N/A";
     }
 
     public boolean isFavourite() {

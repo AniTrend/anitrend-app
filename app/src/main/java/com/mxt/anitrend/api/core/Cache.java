@@ -65,4 +65,8 @@ public final class Cache {
         String preferred_name = "app_cache.atr";
         mFile = new File(appContext.getFilesDir(), preferred_name);
     }
+
+    public static okhttp3.Cache getCache(Context context) {
+        return new okhttp3.Cache(context.getCacheDir(), 50 * 1024 * 1024);
+    }
 }

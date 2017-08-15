@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.FilterTypes;
+import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.presenter.base.TrendingPresenter;
 import com.mxt.anitrend.viewmodel.fragment.DefaultListFragment;
 
@@ -28,7 +28,7 @@ public class TrendingFragment extends DefaultListFragment<Series> {
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.card_col_size_home;
         isPaginate = true;
-        mPresenter = new TrendingPresenter(getContext(), "popularity-desc", FilterTypes.AnimeStatusTypes[FilterTypes.AnimeStatusType.CURRENTLY_AIRING.ordinal()]);
+        mPresenter = new TrendingPresenter(getContext(), "popularity-desc", KeyUtils.AnimeStatusTypes[KeyUtils.CURRENTLY_AIRING]);
     }
 
     @Override

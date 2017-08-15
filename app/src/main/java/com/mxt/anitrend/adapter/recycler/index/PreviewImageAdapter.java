@@ -21,14 +21,17 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.custom.cardgallary.CardAdapterHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.view.widget.cardgallary.CardAdapterHelper;
 import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
+import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
 
 import java.util.List;
+
+import butterknife.BindView;
 
 public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
 
@@ -63,17 +66,14 @@ public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<String> implements RequestListener<String, GlideDrawable>, Palette.PaletteAsyncListener {
+    class ViewHolder extends RecyclerViewHolder<String> implements RequestListener<String, GlideDrawable>, Palette.PaletteAsyncListener {
 
-        private ImageView mImageView;
-        private FrameLayout mFrameLayout;
-        private TextView mLabel;
+        @BindView(R.id.image_preview) ImageView mImageView;
+        @BindView(R.id.preview_container) FrameLayout mFrameLayout;
+        @BindView(R.id.preview_label) TextView mLabel;
 
         ViewHolder(final View view) {
             super(view);
-            mFrameLayout = (FrameLayout) view.findViewById(R.id.preview_container);
-            mImageView = (ImageView) view.findViewById(R.id.image_preview);
-            mLabel = (TextView) view.findViewById(R.id.preview_label);
             mImageView.setOnClickListener(this);
         }
 
@@ -119,8 +119,9 @@ public class PreviewImageAdapter extends RecyclerViewAdapter<String> {
                     Intent intent;
                     switch (type) {
                         case PatternMatcher.KEY_WEB:
-                            intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.parse(mAdapter.get(getAdapterPosition())), "video/*");
+                            intent = new Intent(mContext, VideoPlayerActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra(VideoPlayerActivity.URL_VIDEO_LINK, mAdapter.get(getAdapterPosition()));
                             mContext.startActivity(intent);
                             break;
                         case PatternMatcher.KEY_YOU:

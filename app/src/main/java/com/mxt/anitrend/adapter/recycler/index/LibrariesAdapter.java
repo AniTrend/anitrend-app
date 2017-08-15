@@ -12,10 +12,12 @@ import android.widget.TextView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.LibraryRep;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by Maxwell on 12/30/2016.
@@ -47,17 +49,14 @@ public class LibrariesAdapter extends RecyclerViewAdapter<LibraryRep> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<LibraryRep> {
+    class ViewHolder extends RecyclerViewHolder<LibraryRep> {
 
-        //declare all view controls here:
-        private TextView name, description;
-        private View container;
+        @BindView(R.id.library_name) TextView name;
+        @BindView(R.id.library_description) TextView description;
+        @BindView(R.id.about_container) View container;
 
         ViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.library_name);
-            description = (TextView) itemView.findViewById(R.id.library_description);
-            container = itemView.findViewById(R.id.about_container);
             container.setOnClickListener(this);
         }
 

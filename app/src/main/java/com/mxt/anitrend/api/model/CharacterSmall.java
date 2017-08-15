@@ -18,6 +18,8 @@ public class CharacterSmall implements Parcelable {
     private String role;
     private List<StaffSmall> actor;
 
+    public CharacterSmall() {
+    }
 
     protected CharacterSmall(Parcel in) {
         id = in.readInt();
@@ -83,5 +85,33 @@ public class CharacterSmall implements Parcelable {
 
     public List<StaffSmall> getActor() {
         return actor;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName_first(String name_first) {
+        this.name_first = name_first;
+    }
+
+    public void setName_last(String name_last) {
+        this.name_last = name_last;
+    }
+
+    public void setImage_url_lge(String image_url_lge) {
+        this.image_url_lge = image_url_lge;
+    }
+
+    public void setImage_url_med(String image_url_med) {
+        this.image_url_med = image_url_med;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setActor(List<StaffSmall> actor) {
+        this.actor = actor;
     }
 }

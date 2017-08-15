@@ -8,7 +8,7 @@ import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.Studio;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.structure.ListItem;
-import com.mxt.anitrend.async.FilterBackgroundTask;
+import com.mxt.anitrend.base.custom.async.FilterBackgroundTask;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

@@ -7,6 +7,7 @@ import android.text.Spanned;
 import com.mxt.anitrend.api.structure.UserLists;
 import com.mxt.anitrend.api.structure.UserStats;
 import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.PatternMatcher;
 
 import java.util.List;
 import java.util.Locale;
@@ -99,7 +100,7 @@ public class User implements Parcelable {
     }
 
     public Spanned getAbout() {
-        return MarkDown.convert(about);
+        return MarkDown.convert(PatternMatcher.removeTags(about));
     }
 
     public String getAboutRaw() {

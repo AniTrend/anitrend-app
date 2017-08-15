@@ -11,11 +11,13 @@ import android.widget.TextView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.StudioSmall;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.view.detail.activity.StudioActivity;
 
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by max on 2017/05/14.
@@ -46,16 +48,13 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioSmall> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<StudioSmall> {
+    class ViewHolder extends RecyclerViewHolder<StudioSmall> {
 
-        //declare all view controls here:
-        private TextView studio;
-        private View studio_container;
+        @BindView(R.id.studio) TextView studio;
+        @BindView(R.id.studio_container) View studio_container;
 
         ViewHolder(View view) {
             super(view);
-            studio = (TextView) view.findViewById(R.id.studio);
-            studio_container = view.findViewById(R.id.studio_container);
             studio_container.setOnClickListener(this);
         }
 

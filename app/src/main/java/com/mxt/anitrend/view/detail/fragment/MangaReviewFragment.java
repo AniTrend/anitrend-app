@@ -14,12 +14,12 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.SeriesReviewAdapter;
 import com.mxt.anitrend.api.model.Review;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.AsyncTaskFetch;
-import com.mxt.anitrend.async.RequestApiAction;
-import com.mxt.anitrend.custom.Payload;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.event.ReviewClickListener;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.interfaces.event.ReviewClickListener;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
+import com.mxt.anitrend.base.custom.async.RequestApiAction;
+import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
@@ -242,7 +242,7 @@ public class MangaReviewFragment extends Fragment implements Callback<List<Revie
                     ex.printStackTrace();
                 }
             }
-        }, FilterTypes.ActionType.REVIEW_MANGA_RATE, payload).execute();
+        }, KeyUtils.ActionType.REVIEW_MANGA_RATE, payload).execute();
     }
 
     @Override
@@ -272,6 +272,6 @@ public class MangaReviewFragment extends Fragment implements Callback<List<Revie
                     ex.printStackTrace();
                 }
             }
-        }, FilterTypes.ActionType.REVIEW_MANGA_RATE, payload).execute();
+        }, KeyUtils.ActionType.REVIEW_MANGA_RATE, payload).execute();
     }
 }

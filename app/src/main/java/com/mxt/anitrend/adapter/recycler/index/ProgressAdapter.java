@@ -18,18 +18,20 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.UserActivity;
 import com.mxt.anitrend.api.model.UserSmall;
-import com.mxt.anitrend.api.structure.FilterTypes;
-import com.mxt.anitrend.async.SeriesActionHelper;
-import com.mxt.anitrend.custom.recycler.RecyclerViewAdapter;
-import com.mxt.anitrend.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheet;
-import com.mxt.anitrend.custom.bottomsheet.BottomSheetLikes;
-import com.mxt.anitrend.event.MultiInteractionListener;
+import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheet;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetLikes;
+import com.mxt.anitrend.base.interfaces.event.MultiInteractionListener;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
 import java.util.Locale;
+
+import butterknife.BindView;
 
 /**
  * Created by max on 2017/03/10.
@@ -71,31 +73,29 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<UserActivity> implements View.OnLongClickListener {
+    class ViewHolder extends RecyclerViewHolder<UserActivity> implements View.OnLongClickListener {
 
-        private View mLikesViewer;
-        private ViewFlipper mFlipper;
-        private ImageView mAvatar, mSeriesImage;
-        private TextView mHeading, mLike, mComment, mMainUser, mTime, mContent;
+        @BindView(R.id.likes_viewer) View mLikesViewer;
+        @BindView(R.id.mFlipper) ViewFlipper mFlipper;
+        @BindView(R.id.feed_avatar) ImageView mAvatar;
+        @BindView(R.id.feed_series_img) ImageView mSeriesImage;
+        @BindView(R.id.feed_heading) TextView mHeading;
+        @BindView(R.id.feed_like) TextView mLike;
+        @BindView(R.id.feed_comment) TextView mComment;
+        @BindView(R.id.feed_main_user) TextView mMainUser;
+        @BindView(R.id.feed_time) TextView mTime;
+        @BindView(R.id.feed_content) TextView mContent;
+        @BindView(R.id.feed_delete) TextView mDelete;
 
         public ViewHolder(View view) {
             super(view);
-            mLikesViewer = view.findViewById(R.id.likes_viewer);
-            mFlipper = (ViewFlipper) view.findViewById(R.id.mFlipper);
-            mAvatar = (ImageView) view.findViewById(R.id.feed_avatar);
-            mSeriesImage = (ImageView) view.findViewById(R.id.feed_series_img);
-            mHeading = (TextView) view.findViewById(R.id.feed_heading);
-            mLike = (TextView) view.findViewById(R.id.feed_like);
-            mComment = (TextView) view.findViewById(R.id.feed_comment);
-            mMainUser = (TextView) view.findViewById(R.id.feed_main_user);
-            mTime = (TextView) view.findViewById(R.id.feed_time);
-            mContent = (TextView) view.findViewById(R.id.feed_content);
             mLikesViewer.setOnClickListener(this);
             mFlipper.setOnClickListener(this);
             mSeriesImage.setOnLongClickListener(this);
             mSeriesImage.setOnClickListener(this);
             mComment.setOnClickListener(this);
             mAvatar.setOnClickListener(this);
+            mDelete.setOnClickListener(this);
         }
 
         @Override
@@ -145,8 +145,7 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
                     header = String.format(Locale.getDefault(), "%s %s %s of:", model.getUsers().get(0).getDisplay_name(), model.getStatus(), model.getValue());
             }
 
-
-            Glide.with(mContext).load(mAppPrefs.isHD() ? model.getSeries().getImage_url_lge() : model.getSeries().getImage_url_med())
+            Glide.with(mContext).load(model.getSeries().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.toolbar_shadow)
                     .into(mSeriesImage);
@@ -157,6 +156,8 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
                 mLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_red_900_18dp, 0, 0, 0);
             else
                 mLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_grey_600_18dp, 0, 0, 0);
+
+            mDelete.setVisibility(model.getUsers().contains(current)?View.VISIBLE:View.GONE);
 
             if(mFlipper.getDisplayedChild() != 0)
                 mFlipper.showPrevious();
@@ -197,10 +198,10 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
             switch (v.getId()) {
                 case R.id.feed_series_img:
                     Series series = mAdapter.get(getAdapterPosition()).getSeries();
-                    if(series.getSeries_type().equals(FilterTypes.SeriesTypes[FilterTypes.SeriesType.ANIME.ordinal()]))
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.ANIME, series).execute();
+                    if(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
+                        new SeriesActionHelper(mContext, KeyUtils.ANIME, series).execute();
                     else
-                        new SeriesActionHelper(mContext, FilterTypes.SeriesType.MANGA, series).execute();
+                        new SeriesActionHelper(mContext, KeyUtils.MANGA, series).execute();
                     break;
             }
             return true;

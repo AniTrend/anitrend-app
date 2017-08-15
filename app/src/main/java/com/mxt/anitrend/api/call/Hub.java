@@ -19,6 +19,21 @@ public interface Hub {
             "\"addedBy\":\"UeQuqJ90j3igXB6A\"" +
             "}";
 
+    /*Pass in the param of the video item*/
+    String playlist_filter = "{\"videos\":{\"$exists\":true}," +
+            "\"videos\":\"%s\"}";
+
+    String format = "json";
+
+    String arg_order = "arg_order";
+    String arg_limit = "arg_limit";
+    String arg_page = "arg_page";
+    String arg_expand = "arg_expand";
+    String arg_search = "arg_search";
+    String arg_filter = "arg_filter";
+    String arg_format = "arg_format";
+    String arg_id = "arg_id";
+
     @GET("videos")
     Call<Result<Video>> getVideos(@Query("order") String order,
                                   @Query("limit") int limit,
@@ -36,7 +51,7 @@ public interface Hub {
                                    @Query("filter") String filter,
                                    @Query("format") String format);
 
-    @GET("playlist")
+    @GET("playlists")
     Call<Result<Playlist>> getPlaylist(@Query("order") String order,
                                        @Query("limit") int limit,
                                        @Query("page") int page,

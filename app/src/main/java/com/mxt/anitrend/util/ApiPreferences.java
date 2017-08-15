@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.mxt.anitrend.api.model.User;
-import com.mxt.anitrend.api.structure.FilterTypes;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -102,7 +101,7 @@ public class ApiPreferences {
     }
 
     public String getSort() {
-        return sharedPreferences.getString(KEY_SORT_TYPE, FilterTypes.SeriesSortTypes[FilterTypes.SeriesSortType.POPULARITY.ordinal()]);
+        return sharedPreferences.getString(KEY_SORT_TYPE, KeyUtils.SeriesSortTypes[KeyUtils.POPULARITY]);
     }
 
     public void saveGenres(String genres){
@@ -150,7 +149,7 @@ public class ApiPreferences {
     }
 
     public String getOrder() {
-        return sharedPreferences.getString(KEY_ORDER_TYPE, FilterTypes.OrderTypes[FilterTypes.OrderType.DESC.ordinal()]);
+        return sharedPreferences.getString(KEY_ORDER_TYPE, KeyUtils.OrderTypes[KeyUtils.DESC]);
     }
 
     public void saveYear(int year){
@@ -170,7 +169,7 @@ public class ApiPreferences {
     }
 
     public String getStatus() {
-        return sharedPreferences.getString(KEY_STATUS_TYPE, FilterTypes.AnimeStatusTypes[FilterTypes.AnimeStatusType.ALL_ITEMS.ordinal()]);
+        return sharedPreferences.getString(KEY_STATUS_TYPE, KeyUtils.AnimeStatusTypes[KeyUtils.ALL_ITEMS]);
     }
 
     public void saveExclude(String exclude){

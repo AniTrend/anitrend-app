@@ -58,9 +58,9 @@ public class StaffOverviewFragment extends DefaultFragment<Staff> implements Vie
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_staff_overview, container, false);
         unbinder = ButterKnife.bind(this, root);
-        super.onCreateView(inflater, container, savedInstanceState);
         return root;
     }
 
