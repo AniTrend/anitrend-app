@@ -116,6 +116,8 @@ dependencies {
 
     compile 'com.tapadoo.android:alerter:1.0.7'
 
+    compile 'com.zzhoujay.richtext:richtext:2.5.4'
+
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
     compile 'org.greenrobot:eventbus:3.0.0'

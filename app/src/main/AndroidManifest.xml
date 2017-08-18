@@ -206,9 +206,7 @@
         <activity
             android:name=".view.detail.activity.UserReplyActivity"
             android:label="@string/title_activity_reply"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".view.base.activity.GalleryPreviewActivity"
@@ -241,6 +239,7 @@
 
         <activity
             android:name=".view.base.activity.ComposerActivity"
+            android:launchMode="singleTask"
             android:theme="@style/DarkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -252,6 +251,10 @@
 
         <activity
             android:name=".view.base.activity.StreamActivity"
+            android:theme="@style/DarkTheme" />
+
+        <activity
+            android:name=".view.base.activity.ReviewReaderActivity"
             android:theme="@style/DarkTheme" />
 
     </application>

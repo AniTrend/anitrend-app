@@ -22,6 +22,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
+import com.mxt.anitrend.view.base.activity.ReviewReaderActivity;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
 import com.mxt.anitrend.view.index.activity.UserProfileActivity;
@@ -148,14 +149,18 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
+            Intent starter;
             switch (view.getId()){
                 case R.id.review_read_more:
                     Review review = mAdapter.get(position);
-                    new DialogManager(mContext).createDialogMessage(String.format(Locale.getDefault(),
-                            mContext.getString(R.string.text_reviewed_by), review.getUser().getDisplay_name()), review.getText());
+                    /*new DialogManager(mContext).createDialogMessage(String.format(Locale.getDefault(),
+                            mContext.getString(R.string.text_reviewed_by), review.getUser().getDisplay_name()), review.getText());*/
+                    starter = new Intent(mContext, ReviewReaderActivity.class);
+                    starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    starter.putExtra(ReviewReaderActivity.REVIEW_INSTANCE, review);
+                    mContext.startActivity(starter);
                     break;
                 case R.id.img_lge:
-                    Intent starter;
                     if(reviewType) {
                         starter = new Intent(mContext, AnimeActivity.class);
                         starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -15,8 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
-        android:inputType="textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
-        android:autoLink="all"
-        android:linksClickable="true"/>
+        android:inputType="textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences" />
 
 </FrameLayout>

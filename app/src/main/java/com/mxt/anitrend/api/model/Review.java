@@ -99,8 +99,16 @@ public class Review implements Parcelable {
         return MarkDown.convert(text);
     }
 
+    public String getTextRaw() {
+        return text;
+    }
+
     public int getScore() {
         return score;
+    }
+
+    public float getDoubleScore() {
+        return score * 5 / 100;
     }
 
     public Anime getAnime() {

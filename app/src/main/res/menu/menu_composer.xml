@@ -18,9 +18,5 @@
         android:title="@string/action_send"
         android:icon="@drawable/ic_send_white_24dp"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_help"
-        android:title="@string/menu_title_help"
-        app:showAsAction="never" />
 
 </menu>

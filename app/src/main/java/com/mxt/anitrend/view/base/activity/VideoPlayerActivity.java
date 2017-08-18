@@ -5,14 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 import com.mxt.anitrend.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import fm.jiecao.jcvideoplayer_lib.JCUserActionStandard;
-import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
@@ -71,8 +68,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
      */
     @Override
     public void onBackPressed() {
-        if (JCVideoPlayer.backPress())
-            return;
+        JCVideoPlayer.backPress();
         super.onBackPressed();
     }
 
@@ -92,7 +88,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
             this.mLink = savedInstanceState.getString(KEY_LINK);
     }
 
-    private void destoryActivity() {
+    private void destroyActivity() {
         onBackPressed();
         if(!isDestroyed() || !isFinishing())
             finish();
@@ -107,10 +103,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                destoryActivity();
+                destroyActivity();
                 break;
             case fm.jiecao.jcvideoplayer_lib.R.id.fullscreen:
-                destoryActivity();
+                destroyActivity();
                 break;
         }
     }

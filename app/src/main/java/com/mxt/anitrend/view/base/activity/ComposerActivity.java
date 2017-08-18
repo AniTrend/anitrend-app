@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.github.johnpersano.supertoasts.library.Style;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.mxt.anitrend.R;
@@ -27,8 +28,13 @@ import com.mxt.anitrend.util.ErrorHandler;
 import com.mxt.anitrend.util.ImeAction;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.view.index.activity.LoginActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
+import com.zzhoujay.richtext.RichText;
+import com.zzhoujay.richtext.RichTextConfig;
+import com.zzhoujay.richtext.RichType;
+import com.zzhoujay.richtext.ig.DefaultImageGetter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,7 +72,8 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
 
     private boolean isPreviewMode;
     private String original;
-    private Spanned preview;
+
+    private RichText richText;
 
     private ApplicationPrefs preferences;
     private BottomSheetBehavior mBehavior;
@@ -96,11 +103,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         preferences = new ApplicationPrefs(this);
-        if(!preferences.isAuthenticated()) {
-            Toast.makeText(this, R.string.text_please_sign_in, Toast.LENGTH_LONG).show();
-            finish();
-        } else
-            handleIntent();
     }
 
     @Override
@@ -108,6 +110,11 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
         super.onPostCreate(savedInstanceState);
         getDelegate().setHandleNativeActionModesEnabled(false);
         mPresenter = new GenericPresenter(this);
+        if(!preferences.isAuthenticated()) {
+            Toast.makeText(this, R.string.text_please_sign_in, Toast.LENGTH_LONG).show();
+            finish();
+        } else
+            handleIntent();
         updateUI();
     }
 
@@ -159,11 +166,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             case R.id.action_preview:
                 toggleModes();
                 break;
-            case R.id.action_help:
-                new DialogManager(ComposerActivity.this)
-                        .createDialogMessage(getString(R.string.menu_title_help),
-                                MarkDown.convert(getString(R.string.menu_title_help)));
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -172,6 +174,8 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
     protected void onDestroy() {
         if(activityActions != null && activityActions.getStatus() == AsyncTask.Status.RUNNING)
             activityActions.cancel(true);
+        richText.clear();
+        richText = null;
         super.onDestroy();
     }
 
@@ -198,7 +202,9 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
     }
 
     private void startAction() {
-        Payload.ActivityStruct activityStruct = null;
+        Payload.ActivityStruct activityStruct;
+        if(mActionType == null)
+            mActionType = KeyUtils.ActionType.ACTIVITY_CREATE;
         switch (mActionType) {
             case ACTIVITY_CREATE:
                 activityStruct = new Payload.ActivityStruct(editText.getText().toString());
@@ -209,9 +215,11 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
                 activityActions = new RequestApiAction.ActivityActions<>(getApplicationContext(), this, mActionType, activityStruct);
                 break;
         }
-        activityActions = new RequestApiAction.ActivityActions<>(getApplicationContext(), this, mActionType, activityStruct);
         activityActions.execute();
-        Toast.makeText(this, R.string.Sending, Toast.LENGTH_SHORT).show(); //replace with dialog
+
+        mPresenter.createSuperToast(this, getString(R.string.Sending), R.drawable.ic_info_outline_white_18dp,
+                Style.TYPE_PROGRESS_BAR, Style.DURATION_VERY_LONG,
+                ContextCompat.getColor(this, R.color.colorStateBlue));
     }
 
     private void toggleModes() {
@@ -222,8 +230,12 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             ImeAction.hideSoftKeyboard(this);
             Toast.makeText(this, R.string.text_preview_mode, Toast.LENGTH_SHORT).show();
             original = editText.getText().toString();
-            preview = MarkDown.convert(original);
-            editText.setText(preview);
+
+            RichTextConfig.RichTextConfigBuild builder = RichText
+                    .from(PatternMatcher.convertToStandardMarkdownEditor(original))
+                    .imageGetter(new DefaultImageGetter())
+                    .type(RichType.MARKDOWN);
+            richText = builder.into(editText);
         }
         setIcon();
         isPreviewMode = !isPreviewMode;

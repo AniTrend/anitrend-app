@@ -91,7 +91,7 @@ public class MarkdownEditor extends android.support.v7.widget.AppCompatEditText 
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         int start = getSelectionStart();
         int end = getSelectionEnd() + 2;
-        if(end > getSelectionEnd() + 1)
+        if(end > getSelectionEnd() + 2)
             end -= 1;
         switch (item.getItemId()) {
             case R.id.menu_bold:

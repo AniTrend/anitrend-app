@@ -152,6 +152,12 @@
         <item name="colorControlActivated">?colorAccent</item>
     </style>
 
+    <style name="RatingBarSmall" parent="Theme.AppCompat">
+        <item name="colorControlNormal">?colorAccent</item>
+        <item name="colorControlActivated">?colorAccent</item>
+        <item name="ratingBarStyle">?android:attr/ratingBarStyleSmall</item>
+    </style>
+
     <style name="AppImagePreview" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/colorDarkKnight</item>
     </style>

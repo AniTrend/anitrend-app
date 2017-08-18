@@ -246,6 +246,8 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
         recyclerView.setNestedScrollingEnabled(false); //set to false if somethings fail to work properly
         mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(R.integer.card_col_size_home), StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
+        mActivityOrigin.setHasFixedSize(true);
+        mActivityOrigin.setNestedScrollingEnabled(false);
 
         View bottomSheet = new BottomSheetBuilder(this, coordinatorLayout)
                 .setMode(BottomSheetBuilder.MODE_GRID)
@@ -293,7 +295,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
                         }
                     }
                 }, getApplicationContext(), mModelLookUpKey).execute(AsyncTaskFetch.RequestType.USER_ACTIVITY_REQ);
-                mActivityOrigin.setVisibility(View.GONE);
             }
         }
     }
@@ -308,7 +309,6 @@ public class UserReplyActivity extends DefaultActivity implements SwipeRefreshLa
             emoticonLoader.execute();
         else
             enableEmoticonsPicker();
-        mActivityOrigin.setVisibility(View.VISIBLE);
         final List<UserActivity> activitySingle = Collections.singletonList(mPassedData);
         RecyclerViewAdapter<UserActivity> activityAdapter = new PublicStatusAdapter(activitySingle, UserReplyActivity.this,
                 mPresenter.getAppPrefs(), mPresenter.getApiPrefs(), new MultiInteractionListener() {

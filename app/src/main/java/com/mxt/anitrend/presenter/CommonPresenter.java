@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.view.View;
@@ -127,7 +128,7 @@ public abstract class CommonPresenter <T> extends ScrollListener implements Life
      * <br/>
      * @see com.github.johnpersano.supertoasts.library.Style for toast duration & style
      */
-    public void createSuperToast(Activity mContext, String mText, @DrawableRes int mIcon, int mType) {
+    public void createSuperToast(Activity mContext, String mText, @DrawableRes int mIcon, @Style.Type int mType) {
         mToast = SuperActivityToast.create(mContext, new Style(), mType)
                 .setText(" "+mText) //add a space for the icon
                 .setTypefaceStyle(Typeface.NORMAL)
@@ -155,7 +156,7 @@ public abstract class CommonPresenter <T> extends ScrollListener implements Life
      *
      * @see com.github.johnpersano.supertoasts.library.utils.PaletteUtils for colors
      */
-    public void createSuperToast(Activity mContext, String mText, @DrawableRes int mIcon, int mType, int mDuration, int mColor) {
+    public void createSuperToast(Activity mContext, String mText, @DrawableRes int mIcon, @Style.Type int mType, @Style.Duration int mDuration, @ColorInt int mColor) {
         mToast = SuperActivityToast.create(mContext, new Style(), mType)
                 .setText(" "+mText)
                 .setTypefaceStyle(Typeface.NORMAL)

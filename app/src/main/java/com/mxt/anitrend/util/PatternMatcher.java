@@ -107,4 +107,26 @@ public class PatternMatcher {
     public static String removeTags(String value) {
         return findImages(findMedia(value).replaceAll("")).replaceAll("").replaceAll("~","");
     }
+
+    public static String convertToStandardMarkdown(String value) {
+        Matcher matcher = findImages(value);
+        String TAG = "![image]";
+        while (matcher.find()) {
+            String match = matcher.group();
+            int group = matcher.groupCount();
+            value = value.replace(match, TAG + matcher.group(group));
+        }
+        return value.replaceAll("~","").replaceAll("!~","").replaceAll("~!","");
+    }
+
+    public static String convertToStandardMarkdownEditor(String value) {
+        Matcher matcher = findImages(value);
+        String TAG = "![image]";
+        while (matcher.find()) {
+            String match = matcher.group();
+            int group = matcher.groupCount();
+            value = value.replace(match, TAG + matcher.group(group));
+        }
+        return value;
+    }
 }
