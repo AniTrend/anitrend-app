@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.util.DateTimeConverter;
 
@@ -26,7 +27,7 @@ public class UserNotification implements Parcelable {
     private String created_at;
     private UserSmall user;
     private Comment comment;
-    private Anime series;
+    private SeriesSmall series;
 
     protected UserNotification(Parcel in) {
         id = in.readInt();
@@ -39,7 +40,7 @@ public class UserNotification implements Parcelable {
         created_at = in.readString();
         user = in.readParcelable(UserSmall.class.getClassLoader());
         comment = in.readParcelable(Comment.class.getClassLoader());
-        series = in.readParcelable(Anime.class.getClassLoader());
+        series = in.readParcelable(SeriesSmall.class.getClassLoader());
     }
 
     public static final Creator<UserNotification> CREATOR = new Creator<UserNotification>() {
@@ -95,7 +96,7 @@ public class UserNotification implements Parcelable {
         return comment;
     }
 
-    public Anime getSeries() {
+    public SeriesSmall getSeries() {
         return series;
     }
 

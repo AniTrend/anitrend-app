@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.structure.Anime;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
@@ -318,7 +318,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onClick(View v) {
-            Anime mSeries = mAdapter.get(getAdapterPosition()).getAnime();
+            SeriesSmall mSeries = mAdapter.get(getAdapterPosition()).getAnime();
             final Intent starter = new Intent(mContext, AnimeActivity.class);
             switch (v.getId()) {
                 case R.id.img_lge:
@@ -402,7 +402,7 @@ public class SeriesMyAnimeAdapter extends RecyclerViewAdapter<ListItem> {
 
         @Override
         public void onClick(View v) {
-            Anime mSeries = mAdapter.get(getAdapterPosition()).getAnime();
+            SeriesSmall mSeries = mAdapter.get(getAdapterPosition()).getAnime();
             final Intent starter = new Intent(mContext, AnimeActivity.class);
             switch (v.getId()) {
                 case R.id.img_lge:

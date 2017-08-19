@@ -34,9 +34,10 @@
         <item name="card_color">@color/white</item>
         <item name="drawer_color">@color/colorPrimaryDark_dark</item>
 
+        <item name="android:actionModeBackground">@color/colorDarkKnight</item>
         <item name="android:windowBackground">@color/colorAccent_dark</item>
         <item name="android:textColorPrimary">?attr/content_color</item>
-        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 
     <style name="DarkTheme_DarkSide" parent="Theme.AppCompat.NoActionBar">
@@ -46,9 +47,10 @@
         <item name="card_color">@color/colorLightKnight</item>
         <item name="drawer_color">@color/colorPrimaryText</item>
 
+        <item name="android:actionModeBackground">@color/colorDarkKnight</item>
         <item name="android:windowBackground">@color/colorDarkKnight</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
-        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 
     <!-- User Theme application theme. -->

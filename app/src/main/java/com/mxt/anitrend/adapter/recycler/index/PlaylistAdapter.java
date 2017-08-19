@@ -18,6 +18,7 @@ import com.mxt.anitrend.api.hub.Playlist;
 import com.mxt.anitrend.api.hub.Video;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
 
 import java.util.List;
@@ -85,10 +86,7 @@ public class PlaylistAdapter extends RecyclerViewAdapter<Video> {
                     .centerCrop()
                     .into(mImage);
 
-            if(model.getTitle() != null)
-                mTitle.setText(model.getTitle());
-            else
-                mTitle.setText(model.getFileName());
+            mTitle.setText(model.getTitle());
             mDuration.setText(String.format(Locale.getDefault(), "%d:%d ", (int)model.getDuration() / 60, (int)model.getDuration() % 60));
             mSize.setText(String.format(Locale.getDefault(), " %d MB", model.getSize()/1048576));
         }

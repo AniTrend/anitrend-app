@@ -129,4 +129,11 @@ public class PatternMatcher {
         }
         return value;
     }
+
+    public static String stripBloat(String value) {
+        value = value.replaceAll("(_(und|jpn)_[0-9])|(\\(.*?\\))|(_\\(.*?\\)_)","").replaceAll("_"," ").replaceAll("(\\[.*?\\])|(.\\[.*?\\])","");
+        if(value.startsWith(" "))
+            value = value.replaceFirst(" ","");
+        return value;
+    }
 }

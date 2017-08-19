@@ -147,9 +147,9 @@ public class ComparatorProvider {
                         case "popularity":
                             return s1.getManga().getPopularity() > s2.getManga().getPopularity() ? 1 : -1;
                         case "start_date":
-                            return s1.getManga().getStart_date_fuzzy() > s2.getManga().getStart_date_fuzzy() ? 1 : -1;
+                            return s1.getManga().getStart_date_fuzzy().compareTo(s2.getManga().getStart_date_fuzzy());
                         case "end_date":
-                            return s1.getManga().getEnd_date_fuzzy() > s2.getManga().getEnd_date_fuzzy() ? 1 : -1;
+                            return s1.getManga().getEnd_date_fuzzy().compareTo(s2.getAnime().getEnd_date_fuzzy());
                     }
                     return 0;
                 }
@@ -174,9 +174,9 @@ public class ComparatorProvider {
                     case "popularity":
                         return s1.getManga().getPopularity() > s2.getManga().getPopularity() ? 1 : -1;
                     case "start_date":
-                        return s1.getManga().getStart_date_fuzzy() > s2.getManga().getStart_date_fuzzy() ? 1 : -1;
+                        return s1.getManga().getStart_date_fuzzy().compareTo(s2.getManga().getStart_date_fuzzy());
                     case "end_date":
-                        return s1.getManga().getEnd_date_fuzzy() > s2.getManga().getEnd_date_fuzzy() ? 1 : -1;
+                        return s1.getManga().getEnd_date_fuzzy().compareTo(s2.getAnime().getEnd_date_fuzzy());
                 }
                 return 0;
             }

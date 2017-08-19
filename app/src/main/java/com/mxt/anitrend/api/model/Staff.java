@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Spanned;
 
-import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.util.MarkDown;
 
 import java.util.List;
@@ -28,9 +26,9 @@ public class Staff implements Parcelable {
     private String image_url_med;
     private String language;
     private String role;
-    private List<Anime> anime_staff;
-    private List<Manga> manga_staff;
-    private List<Anime> anime;
+    private List<SeriesSmall> anime_staff;
+    private List<SeriesSmall> manga_staff;
+    private List<SeriesSmall> anime;
 
     protected Staff(Parcel in) {
         dob = in.readLong();
@@ -46,9 +44,9 @@ public class Staff implements Parcelable {
         image_url_med = in.readString();
         language = in.readString();
         role = in.readString();
-        anime_staff = in.createTypedArrayList(Anime.CREATOR);
-        manga_staff = in.createTypedArrayList(Manga.CREATOR);
-        anime = in.createTypedArrayList(Anime.CREATOR);
+        anime_staff = in.createTypedArrayList(SeriesSmall.CREATOR);
+        manga_staff = in.createTypedArrayList(SeriesSmall.CREATOR);
+        anime = in.createTypedArrayList(SeriesSmall.CREATOR);
     }
 
     @Override
@@ -142,18 +140,18 @@ public class Staff implements Parcelable {
         return role;
     }
 
-    public List<Anime> getAnime_staff() {
+    public List<SeriesSmall> getAnime_staff() {
         return anime_staff;
     }
 
-    public List<Manga> getManga_staff() {
+    public List<SeriesSmall> getManga_staff() {
         return manga_staff;
     }
 
     /**
      * Mostly visible to actors
      */
-    public List<Anime> getAnime() {
+    public List<SeriesSmall> getAnime() {
         return anime;
     }
 

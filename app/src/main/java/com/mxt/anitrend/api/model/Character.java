@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Spanned;
 
-import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.util.MarkDown;
 
 import java.util.List;
@@ -25,8 +23,8 @@ public class Character implements Parcelable {
     private String image_url_med;
     private boolean favourite;
     private String role;
-    private List<Anime> anime;
-    private List<Manga> manga;
+    private List<SeriesSmall> anime;
+    private List<SeriesSmall> manga;
 
     protected Character(Parcel in) {
         id = in.readInt();
@@ -39,8 +37,8 @@ public class Character implements Parcelable {
         image_url_med = in.readString();
         favourite = in.readByte() != 0;
         role = in.readString();
-        anime = in.createTypedArrayList(Anime.CREATOR);
-        manga = in.createTypedArrayList(Manga.CREATOR);
+        anime = in.createTypedArrayList(SeriesSmall.CREATOR);
+        manga = in.createTypedArrayList(SeriesSmall.CREATOR);
     }
 
     public static final Creator<Character> CREATOR = new Creator<Character>() {
@@ -97,11 +95,11 @@ public class Character implements Parcelable {
         return favourite;
     }
 
-    public List<Anime> getAnime() {
+    public List<SeriesSmall> getAnime() {
         return anime;
     }
 
-    public List<Manga> getManga() {
+    public List<SeriesSmall> getManga() {
         return manga;
     }
 

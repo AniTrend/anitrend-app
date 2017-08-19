@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.util.DateTimeConverter;
 
 import java.util.List;
@@ -38,8 +39,8 @@ public class ListItem implements Parcelable {
     private String finished_on;
     private String added_time;
     private String updated_time;
-    private Anime anime;
-    private Manga manga;
+    private SeriesSmall anime;
+    private SeriesSmall manga;
 
     protected ListItem(Parcel in) {
         record_id = in.readInt();
@@ -61,8 +62,8 @@ public class ListItem implements Parcelable {
         finished_on = in.readString();
         added_time = in.readString();
         updated_time = in.readString();
-        anime = in.readParcelable(Anime.class.getClassLoader());
-        manga = in.readParcelable(Manga.class.getClassLoader());
+        anime = in.readParcelable(SeriesSmall.class.getClassLoader());
+        manga = in.readParcelable(SeriesSmall.class.getClassLoader());
     }
 
     public static final Creator<ListItem> CREATOR = new Creator<ListItem>() {
@@ -155,11 +156,11 @@ public class ListItem implements Parcelable {
         return updated_time == null? "N/A": DateTimeConverter.convertDateString(updated_time);
     }
 
-    public Anime getAnime() {
+    public SeriesSmall getAnime() {
         return anime;
     }
 
-    public Manga getManga() {
+    public SeriesSmall getManga() {
         return manga;
     }
 

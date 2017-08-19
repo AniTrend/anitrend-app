@@ -26,9 +26,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.api.structure.Anime;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.api.structure.ListItem;
-import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.base.custom.async.RequestApiAction;
 import com.mxt.anitrend.base.interfaces.event.RemoteChangeListener;
@@ -80,7 +79,7 @@ public class DialogManager {
         progress.setMessage(mContext.getString(R.string.text_processing_request));
     }
 
-    private String getAnimeTitle(Anime anime) {
+    private String getAnimeTitle(SeriesSmall anime) {
         switch (api_prefs.getTitleLanguage()) {
             case "romaji":
                 return anime.getTitle_romaji();
@@ -92,7 +91,7 @@ public class DialogManager {
         return "";
     }
 
-    private String getMangaTitle(Manga manga) {
+    private String getMangaTitle(SeriesSmall manga) {
         switch (api_prefs.getTitleLanguage()) {
             case "romaji":
                 return manga.getTitle_romaji();
@@ -567,7 +566,7 @@ public class DialogManager {
     /**
      * Only to be used by users anime lists when browsing an external users lists
      */
-    public void animeAddDialogSmall(@NonNull final Anime item) {
+    public void animeAddDialogSmall(@NonNull final SeriesSmall item) {
         final Payload.ListAnimeAction animeAction = new Payload.ListAnimeAction();
         progress.setIcon(R.drawable.ic_fiber_new_blue_600_24dp);
 
@@ -1054,7 +1053,7 @@ public class DialogManager {
     /**
      * Only to be used by users manga lists when browsing an external users lists
      */
-    public void mangaAddDialogSmall(@NonNull final Manga item) {
+    public void mangaAddDialogSmall(@NonNull final SeriesSmall item) {
         final Payload.ListMangaAction mangaAction = new Payload.ListMangaAction();
         progress.setIcon(R.drawable.ic_fiber_new_teal_600_24dp);
         MaterialDialog.Builder md = new MaterialDialog.Builder(mContext)

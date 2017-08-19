@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.detail.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.view.base.activity.ReviewReaderActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.ArrayList;
@@ -196,7 +198,9 @@ public class MangaReviewFragment extends Fragment implements Callback<List<Revie
     @Override
     public void onReadMore(int index) {
         Review review = reviews.get(index);
-        new DialogManager(getContext()).createDialogMessage(String.format(Locale.getDefault(), "Review by: %s", review.getUser().getDisplay_name()), review.getText());
+        Intent starter = new Intent(getActivity(), ReviewReaderActivity.class);
+        starter.putExtra(ReviewReaderActivity.REVIEW_INSTANCE, review);
+        startActivity(starter);
     }
 
     @Override

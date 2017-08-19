@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.structure.Manga;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
@@ -25,17 +25,17 @@ import java.util.Locale;
 /**
  * Created by max on 2017-04-10.
  */
-public class MangaStaffRoles extends RecyclerViewAdapter<Manga> {
+public class MangaStaffRoles extends RecyclerViewAdapter<SeriesSmall> {
 
     private ApiPreferences apiPrefs;
 
-    public MangaStaffRoles(List<Manga> mAdapter, Context mContext) {
+    public MangaStaffRoles(List<SeriesSmall> mAdapter, Context mContext) {
         super(mAdapter, mContext);
         apiPrefs = new ApiPreferences(mContext);
     }
 
     @Override
-    public RecyclerViewHolder<Manga> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<SeriesSmall> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_staff_roles, parent, false));
     }
 
@@ -53,7 +53,7 @@ public class MangaStaffRoles extends RecyclerViewAdapter<Manga> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<Manga> {
+    private class ViewHolder extends RecyclerViewHolder<SeriesSmall> {
 
         private TextView romanji, rating, relation_type;
         private ImageView model_image;
@@ -68,7 +68,7 @@ public class MangaStaffRoles extends RecyclerViewAdapter<Manga> {
         }
 
         @Override
-        public void onBindViewHolder(Manga model) {
+        public void onBindViewHolder(SeriesSmall model) {
 
             Glide.with(mContext).load(model.getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -99,7 +99,7 @@ public class MangaStaffRoles extends RecyclerViewAdapter<Manga> {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.relation_model_image:
-                    Manga model = mAdapter.get(getAdapterPosition());
+                    SeriesSmall model = mAdapter.get(getAdapterPosition());
                     Intent starter = new Intent(mContext, MangaActivity.class);
                     starter.putExtra(MangaActivity.MODEL_ID_KEY, model.getId());
                     starter.putExtra(MangaActivity.MODEL_BANNER_KEY, model.getImage_url_banner());

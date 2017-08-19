@@ -19,7 +19,7 @@ public interface Hub {
             "\"addedBy\":\"UeQuqJ90j3igXB6A\"" +
             "}";
 
-    /*Pass in the param of the video item*/
+    /*Pass in the param, id of the video item*/
     String playlist_filter = "{\"videos\":{\"$exists\":true}," +
             "\"videos\":\"%s\"}";
 

@@ -14,14 +14,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Review;
-import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.Manga;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.api.structure.ReviewType;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
-import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.view.base.activity.ReviewReaderActivity;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 import com.mxt.anitrend.view.detail.activity.MangaActivity;
@@ -93,7 +91,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
             String banner;
 
             if(reviewType) {
-                Anime anime = model.getAnime();
+                SeriesSmall anime = model.getAnime();
                 banner = anime.getImage_url_banner();
                 if(banner == null)
                     banner = anime.getImage_url_lge();
@@ -110,7 +108,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
                         break;
                 }
             } else {
-                Manga manga = model.getManga();
+                SeriesSmall manga = model.getManga();
                 banner = manga.getImage_url_banner();
                 if(banner == null)
                     banner = manga.getImage_url_lge();
@@ -149,16 +147,15 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            Intent starter;
-            switch (view.getId()){
+            Intent starter = null;
+            switch (view.getId()) {
                 case R.id.review_read_more:
-                    Review review = mAdapter.get(position);
+                    final Review review = mAdapter.get(position);
                     /*new DialogManager(mContext).createDialogMessage(String.format(Locale.getDefault(),
                             mContext.getString(R.string.text_reviewed_by), review.getUser().getDisplay_name()), review.getText());*/
                     starter = new Intent(mContext, ReviewReaderActivity.class);
                     starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     starter.putExtra(ReviewReaderActivity.REVIEW_INSTANCE, review);
-                    mContext.startActivity(starter);
                     break;
                 case R.id.img_lge:
                     if(reviewType) {
@@ -166,16 +163,15 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
                         starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         starter.putExtra(AnimeActivity.MODEL_ID_KEY, mAdapter.get(position).getAnime().getId());
                         starter.putExtra(AnimeActivity.MODEL_BANNER_KEY, mAdapter.get(position).getAnime().getImage_url_banner());
-                        mContext.startActivity(starter);
                     } else {
                         starter = new Intent(mContext, MangaActivity.class);
                         starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         starter.putExtra(MangaActivity.MODEL_ID_KEY, mAdapter.get(position).getManga().getId());
                         starter.putExtra(MangaActivity.MODEL_BANNER_KEY, mAdapter.get(position).getManga().getImage_url_banner());
-                        mContext.startActivity(starter);
                     }
                     break;
             }
+            mContext.startActivity(starter);
         }
     }
 
@@ -204,7 +200,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
          * <br/>
          *
          * @param model Is the model at the current adapter position
-         * @see T
+         * @see Review
          */
         @Override
         public void onBindViewHolder(Review model) {
@@ -224,7 +220,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
             review_down_score.setText(String.format(Locale.getDefault()," %d ",model.getRating_amount() - model.getRating()));
 
             if(reviewType) {
-                Anime anime = model.getAnime();
+                SeriesSmall anime = model.getAnime();
                 show = anime.getImage_url_lge();
 
                 switch (apiPrefs.getTitleLanguage()) {
@@ -239,7 +235,7 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
                         break;
                 }
             } else {
-                Manga manga = model.getManga();
+                SeriesSmall manga = model.getManga();
                 show = manga.getImage_url_lge();
 
                 switch (apiPrefs.getTitleLanguage()) {
@@ -303,8 +299,12 @@ public class SeriesReviewTypeAdapter extends RecyclerViewAdapter<Review> {
                     break;
                 case R.id.review_read_more:
                     Review review = mAdapter.get(position);
-                    new DialogManager(mContext).createDialogMessage(String.format(Locale.getDefault(),
-                            mContext.getString(R.string.text_reviewed_by), review.getUser().getDisplay_name()), review.getText());
+                    /*new DialogManager(mContext).createDialogMessage(String.format(Locale.getDefault(),
+                            mContext.getString(R.string.text_reviewed_by), review.getUser().getDisplay_name()), review.getText());*/
+                    starter = new Intent(mContext, ReviewReaderActivity.class);
+                    starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    starter.putExtra(ReviewReaderActivity.REVIEW_INSTANCE, review);
+                    mContext.startActivity(starter);
                     break;
             }
         }

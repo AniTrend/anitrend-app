@@ -39,10 +39,9 @@ public class HubTaskFetch  <T> extends AsyncTask<Void, Void, Call<T>> {
      */
     @Override
     protected void onPreExecute() {
-        params.putString(Hub.arg_order, "-dateAdded");
+        params.putString(Hub.arg_order, "-addedDate");
         params.putString(Hub.arg_expand, "users.addedBy");
         params.putString(Hub.arg_filter, Hub.filter);
-        params.putString(Hub.arg_expand, "users.addedBy");
         params.putInt(Hub.arg_limit, 20);
         params.putString(Hub.arg_format, Hub.format);
     }
@@ -56,15 +55,15 @@ public class HubTaskFetch  <T> extends AsyncTask<Void, Void, Call<T>> {
             case KeyUtils.FEED_TYPE:
                 return (Call<T>) hub.getVideos(params.getString(Hub.arg_order), params.getInt(Hub.arg_limit),
                         params.getInt(Hub.arg_page), params.getString(Hub.arg_expand),
-                        params.getString(Hub.arg_search), params.getString(Hub.arg_filter));
+                        null, params.getString(Hub.arg_filter));
             case KeyUtils.PLAYLIST_TYPE:
                 return (Call<T>) hub.getPlaylist(params.getString(Hub.arg_order), params.getInt(Hub.arg_limit),
                         params.getInt(Hub.arg_page), params.getString(Hub.arg_expand),
-                        params.getString(Hub.arg_search), "{\"videos\":{\"$exists\":true}}");
+                        null, params.getString(Hub.arg_filter));
             case KeyUtils.RSS_TYPE:
                 return (Call<T>) hub.getRssFeed(params.getString(Hub.arg_order), params.getInt(Hub.arg_limit),
                         params.getInt(Hub.arg_page), params.getString(Hub.arg_expand),
-                        params.getString(Hub.arg_search),  Hub.filter, params.getString(Hub.arg_format));
+                        null,  Hub.filter, params.getString(Hub.arg_format));
             case KeyUtils.VIDEO_TYPE:
                 return (Call<T>) hub.getEpisode(params.getString(Hub.arg_id));
         }

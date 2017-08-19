@@ -17,8 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.model.Review;
-import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.Manga;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.base.custom.async.RequestApiAction;
 import com.mxt.anitrend.databinding.ActivityReviewReaderBinding;
@@ -75,11 +74,16 @@ public class ReviewReaderActivity extends DefaultActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if(getIntent().hasExtra(REVIEW_INSTANCE))
-            mReview = getIntent().getParcelableExtra(REVIEW_INSTANCE);
-        binding.setPresenter(mPresenter);
-        binding.setModel(mReview);
-        updateUI();
+        try {
+            if(getIntent().hasExtra(REVIEW_INSTANCE))
+                mReview = getIntent().getParcelableExtra(REVIEW_INSTANCE);
+            binding.setPresenter(mPresenter);
+            binding.setModel(mReview);
+            updateUI();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -163,8 +167,10 @@ public class ReviewReaderActivity extends DefaultActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRichText.clear();
-        mRichText = null;
+        if(mRichText != null) {
+            mRichText.clear();
+            mRichText = null;
+        }
     }
 
     @Override
@@ -181,8 +187,8 @@ public class ReviewReaderActivity extends DefaultActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(avatar);
 
-        Anime anime = mReview.getAnime();
-        Manga manga = mReview.getManga();
+        SeriesSmall anime = mReview.getAnime();
+        SeriesSmall manga = mReview.getManga();
 
         boolean isAnime = anime != null;
 

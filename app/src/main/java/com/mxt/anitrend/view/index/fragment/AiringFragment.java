@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
-import com.mxt.anitrend.api.structure.Anime;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.interfaces.event.RemoteChangeListener;
 import com.mxt.anitrend.base.interfaces.event.SeriesInteractionListener;
@@ -231,7 +231,7 @@ public class AiringFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     }
 
-    private void navigateToAnime(Anime mSeries) {
+    private void navigateToAnime(SeriesSmall mSeries) {
         final Intent starter = new Intent(getActivity(), AnimeActivity.class);
         starter.putExtra(AnimeActivity.MODEL_ID_KEY, mSeries.getId());
         starter.putExtra(AnimeActivity.MODEL_BANNER_KEY, mSeries.getImage_url_banner());

@@ -174,8 +174,10 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
     protected void onDestroy() {
         if(activityActions != null && activityActions.getStatus() == AsyncTask.Status.RUNNING)
             activityActions.cancel(true);
-        richText.clear();
-        richText = null;
+        if(richText != null) {
+            richText.clear();
+            richText = null;
+        }
         super.onDestroy();
     }
 

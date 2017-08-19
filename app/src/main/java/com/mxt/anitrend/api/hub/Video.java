@@ -6,6 +6,7 @@ import android.text.Spanned;
 
 import com.mxt.anitrend.util.HubUtil;
 import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.PatternMatcher;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class Video implements Parcelable {
     };
 
     public String getFileName() {
-        return fileName;
+        return PatternMatcher.stripBloat(fileName);
     }
 
     public long getSize() {
@@ -119,7 +120,7 @@ public class Video implements Parcelable {
     public String getTitle() {
         if(title != null)
             return title;
-        return fileName;
+        return getFileName();
     }
 
     public Spanned getDescription() {

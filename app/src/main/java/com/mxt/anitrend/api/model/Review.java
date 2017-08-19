@@ -5,8 +5,6 @@ import android.os.Parcelable;
 import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.api.structure.Anime;
-import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.util.DateTimeConverter;
 import com.mxt.anitrend.util.MarkDown;
 
@@ -25,8 +23,8 @@ public class Review implements Parcelable {
     private int user_rating;
     private String text;
     private int score;
-    private Anime anime;
-    private Manga manga;
+    private SeriesSmall anime;
+    private SeriesSmall manga;
     private UserSmall user;
 
     protected Review(Parcel in) {
@@ -39,8 +37,8 @@ public class Review implements Parcelable {
         user_rating = in.readInt();
         text = in.readString();
         score = in.readInt();
-        anime = in.readParcelable(Anime.class.getClassLoader());
-        manga = in.readParcelable(Manga.class.getClassLoader());
+        anime = in.readParcelable(SeriesSmall.class.getClassLoader());
+        manga = in.readParcelable(SeriesSmall.class.getClassLoader());
         user = in.readParcelable(UserSmall.class.getClassLoader());
     }
 
@@ -111,7 +109,7 @@ public class Review implements Parcelable {
         return score * 5 / 100;
     }
 
-    public Anime getAnime() {
+    public SeriesSmall getAnime() {
         return anime;
     }
 
@@ -119,7 +117,7 @@ public class Review implements Parcelable {
         return user;
     }
 
-    public Manga getManga() {
+    public SeriesSmall getManga() {
         return manga;
     }
 

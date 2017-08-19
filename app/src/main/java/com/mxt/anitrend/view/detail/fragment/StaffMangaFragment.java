@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.MangaStaffRoles;
+import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.api.model.Staff;
-import com.mxt.anitrend.api.structure.Manga;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.viewmodel.fragment.DefaultFragment;
@@ -30,7 +30,7 @@ public class StaffMangaFragment extends DefaultFragment<Staff> implements SwipeR
     @BindView(R.id.generic_recycler) StatefulRecyclerView recyclerView;
     @BindView(R.id.generic_progress_state) ProgressLayout progressLayout;
 
-    private RecyclerViewAdapter<Manga> mAdapter;
+    private RecyclerViewAdapter<SeriesSmall> mAdapter;
     private GridLayoutManager mLayoutManager;
 
     public static StaffMangaFragment newInstance(Staff result) {

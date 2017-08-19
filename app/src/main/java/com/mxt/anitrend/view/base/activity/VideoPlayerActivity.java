@@ -1,12 +1,18 @@
 package com.mxt.anitrend.view.base.activity;
 
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 import com.mxt.anitrend.R;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,10 +40,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
 
     private void configurePlayer() {
         player.setUp(mLink, JCVideoPlayer.SCREEN_WINDOW_FULLSCREEN);
+        player.loop = false;
         player.backButton.setOnClickListener(this);
         player.tinyBackImageView.setVisibility(View.INVISIBLE);
         player.fullscreenButton.setImageResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_shrink);
         player.fullscreenButton.setOnClickListener(this);
+        player.clarity.setVisibility(View.GONE);
         player.setSystemTimeAndBattery();
     }
 
