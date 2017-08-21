@@ -47,7 +47,6 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
 
     private final String REQ_KEY = "char_req";
     private final String SM_KEY = "char_sm_key";
-    private final String CH_KEY = "char_data_key";
 
     private boolean requesting;
     private Character character;
@@ -80,11 +79,6 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         prefs = new ApplicationPrefs(getApplicationContext());
-        if(savedInstanceState != null) {
-            requesting = savedInstanceState.getBoolean(REQ_KEY);
-            character_temp = savedInstanceState.getParcelable(SM_KEY);
-            character = savedInstanceState.getParcelable(CH_KEY);
-        }
         startInit();
     }
 
@@ -189,8 +183,16 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
     protected void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(REQ_KEY, requesting);
         outState.putParcelable(SM_KEY, character_temp);
-        outState.putParcelable(CH_KEY, character);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null) {
+            requesting = savedInstanceState.getBoolean(REQ_KEY);
+            character_temp = savedInstanceState.getParcelable(SM_KEY);
+        }
     }
 
     @Override

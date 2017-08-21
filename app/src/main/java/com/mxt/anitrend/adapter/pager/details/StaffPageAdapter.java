@@ -10,6 +10,7 @@ import com.mxt.anitrend.api.model.Staff;
 import com.mxt.anitrend.view.detail.fragment.StaffAnimeFragment;
 import com.mxt.anitrend.view.detail.fragment.StaffMangaFragment;
 import com.mxt.anitrend.view.detail.fragment.StaffOverviewFragment;
+import com.mxt.anitrend.view.detail.fragment.StaffRoleFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.Locale;
@@ -38,7 +39,7 @@ public class StaffPageAdapter extends DefaultStatePagerAdapter {
             case 2:
                 return StaffMangaFragment.newInstance(model);
             case 3:
-                return StaffOverviewFragment.newInstance(model);
+                return StaffRoleFragment.newInstance(model);
         }
         return null;
     }
@@ -49,6 +50,6 @@ public class StaffPageAdapter extends DefaultStatePagerAdapter {
     @Override
     public int getCount() {
         return model != null && model.getAnime() != null &&
-                model.getAnime().size() > 0?super.getCount()-1:super.getCount();
+                model.getAnime().size() > 0?super.getCount():super.getCount()-1;
     }
 }

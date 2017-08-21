@@ -38,7 +38,7 @@ public class HubPageAdapter extends DefaultStatePagerAdapter {
             case 0:
                 return SuggestionFragment.newInstance();
             case 1:
-                List< ExternalLink > externalLinks = new ArrayList<>(1);
+                List<ExternalLink> externalLinks = new ArrayList<>(1);
                 externalLinks.add(new ExternalLink(BuildConfig.FEEDS_LINK,null));
                 return AnimeWatchFragment.newInstance(externalLinks, true);
             case 2:

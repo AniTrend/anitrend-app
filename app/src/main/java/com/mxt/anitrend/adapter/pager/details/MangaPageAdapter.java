@@ -21,11 +21,11 @@ import java.util.Locale;
  */
 public class MangaPageAdapter extends DefaultStatePagerAdapter {
 
-    private Series model;
+    private int id;
 
-    public MangaPageAdapter(FragmentManager fragmentManager, Series model, Context context) {
+    public MangaPageAdapter(FragmentManager fragmentManager, Context context, int id) {
         super(fragmentManager, context);
-        this.model = model;
+        this.id = id;
         mTitles = context.getResources().getStringArray(R.array.manga_page_titles);
     }
 
@@ -43,13 +43,13 @@ public class MangaPageAdapter extends DefaultStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MangaOverviewFragment.newInstance(model);
+                return MangaOverviewFragment.newInstance();
             case 1:
-                return MangaLinksFragment.newInstance(model);
+                return MangaLinksFragment.newInstance();
             case 2:
-                return MangaExtrasFragment.newInstance(model);
+                return MangaExtrasFragment.newInstance();
             case 3:
-                return MangaReviewFragment.newInstance(model.getId());
+                return MangaReviewFragment.newInstance(id);
         }
         return null;
     }

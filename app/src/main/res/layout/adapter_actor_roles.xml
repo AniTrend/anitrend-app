@@ -1,5 +1,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/new_style_height"
@@ -43,6 +44,17 @@
             tools:text="Shingeki no Kyojin 2"
             android:layout_height="wrap_content"/>
 
+        <TextView
+            android:id="@+id/relation_model_character"
+            android:layout_gravity="top|end"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-condensed"
+            android:textIsSelectable="true"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            tools:text="Eren Somename"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <FrameLayout
@@ -62,6 +74,12 @@
             android:max="5" />
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/relation_avatar"
+        android:layout_gravity="start|bottom"
+        android:layout_width="68dp"
+        android:layout_height="100dp"/>
 
 </FrameLayout>
 

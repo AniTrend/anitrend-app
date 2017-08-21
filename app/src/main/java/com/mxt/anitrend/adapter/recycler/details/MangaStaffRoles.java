@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,8 @@ import com.mxt.anitrend.view.detail.activity.MangaActivity;
 
 import java.util.List;
 import java.util.Locale;
+
+import butterknife.BindView;
 
 /**
  * Created by max on 2017-04-10.
@@ -53,17 +56,19 @@ public class MangaStaffRoles extends RecyclerViewAdapter<SeriesSmall> {
         return null;
     }
 
-    private class ViewHolder extends RecyclerViewHolder<SeriesSmall> {
+    class ViewHolder extends RecyclerViewHolder<SeriesSmall> {
 
-        private TextView romanji, rating, relation_type;
-        private ImageView model_image;
+        @BindView(R.id.relation_model_name)
+        TextView romanji;
+        @BindView(R.id.relation_model_rating)
+        RatingBar rating;
+        @BindView(R.id.relation_model_relation_type)
+        TextView relation_type;
+        @BindView(R.id.relation_model_image)
+        ImageView model_image;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-            romanji = (TextView) view.findViewById(R.id.relation_model_name);
-            rating = (TextView) view.findViewById(R.id.relation_model_rating);
-            relation_type = (TextView) view.findViewById(R.id.relation_model_relation_type);
-            model_image = (ImageView) view.findViewById(R.id.relation_model_image);
             model_image.setOnClickListener(this);
         }
 
@@ -86,7 +91,7 @@ public class MangaStaffRoles extends RecyclerViewAdapter<SeriesSmall> {
                     romanji.setText(model.getTitle_japanese());
                     break;
             }
-            rating.setText(String.format(Locale.getDefault(), "%.1f / 5", (model.getAverage_score()*5)/100));
+            rating.setRating(((float) (model.getAverage_score()*5)/100));
             relation_type.setText(model.getRole());
         }
 
@@ -101,6 +106,7 @@ public class MangaStaffRoles extends RecyclerViewAdapter<SeriesSmall> {
                 case R.id.relation_model_image:
                     SeriesSmall model = mAdapter.get(getAdapterPosition());
                     Intent starter = new Intent(mContext, MangaActivity.class);
+                    starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     starter.putExtra(MangaActivity.MODEL_ID_KEY, model.getId());
                     starter.putExtra(MangaActivity.MODEL_BANNER_KEY, model.getImage_url_banner());
                     mContext.startActivity(starter);

@@ -30,6 +30,10 @@ import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.view.detail.activity.StudioActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -84,20 +88,13 @@ public class AnimeOverviewFragment extends Fragment implements View.OnClickListe
         // Required empty public constructor
     }
 
-    public static AnimeOverviewFragment newInstance(Series result) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, result);
-        AnimeOverviewFragment fragment = new AnimeOverviewFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static AnimeOverviewFragment newInstance() {
+        return new AnimeOverviewFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
-            model = getArguments().getParcelable(ARG_KEY);
-        }
         mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.ANIME], getContext());
     }
 
@@ -111,12 +108,18 @@ public class AnimeOverviewFragment extends Fragment implements View.OnClickListe
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        UpdateUI();
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
-    public void UpdateUI(){
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    public void updateUI() {
         /*Populate all the views*/
 
         Glide.with(this)
@@ -212,6 +215,19 @@ public class AnimeOverviewFragment extends Fragment implements View.OnClickListe
                 TransitionHelper.startSharedImageTransition(getActivity(), mModelImage, getString(R.string.transition_image_preview), intent);
             }
         });
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && model == null) {
+            model = param;
+            updateUI();
+        }
     }
 
     @Override

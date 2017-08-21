@@ -17,6 +17,10 @@ import com.mxt.anitrend.adapter.recycler.details.SeriesRankingAdapter;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.base.interfaces.event.InteractionListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -48,12 +52,8 @@ public class MangaLinksFragment extends Fragment implements InteractionListener 
         // Required empty public constructor
     }
 
-    public static MangaLinksFragment newInstance(Series result) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, result);
-        MangaLinksFragment fragment = new MangaLinksFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static MangaLinksFragment newInstance() {
+        return new MangaLinksFragment();
     }
 
     @Override
@@ -80,10 +80,9 @@ public class MangaLinksFragment extends Fragment implements InteractionListener 
         mRankingRecycler.setLayoutManager(layoutManager);
         mRankingRecycler.setNestedScrollingEnabled(false);
         mRankingRecycler.setHasFixedSize(true);
-        UpdateUI();
     }
 
-    public void UpdateUI(){
+    public void updateUI(){
         /*Populate all the views*/
         if(model.getList_stats() != null) {
             mCompleted.setText(model.getList_stats().getCompleted());
@@ -97,6 +96,31 @@ public class MangaLinksFragment extends Fragment implements InteractionListener 
             mRankingRecycler.setAdapter(mRankingAdapter);
         }
         expressAdView.loadAd((new AdRequest.Builder().build()));
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && model == null) {
+            model = param;
+            updateUI();
+        }
     }
 
     @Override

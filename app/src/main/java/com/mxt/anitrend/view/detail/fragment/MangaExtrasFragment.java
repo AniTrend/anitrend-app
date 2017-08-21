@@ -20,6 +20,10 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.interfaces.event.InteractionListener;
 import com.mxt.anitrend.view.detail.activity.StaffActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,11 +32,6 @@ import butterknife.Unbinder;
  * Created by Maxwell on 12/4/2016.
  */
 public class MangaExtrasFragment extends Fragment implements InteractionListener {
-
-    private final String CHARACTER_KEY = "character_recycler";
-    private final String STAFF_KEY = "staff_recycler";
-    private final String ANIME_KEY = "anime_recycler";
-    private final String MANGA_KEY = "manga_recycler";
 
     @BindView(R.id.characters_recycler) StatefulRecyclerView mRecyclerCharacters;
     @BindView(R.id.staff_recycler) StatefulRecyclerView mRecyclerStaff;
@@ -58,12 +57,8 @@ public class MangaExtrasFragment extends Fragment implements InteractionListener
         // Required empty public constructor
     }
 
-    public static MangaExtrasFragment newInstance(Series result) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, result);
-        MangaExtrasFragment fragment = new MangaExtrasFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static MangaExtrasFragment newInstance() {
+        return new MangaExtrasFragment();
     }
 
     @Override
@@ -96,43 +91,20 @@ public class MangaExtrasFragment extends Fragment implements InteractionListener
         mRecyclerManga.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false));
         mRecyclerManga.setNestedScrollingEnabled(false);
         mRecyclerManga.setHasFixedSize(true);
-
-        if(model != null){
-            mCharacterAdapter = new SeriesCharacterAdapter(model.getCharacters(), getActivity());
-            mStaffAdapter = new SeriesStaffAdapter(model.getStaff(), getActivity(), this);
-            mAnimeAdapter = new AnimeDetailAdapter(model.getRelations_anime(), getActivity());
-            mMangaAdapter = new MangaDetailAdapter(model.getRelations(), getActivity());
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
         setupRecyclers();
-        UpdateUI();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(CHARACTER_KEY, mRecyclerCharacters.onSaveInstanceState());
-        outState.putParcelable(STAFF_KEY, mRecyclerStaff.onSaveInstanceState());
-        outState.putParcelable(ANIME_KEY, mRecyclerAnime.onSaveInstanceState());
-        outState.putParcelable(MANGA_KEY, mRecyclerManga.onSaveInstanceState());
-        super.onSaveInstanceState(outState);
-    }
+    private void updateUI() {
+        mCharacterAdapter = new SeriesCharacterAdapter(model.getCharacters(), getActivity());
+        mStaffAdapter = new SeriesStaffAdapter(model.getStaff(), getActivity(), this);
+        mAnimeAdapter = new AnimeDetailAdapter(model.getRelations_anime(), getActivity());
+        mMangaAdapter = new MangaDetailAdapter(model.getRelations(), getActivity());
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null) {
-            mRecyclerCharacters.onRestoreInstanceState(savedInstanceState.getParcelable(CHARACTER_KEY));
-            mRecyclerStaff.onRestoreInstanceState(savedInstanceState.getParcelable(STAFF_KEY));
-            mRecyclerAnime.onRestoreInstanceState(savedInstanceState.getParcelable(ANIME_KEY));
-            mRecyclerManga.onRestoreInstanceState(savedInstanceState.getParcelable(MANGA_KEY));
-        }
-    }
-
-    private void UpdateUI() {
         if(mCharacterAdapter.getItemCount() < 1)
             mCharacterCard.setVisibility(View.GONE);
         else
@@ -152,6 +124,31 @@ public class MangaExtrasFragment extends Fragment implements InteractionListener
             mMangaCard.setVisibility(View.GONE);
         else
             mRecyclerManga.setAdapter(mMangaAdapter);
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && model == null) {
+            model = param;
+            updateUI();
+        }
     }
 
     @Override

@@ -58,7 +58,6 @@ public class MangaReviewFragment extends Fragment implements Callback<List<Revie
 
     private final static String ARG_KEY = "arg_data";
     private final String KEY_ID = "model_id";
-    private final String KEY_REVIEWS = "review_list_key";
 
     public MangaReviewFragment() {
         // Required empty public constructor
@@ -90,7 +89,6 @@ public class MangaReviewFragment extends Fragment implements Callback<List<Revie
         progressLayout.showLoading();
         if(savedInstanceState != null) {
             item_id = savedInstanceState.getInt(KEY_ID);
-            reviews = savedInstanceState.getParcelableArrayList(KEY_REVIEWS);
         }
         setupRecyclers();
         return root;
@@ -105,7 +103,6 @@ public class MangaReviewFragment extends Fragment implements Callback<List<Revie
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_ID, item_id);
-        outState.putParcelableArrayList(KEY_REVIEWS, (ArrayList<? extends Parcelable>) reviews);
         super.onSaveInstanceState(outState);
     }
 

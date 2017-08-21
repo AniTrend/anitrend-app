@@ -53,7 +53,6 @@ public class AnimeReviewsFragment extends Fragment implements Callback<List<Revi
 
     private final static String ARG_KEY = "arg_data";
     private final String KEY_ID = "model_id";
-    private final String KEY_REVIEWS = "review_list_key";
 
     public AnimeReviewsFragment() {
         // Required empty public constructor
@@ -83,10 +82,8 @@ public class AnimeReviewsFragment extends Fragment implements Callback<List<Revi
         View root = inflater.inflate(R.layout.fragment_anime_reviews, container, false);
         unbinder = ButterKnife.bind(this, root);
         progressLayout.showLoading();
-        if(savedInstanceState != null) {
+        if(savedInstanceState != null)
             item_id = savedInstanceState.getInt(KEY_ID);
-            reviews = savedInstanceState.getParcelableArrayList(KEY_REVIEWS);
-        }
         setupRecyclers();
         return root;
     }
@@ -100,18 +97,16 @@ public class AnimeReviewsFragment extends Fragment implements Callback<List<Revi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_ID, item_id);
-        outState.putParcelableArrayList(KEY_REVIEWS, (ArrayList<? extends Parcelable>) reviews);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(reviews != null){
+        if (reviews != null)
             UpdateUI();
-        } else {
+        else
             makeReviewsRequest();
-        }
     }
 
     private void makeReviewsRequest() {

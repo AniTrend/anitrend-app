@@ -32,6 +32,7 @@ import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,25 +50,21 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
 
     private final String SAVED_INSTANCE_ID_KEY = "KEY_PAGE_ID";
     private final String SAVED_INSTANCE_BANNER_MODEL = "KEY_MODEL_BANNER";
-    private final String SAVED_INSTANCE_SERIES_MODEL = "KEY_MODEL_SERIES";
 
     private int mId;
     private String mBanner;
     private Series mSeries;
 
     @BindView(R.id.app_bar) AppBarLayout appBarLayout;
-
-    @BindView(R.id.sections_tabs) TabLayout tabLayout;
+    @BindView(R.id.sections_tabs) SmartTabLayout tabLayout;
     @BindView(R.id.sections_viewpager) ViewPager viewPager;
-
-
     @BindView(R.id.scrollProgressLayout) ProgressLayout progressLayout;
     @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.floatingToolbar) FloatingToolbar mFloatingToolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
-
     @BindView(R.id.detail_model_banner) ImageView mBannerImage;
     @BindView(R.id.toolbar) Toolbar toolbar;
+
     private MenuItem favMenuItem;
 
     private SeriesPresenter mPresenter;
@@ -78,9 +75,8 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
         setContentView(R.layout.activity_series_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if(mIntentData != null) {
+        if(mIntentData != null)
             mId = Integer.valueOf(mIntentData);
-        }
         else {
             Intent intent = getIntent();
             mId = intent.getIntExtra(MODEL_ID_KEY, 0);
@@ -88,15 +84,18 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
                 mBanner = intent.getStringExtra(MODEL_BANNER_KEY);
         }
         mActionBar.setDisplayShowTitleEnabled(false);
+        progressLayout.showLoading();
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setAdapter(new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext(), mId));
+        tabLayout.setViewPager(viewPager);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        progressLayout.showLoading();
-        viewPager.setOffscreenPageLimit(3);
-        attachEventListeners();
-        mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.MANGA], getApplicationContext());
+        mFloatingToolbar.setClickListener(this);
+        mFloatingToolbar.attachFab(fab);
+        mPresenter = new SeriesPresenter(KeyUtils.SeriesTypes[KeyUtils.ANIME], getApplicationContext());
         if(mId != 0 && mSeries != null)
             updateUI();
         else {
@@ -110,14 +109,13 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
             else
                 mPresenter.beginAsync(this, mId);
         }
-
         setUpBanner();
         if(mPresenter.getAppPrefs().getDetailTip())
             showHelp();
     }
 
     private void setUpBanner() {
-        if (mBanner != null) {
+        if(mBanner != null) {
             Glide.with(this)
                     .load(mBanner)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -159,33 +157,10 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Attach event listeners and other properties
-     */
-    private void attachEventListeners() {
-        mFloatingToolbar.setClickListener(this);
-        mFloatingToolbar.attachFab(fab);
-    }
-
-    public void setTitleToolbar(String title) {
-        collapsingToolbarLayout.setTitle(title);
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
-    }
-
-    public void setAdapters() {
-        viewPager.setAdapter(new MangaPageAdapter(getSupportFragmentManager(), mSeries, getApplicationContext()));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_INSTANCE_ID_KEY, mId);
         outState.putString(SAVED_INSTANCE_BANNER_MODEL, mBanner);
-        outState.putParcelable(SAVED_INSTANCE_SERIES_MODEL, mSeries);
         super.onSaveInstanceState(outState);
     }
 
@@ -195,7 +170,6 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
         if(savedInstanceState != null) {
             mId = savedInstanceState.getInt(SAVED_INSTANCE_ID_KEY, 0);
             mBanner = savedInstanceState.getString(SAVED_INSTANCE_BANNER_MODEL);
-            mSeries = savedInstanceState.getParcelable(SAVED_INSTANCE_SERIES_MODEL);
         }
     }
 
@@ -258,7 +232,6 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
                 mSeries = response.body();
                 updateUI();
             } else {
-                appBarLayout.setExpanded(false, false);
                 progressLayout.showError(ContextCompat.getDrawable(this, R.drawable.request_error), getString(R.string.text_error_request), getString(R.string.Go_Back), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -290,13 +263,7 @@ public class MangaActivity extends DefaultActivity implements FloatingToolbar.It
     protected void updateUI() {
         if(favMenuItem != null)
             favMenuItem.setVisible(mSeries.isFavourite());
-        if(mBanner == null) {
-            if(mSeries.getImage_url_banner() != null) {
-                mBanner = mSeries.getImage_url_banner();
-                setUpBanner();
-            }
-        }
-        setAdapters();
+        mPresenter.notifyAllListeners(mSeries);
         progressLayout.showContent();
     }
 

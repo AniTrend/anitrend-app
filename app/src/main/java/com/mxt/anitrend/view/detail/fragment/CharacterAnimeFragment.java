@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.details.AnimeStaffRoles;
+import com.mxt.anitrend.adapter.recycler.details.SeriesStaffRoles;
 import com.mxt.anitrend.api.model.Character;
 import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
@@ -67,7 +67,7 @@ public class CharacterAnimeFragment extends DefaultFragment<Character> implement
     @Override
     protected void updateUI() {
         if (model != null) {
-            mAdapter = new AnimeStaffRoles(model.getAnime(), getContext());
+            mAdapter = new SeriesStaffRoles(model.getAnime(), getContext());
             recyclerView.setAdapter(mAdapter);
         } else {
             progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.layout_empty_response));

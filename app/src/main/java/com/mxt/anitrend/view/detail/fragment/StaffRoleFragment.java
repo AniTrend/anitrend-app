@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.details.AnimeActorRoles;
 import com.mxt.anitrend.adapter.recycler.details.SeriesStaffRoles;
 import com.mxt.anitrend.api.model.SeriesSmall;
 import com.mxt.anitrend.api.model.Staff;
@@ -22,21 +23,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by max on 2017/04/09.
+ * Created by max on 2017/08/21.
  */
-public class StaffAnimeFragment extends DefaultFragment<Staff> implements SwipeRefreshLayout.OnRefreshListener {
+
+public class StaffRoleFragment extends DefaultFragment<Staff> implements SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.generic_pull_refresh) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.generic_recycler) StatefulRecyclerView recyclerView;
-    @BindView(R.id.generic_progress_state) ProgressLayout progressLayout;
+    @BindView(R.id.generic_recycler)
+    StatefulRecyclerView recyclerView;
+    @BindView(R.id.generic_progress_state)
+    ProgressLayout progressLayout;
 
     private RecyclerViewAdapter<SeriesSmall> mAdapter;
     private GridLayoutManager mLayoutManager;
 
-    public static StaffAnimeFragment newInstance(Staff result) {
+    public static StaffRoleFragment newInstance(Staff result) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_KEY, result);
-        StaffAnimeFragment fragment = new StaffAnimeFragment();
+        StaffRoleFragment fragment = new StaffRoleFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,10 +67,10 @@ public class StaffAnimeFragment extends DefaultFragment<Staff> implements SwipeR
     @Override
     protected void updateUI() {
         if(model != null) {
-            mAdapter = new SeriesStaffRoles(model.getAnime_staff(), getContext());
+            mAdapter = new AnimeActorRoles(model.getAnime(), getContext());
             recyclerView.setAdapter(mAdapter);
         } else {
-            progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), "No results to display");
+            progressLayout.showEmpty(ContextCompat.getDrawable(getContext(), R.drawable.request_empty), getString(R.string.layout_empty_response));
         }
     }
 

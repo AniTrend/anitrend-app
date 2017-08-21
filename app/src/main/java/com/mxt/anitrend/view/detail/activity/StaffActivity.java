@@ -45,7 +45,6 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @BindView(R.id.nts_center) SmartTabLayout tabLayout;
 
     private final String KEY_MINI_STAFF = "mini_staff_key";
-    private final String KEY_FULL_STAFF = "full_staff_key";
 
     private Staff mStaff;
     private StaffSmall mStaffSmall;
@@ -59,9 +58,8 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
         setContentView(R.layout.activity_staff_detail);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if(getIntent().hasExtra(STAFF_INTENT_KEY)) {
+        if(getIntent().hasExtra(STAFF_INTENT_KEY))
             mStaffSmall = getIntent().getParcelableExtra(STAFF_INTENT_KEY);
-        }
         progressLayout.showLoading();
     }
 
@@ -69,13 +67,10 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         prefs = new ApplicationPrefs(this);
-        if(savedInstanceState != null) {
-            mStaff = savedInstanceState.getParcelable(KEY_FULL_STAFF);
-            mStaffSmall = savedInstanceState.getParcelable(KEY_MINI_STAFF);
+        if(mStaff != null)
             updateUI();
-        } else {
+        else
             new AsyncTaskFetch<>(this, getApplicationContext(), mStaffSmall.getId()).execute(AsyncTaskFetch.RequestType.STAFF_INFO_REQ);
-        }
         mActionBar.setTitle(mStaffSmall.getName_first());
     }
 
@@ -168,8 +163,14 @@ public class StaffActivity extends DefaultActivity implements Callback<Staff> {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_MINI_STAFF, mStaffSmall);
-        outState.putParcelable(KEY_FULL_STAFF, mStaff);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null)
+            mStaffSmall = savedInstanceState.getParcelable(KEY_MINI_STAFF);
     }
 
     @Override

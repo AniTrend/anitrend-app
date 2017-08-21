@@ -35,6 +35,7 @@ public class SeriesSmall implements Parcelable {
     private String image_url_banner;
     private int updated_at;
     private List<StaffSmall> actors;
+    private List<CharacterSmall> characters;
 
     private int total_episodes;
     private Integer duration;
@@ -70,6 +71,7 @@ public class SeriesSmall implements Parcelable {
         image_url_banner = in.readString();
         updated_at = in.readInt();
         actors = in.createTypedArrayList(StaffSmall.CREATOR);
+        characters = in.createTypedArrayList(CharacterSmall.CREATOR);
         total_episodes = in.readInt();
         duration = in.readInt();
         airing_status = in.readString();
@@ -105,6 +107,7 @@ public class SeriesSmall implements Parcelable {
         dest.writeString(image_url_banner);
         dest.writeInt(updated_at);
         dest.writeTypedList(actors);
+        dest.writeTypedList(characters);
         dest.writeInt(total_episodes);
         dest.writeInt(duration==null?0:duration );
         dest.writeString(airing_status);
@@ -266,5 +269,9 @@ public class SeriesSmall implements Parcelable {
 
     public String getPublishing_status() {
         return publishing_status;
+    }
+
+    public List<CharacterSmall> getCharacters() {
+        return characters;
     }
 }

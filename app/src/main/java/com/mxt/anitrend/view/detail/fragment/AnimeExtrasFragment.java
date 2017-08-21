@@ -20,16 +20,16 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.interfaces.event.InteractionListener;
 import com.mxt.anitrend.view.detail.activity.StaffActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class AnimeExtrasFragment extends Fragment implements InteractionListener {
 
-    private final String CHARACTER_KEY = "character_recycler";
-    private final String STAFF_KEY = "staff_recycler";
-    private final String ANIME_KEY = "anime_recycler";
-    private final String MANGA_KEY = "manga_recycler";
 
     @BindView(R.id.characters_recycler) StatefulRecyclerView mRecyclerCharacters;
     @BindView(R.id.staff_recycler) StatefulRecyclerView mRecyclerStaff;
@@ -48,26 +48,17 @@ public class AnimeExtrasFragment extends Fragment implements InteractionListener
     private RecyclerView.Adapter mAnimeAdapter;
     private RecyclerView.Adapter mMangaAdapter;
 
-    private final static String ARG_KEY = "arg_data";
-
     public AnimeExtrasFragment() {
         // Required empty public constructor
     }
 
-    public static AnimeExtrasFragment newInstance(Series result) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, result);
-        AnimeExtrasFragment fragment = new AnimeExtrasFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static AnimeExtrasFragment newInstance() {
+        return new AnimeExtrasFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
-            model = getArguments().getParcelable(ARG_KEY);
-        }
     }
 
     @Override
@@ -92,43 +83,31 @@ public class AnimeExtrasFragment extends Fragment implements InteractionListener
         mRecyclerManga.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false));
         mRecyclerManga.setNestedScrollingEnabled(false);
         mRecyclerManga.setHasFixedSize(true);
-
-        if(model != null){
-            mCharacterAdapter = new SeriesCharacterAdapter(model.getCharacters(), getActivity());
-            mStaffAdapter = new SeriesStaffAdapter(model.getStaff(), getActivity(), this);
-            mAnimeAdapter = new AnimeDetailAdapter(model.getRelations(), getActivity());
-            mMangaAdapter = new MangaDetailAdapter(model.getRelations_manga(), getActivity());
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
         setupRecyclers();
-        UpdateUI();
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(CHARACTER_KEY, mRecyclerCharacters.onSaveInstanceState());
-        outState.putParcelable(STAFF_KEY, mRecyclerStaff.onSaveInstanceState());
-        outState.putParcelable(ANIME_KEY, mRecyclerAnime.onSaveInstanceState());
-        outState.putParcelable(MANGA_KEY, mRecyclerManga.onSaveInstanceState());
-        super.onSaveInstanceState(outState);
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null) {
-            mRecyclerCharacters.onRestoreInstanceState(savedInstanceState.getParcelable(CHARACTER_KEY));
-            mRecyclerStaff.onRestoreInstanceState(savedInstanceState.getParcelable(STAFF_KEY));
-            mRecyclerAnime.onRestoreInstanceState(savedInstanceState.getParcelable(ANIME_KEY));
-            mRecyclerManga.onRestoreInstanceState(savedInstanceState.getParcelable(MANGA_KEY));
-        }
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
     }
 
-    private void UpdateUI() {
+    private void updateUI() {
+        mCharacterAdapter = new SeriesCharacterAdapter(model.getCharacters(), getActivity());
+        mStaffAdapter = new SeriesStaffAdapter(model.getStaff(), getActivity(), this);
+        mAnimeAdapter = new AnimeDetailAdapter(model.getRelations(), getActivity());
+        mMangaAdapter = new MangaDetailAdapter(model.getRelations_manga(), getActivity());
         if(mCharacterAdapter.getItemCount() < 1)
             mCharacterCard.setVisibility(View.GONE);
         else
@@ -166,5 +145,18 @@ public class AnimeExtrasFragment extends Fragment implements InteractionListener
         Intent intent = new Intent(getContext(), StaffActivity.class);
         intent.putExtra(StaffActivity.STAFF_INTENT_KEY, model.getStaff().get(index));
         startActivity(intent);
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && model == null) {
+            model = param;
+            updateUI();
+        }
     }
 }

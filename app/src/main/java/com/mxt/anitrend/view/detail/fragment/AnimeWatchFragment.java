@@ -21,6 +21,7 @@ import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.details.AnimeEpisodeAdapter;
 import com.mxt.anitrend.api.call.EpisodeModel;
+import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.service.ServiceGenerator;
 import com.mxt.anitrend.api.structure.Channel;
 import com.mxt.anitrend.api.structure.Episode;
@@ -34,6 +35,10 @@ import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.EpisodesHelper;
 import com.mxt.anitrend.util.MarkDown;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,10 +78,18 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
         // Required empty public constructor
     }
 
-    public static AnimeWatchFragment newInstance(List<ExternalLink> param, boolean popular) {
+    public static AnimeWatchFragment newInstance(boolean popular) {
         AnimeWatchFragment fragment = new AnimeWatchFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, (ArrayList<? extends Parcelable>) param);
+        args.putBoolean(ARG_POPULAR, popular);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static AnimeWatchFragment newInstance(List<ExternalLink> externalLinks,boolean popular) {
+        AnimeWatchFragment fragment = new AnimeWatchFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM, (ArrayList<? extends Parcelable>) externalLinks);
         args.putBoolean(ARG_POPULAR, popular);
         fragment.setArguments(args);
         return fragment;
@@ -113,10 +126,12 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
         progressLayout.showLoading();
         mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.card_col_size_home));
         recyclerView.setLayoutManager(mLayoutManager);
-        if(rssFeed == null)
-            new PreviewCheck().execute();
-        else
-            updateUI();
+        if(externalLinks != null) {
+            if(rssFeed == null)
+                new PreviewCheck().execute();
+            else
+                updateUI();
+        }
     }
 
     @Override
@@ -130,6 +145,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
 
     @Override
     public void onPause() {
+        EventBus.getDefault().unregister(this);
         super.onPause();
         if(recyclerView != null)
             fragmentPresenter.setParcelable(recyclerView.onSaveInstanceState());
@@ -138,6 +154,7 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
     @Override
     public void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
         if(recyclerView != null)
             recyclerView.onRestoreInstanceState(fragmentPresenter.getSavedParse());
     }
@@ -164,6 +181,22 @@ public class AnimeWatchFragment extends Fragment implements InteractionListener,
             mAdapter = new AnimeEpisodeAdapter(this, getContext(), rssFeed.getChannel());
             recyclerView.setAdapter(mAdapter);
             progressLayout.showContent();
+        }
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && externalLinks == null) {
+            externalLinks = param.getExternal_links();
+            if(rssFeed == null)
+                new PreviewCheck().execute();
+            else
+                updateUI();
         }
     }
 

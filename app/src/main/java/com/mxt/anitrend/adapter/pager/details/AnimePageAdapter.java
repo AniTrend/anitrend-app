@@ -23,11 +23,11 @@ import java.util.Locale;
 
 public class AnimePageAdapter extends DefaultStatePagerAdapter {
 
-    private Series model;
+    private int id;
 
-    public AnimePageAdapter(FragmentManager fragmentManager, Series model, Context context) {
+    public AnimePageAdapter(FragmentManager fragmentManager, Context context, int id) {
         super(fragmentManager, context);
-        this.model = model;
+        this.id = id;
         mTitles = context.getResources().getStringArray(R.array.anime_page_titles);
     }
 
@@ -40,15 +40,15 @@ public class AnimePageAdapter extends DefaultStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return AnimeOverviewFragment.newInstance(model);
+                return AnimeOverviewFragment.newInstance();
             case 1:
-                return AnimeLinksFragment.newInstance(model);
+                return AnimeLinksFragment.newInstance();
             case 2:
-                return AnimeWatchFragment.newInstance(model.getExternal_links(), false);
+                return AnimeWatchFragment.newInstance(false);
             case 3:
-                return AnimeExtrasFragment.newInstance(model);
+                return AnimeExtrasFragment.newInstance();
             case 4:
-                return AnimeReviewsFragment.newInstance(model.getId());
+                return AnimeReviewsFragment.newInstance(id);
         }
         return null;
     }

@@ -3,13 +3,17 @@ package com.mxt.anitrend.presenter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.johnpersano.supertoasts.library.Style;
 import com.github.johnpersano.supertoasts.library.SuperActivityToast;
 import com.github.johnpersano.supertoasts.library.SuperToast;
@@ -24,6 +28,8 @@ import com.mxt.anitrend.util.ApiPreferences;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DefaultPreferences;
 import com.tapadoo.alerter.Alerter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -282,5 +288,23 @@ public abstract class CommonPresenter <T> extends ScrollListener implements Life
             mToast.dismiss();
             mToast = null;
         }
+    }
+
+    /**
+     * Trigger all subscribers that may be listening. This method makes use of sticky broadcasts
+     * in case all subscribed listeners were not loaded in time for the broadcast
+     * <br/>
+     *
+     * @param param the object of type T to send
+     */
+    public void notifyAllListeners(T param) {
+        EventBus.getDefault().postSticky(param);
+    }
+
+    @BindingAdapter({"bind:imageSrc"})
+    public static void loadImage(ImageView view, String url) {
+        Glide.with(view.getContext())
+                .load(url).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop().into(view);
     }
 }

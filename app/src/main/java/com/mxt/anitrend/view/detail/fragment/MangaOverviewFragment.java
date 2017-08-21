@@ -22,6 +22,10 @@ import com.mxt.anitrend.util.DateTimeConverter;
 import com.mxt.anitrend.util.TransitionHelper;
 import com.mxt.anitrend.view.base.activity.ImagePreviewActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -72,12 +76,8 @@ public class MangaOverviewFragment extends Fragment {
     private Unbinder unbinder;
     private final static String ARG_KEY = "arg_data";
 
-    public static MangaOverviewFragment newInstance(Series result) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, result);
-        MangaOverviewFragment fragment = new MangaOverviewFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static MangaOverviewFragment newInstance() {
+        return new MangaOverviewFragment();
     }
 
     @Override
@@ -99,12 +99,31 @@ public class MangaOverviewFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        UpdateUI();
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
-    public void UpdateUI(){
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && model == null) {
+            model = param;
+            updateUI();
+        }
+    }
+
+    public void updateUI(){
         /*Populate all the views*/
 
         Glide.with(this)

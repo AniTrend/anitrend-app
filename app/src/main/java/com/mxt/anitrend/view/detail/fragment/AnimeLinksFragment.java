@@ -23,6 +23,10 @@ import com.mxt.anitrend.base.custom.async.YoutubeInitializer;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.interfaces.event.InteractionListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -54,20 +58,13 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
         // Required empty public constructor
     }
 
-    public static AnimeLinksFragment newInstance(Series result) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, result);
-        AnimeLinksFragment fragment = new AnimeLinksFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static AnimeLinksFragment newInstance() {
+        return new AnimeLinksFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
-            model = getArguments().getParcelable(ARG_KEY);
-        }
         loaderManager = getActivity().getLoaderManager();
     }
 
@@ -91,10 +88,9 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
         mRankingRecycler.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.list_col_size_rank)));
         mRankingRecycler.setNestedScrollingEnabled(false);
         mRankingRecycler.setHasFixedSize(true);
-        UpdateUI();
     }
 
-    public void UpdateUI() {
+    public void updateUI() {
         /*Populate all the views*/
         if(model.getList_stats() != null) {
             mCompleted.setText(model.getList_stats().getCompleted());
@@ -115,6 +111,31 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
         if(!isLoading && model.getYoutube_id() != null) {
             loaderManager.restartLoader(getResources().getInteger(R.integer.youtube_loader),null, this);
         }
+    }
+
+    /**
+     * Responds to published events
+     *
+     * @param param
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventPublished(Series param) {
+        if(!isRemoving() && model == null) {
+            model = param;
+            updateUI();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     @Override
