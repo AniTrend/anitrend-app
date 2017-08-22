@@ -36,8 +36,6 @@ public abstract class DefaultFragment <T extends Parcelable> extends Fragment {
     protected CommonPresenter mPresenter;
     protected Unbinder unbinder;
     protected T model;
-
-    protected SortHelper<T> mSorter;
     /**
      * Override if you need to include extra functionality into the method,
      * the method will get the arguments from the from your bundle and into
@@ -82,14 +80,14 @@ public abstract class DefaultFragment <T extends Parcelable> extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_MODEL_STATE, model);
+        //outState.putParcelable(KEY_MODEL_STATE, model);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null)
-            model = savedInstanceState.getParcelable(KEY_MODEL_STATE);
+        /*if(savedInstanceState != null)
+            model = savedInstanceState.getParcelable(KEY_MODEL_STATE);*/
     }
 
     /**

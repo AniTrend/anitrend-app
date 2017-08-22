@@ -20,11 +20,13 @@ import com.mxt.anitrend.base.interfaces.event.NotificationClickListener;
 import com.mxt.anitrend.presenter.index.NotificationPresenter;
 import com.mxt.anitrend.util.DialogManager;
 import com.mxt.anitrend.util.ErrorHandler;
+import com.mxt.anitrend.util.NotificationDispatcher;
 import com.mxt.anitrend.view.detail.activity.AnimeActivity;
 import com.mxt.anitrend.view.detail.activity.UserReplyActivity;
 import com.mxt.anitrend.viewmodel.activity.DefaultActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,8 +76,7 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
     protected void startInit() {
         refreshLayout.setOnRefreshListener(this);
         progressLayout.showLoading();
-        GridLayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), getResources().getInteger(R.integer.list_col_size));
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), getResources().getInteger(R.integer.list_col_size)));
         mPresenter = new NotificationPresenter(this);
         mPresenter.beginAsync(this);
     }
@@ -86,7 +87,7 @@ public class NotificationActivity extends DefaultActivity implements Callback<Li
         recyclerView.setAdapter(mAdapter);
         progressLayout.showContent();
         /*
-        Testing notifications
+        Testing notifications by forcing the notification dispatcher to get invoked more than once
         ArrayList<UserNotification> range_filter = new ArrayList<>(mListNotifications.subList(0, 3));
         NotificationDispatcher.createNotification(getApplicationContext(), range_filter);
         */

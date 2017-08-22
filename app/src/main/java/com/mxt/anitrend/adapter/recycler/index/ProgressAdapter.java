@@ -147,7 +147,6 @@ public class ProgressAdapter extends RecyclerViewAdapter<UserActivity> {
 
             Glide.with(mContext).load(model.getSeries().getImage_url_lge())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.drawable.toolbar_shadow)
                     .into(mSeriesImage);
 
             mHeading.setText(String.format(Locale.getDefault(), "%s\n\n%s", header, title));

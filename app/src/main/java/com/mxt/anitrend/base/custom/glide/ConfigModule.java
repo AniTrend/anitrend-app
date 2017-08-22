@@ -41,8 +41,8 @@ public class ConfigModule implements GlideModule {
         int bitmapPoolSize = (int) (1.25 * calculator.getBitmapPoolSize());
         int storageCacheSize = 1024 * 1024 * 350;
         if(context.getExternalCacheDir() != null) {
-            long total = context.getExternalCacheDir().getTotalSpace();
-            storageCacheSize = (int) (total*0.2);
+            long total = context.getExternalCacheDir().getUsableSpace();
+            storageCacheSize = (int) (total*0.14);
         }
 
         builder.setMemoryCache(new LruResourceCache(memoryCacheSize));

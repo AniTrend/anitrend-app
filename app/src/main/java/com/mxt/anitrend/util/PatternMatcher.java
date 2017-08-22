@@ -14,7 +14,6 @@ public class PatternMatcher {
     public static final String KEY_YOU = "youtube";
     public static final String NO_THUMBNAIL = "http://placehold.it/450x250?text=No+Preview+Available";
 
-
     private static final String VID_THUMB = "https://img.youtube.com/vi/%s/hqdefault.jpg";
     private static final String Youtube = "https://www.youtube.com/watch?v=";
     private static final String PATTERN_YOUTUBE_EXTRACT = "(\\?v=)(.*)";
@@ -105,7 +104,7 @@ public class PatternMatcher {
     }
 
     public static String removeTags(String value) {
-        return findImages(findMedia(value).replaceAll("")).replaceAll("").replaceAll("~","");
+        return findImages(findMedia(value).replaceAll("")).replaceAll("").replaceAll("!~","").replaceAll("~!","").replaceAll("~","");
     }
 
     public static String convertToStandardMarkdown(String value) {
@@ -116,7 +115,7 @@ public class PatternMatcher {
             int group = matcher.groupCount();
             value = value.replace(match, TAG + matcher.group(group));
         }
-        return value.replaceAll("~","").replaceAll("!~","").replaceAll("~!","");
+        return value.replaceAll("!~","").replaceAll("~!","").replaceAll("~","");
     }
 
     public static String convertToStandardMarkdownEditor(String value) {

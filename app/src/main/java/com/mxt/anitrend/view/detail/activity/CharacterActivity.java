@@ -142,8 +142,7 @@ public class CharacterActivity extends DefaultActivity implements Callback<Chara
     protected void updateUI() {
         mActionBar.setTitle(character.getName_japanese());
         setFavIcon();
-        CharacterPageAdapter mStaffViewAdapter = new CharacterPageAdapter(getSupportFragmentManager(), character, character_temp, getApplicationContext());
-        mViewPager.setAdapter(mStaffViewAdapter);
+        mViewPager.setAdapter(new CharacterPageAdapter(getSupportFragmentManager(), character, character_temp, getApplicationContext()));
         tabLayout.setViewPager(mViewPager);
         progressLayout.showContent();
     }

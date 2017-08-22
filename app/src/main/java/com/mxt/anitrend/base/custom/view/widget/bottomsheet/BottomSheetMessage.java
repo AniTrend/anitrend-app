@@ -13,27 +13,17 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.johnpersano.supertoasts.library.Style;
-import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.base.custom.service.ServiceScheduler;
 import com.mxt.anitrend.base.interfaces.event.SheetStateChangeListener;
-import com.mxt.anitrend.util.ErrorHandler;
-import com.mxt.anitrend.view.base.activity.MainActivity;
 import com.mxt.anitrend.view.base.activity.SplashActivity;
 import com.mxt.anitrend.api.call.RepoModel;
 import com.mxt.anitrend.api.service.ServiceGenerator;
-import com.mxt.anitrend.util.Downloader;
+import com.mxt.anitrend.base.custom.service.DownloaderService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by max on 2017/04/15.
@@ -177,9 +167,8 @@ public class BottomSheetMessage extends BottomSheet implements SheetStateChangeL
                             mPresenter.createAlerter(getActivity(), getString(R.string.title_download_info), getString(R.string.text_download_info),
                                     R.drawable.ic_cloud_download_white_24dp, R.color.colorStateBlue);
 
-                            Downloader.startDownload(getActivity(),
-                                    RepoModel.DOWNLOAD_LINK, String.format("AniTrend v%s.apk",
-                                            mPresenter.getAppPrefs().getRepoVersions().getVersion()));
+                            new DownloaderService(getContext()).startUpdateDownload(RepoModel.DOWNLOAD_LINK,
+                                    String.format("AniTrend v%s.apk", mPresenter.getAppPrefs().getRepoVersions().getVersion()));
                         }
                         else
                             mPresenter.createAlerter(getActivity(), getString(R.string.title_update_info), getString(R.string.app_no_date),
