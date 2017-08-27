@@ -85,7 +85,7 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             else
                 original = String.format("%s %s",intentReader.getSubject(), intentReader.getText());
         } else {
-            if(getIntent() != null) {
+            if(getIntent() != null && original == null) {
                 if(getIntent().hasExtra(ARG_ACTION_TYPE))
                     mActionType = (KeyUtils.ActionType) getIntent().getSerializableExtra(ARG_ACTION_TYPE);
                 if(getIntent().hasExtra(ARG_ACTION_ID))
@@ -127,12 +127,10 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(!isPreviewMode)
-            original = editText.getText().toString();
         outState.putSerializable(ARG_ACTION_TYPE, mActionType);
         outState.putInt(ARG_ACTION_ID, id);
         outState.putBoolean(arg_key_is_preview, isPreviewMode);
-        outState.putString(arg_key_editor, original);
+        outState.putString(arg_key_editor, editText.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
@@ -143,7 +141,7 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             mActionType = (KeyUtils.ActionType) savedInstanceState.getSerializable(ARG_ACTION_TYPE);
             id = savedInstanceState.getInt(ARG_ACTION_ID, 0);
             isPreviewMode = savedInstanceState.getBoolean(arg_key_is_preview);
-            editText.setText(savedInstanceState.getString(arg_key_editor));
+            original = savedInstanceState.getString(arg_key_editor);
         }
     }
 
