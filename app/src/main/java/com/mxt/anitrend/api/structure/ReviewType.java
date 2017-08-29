@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mxt.anitrend.api.model.Review;
+import com.mxt.anitrend.util.FilterProvider;
 
 import java.util.List;
 
@@ -15,6 +16,11 @@ public class ReviewType implements Parcelable {
 
     private List<Review> anime;
     private List<Review> manga;
+
+    public ReviewType(List<Review> anime, List<Review> manga) {
+        this.anime = anime;
+        this.manga = manga;
+    }
 
     protected ReviewType(Parcel in) {
         anime = in.createTypedArrayList(Review.CREATOR);

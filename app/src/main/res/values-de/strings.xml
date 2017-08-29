@@ -76,7 +76,7 @@
     <string-array name="feed_titles">
         <item>Verlauf</item>
         <item>Status</item>
-        <item>Öffentlicher Status</item>
+        <item>Öffentlich</item>
     </string-array>
 
     <!--Try to keep all titles short-->
@@ -89,7 +89,7 @@
 
     <!--Try to keep all titles short-->
     <string-array name="trending_title">
-        <item>Wird Geschaut</item>
+        <item>Momentan Beliebt</item>
         <item>Kürzlich Hinzugefügt</item>
     </string-array>
 
@@ -152,7 +152,7 @@
 
     <string-array name="anime_listing_status">
         <item>Am Schauen</item>
-        <item>Plane zu Schauen</item>
+        <item>In Planung</item>
         <item>Abgeschlossen</item>
         <item>Pausiert</item>
         <item>Abgebrochen</item>
@@ -160,7 +160,7 @@
 
     <string-array name="manga_listing_status">
         <item>Am Lesen</item>
-        <item>Plane zu Lesen</item>
+        <item>In Planung</item>
         <item>Abgeschlossen</item>
         <item>Pausiert</item>
         <item>Abgebrochen</item>
@@ -285,7 +285,7 @@
     <string name="drawer_title_anime">Anime entdecken</string>
     <string name="drawer_title_manga">Manga entdecken</string>
     <string name="drawer_title_trending">Was ist beliebt?</string>
-    <string name="drawer_title_airing">Airing Anime</string>
+    <string name="drawer_title_airing">Laufende Anime</string>
     <string name="drawer_title_myanime">Meine Anime Liste</string>
     <string name="drawer_title_mymanga">Meine Manga Liste</string>
     <string name="drawer_title_reviews">Serien Reviews</string>
@@ -299,7 +299,7 @@
     <string name="drawer_title_quality">Qualität</string>
     <string name="drawer_title_style">Neue Listenansicht</string>
 
-    <string name="drawer_section_account">Account</string>
+    <string name="drawer_section_account">Benutzer</string>
     <string name="drawer_title_sign_in">Einloggen</string>
     <string name="drawer_title_profile">Profil</string>
     <string name="drawer_title_sign_out">Ausloggen</string>
@@ -364,7 +364,7 @@
 
     <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
     <string name="notification_episode" formatted="false">Episode %s von %s ist gerade erschienen!</string>
-    <string name="notification_episode_short" formatted="false">EP %s of %s lief gerade!</string>
+    <string name="notification_episode_short" formatted="false">Neu: EP %s von %s!</string>
 
 
     <!-- Settings for Application -->
@@ -375,9 +375,9 @@
 
     <string name="pref_summary_auto_increment">
         <![CDATA[
-        Erhöhe schnell die Episoden- oder Kapitelnummer, in dem du
-        (bei Benutzung der neuen Listenansicht) auf sie tippst,
-        anstatt ein zusätzliches Fenster zu öffnen.
+        Erhöhe schnell die Episoden- oder Kapitelnummer, in dem du einfach
+	auf sie tippst, anstatt ein zusätzliches Fenster zu öffnen.
+	(Funktioniert nur in der neuen Listenansicht)
         ]]>
     </string>
 
@@ -388,7 +388,7 @@
         <item>Anime entdecken</item>
         <item>Manga entdecken</item>
         <item>Was ist beliebt?</item>
-        <item>Airing Anime</item>
+        <item>Laufende Anime</item>
         <item>Meine Anime Liste</item>
         <item>Meine Manga Liste</item>
         <item>AniTrend Hub</item>
@@ -665,8 +665,8 @@
 
     <string name="text_error_request">Konnte Anfrage nicht erfolgreich verarbeiten</string>
 
-    <string name="text_what_is_new">Was gibt\'s Neues!</string>
-    <string name="text_enter_text">Schreib hier etwas hinein</string>
+    <string name="text_what_is_new">Was gibt\'s Neues?</string>
+    <string name="text_enter_text">Hier einen Text verfassen</string>
     <string name="text_unable_set_text">Konnte Text nicht setzen..</string>
     <string name="edit_status_title">Status bearbeiten</string>
     <string name="edit_status_text">Verändere deine zuletzt geschriebene Statusnachricht!</string>
@@ -688,8 +688,8 @@
 
     <string name="text_message_to">Schreibe eine Nachricht an %s</string>
     <string name="title_bottom_sheet_favourites">Favoriten des Users</string>
-    <string name="warning_anime_is_airing">Anime ist noch Airing!</string>
-    <string name="warning_anime_not_airing">Anime ist noch nicht Airing!</string>
+    <string name="warning_anime_is_airing">Anime läuft bereits!</string>
+    <string name="warning_anime_not_airing">Anime wurde noch nicht ausgestrahlt!</string>
     <string name="warning_manga_publishing">Manga wird noch veröffentlicht!</string>
     <string name="warning_manga_not_publishing">Manga wurde noch nicht veröffentlicht!</string>
 
@@ -706,136 +706,136 @@
     -->
 
     <!--Start of Menu labels-->
-    <string name="menu_title_notifications">Notifications</string>
-    <string name="menu_title_messages">Messages</string>
-    <string name="menu_title_create_status">Create Status</string>
-    <string name="menu_title_compose_message">Compose Message</string>
+    <string name="menu_title_notifications">Benachrichtigungen</string>
+    <string name="menu_title_messages">Nachrichten</string>
+    <string name="menu_title_create_status">Status erstellen</string>
+    <string name="menu_title_compose_message">Nachricht verfassen</string>
 
-    <string name="menu_title_sorting">Sorting</string>
-    <string name="menu_title_order">Order</string>
+    <string name="menu_title_sorting">Sortierung</string>
+    <string name="menu_title_order">Reihenfolge</string>
     <string name="menu_title_genres">Genres</string>
-    <string name="menu_title_types">Types</string>
-    <string name="menu_title_year">Year</string>
+    <string name="menu_title_types">Typen</string>
+    <string name="menu_title_year">Jahr</string>
     <string name="menu_title_status">Status</string>
 
-    <string name="menu_title_new_activity_post">New Activity Post</string>
-    <string name="menu_title_changelog">Changelog</string>
-    <string name="menu_title_about">About</string>
-    <string name="menu_title_help">Help</string>
+    <string name="menu_title_new_activity_post">Status verfassen</string>
+    <string name="menu_title_changelog">Änderungen</string>
+    <string name="menu_title_about">Über die App</string>
+    <string name="menu_title_help">Hilfe</string>
     <!--End of Menu labels-->
 
     <!--Reply or comment page when you tap the attach icon-->
-    <string name="text_attach_link">Attach Link</string>
-    <string name="text_attach_image">Attach Image</string>
-    <string name="text_youtube_link">Youtube Link</string>
-    <string name="text_webm_link">WebM Link</string>
+    <string name="text_attach_link">Link anfügen</string>
+    <string name="text_attach_image">Bild anfügen</string>
+    <string name="text_youtube_link">Youtube Video</string>
+    <string name="text_webm_link">WebM Video</string>
 
     <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
-    <string name="series_favourite_this">Favourite This</string>
-    <string name="series_add_to_list">Add To list</string>
-    <string name="series_write_a_review">Write A Review</string>
-    <string name="series_share">Share</string>
+    <string name="series_favourite_this">Zu den Favoriten hinzufügen</string>
+    <string name="series_add_to_list">Zur Liste hinzufügen</string>
+    <string name="series_write_a_review">Eine Review verfassen</string>
+    <string name="series_share">Teilen</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Status</string>
-    <string name="dialog_title_episodes">Episodes</string>
-    <string name="dialog_title_rewatched">Rewatched</string>
-    <string name="dialog_title_score">Score (0 – 100)</string>
-    <string name="dialog_title_private">Private</string>
-    <string name="dialog_title_increment_episodes">Increment Episodes</string>
-    <string name="dialog_hint_enter_your_notes">Enter your notes</string>
+    <string name="dialog_title_episodes">Episoden</string>
+    <string name="dialog_title_rewatched">Erneut geschaut</string>
+    <string name="dialog_title_score">Bewertung (0 – 100)</string>
+    <string name="dialog_title_private">Privat</string>
+    <string name="dialog_title_increment_episodes">Episodenzahl erhöhen</string>
+    <string name="dialog_hint_enter_your_notes">Eine Notiz anfügen</string>
 
-    <string name="dialog_title_volumes_read">Volumes Read</string>
-    <string name="dialog_title_chapters_read">Chapters Read</string>
-    <string name="dialog_title_reread">Reread</string>
+    <string name="dialog_title_volumes_read">Bände gelesen</string>
+    <string name="dialog_title_chapters_read">Kapitel gelesen</string>
+    <string name="dialog_title_reread">Erneut gelesen</string>
 
     <!--More labels from profiles-->
-    <string name="text_top_genres">Top Genres:</string>
-    <string name="text_tap_on_item_below_to_view_stats">Tap On Item Below To View Stats!</string>
-    <string name="following">Following</string>
-    <string name="followers">Followers</string>
-    <string name="favourites">Favourites</string>
+    <string name="text_top_genres">Lieblings Genres:</string>
+    <string name="text_tap_on_item_below_to_view_stats">Auf das Icon tippen um Details zu sehen!</string>
+    <string name="following">Folgt</string>
+    <string name="followers">Follower</string>
+    <string name="favourites">Favoriten</string>
 
     <string name="anime">Anime</string>
-    <string name="anime_time">Anime Time</string>
+    <string name="anime_time">Anime Zeit</string>
     <string name="manga">Manga</string>
-    <string name="chapters">Chapters</string>
+    <string name="chapters">Kapitel</string>
 
     <!--Profile page titles-->
     <string-array name="profile_page_titles">
-        <item>overview</item>
-        <item>progress</item>
-        <item>status</item>
+        <item>Übersicht</item>
+        <item>Verlauf</item>
+        <item>Status</item>
     </string-array>
 
     <!--Staff page titles-->
     <string-array name="staff_page_titles">
-        <item>overview</item>
-        <item>anime roles</item>
-        <item>manga roles</item>
-        <item>staff roles</item>
+        <item>Übersicht</item>
+        <item>Anime Rollen</item>
+        <item>Manga Rollen</item>
+        <item>Produktion</item>
     </string-array>
 
     <!--Anime page titles-->
     <string-array name="anime_page_titles">
-        <item>info</item>
-        <item>stats</item>
-        <item>episodes</item>
-        <item>extras</item>
-        <item>reviews</item>
+        <item>Infos</item>
+        <item>Statistik</item>
+        <item>Episoden</item>
+        <item>Extras</item>
+        <item>Reviews</item>
     </string-array>
 
     <!--Manga page titles-->
     <string-array name="manga_page_titles">
-        <item>info</item>
-        <item>stats</item>
-        <item>extras</item>
-        <item>reviews</item>
+        <item>Infos</item>
+        <item>Statistik</item>
+        <item>Extras</item>
+        <item>Reviews</item>
     </string-array>
 
     <!--Favourites page titles-->
     <string-array name="favorites_page_titles">
-        <item>anime</item>
-        <item>characters</item>
-        <item>manga</item>
-        <item>staff</item>
-        <item>studios</item>
+        <item>Anime</item>
+        <item>Charaktere</item>
+        <item>Manga</item>
+        <item>Produzenten</item>
+        <item>Studios</item>
     </string-array>
 
     <!--Character page titles-->
     <string-array name="character_page_titles">
-        <item>overview</item>
-        <item>anime roles</item>
-        <item>manga roles</item>
-        <item>actor roles</item>
+        <item>Übersicht</item>
+        <item>Anime Rollen</item>
+        <item>Manga Rollen</item>
+        <item>Sprechrollen</item>
     </string-array>
 
     <!--Try to keep all titles short-->
     <string-array name="hub_title">
         <item>Vorschläge</item>
-        <item>most popular</item>
-        <item>playlist</item>
+        <item>Beliebteste</item>
+        <item>Playlist</item>
     </string-array>
 
     <!-- Menu title for text composer -->
-    <string name="action_attach">Attach</string>
-    <string name="action_send">Send</string>
-    <string name="action_preview">Preview</string>
+    <string name="action_attach">Anhang anfügen</string>
+    <string name="action_send">Senden</string>
+    <string name="action_preview">Vorschau</string>
 
     <!-- Some text for comments or composer -->
-    <string name="text_hint_comment">Enter your comment</string>
-    <string name="text_edit_mode">Edit Mode Active!</string>
-    <string name="text_preview_mode">Preview Mode Active!</string>
+    <string name="text_hint_comment">Kommentar eingeben</string>
+    <string name="text_edit_mode">In Bearbeitung!</string>
+    <string name="text_preview_mode">Vorschaumodus!</string>
 
     <!-- Menu title for text composer -->
-    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+    <string name="text_compose_success">Erfolgreich gesendet! Vergiss nicht, deinen Statusfeed neu zu laden!</string>
 
     <!-- Some controls will be shown even though they will be disabled -->
-    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+    <string name="text_feature_disabled">Das Feature ist in diesem Kontext nicht zugänglich!</string>
 
     <!-- Dialogs for check updates, etc -->
-    <string name="title_download_info">Download Info!</string>
-    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
-    <string name="title_update_info">Update Info!</string>
+    <string name="title_download_info">Informationen zum Download!</string>
+    <string name="text_download_info">Die Update Datei wird in deinem Downloadordner gespeichert.</string>
+    <string name="title_update_info">Informationen zum Update!</string>
 
 </resources>

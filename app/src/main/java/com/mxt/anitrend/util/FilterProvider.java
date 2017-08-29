@@ -1,13 +1,16 @@
 package com.mxt.anitrend.util;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.function.Predicate;
 import com.mxt.anitrend.api.model.Review;
 import com.mxt.anitrend.api.model.Series;
 import com.mxt.anitrend.api.model.Studio;
 import com.mxt.anitrend.api.model.UserActivity;
+import com.mxt.anitrend.api.model.UserSmall;
 import com.mxt.anitrend.api.structure.ListItem;
+import com.mxt.anitrend.api.structure.ReviewType;
 import com.mxt.anitrend.base.custom.async.FilterBackgroundTask;
 
 import java.util.List;
@@ -51,21 +54,62 @@ public class FilterProvider {
      * <br/>
      * @param model the response body from a request or any object matching the signature of this method
      */
-    public static List<Review> getReviewFilter(final int current, List<Review> model) {
+    public static List<Review> getReviewFilter(@Nullable final UserSmall current, List<Review> model) {
         if(model != null)
             try {
                 return new FilterBackgroundTask<>(model).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new Predicate<Review>() {
                     @Override
                     public boolean test(Review value) {
-                        if(value.isReview_private() && value.getUser().getId() == current)
-                            return true;
+                        if(current != null)
+                            if(value.isReview_private() && value.getUser().getId() == current.getId())
+                                return true;
 
                         if(value.getAnime() != null)
-                            return value.getAnime().isAdult();
+                            return !value.getAnime().isAdult();
 
-                        return value.getManga().isAdult();
+                        return !value.getManga().isAdult();
                     }
                 }).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        return model;
+    }
+
+    /**
+     * Filters out adult content or private reviews from non authors
+     * <br/>
+     * @param current The current users Id
+     * @see com.mxt.anitrend.api.model.UserSmall
+     * <br/>
+     * @param model the response body from a request or any object matching the signature of this method
+     */
+    public static ReviewType getReviewFilter(@Nullable final UserSmall current, ReviewType model) {
+        if(model != null)
+            try {
+                List<Review> anime = new FilterBackgroundTask<>(model.getAnime()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new Predicate<Review>() {
+                    @Override
+                    public boolean test(Review value) {
+                        if(current != null)
+                            if(value.isReview_private() && value.getUser().getId() == current.getId())
+                                return true;
+
+                            return !value.getAnime().isAdult();
+                    }
+                }).get();
+
+                List<Review> manga = new FilterBackgroundTask<>(model.getManga()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new Predicate<Review>() {
+                    @Override
+                    public boolean test(Review value) {
+                        if(current != null)
+                            if(value.isReview_private() && value.getUser().getId() == current.getId())
+                                return true;
+
+                        return !value.getManga().isAdult();
+                    }
+                }).get();
+
+                return new ReviewType(anime, manga);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

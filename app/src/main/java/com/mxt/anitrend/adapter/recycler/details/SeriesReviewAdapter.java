@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Filter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -62,7 +63,8 @@ public class SeriesReviewAdapter extends RecyclerViewAdapter<Review> {
 
         //declare all view controls here:
         private ViewFlipper mUpFlipper, mDownFlipper;
-        private TextView user_name, review_date, review_summary, review_rating, review_up_score, review_down_score, review_read_more;
+        private TextView user_name, review_date, review_summary, review_up_score, review_down_score, review_read_more;
+        private RatingBar review_rating;
         private CircleImageView user_image;
         private CardView review_card;
 
@@ -75,7 +77,7 @@ public class SeriesReviewAdapter extends RecyclerViewAdapter<Review> {
             review_summary = (TextView) view.findViewById(R.id.review_summary);
             review_up_score = (TextView) view.findViewById(R.id.review_up_score);
             review_down_score = (TextView) view.findViewById(R.id.review_down_score);
-            review_rating = (TextView) view.findViewById(R.id.review_rating);
+            review_rating = (RatingBar) view.findViewById(R.id.review_rating);
             user_image = (CircleImageView) view.findViewById(R.id.review_user_image);
             review_card = (CardView) view.findViewById(R.id.card_review);
             review_read_more = (TextView) view.findViewById(R.id.review_read_more);
@@ -116,7 +118,7 @@ public class SeriesReviewAdapter extends RecyclerViewAdapter<Review> {
             user_name.setText(String.format(Locale.getDefault(), mContext.getString(R.string.text_reviewed_by), model.getUser().getDisplay_name()));
             review_date.setText(model.getDate());
             review_summary.setText(model.getSummary());
-            review_rating.setText(String.format(Locale.getDefault(),"  %d / 100", model.getScore()));
+            review_rating.setRating(model.getDoubleScore());
 
             review_up_score.setText(String.format(Locale.getDefault()," %d ",model.getRating()));
             review_down_score.setText(String.format(Locale.getDefault()," %d ",model.getRating_amount() - model.getRating()));

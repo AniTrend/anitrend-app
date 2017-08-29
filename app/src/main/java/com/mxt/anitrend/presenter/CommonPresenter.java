@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -119,7 +120,7 @@ public abstract class CommonPresenter <T> extends ScrollListener implements Life
     /**
      * Available for most calls throughout the application
      */
-    public UserSmall getCurrentUser() {
+    public @Nullable UserSmall getCurrentUser() {
         return mCurrentUser;
     }
 

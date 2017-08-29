@@ -122,7 +122,7 @@
         <item>جديد</item>
         <item>محبوب</item>
         <item>غير محبوب</item>
-        <item>يختلف فيه</item>
+        <item>مثير للجدل</item>
     </string-array>
 
     <!--Try to keep all titles short-->
@@ -136,8 +136,8 @@
         <item>أنيمي</item>
         <item>مانغا</item>
         <item>استوديو</item>
-        <item>staff</item>
-        <item>الشخصيات</item>
+        <item>طاقم</item>
+        <item>شخصيات</item>
         <item>مستخدمين</item>
     </string-array>
 
@@ -146,8 +146,8 @@
         <item>أنيمي</item>
         <item>مانغا</item>
         <item>استوديو</item>
-        <item>staff</item>
-        <item>الشخصيات</item>
+        <item>طاقم</item>
+        <item>شخصيات</item>
     </string-array>
 
     <string-array name="anime_listing_status">
@@ -179,19 +179,19 @@
     <string name="app_greeting">أهلا بك في AniTrend</string>
 
     <!--Filter menu entry these are the dialog titles-->
-    <string name="app_filter_sort">افرر حسب؟</string>
-    <string name="app_filter_order"> ترتيب كـ</string>
+    <string name="app_filter_sort">افرز حسب؟</string>
+    <string name="app_filter_order">رتّب حسب؟</string>
     <string name="app_filter_genres">أختر الصنف.</string>
     <string name="app_filter_show_type">أختر النوع.</string>
     <string name="app_filter_year">حدد التاريخ.</string>
-    <string name="app_filter_status">اظهر فقط؟</string>
+    <string name="app_filter_status">أظهر فقط؟</string>
 
     <!--Splash Screen-->
     <string name="app_splash_api_unavailable">تعذر الاتصال بالخادم :( اسحب لأسفل لإعادة المحاولة!</string>
     <string name="app_splash_authentication_failed">فشلت المصادقة. اسحب لأسفل لإعادة المحاولة!</string>
     <string name="app_splash_authenticating">مصادقة ..</string>
     <string name="app_splash_fetching">طلب بيانات إضافية ..</string>
-    <string name="app_splash_profile">جارٍ طلب الملفّ الشخصيّ.. </string>
+    <string name="app_splash_profile">جارٍ طلب المَلف الشخصيّ.. </string>
     <string name="app_splash_loading">جارٍ تهيئة التطبيق.. </string>
 
     <string name="app_splash_authenticating_message">
@@ -224,10 +224,10 @@
     <!--Do not Translate, native anilist strings-->
     <string-array name="anime_status_types">
         <item>كل القوائم</item>
-        <item>منتهية</item>
-        <item>مستمرة</item>
-        <item>قادمة</item>
-        <item>ملغية</item>
+        <item>المنتهية</item>
+        <item>المستمرة</item>
+        <item>القادمة</item>
+        <item>الملغية</item>
     </string-array>
 
     <!--Do not Translate, native anilist strings-->
@@ -303,7 +303,7 @@
 
     <string name="drawer_section_account">الحساب</string>
     <string name="drawer_title_sign_in">تسجيل الدخول</string>
-    <string name="drawer_title_profile">الملفّ الشخصيّ</string>
+    <string name="drawer_title_profile">المَلف الشخصيّ</string>
     <string name="drawer_title_sign_out">تسجيل الخروج</string>
 
     <string name="drawer_section_extras">إضافي</string>
@@ -328,7 +328,7 @@
     <string name="tip_status_post_text">نشر حالة يراها الجميع. \n\nاضغط هنا للاخفاء</string>
     <string name="tip_notifications_title">الإشعارات</string>
     <string name="tip_notifications_text">الوصول إلى جميع الإشعارات من مكان واحد. \n\nاضغط هنا للاخفاء</string>
-    <string name="tip_more_actions_title">أشياء أخرى</string>
+    <string name="tip_more_actions_title">المزيد</string>
     <string name="tip_more_actions_text">اضغط هنا لعرض خيارات أخرى مثل الاعجابات. \n\nاضغط هنا للاخفاء</string>
     <string name="tip_compose_message_title">إنشاء رسالة</string>
     <string name="tip_compose_message_text">إرسال رسالة إلى المستخدم الحالي. \n\nاضغط هنا للاخفاء</string>
@@ -340,7 +340,7 @@
     <string name="attach_image_title">إضافة صورة</string>
     <string name="attach_image_text">ادخل رابط صورة مثل: https://media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
     <string name="attach_youtube_title">إضافة عنوان يوتيوب</string>
-    <string name="attach_youtube_text">ادخل عنوان اليوتيوب للفيديو الذي ترغب بمشاركته مثل: https://www.youtube.com/watch?v=izdhszFZy-c or https://youtu.be/izdhszFZy-c اترك فقط: izdhszFZy-c</string>
+    <string name="attach_youtube_text">ادخل عنوان اليوتيوب للفيديو الذي ترغب بمشاركته مثل:  https://youtu.be/izdhszFZy-c اترك فقط: izdhszFZy-c</string>
     <string name="attach_webm_title">إضافة فيديو</string>
     <string name="attach_webm_text">ادخل رابط الفيديو مثل: http://dl1.webmfiles.org/big-buck-bunny_trailer.webm</string>
 
@@ -352,7 +352,7 @@
     <string name="title_activity_settings">الإعدادات</string>
     <string name="title_activity_reply">الردود</string>
 
-    <string name="notification_default">نشاط غير معرف</string>
+    <string name="notification_default">نشاط غير معروف</string>
     <string name="notification_series">حلقة جديدة</string>
     <string name="notification_user_follow_activity">متابع جديد</string>
     <string name="notification_user_like_forum">اعجاب المجتمع</string>
@@ -422,7 +422,7 @@
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
-    <string name="pref_header_data_sync">مزامنة &amp; البيانات</string>
+    <string name="pref_header_data_sync">مزامنة البيانات</string>
     <string name="pref_header_data_sync_summary">ضبط تكرار الإشعارات</string>
 
     <string name="pref_title_sync_frequency">اوقات المزامنة</string>
@@ -458,9 +458,9 @@
               قوائم أنيمي او مانغا للحساب، على الاقل 4 قوائم.
             </p>
 
-            <p>
+<p>
               بعد إضافة المحتوى الجديد اضغط <a href="https://anilist.co/settings/list"><b>هنا</b></a>  واضغط على <b>تحديث حالة المستخدم.
-              وبناء على هذا سيتم اجراء مزامنة اجبارية وسيسمح التطبيق عندها لك بستجيل الدخول.
+              وبناء على هذا سيتم اجراء مزامنة اجبارية وسيسمح التطبيق عندها لك بتسجيل الدخول.
               اذا واجهت مشاكل اخرى اذهب الى <a href="https://anilist.co/forum/thread/2081">AniTrend صفحة مجتمع</a>
               للمساعدة.
             </p>
@@ -499,10 +499,10 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        التأكد من امتلاكك احدث نسخة.ان لم تكن سيتم تحميل النسخة الجديدة من <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
+        تأكد من امتلاكك احدث نسخة. ان لم تكن سيتم تحميل النسخة الجديدة من <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
         <br/><br/>
         <b>ملاحظة:</b> إذا قمت بتحميل التطبيق من <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Googlr Play</a></b>
-        فليس هناك داع لإستخدام هذه الخاصية. هل ترغب في المتابعة  amp; والتحديث الى أحدث نسخة؟
+        فليس هناك داعٍ لإستخدام هذه الخاصية. هل ترغب في المتابعة والتحديث الى أحدث نسخة؟
         ]]>
     </string>
 
@@ -553,9 +553,9 @@
 
     <string name="text_no_likes">ليس هناك اعجابات</string>
 
-    <string name="text_user_anime_time">Watched %s of Anime</string>
+    <string name="text_user_anime_time">شاهدت %s من الأنيمي</string>
 
-    <string name="text_user_manga_chapters">Read %s chapters of Manga</string>
+    <string name="text_user_manga_chapters">قرأت %s من المانغا</string>
 
     <string name="text_notification">%d إشعار</string>
     <string name="text_notifications">%dإشعارات</string>
@@ -572,7 +572,7 @@
         ]]>
      </string>
 
-    <string name="text_reply_action_feedback">Tag inserted into input!</string>
+    <string name="text_reply_action_feedback">أدرجت العلامة في المدخلات!</string>
 
     <string name="busy_please_wait">الرجاء الإنتظار!</string>
 
@@ -683,9 +683,9 @@
     <string name="title_anime_list">قائمة الأنيمي</string>
     <string name="title_manga_list">قائمة المانغا</string>
     <string name="title_favourites_list">المفضلة</string>
-    <string name="text_anime_episodes">%d Episodes</string>
-    <string name="text_anime_length">%d Minutes</string>
-    <string name="text_anime_score">%.1f %% Avg</string>
+    <string name="text_anime_episodes">%d حلقة</string>
+    <string name="text_anime_length">%d دقيقة</string>
+    <string name="text_anime_score">%.1f %% معدل</string>
 
     <string name="text_message_to">ارسل رسالة إلى %s</string>
     <string name="title_bottom_sheet_favourites">المفضلة</string>
@@ -758,7 +758,7 @@
     <string name="favourites">المفضلة</string>
 
     <string name="anime">الأنيمي</string>
-    <string name="anime_time">مدة مشاهدة الأنيمي</string>
+    <string name="anime_time">مدة المشاهدة</string>
     <string name="manga">المانغا</string>
     <string name="chapters">الفصول</string>
 
@@ -796,47 +796,47 @@
 
     <!--Favourites page titles-->
     <string-array name="favorites_page_titles">
-        <item>الأنيمي</item>
-        <item>الشخصيات</item>
-        <item>المانغا</item>
-        <item>الطاقم</item>
-        <item>الاستوديوهات</item>
+        <item>أنيمي</item>
+        <item>شخصيات</item>
+        <item>مانغا</item>
+        <item>طاقم</item>
+        <item>استوديو</item>
     </string-array>
 
     <!--Character page titles-->
     <string-array name="character_page_titles">
-        <item>overview</item>
-        <item>anime roles</item>
-        <item>manga roles</item>
-        <item>actor roles</item>
+        <item>نظرة عامة</item>
+        <item>الأنيمي</item>
+        <item>المانغا</item>
+        <item>مؤدي الصوت</item>
     </string-array>
 
     <!--Try to keep all titles short-->
     <string-array name="hub_title">
         <item>اقتراحات</item>
-        <item>most popular</item>
-        <item>playlist</item>
+        <item>الأكثر شعبية</item>
+        <item>قائمة التشغيل</item>
     </string-array>
 
     <!-- Menu title for text composer -->
-    <string name="action_attach">Attach</string>
-    <string name="action_send">Send</string>
-    <string name="action_preview">Preview</string>
+    <string name="action_attach">أرفق</string>
+    <string name="action_send">إرسال</string>
+    <string name="action_preview">معاينة</string>
 
     <!-- Some text for comments or composer -->
-    <string name="text_hint_comment">Enter your comment</string>
-    <string name="text_edit_mode">Edit Mode Active!</string>
-    <string name="text_preview_mode">Preview Mode Active!</string>
+    <string name="text_hint_comment">ادخل تعليقك</string>
+    <string name="text_edit_mode">وضع التحرير فعال!</string>
+    <string name="text_preview_mode">وضع المعاينة فعال!</string>
 
     <!-- Menu title for text composer -->
-    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+    <string name="text_compose_success">تم بنجاح!</string>
 
     <!-- Some controls will be shown even though they will be disabled -->
-    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+    <string name="text_feature_disabled">الميزة معطلة!</string>
 
     <!-- Dialogs for check updates, etc -->
-    <string name="title_download_info">Download Info!</string>
-    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
-    <string name="title_update_info">Update Info!</string>
+    <string name="title_download_info">حالة التحميل!</string>
+    <string name="text_download_info">سيتم حفظ ملف التحديث في مجلد التنزيلات.</string>
+    <string name="title_update_info">حالة التحديث!</string>
 
 </resources>

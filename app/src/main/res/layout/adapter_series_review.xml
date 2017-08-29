@@ -91,17 +91,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <TextView
+                        <RatingBar
                             android:id="@+id/review_rating"
+                            android:layout_alignParentEnd="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:typeface="sans"
-                            android:textStyle="bold"
-                            android:drawableStart="@drawable/ic_star_border_black_18dp"
-                            android:textAlignment="center"
-                            android:textIsSelectable="true"
-                            android:textSize="13sp"
-                            android:layout_alignParentEnd="true"/>
+                            android:theme="@style/RatingBarSmall"
+                            android:isIndicator="true"
+                            android:stepSize="0.01"
+                            android:max="5" />
 
                     </RelativeLayout>
 

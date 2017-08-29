@@ -8,7 +8,7 @@
         <changelogtext>[b]Enhancement[/b] Reviews can now be seen even if the user is not signed in</changelogtext>
         <changelogtext>[b]Feature[/b] Better support for composing &amp; editing posts, [b]select text and apply styling[/b]</changelogtext>
         <changelogtext>[b]Feature[/b] More results on search page, including characters and actors</changelogtext>
-        <changelogtext>[b]Feature[/b] New AnitrendHub items, including some experimental features which will be available in the next release</changelogtext>
+        <changelogtext>[b]Feature[/b] New AniTrend Hub items, including some experimental features which will be available in the next release</changelogtext>
         <changelogtext>[b]Feature[/b] New and improved WebM video player with gesture support for volume, seek &amp; brightness</changelogtext>
         <changelogtext>[b]Bug Fix[/b] Editing status posts inside your profile trims text, if emojis are added</changelogtext>
         <changelogtext>[b]Bug Fix[/b] Navigation tab truncating long titles &amp; missing some characters for languages</changelogtext>

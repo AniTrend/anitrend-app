@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesReviewTypeAdapter;
 import com.mxt.anitrend.api.model.Review;
+import com.mxt.anitrend.api.model.UserSmall;
+import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.api.structure.ReviewType;
 import com.mxt.anitrend.presenter.index.FragmentReviewPresenter;
@@ -104,12 +106,10 @@ public class ReviewFragment extends DefaultReviewFragment<ReviewType> {
         if(isVisible() && (!isDetached() || !isRemoving()))
             if(response.isSuccessful() && response.body() != null && (response.body().getAnime().size() > 0 || response.body().getManga().size() > 0)) {
                 if(model == null)
-                    model = response.body();
+                    model = FilterProvider.getReviewFilter(mPresenter.getCurrentUser(), response.body());
                 else {
-                    final List<Review> animeReviews = response.body().getAnime();
-                    final List<Review> mangaReviews = response.body().getManga();
-                    model.setAnime(animeReviews);
-                    model.setManga(mangaReviews);
+                    model.setAnime(FilterProvider.getReviewFilter(mPresenter.getCurrentUser(), response.body().getAnime()));
+                    model.setManga(FilterProvider.getReviewFilter(mPresenter.getCurrentUser(), response.body().getManga()));
                 }
                 updateUI();
             } else if(response.isSuccessful() && response.body() != null && mPage != 1) {

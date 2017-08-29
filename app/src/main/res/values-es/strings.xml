@@ -319,9 +319,9 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="tip_series_options_message">Ahora puedes agregar tus animes y mangas preferidos a una lista y compartirlos con tus amigos. \n\nToque Para Descartar</string>
     <string name="tip_series_options_title">Función añadida</string>
     <string name="tip_character_options_title">Favoritos</string>
-    <string name="tip_character_options_message">Cambia el estado de tus personajes favoritos. \n\nToque Para Descartar</string>
+    <string name="tip_character_options_message">Pulsa para cambiar el estado de tus personajes favoritos. \n\nToque Para Descartar</string>
     <string name="tip_messages_title">Mensajes</string>
-    <string name="tip_messages_text">Visualiza los mensajes que has enviado y recibido de los usuarios de Anitrend \n\nToque Para Descartar</string>
+    <string name="tip_messages_text">Visualiza las interacciones que has recibido de tus seguidores en Anitrend \n\nToque Para Descartar</string>
     <string name="tip_status_post_title">Publicar estado</string>
     <string name="tip_status_post_text">Crea y comparte tus publicaciones, pensamientos y actividades con la comunidad. \n\nToque Para Descartar</string>
     <string name="tip_notifications_title">Notificaciones</string>
@@ -803,38 +803,38 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <!--Character page titles-->
     <string-array name="character_page_titles">
-        <item>overview</item>
-        <item>anime roles</item>
-        <item>manga roles</item>
-        <item>actor roles</item>
+        <item>resumen</item>
+        <item>roles en anime</item>
+        <item>roles en manga</item>
+        <item>roles de actor</item>
     </string-array>
 
     <!--Try to keep all titles short-->
     <string-array name="hub_title">
         <item>sugerencias</item>
-        <item>most popular</item>
-        <item>playlist</item>
+        <item>Lo más popular</item>
+        <item>Listado</item>
     </string-array>
 
     <!-- Menu title for text composer -->
-    <string name="action_attach">Attach</string>
-    <string name="action_send">Send</string>
-    <string name="action_preview">Preview</string>
+    <string name="action_attach">Adjuntar</string>
+    <string name="action_send">Enviar</string>
+    <string name="action_preview">Vista previa</string>
 
     <!-- Some text for comments or composer -->
-    <string name="text_hint_comment">Enter your comment</string>
-    <string name="text_edit_mode">Edit Mode Active!</string>
-    <string name="text_preview_mode">Preview Mode Active!</string>
+    <string name="text_hint_comment">Escribir comentario</string>
+    <string name="text_edit_mode">Redactando...</string>
+    <string name="text_preview_mode">Vista previa</string>
 
     <!-- Menu title for text composer -->
-    <string name="text_compose_success">Success, don\'t forget to refresh your feed!</string>
+    <string name="text_compose_success">¡Enviado con éxito!. No olvides en volver a cargar tu feed de estado!</string>
 
     <!-- Some controls will be shown even though they will be disabled -->
-    <string name="text_feature_disabled">Feature is disabled in this context!</string>
+    <string name="text_feature_disabled">¡La función está desactivada en este menú contextual!</string>
 
     <!-- Dialogs for check updates, etc -->
-    <string name="title_download_info">Download Info!</string>
-    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
-    <string name="title_update_info">Update Info!</string>
+    <string name="title_download_info">¡Información de la descarga!</string>
+    <string name="text_download_info"> La actualización será almacenada en su carpeta de descargas.</string>
+    <string name="title_update_info">¡Novedades de la actualización!</string>
 
 </resources>

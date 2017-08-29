@@ -113,5 +113,10 @@
     "name": "emoji4j",
     "description": "Java library to convert short codes, emoticons, html entities, emoticons to emojis and vice-versa",
     "link": "https://github.com/kcthota/emoji4j"
+  },
+  {
+    "name": "RichText",
+    "description": "Android平台下的富文本解析器，支持Html和Markdown",
+    "link": "https://github.com/zzhoujay/RichText"
   }
 ]
