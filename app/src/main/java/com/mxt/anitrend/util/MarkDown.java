@@ -55,4 +55,20 @@ public final class MarkDown {
     public static String convertVideo(Editable text) {
         return String.format("webm(%s)", text);
     }
+
+    public static String convertLink(String text) {
+        return String.format("[%s](%s)", text, text);
+    }
+
+    public static String convertImage(String text) {
+        return String.format("img220(%s)", text);
+    }
+
+    public static String convertYoutube(String text) {
+        return String.format("youtube(%s)", text);
+    }
+
+    public static String convertVideo(String text) {
+        return String.format("webm(%s)", text);
+    }
 }

@@ -838,4 +838,23 @@
     <string name="text_download_info">Die Update Datei wird in deinem Downloadordner gespeichert.</string>
     <string name="title_update_info">Informationen zum Update!</string>
 
+    <!-- Sliding dialog that helps you select content type -->
+    <string name="sheet_share_hint">Information to share</string>
+    <string name="sheet_share_title">Format your status post to share</string>
+    <string name="sheet_share_body">Please select the type of content you are trying to share.</string>
+
+    <!--Only replace the first item the others are already provided in this file-->
+    <string-array name="post_share_types">
+        <item>Insert Plain Text</item>
+        <item>@string/attach_link_title</item>
+        <item>@string/attach_image_title</item>
+        <item>@string/attach_youtube_title</item>
+        <item>@string/attach_webm_title</item>
+    </string-array>
+
+    <!--These are the anime time lables in your profile-->
+    <string name="anime_time_hours">%.1f Hours</string>
+    <string name="anime_time_days">%.1f Days</string>
+    <string name="anime_time_years">%.1f Years</string>
+
 </resources>

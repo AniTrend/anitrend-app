@@ -10,6 +10,7 @@ import com.mxt.anitrend.base.custom.async.AsyncTaskFetch;
 import com.mxt.anitrend.presenter.CommonPresenter;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Callback;
 
@@ -45,5 +46,16 @@ public class UserProfilePresenter extends CommonPresenter {
                     R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue, 20);
             getAppPrefs().setUserProfileTip();
         }
+    }
+
+    public String getAnimeTime(int animeTime) {
+        float item_time = animeTime / 60;
+        if(item_time > 60) {
+            item_time /= 24;
+            if(item_time > 365)
+                return mContext.getString(R.string.anime_time_years, item_time/365);
+            return mContext.getString(R.string.anime_time_days, item_time);
+        }
+        return mContext.getString(R.string.anime_time_hours, item_time);
     }
 }

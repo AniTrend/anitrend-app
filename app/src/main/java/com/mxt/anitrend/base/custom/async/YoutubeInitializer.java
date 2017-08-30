@@ -35,9 +35,10 @@ public class YoutubeInitializer extends AsyncTaskLoader<YoutubeFragment> {
      */
     @Override
     protected void onStartLoading() {
-        if(youtubeFragment != null) {
+        /*if(youtubeFragment != null) {
             deliverResult(youtubeFragment);
-        } else forceLoad();
+        } else forceLoad();*/
+        forceLoad();
     }
 
     /**

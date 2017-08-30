@@ -107,7 +107,8 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
 
         if(mCurrentUser != null) {
             mPresenter = new UserProfilePresenter(ProfileActivity.this, mCurrentUser.getId());
-            user_anime_time.setText(mCurrentUser.getAnime_time());
+            user_anime_time.setText(
+                    mPresenter.getAnimeTime(mCurrentUser.getAnime_time()));
             user_manga_chap.setText(mCurrentUser.getManga_chap());
             user_anime_total.setText("0");
             user_manga_total.setText("0");
@@ -128,7 +129,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                  .into(user_banner);
             updateUI();
         } else{
-            Toast.makeText(this, "User model was not initialized, received null", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.layout_empty_response, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -310,7 +311,7 @@ public class ProfileActivity extends DefaultActivity implements View.OnClickList
                 startActivity(intent);
                 break;
             case R.id.user_anime_time_container:
-                mPresenter.createSuperToast(this, String.format(getString(R.string.text_user_anime_time), mCurrentUser.getAnime_time()), R.drawable.ic_play_circle_outline_white_24dp, Style.TYPE_STANDARD);
+                mPresenter.createSuperToast(this, String.format(getString(R.string.text_user_anime_time), mPresenter.getAnimeTime(mCurrentUser.getAnime_time())), R.drawable.ic_play_circle_outline_white_24dp, Style.TYPE_STANDARD);
                 break;
             case R.id.user_manga_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);

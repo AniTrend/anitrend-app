@@ -36,7 +36,7 @@ public interface KeyUtils {
 
     String MD_BOLD = "__", MD_ITALIC = "_", MD_STRIKE = "~~",
             MD_NUMBER = "1. ", MD_BULLET = "- ", MD_HEADING = "#",
-            MD_CENTER_ALIGHN = "~~~", MD_QOUTE = ">" ,MD_CODE = "`";
+            MD_CENTER_ALIGN = "~~~", MD_QUOTE = ">" ,MD_CODE = "`";
 
     enum ActionType {
         ACTION_FOLLOW_TOGGLE,
@@ -64,6 +64,13 @@ public interface KeyUtils {
         MANGA_LIST_EDIT,
         MANGA_LIST_DELETE
     }
+
+    // Share types
+    int PLAIN_TYPE = 0, LINK_TYPE = 1, IMAGE_TYPE = 2, YOUTUBE_TYPE = 3, WEBM_TYPE = 4;
+
+    String[] ShareTypes = {"plain_text", "link", "image", "youtube", "webm"};
+    @IntDef({PLAIN_TYPE, LINK_TYPE, IMAGE_TYPE, YOUTUBE_TYPE, WEBM_TYPE})
+    @interface ShareType {}
 
     // Hub request types
     int FEED_TYPE = 0, RSS_TYPE = 1, PLAYLIST_TYPE = 2, VIDEO_TYPE = 3;

@@ -42,12 +42,12 @@ public class BottomSheetMessage extends BottomSheet implements SheetStateChangeL
     private final String NEG_KEY = "neg_key";
     private final String CALL_KEY = "callback_key";
 
-    @BindView(R.id.msg_title) TextView mTitle;
-    @BindView(R.id.msg_text) TextView mText;
-    @BindView(R.id.msg_state) TextView mState;
+    @BindView(R.id.sheet_title) TextView mTitle;
+    @BindView(R.id.sheet_text) TextView mText;
+    @BindView(R.id.sheet_state) TextView mState;
 
-    @BindView(R.id.msg_positive) AppCompatButton mPositive;
-    @BindView(R.id.msg_negative) AppCompatButton mNegative;
+    @BindView(R.id.sheet_positive) AppCompatButton mPositive;
+    @BindView(R.id.sheet_negative) AppCompatButton mNegative;
 
     @StringRes int title, text, positive, negative;
 
@@ -160,7 +160,7 @@ public class BottomSheetMessage extends BottomSheet implements SheetStateChangeL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.msg_positive:
+            case R.id.sheet_positive:
                 switch (mCallback) {
                     case SheetButtonEvents.CALLBACK_UPDATE_CHECKER:
                         if(mPresenter.getAppPrefs().getRepoVersions().checkAgainstCurrent()) {
@@ -188,10 +188,10 @@ public class BottomSheetMessage extends BottomSheet implements SheetStateChangeL
                 }
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 break;
-            case R.id.msg_negative:
+            case R.id.sheet_negative:
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 break;
-            case R.id.msg_state:
+            case R.id.sheet_state:
                 switch (bottomSheetBehavior.getState()) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);

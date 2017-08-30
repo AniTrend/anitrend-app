@@ -1,5 +1,6 @@
 package com.mxt.anitrend.api.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Spanned;
@@ -82,15 +83,8 @@ public class User implements Parcelable {
         return display_name;
     }
 
-    public String getAnime_time() {
-        float item_time = anime_time / 60;
-        if(item_time > 60) {
-            item_time /= 24;
-            if(item_time > 365)
-                return String.format(Locale.getDefault(), "%.1f Years", item_time/365);
-            return String.format(Locale.getDefault(), "%.1f Days", item_time);
-        }
-        return String.format(Locale.getDefault(), "%.1f Hours", item_time);
+    public int getAnime_time() {
+        return anime_time;
     }
 
     public String getManga_chap() {

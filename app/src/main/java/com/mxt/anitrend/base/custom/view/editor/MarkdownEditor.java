@@ -1,8 +1,9 @@
 package com.mxt.anitrend.base.custom.view.editor;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import static com.mxt.anitrend.util.KeyUtils.*;
 
 public class MarkdownEditor extends android.support.v7.widget.AppCompatEditText implements CustomView, ActionMode.Callback {
 
+    private boolean hasWatcher;
     private ApplicationPrefs applicationPrefs;
 
     public MarkdownEditor(Context context) {
@@ -80,6 +82,52 @@ public class MarkdownEditor extends android.support.v7.widget.AppCompatEditText 
     }
 
     /**
+     * Used to get the correct selection end range depending on the text size
+     * of the preferred mark_down styling.
+     *
+     * @param selection The menu item from the selection mode
+     * @return end selection size with applied offset
+     */
+    private int getSelectionEnd(@IdRes int selection) {
+        int end = getSelectionEnd();
+        final int init_end = getSelectionEnd();
+        switch (selection) {
+            case R.id.menu_bold:
+                end += MD_BOLD.length();
+                break;
+            case R.id.menu_italic:
+                end += MD_ITALIC.length();
+                break;
+            case R.id.menu_strike:
+                end += MD_STRIKE.length();
+                break;
+            case R.id.menu_list:
+                end += MD_NUMBER.length();
+                break;
+            case R.id.menu_bullet:
+                end += MD_BULLET.length();
+                break;
+            case R.id.menu_heading:
+                end += MD_HEADING.length();
+                break;
+            case R.id.menu_center:
+                end += MD_CENTER_ALIGN.length();
+                break;
+            case R.id.menu_quote:
+                end += MD_QUOTE.length();
+                break;
+            case R.id.menu_code:
+                end += MD_CODE.length();
+                break;
+        }
+        // Rare case but if it ever happens reduce end by 1
+        final int text_length = getText().length();
+        if(end > text_length + (end - init_end))
+            end -= (end - init_end) - 1;
+        return end;
+    }
+
+    /**
      * Called to report a user click on an action button.
      *
      * @param mode The current ActionMode
@@ -90,9 +138,7 @@ public class MarkdownEditor extends android.support.v7.widget.AppCompatEditText 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         int start = getSelectionStart();
-        int end = getSelectionEnd() + 2;
-        if(end > getSelectionEnd() + 2)
-            end -= 1;
+        int end = getSelectionEnd(item.getItemId());
         switch (item.getItemId()) {
             case R.id.menu_bold:
                 getText().insert(start, MD_BOLD);
@@ -122,12 +168,12 @@ public class MarkdownEditor extends android.support.v7.widget.AppCompatEditText 
                 mode.finish();
                 return true;
             case R.id.menu_center:
-                getText().insert(start, MD_CENTER_ALIGHN);
-                getText().insert(end, MD_CENTER_ALIGHN, 0, MD_CENTER_ALIGHN.length());
+                getText().insert(start, MD_CENTER_ALIGN);
+                getText().insert(end, MD_CENTER_ALIGN, 0, MD_CENTER_ALIGN.length());
                 mode.finish();
                 return true;
             case R.id.menu_quote:
-                getText().insert(start, MD_QOUTE);
+                getText().insert(start, MD_QUOTE);
                 mode.finish();
                 return true;
             case R.id.menu_code:
@@ -147,5 +193,15 @@ public class MarkdownEditor extends android.support.v7.widget.AppCompatEditText 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
 
+    }
+
+    @Override
+    public void addTextChangedListener(TextWatcher watcher) {
+        hasWatcher = true;
+        super.addTextChangedListener(watcher);
+    }
+
+    public boolean hasTextChangedListener() {
+        return hasWatcher;
     }
 }

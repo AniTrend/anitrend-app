@@ -65,7 +65,6 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loaderManager = getActivity().getLoaderManager();
     }
 
     @Override
@@ -90,6 +89,8 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
         mRankingRecycler.setHasFixedSize(true);
     }
 
+
+
     public void updateUI() {
         /*Populate all the views*/
         if(model.getList_stats() != null) {
@@ -109,6 +110,7 @@ public class AnimeLinksFragment extends Fragment implements InteractionListener,
             mRankingRecycler.setAdapter(mRankingAdapter);
         }
         if(!isLoading && model.getYoutube_id() != null) {
+            loaderManager = getActivity().getLoaderManager();
             loaderManager.restartLoader(getResources().getInteger(R.integer.youtube_loader),null, this);
         }
     }

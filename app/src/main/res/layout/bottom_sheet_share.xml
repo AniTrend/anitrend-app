@@ -14,17 +14,16 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/sheet_title"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="16dp"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="sans-serif-condensed"
             android:textSize="@dimen/tip_title"
             android:textStyle="bold"
-            tools:text="Current Cache Usage"/>
+            android:text="@string/sheet_share_title"/>
 
         <TextView
             android:id="@+id/sheet_state"
@@ -37,9 +36,10 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="16dp">
 
         <ImageView
@@ -51,19 +51,35 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_launcher"/>
 
-        <TextView
-            android:id="@+id/sheet_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/sheet_icon"
-            android:fontFamily="sans-serif-condensed"
-            android:lineSpacingExtra="2dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textSize="@dimen/tip_text"
-            tools:text="@string/drawer_update_text"/>
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/sheet_share_body"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <Spinner
+                android:id="@+id/sheet_share_post_type"
+                android:layout_gravity="start"
+                android:textColor="?attr/drawer_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,7 +93,7 @@
             android:textColor="@color/colorAccent"
             app:backgroundTint="?attr/card_color"
             style="@style/TipButton"
-            tools:text="No"/>
+            android:text="@string/Cancel"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/sheet_positive"
@@ -85,7 +101,7 @@
             android:layout_marginEnd="16dp"
             app:backgroundTint="@color/colorAccent"
             style="@style/TipButton"
-            tools:text="Yes"/>
+            android:text="@string/Ok"/>
 
     </LinearLayout>
 

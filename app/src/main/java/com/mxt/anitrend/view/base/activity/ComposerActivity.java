@@ -8,8 +8,10 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,6 +23,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.Payload;
 import com.mxt.anitrend.base.custom.async.RequestApiAction;
 import com.mxt.anitrend.base.custom.view.editor.MarkdownEditor;
+import com.mxt.anitrend.base.custom.view.widget.bottomsheet.BottomSheetShare;
 import com.mxt.anitrend.presenter.detail.GenericPresenter;
 import com.mxt.anitrend.util.ApplicationPrefs;
 import com.mxt.anitrend.util.DialogManager;
@@ -47,7 +50,7 @@ import retrofit2.Response;
  * Created by max on 2017/08/12.
  */
 
-public class ComposerActivity extends DefaultActivity implements BottomSheetItemClickListener, Callback<ResponseBody> {
+public class ComposerActivity extends DefaultActivity implements BottomSheetItemClickListener, Callback<ResponseBody>, TextWatcher, BottomSheetShare.SheetActionCallback {
 
     public static final String ARG_ACTION_TYPE = "arg_action_type";
     public static final String ARG_ACTION_ID = "arg_action_id";
@@ -80,10 +83,20 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
 
     private void handleIntent() {
         if(intentReader != null) {
-            if(intentReader.getSubject() == null || intentReader.getText().equals(intentReader.getSubject()))
-                original = intentReader.getText().toString();
-            else
-                original = String.format("%s %s",intentReader.getSubject(), intentReader.getText());
+            BottomSheetShare mBuilder;
+            if(intentReader.getSubject() == null || intentReader.getText().equals(intentReader.getSubject())) {
+                mBuilder = new BottomSheetShare.Builder()
+                        .setText(intentReader.getText().toString())
+                        .setButtonEvents(this).build();
+                mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
+            }
+            else {
+                mBuilder = new BottomSheetShare.Builder()
+                        .setSubject(intentReader.getSubject())
+                        .setText(intentReader.getText().toString())
+                        .setButtonEvents(this).build();
+                mBuilder.show(getSupportFragmentManager(), mBuilder.getTag());
+            }
         } else {
             if(getIntent() != null && original == null) {
                 if(getIntent().hasExtra(ARG_ACTION_TYPE))
@@ -94,6 +107,7 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
                     original = getIntent().getStringExtra(ARG_ACTION_PAYLOAD);
             }
         }
+        updateUI();
     }
 
     @Override
@@ -103,6 +117,8 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         preferences = new ApplicationPrefs(this);
+        if(editText.hasTextChangedListener())
+            editText.addTextChangedListener(this);
     }
 
     @Override
@@ -115,7 +131,6 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             finish();
         } else
             handleIntent();
-        updateUI();
     }
 
     @Override
@@ -123,6 +138,12 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
         getMenuInflater().inflate(R.menu.menu_composer, menu);
         mPreviewAction = menu.findItem(R.id.action_preview);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPause() {
+        editText.removeTextChangedListener(this);
+        super.onPause();
     }
 
     @Override
@@ -294,5 +315,38 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
             t.printStackTrace();
             Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if(isPreviewMode)
+            toggleModes();
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    public void onPositive(BottomSheetBehavior sheetBehavior, String result) {
+        if(isAlive()) {
+            if (original == null)
+                original = result;
+            else
+                original += result;
+            editText.setText(original);
+            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+    }
+
+    @Override
+    public void onNegative(BottomSheetBehavior sheetBehavior) {
+        sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 }

@@ -113,7 +113,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
     @Override
     protected void startInit() {
         if(mCurrentUser != null) {
-            user_anime_time.setText(mCurrentUser.getAnime_time());
+            user_anime_time.setText(mPresenter.getAnimeTime(mCurrentUser.getAnime_time()));
             user_manga_chap.setText(mCurrentUser.getManga_chap());
             user_anime_total.setText("0");
             user_manga_total.setText("0");
@@ -311,7 +311,7 @@ public class UserProfileActivity extends DefaultActivity implements Callback<Use
                 startActivity(intent);
                 break;
             case R.id.user_anime_time_container:
-                mPresenter.createSuperToast(this, String.format(getString(R.string.text_user_anime_time), mCurrentUser.getAnime_time()), R.drawable.ic_play_circle_outline_white_24dp, Style.TYPE_STANDARD);
+                mPresenter.createSuperToast(this, String.format(getString(R.string.text_user_anime_time), mPresenter.getAnimeTime(mCurrentUser.getAnime_time())), R.drawable.ic_play_circle_outline_white_24dp, Style.TYPE_STANDARD);
                 break;
             case R.id.user_manga_total_container:
                 intent = new Intent(getApplicationContext(), ListBrowseActivity.class);
