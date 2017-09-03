@@ -19,26 +19,28 @@
         <item name="android:windowBackground">@color/colorAccent_dark</item>
 
         <item name="android:textColorPrimary">@color/black</item>
-
     </style>
 
-    <style name="DarkTheme" parent="AppTheme.NoActionBar">
+    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorLightKnight</item>
         <item name="colorPrimaryDark">@color/colorDarkKnight</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="root_color">@color/colorRoot_dark</item>
         <item name="line_color">@color/colorLine_dark</item>
-        <item name="title_color">@color/colorTextTitle_dark</item>
-        <item name="subtitle_color">@color/colorTextSubtitle_dark</item>
-        <item name="content_color">@color/colorTextContent_dark</item>
+        <item name="title_color">@color/colorTextTitle_light</item>
+        <item name="subtitle_color">@color/colorTextSubtitle_light</item>
+        <item name="content_color">@color/colorTextContent_light</item>
         <item name="card_color">@color/white</item>
         <item name="drawer_color">@color/colorPrimaryDark_dark</item>
 
-        <item name="android:actionModeBackground">@color/colorDarkKnight</item>
+        <item name="android:actionModeBackground">@color/colorTextContent_light</item>
+
         <item name="android:windowBackground">@color/colorAccent_dark</item>
-        <item name="android:textColorPrimary">?attr/content_color</item>
+        <item name="android:textColorPrimary">@color/black</item>
         <item name="android:windowActionModeOverlay">true</item>
     </style>
+
+
 
     <style name="DarkTheme_DarkSide" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorLightKnight</item>

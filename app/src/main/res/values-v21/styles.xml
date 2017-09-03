@@ -39,10 +39,9 @@
         <item name="card_color">@color/white</item>
         <item name="drawer_color">@color/colorPrimaryDark_dark</item>
 
-        <item name="android:actionModeBackground">@color/colorDarkKnight</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowBackground">@color/colorAccent_dark</item>
-        <item name="android:textColorPrimary">?attr/content_color</item>
+        <item name="android:textColorPrimary">@color/black</item>
         <item name="android:navigationBarColor">@color/colorDarkKnight</item>
 
         <item name="android:windowAllowEnterTransitionOverlap">false</item>
