@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.mxt.anitrend.R;
@@ -55,6 +56,8 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
     public static final String ARG_ACTION_TYPE = "arg_action_type";
     public static final String ARG_ACTION_ID = "arg_action_id";
     public static final String ARG_ACTION_PAYLOAD = "arg_action_payload";
+
+    private boolean isClosing;
 
     @BindView(R.id.coordinator)
     CoordinatorLayout coordinatorLayout;
@@ -206,11 +209,20 @@ public class ComposerActivity extends DefaultActivity implements BottomSheetItem
      */
     @Override
     public void onBackPressed() {
-        if(mBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+        if(mBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
             mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            return;
+        else if(editText.hasFocus())
+            editText.clearFocus();
+        else if(!isClosing) {
+            isClosing = true;
+            mPresenter.createSuperToast(ComposerActivity.this,
+                    getString(R.string.text_confirm_exit),
+                    R.drawable.ic_info_outline_white_18dp,
+                    Style.TYPE_STANDARD, Style.DURATION_MEDIUM,
+                    PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_TEAL));
         }
-        super.onBackPressed();
+        else
+            super.onBackPressed();
     }
 
     private void setIcon() {
