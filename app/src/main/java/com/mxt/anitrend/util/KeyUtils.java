@@ -73,10 +73,9 @@ public interface KeyUtils {
     @interface ShareType {}
 
     // Hub request types
-    int FEED_TYPE = 0, RSS_TYPE = 1, PLAYLIST_TYPE = 2, VIDEO_TYPE = 3;
+    int FEED_TYPE = 0, RSS_TYPE = 1, PLAYLIST_TYPE = 2, VIDEO_TYPE = 3, PLAYLIST_COLLECTION = 4;
 
-    String[] HubTypes = {"client_credentials", "authorization_code", "refresh_token"};
-    @IntDef({FEED_TYPE, RSS_TYPE, PLAYLIST_TYPE, VIDEO_TYPE})
+    @IntDef({FEED_TYPE, RSS_TYPE, PLAYLIST_TYPE, VIDEO_TYPE, PLAYLIST_COLLECTION})
     @interface HubType {}
 
     // Token grant types
