@@ -4,20 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.index.FeedVideoAdapter;
 import com.mxt.anitrend.adapter.recycler.index.PlaylistAdapter;
-import com.mxt.anitrend.api.hub.Playlist;
+import com.mxt.anitrend.api.hub.Video;
 import com.mxt.anitrend.presenter.index.PlaylistPresenter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.viewmodel.fragment.DefaultResultFragment;
 
 /**
- * Created by max on 2017/09/11.
+ * Created by max on 2017/08/12.
  */
 
-public class PlaylistFragment extends DefaultResultFragment<Playlist> {
+public class FeedVideoFragment extends DefaultResultFragment<Video> {
 
-    public static PlaylistFragment newInstance() {
-        return new PlaylistFragment();
+    public static FeedVideoFragment newInstance() {
+        return new FeedVideoFragment();
     }
 
     /**
@@ -31,7 +32,7 @@ public class PlaylistFragment extends DefaultResultFragment<Playlist> {
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.card_col_size_home;
         isPaginate = true;
-        mPresenter = new PlaylistPresenter<>(getContext(), KeyUtils.PLAYLIST_TYPE);
+        mPresenter = new PlaylistPresenter<>(getContext(), KeyUtils.FEED_TYPE);
     }
 
     /**
@@ -44,7 +45,7 @@ public class PlaylistFragment extends DefaultResultFragment<Playlist> {
                 swipeRefreshLayout.setRefreshing(false);
             }
             if (mAdapter == null) {
-                mAdapter = new PlaylistAdapter(model, getActivity());
+                mAdapter = new FeedVideoAdapter(model, getActivity());
                 recyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.onDataSetModified(model);

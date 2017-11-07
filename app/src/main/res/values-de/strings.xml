@@ -284,7 +284,7 @@
     <string name="drawer_title_home">Übersicht</string>
     <string name="drawer_title_anime">Anime entdecken</string>
     <string name="drawer_title_manga">Manga entdecken</string>
-    <string name="drawer_title_trending">Was ist beliebt?</string>
+    <string name="drawer_title_trending">Was Ist Beliebt?</string>
     <string name="drawer_title_airing">Laufende Anime</string>
     <string name="drawer_title_myanime">Meine Anime Liste</string>
     <string name="drawer_title_mymanga">Meine Manga Liste</string>
@@ -376,8 +376,8 @@
     <string name="pref_summary_auto_increment">
         <![CDATA[
         Erhöhe schnell die Episoden- oder Kapitelnummer, in dem du einfach
-	auf sie tippst, anstatt ein zusätzliches Fenster zu öffnen.
-	(Funktioniert nur in der neuen Listenansicht)
+    auf sie tippst, anstatt ein zusätzliches Fenster zu öffnen.
+    (Funktioniert nur in der neuen Listenansicht)
         ]]>
     </string>
 
@@ -719,7 +719,7 @@
     <string name="menu_title_status">Status</string>
 
     <string name="menu_title_new_activity_post">Status verfassen</string>
-    <string name="menu_title_changelog">Änderungen</string>
+    <string name="menu_title_changelog">Neuerungen</string>
     <string name="menu_title_about">Über die App</string>
     <string name="menu_title_help">Hilfe</string>
     <!--End of Menu labels-->
@@ -771,9 +771,9 @@
     <!--Staff page titles-->
     <string-array name="staff_page_titles">
         <item>Übersicht</item>
-        <item>Anime Rollen</item>
-        <item>Manga Rollen</item>
-        <item>Produktion</item>
+        <item>In Anime</item>
+        <item>In Manga</item>
+        <item>Gesprochen Von</item>
     </string-array>
 
     <!--Anime page titles-->
@@ -824,7 +824,7 @@
 
     <!-- Some text for comments or composer -->
     <string name="text_hint_comment">Kommentar eingeben</string>
-    <string name="text_edit_mode">In Bearbeitung!</string>
+    <string name="text_edit_mode">Bearbeitungsmodus!</string>
     <string name="text_preview_mode">Vorschaumodus!</string>
 
     <!-- Menu title for text composer -->
@@ -840,12 +840,12 @@
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Information to share</string>
-    <string name="sheet_share_title">Format your status post to share</string>
-    <string name="sheet_share_body">Please select the type of content you are trying to share.</string>
+    <string name="sheet_share_title">Inhalte formatieren</string>
+    <string name="sheet_share_body">Bitte wähle die Art des Inhalts, den du teilen möchtest.</string>
 
     <!--Only replace the first item the others are already provided in this file-->
     <string-array name="post_share_types">
-        <item>Insert Plain Text</item>
+        <item>Text einfügen</item>
         <item>@string/attach_link_title</item>
         <item>@string/attach_image_title</item>
         <item>@string/attach_youtube_title</item>
@@ -853,8 +853,7 @@
     </string-array>
 
     <!--These are the anime time lables in your profile-->
-    <string name="anime_time_hours">%.1f Hours</string>
-    <string name="anime_time_days">%.1f Days</string>
-    <string name="anime_time_years">%.1f Years</string>
-
+    <string name="anime_time_hours">%.1f Stunden</string>
+    <string name="anime_time_days">%.1f Tage</string>
+    <string name="anime_time_years">%.1f Jahre</string>
 </resources>

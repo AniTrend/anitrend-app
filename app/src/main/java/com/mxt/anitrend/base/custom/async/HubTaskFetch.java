@@ -12,12 +12,14 @@ import com.mxt.anitrend.util.KeyUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+import static com.mxt.anitrend.api.call.Hub.playlist_filter;
+
 /**
  * Created by max on 2017/08/12.
  */
 
 @SuppressWarnings("unchecked")
-public class HubTaskFetch  <T> extends AsyncTask<Void, Void, Call<T>> {
+public class HubTaskFetch<T> extends AsyncTask<Void, Void, Call<T>> {
 
     private Context context;
     private Bundle params;
@@ -39,10 +41,10 @@ public class HubTaskFetch  <T> extends AsyncTask<Void, Void, Call<T>> {
      */
     @Override
     protected void onPreExecute() {
-        params.putString(Hub.arg_order, "-addedDate");
+        params.putString(Hub.arg_order, "title");
         params.putString(Hub.arg_expand, "users.addedBy");
         params.putString(Hub.arg_filter, Hub.filter);
-        params.putInt(Hub.arg_limit, 20);
+        params.putInt(Hub.arg_limit, 25);
         params.putString(Hub.arg_format, Hub.format);
     }
 
@@ -59,13 +61,15 @@ public class HubTaskFetch  <T> extends AsyncTask<Void, Void, Call<T>> {
             case KeyUtils.PLAYLIST_TYPE:
                 return (Call<T>) hub.getPlaylist(params.getString(Hub.arg_order), params.getInt(Hub.arg_limit),
                         params.getInt(Hub.arg_page), params.getString(Hub.arg_expand),
-                        null, params.getString(Hub.arg_filter));
+                        null, playlist_filter);
             case KeyUtils.RSS_TYPE:
                 return (Call<T>) hub.getRssFeed(params.getString(Hub.arg_order), params.getInt(Hub.arg_limit),
                         params.getInt(Hub.arg_page), params.getString(Hub.arg_expand),
                         null,  Hub.filter, params.getString(Hub.arg_format));
             case KeyUtils.VIDEO_TYPE:
                 return (Call<T>) hub.getEpisode(params.getString(Hub.arg_id));
+            case KeyUtils.PLAYLIST_COLLECTION:
+                return (Call<T>) hub.getPlaylistItems(params.getString(Hub.arg_id), 1000, 1);
         }
         return null;
     }

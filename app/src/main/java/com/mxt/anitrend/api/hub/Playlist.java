@@ -3,6 +3,8 @@ package com.mxt.anitrend.api.hub;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mxt.anitrend.util.HubUtil;
+
 import java.util.List;
 
 /**
@@ -59,7 +61,7 @@ public class Playlist implements Parcelable {
     }
 
     public String getThumbnail() {
-        return thumbnail;
+        return HubUtil.getThubnailLink(thumbnail);
     }
 
     /**

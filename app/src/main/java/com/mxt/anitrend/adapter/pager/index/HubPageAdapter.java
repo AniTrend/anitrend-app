@@ -3,19 +3,18 @@ package com.mxt.anitrend.adapter.pager.index;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.structure.ExternalLink;
 import com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment;
+import com.mxt.anitrend.view.index.fragment.FeedVideoFragment;
 import com.mxt.anitrend.view.index.fragment.PlaylistFragment;
 import com.mxt.anitrend.view.index.fragment.SuggestionFragment;
 import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by max on 2017/05/02.
