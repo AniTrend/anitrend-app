@@ -102,7 +102,6 @@ public class PlaylistAdapter extends RecyclerViewAdapter<Playlist> {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.playlist_image:
-                    mAdapter.get(getAdapterPosition()).get_id();
                     Toast.makeText(mContext, R.string.tba_placeholder, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(mContext, VideoPlayerActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

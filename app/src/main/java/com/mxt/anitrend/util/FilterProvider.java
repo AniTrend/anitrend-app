@@ -34,7 +34,7 @@ public class FilterProvider {
     public static List<UserActivity> getUserActivityFilter(final int current, List<UserActivity> model) {
         if(model != null)
             try {
-                return new FilterBackgroundTask<>(model).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new Predicate<UserActivity>() {
+                return new FilterBackgroundTask<>(model).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Predicate<UserActivity>() {
                     @Override
                     public boolean test(UserActivity value) {
                         return value.getUser_id() == current || !value.getSeries().isAdult();

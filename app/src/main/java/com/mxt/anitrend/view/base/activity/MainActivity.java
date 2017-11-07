@@ -458,22 +458,28 @@ public class MainActivity extends DefaultActivity implements MaterialSearchBar.O
         app_update = (TextView) mUpdateMenu.getActionView().findViewById(R.id.app_update_info);
 
         mSignOutProfile = menuItems.findItem(R.id.nav_sign_out);
+
         mHomeMenu = menuItems.findItem(R.id.nav_home);
         mAiringMenu = menuItems.findItem(R.id.nav_airing);
         mMyAnimeMenu = menuItems.findItem(R.id.nav_myanime);
         mMyMangaMenu = menuItems.findItem(R.id.nav_mymanga);
         mHubMenu = menuItems.findItem(R.id.nav_hub);
         mReviewMenu = menuItems.findItem(R.id.nav_reviews);
+
         mReviewTypeSwitch.setChecked(review_type);
         mReviewTypeSwitch.setOnCheckedChangeListener(this);
+
         mThemeSwitch.setChecked(mPresenter.getAppPrefs().isLightTheme());
         mThemeSwitch.setOnCheckedChangeListener(this);
+
         mStyleSwitch.setChecked(mPresenter.getAppPrefs().isNewStyle());
         mStyleSwitch.setOnCheckedChangeListener(this);
+
         searchBar.setOnSearchActionListener(this);
         searchBar.addTextChangeListener(this);
         searchBar.inflateMenu(R.menu.menu_main_options);
         searchBar.getMenu().setOnMenuItemClickListener(this);
+
         mReviewMenu.setTitle(review_type?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
         if(mPresenter.getAppPrefs().isAuthenticated()) {
             if(mCurrentUser != null) {

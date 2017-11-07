@@ -2,23 +2,6 @@ package com.mxt.anitrend.api.structure;
 
 import java.io.Serializable;
 
-/**
- * Created by Maxwell on 10/10/2016.
- *\
- *
-/* "anime",
- 2016,
- queString*//*"summer"*//*,
-        null*//*e.g movie*//*,
-        KeyUtils.AnimeStatusTypes[KeyUtils.AnimeStatusType.FINISHED_AIRING.ordinal()],
-        null *//*genre*//*,
-        null, *//*genre exclude*//*
-        "popularity-desc", *//*sort*//*
-        true, *//*airing data*//*
-        true, *//*full page*//*
-        null); *//*page*/
-
-
 public class Search implements Serializable {
 
     private String series_type;
