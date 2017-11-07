@@ -268,7 +268,10 @@ public abstract class CommonPresenter <T> extends ScrollListener implements Life
      */
     @Override
     public void onPause() {
-
+        if(mToast != null) {
+            mToast.dismiss();
+            mToast = null;
+        }
     }
 
     /**

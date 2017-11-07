@@ -4,6 +4,8 @@ import com.mxt.anitrend.api.hub.Playlist;
 import com.mxt.anitrend.api.hub.Result;
 import com.mxt.anitrend.api.hub.Video;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -20,8 +22,7 @@ public interface Hub {
             "}";
 
     /*Pass in the param, id of the video item*/
-    String playlist_filter = "{\"videos\":{\"$exists\":true}," +
-            "\"videos\":\"%s\"}";
+    String playlist_filter = "{\"videos\":{\"$exists\":\"true\"},\"addedBy\":\"UeQuqJ90j3igXB6A\"}";
 
     String format = "json";
 
@@ -58,6 +59,11 @@ public interface Hub {
                                        @Query("expand") String expand,
                                        @Query("search") String search,
                                        @Query("filter") String filter);
+
+    @GET("playlists/{id}/videos")
+    Call<List<Video>> getPlaylistItems(@Path("id") String id,
+                                          @Query("limit") int limit,
+                                          @Query("page") int page);
 
     @GET("videos/{id}")
     Call<Video> getEpisode(@Path("id") String id);

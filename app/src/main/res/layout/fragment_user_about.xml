@@ -39,7 +39,9 @@
                         android:clickable="true"
                         android:foreground="?selectableItemBackground"
                         android:fontFamily="sans-serif-condensed"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:textColor="@color/white"
+                        tools:visibility="visible"/>
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"

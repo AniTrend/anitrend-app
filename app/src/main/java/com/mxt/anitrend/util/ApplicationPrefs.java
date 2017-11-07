@@ -267,13 +267,18 @@ public class ApplicationPrefs {
      * Retrieves current users small object similar to what you'd get from the api
      */
     public UserSmall getMiniUser() {
-        String[] values = getMiniUserInfo();
-        return new UserSmall(
-                Integer.valueOf(values[0]),
-                values[1],
-                values[2],
-                values[3]
-        );
+        try {
+            String[] values = getMiniUserInfo();
+            return new UserSmall(
+                    Integer.valueOf(values[0]),
+                    values[1],
+                    values[2],
+                    values[3]
+            );
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean isLightTheme() {

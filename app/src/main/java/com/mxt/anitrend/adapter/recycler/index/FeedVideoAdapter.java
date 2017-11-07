@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.api.hub.Playlist;
+import com.mxt.anitrend.api.hub.Video;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.view.base.activity.VideoPlayerActivity;
@@ -25,19 +26,19 @@ import java.util.Locale;
 import butterknife.BindView;
 
 /**
- * Created by max on 2017/08/12.
+ * Created by max on 2017/09/11.
  */
 
-public class PlaylistAdapter extends RecyclerViewAdapter<Playlist> {
+public class FeedVideoAdapter  extends RecyclerViewAdapter<Video> {
 
-    public PlaylistAdapter(List<Playlist> mAdapter, FragmentActivity mContext) {
+    public FeedVideoAdapter(List<Video> mAdapter, FragmentActivity mContext) {
         super(mAdapter, mContext);
     }
 
     @Override
-    public RecyclerViewHolder<Playlist> onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_playlist_item, parent, false);
-        return new ViewHolder(view);
+    public RecyclerViewHolder<Video> onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_feed_episode, parent, false);
+        return new FeedVideoAdapter.ViewHolder(view);
     }
 
     /**
@@ -54,14 +55,16 @@ public class PlaylistAdapter extends RecyclerViewAdapter<Playlist> {
         return null;
     }
 
-    class ViewHolder extends RecyclerViewHolder<Playlist> {
+    class ViewHolder extends RecyclerViewHolder<Video> {
 
-        @BindView(R.id.playlist_image)
+        @BindView(R.id.episode_duration)
+        TextView mDuration;
+        @BindView(R.id.episode_image)
         ImageView mImage;
-        @BindView(R.id.playlist_title)
+        @BindView(R.id.episode_title)
         TextView mTitle;
-        @BindView(R.id.playlist_episode_count)
-        TextView mEpisodes;
+        @BindView(R.id.episode_size)
+        TextView mSize;
 
         public ViewHolder(View view) {
             super(view);
@@ -76,14 +79,15 @@ public class PlaylistAdapter extends RecyclerViewAdapter<Playlist> {
          * @see Playlist
          */
         @Override
-        public void onBindViewHolder(Playlist model) {
+        public void onBindViewHolder(Video model) {
             Glide.with(mContext).load(model.getThumbnail())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(mImage);
 
             mTitle.setText(model.getTitle());
-            mEpisodes.setText(String.format(" %s", mContext.getString(R.string.text_anime_episodes, model.getVideos().size())));
+            mDuration.setText(String.format(Locale.getDefault(), "%d:%d ", (int)model.getDuration() / 60, (int)model.getDuration() % 60));
+            mSize.setText(String.format(Locale.getDefault(), " %d MB", model.getSize()/1048576));
         }
 
         /**
@@ -101,7 +105,8 @@ public class PlaylistAdapter extends RecyclerViewAdapter<Playlist> {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.playlist_image:
+                case R.id.episode_image:
+                    mAdapter.get(getAdapterPosition()).get_id();
                     Toast.makeText(mContext, R.string.tba_placeholder, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(mContext, VideoPlayerActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
