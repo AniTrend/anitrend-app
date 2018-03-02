@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.activity.detail.SeriesActivity">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.SeriesPresenter" />
+        <import type="android.view.View" />
+    </data>
+
+    <com.nguyenhoanglam.progresslayout.ProgressLayout
+        android:id="@+id/stateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin">
+
+                    <include layout="@layout/section_series_info" app:model="@{model}" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+                <FrameLayout
+                    android:id="@+id/youtube_view"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:visibility="gone"
+                    tools:layout_height="@dimen/lg_margin"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/genre_recycler"
+                    android:visibility="@{model.genres != null ? View.VISIBLE : View.GONE}"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin">
+
+                    <include layout="@layout/section_series_details" app:model="@{model}"
+                        app:presenter="@{presenter}"/>
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/tags_recycler"
+                    android:visibility="@{model.tags != null ? View.VISIBLE : View.GONE}"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin">
+
+                    <include layout="@layout/section_series_description" app:model="@{model}" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.nguyenhoanglam.progresslayout.ProgressLayout>
+
+</layout>

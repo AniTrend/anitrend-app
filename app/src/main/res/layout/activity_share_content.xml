@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.activity.base.SharedContentActivity">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/design_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/bottom_sheet_width"
+            android:layout_marginEnd="@dimen/bottom_sheet_width"
+            android:orientation="vertical"
+            app:behavior_hideable="true"
+            android:background="?attr/cardColor"
+            app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+            <include layout="@layout/custom_sheet_toolbar" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/xl_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sheet_share_body"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/lg_margin" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/sheet_shared_resource"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+
+                    <Space
+                        android:layout_width="@dimen/lg_margin"
+                        android:layout_height="wrap_content" />
+
+                    <Spinner
+                        android:id="@+id/sheet_share_post_type"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                        android:id="@+id/sheet_share_post_type_approve"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackground"
+                        android:padding="@dimen/lg_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="?colorAccent"
+                        app:srcCompat="@drawable/ic_check_circle_white_24dp" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/xl_margin" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sheet_share_title"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/lg_margin" />
+
+                <com.mxt.anitrend.base.custom.view.editor.ComposerWidget
+                    android:id="@+id/composer_widget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

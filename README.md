@@ -1,11 +1,11 @@
-# __AniTrend v0.9.9r8__ &nbsp; <a href='https://ko-fi.com/A3772XCL' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+# __AniTrend v1.0.5__ &nbsp; <a href='https://ko-fi.com/A3772XCL' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi5.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 __Travis-Ci Status:__ [![Build Status](https://travis-ci.org/wax911/anitrend-app.svg?branch=hotfix%2Flist_browse)](https://travis-ci.org/wax911/anitrend-app) &nbsp; | &nbsp; __Waffles Status:__ [![Waffle.io - Issues in progress](https://badge.waffle.io/wax911/anitrend-app.svg?label=in%20progress&title=In%20Progress)](http://waffle.io/wax911/anitrend-app) &nbsp; | &nbsp; __Codacy:__ [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c678d2333509460aa25c00833514f1f2)](https://www.codacy.com/app/wax911/anitrend-app?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wax911/anitrend-app&amp;utm_campaign=Badge_Grade)
 
 
 <p align="center"><a href='https://play.google.com/store/apps/details?id=com.mxt.anitrend&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a></p>
 
-<img src="https://github.com/wax911/AniTrend/raw/master/screenshots/Nexus4/device-2017-03-12-132055.png" width=265/> <img src="https://github.com/wax911/AniTrend/raw/master/screenshots/Nexus4/device-2017-03-12-132113.png" width=265/> <img src="https://github.com/wax911/AniTrend/raw/master/screenshots/Nexus4/device-2017-03-12-132128.png" width=265/>
+<img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Nexus4/device-2017-03-12-132055.png" width=265/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Nexus4/device-2017-03-12-132113.png" width=265/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Nexus4/device-2017-03-12-132128.png" width=265/>
 ___
 # __Known Bugs (v0.9.9)__
 - __Devices running Android version below Lollipop (5.0) require restart after loging in into the application__
@@ -21,7 +21,7 @@ ___
 - __~~Logout causes application to crash in version v0.8.5~~__
 - __~~Manga relations not displayed properly in v0.8.5~~__
 
-# __<p align="center"><a href="https://github.com/wax911/AniTrend">More Screenshots, Resources and Translation Files Click HERE</a></p>__
+# __<p align="center"><a href="https://github.com/wax911/anitrend-resources">More Screenshots, Resources and Translation Files Click HERE</a></p>__
 
 ___
 # __License__
@@ -50,5 +50,3 @@ SOFTWARE.
 ```
 
  ___
- # __Labraries Used__
- [Labraries Used Here](https://github.com/wax911/AniTrendApp/blob/master/app/src/main/assets/libs/libraries.json)

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_post"
+        android:orderInCategory="100"
+        android:visible="false"
+        android:title="@string/menu_title_new_activity_post"
+        android:icon="@drawable/ic_gesture_grey_600_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_filter"
+        android:orderInCategory="101"
+        android:visible="false"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_filter_list_grey_600_24dp"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/action_sort"
+                android:icon="@drawable/ic_sort_grey_600_24dp"
+                android:title="@string/menu_title_sorting"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_order"
+                android:icon="@drawable/ic_order_by_grey_600_24dp"
+                android:title="@string/menu_title_order"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_genre"
+                android:icon="@drawable/ic_genre_grey_600_24dp"
+                android:title="@string/menu_title_genres"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_type"
+                android:icon="@drawable/ic_type_grey_600_24dp"
+                android:title="@string/menu_title_types"
+                app:showAsAction="ifRoom" >
+                <menu>
+                    <item
+                        android:id="@+id/action_type_anime"
+                        android:icon="@drawable/ic_movie_grey_600_24dp"
+                        android:title="@string/anime"
+                        app:showAsAction="ifRoom" />
+
+                    <item
+                        android:id="@+id/action_type_manga"
+                        android:icon="@drawable/ic_library_books_grey_600_24dp"
+                        android:title="@string/manga"
+                        app:showAsAction="ifRoom" />
+                </menu>
+            </item>
+
+            <item
+                android:id="@+id/action_year"
+                android:icon="@drawable/ic_calendar_grey_600_24dp"
+                android:title="@string/menu_title_year"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_status"
+                android:icon="@drawable/ic_status_grey_600_24dp"
+                android:title="@string/menu_title_status"
+                app:showAsAction="ifRoom" >
+                <menu>
+                    <item
+                        android:id="@+id/action_status_anime"
+                        android:icon="@drawable/ic_movie_grey_600_24dp"
+                        android:title="@string/anime"
+                        app:showAsAction="ifRoom" />
+
+                    <item
+                        android:id="@+id/action_status_manga"
+                        android:icon="@drawable/ic_library_books_grey_600_24dp"
+                        android:title="@string/manga"
+                        app:showAsAction="ifRoom" />
+                </menu>
+            </item>
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/action_share"
+        android:orderInCategory="102"
+        android:visible="false"
+        android:title="@string/drawer_title_share"
+        android:icon="@drawable/ic_share_grey_600_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_mark_all"
+        android:orderInCategory="103"
+        android:visible="false"
+        android:title="@string/menu_title_mark_all_as_read"
+        android:icon="@drawable/ic_done_all_grey_600_24dp"
+        app:showAsAction="ifRoom" />
+
+</menu>

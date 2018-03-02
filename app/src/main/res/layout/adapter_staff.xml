@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model"  type="com.mxt.anitrend.model.entity.base.StaffBase" />
+        <import type="android.text.TextUtils" />
+        <import type="android.view.View" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:layout_margin="@dimen/lg_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="false"
+        app:cardBackgroundColor="?cardColor"
+        app:cardElevation="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/sm_margin"
+        tools:layout_width="@dimen/series_image_lg">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical" >
+
+            <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                android:id="@+id/staff_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/sample_img"
+                app:imageUrl="@{model.image_url_lge}"/>
+
+            <LinearLayout
+                android:padding="@dimen/lg_margin"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.fullName}"
+                    tools:text="Akira Toriyama"/>
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_marginTop="@dimen/sm_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:visibility="@{model.role != null? View.VISIBLE : View.GONE}"
+                    android:text="@{model.role}"
+                    tools:text="Director" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+            android:id="@+id/favourite_indicator"
+            android:layout_gravity="top|end"
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="@dimen/xl_margin"
+            android:layout_margin="@dimen/lg_margin"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:tint="@color/colorStateYellow"
+            app:srcCompat="@drawable/ic_star_grey_600_24dp" />
+
+    </android.support.v7.widget.CardView>
+
+</layout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Review"/>
+    </data>
+
+    <FrameLayout
+        android:layout_margin="@dimen/sm_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.image.WideImageView
+            android:id="@+id/series_image"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            app:imageUrl="@{model.anime != null? model.anime.image_url_banner : model.manga.image_url_banner}"
+            tools:scaleType="centerCrop"
+            tools:layout_height="@dimen/wide_image_md"
+            tools:src="@drawable/sample_banner" />
+
+        <FrameLayout
+            android:background="@color/colorTransparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/md_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@{model.user.display_name}"
+            android:textStyle="bold"
+            tools:text="By: Diama" />
+
+        <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
+            android:layout_gravity="top|start"
+            android:id="@+id/series_rating"
+            android:layout_margin="@dimen/md_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/SmallRating"
+            app:averageScore="@{model.anime != null? model.anime.average_score : model.manga.average_score}"
+            tools:rating="1" />
+
+        <LinearLayout
+            android:layout_marginBottom="35dp"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
+                android:textColor="@color/white"
+                android:padding="@dimen/md_margin"
+                android:id="@+id/series_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Boku no Hero Accademia" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:textColor="@color/white"
+                android:padding="@dimen/md_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{model.summary}"
+                tools:text="One of the best Shonene shows you can ever ask for I also want..." />
+
+        </LinearLayout>
+
+        <com.mxt.anitrend.base.custom.view.widget.VoteWidget
+            android:id="@+id/review_vote"
+            android:layout_gravity="bottom|start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_gravity="bottom|end"
+            android:id="@+id/review_read_more"
+            android:padding="@dimen/lg_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="@string/text_read_more" />
+
+    </FrameLayout
+        >
+</layout>

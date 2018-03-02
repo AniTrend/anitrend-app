@@ -1,66 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?attr/card_color"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?cardColor">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/sheet_title"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:textSize="@dimen/tip_title"
-            android:textStyle="bold"
-            tools:text="Current Cache Usage"/>
-
-        <TextView
-            android:id="@+id/sheet_state"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp"
-            android:drawableStart="@drawable/ic_keyboard_arrow_down_grey_600_18dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
+    <include layout="@layout/custom_sheet_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="@dimen/xl_margin">
 
         <ImageView
-            android:id="@+id/sheet_icon"
+            android:id="@+id/bottom_icon"
             android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_launcher"/>
+            android:src="@mipmap/ic_launcher_round"/>
 
-        <TextView
-            android:id="@+id/sheet_text"
+        <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+            android:id="@+id/bottom_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/sheet_icon"
-            android:fontFamily="sans-serif-condensed"
+            android:layout_toEndOf="@+id/bottom_icon"
             android:lineSpacingExtra="2dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textSize="@dimen/tip_text"
+            android:textSize="@dimen/content_text_size"
             tools:text="@string/drawer_update_text"/>
 
     </RelativeLayout>
@@ -72,19 +43,18 @@
         android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/sheet_negative"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/colorAccent"
-            app:backgroundTint="?attr/card_color"
-            style="@style/TipButton"
+            android:id="@+id/bottom_negative"
+            android:textColor="?colorAccent"
+            android:layout_marginEnd="@dimen/xl_margin"
+            app:backgroundTint="?attr/cardColor"
+            style="@style/MaterialTipButton"
             tools:text="No"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/sheet_positive"
-            android:fontFamily="sans-serif"
-            android:layout_marginEnd="16dp"
-            app:backgroundTint="@color/colorAccent"
-            style="@style/TipButton"
+            android:id="@+id/bottom_positive"
+            android:layout_marginEnd="@dimen/xl_margin"
+            app:backgroundTint="?colorAccent"
+            style="@style/MaterialTipButton"
             tools:text="Yes"/>
 
     </LinearLayout>

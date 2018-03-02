@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/preview_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:src="@drawable/reg_bg" />
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        android:id="@+id/preview_progress"
+        android:layout_width="@dimen/avatar_size"
+        android:layout_height="@dimen/avatar_size"
+        android:layout_gravity="center"
+        app:cpv_animAutostart="true"
+        app:cpv_color="?colorAccent"
+        app:cpv_indeterminate="true"/>
+
+    <com.mxt.anitrend.base.custom.view.image.WideImageView
+        android:id="@+id/preview_credits"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_height="50dp"
+        tools:src="@drawable/powered_by_giphy_dark"/>
+
+</FrameLayout>

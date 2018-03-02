@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.SeriesPresenter" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.image.AspectImageView
+            android:id="@+id/series_image"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
+            android:layout_width="@dimen/series_image_md"
+            android:layout_height="wrap_content"
+            app:imageUrl="@{model.image_url_lge}"
+            tools:src="@drawable/sample_img"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textStyle="bold"
+                android:text="@{model.title_romaji}"
+                tools:text="Gintama, Gin Tama, Silver Soul, Yorinuki Gintama-san"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/lg_margin" />
+
+            <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sm_margin"
+                tools:background="@color/colorStateBlue"
+                app:seriesStatus="@{model}"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/lg_margin" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_series_english_name"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{model.title_english}"
+                android:fontFamily="sans-serif-light"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Gintama" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/md_margin" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_series_type"/>
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@{model.type}"
+                tools:text="TV"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/md_margin" />
+
+            <com.mxt.anitrend.base.custom.view.text.RangeDateTextView
+                android:id="@+id/series_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                app:startDate="@{model.start_date_fuzzy}"
+                tools:text="Started: 2017/09/30"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/md_margin" />
+
+            <com.mxt.anitrend.base.custom.view.text.RangeDateTextView
+                android:id="@+id/series_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                app:endDate="@{model.end_date_fuzzy}"
+                tools:text="Ended: 2017/10/30"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

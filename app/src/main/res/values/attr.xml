@@ -2,31 +2,33 @@
 <resources>
 
     <!-- style -->
-    <declare-styleable name="root_color">
-        <attr name="root_color" format="reference|color" />
+    <declare-styleable name="ThemeColor">
+        <attr name="rootColor" format="reference|color" />
+        <attr name="lineColor" format="reference|color" />
+        <attr name="titleColor" format="reference|color" />
+        <attr name="subtitleColor" format="reference|color" />
+        <attr name="contentColor" format="reference|color" />
+        <attr name="cardColor" format="reference|color" />
+        <attr name="drawerColor" format="reference|color" />
+        <attr name="toolbarColor" format="reference|color" />
     </declare-styleable>
 
-    <declare-styleable name="line_color">
-        <attr name="line_color" format="reference|color" />
+    <declare-styleable name="MaterialSearch">
+        <attr name="voiceDrawable" format="reference" />
+        <attr name="closeDrawable" format="reference" />
+        <attr name="backDrawable" format="reference" />
+        <attr name="suggestionDrawable" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="title_color">
-        <attr name="title_color" format="reference|color" />
+    <declare-styleable name="RingProgress">
+        <attr name="bgColor" format="color|reference" />
+        <attr name="bgShadowColor" format="color|reference" />
+        <attr name="rotate" format="integer" />
+        <attr name="showBackground" format="boolean" />
+        <attr name="showBackgroundShadow" format="boolean" />
+        <attr name="showRingCorner" format="boolean" />
+        <attr name="ringWidthScale" format="float" />
+        <attr name="ringSweepAngle" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="subtitle_color">
-        <attr name="subtitle_color" format="reference|color" />
-    </declare-styleable>
-
-    <declare-styleable name="content_color">
-        <attr name="content_color" format="reference|color" />
-    </declare-styleable>
-
-    <declare-styleable name="card_color">
-        <attr name="card_color" format="reference|color" />
-    </declare-styleable>
-
-    <declare-styleable name="drawer_color">
-        <attr name="drawer_color" format="reference|color" />
-    </declare-styleable>
 </resources>

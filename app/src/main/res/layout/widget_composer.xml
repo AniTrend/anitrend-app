@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable name="onClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/md_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:focusable="true">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
+                android:id="@+id/comment"
+                android:hint="@string/text_hint_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
+                android:textSize="@dimen/subtitle_text_size" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <FrameLayout
+            android:layerType="software"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/md_margin"
+            android:background="@drawable/dashed_background" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_gravity="start"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/insert_image"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="?colorAccent"
+                    app:srcCompat="@drawable/ic_crop_original_white_24dp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/lg_margin"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/insert_webm"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="?colorAccent"
+                    app:srcCompat="@drawable/ic_slow_motion_video_white_24dp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/lg_margin"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/insert_link"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="?colorAccent"
+                    app:srcCompat="@drawable/ic_link_white_24dp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/lg_margin"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/insert_youtube"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/colorStateRed"
+                    app:srcCompat="@drawable/ic_youtube" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_gravity="end"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/insert_gif"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="?colorAccent"
+                    app:srcCompat="@drawable/ic_gif_white_24dp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/lg_margin"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/insert_emoticon"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:padding="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="?colorAccent"
+                    app:srcCompat="@drawable/ic_insert_emoticon_white_24dp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/lg_margin"
+                    android:layout_height="wrap_content" />
+
+                <ViewFlipper
+                    android:onClickListener="@{onClickListener}"
+                    android:id="@+id/widget_flipper"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?selectableItemBackground"
+                    android:inAnimation="@android:anim/slide_in_left"
+                    android:outAnimation="@android:anim/slide_out_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                        android:padding="@dimen/spacing_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="?colorAccent"
+                        app:srcCompat="@drawable/ic_send_white_24dp" />
+
+                    <com.github.rahatarmanahmed.cpv.CircularProgressView
+                        android:layout_width="@dimen/xl_margin"
+                        android:layout_height="@dimen/xl_margin"
+                        android:layout_gravity="center"
+                        app:cpv_animAutostart="true"
+                        app:cpv_color="?colorAccent"
+                        app:cpv_indeterminate="true" />
+
+                </ViewFlipper>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</layout>

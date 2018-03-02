@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="nav_header_discover">Discover</string>
+    <string name="nav_header_manage">Manage</string>
+    <string name="nav_header_customization">Customization</string>
+
+    <string name="nav_header_support">Support</string>
+    <string name="nav_contact">Contact</string>
+    <string name="nav_about">About</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_filter">@string/drawer_title_filter</string>
+    <string name="action_help">Help</string>
+
+    <string name="action_mode_selected">Selected: %d</string>
+
+    <string name="navigation_drawer_open">Navigation drawer opened</string>
+    <string name="navigation_drawer_close">Navigation drawer closed</string>
+
+
+    <string name="nav_home">Home</string>
+    <string name="nav_history">History</string>
     <!--
         Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
 
@@ -65,8 +85,7 @@
 
     <string name="Go_Back">Zurück</string>
 
-    <string name="Follow">Folgen</string>
-    <string name="Unfollow">Nicht mehr folgen</string>
+    <string name="follow">Folgen</string>
 
     <string name="Retry">Wiederholen</string>
 
@@ -221,29 +240,12 @@
     </string-array>
 
     <!--Do not Translate, native anilist strings-->
-    <string-array name="anime_status_types">
+    <string-array name="series_status_types">
         <item>All Listings</item>
         <item>Ended</item>
         <item>Ongoing</item>
         <item>Upcoming</item>
         <item>Cancelled</item>
-    </string-array>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="series_types">
-        <item>All Listings</item>
-        <item>TV</item>
-        <item>TV Short</item>
-        <item>Movie</item>
-        <item>Special</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Manga</item>
-        <item>Novel</item>
-        <item>One Shot</item>
-        <item>Doujin</item>
-        <item>Manhua</item>
-        <item>Manhwa</item>
     </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
@@ -296,7 +298,6 @@
     <string name="drawer_section_configuration">Einstellungen</string>
     <string name="drawer_title_filter">Filter</string>
     <string name="drawer_light_theme">Helles Design</string>
-    <string name="drawer_title_quality">Qualität</string>
     <string name="drawer_title_style">Neue Listenansicht</string>
 
     <string name="drawer_section_account">Benutzer</string>
@@ -778,18 +779,24 @@
 
     <!--Anime page titles-->
     <string-array name="anime_page_titles">
-        <item>Infos</item>
+        <item>Übersicht</item>
+        <item>@string/title_relation</item>
         <item>Statistik</item>
         <item>Episoden</item>
-        <item>Extras</item>
+        <item>Charaktere</item>
+        <item>Produzenten</item>
+        <item>@string/title_social</item>
         <item>Reviews</item>
     </string-array>
 
     <!--Manga page titles-->
     <string-array name="manga_page_titles">
-        <item>Infos</item>
+        <item>Übersicht</item>
+        <item>@string/title_relation</item>
         <item>Statistik</item>
-        <item>Extras</item>
+        <item>Charaktere</item>
+        <item>Produzenten</item>
+        <item>@string/title_social</item>
         <item>Reviews</item>
     </string-array>
 
@@ -836,7 +843,7 @@
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Informationen zum Download!</string>
     <string name="text_download_info">Die Update Datei wird in deinem Downloadordner gespeichert.</string>
-    <string name="title_update_info">Informationen zum Update!</string>
+    <string name="title_update_infodadat">Informationen zum Update!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Information to share</string>
@@ -852,8 +859,106 @@
         <item>@string/attach_webm_title</item>
     </string-array>
 
-    <!--These are the anime time lables in your profile-->
-    <string name="anime_time_hours">%.1f Stunden</string>
-    <string name="anime_time_days">%.1f Tage</string>
-    <string name="anime_time_years">%.1f Jahre</string>
+    <!--These are the anime time labels in your profile-->
+    <string name="anime_time_hours">%.1f Hours</string>
+    <string name="anime_time_days">%.1f Days</string>
+    <string name="anime_time_years">%.1f Years</string>
+
+    <string-array name="anime_media_types">
+        <item>All</item>
+        <item>TV</item>
+        <item>TV Short</item>
+        <item>Movie</item>
+        <item>Special</item>
+        <item>OVA</item>
+        <item>ONA</item>
+    </string-array>
+
+    <string-array name="manga_media_types">
+        <item>All</item>
+        <item>Manga</item>
+        <item>Novel</item>
+        <item>One Shot</item>
+        <item>Doujin</item>
+        <item>Manhua</item>
+    </string-array>
+
+    <string name="series_type">Series Type:</string>
+    <string name="series_episodes">Episodes:</string>
+    <string name="series_next_ep">Next Episode:</string>
+    <string name="series_chapters">Chapters:</string>
+    <string name="series_volumes">Volumes:</string>
+    <string name="logged_in_as">Logged in as</string>
+
+    <string name="sign_into_anilist">Sign Into AniList</string>
+
+    <string name="anitrend_sign_in">AniTrend Sign-In</string>
+    <string name="please_sing_in">Please Sing In</string>
+
+    <string name="action_donate">Donate</string>
+
+    <string name="dialog_title_increment_chapters">Increment Chapters</string>
+
+    <string name="title_activity_staff">Staff</string>
+    <string name="title_activity_character">Character</string>
+    <string name="title_activity_series">Series</string>
+
+    <string name="More">More</string>
+
+    <string name="title_bottom_sheet_giphy">Powered By Giphy</string>
+
+    <string name="title_bookmark">Bookmark</string>
+
+    <string name="series_share_complete">Detailed</string>
+    <string name="series_share_summary">Summary</string>
+
+    <string name="text_giphy_feature">Spice up your posts. Just simply tap to select and long press to preview.</string>
+
+    <string name="text_manga_volumes">%d Volumes</string>
+    <string name="text_manga_chapters">%d Chapters</string>
+
+    <string name="title_series_status">Series Status</string>
+    <string name="title_series_season">Series Season</string>
+    <string name="title_series_score">Series Score</string>
+    <string name="title_series_origin">Series Origin</string>
+
+    <string name="title_total_chapters">Total Chapters</string>
+    <string name="title_total_volumes">Total Volumes</string>
+
+    <string name="title_total_episodes">Total Episodes</string>
+    <string name="title_episode_duration">Episode Duration</string>
+    <string name="title_next_episode">Next Episode</string>
+
+    <string name="title_hash_tag">Hash Tag</string>
+    <string name="title_main_studio">Main Studio</string>
+
+    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register">Create Account</a>]]></string>
+
+    <string name="title_select_all">Select All</string>
+
+    <string name="title_relation">Relations</string>
+
+    <string name="title_social">Social</string>
+
+    <string name="title_website">Website</string>
+    <string name="title_summary">Summary</string>
+
+    <string name="title_date_of_birth">Date Of Birth:</string>
+    <string name="title_language">Language:</string>
+
+    <string name="title_series_japanese_name">Japanese Title</string>
+    <string name="title_series_description">Series Description</string>
+
+    <string name="title_series_english_name">Series English Name:</string>
+    <string name="title_series_type">Series Type:</string>
+    <string name="title_native_name">Native Name:</string>
+
+    <string name="title_alternative_names">Alternative Names</string>
+    <string name="text_unable_to_load_next_page">Error loading more results!</string>
+    <string name="menu_title_mark_all_as_read">Mark All As Read</string>
+    <string name="title_score_distribution">Score Distribution</string>
+    <string name="title_score">Score</string>
+    <string name="title_watching">Watching</string>
+    <string name="title_series_stats">Series Stats</string>
+
 </resources>

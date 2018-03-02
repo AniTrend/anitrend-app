@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--    <shortcut
+        android:enabled="false"
+        android:shortcutId="SHORTCUT_NOTIFICATION"
+        android:icon="@drawable/ic_shortcut_notifications"
+        android:shortcutShortLabel="@string/menu_title_notifications"
+        android:shortcutDisabledMessage="@string/info_login_req">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.mxt.anitrend.view.activity.detail.NotificationActivity"
+            android:targetPackage="com.mxt.anitrend" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="false"
+        android:shortcutId="SHORTCUT_PROFILE"
+        android:icon="@drawable/ic_shortcut_profile"
+        android:shortcutShortLabel="@string/drawer_title_profile"
+        android:shortcutDisabledMessage="@string/info_login_req">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.mxt.anitrend.view.activity.detail.ProfileActivity"
+            android:targetPackage="com.mxt.anitrend" />
+    </shortcut>-->
+
+</shortcuts>

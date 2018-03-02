@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Rank" />
+    </data>
+
+    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        tools:layout_width="180dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                android:id="@+id/ranking_type"
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/menu_item_icon_size"
+                android:layout_height="@dimen/menu_item_icon_size"
+                tools:src="@drawable/ic_star_yellow_700_24dp"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="@dimen/xl_margin"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                android:id="@+id/sub_container"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                app:textHtml="@{model.typeHtml}"
+                tools:textStyle="bold"
+                tools:text="#64 Highest Rated 2015"/>
+
+        </LinearLayout>
+
+    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+</layout>

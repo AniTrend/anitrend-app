@@ -1,0 +1,164 @@
+package com.mxt.anitrend.base.custom.view.widget;
+
+import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
+import com.mxt.anitrend.R;
+import com.mxt.anitrend.databinding.CustomActionMangaBinding;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.NotifyUtil;
+
+import static com.mxt.anitrend.util.KeyUtils.UserMangaStatus;
+
+/**
+ * Created by max on 2018/01/03.
+ */
+
+public class CustomSeriesMangaManage extends CustomSeriesManageBase {
+
+    private CustomActionMangaBinding binding;
+
+    public CustomSeriesMangaManage(Context context) {
+        super(context);
+    }
+
+    public CustomSeriesMangaManage(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public CustomSeriesMangaManage(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public CustomSeriesMangaManage(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    /**
+     * Optionally included when constructing custom views
+     */
+    @Override
+    public void onInit() {
+        super.onInit();
+        binding = CustomActionMangaBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+    }
+
+    /**
+     * save current views states into the model
+     */
+    @Override
+    public void persistChanges() {
+        model.setChapters_read(!TextUtils.isEmpty(binding.diaCurrentChapters.getText())? Integer.valueOf(binding.diaCurrentChapters.getText().toString()): 0);
+        model.setReread(!TextUtils.isEmpty(binding.diaCurrentReread.getText()) ? Integer.valueOf(binding.diaCurrentReread.getText().toString()): 0);
+        model.setVolumes_read(!TextUtils.isEmpty(binding.diaCurrentVolumes.getText()) ? Integer.valueOf(binding.diaCurrentVolumes.getText().toString()): 0);
+        model.setScore_raw(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
+        model.setPrivate(binding.diaCurrentPrivacy.isChecked()? 1 : 0);
+        model.setNotes(binding.diaCurrentNotes.getFormattedText());
+        model.setList_status(KeyUtils.UserMangaStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
+    }
+
+    @Override
+    protected void populateFields() {
+        binding.setModel(model);
+        binding.executePendingBindings();
+    }
+
+    @Override
+    protected void bindFields() {
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.manga_listing_status, R.layout.adapter_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        binding.diaCurrentStatus.setAdapter(adapter);
+
+        if(!TextUtils.isEmpty(model.getList_status()))
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(UserMangaStatus).indexOf(model.getList_status()));
+        else
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserMangaStatus).indexOf(KeyUtils.UserMangaStatus[KeyUtils.PLAN_TO_READ]));
+        binding.diaCurrentPrivacy.setChecked(model.isPrivate());
+        if(model.getScore_raw() != 0)
+            binding.diaCurrentScore.setText(String.valueOf(model.getScore_raw()));
+        if(model.getChapters_read() != 0)
+            binding.diaCurrentChapters.setText(String.valueOf(model.getChapters_read()));
+        if(model.getVolumes_read() != 0)
+            binding.diaCurrentVolumes.setText(String.valueOf(model.getVolumes_read()));
+        if(model.getReread() != 0)
+            binding.diaCurrentReread.setText(String.valueOf(model.getReread()));
+
+        binding.diaCurrentStatus.setOnItemSelectedListener(this);
+        binding.diaCurrentProgressIncrement.setOnClickListener(this);
+    }
+
+    /**
+     * Clean up any resources that won't be needed
+     */
+    @Override
+    public void onViewRecycled() {
+        super.onViewRecycled();
+        if(binding != null)
+            binding.unbind();
+    }
+
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        model.setList_status(UserMangaStatus[i]);
+        switch (UserMangaStatus[i]) {
+            case "reading":
+                if (getSeriesModel().getPublishing_status().equals(KeyUtils.MangaStatusTypes[KeyUtils.NOT_YET_PUBLISHED]))
+                    NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
+                break;
+            case "plan to read":
+                break;
+            case "completed":
+                if (!getSeriesModel().getPublishing_status().equals(KeyUtils.MangaStatusTypes[KeyUtils.FINISHED_PUBLISHING]))
+                    NotifyUtil.makeText(getContext(), R.string.warning_manga_publishing, Toast.LENGTH_LONG).show();
+                else {
+                    int total = getSeriesModel().getTotal_chapters();
+                    model.setChapters_read(total);
+                    binding.diaCurrentChapters.setText(String.valueOf(total));
+                    total = getSeriesModel().getTotal_volumes();
+                    if(total > 0) {
+                        model.setVolumes_read(total);
+                        binding.diaCurrentVolumes.setText(String.valueOf(total));
+                    }
+                }
+                break;
+            case "on hold":
+                if (getSeriesModel().getPublishing_status().equals(KeyUtils.MangaStatusTypes[KeyUtils.NOT_YET_PUBLISHED]))
+                    NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
+                break;
+            case "dropped":
+                if (getSeriesModel().getPublishing_status().equals(KeyUtils.MangaStatusTypes[KeyUtils.NOT_YET_PUBLISHED]))
+                    NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.dia_current_progress_increment:
+                int current = model.getChapters_read() + 1;
+                model.setChapters_read(current);
+                binding.diaCurrentChapters.setText(String.valueOf(current));
+                break;
+        }
+    }
+}

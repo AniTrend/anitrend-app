@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <com.mxt.anitrend.base.custom.view.image.BrandImageView
+        android:id="@+id/giphy_image"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="@dimen/md_margin"
+        android:onClickListener="@{onClickListener}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        tools:layout_height="@dimen/wide_image_md"
+        tools:scaleType="centerCrop"
+        tools:src="@drawable/reg_bg" />
+
+</layout>

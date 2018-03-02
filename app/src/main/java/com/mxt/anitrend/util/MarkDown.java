@@ -8,6 +8,8 @@ import android.text.Spanned;
 
 import com.github.rjeschke.txtmark.Processor;
 
+import java.util.regex.Matcher;
+
 /**
  * Created by max on 2017/03/26.
  * Moved markdown processor to global location
@@ -15,60 +17,58 @@ import com.github.rjeschke.txtmark.Processor;
 public final class MarkDown {
 
     private static SpannableStringBuilder fromMD(String content) {
-        if(content == null)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                return (SpannableStringBuilder) Html.fromHtml("<b>No content available</b>", Html.FROM_HTML_MODE_COMPACT | Html.FROM_HTML_OPTION_USE_CSS_COLORS | Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST);
-            else return (SpannableStringBuilder) Html.fromHtml("<b>No content available</b>");
+        Spanned htmlConverted;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            return (SpannableStringBuilder) Html.fromHtml(Processor.process(content), Html.FROM_HTML_MODE_COMPACT | Html.FROM_HTML_OPTION_USE_CSS_COLORS | Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST);
-        else return (SpannableStringBuilder) Html.fromHtml(Processor.process(content));
+            htmlConverted = Html.fromHtml(Processor.process(content),
+                    Html.FROM_HTML_MODE_LEGACY);
+        else
+            htmlConverted = Html.fromHtml(Processor.process(content));
+        return (SpannableStringBuilder) htmlConverted;
     }
 
     public static Spanned convert(String input) {
-        SpannableStringBuilder spanned = fromMD(PatternMatcher.findUserTags(input));
+        SpannableStringBuilder result;
+        if(input == null)
+            result = fromMD("<b>No content available</b>");
+        else
+            result = fromMD(PatternMatcher.findUserTags(input));
 
-        try {
-            if(input != null && !input.isEmpty()) {
-                while (spanned.charAt(spanned.length() - 1) == '\n') {
-                    spanned = spanned.delete(spanned.length() - 1, spanned.length());
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        if(result.length() > 0)
+            while (result.charAt(result.length() - 1) == '\n')
+                result = result.delete(result.length() - 1, result.length());
 
-        return spanned;
+        return result;
     }
 
-    public static String convertLink(Editable text) {
-        return String.format("[%s](%s)", text, text);
+    static String convertLink(Editable text) {
+        return convertLink(text.toString());
     }
 
-    public static String convertImage(Editable text) {
-        return String.format("img220(%s)", text);
+    static String convertImage(Editable text) {
+        return convertImage(text.toString());
     }
 
-    public static String convertYoutube(Editable text) {
-        return String.format("youtube(%s)", text);
+    static String convertYoutube(Editable text) {
+        return convertYoutube(text.toString());
     }
 
-    public static String convertVideo(Editable text) {
-        return String.format("webm(%s)", text);
+    static String convertVideo(Editable text) {
+        return convertVideo(text.toString());
     }
 
     public static String convertLink(String text) {
-        return String.format("[%s](%s)", text, text);
+        return PatternMatcher.createLinkStandard(text);
     }
 
     public static String convertImage(String text) {
-        return String.format("img220(%s)", text);
+        return PatternMatcher.createImageStandard(text);
     }
 
     public static String convertYoutube(String text) {
-        return String.format("youtube(%s)", text);
+        return PatternMatcher.createYoutubeStandard(text);
     }
 
     public static String convertVideo(String text) {
-        return String.format("webm(%s)", text);
+        return PatternMatcher.createWebMStandard(text);
     }
 }

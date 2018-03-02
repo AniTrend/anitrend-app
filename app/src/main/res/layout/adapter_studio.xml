@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model"  type="com.mxt.anitrend.model.entity.base.StudioBase" />
+        <import type="android.view.View" />
+    </data>
+
+    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/lg_margin"
+        android:foreground="?selectableItemBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{model.studio_name}"
+                tools:text="Studio One"/>
+
+            <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                android:layout_gravity="center"
+                android:foreground="?selectableItemBackground"
+                android:layout_width="@dimen/xl_margin"
+                android:layout_height="@dimen/xl_margin"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:visibility="@{model.favourite ? View.VISIBLE : View.GONE}"
+                app:tint="@color/colorStateYellow"
+                app:srcCompat="@drawable/ic_star_grey_600_24dp" />
+
+        </LinearLayout>
+
+    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+</layout>

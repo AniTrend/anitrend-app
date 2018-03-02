@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+        <variable name="onClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppThemeLight.AppBarOverlay">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll">
+
+                <com.mxt.anitrend.base.custom.view.image.WideImageView
+                    android:id="@+id/series_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:onClickListener="@{onClickListener}"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.4"
+                    tools:src="@drawable/sample_banner" />
+
+                <include layout="@layout/custom_toolbar_transparent" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+            <include layout="@layout/custom_tab" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/content_view_pager" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

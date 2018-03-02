@@ -1,68 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="HardcodedText">
 
     <item
-        android:id="@+id/menu_bold"
-        android:icon="@drawable/ic_format_bold_white_24dp"
-        android:title="Bold"
-        android:titleCondensed="Bold"
-        app:showAsAction="always"/>
+        android:id="@+id/menu_styling"
+        android:orderInCategory="100"
+        android:title="Style"
+        android:icon="@drawable/ic_gesture_grey_600_24dp"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu_bold"
+                android:icon="@drawable/ic_format_bold_grey_600_24dp"
+                android:title="Bold"
+                android:titleCondensed="Bold"
+                app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/menu_italic"
-        android:icon="@drawable/ic_format_italic_white_24dp"
-        android:title="Italic"
-        android:titleCondensed="Italic"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_italic"
+                android:icon="@drawable/ic_format_italic_grey_600_24dp"
+                android:title="Italic"
+                android:titleCondensed="Italic"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_strike"
-        android:icon="@drawable/ic_format_strikethrough_white_24dp"
-        android:title="Strike"
-        android:titleCondensed="Strike"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_strike"
+                android:icon="@drawable/ic_strikethrough_s_grey_600_24dp"
+                android:title="Strike"
+                android:titleCondensed="Strike"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_list"
-        android:icon="@drawable/ic_format_list_numbered_white_24dp"
-        android:title="Number"
-        android:titleCondensed="Number"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_list"
+                android:icon="@drawable/ic_format_list_numbered_grey_600_24dp"
+                android:title="Number"
+                android:titleCondensed="Number"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_bullet"
-        android:icon="@drawable/ic_format_list_bulleted_white_24dp"
-        android:title="Bullet"
-        android:titleCondensed="Bullet"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_bullet"
+                android:icon="@drawable/ic_format_list_bulleted_grey_600_24dp"
+                android:title="Bullet"
+                android:titleCondensed="Bullet"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_heading"
-        android:icon="@drawable/ic_format_size_white_24dp"
-        android:title="Heading"
-        android:titleCondensed="Heading"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_heading"
+                android:icon="@drawable/ic_format_size_grey_600_24dp"
+                android:title="Heading"
+                android:titleCondensed="Heading"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_center"
-        android:icon="@drawable/ic_format_align_center_white_24dp"
-        android:title="Center Align"
-        android:titleCondensed="Center"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_center"
+                android:icon="@drawable/ic_format_align_center_grey_600_24dp"
+                android:title="Center"
+                android:titleCondensed="Center"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_quote"
-        android:icon="@drawable/ic_format_quote_white_24dp"
-        android:title="Quote"
-        android:titleCondensed="Italic"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_quote"
+                android:icon="@drawable/ic_format_quote_grey_600_24dp"
+                android:title="Quote"
+                android:titleCondensed="Quote"
+                app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_code"
-        android:icon="@drawable/ic_format_quote_white_24dp"
-        android:title="Code"
-        android:titleCondensed="Code"
-        app:showAsAction="always"/>
+            <item
+                android:id="@+id/menu_code"
+                android:icon="@drawable/ic_code_grey_600_24dp"
+                android:title="Code"
+                android:titleCondensed="Code"
+                app:showAsAction="ifRoom"/>
+        </menu>
+    </item>
 
 </menu>

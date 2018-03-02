@@ -3,25 +3,22 @@ package com.mxt.anitrend.adapter.pager.index;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.view.index.fragment.MangaFragment;
-import com.mxt.anitrend.view.index.fragment.NewMangaFragment;
-import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
-
-import java.util.Locale;
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.view.fragment.index.MangaFragment;
 
 /**
- * Created by Maxwell on 11/1/2016.
+ * Created by max on 2017/10/30.
+ * Discover Manga Page Adapter
  */
 
-public class MangaPageAdapter extends DefaultStatePagerAdapter {
+public class MangaPageAdapter extends BaseStatePageAdapter {
 
     public MangaPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
-        mTitles = context.getResources().getStringArray(R.array.manga_title);
+        setPagerTitles(R.array.manga_title);
     }
 
     /**
@@ -34,9 +31,9 @@ public class MangaPageAdapter extends DefaultStatePagerAdapter {
         switch (position)
         {
             case 0:
-                return MangaFragment.newInstance();
+                return MangaFragment.newInstance(KeyUtils.BROWSE_MANGA_REQ);
             case 1:
-                return NewMangaFragment.newInstance();
+                return MangaFragment.newInstance(KeyUtils.BROWSE_MANGA_LATEST_REQ);
         }
         return null;
     }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickEvent" type="android.view.View.OnClickListener" />
+    </data>
+
+    <ViewFlipper
+        android:id="@+id/widget_flipper"
+        android:clickable="true"
+        android:focusable="true"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right"
+        android:foreground="?selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClickListener="@{onClickEvent}"
+        tools:background="@color/colorTransparent">
+
+        <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
+            android:id="@+id/series_progress_increment"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:padding="@dimen/lg_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="32/? +"/>
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="@dimen/xl_margin"
+            android:layout_gravity="center"
+            app:cpv_animAutostart="true"
+            app:cpv_color="?colorAccent"
+            app:cpv_indeterminate="true" />
+
+    </ViewFlipper>
+
+</layout>

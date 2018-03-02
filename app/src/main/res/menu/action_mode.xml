@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_select_all"
+        android:orderInCategory="100"
+        android:title="@string/title_select_all"
+        android:icon="@drawable/ic_check_circle_grey_600_24dp"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/action_bookmark"
+        android:orderInCategory="100"
+        android:title="@string/title_bookmark"
+        android:icon="@drawable/ic_book_grey_600_24dp"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="100"
+        android:title="@string/Delete"
+        android:icon="@drawable/ic_delete_sweep_grey_600_24dp"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+</menu>

@@ -31,14 +31,4 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# Custom ignores
-Screenshots/
-
-# Services
-app/google-services.json
-
-\.idea/
-
-app/\.directory
-
-\.directory
+.directory

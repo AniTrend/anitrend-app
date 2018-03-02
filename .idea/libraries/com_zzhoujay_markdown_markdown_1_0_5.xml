@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.zzhoujay.markdown:markdown-1.0.5">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/markdown-1.0.5.aar/e186d4df16d71adb74f159f855f01986/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/markdown-1.0.5.aar/e186d4df16d71adb74f159f855f01986/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.zzhoujay.markdown/markdown/1.0.5/fe45f28d28ecba8399ffe417a9ab0f762904a903/markdown-1.0.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

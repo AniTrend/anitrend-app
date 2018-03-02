@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:descendantFocusability="blocksDescendants">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:scrollbars="vertical">
+
+            <LinearLayout android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
+                    android:id="@+id/comment_origin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <com.nguyenhoanglam.progresslayout.ProgressLayout
+                    android:id="@+id/stateLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" />
+
+                </com.nguyenhoanglam.progresslayout.ProgressLayout>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout>
+
+    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/lg_margin"
+        android:layout_marginEnd="@dimen/lg_margin"
+        android:layout_gravity="bottom"
+        app:cardBackgroundColor="?cardColor">
+
+        <com.mxt.anitrend.base.custom.view.editor.ComposerWidget
+            android:id="@+id/composer_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+</LinearLayout>

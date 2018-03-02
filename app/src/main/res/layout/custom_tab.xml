@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ogaclejapan.smarttablayout.SmartTabLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/smart_tab"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    android:paddingBottom="@dimen/md_margin"
+    app:stl_dividerColor="@android:color/transparent"
+    app:stl_defaultTabTextColor="?attr/titleColor"
+    app:stl_defaultTabTextMinWidth="120dp"
+    app:stl_indicatorAlwaysInCenter="true"
+    app:stl_indicatorColor="?colorAccent"
+    app:stl_indicatorCornerRadius="1.5dp"
+    app:stl_indicatorInterpolation="smart"
+    app:stl_indicatorThickness="3dp"
+    app:stl_underlineColor="@color/black_transparent" />

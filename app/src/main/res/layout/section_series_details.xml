@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.SeriesPresenter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_series_season" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getSeriesSeason(model)}"
+                    tools:text="2015 Fall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_series_origin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{model.source}"
+                    tools:text="Manga" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:visibility="@{presenter.isManga(model)}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <LinearLayout
+            android:visibility="@{presenter.isManga(model)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_total_chapters" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getChapterCount(model)}"
+                    tools:text="12 Chapters" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_total_volumes" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getVolumeCount(model)}"
+                    tools:text="24 Volumes" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:visibility="@{presenter.isAnime(model)}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <LinearLayout
+            android:visibility="@{presenter.isAnime(model)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_total_episodes" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getEpisodeCount(model)}"
+                    tools:text="12 Episodes" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_episode_duration" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getEpisodeDuration(model)}"
+                    tools:text="24 Minutes" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_hash_tag" />
+
+                <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getHashTag(model)}"
+                    tools:text="#onepunchman" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_series_score" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="@{String.format(@string/text_anime_score, model.average_score)}"
+                tools:text="85% Avg" />
+        </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:visibility="@{presenter.isAnime(model)}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <LinearLayout
+            android:visibility="@{presenter.isAnime(model)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:id="@+id/anime_main_studio_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_main_studio" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@{presenter.getMainStudio(model)}"
+                    android:textColor="?colorAccent"
+                    tools:text="MADHOUSE" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_next_episode" />
+
+                <com.mxt.anitrend.base.custom.view.text.AiringTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    app:airingDate="@{model.airing}"
+                    tools:text="EP 3 Airing In 2 days" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_series_status" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@{presenter.getSeriesStatus(model)}"
+                    tools:text="not yet aired" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

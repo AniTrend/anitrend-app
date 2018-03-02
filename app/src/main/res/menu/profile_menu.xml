@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_notification"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_notifications_none_white_24dp"
+        android:title="@string/menu_title_notifications"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_message"
+        android:orderInCategory="101"
+        android:icon="@drawable/ic_mail_outline_white_24dp"
+        android:title="@string/menu_title_messages"
+        app:showAsAction="ifRoom" />
+
+</menu>

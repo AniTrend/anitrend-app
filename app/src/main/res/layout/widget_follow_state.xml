@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <ViewFlipper
+        android:id="@+id/widget_flipper"
+        android:clickable="true"
+        android:focusable="true"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right"
+        android:foreground="?selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClickListener="@{onClickListener}">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/user_follow_state_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:contentPadding="@dimen/lg_margin"
+            app:cardPreventCornerOverlap="true"
+            tools:cardBackgroundColor="?attr/colorAccent">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/user_follow_state_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                tools:text="@string/follow" />
+
+        </android.support.v7.widget.CardView>
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="@dimen/xl_margin"
+            android:layout_gravity="center"
+            app:cpv_animAutostart="true"
+            app:cpv_color="?colorAccent"
+            app:cpv_indeterminate="true" />
+
+    </ViewFlipper>
+
+</layout>

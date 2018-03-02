@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:onClickListener="@{onClickListener}"
+            android:id="@+id/user_following_container"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
+            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/following"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/user_following_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text=".." />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:onClickListener="@{onClickListener}"
+            android:id="@+id/user_followers_container"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
+            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:text="@string/followers" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/user_followers_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text=".." />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:onClickListener="@{onClickListener}"
+            android:id="@+id/user_favourites_container"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
+            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favourites"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/user_favourites_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text=".."/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

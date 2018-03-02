@@ -1,240 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:mContext="com.mxt.anitrend.view.detail.activity.StaffActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:animateLayoutChanges="true"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Staff" />
+        <import type="com.mxt.anitrend.util.DateUtil" />
+    </data>
 
-        <!--Image Container & Small Details-->
-        <android.support.v7.widget.CardView
+    <com.nguyenhoanglam.progresslayout.ProgressLayout
+        android:id="@+id/stateLayout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="?attr/card_color"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true">
-
-            <RelativeLayout
-                android:layout_margin="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <!--Right Info Grid-->
-                <LinearLayout
-                    android:layout_marginStart="5dp"
-                    android:layout_toEndOf="@+id/staff_detail_image"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <!--Header Items-->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="58dp">
-
-                        <TextView
-                            android:id="@+id/staff_language"
-                            tools:text="Japanese"
-                            android:layout_centerVertical="true"
-                            android:fontFamily="sans-serif-condensed"
-                            android:textAllCaps="true"
-                            android:textSize="12sp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/staff_jap_name"
-                            tools:text="神谷 浩史"
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_alignParentStart="true"
-                            android:textIsSelectable="true"
-                            android:layout_marginTop="2dp"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </RelativeLayout>
-
-                    <android.support.v4.widget.Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="5dp" />
-
-                    <FrameLayout
-                        android:background="@color/colorBlueGrey200"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
-
-                    <android.support.v4.widget.Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="5dp" />
-
-                    <!--Anime Small Details-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:text="First Name:"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-condensed" />
-
-                        <TextView
-                            android:id="@+id/staff_first_name"
-                            tools:text="Hiroshi"
-                            android:textIsSelectable="true"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-light" />
-
-                        <TextView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-condensed"
-                            android:text="Last Name:" />
-
-                        <TextView
-                            android:id="@+id/staff_last_name"
-                            tools:text="Kamiya"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-light" />
-
-                        <!--Footer Date Items-->
-                        <RelativeLayout
-                            android:layout_marginTop="10dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-condensed"
-                                android:text="Date Of Birth:" />
-
-                            <TextView
-                                android:id="@+id/staff_dob"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignTop="@+id/anime_title_start_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-light"
-                                tools:text="N/A" />
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/staff_detail_image"
-                    android:clickable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:layout_width="150dp"
-                    android:layout_height="220dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true" />
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
-
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
-
-        <!--Staff / Actor Information-->
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="?attr/card_color"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp">
+                android:layout_height="wrap_content">
 
-                <!--Header Text Items-->
-                <TextView
-                    android:text="Information"
-                    android:fontFamily="sans-serif-condensed"
-                    android:padding="10dp"
-                    android:textSize="16sp"
-                    android:background="?colorAccent"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <android.support.v4.widget.Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <TextView
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Website"
-                    />
+                    android:layout_margin="@dimen/lg_margin">
 
-                <TextView
-                    android:id="@+id/staff_website"
-                    android:autoLink="web"
-                    android:textIsSelectable="true"
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                            android:id="@+id/staff_img"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?selectableItemBackground"
+                            android:layout_width="@dimen/series_image_xs"
+                            android:layout_height="wrap_content"
+                            app:imageUrl="@{model.image_url_lge}"
+                            tools:src="@drawable/sample_img"/>
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="@dimen/xl_margin"
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textStyle="bold"
+                                android:text="@{model.getFullName}"
+                                tools:text="Tomokazu Sugita"/>
+
+                            <android.support.v4.widget.Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/lg_margin" />
+
+                            <FrameLayout
+                                android:layerType="software"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/md_margin"
+                                android:background="@drawable/dashed_background" />
+
+                            <android.support.v4.widget.Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/lg_margin" />
+
+                            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_language"/>
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{model.language}"
+                                android:fontFamily="sans-serif-light"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                tools:text="Japanese" />
+
+                            <android.support.v4.widget.Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/lg_margin" />
+
+                            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_date_of_birth"/>
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{DateUtil.convertLongDate(model.dob)}"
+                                android:fontFamily="sans-serif-light"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                tools:text="25 Jan 1985" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:clickable="true"
+                    android:focusable="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    tools:text="https://www.web.com"
-                    />
+                    android:layout_margin="@dimen/lg_margin">
 
-                <android.support.v4.widget.Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                <TextView
-                    android:textIsSelectable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Summary"
-                    />
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_website"
+                            />
 
-                <TextView
-                    android:textIsSelectable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/staff_info"
-                    tools:text="Summary about the actor or staff"/>
+                        <android.support.v4.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/md_margin" />
+
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:autoLink="web"
+                            android:text="@{model.website}"
+                            tools:text="https://www.web.com" />
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xl_margin" />
+
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_summary"
+                            />
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/md_margin" />
+
+                        <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            app:textHtml="@{model.info}"
+                            tools:text="The Amanto, aliens from outer space, have invaded Earth and taken over feudal Japan."/>
+
+                    </LinearLayout>
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </android.support.v4.widget.NestedScrollView>
 
-    </LinearLayout>
+    </com.nguyenhoanglam.progresslayout.ProgressLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</layout>

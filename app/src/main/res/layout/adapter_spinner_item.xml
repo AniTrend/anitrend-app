@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@android:id/text1"
-    style="@style/spinnerItemStyle"
-    android:singleLine="true"
+    android:padding="@dimen/lg_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:ellipsize="marquee" />
+    android:ellipsize="marquee"
+    tools:text="Plain Text"/>

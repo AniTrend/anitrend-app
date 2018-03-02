@@ -3,35 +3,35 @@ package com.mxt.anitrend.adapter.pager.index;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.view.index.fragment.NewAnimeFragment;
-import com.mxt.anitrend.view.index.fragment.TrendingFragment;
-import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
-
-import java.util.Locale;
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.view.fragment.index.AnimeFragment;
 
 /**
- * Created by Maxwell on 11/1/2016.
+ * Created by max on 2017/10/30.
  */
 
-public class TrendingPageAdapter extends DefaultStatePagerAdapter {
-
+public class TrendingPageAdapter extends BaseStatePageAdapter {
 
     public TrendingPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
-        mTitles = context.getResources().getStringArray(R.array.trending_title);
+        setPagerTitles(R.array.trending_title);
     }
 
+    /**
+     * Return the Fragment associated with a specified position.
+     *
+     * @param position
+     */
     @Override
     public Fragment getItem(int position) {
-        switch (position)
-        {
+        switch (position) {
             case 0:
-                return TrendingFragment.newInstance();
+                return AnimeFragment.newInstance(KeyUtils.BROWSE_ANIME_TRENDING_REQ);
             case 1:
-                return NewAnimeFragment.newInstance();
+                return AnimeFragment.newInstance(KeyUtils.BROWSE_ANIME_LATEST_REQ);
         }
         return null;
     }

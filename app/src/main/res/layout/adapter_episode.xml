@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.crunchy.Episode" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.base.BasePresenter" />
+    </data>
+
+    <FrameLayout
+        android:layout_margin="@dimen/sm_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.image.WideImageView
+            android:id="@+id/series_image"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:imageUrl="@{presenter.getThumbnail(model.thumbnail)}"
+            tools:scaleType="centerCrop"
+            tools:src="@drawable/sample_banner" />
+
+        <LinearLayout
+            android:layout_gravity="top|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:background="@color/colorTransparent">
+
+            <TextView
+                android:id="@+id/series_duration"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{presenter.getDuration(model.content)}"
+                tools:text="23:45"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="@dimen/md_margin"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_time_white_18dp"/>
+
+        </LinearLayout>
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/series_title"
+            android:background="@color/colorTransparent"
+            android:layout_gravity="bottom|center_horizontal"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-condensed"
+            android:padding="@dimen/lg_margin"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.title}"
+            tools:text="Boku no Hero Accademia"/>
+
+    </FrameLayout>
+
+</layout>

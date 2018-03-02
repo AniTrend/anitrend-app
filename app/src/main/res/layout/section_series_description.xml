@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.activity.detail.SeriesActivity">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.SeriesPresenter" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
+            android:id="@+id/series_rating"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:averageScore="@{model.average_score}" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/xl_margin" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_series_japanese_name"
+            />
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/md_margin" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@{model.title_japanese}"
+            tools:text="銀魂" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/xl_margin" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_series_description"
+            />
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/md_margin" />
+
+        <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            app:textHtml="@{model.description}"
+            tools:text="The Amanto, aliens from outer space, have invaded Earth and taken over feudal Japan."/>
+
+    </LinearLayout>
+
+</layout>

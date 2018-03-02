@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="rating" type="String" />
+    </data>
+
+    <LinearLayout
+        android:background="@drawable/rating_bubble"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@{rating}"
+            tools:text="4.35"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/md_margin"
+            android:layout_height="wrap_content" />
+
+        <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+            android:id="@+id/rating_favour_state"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            tools:srcCompat="@drawable/ic_star_yellow_700_24dp"/>
+
+    </LinearLayout>
+    
+</layout>

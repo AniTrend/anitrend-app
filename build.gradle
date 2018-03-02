@@ -1,15 +1,36 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.versions = [
+        'compileSdk'    : 27,
+        'targetSdk'     : 27,
+        'minSdk'        : 17,
+        'versionCode'   : 73,
+        'versionName'   : '1.0.5',
+        'buildTools'    : '26.0.2',
+        'butterKnife'   : '8.8.1',
+        'glide'         : '4.6.1',
+        'retrofit'      : '2.3.0',
+        'supportLibrary': '27.0.2',
+        'firebase'      : '11.8.0',
+        'objectBox'     : '1.4.1',
+        'architecture'  : '1.1.0',
+        'emojify'       : '0.1.4.2'
+    ]
     repositories {
         jcenter()
+        maven { url "https://maven.google.com" }
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url "http://objectbox.net/beta-repo/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.google.gms:google-services:3.1.0'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        // Google Play Services
+        classpath 'com.google.gms:google-services:3.1.2'
+        // Crash Analytics
+        classpath 'io.fabric.tools:gradle:1.25.1'
+        // Object Box
+        classpath "io.objectbox:objectbox-gradle-plugin:${versions.objectBox}"
     }
 }
 
@@ -17,8 +38,9 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "https://jitpack.io" }
-        maven { url 'https://dl.bintray.com/drummer-aidan/maven' }
+        maven { url 'https://jitpack.io' }
+        maven { url "https://maven.google.com" }
+        maven { url "http://objectbox.net/beta-repo/" }
     }
 }
 

@@ -6,24 +6,31 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.structure.ExternalLink;
-import com.mxt.anitrend.view.detail.fragment.AnimeWatchFragment;
-import com.mxt.anitrend.view.index.fragment.FeedVideoFragment;
-import com.mxt.anitrend.view.index.fragment.PlaylistFragment;
-import com.mxt.anitrend.view.index.fragment.SuggestionFragment;
-import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.view.fragment.index.SuggestionFragment;
+import com.mxt.anitrend.view.fragment.index.WatchFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by max on 2017/05/02.
+ * Created by max on 2017/11/04.
  */
-public class HubPageAdapter extends DefaultStatePagerAdapter {
+
+public class HubPageAdapter extends BaseStatePageAdapter {
 
     public HubPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
-        mTitles = context.getResources().getStringArray(R.array.hub_title);
+        setPagerTitles(R.array.hub_title);
+    }
+
+    /**
+     * Return the number of views available.
+     */
+    @Override
+    public int getCount() {
+        return super.getCount() - 1;
     }
 
     /**
@@ -39,9 +46,9 @@ public class HubPageAdapter extends DefaultStatePagerAdapter {
             case 1:
                 List<ExternalLink> externalLinks = new ArrayList<>(1);
                 externalLinks.add(new ExternalLink(BuildConfig.FEEDS_LINK,null));
-                return AnimeWatchFragment.newInstance(externalLinks, true);
+                return WatchFragment.newInstance(externalLinks, true);
             case 2:
-                return PlaylistFragment.newInstance();
+                return new Fragment();
         }
         return null;
     }

@@ -1,9 +1,11 @@
 package com.mxt.anitrend.base.custom.view.editor;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -12,16 +14,27 @@ import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.util.ApplicationPrefs;
-import static com.mxt.anitrend.util.KeyUtils.*;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.KeyUtils;
+
+import io.wax911.emojify.EmojiUtils;
+
+import static com.mxt.anitrend.util.KeyUtils.MD_BOLD;
+import static com.mxt.anitrend.util.KeyUtils.MD_BULLET;
+import static com.mxt.anitrend.util.KeyUtils.MD_CENTER_ALIGN;
+import static com.mxt.anitrend.util.KeyUtils.MD_CODE;
+import static com.mxt.anitrend.util.KeyUtils.MD_HEADING;
+import static com.mxt.anitrend.util.KeyUtils.MD_ITALIC;
+import static com.mxt.anitrend.util.KeyUtils.MD_NUMBER;
+import static com.mxt.anitrend.util.KeyUtils.MD_QUOTE;
+import static com.mxt.anitrend.util.KeyUtils.MD_STRIKE;
 
 /**
  * Created by max on 2017/08/14.
+ * Markdown input editor
  */
 
 public class MarkdownInputEditor extends TextInputEditText implements CustomView, ActionMode.Callback {
-
-    private ApplicationPrefs applicationPrefs;
 
     public MarkdownInputEditor(Context context) {
         super(context);
@@ -43,11 +56,11 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
      */
     @Override
     public void onInit() {
-        applicationPrefs = new ApplicationPrefs(getContext());
         setVerticalScrollBarEnabled(true);
-        setTextColor(ContextCompat.getColor(getContext(),applicationPrefs.isLightTheme()?
-                R.color.colorPrimaryDark_dark:R.color.colorPrimaryText));
         setCustomSelectionActionModeCallback(this);
+        setMaxHeight(CompatUtil.dipToPx(KeyUtils.PEEK_HEIGHT));
+        setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+        setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
     }
 
     /**
@@ -183,6 +196,14 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
     }
 
     /**
+     * @return composed text as hex html entities
+     */
+    public String getFormattedText() {
+        String content = getText().toString();
+        return EmojiUtils.hexHtmlify(content);
+    }
+
+    /**
      * Called when an action mode is about to be exited and destroyed.
      *
      * @param mode The current ActionMode being destroyed
@@ -190,5 +211,17 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
     @Override
     public void onDestroyActionMode(ActionMode mode) {
 
+    }
+
+    /**
+     * Clean up any resources that won't be needed
+     */
+    @Override
+    public void onViewRecycled() {
+
+    }
+
+    public boolean isEmpty() {
+        return TextUtils.isEmpty(getText());
     }
 }

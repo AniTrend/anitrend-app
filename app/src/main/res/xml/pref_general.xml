@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:icon="@drawable/ic_fiber_smart_record_grey_900_24dp"
-        android:key="@string/pref_key_auto_increment"
-        android:summary="@string/pref_summary_auto_increment"
-        android:title="@string/pref_title_auto_increment" />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
         android:defaultValue="4"
-        android:dialogIcon="@drawable/ic_touch_app_grey_900_24dp"
         android:entries="@array/pref_titles_menu_entries"
         android:entryValues="@array/pref_values_menu_entries"
-        android:icon="@drawable/ic_menu_grey_900_24dp"
         android:key="@string/pref_key_startup_page"
         android:title="@string/pref_title_startup_page" />
 

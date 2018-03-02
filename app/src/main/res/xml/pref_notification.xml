@@ -4,7 +4,6 @@
          when checked/unchecked. -->
     <SwitchPreference
         android:defaultValue="true"
-        android:icon="@drawable/ic_do_not_disturb_on_grey_900_24dp"
         android:key="@string/pref_key_new_message_notifications"
         android:title="@string/pref_title_new_message_notifications" />
 
@@ -13,7 +12,6 @@
     <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
     <RingtonePreference
         android:defaultValue="content://settings/system/notification_sound"
-        android:icon="@drawable/ic_notifications_active_grey_900_24dp"
         android:dependency="notifications_new_message"
         android:key="@string/pref_key_ringtone"
         android:ringtoneType="notification"

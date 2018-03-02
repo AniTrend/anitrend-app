@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/notification_indicator"
+            android:layout_gravity="end"
+            android:layout_margin="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_notification_dot"/>
+
+        <com.mxt.anitrend.base.custom.view.container.CardViewBase
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lg_margin"
+            android:foreground="?selectableItemBackground">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="@dimen/lg_margin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:layout_weight="1"
+                            android:id="@+id/notification_subject"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            tools:text="@string/notification_user_reply_activity" />
+
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:id="@+id/notification_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="1 hour ago" />
+
+                    </LinearLayout>
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/xl_margin" />
+
+                    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                        android:id="@+id/notification_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="AnukWolf" />
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/lg_margin" />
+
+                    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                        android:id="@+id/notification_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="replied to your activity post" />
+
+                </LinearLayout>
+
+                <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                    android:id="@+id/notification_img"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    tools:src="@drawable/sample_img" />
+
+            </LinearLayout>
+
+        </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+    </FrameLayout>
+
+
+</layout>

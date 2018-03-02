@@ -1,20 +1,29 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.objectbox'
+apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
     defaultConfig {
         applicationId "com.mxt.anitrend"
-        minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 52
-        versionName '0.9.9r9'
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.versionCode
+        versionName versions.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "anitrend_v${defaultConfig.versionName}_rc_${defaultConfig.versionCode}.apk"
+                }
+            }
         }
         buildTypes.each {
             it.buildConfigField("String", "API_KEY", API_KEY)
@@ -28,112 +37,126 @@ android {
             it.buildConfigField("String", "CRUNCHY_LINK", CRUNCHY_LINK)
             it.buildConfigField("String", "FEEDS_LINK", FEEDS_LINK)
             it.buildConfigField("String", "APP_REPO", APP_REPO)
-            it.buildConfigField("String", "HUB_BASE_LINK", HUB_BASE_LINK)
-        }
-        debug {
-            testCoverageEnabled = false
+            it.buildConfigField("String", "GIPHY_LINK", GIPHY_LINK)
+            it.buildConfigField("String", "GIPHY_KEY", GIPHY_KEY)
         }
     }
     dataBinding {
         enabled = true
     }
-    productFlavors {
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dexOptions {
+        jumboMode true
     }
 }
 
 configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 30, 'days'
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-def design_support = '25.3.1'
-def retro_fit = '2.2.0'
-def fire_base = '11.0.1'
-def glide = '3.8.0'
-
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-
-    /*Testing android support libraries*/
-    androidTestCompile "com.android.support:support-annotations:${design_support}"
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    testCompile 'junit:junit:4.12'
+    /** Architecture Components */
+    compile "android.arch.lifecycle:extensions:${versions.architecture}"
 
-    compile("com.squareup.retrofit2:converter-simplexml:${retro_fit}") {
+    /** Android Support Libraries */
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.android.support:appcompat-v7:${versions.supportLibrary}"
+    compile "com.android.support:support-v4:${versions.supportLibrary}"
+    compile "com.android.support:design:${versions.supportLibrary}"
+    compile "com.android.support:cardview-v7:${versions.supportLibrary}"
+    compile "com.android.support:support-vector-drawable:${versions.supportLibrary}"
+
+    /** Fire-base Libraries */
+    compile "com.google.firebase:firebase-core:${versions.firebase}"
+    compile 'com.firebase:firebase-jobdispatcher:0.8.5'
+
+    /** Crash Analytics */
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
+    }
+
+    /** Retrofit Libraries */
+    compile "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    compile "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+    compile("com.squareup.retrofit2:converter-simplexml:${versions.retrofit}") {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    /* Retrofit */
-    compile "com.squareup.retrofit2:retrofit:${retro_fit}"
-    compile "com.squareup.retrofit2:converter-gson:${retro_fit}"
+    compile "com.squareup.okhttp3:logging-interceptor:3.9.0"
 
-    /* Glide */
-    compile "com.github.bumptech.glide:glide:${glide}"
-    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+    /** Glide Libraries */
+    compile "com.github.bumptech.glide:glide:${versions.glide}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
 
-    /* Android support libraries */
-    compile "com.android.support:appcompat-v7:${design_support}"
-    compile "com.android.support:palette-v7:${design_support}"
-    compile "com.android.support:support-v4:${design_support}"
-    compile "com.android.support:design:${design_support}"
+    /** Butter Knife Libraries */
+    compile "com.jakewharton:butterknife:${versions.butterKnife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${versions.butterKnife}"
 
-    /* Firebase dependencies */
-    compile "com.google.firebase:firebase-core:${fire_base}"
-    compile "com.google.firebase:firebase-ads:${fire_base}"
-    compile "com.google.firebase:firebase-crash:${fire_base}"
-
-    compile 'com.firebase:firebase-jobdispatcher:0.7.0'
-
-    /* Other 3rd party libraries */
-
-    compile 'com.annimon:stream:1.1.8'
-
-    compile 'fm.jiecao:jiecaovideoplayer:5.8.1'
-    compile 'com.afollestad.material-dialogs:core:0.9.4.3'
-
-    compile 'com.codemybrainsout.onboarding:onboarder:1.0.4'
-
-    compile 'com.github.chrisbanes:PhotoView:2.1.3'
-
-    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
-
-    compile 'com.github.johnpersano:supertoasts:2.0'
-
-    compile 'com.github.rubensousa:FloatingToolbar:1.5.1'
-    compile 'com.github.rubensousa:BottomSheetBuilder:1.6.0'
-
-    compile 'com.github.mancj:MaterialSearchBar:0.7.1'
-
+    /** State Layout Library */
     compile 'com.github.nguyenhoanglam:ProgressLayout:1.0.1'
 
-    compile 'com.github.tony19:named-regexp:0.2.4'
+    /** Event Bus Library */
+    compile 'org.greenrobot:eventbus:3.1.1'
 
-    compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
+    /** Material Dialogs Library*/
+    compile 'com.afollestad.material-dialogs:core:0.9.6.0'
 
-    compile 'com.tapadoo.android:alerter:1.0.7'
+    /** Material Search View */
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
-    compile 'com.zzhoujay.richtext:richtext:2.5.4'
+    /** Object Box */
+    compile "io.objectbox:objectbox-android:${versions.objectBox}"
+    annotationProcessor "io.objectbox:objectbox-processor:${versions.objectBox}"
 
-    compile 'de.hdodenhof:circleimageview:2.1.0'
+    /** Emojify */
+    compile "com.github.wax911:android-emojify:${versions.emojify}"
 
-    compile 'org.greenrobot:eventbus:3.0.0'
-
-    compile 'org.hamcrest:hamcrest-library:1.3'
-
+    /** Pretty Time */
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 
+    /** Smart Tab Layout */
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
 
-    compile 'uk.co.samuelwall:material-tap-target-prompt:1.11.0'
+    /** Java Streams Port */
+    compile 'com.annimon:stream:1.1.9'
 
-    /* Butter Knife */
+    /** Highly Customizable Video Player */
+    compile 'cn.jzvd:jiaozivideoplayer:6.2.7'
 
-    compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    /** Photo View */
+    compile 'com.github.chrisbanes:PhotoView:2.1.3'
+
+    /** Reveal Animation */
+    compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
+
+    /** Alerter */
+    compile 'com.tapadoo.android:alerter:2.0.4'
+
+    /** Rich Text Markdown Parser */
+    compile 'com.zzhoujay.richtext:richtext:3.0.5'
+
+    /** Tap Target Prompt */
+    compile 'uk.co.samuelwall:material-tap-target-prompt:2.7.0'
+
+    /** Circular Progress View */
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+
+    /** On-boarding Experience */
+    compile 'com.codemybrainsout.onboarding:onboarder:1.0.4'
+
+    /** Charts */
+    compile'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    testCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.activity.detail.SeriesActivity">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+        <import type="android.view.View" />
+    </data>
+
+    <com.nguyenhoanglam.progresslayout.ProgressLayout
+        android:id="@+id/stateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/links_recycler"
+                    android:visibility="@{model.external_links != null &amp; !model.external_links.isEmpty() ? View.VISIBLE : View.GONE}"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:visibility="@{model.score_distribution != null &amp; !model.score_distribution.isEmpty() ? View.VISIBLE : View.GONE}">
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/series_score_dist"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:visibility="@{model.airing_stats != null &amp; !model.airing_stats.isEmpty() ? View.VISIBLE : View.GONE}">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/series_airing_correlation"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:visibility="@{model.list_stats != null &amp; !model.list_stats.isEmpty() ? View.VISIBLE : View.GONE}">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/series_stats"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/ranking_recycler"
+                    android:visibility="@{model.rankings != null &amp; !model.rankings.isEmpty() ? View.VISIBLE : View.GONE}"
+                    android:layout_margin="@dimen/lg_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.nguyenhoanglam.progresslayout.ProgressLayout>
+
+</layout>

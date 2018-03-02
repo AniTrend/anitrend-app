@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Tag" />
+    </data>
+
+    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        tools:layout_width="180dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                android:layout_gravity="center_vertical"
+                android:layout_width="@dimen/menu_item_icon_size"
+                android:layout_height="@dimen/menu_item_icon_size"
+                app:srcCompat="@drawable/ic_loyalty_white_24dp"
+                app:tint="?colorAccent"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="@dimen/xl_margin"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:text="@{model.name}"
+                    tools:text="High School"/>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="@dimen/lg_margin"
+                    android:layout_height="wrap_content" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='@{String.format("%d%%",model.votes)}'
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:textColor="?colorAccent"
+                    tools:text="80%"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+</layout>

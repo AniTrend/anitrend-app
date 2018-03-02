@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.mxt.anitrend.util.DateUtil" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Series" />
+    </data>
+
+    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/lg_margin"
+        android:foreground="?selectableItemBackground">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:gravity="center"
+                android:id="@+id/series_title_romanji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{model.title_romaji}"
+                android:layout_margin="@dimen/md_margin"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                tools:text="Gintama. Porori-hen" />
+
+            <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+                android:id="@+id/series_status"
+                android:layout_below="@+id/series_title_romanji"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sm_margin"
+                app:seriesStatus="@{model}"
+                tools:background="@color/colorStateBlue"/>
+
+            <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                android:id="@+id/series_image"
+                android:layout_below="@+id/series_status"
+                android:layout_width="@dimen/series_image_md"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_margin"
+                app:imageUrl="@{model.image_url_lge}"
+                tools:src="@drawable/sample_img"/>
+
+            <!--Anime Small Details-->
+            <LinearLayout
+                android:layout_toEndOf="@+id/series_image"
+                android:layout_alignTop="@+id/series_image"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_title_eng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.title_english}"
+                    tools:text="Gintama. Porori-hen" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/series_type" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/sm_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_type"
+                    android:text="@{model.type}"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Novel" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/series_chapters" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/sm_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_chapters"
+                    android:text="@{String.valueOf(model.total_chapters)}"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="20" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/series_volumes" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/sm_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_volumes"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{String.valueOf(model.total_volumes)}"
+                    tools:text="8" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/separator"
+                android:layout_marginTop="@dimen/md_margin"
+                android:layout_below="@id/series_image"
+                android:background="@color/colorBlueGrey100"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <FrameLayout
+                android:layout_marginTop="@dimen/md_margin"
+                android:layout_alignTop="@id/separator"
+                android:layout_alignParentStart="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
+                    android:id="@+id/series_rating"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/SmallRating"
+                    app:averageScore="@{model.average_score}"
+                    tools:rating="1"/>
+
+                <com.mxt.anitrend.base.custom.view.text.RangeDateTextView
+                    android:id="@+id/series_start_date"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:startDate="@{model.start_date_fuzzy}"
+                    android:textStyle="bold"
+                    android:textSize="10sp"
+                    tools:text="Started: 2017/09/30"/>
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
+</layout>

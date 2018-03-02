@@ -1,0 +1,86 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickEvent" type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ViewFlipper
+            android:id="@+id/widget_thumb_up_flipper"
+            android:clickable="true"
+            android:focusable="true"
+            android:inAnimation="@android:anim/slide_in_left"
+            android:outAnimation="@android:anim/slide_out_right"
+            android:padding="@dimen/spacing_small"
+            android:foreground="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClickListener="@{onClickEvent}">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/widget_thumb_up"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:drawableTint="@color/colorStateGreen"
+                tools:drawableStart="@drawable/ic_thumb_up_grey_600_18dp"
+                tools:text=" 5"
+                />
+
+            <com.github.rahatarmanahmed.cpv.CircularProgressView
+                android:layout_width="@dimen/xl_margin"
+                android:layout_height="@dimen/xl_margin"
+                android:layout_gravity="center"
+                app:cpv_animAutostart="true"
+                app:cpv_color="?colorAccent"
+                app:cpv_indeterminate="true" />
+
+        </ViewFlipper>
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/spacing_medium"
+            android:layout_height="wrap_content" />
+
+        <ViewFlipper
+            android:id="@+id/widget_thumb_down_flipper"
+            android:clickable="true"
+            android:focusable="true"
+            android:inAnimation="@android:anim/slide_in_left"
+            android:outAnimation="@android:anim/slide_out_right"
+            android:padding="@dimen/spacing_small"
+            android:foreground="?selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClickListener="@{onClickEvent}">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/widget_thumb_down"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:drawableTint="@color/colorStateOrange"
+                tools:drawableStart="@drawable/ic_thumb_down_grey_600_18dp"
+                tools:text=" 5"
+                />
+
+            <com.github.rahatarmanahmed.cpv.CircularProgressView
+                android:layout_width="@dimen/xl_margin"
+                android:layout_height="@dimen/xl_margin"
+                android:layout_gravity="center"
+                app:cpv_animAutostart="true"
+                app:cpv_color="?colorAccent"
+                app:cpv_indeterminate="true" />
+
+        </ViewFlipper>
+
+    </LinearLayout>
+
+</layout>

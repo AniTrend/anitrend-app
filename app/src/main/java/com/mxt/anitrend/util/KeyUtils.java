@@ -1,69 +1,159 @@
 package com.mxt.anitrend.util;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
 
 /**
- * Created by Maxwell on 10/2/2016.
- * Do not rearrange order any properties
+ * Created by max on 2017/09/16.
+ * Key values to be used throughout the application
  */
+
 public interface KeyUtils {
 
-    // Unaffiliated values
-    String[] ShowTypes = {null, "Tv","Tv Short","Movie","Special","OVA","ONA","Manga","Novel","One Shot","Doujin","Manhua","Manhwa"};
+    /** Default Values */
+    float AspectRatio = 1.37f;
+    float WideAspectRatio = 0.95f;
+    float PEEK_HEIGHT = 200f;
+    int AIRING_LIMIT = 22, PAGING_LIMIT = 24, GLIDE_REQUEST_TIMEOUT = 10000;
 
-    // TODO: 2017/07/19  Will be removed after the DB is fixed
-    String[] GenreTypes = {
-            "Action",
-            "Adventure",
-            "Comedy",
-            "Drama",
-            "Ecchi",
-            "Fantasy",
-            "Hentai",
-            "Horror",
-            "Mahou Shoujo",
-            "Mecha",
-            "Music",
-            "Mystery",
-            "Psychological",
-            "Romance",
-            "Sci-Fi",
-            "Slice of Life",
-            "Sports",
-            "Supernatural",
-            "Thriller"
-    };
+    /** Notification Channels */
+    String CHANNEL_ID = "anitrend_app";
+    String CHANNEL_TITLE = "AniTrend Notifications";
+
+    /** Base Application Args */
+    String arg_id = "arg_id";
+    String arg_page = "arg_page";
+    String arg_text = "arg_text";
+    String arg_feed = "arg_feed";
+    String arg_title = "arg_title";
+    String arg_model = "arg_model";
+    String arg_rating = "arg_rating";
+    String arg_popular = "arg_popular";
+    String arg_user_id = "arg_user_id";
+    String arg_redirect = "arg_redirect";
+    String arg_user_name = "arg_user_name";
+    String arg_activity_id = "arg_user_id";
+    String arg_user_model = "arg_user_model";
+    String arg_list_model = "arg_list_model";
+    String arg_branch_name = "arg_branch_name";
+    String arg_review_type = "arg_review_type";
+    String arg_page_offset = "arg_page_offset";
+    String arg_request_type = "arg_request_type";
+    String arg_search_query = "arg_search_query";
+    String arg_recipient_id = "arg_recipient_id";
+    String arg_activity_tag = "arg_activity_tag";
+    String arg_shortcut_used = "arg_shortcut_used";
+    String arg_deep_link_type = "arg_deep_link_type";
+
+    String arg_positive_text = "arg_positive_text";
+    String arg_negative_text = "arg_negative_text";
+
+    /** Application State Keys */
+    String key_recycler_state = "key_recycler_state";
+    String key_model_state = "key_model_state";
+    String key_pagination = "key_pagination";
+    String key_columns = "key_columns";
+    String key_page_limit = "key_page_limit";
+    String key_navigation_selected = "key_navigation_selected";
+    String key_navigation_title = "key_navigation_title";
+    String key_bundle_param = "key_bundle_param";
+    String key_analytics_error = "key_analytics_error";
+
+    /** Browse Keys */
+    String arg_series_tag = "arg_series_tag";
+    String arg_series_year = "arg_series_year";
+    String arg_series_type = "arg_series_type";
+    String arg_season_title = "arg_season_title";
+    String arg_series_season = "arg_series_season";
+    String arg_series_status = "arg_series_status";
+    String arg_series_genres = "arg_series_genres";
+    String arg_series_sort_by = "arg_series_sort_by";
+    String arg_series_order_by = "arg_series_order_by";
+    String arg_series_show_type = "arg_series_show_type";
+    String arg_series_airing_data = "arg_series_airing_data";
+    String arg_series_tag_exclude = "arg_series_tag_exclude";
+    String arg_series_genres_exclude = "arg_series_genres_exclude";
+
+    /** Sort Types */
+    String key_sort_title = "title_romaji";
+    String key_sort_score = "score";
+    String key_sort_popularity = "popularity";
+    String key_sort_start_date = "start_date";
+    String key_sort_end_date = "end_date";
+
+    /** Series List Keys */
+    String arg_list_status = "arg_list_status";
+    String arg_list_score = "arg_list_score";
+    String arg_list_score_raw = "arg_list_score_raw";
+    String arg_list_notes = "arg_list_notes";
+    String arg_list_advanced_rating = "arg_list_advanced_rating";
+    String arg_list_custom_list = "arg_list_custom_list";
+    String arg_list_hidden = "arg_list_hidden";
+
+    String arg_list_watched = "arg_list_watched";
+    String arg_list_re_watched = "arg_list_re_watched";
+
+    String arg_list_read = "arg_list_read";
+    String arg_list_re_read = "arg_list_re_read";
+    String arg_list_volumes = "arg_list_volumes";
+
+    /** keys to use for series list fragment */
+    String[] AnimeListKeys = {"watching","plan_to_watch","completed","on_hold","dropped"};
+    String[] MangaListKeys = {"reading","plan_to_read","completed","on_hold","dropped"};
+
+
+    /** Alerter Durations */
+    long DURATION_SHORT = 2000L, DURATION_MEDIUM = 3500L, DURATION_LONG = 6500L;
+
+    @IntDef({DURATION_SHORT, DURATION_MEDIUM, DURATION_LONG})
+    @interface AlerterDuration {}
+
+
+    /** Request types */
+    int ACTION_FOLLOW_TOGGLE_REQ = 0, ACTIVITY_CREATE_REQ = 1, ACTIVITY_EDIT_REQ = 2, ACTIVITY_DELETE_REQ = 3, ACTIVITY_REPLY_REQ = 4, ACTIVITY_FAVOURITE_REQ = 5,
+        ACTIVITY_REPLY_FAVOURITE_REQ = 6, ACTIVITY_REPLY_EDIT_REQ = 7, ACTIVITY_REPLY_DELETE_REQ = 8, DIRECT_MESSAGE_SEND_REQ = 9, DIRECT_MESSAGE_EDIT_REQ = 10,
+        ANIME_FAVOURITE_REQ = 11, MANGA_FAVOURITE_REQ = 12, CHARACTER_FAVOURITE_REQ = 13, STAFF_FAVOURITE_REQ = 14, STUDIO_FAVOURITE_REQ = 15, REVIEW_ANIME_RATE_REQ = 16,
+        REVIEW_MANGA_RATE_REQ = 17, ANIME_LIST_ADD_REQ = 18, ANIME_LIST_EDIT_REQ = 19, ANIME_LIST_DELETE_REQ = 20, MANGA_LIST_ADD_REQ = 21, MANGA_LIST_EDIT_REQ = 22,
+        MANGA_LIST_DELETE_REQ = 23, AUTH_USER_REQ = 24, GENRE_LIST_REQ = 25, TAG_LIST_REQ = 26, BROWSE_ANIME_REQ = 27, BROWSE_MANGA_REQ = 28, CURRENT_USER_REQ = 29,
+        USER_ACCOUNT_REQ = 30, USER_FAVOURITES_REQ = 31, USER_FOLLOWERS_REQ = 32, USER_FOLLOWING_REQ = 33, USER_NOTIFICATION_COUNT = 34, USER_NOTIFICATION_REQ = 35,
+        USER_ACTIVITY_BY_ID_REQ = 36, USER_ANIME_LIST_REQ = 37, USER_MANGA_LIST_REQ = 38, USER_SEARCH_REQ = 39, CHARACTER_INFO_REQ = 40, CHARACTER_SEARCH_REQ = 41,
+        STAFF_INFO_REQ = 42, STAFF_SEARCH_REQ = 43, ANIME_REVIEWS_REQ = 44, MANGA_REVIEWS_REQ = 45, SERIES_REVIEWS_REQ = 46, ANIME_SEARCH_REQ = 47,
+        MANGA_SEARCH_REQ = 48, STUDIO_SEARCH_REQ = 49, STUDIO_INFO_REQ = 50, BROWSE_MANGA_LATEST_REQ = 51, BROWSE_ANIME_LATEST_REQ = 52,
+        BROWSE_ANIME_TRENDING_REQ = 53, BROWSE_AIRING_REQ = 54, EPISODE_LATEST_REQ = 55, EPISODE_POPULAR_REQ = 56, EPISODE_FEED_REQ = 57,
+        BROWSE_FILTER_REQ = 58, UPDATE_CHECKER_REQ = 59, USER_ACTIVITY_REQ = 60, SERIES_PAGE_REQ = 61, USER_ACTIVITY_REPLIES_BY_ID_REQ = 62,
+        GIPHY_TRENDING_REQ = 63, GIPHY_SEARCH_REQ = 64, SERIES_ACTIVITY_REQ = 65, ANIME_LIST_ITEM_REQ = 66, MANGA_LIST_ITEM_REQ = 67,
+        SERIES_CHARACTER_PAGE_REQ = 68;
+
+    @IntDef({ACTION_FOLLOW_TOGGLE_REQ, ACTIVITY_CREATE_REQ, ACTIVITY_EDIT_REQ, ACTIVITY_DELETE_REQ, ACTIVITY_REPLY_REQ, ACTIVITY_FAVOURITE_REQ,
+            ACTIVITY_REPLY_FAVOURITE_REQ, ACTIVITY_REPLY_EDIT_REQ, ACTIVITY_REPLY_DELETE_REQ, DIRECT_MESSAGE_SEND_REQ, DIRECT_MESSAGE_EDIT_REQ,
+            ANIME_FAVOURITE_REQ, MANGA_FAVOURITE_REQ, CHARACTER_FAVOURITE_REQ, STAFF_FAVOURITE_REQ, STUDIO_FAVOURITE_REQ, REVIEW_ANIME_RATE_REQ,
+            REVIEW_MANGA_RATE_REQ, ANIME_LIST_ADD_REQ, ANIME_LIST_EDIT_REQ, ANIME_LIST_DELETE_REQ, MANGA_LIST_ADD_REQ, MANGA_LIST_EDIT_REQ,
+            MANGA_LIST_DELETE_REQ, AUTH_USER_REQ, GENRE_LIST_REQ, TAG_LIST_REQ, BROWSE_ANIME_REQ, BROWSE_MANGA_REQ, CURRENT_USER_REQ,
+            USER_ACCOUNT_REQ, USER_FAVOURITES_REQ, USER_FOLLOWERS_REQ, USER_FOLLOWING_REQ, USER_NOTIFICATION_COUNT, USER_NOTIFICATION_REQ,
+            USER_ACTIVITY_BY_ID_REQ, USER_ANIME_LIST_REQ, USER_MANGA_LIST_REQ, USER_SEARCH_REQ, CHARACTER_INFO_REQ, CHARACTER_SEARCH_REQ,
+            STAFF_INFO_REQ, STAFF_SEARCH_REQ, ANIME_REVIEWS_REQ, MANGA_REVIEWS_REQ, SERIES_REVIEWS_REQ, ANIME_SEARCH_REQ,MANGA_SEARCH_REQ,
+            STUDIO_SEARCH_REQ, STUDIO_INFO_REQ, BROWSE_MANGA_LATEST_REQ, BROWSE_ANIME_LATEST_REQ, BROWSE_ANIME_TRENDING_REQ, BROWSE_AIRING_REQ,
+            EPISODE_LATEST_REQ, EPISODE_POPULAR_REQ, EPISODE_FEED_REQ, BROWSE_FILTER_REQ, UPDATE_CHECKER_REQ, USER_ACTIVITY_REQ, SERIES_PAGE_REQ,
+            USER_ACTIVITY_REPLIES_BY_ID_REQ, GIPHY_TRENDING_REQ, GIPHY_SEARCH_REQ, SERIES_ACTIVITY_REQ, ANIME_LIST_ITEM_REQ, MANGA_LIST_ITEM_REQ,
+            SERIES_CHARACTER_PAGE_REQ
+    })
+    @interface RequestMode {}
+
+    // Unaffiliated values
+    String[] AnimeMediaTypes = {null, "Tv","Tv Short","Movie","Special","OVA","ONA"};
+    String[] MangaMediaTypes = {null, "Manga","Novel","One Shot","Doujin","Manhua","Manhwa"};
+
+    // Deep link types
+    String DEEP_LINK_USER = "user", DEEP_LINK_MANGA = "manga", DEEP_LINK_ANIME = "anime",
+            DEEP_LINK_CHARACTER = "character", DEEP_LINK_STAFF = "staff", DEEP_LINK_ACTOR = "actor";
+
+    @StringDef({DEEP_LINK_USER, DEEP_LINK_MANGA, DEEP_LINK_ANIME, DEEP_LINK_CHARACTER, DEEP_LINK_STAFF, DEEP_LINK_ACTOR})
+    @interface DeepLinkType {}
+
 
     String MD_BOLD = "__", MD_ITALIC = "_", MD_STRIKE = "~~",
-            MD_NUMBER = "1. ", MD_BULLET = "- ", MD_HEADING = "#",
-            MD_CENTER_ALIGN = "~~~", MD_QUOTE = ">" ,MD_CODE = "`";
-
-    enum ActionType {
-        ACTION_FOLLOW_TOGGLE,
-        ACTIVITY_CREATE,
-        ACTIVITY_EDIT,
-        ACTIVITY_DELETE,
-        ACTIVITY_REPLY,
-        ACTIVITY_FAVOURITE,
-        ACTIVITY_REPLY_FAVOURITE,
-        ACTIVITY_REPLY_EDIT,
-        ACTIVITY_REPLY_DELETE,
-        DIRECT_MESSAGE_SEND,
-        DIRECT_MESSAGE_EDIT,
-        ANIME_FAVOURITE,
-        MANGA_FAVOURITE,
-        CHARACTER_FAVOURITE,
-        STAFF_FAVOURITE,
-        STUDIO_FAVOURITE,
-        REVIEW_ANIME_RATE,
-        REVIEW_MANGA_RATE,
-        ANIME_LIST_ADD,
-        ANIME_LIST_EDIT,
-        ANIME_LIST_DELETE,
-        MANGA_LIST_ADD,
-        MANGA_LIST_EDIT,
-        MANGA_LIST_DELETE
-    }
+            MD_NUMBER = "1. ", MD_BULLET = "- ", MD_HEADING = "# ",
+            MD_CENTER_ALIGN = "~~~", MD_QUOTE = "> " ,MD_CODE = "`";
 
     // Share types
     int PLAIN_TYPE = 0, LINK_TYPE = 1, IMAGE_TYPE = 2, YOUTUBE_TYPE = 3, WEBM_TYPE = 4;
@@ -85,7 +175,6 @@ public interface KeyUtils {
     @IntDef({AUTHENTICATION_TYPE, AUTHENTICATION_CODE, REFRESH_TYPE})
     @interface GrantType {}
 
-
     // Series Types
     int ANIME = 0, MANGA = 1;
 
@@ -98,14 +187,14 @@ public interface KeyUtils {
 
     String[] SeasonTitles = {"winter","spring","summer","fall"};
     @IntDef({WINTER, SPRING, SUMMER, FALL})
-    @interface SeasonTitle {}
+    @interface SeasonType {}
 
 
     // Activity types
-    int PROGRESS = 0, STATUS = 1, PUBIC_STATUS = 2, MESSAGE = 3;
+    int PROGRESS = 0, STATUS = 1, PUBIC_STATUS = 2, MESSAGE = 3, LIST = 4;
 
-    String[] ActivityTypes = { "series", "text", "public-status-replies", "message"};
-    @IntDef({PROGRESS,STATUS,PUBIC_STATUS,MESSAGE})
+    String[] ActivityTypes = { "series", "text", "public-status-replies", "message", "list"};
+    @IntDef({PROGRESS, STATUS, PUBIC_STATUS, MESSAGE, LIST})
     @interface ActivityType {}
 
     // Review Types
@@ -115,13 +204,29 @@ public interface KeyUtils {
     @IntDef({LATEST,POPULAR,NEED_LOVE,CONTROVERSIAL})
     @interface ReviewType {}
 
+    // Review Request Types
+    int SERIES_REVIEW_ANIME = 0, SERIES_REVIEW_MANGA = 1;
+
+    @IntDef({SERIES_REVIEW_ANIME, SERIES_REVIEW_MANGA})
+    @interface SeriesReviewType {}
+
+    // Review Status
+    int NO_RATING = 0, UP_VOTE = 1, DOWN_VOTE = 2;
+
+    @IntDef({NO_RATING, UP_VOTE, DOWN_VOTE})
+    @interface ReviewStatus {}
+
     // Share series status types
-    int ALL_ITEMS = 0, CANCELLED = 4;
+    int ALL_ITEMS = 0, CANCELLED = 4; String key_cancelled = "cancelled";
+
+    String key_finished_airing = "finished airing";
+    String key_currently_airing = "currently airing";
+    String key_not_yet_aired = "not yet aired";
 
     // Anime status types
     int FINISHED_AIRING = 1, CURRENTLY_AIRING = 2, NOT_YET_AIRED = 3;
 
-    String[] AnimeStatusTypes = {null ,"finished airing","currently airing","not yet aired","cancelled"};
+    String[] AnimeStatusTypes = {null,key_finished_airing,key_currently_airing,key_not_yet_aired,key_cancelled};
     @IntDef({ALL_ITEMS, FINISHED_AIRING, CURRENTLY_AIRING, NOT_YET_AIRED, CANCELLED})
     @interface AnimeStatusType {}
 
@@ -129,7 +234,11 @@ public interface KeyUtils {
     // Manga status types
     int FINISHED_PUBLISHING = 1, PUBLISHING = 2, NOT_YET_PUBLISHED = 3;
 
-    String[] MangaStatusTypes = {null, "finished publishing","publishing","not yet published","cancelled"};
+    String key_finished_publishing = "finished publishing";
+    String key_publishing = "publishing";
+    String key_not_yet_published = "not yet published";
+
+    String[] MangaStatusTypes = {null,key_finished_publishing,key_publishing,key_not_yet_published,key_cancelled};
     @IntDef({ALL_ITEMS ,FINISHED_PUBLISHING, PUBLISHING, NOT_YET_PUBLISHED, CANCELLED})
     @interface MangaStatusType {}
 
@@ -154,17 +263,89 @@ public interface KeyUtils {
     int COMPLETED = 2, ON_HOLD = 3, DROPPED = 4;
 
     // Anime Status
-    int WATCHING = 0, PLAN_TO_WATCH = 1;
+    int PLAN_TO_WATCH = 1,  WATCHING= 0;
 
     String[] UserAnimeStatus = {"watching","plan to watch","completed","on-hold","dropped"};
-    @IntDef({WATCHING, PLAN_TO_WATCH, COMPLETED, ON_HOLD, DROPPED})
+    @IntDef({PLAN_TO_WATCH, WATCHING, COMPLETED, ON_HOLD, DROPPED})
     @interface UserAnimeStatusKey {}
 
 
     // Manga Status
-    int READING = 0, PLAN_TO_READ = 1;
+    int PLAN_TO_READ = 1, READING = 0;
 
     String[] UserMangaStatus = {"reading","plan to read","completed","on-hold","dropped"};
-    @IntDef({READING, PLAN_TO_READ, COMPLETED, ON_HOLD, DROPPED})
+    @IntDef({PLAN_TO_READ, READING, COMPLETED, ON_HOLD, DROPPED})
     @interface UserMangaStatusKey {}
+
+    // User List Keys
+    int KEY_ON_HOLD = 0, KEY_PLAN_TO_READ = 1, KEY_DROPPED = 2, KEY_COMPLETED = 3,
+            KEY_READING = 4, KEY_WATCHING = 5, KEY_PLAN_TO_WATCH = 6;
+
+    String[] UserListKeys = {"on_hold", "plan_to_read", "dropped", "completed", "reading", "watching", "plan_to_watch"};
+    @IntDef({KEY_ON_HOLD, KEY_PLAN_TO_READ, KEY_DROPPED, KEY_COMPLETED, KEY_READING, KEY_WATCHING, KEY_PLAN_TO_WATCH})
+    @interface UserListType {}
+
+
+    // Application shortcuts
+    int SHORTCUT_SEARCH = 0, SHORTCUT_NOTIFICATION = 1, SHORTCUT_AIRING = 2, SHORTCUT_TRENDING = 3, SHORTCUT_MY_ANIME = 4,
+            SHORTCUT_MY_MANGA = 5, SHORTCUT_FEEDS = 6, SHORTCUT_PROFILE = 7;
+
+    String[] ShortcutTypes = {"SHORTCUT_SEARCH", "SHORTCUT_NOTIFICATION", "SHORTCUT_AIRING", "SHORTCUT_TRENDING",
+            "SHORTCUT_ANIME", "SHORTCUT_MANGA", "SHORTCUT_FEEDS", "SHORTCUT_PROFILE"};
+    @IntDef({SHORTCUT_SEARCH, SHORTCUT_NOTIFICATION, SHORTCUT_AIRING, SHORTCUT_TRENDING, SHORTCUT_MY_ANIME, SHORTCUT_MY_MANGA,
+            SHORTCUT_FEEDS, SHORTCUT_PROFILE})
+    @interface ShortcutType {}
+
+
+    // Title preferences for series
+    int LANGUAGE_ROMAJI = 0, LANGUAGE_ENGLISH = 1, LANGUAGE_JAPANESE = 2;
+
+    String key_language_romaji = "romaji", key_language_english = "english", key_language_japanese = "japanese";
+
+    @IntDef({LANGUAGE_ROMAJI, LANGUAGE_ENGLISH, LANGUAGE_JAPANESE})
+    @interface LanguageType {}
+
+    // Notification Types
+    int NOTIFICATION_DIRECT_MESSAGE = 2, NOTIFICATION_REPLY_ACTIVITY = 3, NOTIFICATION_FOLLOW_ACTIVITY = 4, NOTIFICATION_MENTION_ACTIVITY = 5,
+    NOTIFICATION_COMMENT_FORUM = 7, NOTIFICATION_REPLY_FORUM = 8, NOTIFICATION_AIRING = 9, NOTIFICATION_LIKE_ACTIVITY = 10,
+    NOTIFICATION_LIKE_ACTIVITY_REPLY = 11, NOTIFICATION_LIKE_FORUM = 12, NOTIFICATION_LIKE_FORUM_COMMENT = 13;
+
+
+    @IntDef({NOTIFICATION_DIRECT_MESSAGE, NOTIFICATION_REPLY_ACTIVITY, NOTIFICATION_FOLLOW_ACTIVITY, NOTIFICATION_MENTION_ACTIVITY,
+            NOTIFICATION_COMMENT_FORUM, NOTIFICATION_REPLY_FORUM, NOTIFICATION_AIRING, NOTIFICATION_LIKE_ACTIVITY,
+            NOTIFICATION_LIKE_ACTIVITY_REPLY, NOTIFICATION_LIKE_FORUM, NOTIFICATION_LIKE_FORUM_COMMENT})
+    @interface NotificationType {}
+
+    // Giphy types
+    int GIPHY_LARGE_DOWN_SAMPLE = 0, GIPHY_ORIGINAL_STILL = 1, GIPHY_ORIGINAL_ANIMATED = 2, GIPHY_PREVIEW = 3;
+
+    String[] GiphyTypes = { "downsized_large", "original_still", "original", "preview_gif" };
+    @IntDef({GIPHY_LARGE_DOWN_SAMPLE, GIPHY_ORIGINAL_STILL, GIPHY_ORIGINAL_ANIMATED, GIPHY_PREVIEW})
+    @interface GiphyType {}
+
+
+    // Time unit conversion place identifiers
+    int TIME_UNIT_DAYS = 0, TIME_UNIT_HOURS = 1, TIME_UNIT_MINUTES = 2, TIME_UNITS_SECONDS = 3;
+
+    @IntDef({TIME_UNIT_DAYS, TIME_UNIT_HOURS, TIME_UNIT_MINUTES, TIME_UNITS_SECONDS})
+    @interface TimeTargetType {}
+
+
+    // Group types for recycler view
+    int RECYCLER_TYPE_CONTENT = 0x00000010,  RECYCLER_TYPE_HEADER = 0x00000011, RECYCLER_TYPE_LOADING = 0x00000100, RECYCLER_TYPE_EMPTY = 0x00000101;
+
+    @IntDef({RECYCLER_TYPE_CONTENT, RECYCLER_TYPE_HEADER, RECYCLER_TYPE_LOADING, RECYCLER_TYPE_EMPTY})
+    @interface RecyclerViewType {}
+
+    /** Application Tips */
+    String KEY_MAIN_TIP = "KEY_MAIN_TIP", KEY_DETAIL_TIP = "KEY_DETAIL_TIP", KEY_NOTIFICATION_TIP = "KEY_NOTIFICATION_TIP",
+    KEY_MESSAGE_TIP = "KEY_MESSAGE_TIP", KEY_COMPOSE_TIP = "KEY_COMPOSE_TIP", KEY_CHARACTER_TIP = "KEY_CHARACTER_TIP",
+    KEY_STAFF_TIP = "KEY_STAFF_TIP", KEY_STATUS_POST_TIP = "KEY_STATUS_POST_TIP", KEY_USER_PROFILE_TIP = "KEY_USER_PROFILE_TIP",
+    KEY_REVIEW_TYPE_TIP = "KEY_REVIEW_TYPE_TIP", KEY_LOGIN_TIP = "KEY_LOGIN_TIP", KEY_GIPHY_TIP = "KEY_GIPHY_TIP",
+    KEY_POST_TYPE_TIP = "KEY_POST_TYPE_TIP";
+
+    @StringDef({KEY_MAIN_TIP, KEY_DETAIL_TIP, KEY_NOTIFICATION_TIP, KEY_MESSAGE_TIP, KEY_COMPOSE_TIP, KEY_CHARACTER_TIP,
+            KEY_STAFF_TIP, KEY_STATUS_POST_TIP, KEY_USER_PROFILE_TIP, KEY_REVIEW_TYPE_TIP, KEY_LOGIN_TIP, KEY_GIPHY_TIP,
+            KEY_POST_TYPE_TIP})
+    @interface TapTargetType {}
 }

@@ -1,55 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_splash"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:mContext="com.mxt.anitrend.view.base.activity.SplashActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/activity_splash"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".view.activity.index.SplashActivity">
 
-        <TextView
-            android:id="@+id/splash_app_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/app_name"
-            android:textColor="#FFFFFF" />
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/lg_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-        <TextView
+            <FrameLayout
+                android:layout_width="@dimen/series_image_xl"
+                android:layout_height="@dimen/md_margin"
+                android:background="@color/colorStateGreen" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/lg_margin" />
+
+            <FrameLayout
+                android:layout_width="@dimen/series_image_lg"
+                android:layout_height="@dimen/md_margin"
+                android:background="@color/colorStateBlue" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/lg_margin" />
+
+            <FrameLayout
+                android:layout_width="@dimen/series_image_md"
+                android:layout_height="@dimen/md_margin"
+                android:background="@color/colorStateOrange" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/lg_margin" />
+
+            <FrameLayout
+                android:layout_width="@dimen/series_image_sm"
+                android:layout_height="@dimen/md_margin"
+                android:background="@color/colorStateRed" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="17dp"
-            android:fontFamily="sans-serif-condensed"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ani"
+                android:textSize="55sp"
+                tools:ignore="HardcodedText" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trend"
+                android:textColor="@color/colorStateBlue"
+                android:textSize="55sp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@string/app_provider"
-            android:textColor="#FFFFFF" />
+            android:textSize="22sp"
+            app:layout_constraintBottom_toTopOf="@+id/preview_credits"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.25" />
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="120dp"
-            android:src="@drawable/app_logo" />
 
-        <TextView
-            android:id="@+id/app_status"
+        <com.mxt.anitrend.base.custom.view.image.WideImageView
+            android:id="@+id/preview_credits"
             android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:src="@drawable/powered_by_giphy_dark"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <com.mxt.anitrend.base.custom.view.widget.CustomProgress
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/wide_image_md"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/splash_app_name"
-            android:layout_marginBottom="25dp"
-            android:fontFamily="sans-serif-condensed"
-            android:textColor="#FFFFFF" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
-    </RelativeLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

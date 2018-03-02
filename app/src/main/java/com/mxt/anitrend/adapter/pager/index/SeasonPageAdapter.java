@@ -5,18 +5,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.index.fragment.SeasonFragment;
-import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
+import com.mxt.anitrend.view.fragment.index.SeasonFragment;
 
 /**
  * Created by Maxwell on 10/14/2016.
  */
-public class SeasonPageAdapter extends DefaultStatePagerAdapter {
+public class SeasonPageAdapter extends BaseStatePageAdapter {
 
     public SeasonPageAdapter(FragmentManager manager, Context context) {
         super(manager, context);
-        mTitles = context.getResources().getStringArray(R.array.seasons_titles);
+        setPagerTitles(R.array.seasons_titles);
     }
 
     /**

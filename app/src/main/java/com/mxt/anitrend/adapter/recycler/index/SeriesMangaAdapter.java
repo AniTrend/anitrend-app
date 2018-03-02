@@ -1,202 +1,125 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
-import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Filter;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.model.Series;
-import com.mxt.anitrend.base.custom.async.SeriesActionHelper;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.util.ApplicationPrefs;
-import com.mxt.anitrend.util.DateTimeConverter;
-import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.detail.activity.MangaActivity;
+import com.mxt.anitrend.databinding.AdapterMangaBinding;
+import com.mxt.anitrend.model.entity.anilist.Series;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
-import top.wefor.circularanim.CircularAnim;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 /**
- * Created by Maxwell on 11/1/2016.
+ * Created by max on 2017/10/30.
  */
 
 public class SeriesMangaAdapter extends RecyclerViewAdapter<Series> {
 
-    private ApplicationPrefs mPrefs;
-
-    public SeriesMangaAdapter(List<Series> adapter, FragmentActivity context, ApplicationPrefs prefs) {
-        super(adapter, context);
-        mPrefs = prefs;
+    public SeriesMangaAdapter(List<Series> data, Context context) {
+        super(data, context);
     }
 
     @Override
     public RecyclerViewHolder<Series> onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_series_manga_list, parent, false);
-        return new ViewHolder(view);
+        return new SeriesViewHolder(AdapterMangaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerViewHolder<Series> holder, int position) {
-        holder.onBindViewHolder(mAdapter.get(position));
-    }
-
-    /**
-     * <p>Returns a filter that can be used to constrain data with a filtering
-     * pattern.</p>
-     * <p>
-     * <p>This method is usually implemented by {@link Adapter}
-     * classes.</p>
-     *
-     * @return a filter used to constrain data
-     */
     @Override
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    mAdapter = mStore;
-                } else {
-                    mAdapter = new ArrayList<>();
-                    for (Series model:mStore) {
-                        if(model.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                model.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                model.getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
-                            mAdapter.add(model);
-                        }
-                    }
-                }
+                if(filter.isEmpty())
+                    data = clone;
+                else
+                    data = new ArrayList<>(Stream.of(clone).filter((model) -> model.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
+                            model.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
+                            model.getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)).toList());
                 FilterResults results = new FilterResults();
-                results.values = mAdapter;
+                results.values = data;
                 return results;
             }
 
-            @Override
+            @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                mAdapter = (List<Series>) results.values;
+                data = new ArrayList<>((List<Series>) results.values);
                 notifyDataSetChanged();
             }
         };
     }
 
-    class ViewHolder extends RecyclerViewHolder<Series> implements View.OnLongClickListener {
+    protected class SeriesViewHolder extends RecyclerViewHolder<Series> {
 
-        @BindView(R.id.img_lge) ImageView image;
-        @BindView(R.id.txt_eng_title) TextView eng;
-        @BindView(R.id.txt_romanji) TextView romanji;
-        @BindView(R.id.txt_manga_type) TextView type;
-        @BindView(R.id.txt_manga_chapters) TextView chapters;
-        @BindView(R.id.txt_airing) TextView airing;
-        @BindView(R.id.txt_popularity) TextView popularity;
-        @BindView(R.id.txt_startdate) TextView starting;
-        @BindView(R.id.txt_manga_volumes) TextView volumes;
-        @BindView(R.id.line) FrameLayout line;
-        @BindView(R.id.card_view) CardView cardView;
+        private AdapterMangaBinding binding;
 
-        ViewHolder(View itemView) {
-            super(itemView);
-            image.setOnClickListener(this);
-            cardView.setOnClickListener(this);
-            image.setOnLongClickListener(this);
-            cardView.setOnLongClickListener(this);
+        /**
+         * Default constructor which includes binding with butter knife
+         *
+         * @param view
+         */
+        SeriesViewHolder(AdapterMangaBinding view) {
+            super(view.getRoot());
+            this.binding = view;
         }
 
+        /**
+         * Load image, text, buttons, etc. in this method from the given parameter
+         * <br/>
+         *
+         * @param model Is the model at the current adapter position
+         * @see Series
+         */
         @Override
         public void onBindViewHolder(Series model) {
-
-            Glide.with(mContext).load(model.getImage_url_lge())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
-                    .into(image);
-
-            eng.setText(model.getTitle_english());
-            romanji.setText(model.getTitle_romaji());
-            type.setText(model.getType());
-            chapters.setText(model.getTotal_chapters() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getTotal_chapters()));
-            airing.setText(model.getPublishing_status());
-            popularity.setText(mContext.getString(R.string.text_popularity, model.getPopularity()));
-            starting.setText(String.format("%s: %s", DateTimeConverter.getStartTitle(model.getStart_date_fuzzy()), DateTimeConverter.convertDate(model.getStart_date_fuzzy())));
-            volumes.setText(model.getTotal_volumes() < 1?mContext.getString(R.string.TBA):String.valueOf(model.getTotal_volumes()));
-
-            if(model.getPublishing_status() != null)
-                switch (model.getPublishing_status()) {
-                    case "finished publishing":
-                        line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorStateGreen));
-                        break;
-                    case "publishing":
-                        line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorStateBlue));
-                        break;
-                    case "not yet published":
-                        line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorStateOrange));
-                        break;
-                    case "cancelled":
-                        line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorStateRed));
-                        break;
-                }
+            binding.setModel(model);
+            binding.executePendingBindings();
         }
 
+        /**
+         * If any image views are used within the view holder, clear any pending async img requests
+         * by using Glide.clear(ImageView) or Glide.with(context).clear(view) if using Glide v4.0
+         * <br/>
+         *
+         * @see Glide
+         */
         @Override
         public void onViewRecycled() {
-            Glide.clear(image);
+            Glide.with(getContext()).clear(binding.seriesImage);
+            binding.unbind();
         }
 
-        @Override
+        /**
+         * Handle any onclick events from our views
+         * <br/>
+         *
+         * @param v the view that has been clicked
+         * @see View.OnClickListener
+         */
+        @Override @OnClick(R.id.container)
         public void onClick(View v) {
-            Series mSeries = mAdapter.get(getAdapterPosition());
-            final Intent starter = new Intent(mContext, MangaActivity.class);
-            switch (v.getId()) {
-                case R.id.img_lge:
-                    starter.putExtra(MangaActivity.MODEL_ID_KEY, mSeries.getId());
-                    starter.putExtra(MangaActivity.MODEL_BANNER_KEY, mSeries.getImage_url_banner());
-                    CircularAnim.fullActivity((FragmentActivity)mContext, v).colorOrImageRes(mPrefs.isLightTheme()?R.color.colorAccent_Ripple:R.color.colorDarkKnight).go(new CircularAnim.OnAnimationEndListener() {
-                        @Override
-                        public void onAnimationEnd() {
-                            mContext.startActivity(starter);
-                        }
-                    });
-                    break;
-                case R.id.card_view:
-                    starter.putExtra(MangaActivity.MODEL_ID_KEY, mSeries.getId());
-                    starter.putExtra(MangaActivity.MODEL_BANNER_KEY, mSeries.getImage_url_banner());
-                    mContext.startActivity(starter);
-                    break;
-            }
+            int index;
+            if((index = getAdapterPosition()) > -1)
+                clickListener.onItemClick(v, data.get(index));
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.img_lge:
-                    if(mPrefs.isAuthenticated())
-                        new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
-                    else
-                        Toast.makeText(mContext, mContext.getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.card_view:
-                    if(mPrefs.isAuthenticated())
-                        new SeriesActionHelper(mContext, KeyUtils.MANGA, mAdapter.get(getAdapterPosition())).execute();
-                    else
-                        Toast.makeText(mContext, mContext.getString(R.string.info_login_req), Toast.LENGTH_SHORT).show();
-                    break;
-            }
+        @Override @OnLongClick(R.id.container)
+        public boolean onLongClick(View view) {
+            int index;
+            if((index = getAdapterPosition()) > -1)
+                clickListener.onItemLongClick(view, data.get(index));
             return true;
         }
     }

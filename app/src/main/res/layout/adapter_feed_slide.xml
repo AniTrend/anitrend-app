@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickListener" type="android.view.View.OnClickListener" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.image.WideImageView
+            android:id="@+id/feed_status_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClickListener="@{onClickListener}"
+            android:foreground="?selectableItemBackground"
+            tools:layout_height="@dimen/wide_image_md"
+            tools:scaleType="centerCrop"
+            tools:src="@drawable/sample_banner"/>
+
+        <ImageView
+            android:id="@+id/feed_play_back"
+            android:layout_gravity="center"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:padding="@dimen/xl_margin"
+            android:background="@drawable/bubble_background"
+            app:srcCompat="@drawable/ic_play_circle_outline_white_24dp" />
+
+    </FrameLayout>
+
+</layout>

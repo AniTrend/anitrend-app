@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.group.EntityHeader" />
+    </data>
+
+    <FrameLayout
+        android:layout_margin="@dimen/lg_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/catalog_header_title"
+            android:layout_gravity="center_vertical|start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:text="@{model.title}"
+            tools:text="Adaptations" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/catalog_header_count"
+            android:layout_gravity="center_vertical|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:text="@{String.valueOf(safeUnbox(model.size))}"
+            tools:text="20" />
+    </FrameLayout>
+
+</layout>

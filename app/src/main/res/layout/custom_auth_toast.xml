@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.User" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="150dp">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alignmentMode="alignBounds"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/cardColor"
+            android:columnCount="2"
+            android:elevation="@dimen/md_margin"
+            android:padding="@dimen/xl_margin"
+            android:rowCount="2"
+            tools:targetApi="lollipop">
+
+            <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="@dimen/avatar_size"
+                android:layout_height="@dimen/avatar_size"
+                android:layout_margin="@dimen/xl_margin"
+                android:layout_rowSpan="2"
+                app:avatarUrl="@{model.image_url_med}"
+                tools:src="@tools:sample/avatars" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_marginEnd="@dimen/xl_margin"
+                android:paddingTop="@dimen/md_margin"
+                android:textStyle="bold"
+                android:text="@string/logged_in_as" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:layout_marginEnd="@dimen/xl_margin"
+                android:paddingTop="@dimen/md_margin"
+                android:text="@{model.display_name}"
+                tools:text="wax911" />
+
+        </GridLayout>
+
+    </FrameLayout>
+</layout>

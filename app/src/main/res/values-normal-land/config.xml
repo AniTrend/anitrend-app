@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="grid_list_x2">3</integer>
+    <integer name="grid_giphy_x3">4</integer>
+
+    <integer name="single_list_x1">1</integer>
+    <integer name="grid_emoji_x3">3</integer>
+</resources>

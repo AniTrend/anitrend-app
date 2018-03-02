@@ -1,208 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_review"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:foreground="?selectableItemBackground"
-    app:cardBackgroundColor="?attr/card_color"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Review" />
+    </data>
+
+    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/lg_margin"
+        android:foreground="?selectableItemBackground">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:padding="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/review_user_name"
-                    android:maxWidth="150dp"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif-condensed"
-                    android:layout_alignParentStart="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/review_date"
-                    android:maxWidth="150dp"
-                    android:maxLines="2"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif-condensed"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </RelativeLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="5dp" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_height="1dp"
-                android:background="@color/colorBlueGrey100"/>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="5dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/review_user_image"
-                    android:layout_gravity="center_vertical"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FF000000"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp" />
+                <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="@dimen/avatar_ripple_radius"
+                    android:layout_height="@dimen/avatar_ripple_radius"
+                    app:avatarUrl="@{model.user.image_url_lge}"
+                    tools:src="@drawable/ic_player" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/user_name"
+                    android:layout_marginStart="@dimen/lg_margin"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{model.user.display_name}"
+                    tools:text="wax911" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/review_date"
+                    android:layout_weight="1.8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:textAlignment="viewEnd"
+                    android:text="@{model.date}"
+                    tools:text="Oct 28 2017" />
+
+            </LinearLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/lg_margin" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/spacing_small">
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <RelativeLayout
+                    <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/series_title"
+                        android:textSize="16sp"
+                        android:ellipsize="end"
+                        tools:text="Gintama." />
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/lg_margin" />
+
+                    <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="italic"
+                        android:maxLines="3"
+                        app:markDown="@{model.summary}"
+                        tools:text="Amazing show with a well thought out plot" />
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/lg_margin" />
+
+                    <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
+                        android:id="@+id/series_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/SmallRating"
+                        app:averageScore="@{model.anime != null? model.anime.average_score : model.manga.average_score}"
+                        tools:rating="1"/>
+
+                </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_marginStart="10dp"
-                            android:text="Review Summary:"
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:id="@+id/review_read_more"
+                            android:padding="6dp"
                             android:textStyle="bold"
-                            android:typeface="sans"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <RatingBar
-                            android:id="@+id/review_rating"
-                            android:layout_alignParentEnd="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:theme="@style/RatingBarSmall"
-                            android:isIndicator="true"
-                            android:stepSize="0.01"
-                            android:max="5" />
+                            android:text="@string/text_read_more" />
 
-                    </RelativeLayout>
+                        <com.mxt.anitrend.base.custom.view.widget.VoteWidget
+                            android:id="@+id/review_vote"
+                            android:layout_gravity="end|bottom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-                    <android.support.v4.widget.Space
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp" />
+                    </FrameLayout>
 
-                        <TextView
-                            android:id="@+id/review_summary"
-                            android:layout_marginStart="10dp"
-                            android:typeface="sans"
-                            android:maxLines="4"
-                            android:ellipsize="end"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                </RelativeLayout>
 
-                    </LinearLayout>
+                <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                    android:id="@+id/series_image"
+                    android:layout_width="@dimen/series_image_xs"
+                    android:layout_height="wrap_content"
+                    app:imageUrl="@{model.anime != null? model.anime.image_url_lge : model.manga.image_url_lge}"
+                    tools:src="@drawable/sample_img" />
 
             </LinearLayout>
 
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_height="1dp"
-                android:background="@color/colorBlueGrey100"/>
-
-
-            <RelativeLayout
-                android:padding="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <ViewFlipper
-                android:id="@+id/mUpFlipper"
-                android:padding="6dp"
-                android:clickable="true"
-                android:foreground="?selectableItemBackground"
-                android:inAnimation="@android:anim/fade_in"
-                android:outAnimation="@android:anim/fade_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true">
-
-                <TextView
-                    android:id="@+id/review_up_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:typeface="sans"
-                    android:textStyle="bold"
-                    tools:drawableStart="@drawable/ic_thumb_up_grey_600_18dp"
-                    />
-
-                <ProgressBar
-                    android:layout_width="18dp"
-                    android:layout_height="18dp" />
-
-            </ViewFlipper>
-
-            <ViewFlipper
-                android:id="@+id/mDownFlipper"
-                android:clickable="true"
-                android:padding="6dp"
-                android:foreground="?selectableItemBackground"
-                android:layout_marginStart="60dp"
-                android:inAnimation="@android:anim/fade_in"
-                android:outAnimation="@android:anim/fade_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/mUpFlipper"
-                android:layout_alignParentStart="true">
-
-                <TextView
-                    android:id="@+id/review_down_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:typeface="sans"
-                    android:textStyle="bold"
-                    tools:drawableStart="@drawable/ic_thumb_down_grey_600_18dp"
-                    />
-
-                <ProgressBar
-                    android:layout_width="18dp"
-                    android:layout_height="18dp" />
-
-            </ViewFlipper>
-
-            <TextView
-                android:id="@+id/review_read_more"
-                android:padding="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:drawableStart="@drawable/ic_arrow_drop_down_grey_600_18dp"
-                android:typeface="sans"
-                android:textStyle="bold"
-                android:text=" Read More"
-                android:layout_alignParentEnd="true"/>
-
-            </RelativeLayout>
-
         </LinearLayout>
 
-</android.support.v7.widget.CardView>
+    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+</layout>

@@ -3,50 +3,48 @@ package com.mxt.anitrend.adapter.pager.index;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.util.ApplicationPrefs;
-import com.mxt.anitrend.view.base.fragment.AnimeSearchFragment;
-import com.mxt.anitrend.view.base.fragment.CharacterSearchFragment;
-import com.mxt.anitrend.view.base.fragment.MangaSearchFragment;
-import com.mxt.anitrend.view.base.fragment.StaffSearchFragment;
-import com.mxt.anitrend.view.base.fragment.StudioSearchFragment;
-import com.mxt.anitrend.view.base.fragment.UserSearchFragment;
-import com.mxt.anitrend.viewmodel.pager.DefaultStatePagerAdapter;
-
-import java.util.Locale;
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.view.fragment.search.CharacterSearchFragment;
+import com.mxt.anitrend.view.fragment.search.SeriesSearchFragment;
+import com.mxt.anitrend.view.fragment.search.StaffSearchFragment;
+import com.mxt.anitrend.view.fragment.search.StudioSearchFragment;
+import com.mxt.anitrend.view.fragment.search.UserSearchFragment;
 
 /**
- * Created by Maxwell on 11/6/2016.
+ * Created by max on 2017/12/19.
  */
 
-public class SearchPageAdapter extends DefaultStatePagerAdapter {
+public class SearchPageAdapter extends BaseStatePageAdapter {
 
-    private final String query;
-
-    public SearchPageAdapter(FragmentManager fragmentManager, String query, Context context) {
+    public SearchPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
-        this.query = query;
-        boolean isAuth = new ApplicationPrefs(context).isAuthenticated();
-        mTitles = context.getResources().getStringArray(isAuth ? R.array.search_titles_auth : R.array.search_titles);
+        setPagerTitles(new ApplicationPref(context).isAuthenticated()? R.array.search_titles_auth : R.array.search_titles);
     }
 
+    /**
+     * Return the Fragment associated with a specified position.
+     *
+     * @param position
+     */
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return AnimeSearchFragment.newInstance(query);
+                return SeriesSearchFragment.newInstance(getParams(), KeyUtils.ANIME);
             case 1:
-                return MangaSearchFragment.newInstance(query);
+                return SeriesSearchFragment.newInstance(getParams(), KeyUtils.MANGA);
             case 2:
-                return StudioSearchFragment.newInstance(query);
+                return StudioSearchFragment.newInstance(getParams());
             case 3:
-                return StaffSearchFragment.newInstance(query);
+                return StaffSearchFragment.newInstance(getParams());
             case 4:
-                return CharacterSearchFragment.newInstance(query);
+                return CharacterSearchFragment.newInstance(getParams());
             case 5:
-                return UserSearchFragment.newInstance(query);
+                return UserSearchFragment.newInstance(getParams());
         }
         return null;
     }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="card_col_size_home">1</integer>
-    <integer name="list_col_size">1</integer>
-    <integer name="list_col_size_rank">2</integer>
-    <integer name="list_col_emoticon">3</integer>
+    <integer name="single_list_constant">1</integer>
+
+    <integer name="grid_list_x2">2</integer>
+    <integer name="grid_giphy_x3">3</integer>
+
+    <integer name="single_list_x1">1</integer>
+    <integer name="grid_emoji_x3">3</integer>
 </resources>

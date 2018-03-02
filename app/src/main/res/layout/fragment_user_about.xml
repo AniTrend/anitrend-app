@@ -1,14 +1,15 @@
-<com.nguyenhoanglam.progresslayout.ProgressLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scrollProgressLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:mContext="com.mxt.anitrend.view.detail.fragment.UserAboutFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/user_lists_pull_refresh"
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.User" />
+    </data>
+
+    <com.nguyenhoanglam.progresslayout.ProgressLayout
+        android:id="@+id/stateLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,234 +21,133 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/lg_margin">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_margin="5dp"
-                    android:background="?attr/card_color"
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:id="@+id/container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin">
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/user_follow_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_gravity="end"
-                        android:layout_margin="10dp"
-                        android:clickable="true"
-                        android:foreground="?selectableItemBackground"
-                        android:fontFamily="sans-serif-condensed"
-                        android:visibility="gone"
-                        android:textColor="@color/white"
-                        tools:visibility="visible"/>
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/user_profile_image"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="10dp"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        app:civ_border_width="2dp"
-                        app:civ_border_color="@color/white"/>
-
-                    <TextView
-                        android:id="@+id/user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="sans-serif-condensed"
-                        android:textSize="15sp"
-                        android:layout_margin="8dp"
-                        />
-
-                    <FrameLayout
-                        android:id="@+id/extra_holder"
-                        android:visibility="gone"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:id="@+id/extra_img"
-                            android:visibility="gone"
+                        <LinearLayout
+                            android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop" />
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:id="@+id/extra_img_gallery"
-                            android:visibility="gone"
-                            android:layout_gravity="bottom|end"
-                            android:textColor="@color/white"
-                            android:clickable="true"
-                            android:foreground="?selectableItemBackground"
-                            android:drawableStart="@drawable/ic_collections_white_18dp"
-                            android:fontFamily="sans-serif-condensed"
-                            android:textStyle="bold"
-                            android:layout_margin="5dp"
-                            android:padding="10dp"
-                            android:background="@color/colorBackground"
+                            <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                                android:id="@+id/user_avatar"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:padding="@dimen/md_margin"
+                                app:avatarUrl="@{model.image_url_lge}"
+                                tools:src="@drawable/ic_player" />
+
+                            <com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget
+                                android:id="@+id/user_about_panel_widget"
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/md_margin"
+                                android:layout_gravity="start|center_vertical"
+                                android:text="@{model.display_name}"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                tools:text="wax911" />
+
+                            <com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
+                                android:id="@+id/user_follow_state_widget"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|center_vertical"
+                                android:padding="@dimen/md_margin" />
+
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorBlueGrey100" />
+
+                        <android.support.v4.widget.Space
                             android:layout_width="wrap_content"
+                            android:layout_height="@dimen/lg_margin" />
+
+                        <com.mxt.anitrend.base.custom.view.widget.StatusContentWidget
+                            android:id="@+id/widget_status"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
-                    </FrameLayout>
-
-                    <TextView
-                        android:id="@+id/user_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textAlignment="center"
-                        android:fontFamily="sans-serif-condensed"
-                        android:layout_margin="15dp"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorBlueGrey100" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false"
-                        android:weightSum="3">
-
-                        <LinearLayout
-                            android:id="@+id/user_following_container"
-                            android:clickable="true"
-                            android:foreground="?selectableItemBackground"
-                            android:layout_margin="10dp"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/following"
-                                android:layout_gravity="center"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="14sp"/>
-
-                            <TextView
-                                android:id="@+id/user_following_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="@string/Loading"
-                                android:textStyle="bold"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="14sp"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/user_followers_container"
-                            android:clickable="true"
-                            android:foreground="?selectableItemBackground"
-                            android:layout_margin="10dp"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="@string/followers"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="14sp"
-                                android:id="@+id/textView"
-                                />
-
-                            <TextView
-                                android:id="@+id/user_followers_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:textStyle="bold"
-                                android:text="@string/Loading"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="14sp"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/user_favourites_container"
-                            android:clickable="true"
-                            android:foreground="?selectableItemBackground"
-                            android:layout_margin="10dp"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/favourites"
-                                android:layout_gravity="center"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="14sp"/>
-
-                            <TextView
-                                android:id="@+id/user_favourites_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:text="@string/Loading"
-                                android:layout_gravity="center"
-                                android:fontFamily="sans-serif-condensed"
-                                android:textSize="14sp"/>
-
-                        </LinearLayout>
+                        <android.support.v4.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/lg_margin" />
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+
 
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                    android:layout_height="@dimen/md_margin" />
 
-                <TextView
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="24sp"
-                    android:text="@string/text_top_genres"
-                    />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:text="@string/text_top_genres" />
 
-                <TextView
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/text_tap_on_item_below_to_view_stats"
-                    />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@string/text_tap_on_item_below_to_view_stats" />
 
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                    android:layout_height="@dimen/md_margin" />
 
-                <com.mxt.anitrend.base.custom.view.widget.PolygonView
-                    android:id="@+id/user_stats"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="350dp"
-                    android:layout_height="350dp"
-                />
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:id="@+id/user_stats_container"
+                    android:foreground="?selectableItemBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lg_margin">
+
+                    <com.mxt.anitrend.base.custom.view.widget.RingProgress
+                        android:id="@+id/user_stats"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        app:ringWidthScale="0.2"
+                        app:rotate="240"
+                        app:showBackground="true"
+                        app:showRingCorner="true"
+                        app:ringSweepAngle="250" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</com.nguyenhoanglam.progresslayout.ProgressLayout>
+    </com.nguyenhoanglam.progresslayout.ProgressLayout>
+</layout>

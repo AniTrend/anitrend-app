@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="onClickEvent" type="android.view.View.OnClickListener" />
+    </data>
+
+    <ViewFlipper
+        android:id="@+id/widget_flipper"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right"
+        android:padding="@dimen/mg_margin"
+        android:foreground="?selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClickListener="@{onClickEvent}">
+
+        <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+            android:id="@+id/widget_like"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/avatar_ripple_radius"
+            android:layout_height="@dimen/avatar_ripple_radius"
+            tools:src="@drawable/ic_favorite_white_24dp" />
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="@dimen/xl_margin"
+            android:layout_gravity="center"
+            app:cpv_animAutostart="true"
+            app:cpv_color="?colorAccent"
+            app:cpv_indeterminate="true" />
+
+    </ViewFlipper>
+</layout>

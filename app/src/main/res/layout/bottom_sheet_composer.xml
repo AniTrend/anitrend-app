@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?cardColor">
+
+    <include layout="@layout/custom_sheet_toolbar" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:padding="@dimen/xl_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.editor.ComposerWidget
+            android:id="@+id/composer_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>

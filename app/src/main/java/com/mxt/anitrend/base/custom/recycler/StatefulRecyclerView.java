@@ -7,68 +7,33 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import com.mxt.anitrend.base.interfaces.view.CustomView;
+
 /**
  * Class {@link StatefulRecyclerView} extends {@link RecyclerView} and adds position management on configuration changes.
  *
  * @author FrantisekGazo
  * @version 2016-03-15
+ * Modified by max
  */
 
-public class StatefulRecyclerView extends RecyclerView {
-
-    private static final String SAVED_SUPER_STATE = "super-state";
-    private static final String SAVED_LAYOUT_MANAGER = "layout-manager-state";
-
-    private Parcelable mLayoutManagerSavedState;
+public class StatefulRecyclerView extends RecyclerView implements CustomView {
 
     private boolean isListenerPresent;
 
     public StatefulRecyclerView(Context context) {
         super(context);
+        onInit();
     }
 
     public StatefulRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        onInit();
     }
 
     public StatefulRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
-        bundle.putParcelable(SAVED_LAYOUT_MANAGER, this.getLayoutManager().onSaveInstanceState());
-        return bundle;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            mLayoutManagerSavedState = bundle.getParcelable(SAVED_LAYOUT_MANAGER);
-            state = bundle.getParcelable(SAVED_SUPER_STATE);
-        }
-        super.onRestoreInstanceState(state);
-    }
-
-    /**
-     * Restores scroll position after configuration change.
-     * <p>
-     * <b>NOTE:</b> Must be called after adapter has been set.
-     */
-    private void restorePosition() {
-        if (mLayoutManagerSavedState != null) {
-            this.getLayoutManager().onRestoreInstanceState(mLayoutManagerSavedState);
-            mLayoutManagerSavedState = null;
-        }
-    }
-
-    @Override
-    public void setAdapter(Adapter adapter) {
-        super.setAdapter(adapter);
-        restorePosition();
+        onInit();
     }
 
     /**
@@ -95,7 +60,24 @@ public class StatefulRecyclerView extends RecyclerView {
         isListenerPresent = false;
     }
 
+    /*To avoid multiple instances of scroll listener from being added*/
     public boolean hasOnScrollListener() {
         return isListenerPresent;
+    }
+
+    /**
+     * Optionally included when constructing custom views
+     */
+    @Override
+    public void onInit() {
+
+    }
+
+    /**
+     * Clean up any resources that won't be needed
+     */
+    @Override
+    public void onViewRecycled() {
+
     }
 }

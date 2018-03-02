@@ -1,141 +1,72 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mxt.anitrend">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
-        android:allowBackup="true"
-        android:fullBackupContent="true"
-        android:hardwareAccelerated="true"
-        android:name=".AniTrend"
+        android:name=".App"
         android:largeHeap="true"
-        android:icon="@drawable/ic_launcher"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon">
+        android:fullBackupContent="@xml/backup_descriptor">
 
-        <meta-data
-            android:name="com.mxt.anitrend.base.custom.glide.ConfigModule"
-            android:value="GlideModule" />
-
-        <activity
-            android:name=".view.base.activity.SplashActivity"
-            android:theme="@style/SplashTheme">
+        <activity android:name=".view.activity.index.SplashActivity"
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter>
-                <data
-                    android:scheme="https"
-                    android:host="anilist.co"
-                    android:path="/" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
 
-        <activity
-            android:name=".view.base.activity.StarterActivity"
-            android:launchMode="singleTask" />
-
-        <activity
-            android:name=".view.base.activity.MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/DarkTheme" />
-
-        <activity
-            android:name=".view.detail.activity.AnimeActivity"
-            android:theme="@style/DarkTheme" >
-
-            <intent-filter>
-                <data
-                    android:scheme="https"
-                    android:host="anilist.co"
-                    android:pathPattern="/anime.*" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name=".view.base.activity.SearchResultActivity"
-            android:label="Search Results"
-            android:launchMode="singleTask"
-            android:parentActivityName=".view.base.activity.MainActivity"
-            android:theme="@style/DarkTheme" />
-
-        <activity
-            android:name=".view.detail.activity.MangaActivity"
-            android:theme="@style/DarkTheme" >
-
-            <intent-filter>
-                <data
-                    android:scheme="https"
-                    android:host="anilist.co"
-                    android:pathPattern="/manga.*" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name=".view.base.activity.ImagePreviewActivity"
-            android:label=""
-            android:theme="@style/AppImagePreview"
-            />
-
-        <activity
-            android:name=".view.index.activity.LoginActivity"
-            android:label=""
+        <activity android:name=".view.activity.index.MainActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".view.base.activity.MainActivity"
-            android:theme="@style/DarkTheme_DarkSide">
+            android:label="@string/app_name" />
 
+        <activity
+            android:name=".view.activity.base.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".view.activity.index.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activity.index.MainActivity" />
+        </activity>
+
+        <activity android:name=".view.activity.detail.NotificationActivity"
+            android:label="@string/title_activity_notification"
+            android:launchMode="singleTop" />
+
+        <activity android:name=".view.activity.detail.MessageActivity"
+            android:label="@string/title_activity_message" />
+
+        <activity android:name=".view.activity.index.LoginActivity"
+            android:theme="@style/AppThemeLight.Translucent"
+            android:exported="true"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="com.mxt.anitrend"
                     android:scheme="intent" />
-
             </intent-filter>
-
         </activity>
 
         <activity
-            android:name=".view.index.activity.ProfileActivity"
-            android:label=""
-            android:parentActivityName=".view.base.activity.MainActivity"
-            android:theme="@style/UserTheme" />
-
-        <activity
-            android:name=".view.index.activity.UserProfileActivity"
-            android:label=""
-            android:theme="@style/UserTheme" >
-
+            android:name=".view.activity.detail.ProfileActivity"
+            android:label="@string/drawer_title_profile">
             <intent-filter>
                 <data
                     android:scheme="https"
@@ -145,102 +76,96 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-
         </activity>
 
-        <activity
-            android:name=".view.detail.activity.CharacterActivity"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.activity.detail.SeriesActivity"
+            android:label="@string/title_activity_series">
+            <intent-filter>
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/manga.*" />
 
-        <activity
-            android:name=".view.base.activity.AboutActivity"
-            android:label="About AniTrend"
-            android:parentActivityName=".view.base.activity.MainActivity"
-            android:theme="@style/DarkTheme" />
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/anime.*" />
 
-        <activity
-            android:name=".view.index.activity.NotificationActivity"
-            android:label="@string/title_activity_notification"
-            android:launchMode="singleTop"
-            android:theme="@style/UserTheme" />
-
-        <activity
-            android:name=".view.index.activity.MessageActivity"
-            android:label="@string/title_activity_message"
-            android:launchMode="singleTop"
-            android:theme="@style/UserTheme" />
-
-        <activity
-            android:name=".view.base.activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.base.activity.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mxt.anitrend.view.base.activity.MainActivity" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
 
-        <receiver android:name=".base.custom.receiver.NotificationRunner">
+        <activity android:name=".view.activity.detail.CharacterActivity"
+            android:label="@string/title_activity_character">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/character.*" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-        </receiver>
+        </activity>
 
-        <receiver
-            android:name=".base.custom.receiver.PostNotificationBroadcaster"
-            android:enabled="true"
-            android:exported="false">
+        <activity android:name=".view.activity.detail.StaffActivity"
+            android:label="@string/title_activity_staff">
             <intent-filter>
-                <action android:name="com.mxt.receiver.PostNotificationBroadcaster" />
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/staff.*" />
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/actor.*" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-        </receiver>
+        </activity>
 
-        <service
-            android:name=".base.custom.service.JobDispatcherService"
-            android:exported="false">
+        <activity android:name=".view.activity.detail.StudioActivity"
+            android:label="@string/title_activity_studio">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/studio.*" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-        </service>
+        </activity>
+
+        <activity android:name=".view.activity.detail.FavouriteActivity"
+            android:label="@string/title_favourites_list" />
+
+        <activity android:name=".view.activity.detail.SeriesListActivity"
+            android:label="@string/title_activity_user_list_view" />
+
+        <activity android:name=".view.activity.detail.BrowseActivity"
+            android:launchMode="singleTop" />
+
+        <activity android:name=".view.activity.base.AboutActivity"
+            android:label="@string/nav_about"
+            android:launchMode="singleTop" />
+
+        <activity android:name=".view.activity.index.SearchActivity"
+            android:label="@string/action_search"
+            android:launchMode="singleTop" />
 
         <activity
-            android:name=".view.detail.activity.UserReplyActivity"
+            android:name=".view.activity.detail.CommentActivity"
             android:label="@string/title_activity_reply"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:launchMode="singleTop" />
 
-        <activity
-            android:name=".view.base.activity.GalleryPreviewActivity"
-            android:theme="@style/AppImagePreview" />
-
-
-        <activity android:theme="@style/DarkTheme_DarkSide"
-            android:name="com.mxt.anitrend.view.base.activity.VideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize" />
-
-        <activity
-            android:name=".view.detail.activity.StaffActivity"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity
-            android:name=".view.base.activity.ListBrowseActivity"
-            android:label="@string/title_activity_user_list_view"
-            android:theme="@style/DarkTheme" />
-
-        <activity
-            android:name=".view.base.activity.FavouriteActivity"
-            android:label="@string/title_favourites_list"
-            android:theme="@style/DarkTheme" />
-
-        <activity
-            android:name=".view.detail.activity.StudioActivity"
-            android:label="@string/title_activity_studio"
-            android:theme="@style/DarkTheme" />
-
-        <activity
-            android:name=".view.base.activity.ComposerActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/DarkTheme">
+        <activity android:name=".view.activity.base.SharedContentActivity"
+            android:label="@string/menu_title_new_activity_post"
+            android:theme="@style/AppThemeLight.Translucent"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -248,15 +173,38 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.activity.base.WelcomeActivity"
+            android:launchMode="singleTop" />
 
         <activity
-            android:name=".view.base.activity.StreamActivity"
-            android:theme="@style/DarkTheme" />
+            android:name=".view.activity.base.ImagePreviewActivity"
+            android:launchMode="singleTop" />
 
         <activity
-            android:name=".view.base.activity.ReviewReaderActivity"
-            android:theme="@style/DarkTheme" />
+            android:name=".view.activity.base.GiphyPreviewActivity"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".view.activity.base.VideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:launchMode="singleTop" />
+
+        <service android:name=".service.TagGenreService" />
+        <service android:name=".service.AuthenticatorService" />
+
+        <receiver android:name=".receiver.SchedulerDelegate">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.JobDispatcherService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
 
     </application>
-
 </manifest>

@@ -1,191 +1,157 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Filter;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.api.structure.ListItem;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.base.interfaces.event.SeriesInteractionListener;
-import com.mxt.anitrend.util.ApiPreferences;
-import com.mxt.anitrend.util.ApplicationPrefs;
-import com.mxt.anitrend.util.DateTimeConverter;
+import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
+import com.mxt.anitrend.model.entity.anilist.Favourite;
+import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.util.SeriesUtil;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 /**
- * Created by max on 2017/03/04.
+ * Created by max on 2017/12/19.
  */
-public class SeriesAiringAdapter extends RecyclerViewAdapter<ListItem> {
 
-    private FragmentActivity mContext;
-    private ApplicationPrefs mPrefs;
-    private ApiPreferences mApiPrefs;
-    private SeriesInteractionListener interactionListener;
+public class SeriesAiringAdapter extends RecyclerViewAdapter<SeriesList> {
 
-    public SeriesAiringAdapter(List<ListItem> adapter, FragmentActivity context, ApplicationPrefs prefs, ApiPreferences apiPrefs,SeriesInteractionListener callback) {
-        super(adapter, context);
-        mAdapter = adapter;
-        mContext = context;
-        interactionListener = callback;
-        mApiPrefs = apiPrefs;
-        mPrefs = prefs;
+    private String currentUser;
+    private List<SeriesBase> favouriteSeries;
+
+    public SeriesAiringAdapter(List<SeriesList> data, Context context) {
+        super(data, context);
+        Favourite favourite = presenter.getFavourites();
+        if(presenter.getApplicationPref().isAuthenticated())
+            currentUser = presenter.getDatabase().getCurrentUser().getDisplay_name();
+        if(favourite != null) {
+            favouriteSeries = new ArrayList<>();
+            if(favourite.getAnime() != null)
+                favouriteSeries.addAll(favourite.getAnime());
+            if(favourite.getManga() != null)
+                favouriteSeries.addAll(favourite.getManga());
+        }
     }
 
     @Override
-    public RecyclerViewHolder<ListItem> onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(mPrefs.isNewStyle()?R.layout.adapter_series_airing_v2:R.layout.adapter_series_anime_list, parent, false);
-        return mPrefs.isNewStyle()?new GridViewHolder(view):new CardViewHolder(view);
+    public RecyclerViewHolder<SeriesList> onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new AiringViewHolder(AdapterSeriesAiringBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
-    /**
-     * <p>Returns a filter that can be used to constrain data with a filtering
-     * pattern.</p>
-     * <p>
-     * <p>This method is usually implemented by {@link Adapter}
-     * classes.</p>
-     *
-     * @return a filter used to constrain data
-     */
     @Override
     public Filter getFilter() {
+        /*return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String filter = constraint.toString();
+                if(filter.isEmpty()) {
+                    data = clone;
+                } else {
+                    data = new ArrayList<>();
+                    for (SeriesList model : clone) {
+                        if(model.getAnime() != null)
+                            if(model.getAnime().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                    model.getAnime().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                    model.getAnime().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
+                                data.add(model);
+                            }
+                            else if(model.getManga() != null)
+                                if(model.getManga().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                        model.getManga().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                        model.getManga().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
+                                    data.add(model);
+                                }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = data;
+                return results;
+            }
+
+            @Override @SuppressWarnings("unchecked")
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                data = new ArrayList<>((List<SeriesList>) results.values);
+                notifyDataSetChanged();
+            }
+        };*/
         return null;
     }
 
-    class CardViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
+    protected class AiringViewHolder extends RecyclerViewHolder<SeriesList> {
 
-        @BindView(R.id.card_view) CardView cardView;
-        @BindView(R.id.img_lge) ImageView image;
-        @BindView(R.id.txt_eng_title) TextView eng;
-        @BindView(R.id.txt_romanji) TextView romanji;
-        @BindView(R.id.txt_anime_type) TextView type;
-        @BindView(R.id.txt_anime_eps) TextView eps;
-        @BindView(R.id.txt_airing) TextView airing;
-        @BindView(R.id.txt_popularity) TextView popularity;
-        @BindView(R.id.txt_startdate) TextView starting;
-        @BindView(R.id.txt_last_updated) TextView nxt_ep;
-        @BindView(R.id.line) FrameLayout line;
+        private AdapterSeriesAiringBinding binding;
 
-        CardViewHolder(View itemView) {
-            super(itemView);
-            image.setOnClickListener(this);
-            cardView.setOnClickListener(this);
-            image.setOnLongClickListener(this);
-            cardView.setOnLongClickListener(this);
+        /**
+         * Default constructor which includes binding with butter knife
+         *
+         * @param binding
+         */
+        public AiringViewHolder(AdapterSeriesAiringBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
+        /**
+         * Load image, text, buttons, etc. in this method from the given parameter
+         * <br/>
+         *
+         * @param model Is the model at the current adapter position
+         */
         @Override
-        public void onBindViewHolder(ListItem model) {
-
-            eng.setText(model.getAnime().getTitle_english());
-            romanji.setText(model.getAnime().getTitle_romaji());
-            type.setText(model.getAnime().getType());
-            eps.setText(String.format(Locale.getDefault(), "Watched %s/%s", model.getEpisodes_watched(),model.getAnime().getTotal_episodes() < 1?"?":model.getAnime().getTotal_episodes()));
-            airing.setText(model.getAnime().getAiring_status());
-            popularity.setText(mContext.getString(R.string.text_popularity, model.getAnime().getPopularity()));
-            starting.setText(String.format("%s",model.getScore()));
-            nxt_ep.setText(DateTimeConverter.getNextEpDate(model.getAnime().getAiring()));
-
-            if(model.getAnime().getAiring().getNext_episode() - model.getEpisodes_watched() > 1)
-                line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorStateOrange));
-            else
-                line.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBlueGrey100));
-
-            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
-                    .into(image);
+        public void onBindViewHolder(SeriesList model) {
+            binding.setModel(model);
+            binding.seriesTitle.setTitle(model);
+            binding.seriesEpisodes.setModel(model, currentUser);
+            binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(SeriesUtil.getSeriesModel(model)));
+            binding.executePendingBindings();
         }
 
+        /**
+         * If any image views are used within the view holder, clear any pending async img requests
+         * by using Glide.clear(ImageView) or Glide.with(context).clear(view) if using Glide v4.0
+         * <br/>
+         *
+         * @see Glide
+         */
         @Override
         public void onViewRecycled() {
-            Glide.clear(image);
+            Glide.with(getContext()).clear(binding.seriesImage);
+            binding.seriesEpisodes.onViewRecycled();
+            binding.customRatingWidget.onViewRecycled();
+            binding.unbind();
         }
 
-        @Override
+        /**
+         * Handle any onclick events from our views
+         * <br/>
+         *
+         * @param v the view that has been clicked
+         * @see View.OnClickListener
+         */
+        @Override @OnClick(R.id.series_image)
         public void onClick(View v) {
-            interactionListener.onClickSeries(mAdapter.get(getAdapterPosition()), v.getId());
+            int index;
+            if((index = getAdapterPosition()) > -1)
+                clickListener.onItemClick(v, data.get(index));
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            interactionListener.onLongClickSeries(mAdapter.get(getAdapterPosition()));
-            return true;
-        }
-    }
-
-    class GridViewHolder extends RecyclerViewHolder<ListItem> implements View.OnLongClickListener {
-
-        @BindView(R.id.txt_title) TextView title;
-        @BindView(R.id.txt_anime_eps) TextView eps;
-        @BindView(R.id.txt_anime_info) TextView info;
-        @BindView(R.id.img_lge) ImageView image;
-        @BindView(R.id.line) View line;
-
-        GridViewHolder(View itemView) {
-            super(itemView);
-            eps.setOnClickListener(this);
-            image.setOnClickListener(this);
-            image.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onBindViewHolder(ListItem model) {
-
-            switch (mApiPrefs.getTitleLanguage()) {
-                case "romaji":
-                    title.setText(model.getAnime().getTitle_romaji());
-                    break;
-                case "english":
-                    title.setText(model.getAnime().getTitle_english());
-                    break;
-                case "japanese":
-                    title.setText(model.getAnime().getTitle_japanese());
-                    break;
-            }
-
-            info.setText(DateTimeConverter.getNextEpDate(model.getAnime().getAiring()));
-            eps.setText(String.format(Locale.getDefault(), "%s/%s +", model.getEpisodes_watched(),model.getAnime().getTotal_episodes() < 1?"?":model.getAnime().getTotal_episodes()));
-            if(model.getAnime().getAiring().getNext_episode() - model.getEpisodes_watched() > 1)
-                line.setVisibility(View.VISIBLE);
-            else
-                line.setVisibility(View.GONE);
-
-            Glide.with(mContext).load(model.getAnime().getImage_url_lge())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.drawable.toolbar_shadow)
-                    .centerCrop()
-                    .into(image);
-        }
-
-        @Override
-        public void onViewRecycled() {
-            Glide.clear(image);
-        }
-
-        @Override
-        public void onClick(View v) {
-            interactionListener.onClickSeries(mAdapter.get(getAdapterPosition()), v.getId());
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            interactionListener.onLongClickSeries(mAdapter.get(getAdapterPosition()));
+        @Override @OnLongClick(R.id.series_image)
+        public boolean onLongClick(View view) {
+            int index;
+            if((index = getAdapterPosition()) > -1)
+                clickListener.onItemLongClick(view, data.get(index));
             return true;
         }
     }

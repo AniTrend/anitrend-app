@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="?cardColor">
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/toolbar_title"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_margin="@dimen/lg_margin"
+            android:padding="@dimen/lg_margin"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            tools:text="Toolbar Title" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/toolbar_search"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="@dimen/lg_margin"
+            android:padding="@dimen/lg_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:foreground="?selectableItemBackground"
+            tools:visibility="visible"
+            tools:src="@drawable/ic_search_grey_600_24dp" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/toolbar_state"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="@dimen/lg_margin"
+            android:padding="@dimen/lg_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:foreground="?selectableItemBackground"
+            tools:src="@drawable/ic_close_grey_600_24dp" />
+
+    </LinearLayout>
+
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="?titleColor"
+        android:textColorHint="?subtitleColor"
+        app:searchVoiceIcon="?voiceDrawable"
+        app:searchSuggestionIcon="?suggestionDrawable"
+        app:searchSuggestionBackground="?colorPrimary"
+        app:searchCloseIcon="?closeDrawable"
+        app:searchBackIcon="?backDrawable"
+        app:searchBackground="?colorPrimary" />
+</FrameLayout>

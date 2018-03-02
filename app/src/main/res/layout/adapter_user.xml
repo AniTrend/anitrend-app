@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.base.UserBase"/>
+    </data>
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/lg_margin"
+        android:foreground="?selectableItemBackground"
+        android:background="?attr/cardColor"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/md_margin">
+
+        <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+            android:id="@+id/user_avatar"
+            android:layout_gravity="start|center_vertical"
+            android:layout_width="@dimen/avatar_size_md"
+            android:layout_height="@dimen/avatar_size_md"
+            app:avatarUrl="@{model.image_url_lge}"
+            tools:src="@drawable/avatar_placeholder"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="wrap_content" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/user_name"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{model.display_name}"
+            tools:text="Loath57"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/xl_margin"
+            android:layout_height="wrap_content" />
+
+        <com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
+            android:id="@+id/user_follow_state_widget"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</layout>
