@@ -51,13 +51,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/assets" type="java-test-resource" />
@@ -65,6 +58,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testDebug/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/assets" type="java-resource" />
@@ -89,11 +89,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/build-info" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/builds" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-compiler" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-info" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-classes" />
@@ -117,7 +115,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/objectbox-build-config.json" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 27 Platform" jdkType="Android SDK" />
@@ -146,6 +143,7 @@
     <orderEntry type="library" name="com.android.support:support-media-compat-27.0.2" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:answers-1.4.1" level="project" />
     <orderEntry type="library" name="com.github.XunMengWinter:CircularAnim-0.3.4" level="project" />
+    <orderEntry type="library" name="__local_aars__:/home/max/Documents/GitHub/anitrend-app/app/libs/txtmark-0.16.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp3:logging-interceptor:3.9.0@jar" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-11.8.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-27.0.2" level="project" />
@@ -177,7 +175,6 @@
     <orderEntry type="library" name="com.google.code.findbugs:jsr305:3.0.2@jar" level="project" />
     <orderEntry type="library" name="com.zzhoujay.markdown:markdown-1.0.5" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-license-11.8.0" level="project" />
-    <orderEntry type="library" name="__local_aars__:/home/max/Documents/GitHub/anitrend/app/libs/YouTubeAndroidPlayerApi.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.github.rahatarmanahmed:circularprogressview-2.5.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-license-11.8.0" level="project" />
     <orderEntry type="library" name="com.squareup.retrofit2:converter-gson:2.3.0@jar" level="project" />
@@ -197,6 +194,7 @@
     <orderEntry type="library" name="io.objectbox:objectbox-java-api:1.4.1@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-ui-27.0.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-tasks-11.8.0" level="project" />
+    <orderEntry type="library" name="__local_aars__:/home/max/Documents/GitHub/anitrend-app/app/libs/YouTubeAndroidPlayerApi.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="cn.jzvd:jiaozivideoplayer-6.2.7" level="project" />
     <orderEntry type="library" name="com.tapadoo.android:alerter-2.0.4" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:gifdecoder-4.6.1" level="project" />
@@ -214,7 +212,6 @@
     <orderEntry type="library" name="com.annimon:stream:1.1.9@jar" level="project" />
     <orderEntry type="library" name="com.squareup.retrofit2:converter-simplexml:2.3.0@jar" level="project" />
     <orderEntry type="library" name="org.ocpsoft.prettytime:prettytime:4.0.1.Final@jar" level="project" />
-    <orderEntry type="library" name="__local_aars__:/home/max/Documents/GitHub/anitrend/app/libs/txtmark-0.16.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.github.PhilJay:MPAndroidChart:v3.0.3@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:livedata-core-1.1.0" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:beta-1.2.7" level="project" />
