@@ -49,7 +49,6 @@ import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
@@ -64,7 +63,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -338,7 +336,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                                     @Override
                                     public void onPositiveButton() {
                                         Version version = getPresenter().getDatabase().getRemoteVersion();
-                                        if(version != null && version.checkAgainstCurrent())
+                                        if(version != null && version.isNewerVersion())
                                             DownloaderService.downloadNewVersion(MainActivity.this, version);
                                         else
                                             NotifyUtil.createAlerter(MainActivity.this, getString(R.string.title_update_infodadat),
@@ -408,7 +406,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         else
             mHeaderView.setImageResource(R.drawable.reg_bg);
 
-        if(version != null && version.checkAgainstCurrent()) {
+        if(version != null && version.isNewerVersion()) {
             // If a new version of the application is available on GitHub
             TextView mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update).getActionView().findViewById(R.id.app_update_info);
             mAppUpdateWidget.setText(getString(R.string.app_update, version.getVersion()));

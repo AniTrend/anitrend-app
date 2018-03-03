@@ -17,9 +17,10 @@ public class Version implements Parcelable {
 
     @Id(assignable = true)
     private long code;
+    private long last_checked;
+    private boolean db_migration;
     private String version;
     private String app_id;
-    private long last_checked;
 
     public Version() {
 
@@ -72,7 +73,7 @@ public class Version implements Parcelable {
         return app_id;
     }
 
-    public boolean checkAgainstCurrent() {
+    public boolean isNewerVersion() {
         return code > BuildConfig.VERSION_CODE;
     }
 
@@ -94,5 +95,13 @@ public class Version implements Parcelable {
 
     public void setLast_checked(long last_checked) {
         this.last_checked = last_checked;
+    }
+
+    public boolean isDb_migration() {
+        return db_migration;
+    }
+
+    public void setDb_migration(boolean db_migration) {
+        this.db_migration = db_migration;
     }
 }
