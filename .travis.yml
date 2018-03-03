@@ -33,12 +33,13 @@ android:
 licenses:
   - '.+'
 
-# Move our test play-services configuration to the appropreiate config location
-before_script: mv app/src/.travic-ci/google-services.json app/src/google-services.json
-
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+# Move our test play-services configuration to the appropreiate config location
+before_script:
+    - mv app/.travic-ci/google-services.json app/google-services.json
 
 cache:
   directories:

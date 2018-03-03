@@ -13,31 +13,32 @@ Big shout out to all the testers, translators and donators on the [AniTrend Disc
 # Screenshots
 
 ### Dual Application Themes
-<br/>
+
 <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145123.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145158.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145057.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145213.png" width="200px"/>
+
 
 <br/>
 
 ### Dedicated Anime &amp; Manga Pages
-<br/>
+
 <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145523.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145539.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145557.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145619.png" width="200px"/>
 
 <br/>
 
 ### Chrunchyroll Feeds Integration
-<br/>
+
 <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145319.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145336.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145413.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145710.png" width="200px"/>
 
 <br/>
 
 ### Anime &amp; Manga Reviews
-<br/>
+
 <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145855.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145917.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150123.png" width="200px"/>
 
 <br/>
 
 ### More, More &amp; So Much More
-<br/>
+
 <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-143948.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-144555.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-143446.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-143529.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150251.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145643.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150446.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150919.png" width="200px"/>
 
 # License
