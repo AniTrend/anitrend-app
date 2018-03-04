@@ -303,7 +303,7 @@
     },
     {
       "id": "9:1765633700553609294",
-      "lastPropertyId": "4:3840672239741329836",
+      "lastPropertyId": "5:58109564652939878",
       "name": "Version",
       "properties": [
         {
@@ -321,6 +321,10 @@
         {
           "id": "4:3840672239741329836",
           "name": "last_checked"
+        },
+        {
+          "id": "5:58109564652939878",
+          "name": "db_migration"
         }
       ],
       "relations": []

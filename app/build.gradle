@@ -156,6 +156,9 @@ dependencies {
     /** Charts */
     compile'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
+    /** About Library */
+    compile 'com.github.medyo:android-about-page:1.2.2'
+
     testCompile 'junit:junit:4.12'
 }
 
