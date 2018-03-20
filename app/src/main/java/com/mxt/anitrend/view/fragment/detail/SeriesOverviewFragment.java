@@ -21,7 +21,7 @@ import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.anilist.Tag;
+import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -128,10 +128,10 @@ public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter,
         binding.genreRecycler.setAdapter(genreAdapter);
 
         if(tagAdapter == null) {
-            tagAdapter = new TagAdapter(model.getTags(), getContext());
-            tagAdapter.setClickListener(new ItemClickListener<Tag>() {
+            tagAdapter = new TagAdapter(model.getMediaTags(), getContext());
+            tagAdapter.setClickListener(new ItemClickListener<MediaTag>() {
                 @Override
-                public void onItemClick(View target, Tag data) {
+                public void onItemClick(View target, MediaTag data) {
                     switch (target.getId()) {
                         case R.id.container:
                             DialogUtil.createMessage(getActivity(), data.getName(), data.getDescription(),
@@ -154,7 +154,7 @@ public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter,
                 }
 
                 @Override
-                public void onItemLongClick(View target, Tag data) {
+                public void onItemLongClick(View target, MediaTag data) {
 
                 }
             });

@@ -10,7 +10,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterLinkBinding;
-import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.List;

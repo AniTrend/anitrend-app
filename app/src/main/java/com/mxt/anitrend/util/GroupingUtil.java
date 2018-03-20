@@ -7,7 +7,7 @@ import com.annimon.stream.Stream;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.model.entity.group.EntityHeader;
 

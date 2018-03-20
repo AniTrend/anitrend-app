@@ -86,14 +86,14 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             Bundle SHORTCUT_MY_ANIME_BUNDLE = new Bundle();
             SHORTCUT_MY_ANIME_BUNDLE.putInt(KeyUtils.arg_series_type, KeyUtils.ANIME);
-            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_user_name, model.getDisplay_name());
+            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_user_name, model.getName());
 
             Bundle SHORTCUT_MY_MANGA_BUNDLE = new Bundle();
             SHORTCUT_MY_MANGA_BUNDLE.putInt(KeyUtils.arg_series_type, KeyUtils.MANGA);
-            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_user_name, model.getDisplay_name());
+            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_user_name, model.getName());
 
             Bundle SHORTCUT_PROFILE_BUNDLE = new Bundle();
-            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtils.arg_user_name, model.getDisplay_name());
+            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtils.arg_user_name, model.getName());
 
             ShortcutHelper.createShortcuts(LoginActivity.this,
                     new ShortcutHelper.ShortcutBuilder()

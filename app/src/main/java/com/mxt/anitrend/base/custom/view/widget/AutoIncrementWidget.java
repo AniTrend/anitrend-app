@@ -16,7 +16,7 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -112,7 +112,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         try {
             MediaList mediaList;
             if(response.isSuccessful() && (mediaList = response.body()) != null) {
-                boolean isModelCategoryChanged = !mediaList.getList_status().equals(model.getList_status());
+                boolean isModelCategoryChanged = !mediaList.getStatus().equals(model.getStatus());
                 mediaList.setAnime(model.getAnime()); mediaList.setManga(model.getManga()); model = mediaList;
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
                 presenter.getDatabase().getBoxStore(MediaList.class).put(model); resetFlipperState();
@@ -143,11 +143,11 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
 
     private void updateModelState() {
         model.setChapters_read(model.getChapters_read() + 1);
-        model.setEpisodes_watched(model.getEpisodes_watched() + 1);
+        model.setProgress(model.getProgress() + 1);
         if(SeriesUtil.isIncrementLimitReached(model))
-            model.setList_status(KeyUtils.UserAnimeStatus[KeyUtils.COMPLETED]);
+            model.setStatus(KeyUtils.UserAnimeStatus[KeyUtils.COMPLETED]);
         if(SeriesUtil.isIncrementLimitReached(model))
-            model.setList_status(KeyUtils.UserMangaStatus[KeyUtils.COMPLETED]);
+            model.setStatus(KeyUtils.UserMangaStatus[KeyUtils.COMPLETED]);
 
         presenter.setParams(getParam());
         presenter.requestData(requestType, getContext(), this);
@@ -155,9 +155,9 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
 
     private Bundle getParam() {
         Bundle bundle = new Bundle();
-        bundle.putLong(KeyUtils.arg_id, model.getSeries_id());
+        bundle.putLong(KeyUtils.arg_id, model.getMediaId());
 
-        bundle.putString(KeyUtils.arg_list_status, model.getList_status());
+        bundle.putString(KeyUtils.arg_list_status, model.getStatus());
         bundle.putString(KeyUtils.arg_list_score, model.getScore());
         bundle.putInt(KeyUtils.arg_list_score_raw, model.getScore_raw());
         bundle.putString(KeyUtils.arg_list_notes, model.getNotes());
@@ -166,12 +166,12 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         // bundle.putString(KeyUtils.arg_list_advanced_rating, name_of_rating);
         // bundle.putInt(KeyUtils.arg_list_custom_list, model.getCustom_lists()[selected_index]);
 
-        bundle.putInt(KeyUtils.arg_list_watched, model.getEpisodes_watched());
-        bundle.putInt(KeyUtils.arg_list_re_watched, model.getRewatched());
+        bundle.putInt(KeyUtils.arg_list_watched, model.getProgress());
+        bundle.putInt(KeyUtils.arg_list_re_watched, model.getRepeat());
 
         bundle.putInt(KeyUtils.arg_list_read, model.getChapters_read());
         bundle.putInt(KeyUtils.arg_list_re_read, model.getReread());
-        bundle.putInt(KeyUtils.arg_list_volumes, model.getVolumes_read());
+        bundle.putInt(KeyUtils.arg_list_volumes, model.getProgressVolumes());
 
         return bundle;
     }

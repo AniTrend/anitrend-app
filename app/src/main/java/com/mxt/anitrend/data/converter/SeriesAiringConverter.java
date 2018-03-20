@@ -1,25 +1,26 @@
 package com.mxt.anitrend.data.converter;
 
 import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.entity.general.Airing;
+import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
+
 import io.objectbox.converter.PropertyConverter;
 
 /**
  * Created by max on 2017/11/04.
- * Media Airing Property Converter
+ * Media AiringSchedule Property Converter
  */
 
-public class SeriesAiringConverter implements PropertyConverter<Airing, String> {
+public class SeriesAiringConverter implements PropertyConverter<AiringSchedule, String> {
 
     @Override
-    public Airing convertToEntityProperty(String databaseValue) {
+    public AiringSchedule convertToEntityProperty(String databaseValue) {
         if(databaseValue == null)
             return null;
-        return WebFactory.gson.fromJson(databaseValue, Airing.class);
+        return WebFactory.gson.fromJson(databaseValue, AiringSchedule.class);
     }
 
     @Override
-    public String convertToDatabaseValue(Airing entityProperty) {
+    public String convertToDatabaseValue(AiringSchedule entityProperty) {
         if(entityProperty == null)
             return null;
         return WebFactory.gson.toJson(entityProperty);

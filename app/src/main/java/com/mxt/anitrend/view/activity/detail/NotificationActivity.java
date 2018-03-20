@@ -5,12 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.view.fragment.detail.NotificationFragment;
 

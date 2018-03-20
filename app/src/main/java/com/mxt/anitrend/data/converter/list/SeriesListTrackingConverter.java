@@ -2,7 +2,7 @@ package com.mxt.anitrend.data.converter.list;
 
 import com.google.gson.reflect.TypeToken;
 import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 
 import java.util.List;
 import java.util.Map;

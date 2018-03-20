@@ -13,7 +13,7 @@ import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -123,7 +123,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
         setReadItems(data);
         if(target.getId() == R.id.notification_img && data.getObject_type() != KeyUtils.NOTIFICATION_AIRING) {
             intent = new Intent(getActivity(), ProfileActivity.class);
-            intent.putExtra(KeyUtils.arg_user_name, data.getUser().getDisplay_name());
+            intent.putExtra(KeyUtils.arg_user_name, data.getUser().getName());
             CompatUtil.startRevealAnim(getActivity(), target, intent);
         }
         else
@@ -137,16 +137,16 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
                     break;
                 case KeyUtils.NOTIFICATION_COMMENT_FORUM:
                     if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), data.getComment().getComment());
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
                     } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), String.valueOf(data.getMeta_value()));
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
                     }
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_FORUM:
                     if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), data.getComment().getComment());
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
                     } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), String.valueOf(data.getMeta_value()));
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
                     }
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:
@@ -161,14 +161,14 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
                     break;
                 case KeyUtils.NOTIFICATION_REPLY_FORUM:
                     if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), data.getComment().getComment());
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
                     } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), String.valueOf(data.getMeta_value()));
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
                     }
                     break;
                 case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
                     intent = new Intent(getActivity(), ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_user_name, data.getUser().getDisplay_name());
+                    intent.putExtra(KeyUtils.arg_user_name, data.getUser().getName());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
@@ -187,16 +187,16 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_FORUM_COMMENT:
                     if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), data.getComment().getComment());
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
                     } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), String.valueOf(data.getMeta_value()));
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
                     }
                     break;
                 default:
                     if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), data.getComment().getComment());
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
                     } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getDisplay_name(), String.valueOf(data.getMeta_value()));
+                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
                     }
                     break;
             }

@@ -17,10 +17,10 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseComment;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
+import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.general.UserActivityReply;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -49,7 +49,7 @@ import retrofit2.Response;
  * Comment fragment
  */
 
-public class CommentFragment extends FragmentBaseComment implements RetroCallback<UserActivity>, BaseConsumer.onRequestModelChange<UserActivityReply> {
+public class CommentFragment extends FragmentBaseComment implements RetroCallback<FeedList>, BaseConsumer.onRequestModelChange<FeedReply> {
 
     private StatusFeedAdapter feedAdapter;
 
@@ -69,7 +69,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             if (getArguments().containsKey(KeyUtils.arg_model))
-                userActivity = getArguments().getParcelable(KeyUtils.arg_model);
+                feedList = getArguments().getParcelable(KeyUtils.arg_model);
             if (getArguments().containsKey(KeyUtils.arg_id))
                 userActivityId = getArguments().getInt(KeyUtils.arg_id);
         }
@@ -119,8 +119,8 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
 
             }
         });
-        if(userActivity != null) {
-            userActivityId = userActivity.getId();
+        if(feedList != null) {
+            userActivityId = feedList.getId();
             initExtraComponents();
         }
         else {
@@ -171,11 +171,11 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, UserActivityReply data) {
+    public void onItemClick(View target, FeedReply data) {
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                MediaBase series = userActivity.getSeries();
+                MediaBase series = feedList.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
                 intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());
@@ -217,19 +217,19 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, UserActivityReply data) {
+    public void onItemLongClick(View target, FeedReply data) {
 
     }
 
     private void initExtraComponents() {
-        composerWidget.setModel(userActivity);
+        composerWidget.setModel(feedList);
         composerWidget.setRequestMode(KeyUtils.ACTIVITY_REPLY_REQ);
 
         if(feedAdapter == null) {
-            feedAdapter = new StatusFeedAdapter(Collections.singletonList(userActivity), getContext());
-            feedAdapter.setClickListener(new ItemClickListener<UserActivity>() {
+            feedAdapter = new StatusFeedAdapter(Collections.singletonList(feedList), getContext());
+            feedAdapter.setClickListener(new ItemClickListener<FeedList>() {
                 @Override
-                public void onItemClick(View target, UserActivity data) {
+                public void onItemClick(View target, FeedList data) {
                     Intent intent;
                     switch (target.getId()) {
                         case R.id.series_image:
@@ -259,7 +259,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                 }
 
                 @Override
-                public void onItemLongClick(View target, UserActivity data) {
+                public void onItemLongClick(View target, FeedList data) {
                     switch (target.getId()) {
                         case R.id.series_image:
                             if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -287,10 +287,10 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
      * @param response the response from the network
      */
     @Override
-    public void onResponse(@NonNull Call<UserActivity> call, @NonNull Response<UserActivity> response) {
+    public void onResponse(@NonNull Call<FeedList> call, @NonNull Response<FeedList> response) {
         if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             if(response.isSuccessful() && response.body() != null) {
-                userActivity = response.body();
+                feedList = response.body();
                 initExtraComponents();
             } else {
                 NotifyUtil.createAlerter(getActivity(), getString(R.string.text_error_request),
@@ -307,7 +307,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
      * @param throwable contains information about the error
      */
     @Override
-    public void onFailure(@NonNull Call<UserActivity> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<FeedList> call, @NonNull Throwable throwable) {
         if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             throwable.printStackTrace();
             NotifyUtil.createAlerter(getActivity(), getString(R.string.text_error_request),
@@ -316,8 +316,8 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserActivityReply> consumer) {
-        Optional<IntPair<UserActivityReply>> pairOptional;
+    public void onModelChanged(BaseConsumer<FeedReply> consumer) {
+        Optional<IntPair<FeedReply>> pairOptional;
         int pairIndex;
         switch (consumer.getRequestMode()) {
             case KeyUtils.ACTIVITY_REPLY_REQ:

@@ -7,7 +7,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
 

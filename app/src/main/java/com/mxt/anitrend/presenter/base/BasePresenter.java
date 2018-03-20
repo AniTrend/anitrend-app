@@ -11,7 +11,7 @@ import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.crunchy.MediaContent;
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail;
-import com.mxt.anitrend.model.entity.general.UserStats;
+import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.service.TagGenreService;
 import com.mxt.anitrend.util.ComparatorProvider;
 

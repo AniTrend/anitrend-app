@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Discover</string>
     <string name="nav_header_manage">Manage</string>
@@ -27,7 +27,7 @@
         What You'll Need:
 
         1. A good text editor I recommend Atom (https://atom.io/), Sublime (https://www.sublimetext.com/), Brackets (http://brackets.io/) if you want to use something else no problem
-        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information https://www.w3schools.com/tags/
+        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information https://www.w3schools.mediaTagstags/
         3. Know what character escaping is, because you cannot use characters like ' or , or ; or & or $ or % e.t.c without escaping them. e.g.
            What\'s Trending should become What\'s Trending (Refer to http://www.ascii.cl/htmlcodes.htm look at the HTML Name Column for some conventions) not what i am looking for?
            Contact me on the AniTrend Discord server (https://discord.gg/nqsFGgX) under the #translators channel
@@ -39,7 +39,7 @@
 
         I know different languages have different rules like RTL so if you need to change the positions/order of %s or %d or %f you can still do so just don't remove the % sign
 
-        N.B. If any of the tags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
+        N.B. If any of mediaTagstags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
         So you can just omit those fields
 
         Special Cases:
@@ -91,7 +91,7 @@
 
     <string name="Watch">Guarda</string>
 
-    <!--Try to keep all titles short and do not change the order of the <item> tags-->
+    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
     <string-array name="feed_titles">
         <item>avanzamento</item>
         <item>stato</item>
@@ -444,7 +444,7 @@
         <item>360</item>
     </string-array>
 
-    <!--Another lmessageBasesage using a bit of html the p tags represent new paragraphs-->
+    <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
     <string name="login_notice">
         <![CDATA[
             <p>

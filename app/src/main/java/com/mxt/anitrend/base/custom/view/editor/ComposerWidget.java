@@ -19,10 +19,10 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetComposerBinding;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
+import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.model.entity.general.UserActivityReply;
 import com.mxt.anitrend.model.entity.giphy.Gif;
 import com.mxt.anitrend.model.entity.giphy.Giphy;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -54,8 +54,8 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
     private WidgetPresenter<ResponseBody> presenter;
     private ItemClickListener<Object> itemClickListener;
 
-    private UserActivity userActivity;
-    private UserActivityReply userActivityReply;
+    private FeedList feedList;
+    private FeedReply feedReply;
 
     private Lifecycle lifecycle;
 
@@ -117,18 +117,18 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         this.lifecycle = lifecycle;
     }
 
-    public void setModel(UserActivity userActivity) {
-        this.userActivity = userActivity;
-        presenter.getParams().putInt(KeyUtils.arg_id, userActivity.getId());
+    public void setModel(FeedList feedList) {
+        this.feedList = feedList;
+        presenter.getParams().putInt(KeyUtils.arg_id, feedList.getId());
     }
 
     public void setModel(User user) {
         presenter.getParams().putLong(KeyUtils.arg_recipient_id, user.getId());
     }
 
-    public void setModel(UserActivityReply userActivityReply) {
-        this.userActivityReply = userActivityReply;
-        presenter.getParams().putInt(KeyUtils.arg_activity_id, userActivityReply.getId());
+    public void setModel(FeedReply feedReply) {
+        this.feedReply = feedReply;
+        presenter.getParams().putInt(KeyUtils.arg_activity_id, feedReply.getId());
     }
 
     public void setRequestMode(@KeyUtils.RequestMode int requestType) {
@@ -156,9 +156,9 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
             binding.widgetFlipper.showNext();
 
             if(requestType == KeyUtils.ACTIVITY_EDIT_REQ)
-                userActivity.setValue(binding.comment.getFormattedText());
+                feedList.setValue(binding.comment.getFormattedText());
             else if(requestType == KeyUtils.ACTIVITY_REPLY_EDIT_REQ)
-                userActivityReply.setReply_value(binding.comment.getFormattedText());
+                feedReply.setText(binding.comment.getFormattedText());
 
             presenter.getParams().putString(KeyUtils.arg_text, binding.comment.getFormattedText());
             presenter.requestData(requestType, getContext(), this);
@@ -204,11 +204,11 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
                 binding.comment.getText().clear();
 
                 if(requestType == KeyUtils.ACTIVITY_EDIT_REQ)
-                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, userActivity), false);
+                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
                 else if(requestType == KeyUtils.ACTIVITY_REPLY_EDIT_REQ)
-                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, userActivityReply), false);
+                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
                 else
-                    presenter.notifyAllListeners(new BaseConsumer<UserActivity>(requestType), false);
+                    presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
             }
             else
                 NotifyUtil.makeText(getContext(), ErrorUtil.getError(response), Toast.LENGTH_SHORT).show();
@@ -262,8 +262,8 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
             appendText(textValue);
     }
 
-    public void mentionUserFrom(UserActivityReply userActivityReply) {
-        String user = userActivityReply.getUser().getDisplay_name();
+    public void mentionUserFrom(FeedReply feedReply) {
+        String user = feedReply.getUser().getName();
         appendText(String.format(Locale.getDefault(), "@%s ", user));
     }
 

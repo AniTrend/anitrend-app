@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataContainer<T> {
 
-    @SerializedName(value = "PageContainer", alternate = {"Character", "Staff", "Studio", "User", "Media", "MediaList",
-            "Activity", "ActivityReply", "MediaTagCollection", "GenreCollection"
+    @SerializedName(value = "Page", alternate = {"Character", "Staff", "Studio", "User", "Media", "MediaList",
+            "Activity", "ActivityReply", "MediaTagCollection", "GenreCollection", "MediaTrends", "Viewer"
     })
     private T result;
 

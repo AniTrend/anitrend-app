@@ -1,10 +1,10 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.general.MediaList" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaList" />
     </data>
 
     <FrameLayout
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:src="@drawable/sample_img"
-            app:imageUrl="@{model.anime != null? model.anime.image_url_lge : model.manga.image_url_lge}"/>
+            app:imageUrl="@{model.anime != null? model.anime.avatar : model.manga.avatar}"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             tools:text="Gintama."/>
 
-        <!-- Episode Increment View, With Color View For Airing Status -->
+        <!-- Episode Increment View, With Color View AiringSchedulering Status -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_gravity="bottom|start"

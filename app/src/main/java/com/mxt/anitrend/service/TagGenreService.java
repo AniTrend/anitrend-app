@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.annimon.stream.Stream;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.api.retro.anilist.SeriesModel;
+import com.mxt.anitrend.model.api.retro.anilist.BaseModel;
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.Tag;
+import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -44,19 +46,21 @@ public class TagGenreService extends IntentService {
         try {
             initAnalytics();
             BasePresenter basePresenter = new BasePresenter(getApplicationContext());
-            SeriesModel seriesModel = WebFactory.createService(SeriesModel.class, getApplicationContext());
-            if(basePresenter.getDatabase().getBoxStore(Tag.class).count() < 1) {
-                Response<List<Tag>> tagsResponse = seriesModel.getTags().execute();
-
+            BaseModel baseModel = WebFactory.createService(BaseModel.class, getApplicationContext());
+            if(basePresenter.getDatabase().getBoxStore(MediaTag.class).count() < 1) {
+                Response<List<MediaTag>> tagsResponse = baseModel.getTags(RequestHandler.getDefaultQueryContainer()).execute();
                 if (tagsResponse.isSuccessful() && tagsResponse.body() != null)
                     basePresenter.getDatabase().saveTags(tagsResponse.body());
                 else
                     Log.e(ServiceName, ErrorUtil.getError(tagsResponse));
             }
             if(basePresenter.getDatabase().getBoxStore(Genre.class).count() < 1) {
-                Response<List<Genre>> genreResponse = seriesModel.getGenres().execute();
-                if (genreResponse.isSuccessful() && genreResponse.body() != null)
-                    basePresenter.getDatabase().saveGenres(genreResponse.body());
+                Response<List<String>> genreResponse = baseModel.getGenres(RequestHandler.getDefaultQueryContainer()).execute();
+                List<String> genres;
+                if (genreResponse.isSuccessful() && (genres = genreResponse.body()) != null) {
+                    List<Genre> genreList = Stream.of(genres).map(Genre::new).toList();
+                    basePresenter.getDatabase().saveGenres(genreList);
+                }
                 else
                     Log.e(ServiceName, ErrorUtil.getError(genreResponse));
             }

@@ -10,10 +10,10 @@ import io.objectbox.annotation.Id;
 
 /**
  * Created by max on 2017/10/22.
- * VersionBase model from github
+ * Version model from github
  */
 @Entity
-public class VersionBase implements Parcelable {
+public class Version implements Parcelable {
 
     @Id(assignable = true)
     private long code;
@@ -22,16 +22,16 @@ public class VersionBase implements Parcelable {
     private String version;
     private String app_id;
 
-    public VersionBase() {
+    public Version() {
 
     }
 
-    public VersionBase(int code, String version) {
+    public Version(int code, String version) {
         this.code = code;
         this.version = version;
     }
 
-    protected VersionBase(Parcel in) {
+    protected Version(Parcel in) {
         code = in.readInt();
         version = in.readString();
         app_id = in.readString();
@@ -49,15 +49,15 @@ public class VersionBase implements Parcelable {
         return 0;
     }
 
-    public static final Creator<VersionBase> CREATOR = new Creator<VersionBase>() {
+    public static final Creator<Version> CREATOR = new Creator<Version>() {
         @Override
-        public VersionBase createFromParcel(Parcel in) {
-            return new VersionBase(in);
+        public Version createFromParcel(Parcel in) {
+            return new Version(in);
         }
 
         @Override
-        public VersionBase[] newArray(int size) {
-            return new VersionBase[size];
+        public Version[] newArray(int size) {
+            return new Version[size];
         }
     };
 

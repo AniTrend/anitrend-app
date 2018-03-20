@@ -1,5 +1,5 @@
 {
-  "_note1": "KEEP THIS FILE! Check it into a versionBase control system (VCS) like git.",
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
   "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
@@ -111,7 +111,7 @@
         {
           "id": "2:8858959861935915303",
           "indexId": "2:2490581992659279563",
-          "name": "display_name"
+          "name": "name"
         },
         {
           "id": "3:8275479215441191268",
@@ -139,7 +139,7 @@
         },
         {
           "id": "9:4227271090510558731",
-          "name": "image_url_lge"
+          "name": "avatar"
         },
         {
           "id": "10:1549736843475610512",
@@ -195,16 +195,16 @@
       "properties": [
         {
           "id": "1:54625114033089390",
-          "name": "record_id"
+          "name": "id"
         },
         {
           "id": "2:7425924412977654045",
           "indexId": "1:6452572299229966384",
-          "name": "series_id"
+          "name": "mediaId"
         },
         {
           "id": "3:3161330497945945203",
-          "name": "list_status"
+          "name": "status"
         },
         {
           "id": "4:4652146643650446384",
@@ -216,7 +216,7 @@
         },
         {
           "id": "6:5064918303103545591",
-          "name": "episodes_watched"
+          "name": "progress"
         },
         {
           "id": "7:7745325062226707705",
@@ -224,11 +224,11 @@
         },
         {
           "id": "8:7176446789884555510",
-          "name": "volumes_read"
+          "name": "progressVolumes"
         },
         {
           "id": "9:183083046875885251",
-          "name": "rewatched"
+          "name": "repeat"
         },
         {
           "id": "10:988194724083291752",
@@ -312,7 +312,7 @@
         },
         {
           "id": "2:5330112884900128504",
-          "name": "versionBase"
+          "name": "version"
         },
         {
           "id": "3:3430541957216003755",
@@ -432,7 +432,7 @@
         },
         {
           "id": "18:399841622588110547",
-          "name": "image_url_lge"
+          "name": "avatar"
         },
         {
           "id": "19:3613072485085710780",
@@ -468,7 +468,7 @@
         },
         {
           "id": "27:237983657539781184",
-          "name": "airing"
+          "name": "airingSchedule"
         },
         {
           "id": "28:7829713639354057686",
@@ -497,11 +497,11 @@
         {
           "id": "2:8409344056527173078",
           "indexId": "4:8099986486146876590",
-          "name": "display_name"
+          "name": "name"
         },
         {
           "id": "3:5694659253763382832",
-          "name": "image_url_lge"
+          "name": "avatar"
         },
         {
           "id": "4:4765201360663256868",
@@ -537,7 +537,7 @@
         },
         {
           "id": "7:3757330627079877634",
-          "name": "created_at"
+          "name": "createdAt"
         },
         {
           "id": "8:5943069004729972747",
@@ -611,5 +611,5 @@
     4117267305388460974
   ],
   "retiredRelationUids": [],
-  "versionBase": 1
+  "version": 1
 }

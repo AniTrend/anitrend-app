@@ -14,7 +14,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterReviewBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.model.entity.general.FeedReview;
 import com.mxt.anitrend.util.ApplicationPref;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class SeriesReviewAdapter extends RecyclerViewAdapter<Review> {
                 if(filter.isEmpty()) {
                     data = clone;
                 } else {
-                    data = new ArrayList<>(Stream.of(clone).filter((model) -> model.getUser().getDisplay_name().toLowerCase(Locale.getDefault()).contains(filter) || model.getAnime() != null? (
+                    data = new ArrayList<>(Stream.of(clone).filter((model) -> model.getUser().getName().toLowerCase(Locale.getDefault()).contains(filter) || model.getAnime() != null? (
                             model.getAnime().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
                                     model.getAnime().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
                                     model.getAnime().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) :

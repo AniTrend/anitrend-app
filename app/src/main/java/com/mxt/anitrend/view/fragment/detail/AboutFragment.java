@@ -36,7 +36,7 @@ public class AboutFragment extends FragmentBase<Void, BasePresenter, Void> {
                 .setImage(R.mipmap.ic_launcher)
                 .addGroup("About AniTrend")
                 .setDescription(getString(R.string.app_description))
-                .addItem(new Element().setTitle(String.format("VersionBase %s", BuildConfig.VERSION_NAME)))
+                .addItem(new Element().setTitle(String.format("Version %s", BuildConfig.VERSION_NAME)))
                 .addPlayStore("com.mxt.anitrend")
                 .addTwitter("anitrend_app")
                 .create();

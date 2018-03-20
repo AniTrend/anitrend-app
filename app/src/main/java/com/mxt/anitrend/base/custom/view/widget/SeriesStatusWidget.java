@@ -14,7 +14,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.SeriesUtil;
@@ -165,8 +165,8 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     /** Give the current airing status of the series */
     @BindingAdapter("airingStatus")
     public static void setAiringStatus(SeriesStatusWidget view, MediaList mediaList) {
-        if(mediaList != null && mediaList.getAnime() != null && mediaList.getAnime().getAiring() != null) {
-            if(mediaList.getAnime().getAiring().getNext_episode() - mediaList.getEpisodes_watched() > 1)
+        if(mediaList != null && mediaList.getAnime() != null && mediaList.getAnime().getAiringSchedule() != null) {
+            if(mediaList.getAnime().getAiringSchedule().getNext_episode() - mediaList.getProgress() > 1)
                 view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
         } else
             view.setVisibility(GONE);

@@ -7,7 +7,7 @@ import com.firebase.jobdispatcher.JobService;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.mxt.anitrend.base.custom.async.NotificationSyncTask;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotificationDispatcher;
 

@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="grid_list_x2">4</integer>
     <integer name="grid_giphy_x3">5</integer>

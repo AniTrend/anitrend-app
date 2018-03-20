@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.view.fragment.detail.CommentFragment;
 
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * Comment activity for progress & feeds
  */
 
-public class CommentActivity extends ActivityBase<UserActivity, BasePresenter> {
+public class CommentActivity extends ActivityBase<FeedList, BasePresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
 

@@ -59,11 +59,11 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
     public void persistChanges() {
         model.setChapters_read(!TextUtils.isEmpty(binding.diaCurrentChapters.getText())? Integer.valueOf(binding.diaCurrentChapters.getText().toString()): 0);
         model.setReread(!TextUtils.isEmpty(binding.diaCurrentReread.getText()) ? Integer.valueOf(binding.diaCurrentReread.getText().toString()): 0);
-        model.setVolumes_read(!TextUtils.isEmpty(binding.diaCurrentVolumes.getText()) ? Integer.valueOf(binding.diaCurrentVolumes.getText().toString()): 0);
+        model.setProgressVolumes(!TextUtils.isEmpty(binding.diaCurrentVolumes.getText()) ? Integer.valueOf(binding.diaCurrentVolumes.getText().toString()): 0);
         model.setScore_raw(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
         model.setPrivate(binding.diaCurrentPrivacy.isChecked()? 1 : 0);
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
-        model.setList_status(KeyUtils.UserMangaStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
+        model.setStatus(KeyUtils.UserMangaStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
     }
 
     @Override
@@ -81,8 +81,8 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         // Apply the adapter to the spinner
         binding.diaCurrentStatus.setAdapter(adapter);
 
-        if(!TextUtils.isEmpty(model.getList_status()))
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(UserMangaStatus).indexOf(model.getList_status()));
+        if(!TextUtils.isEmpty(model.getStatus()))
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(UserMangaStatus).indexOf(model.getStatus()));
         else
             binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserMangaStatus).indexOf(KeyUtils.UserMangaStatus[KeyUtils.PLAN_TO_READ]));
         binding.diaCurrentPrivacy.setChecked(model.isPrivate());
@@ -90,8 +90,8 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
             binding.diaCurrentScore.setText(String.valueOf(model.getScore_raw()));
         if(model.getChapters_read() != 0)
             binding.diaCurrentChapters.setText(String.valueOf(model.getChapters_read()));
-        if(model.getVolumes_read() != 0)
-            binding.diaCurrentVolumes.setText(String.valueOf(model.getVolumes_read()));
+        if(model.getProgressVolumes() != 0)
+            binding.diaCurrentVolumes.setText(String.valueOf(model.getProgressVolumes()));
         if(model.getReread() != 0)
             binding.diaCurrentReread.setText(String.valueOf(model.getReread()));
 
@@ -113,7 +113,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        model.setList_status(UserMangaStatus[i]);
+        model.setStatus(UserMangaStatus[i]);
         switch (UserMangaStatus[i]) {
             case "reading":
                 if (getSeriesModel().getPublishing_status().equals(KeyUtils.MangaStatusTypes[KeyUtils.NOT_YET_PUBLISHED]))
@@ -130,7 +130,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
                     binding.diaCurrentChapters.setText(String.valueOf(total));
                     total = getSeriesModel().getTotal_volumes();
                     if(total > 0) {
-                        model.setVolumes_read(total);
+                        model.setProgressVolumes(total);
                         binding.diaCurrentVolumes.setText(String.valueOf(total));
                     }
                 }

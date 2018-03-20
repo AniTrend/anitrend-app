@@ -4,7 +4,7 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.util.AttributeSet;
 
-import com.mxt.anitrend.model.entity.general.Airing;
+import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 import com.mxt.anitrend.util.DateUtil;
 
 import javax.annotation.Nullable;
@@ -37,9 +37,9 @@ public class AiringTextView extends SingleLineTextView {
     }
 
     @BindingAdapter("airingDate")
-    public static void setAiring(AiringTextView view, @Nullable Airing airing) {
-        if(airing != null) {
-            view.setText(DateUtil.getNextEpDate(airing));
+    public static void setAiring(AiringTextView view, @Nullable AiringSchedule airingSchedule) {
+        if(airingSchedule != null) {
+            view.setText(DateUtil.getNextEpDate(airingSchedule));
             view.setVisibility(VISIBLE);
         }
         else

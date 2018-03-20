@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Discover</string>
     <string name="nav_header_manage">Manage</string>
@@ -39,7 +39,7 @@
 
         I know different languages have different rules like RTL so if you need to change the positions/order of %s or %d or %f you can still do so just don't remove the % sign
 
-        N.B. If any of the tags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
+        N.B. If any of mediaTagstags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
         So you can just omit those fields
 
         Special Cases:
@@ -89,7 +89,7 @@
 
     <string name="Watch">Ver</string>
 
-    <!--Try to keep all titles short and do not change the order of the <item> tags-->
+    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
     <string-array name="feed_titles">
         <item>progreso</item>
         <item>estado</item>
@@ -446,7 +446,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>360</item>
     </string-array>
 
-    <!--Another lmessageBasesage using a bit of html the p tags represent new paragraphs-->
+    <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
     <string name="login_notice">
         <![CDATA[
             <p>

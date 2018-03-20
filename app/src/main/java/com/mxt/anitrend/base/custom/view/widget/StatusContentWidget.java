@@ -18,8 +18,8 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetStatusBinding;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
-import com.mxt.anitrend.model.entity.general.UserActivityReply;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
+import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.LinearScaleHelper;
@@ -73,12 +73,12 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
         linearScaleHelper = new LinearScaleHelper();
     }
 
-    public void setModel(UserActivity model) {
+    public void setModel(FeedList model) {
         binding.widgetStatusText.setMarkDownText(model.getValue());
         findMediaAttachments(model.getValue());
     }
 
-    public void setModel(UserActivityReply model) {
+    public void setModel(FeedReply model) {
         binding.widgetStatusText.setMarkDownText(model.getReply());
         findMediaAttachments(model.getReply());
     }

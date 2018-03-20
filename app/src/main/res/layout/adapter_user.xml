@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -24,7 +24,7 @@
             android:layout_gravity="start|center_vertical"
             android:layout_width="@dimen/avatar_size_md"
             android:layout_height="@dimen/avatar_size_md"
-            app:avatarUrl="@{model.image_url_lge}"
+            app:avatarUrl="@{model.avatar}"
             tools:src="@drawable/avatar_placeholder"/>
 
         <android.support.v4.widget.Space
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{model.display_name}"
+            android:text="@{model.name}"
             tools:text="Loath57"/>
 
         <android.support.v4.widget.Space

@@ -21,7 +21,7 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.ActivityShareContentBinding;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
@@ -45,8 +45,8 @@ import butterknife.OnClick;
  * share content intent activity
  */
 
-public class SharedContentActivity extends ActivityBase<UserActivity, BasePresenter> implements BottomSheetListener,
-        BaseConsumer.onRequestModelChange<UserActivity>, ItemClickListener<Object> {
+public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter> implements BottomSheetListener,
+        BaseConsumer.onRequestModelChange<FeedList>, ItemClickListener<Object> {
 
     private ActivityShareContentBinding binding;
     private BottomSheetBehavior bottomSheetBehavior;
@@ -198,7 +198,7 @@ public class SharedContentActivity extends ActivityBase<UserActivity, BasePresen
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserActivity> consumer) {
+    public void onModelChanged(BaseConsumer<FeedList> consumer) {
         if(consumer.getRequestMode() == KeyUtils.ACTIVITY_CREATE_REQ) {
             NotifyUtil.makeText(this, R.string.text_compose_success, R.drawable.ic_insert_emoticon_white_24dp, Toast.LENGTH_SHORT).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);

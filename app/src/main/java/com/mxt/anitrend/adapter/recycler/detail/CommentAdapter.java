@@ -10,7 +10,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterCommentBinding;
-import com.mxt.anitrend.model.entity.general.UserActivityReply;
+import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
@@ -23,14 +23,14 @@ import butterknife.OnClick;
  * comment activity adapter
  */
 
-public class CommentAdapter extends RecyclerViewAdapter<UserActivityReply> {
+public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
 
-    public CommentAdapter(List<UserActivityReply> data, Context context) {
+    public CommentAdapter(List<FeedReply> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<UserActivityReply> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<FeedReply> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new CommentViewHolder(AdapterCommentBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
@@ -39,7 +39,7 @@ public class CommentAdapter extends RecyclerViewAdapter<UserActivityReply> {
         return null;
     }
 
-    protected class CommentViewHolder extends RecyclerViewHolder<UserActivityReply> {
+    protected class CommentViewHolder extends RecyclerViewHolder<FeedReply> {
 
         private AdapterCommentBinding binding;
 
@@ -60,7 +60,7 @@ public class CommentAdapter extends RecyclerViewAdapter<UserActivityReply> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(UserActivityReply model) {
+        public void onBindViewHolder(FeedReply model) {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
             binding.widgetMention.setVisibility(View.GONE);

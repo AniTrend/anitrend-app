@@ -9,7 +9,7 @@ import android.util.TypedValue;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 
 import java.util.Locale;
 
@@ -46,7 +46,7 @@ public class FeedHeadlineTextView extends AppCompatTextView implements CustomVie
     }
 
     @BindingAdapter("feedHeadline")
-    public static void setHeadline(FeedHeadlineTextView headline, UserActivity model) {
+    public static void setHeadline(FeedHeadlineTextView headline, FeedList model) {
         if (TextUtils.isEmpty(model.getValue()))
             headline.setText(String.format(Locale.getDefault(), "%s: %s", model.getStatus(), model.getSeries().getTitle_romaji()));
         else

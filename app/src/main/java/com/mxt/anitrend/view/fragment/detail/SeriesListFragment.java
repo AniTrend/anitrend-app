@@ -18,11 +18,10 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentUserListBase;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
 import com.mxt.anitrend.util.ComparatorProvider;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -131,7 +130,7 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
         switch (target.getId()) {
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getSeries_id());
+                intent.putExtra(KeyUtils.arg_id, data.getMediaId());
                 intent.putExtra(KeyUtils.arg_series_type, KeyUtils.SeriesTypes[seriesType]);
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;

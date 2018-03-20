@@ -2,11 +2,10 @@ package com.mxt.anitrend.model.entity.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
+import com.mxt.anitrend.model.entity.anilist.meta.TitleBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-
-import java.util.List;
 
 /**
  * Created by Maxwell on 10/4/2016.
@@ -14,32 +13,26 @@ import java.util.List;
 public class CharacterBase extends EntityGroup implements Parcelable {
 
     private long id;
-    private String name_first;
-    private String name_last;
-    private String image_url_lge;
-    private String image_url_med;
-    private String role;
-    private List<StaffBase> actor;
+    private TitleBase name;
+    private ImageBase image;
+    private boolean isFavourite;
+    private String siteUrl;
 
     protected CharacterBase(Parcel in) {
         id = in.readLong();
-        name_first = in.readString();
-        name_last = in.readString();
-        image_url_lge = in.readString();
-        image_url_med = in.readString();
-        role = in.readString();
-        actor = in.createTypedArrayList(StaffBase.CREATOR);
+        name = in.readParcelable(TitleBase.class.getClassLoader());
+        image = in.readParcelable(ImageBase.class.getClassLoader());
+        isFavourite = in.readByte() != 0;
+        siteUrl = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
-        dest.writeString(name_first);
-        dest.writeString(name_last);
-        dest.writeString(image_url_lge);
-        dest.writeString(image_url_med);
-        dest.writeString(role);
-        dest.writeTypedList(actor);
+        dest.writeParcelable(name, flags);
+        dest.writeParcelable(image, flags);
+        dest.writeByte((byte) (isFavourite ? 1 : 0));
+        dest.writeString(siteUrl);
     }
 
     @Override
@@ -63,68 +56,20 @@ public class CharacterBase extends EntityGroup implements Parcelable {
         return id;
     }
 
-    public String getName_first() {
-        return name_first;
+    public TitleBase getName() {
+        return name;
     }
 
-    public String getFullName() {
-        if(TextUtils.isEmpty(name_last))
-            return name_first;
-        return String.format("%s %s", name_first, name_last);
+    public ImageBase getImage() {
+        return image;
     }
 
-    public String getName_last() {
-        return name_last == null? "":name_last;
+    public boolean isFavourite() {
+        return isFavourite;
     }
 
-    public String getImage_url_lge() {
-        return image_url_lge;
-    }
-
-    public String getImage_url_med() {
-        return image_url_med;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public List<StaffBase> getActor() {
-        return actor;
-    }
-
-    public String getFirstActor() {
-        if(actor != null && !actor.isEmpty())
-            return actor.get(0).getFullName();
-        return null;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName_first(String name_first) {
-        this.name_first = name_first;
-    }
-
-    public void setName_last(String name_last) {
-        this.name_last = name_last;
-    }
-
-    public void setImage_url_lge(String image_url_lge) {
-        this.image_url_lge = image_url_lge;
-    }
-
-    public void setImage_url_med(String image_url_med) {
-        this.image_url_med = image_url_med;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setActor(List<StaffBase> actor) {
-        this.actor = actor;
+    public String getSiteUrl() {
+        return siteUrl;
     }
 
     @Override

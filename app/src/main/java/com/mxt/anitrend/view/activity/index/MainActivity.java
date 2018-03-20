@@ -41,7 +41,7 @@ import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView;
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.base.VersionBase;
+import com.mxt.anitrend.model.entity.base.Version;
 import com.mxt.anitrend.presenter.activity.MainPresenter;
 import com.mxt.anitrend.service.DownloaderService;
 import com.mxt.anitrend.util.CompatUtil;
@@ -273,13 +273,13 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
             case R.id.nav_myanime:
                 intent = new Intent(this, SeriesListActivity.class);
                 intent.putExtra(KeyUtils.arg_series_type, KeyUtils.ANIME);
-                intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getDisplay_name());
+                intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                 startActivity(intent);
                 break;
             case R.id.nav_mymanga:
                 intent = new Intent(this, SeriesListActivity.class);
                 intent.putExtra(KeyUtils.arg_series_type, KeyUtils.MANGA);
-                intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getDisplay_name());
+                intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                 startActivity(intent);
                 break;
             case R.id.nav_hub:
@@ -335,9 +335,9 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                                 .buildWithCallback(new BottomSheetChoice() {
                                     @Override
                                     public void onPositiveButton() {
-                                        VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
-                                        if(versionBase != null && versionBase.isNewerVersion())
-                                            DownloaderService.downloadNewVersion(MainActivity.this, versionBase);
+                                        Version version = getPresenter().getDatabase().getRemoteVersion();
+                                        if(version != null && version.isNewerVersion())
+                                            DownloaderService.downloadNewVersion(MainActivity.this, version);
                                         else
                                             NotifyUtil.createAlerter(MainActivity.this, getString(R.string.title_update_infodadat),
                                                     getString(R.string.app_no_date), R.drawable.ic_cloud_done_white_24dp, R.color.colorStateGreen);
@@ -380,7 +380,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
     protected void updateUI() {
         boolean reviewType = getPresenter().getApplicationPref().getReviewType();
 
-        VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
+        Version version = getPresenter().getDatabase().getRemoteVersion();
         View HeaderContainer = mNavigationView.getHeaderView(0);
 
         mHeaderView = HeaderContainer.findViewById(R.id.drawer_banner);
@@ -406,10 +406,10 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         else
             mHeaderView.setImageResource(R.drawable.reg_bg);
 
-        if(versionBase != null && versionBase.isNewerVersion()) {
-            // If a new versionBase of the application is available on GitHub
+        if(version != null && version.isNewerVersion()) {
+            // If a new version of the application is available on GitHub
             TextView mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update).getActionView().findViewById(R.id.app_update_info);
-            mAppUpdateWidget.setText(getString(R.string.app_update, versionBase.getVersion()));
+            mAppUpdateWidget.setText(getString(R.string.app_update, version.getVersion()));
             mAppUpdateWidget.setVisibility(View.VISIBLE);
         }
         checkNewInstallation();
@@ -423,8 +423,8 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
     private void setupUserItems() {
         User user;
         if((user = getPresenter().getDatabase().getCurrentUser()) != null) {
-            mUserName.setText(user.getDisplay_name());
-            mUserAvatar.setImageSrc(user.getImage_url_lge());
+            mUserName.setText(user.getName());
+            mUserAvatar.setImageSrc(user.getAvatar());
             HeaderImageView.setImage(mHeaderView, user.getImage_url_banner());
 
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_LOGIN_TIP)) {
@@ -437,9 +437,9 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                         .build();
                 showBottomSheet();
             }
-            Crashlytics.setUserIdentifier(user.getDisplay_name());
+            Crashlytics.setUserIdentifier(user.getName());
             getApplicationBase().getAnalytics()
-                    .setUserId(user.getDisplay_name());
+                    .setUserId(user.getName());
         }
 
         mAccountLogin.setVisible(false);
@@ -469,7 +469,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
             case R.id.banner_clickable:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     Intent intent = new Intent(this, ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getDisplay_name());
+                    intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                     CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
                 }
                 else
@@ -477,7 +477,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                 break;
             default:
                 User current = getPresenter().getDatabase().getCurrentUser();
-                current.setNotifications(0);
+                current.setUnreadNotificationCount(0);
                 getPresenter().getDatabase().saveCurrentUser(current);
                 startActivity(new Intent(MainActivity.this, NotificationActivity.class));
                 break;

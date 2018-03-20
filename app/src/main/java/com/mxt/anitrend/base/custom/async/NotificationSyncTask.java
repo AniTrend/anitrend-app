@@ -7,9 +7,8 @@ import android.util.Log;
 
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.api.retro.anilist.UserModel;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.JobDispatcherService;
 import com.mxt.anitrend.util.ErrorUtil;

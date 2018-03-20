@@ -8,8 +8,6 @@ import android.util.Log;
 
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.api.retro.anilist.UserListModel;
-import com.mxt.anitrend.model.api.retro.anilist.UserModel;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.UserBase;

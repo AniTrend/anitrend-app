@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.base.custom.async.SortHelperTask;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
@@ -41,7 +40,6 @@ import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
 
 import org.greenrobot.eventbus.EventBus;

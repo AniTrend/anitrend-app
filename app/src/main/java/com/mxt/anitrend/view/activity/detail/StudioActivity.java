@@ -11,17 +11,12 @@ import android.view.MenuItem;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
-import com.mxt.anitrend.model.entity.anilist.Studio;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.fragment.search.SeriesSearchFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by max on 2017/12/14.
@@ -91,7 +86,7 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
 
     @Override
     protected void updateUI() {
-        mActionBar.setTitle(model.getStudio_name());
+        mActionBar.setTitle(model.getName());
         getPresenter().notifyAllListeners(model, false);
         if(favouriteWidget != null)
             favouriteWidget.setModel(model);

@@ -13,7 +13,7 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -80,7 +80,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>,
         switch (target.getId()) {
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getSeries_id());
+                intent.putExtra(KeyUtils.arg_id, data.getMediaId());
                 intent.putExtra(KeyUtils.arg_series_type, seriesType);
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;

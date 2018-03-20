@@ -15,12 +15,11 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -43,7 +42,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
  * Home page feed base
  */
 
-public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivity>, BasePresenter> implements BaseConsumer.onRequestModelChange<UserActivity> {
+public class FeedFragment extends FragmentBaseList<FeedList, List<FeedList>, BasePresenter> implements BaseConsumer.onRequestModelChange<FeedList> {
 
     private @KeyUtils.ActivityType int requestType;
 
@@ -111,14 +110,14 @@ public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivi
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, UserActivity data) {
+    public void onItemClick(View target, FeedList data) {
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
                 MediaBase series = data.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());
+                intent.putExtra(KeyUtils.arg_series_type, series.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_comment:
@@ -163,7 +162,7 @@ public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivi
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, UserActivity data) {
+    public void onItemLongClick(View target, FeedList data) {
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -177,8 +176,8 @@ public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivi
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserActivity> consumer) {
-        Optional<IntPair<UserActivity>> pairOptional;
+    public void onModelChanged(BaseConsumer<FeedList> consumer) {
+        Optional<IntPair<FeedList>> pairOptional;
         int pairIndex;
         switch (consumer.getRequestMode()) {
             case KeyUtils.ACTIVITY_CREATE_REQ:
@@ -210,7 +209,7 @@ public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivi
      * @param content The new data
      */
     @Override
-    public void onChanged(@Nullable List<UserActivity> content) {
+    public void onChanged(@Nullable List<FeedList> content) {
         super.onChanged(FilterProvider.getUserActivityFilter(getPresenter(), content));
     }
 
@@ -237,7 +236,7 @@ public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivi
      */
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        List<UserActivity> selected = getActionMode().getSelectedItems();
+        List<FeedList> selected = getActionMode().getSelectedItems();
         switch (item.getItemId()) {
             case R.id.action_bookmark:
                 break;

@@ -10,7 +10,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterRankingBinding;
-import com.mxt.anitrend.model.entity.anilist.Rank;
+import com.mxt.anitrend.model.entity.anilist.MediaRank;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.List;
@@ -22,14 +22,14 @@ import butterknife.OnLongClick;
  * Created by max on 2018/01/01.
  */
 
-public class RankAdapter extends RecyclerViewAdapter<Rank> {
+public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
 
-    public RankAdapter(List<Rank> data, Context context) {
+    public RankAdapter(List<MediaRank> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<Rank> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaRank> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new RankViewHolder(AdapterRankingBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
@@ -38,7 +38,7 @@ public class RankAdapter extends RecyclerViewAdapter<Rank> {
         return null;
     }
 
-    protected class RankViewHolder extends RecyclerViewHolder<Rank> {
+    protected class RankViewHolder extends RecyclerViewHolder<MediaRank> {
 
         private AdapterRankingBinding binding;
 
@@ -59,7 +59,7 @@ public class RankAdapter extends RecyclerViewAdapter<Rank> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(Rank model) {
+        public void onBindViewHolder(MediaRank model) {
             binding.setModel(model);
             // app:srcCompat='@{model.ranking_type.equals("popular")? @drawable/ic_star_yellow_700_24dp : @drawable/ic_favorite_red_700_24dp}'
             binding.rankingType.setImageDrawable(CompatUtil.getDrawable(getContext(), model.getRanking_type().equals("popular")? R.drawable.ic_star_yellow_700_24dp : R.drawable.ic_favorite_red_700_24dp ));

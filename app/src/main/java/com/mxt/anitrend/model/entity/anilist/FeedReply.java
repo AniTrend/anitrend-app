@@ -1,9 +1,8 @@
-package com.mxt.anitrend.model.entity.general;
+package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.util.DateUtil;
 
@@ -13,52 +12,47 @@ import java.util.List;
  * Created by max on 2017/03/13.
  */
 
-public class UserActivityReply implements Parcelable {
+public class FeedReply implements Parcelable {
 
-    private int id;
-    private String reply_value;
-    private String created_at;
-    private String updated_at;
+    private long id;
+    private String text;
+    private String createdAt;
     private UserBase user;
     private List<UserBase> likes;
 
 
-    protected UserActivityReply(Parcel in) {
-        id = in.readInt();
-        reply_value = in.readString();
-        created_at = in.readString();
-        updated_at = in.readString();
+    protected FeedReply(Parcel in) {
+        id = in.readLong();
+        text = in.readString();
+        createdAt = in.readString();
         user = in.readParcelable(UserBase.class.getClassLoader());
         likes = in.createTypedArrayList(UserBase.CREATOR);
     }
 
-    public static final Creator<UserActivityReply> CREATOR = new Creator<UserActivityReply>() {
+    public static final Creator<FeedReply> CREATOR = new Creator<FeedReply>() {
         @Override
-        public UserActivityReply createFromParcel(Parcel in) {
-            return new UserActivityReply(in);
+        public FeedReply createFromParcel(Parcel in) {
+            return new FeedReply(in);
         }
 
         @Override
-        public UserActivityReply[] newArray(int size) {
-            return new UserActivityReply[size];
+        public FeedReply[] newArray(int size) {
+            return new FeedReply[size];
         }
     };
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     public String getReply() {
-        return reply_value;
+        return text;
     }
 
-    public String getCreated_at() {
-        return DateUtil.getPrettyDateCustom(created_at);
+    public String getCreatedAt() {
+        return DateUtil.getPrettyDateCustom(createdAt);
     }
 
-    public String getUpdated_at() {
-        return updated_at;
-    }
 
     public UserBase getUser() {
         return user;
@@ -68,20 +62,16 @@ public class UserActivityReply implements Parcelable {
         return likes;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public void setReply_value(String reply_value) {
-        this.reply_value = reply_value;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setUser(UserBase user) {
@@ -117,20 +107,19 @@ public class UserActivityReply implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(reply_value);
-        dest.writeString(created_at);
-        dest.writeString(updated_at);
+        dest.writeLong(id);
+        dest.writeString(text);
+        dest.writeString(createdAt);
         dest.writeParcelable(user, flags);
         dest.writeTypedList(likes);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof UserActivityReply)
-            return ((UserActivityReply)obj).getId() == getId();
-        if(obj instanceof UserActivity)
-            return ((UserActivity)obj).getId() == getId();
+        if(obj instanceof FeedReply)
+            return ((FeedReply)obj).getId() == getId();
+        if(obj instanceof FeedList)
+            return ((FeedList)obj).getId() == getId();
         return super.equals(obj);
     }
 }

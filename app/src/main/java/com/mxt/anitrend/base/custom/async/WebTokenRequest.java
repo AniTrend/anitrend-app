@@ -13,6 +13,7 @@ import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.AnalyticsUtil;
+import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.ShortcutHelper;
 
@@ -55,7 +56,7 @@ public class WebTokenRequest {
      */
     private static void checkTokenState(Context context, BasePresenter presenter) {
         if(token == null || token.getExpires() < (System.currentTimeMillis() / 1000L)) {
-            WebToken response = WebFactory.refreshTokenSync(presenter.getDatabase().getAuthCode(), presenter.getApplicationPref().isAuthenticated());
+            WebToken response = WebFactory.requestCodeTokenSync(presenter.getDatabase().getAuthCode().getCode());
             if(response != null) {
                 createNewTokenReference(response);
                 presenter.getDatabase().saveWebToken(response);
@@ -72,10 +73,12 @@ public class WebTokenRequest {
      */
     public static void getToken(Context context) {
         synchronized (lock) {
-            if(token == null || token.getExpires() < (System.currentTimeMillis() / 1000L)) {
+            if(new ApplicationPref(context).isAuthenticated()) {
                 BasePresenter presenter = new BasePresenter(context);
-                token = presenter.getDatabase().getWebToken();
-                checkTokenState(context, presenter);
+                if (token == null || token.getExpires() < (System.currentTimeMillis() / 1000L)) {
+                    token = presenter.getDatabase().getWebToken();
+                    checkTokenState(context, presenter);
+                }
             }
         }
     }

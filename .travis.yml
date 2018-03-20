@@ -27,7 +27,7 @@ android:
     # addons
     - addon-google_apis-google-$ANDROID_API_LEVEL
 
-    # The SDK versionBase used to compile your project
+    # The SDK version used to compile your project
     - android-$ANDROID_API_LEVEL
 
 licenses:
@@ -40,6 +40,7 @@ before_cache:
 # Move our test play-services configuration to the appropreiate config location
 before_script:
     - mv app/.travic-ci/google-services.json app/google-services.json
+    - mv app/.travic-ci/secrets.properties ./secrets.properties
 
 cache:
   directories:

@@ -48,7 +48,7 @@ public class SeriesPresenter extends CommonPresenter {
                     .filter(model -> model.getMain_studio() == 1)
                     .findFirst();
            if(result.isPresent())
-               return result.get().getStudio_name();
+               return result.get().getName();
         }
         return getContext().getString(R.string.TBA);
     }

@@ -10,7 +10,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupRoleCharacterAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Character;
-import com.mxt.anitrend.model.entity.anilist.Staff;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;

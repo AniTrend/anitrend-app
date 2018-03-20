@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -30,7 +30,7 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="@dimen/avatar_ripple_radius"
                     android:layout_height="@dimen/avatar_ripple_radius"
-                    app:avatarUrl="@{model.user.image_url_lge}"
+                    app:avatarUrl="@{model.user.avatar}"
                     tools:src="@drawable/ic_player" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@{model.user.display_name}"
+                    android:text="@{model.user.name}"
                     tools:text="wax911" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -138,7 +138,7 @@
                     android:id="@+id/series_image"
                     android:layout_width="@dimen/series_image_xs"
                     android:layout_height="wrap_content"
-                    app:imageUrl="@{model.anime != null? model.anime.image_url_lge : model.manga.image_url_lge}"
+                    app:imageUrl="@{model.anime != null? model.anime.avatar : model.manga.avatar}"
                     tools:src="@drawable/sample_img" />
 
             </LinearLayout>

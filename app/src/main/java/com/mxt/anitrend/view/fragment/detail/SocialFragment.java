@@ -14,8 +14,8 @@ import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -32,7 +32,7 @@ import java.util.List;
  * Created by max on 2018/01/05.
  */
 
-public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActivity>, BasePresenter> implements BaseConsumer.onRequestModelChange<UserActivity>, PublisherListener<Media> {
+public class SocialFragment extends FragmentBaseList<FeedList, List<FeedList>, BasePresenter> implements BaseConsumer.onRequestModelChange<FeedList>, PublisherListener<Media> {
 
     private @KeyUtils.ActivityType int requestType;
     private @KeyUtils.SeriesType int seriesType;
@@ -96,7 +96,7 @@ public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActi
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, UserActivity data) {
+    public void onItemClick(View target, FeedList data) {
         Intent intent;
         if(!getPresenter().getApplicationPref().isAuthenticated()) {
             NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -127,7 +127,7 @@ public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActi
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, UserActivity data) {
+    public void onItemLongClick(View target, FeedList data) {
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -140,7 +140,7 @@ public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActi
 
     @SuppressLint("SwitchIntDef")
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserActivity> consumer) {
+    public void onModelChanged(BaseConsumer<FeedList> consumer) {
         switch (consumer.getRequestMode()) {
             case KeyUtils.ACTIVITY_CREATE_REQ:
                 swipeRefreshLayout.setRefreshing(true);
@@ -151,7 +151,7 @@ public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActi
                 onRefresh();
                 break;
             case KeyUtils.ACTIVITY_DELETE_REQ:
-                Optional<IntPair<UserActivity>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                Optional<IntPair<FeedList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     model.remove(pairOptional.get().getFirst());
                     mAdapter.onItemRemoved(pairOptional.get().getFirst());
@@ -166,10 +166,10 @@ public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActi
      * @param content The new data
      */
     @Override
-    public void onChanged(@Nullable List<UserActivity> content) {
+    public void onChanged(@Nullable List<FeedList> content) {
         if(content != null)
-            for (UserActivity userActivity: content)
-                userActivity.setSeries(series);
+            for (FeedList feedList : content)
+                feedList.setSeries(series);
         super.onChanged(content);
     }
 

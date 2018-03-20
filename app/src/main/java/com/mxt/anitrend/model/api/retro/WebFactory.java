@@ -18,7 +18,6 @@ import com.mxt.anitrend.model.api.retro.base.GiphyModel;
 import com.mxt.anitrend.model.api.retro.base.RepositoryModel;
 import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
-import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -61,8 +60,10 @@ public class WebFactory {
             .baseUrl(BuildConfig.GIPHY_LINK);
 
     public final static String API_AUTH_LINK =
-            String.format("https://anilist.co/api/auth/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
-            GrantTypes[AUTHENTICATION_CODE], BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI, BuildConfig.RESPONSE_TYPE);
+            String.format("%s/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
+                    BuildConfig.API_AUTH_LINK ,GrantTypes[AUTHENTICATION_CODE],
+                    BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI,
+                    BuildConfig.RESPONSE_TYPE);
 
     private static Retrofit mRetrofit, mCrunchy, mGiphy;
 
@@ -81,7 +82,7 @@ public class WebFactory {
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                     .readTimeout(35, TimeUnit.SECONDS)
                     .connectTimeout(35, TimeUnit.SECONDS)
-                    .addInterceptor(new AuthInterceptor());
+                    .addInterceptor(new AuthInterceptor(context));
 
             if(BuildConfig.DEBUG) {
                 HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor()
@@ -139,33 +140,6 @@ public class WebFactory {
         return new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson))
                 .client(baseClient.build()).baseUrl(BuildConfig.APP_REPO)
                 .build().create(RepositoryModel.class);
-    }
-
-    /**
-     * Get a new token, the token that will be requested will vary depending on the authentication
-     * state of the application
-     */
-    public static @Nullable WebToken refreshTokenSync(AuthBase authBase, boolean isAuthenticated) {
-        try {
-            Call<WebToken> refreshTokenCall;
-            if (isAuthenticated)
-                refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
-                        .create(AuthModel.class).getAccessToken(GrantTypes[KeyUtils.REFRESH_TYPE],
-                                BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, authBase.getRefresh_code());
-            else
-                refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
-                        .create(AuthModel.class).getAccessToken(GrantTypes[KeyUtils.AUTHENTICATION_TYPE],
-                                BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET);
-
-            Response<WebToken> response = refreshTokenCall.execute();
-            if (!response.isSuccessful())
-                Log.e("refreshTokenSync", ErrorUtil.getError(response));
-            return response.body();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Log.e("refreshTokenSync", ex.getLocalizedMessage());
-            return null;
-        }
     }
 
     /**

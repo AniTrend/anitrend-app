@@ -26,19 +26,34 @@ android {
             }
         }
         buildTypes.each {
-            it.buildConfigField "String", "API_KEY", API_KEY
-            it.buildConfigField "String", "CLIENT_ID", CLIENT_ID
-            it.buildConfigField "String", "CLIENT_SECRET", CLIENT_SECRET
+            if (rootProject.file("secrets.properties").exists()) {
+                def props = new Properties()
+                props.load(new FileInputStream(rootProject.file("secrets.properties")))
+                it.buildConfigField "String", "API_KEY", props['API_KEY']
+                it.buildConfigField "String", "CLIENT_ID", props['CLIENT_ID']
+                it.buildConfigField "String", "CLIENT_SECRET", props['CLIENT_SECRET']
+                it.buildConfigField "String", "GIPHY_KEY", props['GIPHY_KEY']
+            } else {
+                it.buildConfigField "String", "API_KEY", "API_KEY"
+                it.buildConfigField "String", "CLIENT_ID", "CLIENT_ID"
+                it.buildConfigField "String", "CLIENT_SECRET", "CLIENT_SECRET"
+                it.buildConfigField "String", "GIPHY_KEY", "GIPHY_KEY"
+            }
+
             it.buildConfigField "String", "HEADER_KEY", HEADER_KEY
             it.buildConfigField "String", "REDIRECT_URI", REDIRECT_URI
             it.buildConfigField "String", "RESPONSE_TYPE", RESPONSE_TYPE
+
             it.buildConfigField "String", "REGISTER_URL", REGISTER_URL
+            it.buildConfigField "String", "API_AUTH_LINK", API_AUTH_LINK
             it.buildConfigField "String", "API_LINK", API_LINK
+
             it.buildConfigField "String", "CRUNCHY_LINK", CRUNCHY_LINK
             it.buildConfigField "String", "FEEDS_LINK", FEEDS_LINK
+
             it.buildConfigField "String", "APP_REPO", APP_REPO
+
             it.buildConfigField "String", "GIPHY_LINK", GIPHY_LINK
-            it.buildConfigField "String", "GIPHY_KEY", GIPHY_KEY
         }
     }
     dataBinding {

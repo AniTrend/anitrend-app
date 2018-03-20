@@ -32,8 +32,8 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.anilist.Rank;
-import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.MediaRank;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
@@ -101,9 +101,9 @@ public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Me
         binding.setModel(model);
         if(rankAdapter == null) {
             rankAdapter = new RankAdapter(model.getRankings(), getContext());
-            rankAdapter.setClickListener(new ItemClickListener<Rank>() {
+            rankAdapter.setClickListener(new ItemClickListener<MediaRank>() {
                 @Override
-                public void onItemClick(View target, Rank data) {
+                public void onItemClick(View target, MediaRank data) {
                     Intent intent = new Intent(getActivity(), BrowseActivity.class);
                     Bundle args = ParamBuilderUtil.Builder()
                             .setSeries_type(model.getSeries_type())
@@ -117,7 +117,7 @@ public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Me
                 }
 
                 @Override
-                public void onItemLongClick(View target, Rank data) {
+                public void onItemLongClick(View target, MediaRank data) {
 
                 }
             });
@@ -125,7 +125,7 @@ public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Me
         binding.rankingRecycler.setAdapter(rankAdapter);
 
         if(linkAdapter == null) {
-            linkAdapter = new LinkAdapter(model.getExternal_links(), getContext());
+            linkAdapter = new LinkAdapter(model.getExternalLinks(), getContext());
             linkAdapter.setClickListener(new ItemClickListener<ExternalLink>() {
                 @Override
                 public void onItemClick(View target, ExternalLink data) {

@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.fragment.detail.UserFeedFragment;

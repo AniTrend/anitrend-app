@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
-import com.mxt.anitrend.model.entity.base.VersionBase;
+import com.mxt.anitrend.model.entity.base.Version;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.CompatUtil;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * Base splash screen
  */
 
-public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
+public class SplashActivity extends ActivityBase<Version, BasePresenter> {
 
     protected @BindView(R.id.preview_credits)
     WideImageView giphyCitation;
@@ -66,8 +66,8 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
 
     @Override
     protected void makeRequest() {
-        VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
-        if(versionBase == null || DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_HOURS, versionBase.getLast_checked(), 6))
+        Version version = getPresenter().getDatabase().getRemoteVersion();
+        if(version == null || DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_HOURS, version.getLast_checked(), 6))
             getViewModel().requestData(KeyUtils.UPDATE_CHECKER_REQ, getApplicationContext());
         else
             updateUI();
@@ -79,7 +79,7 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable VersionBase model) {
+    public void onChanged(@Nullable Version model) {
         super.onChanged(model);
         if(model != null) {
             getPresenter().getDatabase().saveRemoteVersion(model);

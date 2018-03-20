@@ -179,7 +179,7 @@ public class UserAboutFragment extends FragmentBase<User, ProfilePresenter, User
         switch (v.getId()) {
             case R.id.user_avatar:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage_url_lge());
+                intent.putExtra(KeyUtils.arg_model, model.getAvatar());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             case R.id.user_stats_container:

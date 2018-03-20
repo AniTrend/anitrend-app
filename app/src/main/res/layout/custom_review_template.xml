@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@{model.user.display_name}"
+                android:text="@{model.user.name}"
                 tools:text="wax911" />
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -111,7 +111,7 @@
                 <com.mxt.anitrend.base.custom.view.image.AspectImageView
                     android:layout_width="@dimen/series_image_xs"
                     android:layout_height="match_parent"
-                    app:imageUrl="@{model.anime != null? model.anime.image_url_lge : model.manga.image_url_lge}"
+                    app:imageUrl="@{model.anime != null? model.anime.avatar : model.manga.avatar}"
                     tools:src="@drawable/sample_img" />
 
             </LinearLayout>

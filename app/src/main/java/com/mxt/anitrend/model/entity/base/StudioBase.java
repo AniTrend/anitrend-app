@@ -10,18 +10,15 @@ import android.os.Parcelable;
 public class StudioBase implements Parcelable {
 
     private long id;
-    private String studio_name;
-    private String studio_wiki;
-    private int main_studio;
-    private boolean favourite;
-
+    private String name;
+    private String siteUrl;
+    private boolean isFavourite;
 
     protected StudioBase(Parcel in) {
         id = in.readLong();
-        studio_name = in.readString();
-        studio_wiki = in.readString();
-        main_studio = in.readInt();
-        favourite = in.readByte() != 0;
+        name = in.readString();
+        siteUrl = in.readString();
+        isFavourite = in.readByte() != 0;
     }
 
     public static final Creator<StudioBase> CREATOR = new Creator<StudioBase>() {
@@ -40,24 +37,20 @@ public class StudioBase implements Parcelable {
         return id;
     }
 
-    public String getStudio_name() {
-        return studio_name;
+    public String getName() {
+        return name;
     }
 
-    public String getStudio_wiki() {
-        return studio_wiki;
+    public String getSiteUrl() {
+        return siteUrl;
     }
 
     public boolean isFavourite() {
-        return favourite;
+        return isFavourite;
     }
 
     public void setFavourite(boolean favourite) {
-        this.favourite = favourite;
-    }
-
-    public int getMain_studio() {
-        return main_studio;
+        this.isFavourite = favourite;
     }
 
     @Override
@@ -93,9 +86,8 @@ public class StudioBase implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
-        dest.writeString(studio_name);
-        dest.writeString(studio_wiki);
-        dest.writeInt(main_studio);
-        dest.writeByte((byte) (favourite ? 1 : 0));
+        dest.writeString(name);
+        dest.writeString(siteUrl);
+        dest.writeByte((byte) (isFavourite ? 1 : 0));
     }
 }

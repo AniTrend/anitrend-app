@@ -522,7 +522,7 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Checks if you have the latest versionBase. If not a newer versionBase will download from <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
+        Checks if you have the latest version. If not a newer version will download from <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
         <br/><br/>
         <b>N.B.</b> If you downloaded this app from the <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
         then there is no need to use this feature. Do still you wish to continue with checking &amp; updating to the latest build?
@@ -550,7 +550,7 @@
         ]]>
     </string>
 
-    <string name="app_no_date">You have the latest versionBase of AniTrend!</string>
+    <string name="app_no_date">You have the latest version of AniTrend!</string>
 
     <string name="title_permission_write">Permission Required</string>
 
@@ -720,7 +720,7 @@
     <string name="warning_manga_not_publishing">Manga hasn\'t been published yet!</string>
 
     <string name="text_update_check_failed">Unable to check for updates</string>
-    <string name="text_downloading_update">Downloading latest versionBase of AniTrend!</string>
+    <string name="text_downloading_update">Downloading latest version of AniTrend!</string>
 
     <string name="title_new_feature">New Feature!</string>
     <string name="text_reviews_feature">Did you know you can switch between manga and anime reviews be tapping the toggle switch?</string>

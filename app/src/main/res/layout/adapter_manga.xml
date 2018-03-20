@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -46,7 +46,7 @@
                 android:layout_width="@dimen/series_image_md"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/md_margin"
-                app:imageUrl="@{model.image_url_lge}"
+                app:imageUrl="@{model.avatar}"
                 tools:src="@drawable/sample_img"/>
 
             <!--Anime Small Details-->

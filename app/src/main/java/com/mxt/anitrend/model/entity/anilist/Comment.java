@@ -1,4 +1,4 @@
-package com.mxt.anitrend.model.entity.general;
+package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 import android.os.Parcelable;

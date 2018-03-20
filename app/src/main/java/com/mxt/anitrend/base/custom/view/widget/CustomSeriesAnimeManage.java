@@ -55,12 +55,12 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
      */
     @Override
     public void persistChanges() {
-        model.setEpisodes_watched(!TextUtils.isEmpty(binding.diaCurrentProgress.getText())? Integer.valueOf(binding.diaCurrentProgress.getText().toString()): 0);
-        model.setRewatched(!TextUtils.isEmpty(binding.diaCurrentRewatch.getText()) ? Integer.valueOf(binding.diaCurrentRewatch.getText().toString()): 0);
+        model.setProgress(!TextUtils.isEmpty(binding.diaCurrentProgress.getText())? Integer.valueOf(binding.diaCurrentProgress.getText().toString()): 0);
+        model.setRepeat(!TextUtils.isEmpty(binding.diaCurrentRewatch.getText()) ? Integer.valueOf(binding.diaCurrentRewatch.getText().toString()): 0);
         model.setScore_raw(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
         model.setPrivate(binding.diaCurrentPrivacy.isChecked()? 1 : 0);
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
-        model.setList_status(KeyUtils.UserAnimeStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
+        model.setStatus(KeyUtils.UserAnimeStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
     }
 
     @Override
@@ -78,18 +78,18 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         // Apply the adapter to the spinner
         binding.diaCurrentStatus.setAdapter(adapter);
 
-        if(!TextUtils.isEmpty(model.getList_status()))
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserAnimeStatus).indexOf(model.getList_status()));
+        if(!TextUtils.isEmpty(model.getStatus()))
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserAnimeStatus).indexOf(model.getStatus()));
         else
             binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserAnimeStatus).indexOf(KeyUtils.UserAnimeStatus[KeyUtils.PLAN_TO_WATCH]));
 
         binding.diaCurrentPrivacy.setChecked(model.isPrivate());
         if(model.getScore_raw() != 0)
             binding.diaCurrentScore.setText(String.valueOf(model.getScore_raw()));
-        if(model.getEpisodes_watched() != 0)
-            binding.diaCurrentProgress.setText(String.valueOf(model.getEpisodes_watched()));
-        if(model.getRewatched() != 0)
-            binding.diaCurrentRewatch.setText(String.valueOf(model.getRewatched()));
+        if(model.getProgress() != 0)
+            binding.diaCurrentProgress.setText(String.valueOf(model.getProgress()));
+        if(model.getRepeat() != 0)
+            binding.diaCurrentRewatch.setText(String.valueOf(model.getRepeat()));
 
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
         binding.diaCurrentProgressIncrement.setOnClickListener(this);
@@ -107,7 +107,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        model.setList_status(KeyUtils.UserAnimeStatus[i]);
+        model.setStatus(KeyUtils.UserAnimeStatus[i]);
         switch (KeyUtils.UserAnimeStatus[i]) {
             case "watching":
                 if (getSeriesModel().getAiring_status().equals(KeyUtils.AnimeStatusTypes[KeyUtils.NOT_YET_AIRED]))
@@ -120,7 +120,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getTotal_episodes();
-                    model.setEpisodes_watched(total);
+                    model.setProgress(total);
                     binding.diaCurrentProgress.setText(String.valueOf(total));
                 }
                 break;
@@ -144,8 +144,8 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.dia_current_progress_increment:
-                int current = model.getEpisodes_watched() + 1;
-                model.setEpisodes_watched(current);
+                int current = model.getProgress() + 1;
+                model.setProgress(current);
                 binding.diaCurrentProgress.setText(String.valueOf(current));
                 break;
         }

@@ -59,8 +59,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="com.mxt.anitrend"
-                    android:scheme="intent" />
+                    android:scheme="https"
+                    android:host="anitrend.co" />
             </intent-filter>
         </activity>
 

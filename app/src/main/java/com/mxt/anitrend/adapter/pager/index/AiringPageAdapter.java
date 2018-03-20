@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
-import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.view.fragment.index.AiringFragment;
 import com.mxt.anitrend.view.fragment.index.WatchFragment;
 

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.data.DatabaseHelper;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.view.activity.detail.CommentActivity;
 import com.mxt.anitrend.view.activity.detail.MessageActivity;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
@@ -67,7 +67,7 @@ public final class NotificationDispatcher {
                 break;
             case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
                 intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra(KeyUtils.arg_user_name, notification.getUser().getDisplay_name());
+                intent.putExtra(KeyUtils.arg_user_name, notification.getUser().getName());
                 break;
             case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
                 intent = new Intent(context, MessageActivity.class);
@@ -113,76 +113,76 @@ public final class NotificationDispatcher {
             remoteViews.setImageViewResource(R.id.notification_img, R.drawable.gradient_shadow);
 
             if(model.getObject_type() != KeyUtils.NOTIFICATION_AIRING) {
-                url_load = model.getUser().getImage_url_lge();
+                url_load = model.getUser().getAvatar();
                 switch (model.getObject_type()){
                     case KeyUtils.NOTIFICATION_COMMENT_FORUM:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getComment().getComment()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_comment_forum));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getComment().getComment()));
                         break;
                     case KeyUtils.NOTIFICATION_LIKE_FORUM:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_like_forum));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_like_activity));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_REPLY_ACTIVITY:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_reply_activity));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_REPLY_FORUM:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getComment().getComment()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_reply_forum));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getComment().getComment()));
                         break;
                     case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_follow_activity));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_activity_message));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_LIKE_ACTIVITY_REPLY:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_like_activity));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_MENTION_ACTIVITY:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_activity_mention));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     case KeyUtils.NOTIFICATION_LIKE_FORUM_COMMENT:
-                        notificationBuilder.setContentTitle(model.getUser().getDisplay_name());
+                        notificationBuilder.setContentTitle(model.getUser().getName());
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_user_like_comment));
-                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                        remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));
                         break;
                     default:
@@ -190,7 +190,7 @@ public final class NotificationDispatcher {
                         notificationBuilder.setContentText(String.format("%s", model.getMeta_value()));
                         remoteViews.setCharSequence(R.id.notification_subject, "setText", context.getString(R.string.notification_default));
                         if(model.getUser() != null)
-                            remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getDisplay_name());
+                            remoteViews.setCharSequence(R.id.notification_header, "setText", model.getUser().getName());
                         else
                             remoteViews.setCharSequence(R.id.notification_header, "setText", "Unknown Origin");
                         remoteViews.setCharSequence(R.id.notification_content, "setText", String.format("%s", model.getMeta_value()));

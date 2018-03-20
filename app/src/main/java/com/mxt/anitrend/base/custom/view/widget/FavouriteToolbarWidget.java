@@ -16,8 +16,6 @@ import com.mxt.anitrend.databinding.WidgetToolbarFavouriteBinding;
 import com.mxt.anitrend.model.entity.anilist.Character;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.anilist.Staff;
-import com.mxt.anitrend.model.entity.anilist.Studio;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;

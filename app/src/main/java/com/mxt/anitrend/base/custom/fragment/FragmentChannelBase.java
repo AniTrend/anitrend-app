@@ -24,7 +24,7 @@ import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.crunchy.Channel;
 import com.mxt.anitrend.model.entity.crunchy.Episode;
 import com.mxt.anitrend.model.entity.crunchy.Rss;
-import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -322,7 +322,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, BasePres
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onEventPublished(Media param) {
         if(isAlive() && externalLinks == null) {
-            externalLinks = param.getExternal_links();
+            externalLinks = param.getExternalLinks();
             if(model == null && externalLinks != null)
                 targetLink = EpisodeHelper.episodeSupport(externalLinks);
             if (targetLink == null)

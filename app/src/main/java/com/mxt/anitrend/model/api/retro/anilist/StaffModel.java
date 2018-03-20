@@ -1,35 +1,41 @@
 package com.mxt.anitrend.model.api.retro.anilist;
 
-import com.mxt.anitrend.model.entity.anilist.Character;
-import com.mxt.anitrend.model.entity.anilist.Staff;
+import com.mxt.anitrend.base.custom.annotation.GraphQuery;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
+import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 
-import java.util.List;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
+import retrofit2.http.Body;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
- * Created by Maxwell on 10/4/2016.
+ * Created by max on 2018/03/20.
+ * Staff queries
  */
+
 public interface StaffModel {
 
-    @GET("staff/{id}")
-    Call<Character> getStaff(@Path("id") long id);
+    @POST("/")
+    @GraphQuery("StaffBase")
+    @Headers("Content-Type: application/json")
+    Call<StaffBase> getStaffBase(@Body GraphQueryContainer request);
 
-    @GET("staff/{id}/page")
-    Call<Staff> getStaffPage(@Path("id") long id);
+    @POST("/")
+    @GraphQuery("StaffOverview")
+    @Headers("Content-Type: application/json")
+    Call<StaffBase> getStaffOverview(@Body GraphQueryContainer request);
 
-    @GET("staff/search/{query}")
-    Call<List<StaffBase>> findStaff(@Path("query") String query, @Query("page") int page);
+    @POST("/")
+    @GraphQuery("StaffMedia")
+    @Headers("Content-Type: application/json")
+    Call<ConnectionContainer<EdgeContainer<String, MediaBase>>> getStaffMedia(@Body GraphQueryContainer request);
 
-    @FormUrlEncoded
-    @POST("staff/favourite")
-    Call<ResponseBody> toggleFavourite(@Field("id") long id);
-
+    @POST("/")
+    @GraphQuery("StaffRoles")
+    @Headers("Content-Type: application/json")
+    Call<ConnectionContainer<EdgeContainer<String, StaffBase>>> getStaffRoles(@Body GraphQueryContainer request);
 }

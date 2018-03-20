@@ -1,7 +1,7 @@
 package com.mxt.anitrend.data.converter;
 
 import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.entity.general.UserStats;
+import com.mxt.anitrend.model.entity.anilist.UserStats;
 
 import io.objectbox.converter.PropertyConverter;
 

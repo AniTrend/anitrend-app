@@ -10,7 +10,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterTagBinding;
-import com.mxt.anitrend.model.entity.anilist.Tag;
+import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.List;
@@ -22,14 +22,14 @@ import butterknife.OnLongClick;
  * Created by max on 2018/01/01.
  */
 
-public class TagAdapter extends RecyclerViewAdapter<Tag> {
+public class TagAdapter extends RecyclerViewAdapter<MediaTag> {
 
-    public TagAdapter(List<Tag> data, Context context) {
+    public TagAdapter(List<MediaTag> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<Tag> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaTag> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new TagViewHolder(AdapterTagBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
@@ -38,7 +38,7 @@ public class TagAdapter extends RecyclerViewAdapter<Tag> {
         return null;
     }
 
-    protected class TagViewHolder extends RecyclerViewHolder<Tag> {
+    protected class TagViewHolder extends RecyclerViewHolder<MediaTag> {
 
         private AdapterTagBinding binding;
 
@@ -59,7 +59,7 @@ public class TagAdapter extends RecyclerViewAdapter<Tag> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(Tag model) {
+        public void onBindViewHolder(MediaTag model) {
             binding.setModel(model);
             binding.executePendingBindings();
         }

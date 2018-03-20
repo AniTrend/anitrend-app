@@ -3,7 +3,7 @@ package com.mxt.anitrend.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mxt.anitrend.model.entity.general.Airing;
+import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -133,7 +133,9 @@ public class DateUtil {
         return null;
     }
 
-    /**Only for fuzzy dates*/
+    /**
+     * Only for fuzzy dates
+     */
     private static boolean isNewerDate(long date) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy",Locale.getDefault());
         Date strDate = sdf.parse(convertDate(date));
@@ -160,13 +162,13 @@ public class DateUtil {
     /**
      * Formats the epotch time to a pretty data
      * <br/>
-     * @return string such as "EP 6 Airing in 2 hours"
-     * @param airing - the current airing object of a series
+     * @return string such as "EP 6 AiringSchedule in 2 hours"
+     * @param airingSchedule - the current airingSchedule object of a series
      */
-    public static String getNextEpDate(@NonNull Airing airing){
+    public static String getNextEpDate(@NonNull AiringSchedule airingSchedule){
         PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
-        String from_now = prettyTime.format(new Date(System.currentTimeMillis()+(airing.getCountdown()*1000L)));
-        return String.format(Locale.getDefault(), "EP %d: %s",airing.getNext_episode(), from_now);
+        String from_now = prettyTime.format(new Date(System.currentTimeMillis()+(airingSchedule.getTimeUntilAiring() * 1000L)));
+        return String.format(Locale.getDefault(), "EP %d: %s", airingSchedule.getEpisode(), from_now);
     }
 
     /**

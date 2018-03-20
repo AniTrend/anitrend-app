@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -42,7 +42,7 @@
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                 android:layout_marginEnd="@dimen/xl_margin"
                 android:paddingTop="@dimen/md_margin"
-                android:text="@{model.display_name}"
+                android:text="@{model.name}"
                 tools:text="wax911" />
 
         </GridLayout>

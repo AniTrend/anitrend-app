@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.SeriesUtil;
 
@@ -38,10 +38,10 @@ public class SeriesProgressTextView extends SingleLineTextView {
                 setText(R.string.TBA);
             else {
                 if (isCurrentUser && !SeriesUtil.isIncrementLimitReached(seriesModel))
-                    setText(String.format(Locale.getDefault(), "%s/%s +", seriesModel.getEpisodes_watched(),
+                    setText(String.format(Locale.getDefault(), "%s/%s +", seriesModel.getProgress(),
                             seriesModel.getAnime().getTotal_episodes() < 1 ? "?" : seriesModel.getAnime().getTotal_episodes()));
                 else
-                    setText(String.format(Locale.getDefault(), "%s/%s", seriesModel.getEpisodes_watched(),
+                    setText(String.format(Locale.getDefault(), "%s/%s", seriesModel.getProgress(),
                             seriesModel.getAnime().getTotal_episodes() < 1 ? "?" : seriesModel.getAnime().getTotal_episodes()));
             }
         } else if (SeriesUtil.isMangaType(model)) {

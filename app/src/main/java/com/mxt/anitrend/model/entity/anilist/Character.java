@@ -12,21 +12,13 @@ import java.util.List;
  */
 public class Character extends CharacterBase {
 
-    private String info;
-    private String name_alt;
-    private String name_japanese;
-    private boolean favourite;
-    private List<MediaBase> anime;
-    private List<MediaBase> manga;
+    private String description;
+    private boolean isFavourite;
 
     protected Character(Parcel in) {
         super(in);
-        info = in.readString();
-        name_alt = in.readString();
-        name_japanese = in.readString();
-        favourite = in.readByte() != 0;
-        anime = in.createTypedArrayList(MediaBase.CREATOR);
-        manga = in.createTypedArrayList(MediaBase.CREATOR);
+        description = in.readString();
+        isFavourite = in.readByte() != 0;
     }
 
     public static final Creator<Character> CREATOR = new Creator<Character>() {
@@ -49,39 +41,16 @@ public class Character extends CharacterBase {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
-        parcel.writeString(info);
-        parcel.writeString(name_alt);
-        parcel.writeString(name_japanese);
-        parcel.writeByte((byte) (favourite ? 1 : 0));
-        parcel.writeTypedList(anime);
-        parcel.writeTypedList(manga);
+        parcel.writeString(description);
+        parcel.writeByte((byte) (isFavourite ? 1 : 0));
     }
 
-    public String getInfo() {
-        return info;
+    public String getDescription() {
+        return description;
     }
 
-    public String getName_alt() {
-        return name_alt;
-    }
-
-    public String getName_japanese() {
-        return name_japanese;
-    }
-
+    @Override
     public boolean isFavourite() {
-        return favourite;
-    }
-
-    public List<MediaBase> getAnime() {
-        return anime;
-    }
-
-    public List<MediaBase> getManga() {
-        return manga;
-    }
-
-    public void setFavourite(boolean favourite) {
-        this.favourite = favourite;
+        return isFavourite;
     }
 }

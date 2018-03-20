@@ -14,7 +14,7 @@ import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.general.SeriesList_;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
@@ -63,7 +63,7 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
                     KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
         }
         else {
-            presenter.getParams().putLong(KeyUtils.arg_id, mediaList.getSeries_id());
+            presenter.getParams().putLong(KeyUtils.arg_id, mediaList.getMediaId());
             presenter.requestData(mediaList.getAnime() != null ?
                     KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
         }
@@ -93,7 +93,7 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
             else if(mediaBase != null)
                 SeriesDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), SeriesUtil.getSeriesTitle(mediaBase, presenter.getLanguagePreference()));
             else
-                SeriesDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getSeries_id()), SeriesUtil.getSeriesTitle(mediaList, presenter.getLanguagePreference()));
+                SeriesDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), SeriesUtil.getSeriesTitle(mediaList, presenter.getLanguagePreference()));
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());
@@ -114,7 +114,7 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             MediaList seriesStatus;
             if(response.isSuccessful() && (seriesStatus = response.body()) != null) {
-                if(!TextUtils.isEmpty(seriesStatus.getList_status()))
+                if(!TextUtils.isEmpty(seriesStatus.getStatus()))
                     presenter.getDatabase().getBoxStore(MediaList.class).put(seriesStatus);
                 showActionDialog();
             } else {

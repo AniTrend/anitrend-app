@@ -1,34 +1,45 @@
 package com.mxt.anitrend.model.api.retro.anilist;
 
-import com.mxt.anitrend.model.entity.anilist.Character;
+import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.base.StaffBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 
 import java.util.List;
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
+import retrofit2.http.Body;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
- * Created by Maxwell on 10/4/2016.
- * Model for characters
+ * Created by max on 2018/03/20.
+ * Character relation queries
  */
+
 public interface CharacterModel {
 
-    @GET("character/{id}")
-    Call<Character> getCharacter(@Path("id") long id);
+    @POST("/")
+    @GraphQuery("CharacterBase")
+    @Headers("Content-Type: application/json")
+    Call<CharacterBase> getCharacterBase(@Body GraphQueryContainer request);
 
-    @GET("character/{id}/page")
-    Call<Character> getCharacterPage(@Path("id") long id);
+    @POST("/")
+    @GraphQuery("CharacterOverview")
+    @Headers("Content-Type: application/json")
+    Call<Character> getCharacterOverview(@Body GraphQueryContainer request);
 
-    @GET("character/search/{query}")
-    Call<List<CharacterBase>> findCharacter(@Path("query") String query, @Query("page") int page);
+    @POST("/")
+    @GraphQuery("CharacterMedia")
+    @Headers("Content-Type: application/json")
+    Call<ConnectionContainer<PageContainer<MediaBase>>> getCharacterMedia(@Body GraphQueryContainer request);
 
-    @FormUrlEncoded
-    @POST("character/favourite")
-    Call<ResponseBody> toggleFavourite(@Field("id") long id);
+    @POST("/")
+    @GraphQuery("CharacterActors")
+    @Headers("Content-Type: application/json")
+    Call<ConnectionContainer<EdgeContainer<List<StaffBase>,StaffBase>>> getCharacterActors(@Body GraphQueryContainer request);
 }

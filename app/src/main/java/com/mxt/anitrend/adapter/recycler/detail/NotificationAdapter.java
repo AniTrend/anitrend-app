@@ -14,7 +14,7 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView;
 import com.mxt.anitrend.databinding.AdapterNotificationBinding;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase_;
-import com.mxt.anitrend.model.entity.general.Notification;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
@@ -88,7 +88,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
             binding.notificationTime.setText(model.getCreated_at());
 
             if(model.getObject_type() != KeyUtils.NOTIFICATION_AIRING)
-                AspectImageView.setImage(binding.notificationImg, model.getUser().getImage_url_lge());
+                AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar());
             else
                 AspectImageView.setImage(binding.notificationImg, model.getSeries().getImage_url_lge());
 
@@ -100,58 +100,58 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
                     break;
                 case KeyUtils.NOTIFICATION_COMMENT_FORUM:
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(model.getComment().getComment());
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_FORUM:
                     binding.notificationSubject.setText(R.string.notification_user_like_forum);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:
                     binding.notificationSubject.setText(R.string.notification_user_like_activity);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_REPLY_ACTIVITY:
                     binding.notificationSubject.setText(R.string.notification_user_reply_activity);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_REPLY_FORUM:
                     binding.notificationSubject.setText(R.string.notification_user_reply_forum);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getComment().getComment()));
                     break;
                 case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
                     binding.notificationSubject.setText(R.string.notification_user_follow_activity);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
                     binding.notificationSubject.setText(R.string.notification_user_activity_message);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_ACTIVITY_REPLY:
                     binding.notificationSubject.setText(R.string.notification_user_like_activity);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_MENTION_ACTIVITY:
                     binding.notificationSubject.setText(R.string.notification_user_activity_mention);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 case KeyUtils.NOTIFICATION_LIKE_FORUM_COMMENT:
                     binding.notificationSubject.setText(R.string.notification_user_like_comment);
-                    binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                    binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
                     break;
                 default:
                     binding.notificationSubject.setText(R.string.notification_default);
                     if(model.getUser() != null)
-                        binding.notificationHeader.setText(model.getUser().getDisplay_name());
+                        binding.notificationHeader.setText(model.getUser().getName());
                     else
                         binding.notificationHeader.setText(R.string.notification_default);
                     binding.notificationContent.setText(String.format("%s", model.getMeta_data()));

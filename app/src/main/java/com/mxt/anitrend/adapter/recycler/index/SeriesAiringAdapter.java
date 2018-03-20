@@ -13,7 +13,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.SeriesUtil;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<MediaList> {
         super(data, context);
         Favourite favourite = presenter.getFavourites();
         if(presenter.getApplicationPref().isAuthenticated())
-            currentUser = presenter.getDatabase().getCurrentUser().getDisplay_name();
+            currentUser = presenter.getDatabase().getCurrentUser().getName();
         if(favourite != null) {
             favouriteSeries = new ArrayList<>();
             if(favourite.getAnime() != null)

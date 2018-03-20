@@ -13,13 +13,12 @@ import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.FilterProvider;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -39,7 +38,7 @@ import java.util.List;
  * user profile targeted feeds
  */
 
-public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserActivity>, ProfilePresenter> implements PublisherListener<User>, BaseConsumer.onRequestModelChange<UserActivity> {
+public class UserFeedFragment extends FragmentBaseList<FeedList, List<FeedList>, ProfilePresenter> implements PublisherListener<User>, BaseConsumer.onRequestModelChange<FeedList> {
 
     @KeyUtils.ActivityType int requestType;
     private UserBase userBase;
@@ -88,7 +87,7 @@ public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserAc
         if(userBase != null) {
             Bundle bundle = getViewModel().getParams();
             bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
-            bundle.putString(KeyUtils.arg_user_name, userBase.getDisplay_name());
+            bundle.putString(KeyUtils.arg_user_name, userBase.getName());
             bundle.putString(KeyUtils.arg_request_type, KeyUtils.ActivityTypes[requestType]);
             getViewModel().requestData(KeyUtils.USER_ACTIVITY_REQ, getContext());
         }
@@ -117,7 +116,7 @@ public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserAc
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, UserActivity data) {
+    public void onItemClick(View target, FeedList data) {
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
@@ -169,7 +168,7 @@ public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserAc
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, UserActivity data) {
+    public void onItemLongClick(View target, FeedList data) {
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -183,8 +182,8 @@ public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserAc
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserActivity> consumer) {
-        Optional<IntPair<UserActivity>> pairOptional;
+    public void onModelChanged(BaseConsumer<FeedList> consumer) {
+        Optional<IntPair<FeedList>> pairOptional;
         int pairIndex;
         switch (consumer.getRequestMode()) {
             case KeyUtils.ACTIVITY_CREATE_REQ:
@@ -216,7 +215,7 @@ public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserAc
      * @param content The new data
      */
     @Override
-    public void onChanged(@Nullable List<UserActivity> content) {
+    public void onChanged(@Nullable List<FeedList> content) {
         super.onChanged(FilterProvider.getUserActivityFilter(getPresenter(), content));
     }
 }

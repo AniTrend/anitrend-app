@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.mxt.anitrend.model.api.retro.WebFactory;
+import com.mxt.anitrend.model.entity.container.attribute.GraphError;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -25,10 +26,6 @@ public class ErrorUtil {
 
     private static final String TAG = "ErrorUtil";
 
-    private static final String ERROR_KEY = "error";
-    private static final String ERROR_MESSAGE_KEY = "error_message";
-    private static final String ERROR_DESCRIPTION_KEY = "error_description";
-
     /**
      * Converts the response error response into an object.
      *
@@ -42,19 +39,14 @@ public class ErrorUtil {
                 String message;
                 if (responseBody != null && !(message = responseBody.string()).isEmpty()) {
                     Log.e(TAG, message);
-                    Type tokenType = new TypeToken<Map<String, String>>(){}.getType();
-                    LinkedTreeMap<String, String> error = WebFactory.gson.fromJson(message, tokenType);
-                    if (error != null && error.containsKey(ERROR_KEY) && error.containsKey(ERROR_MESSAGE_KEY))
-                        return String.format(Locale.getDefault(), "%s: %s", error.get(ERROR_KEY), error.get(ERROR_MESSAGE_KEY));
-                    else if (error != null && error.containsKey(ERROR_KEY) && error.containsKey(ERROR_DESCRIPTION_KEY))
-                        return String.format(Locale.getDefault(), "%s: %s", error.get(ERROR_KEY), error.get(ERROR_DESCRIPTION_KEY));
-                    else
-                        return message;
+                    Type tokenType = new TypeToken<GraphError>(){}.getType();
+                    GraphError graphError = WebFactory.gson.fromJson(message, tokenType);
+                    return graphError.toString();
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ex.getMessage();
+            return "Unexpected error encountered";
         }
         return "No error information found!";
     }

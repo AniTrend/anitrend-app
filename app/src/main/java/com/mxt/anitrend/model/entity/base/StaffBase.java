@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
+import com.mxt.anitrend.model.entity.anilist.meta.TitleBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 
 /**
@@ -12,21 +14,34 @@ import com.mxt.anitrend.model.entity.group.EntityGroup;
 public class StaffBase extends EntityGroup implements Parcelable {
 
     private long id;
-    private String name_first;
-    private String name_last;
-    private String image_url_lge;
-    private String image_url_med;
+    private TitleBase name;
+    private ImageBase image;
+    private boolean isFavourite;
+    private String description;
     private String language;
-    private String role;
 
     protected StaffBase(Parcel in) {
         id = in.readLong();
-        name_first = in.readString();
-        name_last = in.readString();
-        image_url_lge = in.readString();
-        image_url_med = in.readString();
+        name = in.readParcelable(TitleBase.class.getClassLoader());
+        image = in.readParcelable(ImageBase.class.getClassLoader());
+        isFavourite = in.readByte() != 0;
+        description = in.readString();
         language = in.readString();
-        role = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeParcelable(name, flags);
+        dest.writeParcelable(image, flags);
+        dest.writeByte((byte) (isFavourite ? 1 : 0));
+        dest.writeString(description);
+        dest.writeString(language);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<StaffBase> CREATOR = new Creator<StaffBase>() {
@@ -45,39 +60,24 @@ public class StaffBase extends EntityGroup implements Parcelable {
         return id;
     }
 
-    public String getName_first() {
-        return name_first;
+    public TitleBase getName() {
+        return name;
     }
 
-    public String getFullName() {
-        if(TextUtils.isEmpty(name_last))
-            return name_first;
-        return String.format("%s %s", name_first, name_last);
+    public ImageBase getImage() {
+        return image;
     }
 
-    public String getName_last() {
-        return name_last;
+    public boolean isFavourite() {
+        return isFavourite;
     }
 
-    public String getImage_url_lge() {
-        return image_url_lge;
-    }
-
-    public String getImage_url_med() {
-        return image_url_med;
+    public String getDescription() {
+        return description;
     }
 
     public String getLanguage() {
         return language;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    @Override
-    public String toString() {
-        return getFullName();
     }
 
     @Override
@@ -85,21 +85,5 @@ public class StaffBase extends EntityGroup implements Parcelable {
         if(obj instanceof StaffBase)
             return ((StaffBase) obj).getId() == id;
         return super.equals(obj);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeString(name_first);
-        parcel.writeString(name_last);
-        parcel.writeString(image_url_lge);
-        parcel.writeString(image_url_med);
-        parcel.writeString(language);
-        parcel.writeString(role);
     }
 }

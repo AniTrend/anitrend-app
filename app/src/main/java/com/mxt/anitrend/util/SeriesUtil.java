@@ -1,7 +1,7 @@
 package com.mxt.anitrend.util;
 
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 
 /**
  * Created by max on 2018/02/23.
@@ -25,7 +25,7 @@ public class SeriesUtil {
     public static boolean isIncrementLimitReached(MediaList model) {
         MediaBase mediaBase = getSeriesModel(model);
         if(isAnimeType(mediaBase))
-            return mediaBase.getTotal_episodes() == model.getEpisodes_watched() && mediaBase.getTotal_episodes() != 0;
+            return mediaBase.getTotal_episodes() == model.getProgress() && mediaBase.getTotal_episodes() != 0;
         return mediaBase.getTotal_chapters() == model.getChapters_read() && mediaBase.getTotal_chapters() != 0;
     }
 

@@ -44,7 +44,7 @@ public class UserAdapter extends RecyclerViewAdapter<UserBase> {
                     data = clone;
                 else
                     data = new ArrayList<>(Stream.of(clone)
-                            .filter((model) -> model.getDisplay_name().toLowerCase().contains(filter))
+                            .filter((model) -> model.getName().toLowerCase().contains(filter))
                             .toList());
                 FilterResults results = new FilterResults();
                 results.values = data;

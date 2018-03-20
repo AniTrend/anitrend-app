@@ -12,8 +12,8 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
  * Created by max on 2017/12/13.
  */
 
-public class BottomSheetComposer extends BottomSheetBase implements ItemClickListener<Object>, BaseConsumer.onRequestModelChange<UserActivity> {
+public class BottomSheetComposer extends BottomSheetBase implements ItemClickListener<Object>, BaseConsumer.onRequestModelChange<FeedList> {
 
     protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
 
@@ -38,7 +38,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
 
     private BottomSheetBase mBottomSheet;
 
-    private UserActivity userActivity;
+    private FeedList feedList;
 
     private User user;
 
@@ -57,7 +57,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            userActivity = getArguments().getParcelable(KeyUtils.arg_model);
+            feedList = getArguments().getParcelable(KeyUtils.arg_model);
             requestType = getArguments().getInt(KeyUtils.arg_request_type);
             user = getArguments().getParcelable(KeyUtils.arg_user_model);
         }
@@ -87,16 +87,16 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             EventBus.getDefault().register(this);
         switch (requestType) {
             case KeyUtils.ACTIVITY_EDIT_REQ:
-                composerWidget.setModel(userActivity);
-                composerWidget.setText(userActivity.getValue());
+                composerWidget.setModel(feedList);
+                composerWidget.setText(feedList.getValue());
                 break;
             case KeyUtils.DIRECT_MESSAGE_SEND_REQ:
-                toolbarTitle.setText(getString(mTitle, user.getDisplay_name()));
+                toolbarTitle.setText(getString(mTitle, user.getName()));
                 composerWidget.setModel(user);
                 break;
             case KeyUtils.DIRECT_MESSAGE_EDIT_REQ:
-                toolbarTitle.setText(getString(mTitle, user.getDisplay_name()));
-                composerWidget.setText(userActivity.getValue());
+                toolbarTitle.setText(getString(mTitle, user.getName()));
+                composerWidget.setText(feedList.getValue());
                 composerWidget.setModel(user);
                 break;
         }
@@ -152,7 +152,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
 
     @SuppressLint("SwitchIntDef")
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserActivity> consumer) {
+    public void onModelChanged(BaseConsumer<FeedList> consumer) {
         NotifyUtil.createAlerter(getActivity(), R.string.text_post_information, R.string.completed_success, R.drawable.ic_insert_emoticon_white_24dp, R.color.colorStateGreen);
         closeDialog();
     }
@@ -180,8 +180,8 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             return this;
         }
 
-        public Builder setUserActivity(UserActivity userActivity) {
-            bundle.putParcelable(KeyUtils.arg_model, userActivity);
+        public Builder setUserActivity(FeedList feedList) {
+            bundle.putParcelable(KeyUtils.arg_model, feedList);
             return this;
         }
 

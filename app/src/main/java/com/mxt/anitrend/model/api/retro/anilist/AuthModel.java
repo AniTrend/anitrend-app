@@ -22,23 +22,10 @@ public interface AuthModel {
      * @param code Authorization code from previous request
      */
     @FormUrlEncoded
-    @POST("auth/access_token")
+    @POST("token")
     Call<WebToken> getAuthRequest(@Field("grant_type") String grant_type,
                                @Field("client_id") String client_id,
                                @Field("client_secret") String client_secret,
                                @Field("redirect_uri") String redirect_uri,
                                @Field("code") String code);
-
-    @FormUrlEncoded
-    @POST("auth/access_token")
-    Call<WebToken> getAccessToken(@Field("grant_type") String grant_type,
-                               @Field("client_id") String client_id,
-                               @Field("client_secret") String client_secret,
-                               @Field("refresh_token") String refresh_token);
-
-    @FormUrlEncoded
-    @POST("auth/access_token")
-    Call<WebToken> getAccessToken(@Field("grant_type") String grant_type,
-                               @Field("client_id") String client_id,
-                               @Field("client_secret") String client_secret);
 }

@@ -1,8 +1,7 @@
 package com.mxt.anitrend.util;
 
 import com.mxt.anitrend.BuildConfig;
-import com.mxt.anitrend.model.entity.crunchy.Episode;
-import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 
 import java.util.List;
 

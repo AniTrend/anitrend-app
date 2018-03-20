@@ -2,13 +2,13 @@ package com.mxt.anitrend.base.interfaces.dao;
 
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.Tag;
+import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.VersionBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface BoxQuery {
     /**
      * Get the application version on github
      */
-    VersionBase getRemoteVersion();
+    Version getRemoteVersion();
 
     /**
      * Get all users
@@ -42,7 +42,7 @@ public interface BoxQuery {
     /**
      * Gets all saved tags
      */
-    List<Tag> getAllTags();
+    List<MediaTag> getAllTags();
 
     /**
      * Gets all saved genres
@@ -70,9 +70,9 @@ public interface BoxQuery {
     boolean saveWebToken(WebToken webToken);
 
     /**
-     * Save the application versionBase on github
+     * Save the application version on github
      */
-    boolean saveRemoteVersion(VersionBase versionBase);
+    boolean saveRemoteVersion(Version version);
 
     /**
      * Saves all the users
@@ -80,9 +80,9 @@ public interface BoxQuery {
     void saveUsers(List<UserBase> users);
 
     /**
-     * Saves all saved tags
+     * Saves all saved mediaTags
      */
-    void saveTags(List<Tag> tags);
+    void saveTags(List<MediaTag> mediaTags);
 
     /**
      * Saves all saved genres

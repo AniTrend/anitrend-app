@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Index;
 
 /**
  * Created by Maxwell on 10/24/2016.
@@ -12,8 +13,9 @@ import io.objectbox.annotation.Id;
 @Entity
 public class Genre implements Parcelable {
 
-    @Id(assignable = true)
+    @Id
     private long id;
+    @Index
     private String genre;
 
     public Genre() {

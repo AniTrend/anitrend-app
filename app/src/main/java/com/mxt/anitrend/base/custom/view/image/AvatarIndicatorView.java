@@ -146,7 +146,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, Retr
                     intent = new Intent(getContext(), NotificationActivity.class);
                 } else {
                     intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_user_name, presenter.getDatabase().getCurrentUser().getDisplay_name());
+                    intent.putExtra(KeyUtils.arg_user_name, presenter.getDatabase().getCurrentUser().getName());
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);

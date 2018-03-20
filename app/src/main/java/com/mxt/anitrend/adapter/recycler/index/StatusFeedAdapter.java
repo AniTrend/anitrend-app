@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding;
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
@@ -24,14 +24,14 @@ import butterknife.OnLongClick;
  * Created by max on 2017/11/07.
  */
 
-public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
+public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
 
-    public StatusFeedAdapter(List<UserActivity> data, Context context) {
+    public StatusFeedAdapter(List<FeedList> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<UserActivity> onCreateViewHolder(ViewGroup parent, @KeyUtils.ActivityType int viewType) {
+    public RecyclerViewHolder<FeedList> onCreateViewHolder(ViewGroup parent, @KeyUtils.ActivityType int viewType) {
         if(viewType == KeyUtils.STATUS)
             return new StatusFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         else if(viewType == KeyUtils.MESSAGE)
@@ -55,12 +55,12 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
      */
     @Override
     public @KeyUtils.ActivityType int getItemViewType(int position) {
-        UserActivity model = data.get(position);
-        if(model.getActivity_type().equals(KeyUtils.ActivityTypes[KeyUtils.STATUS]))
+        FeedList model = data.get(position);
+        if(model.getType().equals(KeyUtils.ActivityTypes[KeyUtils.STATUS]))
             return KeyUtils.STATUS;
-        else if(model.getActivity_type().equals(KeyUtils.ActivityTypes[KeyUtils.MESSAGE]))
+        else if(model.getType().equals(KeyUtils.ActivityTypes[KeyUtils.MESSAGE]))
             return KeyUtils.MESSAGE;
-        else if(model.getActivity_type().equals(KeyUtils.ActivityTypes[KeyUtils.LIST]) && model.getLikes() == null)
+        else if(model.getType().equals(KeyUtils.ActivityTypes[KeyUtils.LIST]) && model.getLikes() == null)
             return KeyUtils.LIST;
 
         return KeyUtils.PROGRESS;
@@ -71,7 +71,7 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
         return null;
     }
 
-    protected class ProgressFeedViewHolder extends RecyclerViewHolder<UserActivity> {
+    protected class ProgressFeedViewHolder extends RecyclerViewHolder<FeedList> {
 
         private AdapterFeedProgressBinding binding;
 
@@ -92,11 +92,11 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(UserActivity model) {
+        public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
             binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_FAVOURITE_REQ, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
-            binding.widgetComment.setReplyCount(model.getReply_count());
+            binding.widgetComment.setReplyCount(model.getReplyCount());
             if(presenter.isCurrentUser(model.getUser_id())) {
                 binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
@@ -145,7 +145,7 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
         }
     }
 
-    protected class StatusFeedViewHolder extends RecyclerViewHolder<UserActivity> {
+    protected class StatusFeedViewHolder extends RecyclerViewHolder<FeedList> {
 
         private AdapterFeedStatusBinding binding;
 
@@ -166,14 +166,14 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(UserActivity model) {
+        public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_FAVOURITE_REQ, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
-            binding.widgetComment.setReplyCount(model.getReply_count());
+            binding.widgetComment.setReplyCount(model.getReplyCount());
 
             if(presenter.isCurrentUser(model.getUser_id())) {
                 binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
@@ -215,7 +215,7 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
         public void onClick(View v) {
             int index;
             if((index = getAdapterPosition()) > -1) {
-                UserActivity model = data.get(index);
+                FeedList model = data.get(index);
                 if(isClickable(model))
                     clickListener.onItemClick(v, model);
             }
@@ -228,7 +228,7 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
         }
     }
     
-    protected class MessageFeedViewHolder extends RecyclerViewHolder<UserActivity> {
+    protected class MessageFeedViewHolder extends RecyclerViewHolder<FeedList> {
 
         private AdapterFeedStatusBinding binding;
 
@@ -249,14 +249,14 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(UserActivity model) {
+        public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_FAVOURITE_REQ, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
-            binding.widgetComment.setReplyCount(model.getReply_count());
+            binding.widgetComment.setReplyCount(model.getReplyCount());
 
             if(presenter.isCurrentUser(model.getMessenger())) {
                 binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
@@ -306,7 +306,7 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
         }
     }
 
-    protected class ListFeedViewHolder extends RecyclerViewHolder<UserActivity> {
+    protected class ListFeedViewHolder extends RecyclerViewHolder<FeedList> {
 
         private AdapterFeedProgressBinding binding;
 
@@ -327,11 +327,11 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<UserActivity> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(UserActivity model) {
+        public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
             binding.widgetUsers.setVisibility(View.GONE);
             binding.widgetFavourite.setVisibility(View.GONE);
-            binding.widgetComment.setReplyCount(model.getReply_count());
+            binding.widgetComment.setReplyCount(model.getReplyCount());
             if(presenter.isCurrentUser(model.getUser_id())) {
                 binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
                 binding.widgetDelete.setVisibility(View.VISIBLE);

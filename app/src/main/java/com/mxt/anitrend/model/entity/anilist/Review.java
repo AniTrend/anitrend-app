@@ -14,33 +14,54 @@ import com.mxt.anitrend.util.KeyUtils;
  */
 public class Review implements Parcelable {
 
-    private int id;
-    private String date;
-    private int rating;
-    private int rating_amount;
+    private long id;
     private String summary;
-    @SerializedName("private")
-    private int review_private;
-    private int user_rating;
-    private String text;
+    private String mediaType;
+    private String body;
+    private int rating;
+    private int ratingAmount;
+    private String userRating;
     private int score;
-    private MediaBase anime;
-    private MediaBase manga;
+    @SerializedName("private")
+    private boolean isPrivate;
+    private long createdAt;
     private UserBase user;
+    private MediaBase media;
 
     protected Review(Parcel in) {
-        id = in.readInt();
-        date = in.readString();
-        rating = in.readInt();
-        rating_amount = in.readInt();
+        id = in.readLong();
         summary = in.readString();
-        review_private = in.readInt();
-        user_rating = in.readInt();
-        text = in.readString();
+        mediaType = in.readString();
+        body = in.readString();
+        rating = in.readInt();
+        ratingAmount = in.readInt();
+        userRating = in.readString();
         score = in.readInt();
-        anime = in.readParcelable(MediaBase.class.getClassLoader());
-        manga = in.readParcelable(MediaBase.class.getClassLoader());
+        isPrivate = in.readByte() != 0;
+        createdAt = in.readLong();
         user = in.readParcelable(UserBase.class.getClassLoader());
+        media = in.readParcelable(MediaBase.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(summary);
+        dest.writeString(mediaType);
+        dest.writeString(body);
+        dest.writeInt(rating);
+        dest.writeInt(ratingAmount);
+        dest.writeString(userRating);
+        dest.writeInt(score);
+        dest.writeByte((byte) (isPrivate ? 1 : 0));
+        dest.writeLong(createdAt);
+        dest.writeParcelable(user, flags);
+        dest.writeParcelable(media, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Review> CREATOR = new Creator<Review>() {
@@ -55,153 +76,51 @@ public class Review implements Parcelable {
         }
     };
 
-    public int getId() {
+    public long getId() {
         return id;
-    }
-
-    public String getDate() {
-        return DateUtil.convertDateString(date);
-    }
-
-    /**
-    * @return Positive user ratings of review
-    */
-    public int getRating() {
-        return rating;
-    }
-
-    /**
-     * @return All user rating of review
-     */
-    public int getRating_amount() {
-        return rating_amount;
     }
 
     public String getSummary() {
         return summary;
     }
 
-    public boolean isReview_private() {
-        return review_private == 1;
+    public String getMediaType() {
+        return mediaType;
     }
 
-    /**
-     * Current user rating of review
-     *
-     * @return 0 - no rating <br> 1 up or positive rating <br> 2 down or negative rating
-     */
-    public @KeyUtils.ReviewStatus int getUser_rating() {
-        return user_rating;
+    public String getBody() {
+        return body;
     }
 
-    public String getText() {
-        return text;
+    public int getRating() {
+        return rating;
+    }
+
+    public int getRatingAmount() {
+        return ratingAmount;
+    }
+
+    public String getUserRating() {
+        return userRating;
     }
 
     public int getScore() {
         return score;
     }
 
-    public float getDoubleScore() {
-        return score * 5 / 100;
+    public boolean isPrivate() {
+        return isPrivate;
     }
 
-    public MediaBase getAnime() {
-        return anime;
+    public long getCreatedAt() {
+        return createdAt;
     }
 
     public UserBase getUser() {
         return user;
     }
 
-    public MediaBase getManga() {
-        return manga;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public void setRating_amount(int rating_amount) {
-        this.rating_amount = rating_amount;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public void setReview_private(int review_private) {
-        this.review_private = review_private;
-    }
-
-    public void setUser_rating(int user_rating) {
-        this.user_rating = user_rating;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setAnime(MediaBase anime) {
-        this.anime = anime;
-    }
-
-    public void setManga(MediaBase manga) {
-        this.manga = manga;
-    }
-
-    public void setUser(UserBase user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", date='" + date + "\n" +
-                ", rating=" + rating +
-                ", rating_amount=" + rating_amount +
-                ", summary='" + summary + "\n" +
-                ", review_private=" + review_private +
-                ", user_rating=" + user_rating +
-                ", text='" + text + "\n" +
-                ", score=" + score +
-                ", anime=" + anime +
-                ", manga=" + manga +
-                ", user=" + user +
-                '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(date);
-        parcel.writeInt(rating);
-        parcel.writeInt(rating_amount);
-        parcel.writeString(summary);
-        parcel.writeInt(review_private);
-        parcel.writeInt(user_rating);
-        parcel.writeString(text);
-        parcel.writeInt(score);
-        parcel.writeParcelable(anime, i);
-        parcel.writeParcelable(manga, i);
-        parcel.writeParcelable(user, i);
+    public MediaBase getMedia() {
+        return media;
     }
 }

@@ -9,7 +9,7 @@ import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.EpisodeAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase;
-import com.mxt.anitrend.model.entity.general.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
 

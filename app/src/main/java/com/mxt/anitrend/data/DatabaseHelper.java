@@ -8,15 +8,15 @@ import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Genre_;
-import com.mxt.anitrend.model.entity.anilist.Tag;
+import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.UserBase_;
-import com.mxt.anitrend.model.entity.base.VersionBase;
-import com.mxt.anitrend.model.entity.general.MediaList;
+import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class DatabaseHelper implements BoxQuery {
         getBoxStore(AuthBase.class).removeAll();
         getBoxStore(User.class).removeAll();
         getBoxStore(UserBase.class).removeAll();
-        getBoxStore(VersionBase.class).removeAll();
+        getBoxStore(Version.class).removeAll();
         getBoxStore(MediaList.class).removeAll();
         getBoxStore(NotificationBase.class).removeAll();
         getBoxStore(Favourite.class).removeAll();
@@ -104,8 +104,8 @@ public class DatabaseHelper implements BoxQuery {
      * Get the application version on github
      */
     @Override
-    public VersionBase getRemoteVersion() {
-        return getBoxStore(VersionBase.class)
+    public Version getRemoteVersion() {
+        return getBoxStore(Version.class)
                 .query().build().findFirst();
     }
 
@@ -126,8 +126,8 @@ public class DatabaseHelper implements BoxQuery {
      * Gets all saved tags
      */
     @Override
-    public List<Tag> getAllTags() {
-        return getBoxStore(Tag.class)
+    public List<MediaTag> getAllTags() {
+        return getBoxStore(MediaTag.class)
                 .query().build()
                 .findLazy();
     }
@@ -160,8 +160,6 @@ public class DatabaseHelper implements BoxQuery {
     @Override
     public boolean saveCurrentUser(User user) {
         this.user = user;
-        if(user.getLists() != null && user.getLists().size() > 0)
-            saveSeries(user.getLists());
         return getBoxStore(User.class).put(user) > -1;
     }
 
@@ -189,17 +187,17 @@ public class DatabaseHelper implements BoxQuery {
     }
 
     /**
-     * Save the application versionBase on github
+     * Save the application version on github
      *
-     * @param versionBase
+     * @param version
      */
     @Override
-    public boolean saveRemoteVersion(VersionBase versionBase) {
-        Box<VersionBase> versionBox = getBoxStore(VersionBase.class);
+    public boolean saveRemoteVersion(Version version) {
+        Box<Version> versionBox = getBoxStore(Version.class);
         if(versionBox.count() > 0)
             versionBox.removeAll();
-        versionBase.setLast_checked(System.currentTimeMillis());
-        versionBox.put(versionBase);
+        version.setLast_checked(System.currentTimeMillis());
+        versionBox.put(version);
         return false;
     }
 
@@ -216,15 +214,15 @@ public class DatabaseHelper implements BoxQuery {
     }
 
     /**
-     * Saves all saved tags
+     * Saves all saved mediaTags
      *
-     * @param tags
+     * @param mediaTags
      */
     @Override
-    public void saveTags(List<Tag> tags) {
-        Box<Tag> tagBox = getBoxStore(Tag.class);
-        if(tagBox.count() < tags.size())
-            tagBox.put(tags);
+    public void saveTags(List<MediaTag> mediaTags) {
+        Box<MediaTag> tagBox = getBoxStore(MediaTag.class);
+        if(tagBox.count() < mediaTags.size())
+            tagBox.put(mediaTags);
     }
 
     /**

@@ -18,8 +18,8 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
-import com.mxt.anitrend.model.entity.anilist.UserActivity;
-import com.mxt.anitrend.model.entity.general.UserActivityReply;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
+import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
  * Comment fragment base class style
  */
 
-public abstract class FragmentBaseComment extends FragmentBase<UserActivityReply, WidgetPresenter<UserActivity>, List<UserActivityReply>> implements
+public abstract class FragmentBaseComment extends FragmentBase<FeedReply, WidgetPresenter<FeedList>, List<FeedReply>> implements
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
@@ -50,13 +50,13 @@ public abstract class FragmentBaseComment extends FragmentBase<UserActivityReply
     protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
 
     protected int userActivityId;
-    protected UserActivity userActivity;
-    protected List<UserActivityReply> model;
+    protected FeedList feedList;
+    protected List<FeedReply> model;
 
     protected String query;
     protected boolean isLimit;
 
-    protected RecyclerViewAdapter<UserActivityReply> mAdapter;
+    protected RecyclerViewAdapter<FeedReply> mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
 
     private final View.OnClickListener stateLayoutOnClick = view -> {
@@ -338,7 +338,7 @@ public abstract class FragmentBaseComment extends FragmentBase<UserActivityReply
      * @param content The new data
      */
     @Override
-    public void onChanged(@Nullable List<UserActivityReply> content) {
+    public void onChanged(@Nullable List<FeedReply> content) {
         if(content != null) {
             if(content.size() > 0) {
                 if(isPager) {
@@ -366,7 +366,7 @@ public abstract class FragmentBaseComment extends FragmentBase<UserActivityReply
      * @param data   the model that at the click index
      */
     @Override
-    public abstract void onItemClick(View target, UserActivityReply data);
+    public abstract void onItemClick(View target, FeedReply data);
 
     /**
      * When the target view from {@link View.OnLongClickListener}
@@ -376,5 +376,5 @@ public abstract class FragmentBaseComment extends FragmentBase<UserActivityReply
      * @param data   the model that at the long click index
      */
     @Override
-    public abstract void onItemLongClick(View target, UserActivityReply data);
+    public abstract void onItemLongClick(View target, FeedReply data);
 }

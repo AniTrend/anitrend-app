@@ -1,10 +1,10 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.general.UserActivityReply" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.FeedReply" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@{model.user.display_name}"
+                    android:text="@{model.user.name}"
                     tools:text="wax911" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
-                    android:text="@{model.created_at}"
+                    android:text="@{model.createdAt}"
                     tools:text="Oct 28 2017" />
 
             </LinearLayout>

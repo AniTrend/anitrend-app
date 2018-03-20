@@ -127,7 +127,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
 
     public boolean isCurrentUser(String userName) {
         return getApplicationPref().isAuthenticated() && getDatabase().getCurrentUser() != null &&
-                userName != null && getDatabase().getCurrentUser().getDisplay_name().equals(userName);
+                userName != null && getDatabase().getCurrentUser().getName().equals(userName);
     }
 
     public boolean isCurrentUser(long userId, String userName) {

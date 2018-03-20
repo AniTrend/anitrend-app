@@ -1,4 +1,4 @@
-<?xml versionBase="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -43,7 +43,7 @@
                                 android:foreground="?selectableItemBackground"
                                 android:layout_width="@dimen/series_image_xs"
                                 android:layout_height="wrap_content"
-                                app:imageUrl="@{model.image_url_lge}"
+                                app:imageUrl="@{model.avatar}"
                                 tools:src="@drawable/sample_img"/>
 
                             <android.support.v4.widget.Space
