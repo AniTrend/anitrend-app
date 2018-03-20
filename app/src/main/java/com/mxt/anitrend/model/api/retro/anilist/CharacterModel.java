@@ -31,5 +31,4 @@ public interface CharacterModel {
     @FormUrlEncoded
     @POST("character/favourite")
     Call<ResponseBody> toggleFavourite(@Field("id") long id);
-
 }
