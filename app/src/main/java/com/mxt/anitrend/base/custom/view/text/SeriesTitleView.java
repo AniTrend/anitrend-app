@@ -4,10 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
 
@@ -44,7 +44,7 @@ public class SeriesTitleView extends SingleLineTextView implements CustomView {
         isAuthenticated = presenter.getApplicationPref().isAuthenticated();
     }
 
-    public void setTitle(Series series) {
+    public void setTitle(Media series) {
         switch (getLanguagePreference()) {
             case KeyUtils.LANGUAGE_ENGLISH:
                 setText(series.getTitle_english());
@@ -58,7 +58,7 @@ public class SeriesTitleView extends SingleLineTextView implements CustomView {
         }
     }
 
-    public void setTitle(SeriesBase series) {
+    public void setTitle(MediaBase series) {
         switch (getLanguagePreference()) {
             case KeyUtils.LANGUAGE_ENGLISH:
                 setText(series.getTitle_english());
@@ -72,7 +72,7 @@ public class SeriesTitleView extends SingleLineTextView implements CustomView {
         }
     }
 
-    public void setTitle(SeriesList series) {
+    public void setTitle(MediaList series) {
         if(series.getAnime() != null)
             setTitle(series.getAnime());
         else if(series.getManga() != null)

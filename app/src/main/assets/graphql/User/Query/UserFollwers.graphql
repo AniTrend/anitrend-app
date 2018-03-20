@@ -1,0 +1,25 @@
+query UserFollowers($id: Int!, $page: Int, $perPage: Int, $sort: [UserSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    followers(userId: $id, sort: $sort) {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+  }
+}

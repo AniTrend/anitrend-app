@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist;
 
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Tag;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.model.entity.general.Airing;
@@ -9,7 +9,6 @@ import com.mxt.anitrend.model.entity.general.Airing;
 import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -42,7 +41,7 @@ public interface SeriesModel {
      * @param series_type the type of series either anime or manga
      */
     @GET("browse/{series_type}")
-    Call<List<Series>> getSeriesList(@Path("series_type") String series_type);
+    Call<List<Media>> getSeriesList(@Path("series_type") String series_type);
 
     /**
      * Gets a filtered result of anime
@@ -61,26 +60,26 @@ public interface SeriesModel {
      * @param page           : int
     */
     @GET("browse/{series_type}")
-    Call<List<Series>> getFilteredBrowse(@Path("series_type") String series_type,
-                                         @Query("year") Integer year,
-                                         @Query("season") String season,
-                                         @Query("type") String type,
-                                         @Query("status") String status,
-                                         @Query("genres") String genres,
-                                         @Query("genres_exclude") String genres_exclude,
-                                         @Query("tags") String tags,
-                                         @Query("tags_exclude") String tags_exclude,
-                                         @Query("sort") String sort,
-                                         @Query("airing_data") boolean airing_data,
-                                         @Query("full_page") boolean full_page,
-                                         @Query("page") int page);
+    Call<List<Media>> getFilteredBrowse(@Path("series_type") String series_type,
+                                        @Query("year") Integer year,
+                                        @Query("season") String season,
+                                        @Query("type") String type,
+                                        @Query("status") String status,
+                                        @Query("genres") String genres,
+                                        @Query("genres_exclude") String genres_exclude,
+                                        @Query("tags") String tags,
+                                        @Query("tags_exclude") String tags_exclude,
+                                        @Query("sort") String sort,
+                                        @Query("airing_data") boolean airing_data,
+                                        @Query("full_page") boolean full_page,
+                                        @Query("page") int page);
 
     /**
      * Basic
      * @return  a series model.
      * */
     @GET("{series_type}/{id}")
-    Call<Series> getSeries(@Path("series_type") String series_type, @Path("id") int id);
+    Call<Media> getSeries(@Path("series_type") String series_type, @Path("id") int id);
 
     /**
      * Page Item which returns a series model with the following:
@@ -96,7 +95,7 @@ public interface SeriesModel {
      * @return a series model with the following:
      * */
     @GET("{series}/{id}/page")
-    Call<Series> getSeriesPage(@Path("series") String series_type, @Path("id") long id);
+    Call<Media> getSeriesPage(@Path("series") String series_type, @Path("id") long id);
 
     /**
      * Returns series model with the following:
@@ -106,7 +105,7 @@ public interface SeriesModel {
      * @return series model
      */
     @GET("{series}/{id}/characters")
-    Call<Series> getSeriesCharacters(@Path("series") String series_type, @Path("id") long id);
+    Call<Media> getSeriesCharacters(@Path("series") String series_type, @Path("id") long id);
 
     /**
      * Returns series model with the following:
@@ -116,7 +115,7 @@ public interface SeriesModel {
      * @return series model
      */
     @GET("{series}/{id}/actors")
-    Call<Series> getSeriesActors(@Path("series") String series_type, @Path("id") long id);
+    Call<Media> getSeriesActors(@Path("series") String series_type, @Path("id") long id);
 
     /**
      * Get airing status of an anime
@@ -134,7 +133,7 @@ public interface SeriesModel {
      * @return series models
     */
     @GET("{series}/search/{query}")
-    Call<List<Series>> findSeries(@Path("series") String series_type, @Path("query") String query, @Query("page") int page);
+    Call<List<Media>> findSeries(@Path("series") String series_type, @Path("query") String query, @Query("page") int page);
 
     @FormUrlEncoded
     @POST("{series_type}/favourite")

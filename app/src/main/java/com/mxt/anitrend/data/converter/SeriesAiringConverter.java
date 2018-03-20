@@ -6,7 +6,7 @@ import io.objectbox.converter.PropertyConverter;
 
 /**
  * Created by max on 2017/11/04.
- * Series Airing Property Converter
+ * Media Airing Property Converter
  */
 
 public class SeriesAiringConverter implements PropertyConverter<Airing, String> {

@@ -1,0 +1,72 @@
+query CharacterActors($id: Int!, $page: Int, $perPage: Int, $characterSort: [CharacterSort], $staffSort: [StaffSort]) {
+  Character(id: $id, sort: $characterSort) {
+    media(page: $page, perPage: $perPage) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      edges {
+        voiceActors(sort: $staffSort) {
+          ... on Staff {
+            id
+            name {
+              ... on StaffName {
+                first
+                last
+                native
+              }
+            }
+            language
+            image {
+              ... on StaffImage {
+                large
+                medium
+              }
+            }
+            description(asHtml: true)
+            language
+          }
+        }
+        node {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            type
+            status
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

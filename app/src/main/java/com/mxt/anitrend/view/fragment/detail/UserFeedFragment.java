@@ -15,7 +15,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -121,7 +121,7 @@ public class UserFeedFragment extends FragmentBaseList<UserActivity, List<UserAc
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                SeriesBase series = data.getSeries();
+                MediaBase series = data.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
                 intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());

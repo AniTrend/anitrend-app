@@ -1,0 +1,19 @@
+query StudioSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [StudioSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    studios(id: $id, search: $search, sort: $sort) {
+      ... on Studio {
+        id
+        name
+        isFavourite
+      }
+    }
+  }
+}

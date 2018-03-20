@@ -1,0 +1,23 @@
+query StudioFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $name) {
+    favourites {
+      studios(page: $page, perPage: $perPage) {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
+        }
+        nodes {
+          ... on Studio {
+            id
+            name
+            isFavourite
+          }
+        }
+      }
+    }
+  }
+}

@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
@@ -35,14 +35,14 @@ public class SeriesPresenter extends CommonPresenter {
         super(context);
     }
 
-    public Spanned getHashTag(Series series) {
+    public Spanned getHashTag(Media series) {
         if(series != null && !TextUtils.isEmpty(series.getHashtag()))
             return Html.fromHtml(String.format("<a href=\"https://twitter.com/search?q=%%23%s&src=typd\">%s</a>",
                     series.getHashtag().replace("#", ""), series.getHashtag()));
         return Html.fromHtml(getContext().getString(R.string.TBA));
     }
 
-    public String getMainStudio(Series series) {
+    public String getMainStudio(Media series) {
         if(series != null) {
            Optional<StudioBase> result = Stream.of(series.getStudio())
                     .filter(model -> model.getMain_studio() == 1)
@@ -102,19 +102,19 @@ public class SeriesPresenter extends CommonPresenter {
                 .get().getValue();
     }
 
-    public String getEpisodeDuration(Series series) {
+    public String getEpisodeDuration(Media series) {
         if(series != null && series.getDuration() > 0)
             getContext().getString(R.string.text_anime_length, series.getDuration());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getSeriesSeason(Series series) {
+    public String getSeriesSeason(Media series) {
         if(series != null && series.getStart_date_fuzzy() > 0)
             return DateUtil.getSeriesSeason(series.getStart_date_fuzzy());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getSeriesStatus(Series series) {
+    public String getSeriesStatus(Media series) {
         if(series != null && (!TextUtils.isEmpty(series.getAiring_status()) || !TextUtils.isEmpty(series.getPublishing_status()))) {
             if (series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME])) {
                 return CompatUtil.capitalizeWords(series.getAiring_status());
@@ -124,25 +124,25 @@ public class SeriesPresenter extends CommonPresenter {
         return getContext().getString(R.string.TBA);
     }
 
-    public String getEpisodeCount(Series series) {
+    public String getEpisodeCount(Media series) {
         if(series != null && series.getTotal_episodes() > 0)
             return getContext().getString(R.string.text_anime_episodes, series.getTotal_episodes());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getVolumeCount(Series series) {
+    public String getVolumeCount(Media series) {
         if(series != null && series.getTotal_volumes() > 0)
             return getContext().getString(R.string.text_manga_volumes, series.getTotal_volumes());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getChapterCount(Series series) {
+    public String getChapterCount(Media series) {
         if(series != null && series.getTotal_chapters() > 0)
             return getContext().getString(R.string.text_manga_chapters, series.getTotal_chapters());
         return getContext().getString(R.string.TBA);
     }
 
-    public List<Genre> buildGenres(Series series) {
+    public List<Genre> buildGenres(Media series) {
         List<Genre> genres = new ArrayList<>();
         if(series != null && series.getGenres() != null) {
             for (String genre: series.getGenres()) {
@@ -155,13 +155,13 @@ public class SeriesPresenter extends CommonPresenter {
         return genres;
     }
 
-    public int isAnime(Series series) {
+    public int isAnime(Media series) {
         if(SeriesUtil.isAnimeType(series))
             return View.VISIBLE;
         return View.GONE;
     }
 
-    public int isManga(Series series) {
+    public int isManga(Media series) {
         if(SeriesUtil.isMangaType(series))
             return View.VISIBLE;
         return View.GONE;

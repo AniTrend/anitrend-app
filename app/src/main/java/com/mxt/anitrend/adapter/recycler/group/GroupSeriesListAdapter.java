@@ -13,8 +13,8 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -34,7 +34,7 @@ import butterknife.OnLongClick;
 public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
 
     private String currentUser;
-    private List<SeriesBase> favouriteSeries;
+    private List<MediaBase> favouriteSeries;
 
     public GroupSeriesListAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
@@ -76,12 +76,12 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
                 } else {
                     data = new ArrayList<>();
                     for (EntityGroup model : clone) {
-                        if(model instanceof SeriesList) {
-                            SeriesBase seriesBase = SeriesUtil.getSeriesModel((SeriesList) model);
+                        if(model instanceof MediaList) {
+                            MediaBase mediaBase = SeriesUtil.getSeriesModel((MediaList) model);
 
-                            if (seriesBase.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    seriesBase.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    seriesBase.getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter))
+                            if (mediaBase.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                    mediaBase.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                    mediaBase.getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter))
                                 data.add(model);
                         }
                     }
@@ -121,7 +121,7 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
          */
         @Override
         public void onBindViewHolder(EntityGroup entityGroup) {
-            SeriesList model = (SeriesList) entityGroup;
+            MediaList model = (MediaList) entityGroup;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.seriesEpisodes.setModel(model, currentUser);

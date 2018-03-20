@@ -1,0 +1,16 @@
+query SeriesBase($id: Int!, $isAdult: Boolean = false) {
+  Media(id: $id, isAdult: $isAdult) {
+    ... on Media {
+      id
+      bannerImage
+      isFavourite
+      mediaListEntry {
+        ... on MediaList {
+          id
+          status
+        }
+      }
+      siteUrl
+    }
+  }
+}

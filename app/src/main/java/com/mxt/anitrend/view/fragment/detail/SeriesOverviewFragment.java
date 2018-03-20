@@ -20,7 +20,7 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Tag;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
@@ -43,11 +43,11 @@ import butterknife.OnClick;
  * Created by max on 2017/12/31.
  */
 
-public class SeriesOverviewFragment extends FragmentBase<Series, SeriesPresenter, Series> implements PublisherListener<Series> {
+public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
 
     private FragmentSeriesOverviewBinding binding;
     private YoutubePlayerFragment youtubePlayerFragment;
-    private Series model;
+    private Media model;
 
     private GenreAdapter genreAdapter;
     private TagAdapter tagAdapter;
@@ -178,7 +178,7 @@ public class SeriesOverviewFragment extends FragmentBase<Series, SeriesPresenter
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable Series model) {
+    public void onChanged(@Nullable Media model) {
 
     }
 
@@ -189,7 +189,7 @@ public class SeriesOverviewFragment extends FragmentBase<Series, SeriesPresenter
      * @see Subscribe
      */
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Series param) {
+    public void onEventPublished(Media param) {
         if(model == null) {
             model = param;
             getViewModel().getParams().putString(KeyUtils.arg_model, model.getYoutube_id());

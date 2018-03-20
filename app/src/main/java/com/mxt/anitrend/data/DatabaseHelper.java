@@ -11,12 +11,12 @@ import com.mxt.anitrend.model.entity.anilist.Genre_;
 import com.mxt.anitrend.model.entity.anilist.Tag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
-import com.mxt.anitrend.model.entity.base.AuthCode;
+import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.UserBase_;
-import com.mxt.anitrend.model.entity.base.Version;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.VersionBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,11 +60,11 @@ public class DatabaseHelper implements BoxQuery {
      */
     public void invalidateBoxStores() {
         getBoxStore(WebToken.class).removeAll();
-        getBoxStore(AuthCode.class).removeAll();
+        getBoxStore(AuthBase.class).removeAll();
         getBoxStore(User.class).removeAll();
         getBoxStore(UserBase.class).removeAll();
-        getBoxStore(Version.class).removeAll();
-        getBoxStore(SeriesList.class).removeAll();
+        getBoxStore(VersionBase.class).removeAll();
+        getBoxStore(MediaList.class).removeAll();
         getBoxStore(NotificationBase.class).removeAll();
         getBoxStore(Favourite.class).removeAll();
     }
@@ -85,8 +85,8 @@ public class DatabaseHelper implements BoxQuery {
      * Get default authentication code
      */
     @Override
-    public AuthCode getAuthCode() {
-        return getBoxStore(AuthCode.class)
+    public AuthBase getAuthCode() {
+        return getBoxStore(AuthBase.class)
                 .query().build()
                 .findFirst();
     }
@@ -104,8 +104,8 @@ public class DatabaseHelper implements BoxQuery {
      * Get the application version on github
      */
     @Override
-    public Version getRemoteVersion() {
-        return getBoxStore(Version.class)
+    public VersionBase getRemoteVersion() {
+        return getBoxStore(VersionBase.class)
                 .query().build().findFirst();
     }
 
@@ -146,8 +146,8 @@ public class DatabaseHelper implements BoxQuery {
      * Gets all saved series lists
      */
     @Override
-    public List<SeriesList> getAllSeries() {
-        return getBoxStore(SeriesList.class)
+    public List<MediaList> getAllSeries() {
+        return getBoxStore(MediaList.class)
                 .query().build()
                 .findLazy();
     }
@@ -168,12 +168,12 @@ public class DatabaseHelper implements BoxQuery {
     /**
      * Get default authentication code
      *
-     * @param authCode
+     * @param authBase
      */
     @Override
-    public boolean saveAuthCode(AuthCode authCode) {
-        getBoxStore(AuthCode.class).removeAll();
-        return getBoxStore(AuthCode.class).put(authCode) > -1;
+    public boolean saveAuthCode(AuthBase authBase) {
+        getBoxStore(AuthBase.class).removeAll();
+        return getBoxStore(AuthBase.class).put(authBase) > -1;
     }
 
     /**
@@ -189,17 +189,17 @@ public class DatabaseHelper implements BoxQuery {
     }
 
     /**
-     * Save the application version on github
+     * Save the application versionBase on github
      *
-     * @param version
+     * @param versionBase
      */
     @Override
-    public boolean saveRemoteVersion(Version version) {
-        Box<Version> versionBox = getBoxStore(Version.class);
+    public boolean saveRemoteVersion(VersionBase versionBase) {
+        Box<VersionBase> versionBox = getBoxStore(VersionBase.class);
         if(versionBox.count() > 0)
             versionBox.removeAll();
-        version.setLast_checked(System.currentTimeMillis());
-        versionBox.put(version);
+        versionBase.setLast_checked(System.currentTimeMillis());
+        versionBox.put(versionBase);
         return false;
     }
 
@@ -242,13 +242,13 @@ public class DatabaseHelper implements BoxQuery {
     /**
      * Saves all series lists
      *
-     * @param seriesLists
+     * @param mediaLists
      */
     @Override
-    public void saveSeries(List<SeriesList> seriesLists) {
-        Box<SeriesList> seriesListBox = getBoxStore(SeriesList.class);
-        if(seriesListBox.count() < seriesLists.size())
-            seriesListBox.put(seriesLists);
+    public void saveSeries(List<MediaList> mediaLists) {
+        Box<MediaList> seriesListBox = getBoxStore(MediaList.class);
+        if(seriesListBox.count() < mediaLists.size())
+            seriesListBox.put(mediaLists);
     }
 
     /**
@@ -298,10 +298,10 @@ public class DatabaseHelper implements BoxQuery {
      *
      * @param seriesMap
      */
-    public void saveSeries(Map<String, List<SeriesList>> seriesMap) {
-        List<SeriesList> seriesLists = new ArrayList<>();
-        for (List<SeriesList> list: seriesMap.values())
-            seriesLists.addAll(list);
-        saveSeries(seriesLists);
+    public void saveSeries(Map<String, List<MediaList>> seriesMap) {
+        List<MediaList> mediaLists = new ArrayList<>();
+        for (List<MediaList> list: seriesMap.values())
+            mediaLists.addAll(list);
+        saveSeries(mediaLists);
     }
 }

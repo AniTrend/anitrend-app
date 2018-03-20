@@ -1,0 +1,82 @@
+query SeriesSocial($mediaId: Int!, $isFollowing: Boolean = false, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    activities(mediaId: $mediaId, type: MEDIA_LIST, sort: ID_DESC, isFollowing: $isFollowing) {
+      ... on ListActivity {
+        id
+        status
+        progress
+        createdAt
+        user {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        replyCount
+        likes {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        media {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            type
+            status
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

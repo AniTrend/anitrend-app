@@ -10,9 +10,8 @@ import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.databinding.AdapterSeriesBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +25,16 @@ import butterknife.OnLongClick;
  * adapter for series lists
  */
 
-public class SeriesListAdapter extends RecyclerViewAdapter<SeriesList> {
+public class SeriesListAdapter extends RecyclerViewAdapter<MediaList> {
 
     private String currentUser;
 
-    public SeriesListAdapter(List<SeriesList> data, Context context) {
+    public SeriesListAdapter(List<MediaList> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<SeriesList> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaList> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new SeriesListViewHolder(AdapterSeriesListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -49,7 +48,7 @@ public class SeriesListAdapter extends RecyclerViewAdapter<SeriesList> {
                     data = clone;
                 } else {
                     data = new ArrayList<>();
-                    for (SeriesList model : clone) {
+                    for (MediaList model : clone) {
                         if(model.getAnime() != null) {
                             if (model.getAnime().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
                                     model.getAnime().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
@@ -73,7 +72,7 @@ public class SeriesListAdapter extends RecyclerViewAdapter<SeriesList> {
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<SeriesList>) results.values);
+                data = new ArrayList<>((List<MediaList>) results.values);
                 notifyDataSetChanged();
             }
         };
@@ -83,7 +82,7 @@ public class SeriesListAdapter extends RecyclerViewAdapter<SeriesList> {
         this.currentUser = currentUser;
     }
 
-    protected class SeriesListViewHolder extends RecyclerViewHolder<SeriesList> {
+    protected class SeriesListViewHolder extends RecyclerViewHolder<MediaList> {
 
         private AdapterSeriesListBinding binding;
 
@@ -104,7 +103,7 @@ public class SeriesListAdapter extends RecyclerViewAdapter<SeriesList> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(SeriesList model) {
+        public void onBindViewHolder(MediaList model) {
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.seriesEpisodes.setModel(model, currentUser);

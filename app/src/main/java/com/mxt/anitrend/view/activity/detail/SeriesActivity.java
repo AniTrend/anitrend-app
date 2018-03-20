@@ -19,7 +19,7 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.databinding.ActivitySeriesBinding;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -35,14 +35,14 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by max on 2017/12/01.
- * Series activity
+ * Media activity
  */
 
-public class SeriesActivity extends ActivityBase<Series, SeriesPresenter> implements View.OnClickListener {
+public class SeriesActivity extends ActivityBase<Media, SeriesPresenter> implements View.OnClickListener {
 
     private ActivitySeriesBinding binding;
     private String seriesType;
-    private Series model;
+    private Media model;
 
     private FavouriteToolbarWidget favouriteWidget;
 
@@ -156,7 +156,7 @@ public class SeriesActivity extends ActivityBase<Series, SeriesPresenter> implem
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable Series model) {
+    public void onChanged(@Nullable Media model) {
         super.onChanged(model);
         this.model = model;
         updateUI();

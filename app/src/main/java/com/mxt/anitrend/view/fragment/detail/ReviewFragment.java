@@ -10,9 +10,9 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesReviewAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -31,7 +31,7 @@ import java.util.List;
  * Created by max on 2017/12/28.
  */
 
-public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BasePresenter> implements PublisherListener<Series> {
+public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BasePresenter> implements PublisherListener<Media> {
 
     private @KeyUtils.SeriesType int seriesType;
     private long seriesId;
@@ -92,10 +92,10 @@ public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BaseP
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                SeriesBase seriesBase = reviewType? data.getAnime() : data.getManga();
+                MediaBase mediaBase = reviewType? data.getAnime() : data.getManga();
                 intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, seriesBase.getId());
-                intent.putExtra(KeyUtils.arg_series_type, seriesBase.getSeries_type());
+                intent.putExtra(KeyUtils.arg_id, mediaBase.getId());
+                intent.putExtra(KeyUtils.arg_series_type, mediaBase.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.user_avatar:
@@ -145,7 +145,7 @@ public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BaseP
      * @see Subscribe
      */
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Series param) {
+    public void onEventPublished(Media param) {
         if(model == null) {
             seriesId = param.getId();
             makeRequest();

@@ -18,7 +18,7 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentUserListBase;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
 import com.mxt.anitrend.util.ComparatorProvider;
 import com.mxt.anitrend.util.CompatUtil;
@@ -39,7 +39,7 @@ import java.util.Map;
  * series list fragment
  */
 
-public class SeriesListFragment extends FragmentUserListBase implements BaseConsumer.onRequestModelChange<SeriesList> {
+public class SeriesListFragment extends FragmentUserListBase implements BaseConsumer.onRequestModelChange<MediaList> {
 
     private String userName;
     private int contentIndex;
@@ -127,7 +127,7 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, SeriesList data) {
+    public void onItemClick(View target, MediaList data) {
         switch (target.getId()) {
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
@@ -147,7 +147,7 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, SeriesList data) {
+    public void onItemLongClick(View target, MediaList data) {
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -194,22 +194,22 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
             showEmpty(getString(R.string.layout_empty_response));
     }
 
-    private List<SeriesList> getList(Map<String, List<SeriesList>> seriesMap) {
-        List<SeriesList> seriesList = seriesMap.get(getListType());
-        List<SeriesList> filtered = FilterProvider.getListItemFilter(getPresenter().isCurrentUser(userName), seriesList);
+    private List<MediaList> getList(Map<String, List<MediaList>> seriesMap) {
+        List<MediaList> mediaList = seriesMap.get(getListType());
+        List<MediaList> filtered = FilterProvider.getListItemFilter(getPresenter().isCurrentUser(userName), mediaList);
         if(filtered != null)
             return sortedFilteredList(filtered);
-        return seriesList;
+        return mediaList;
     }
 
-    private List<SeriesList> sortedFilteredList(List<SeriesList> seriesList) {
+    private List<MediaList> sortedFilteredList(List<MediaList> mediaList) {
         User user = getPresenter().getDatabase().getCurrentUser();
-        List<SeriesList> seriesListFiltered;
+        List<MediaList> mediaListFiltered;
         if(seriesType == KeyUtils.ANIME)
-            seriesListFiltered = Stream.of(seriesList).sorted(ComparatorProvider.getAnimeComparator(getPresenter().getApplicationPref() , user.getTitle_language())).toList();
+            mediaListFiltered = Stream.of(mediaList).sorted(ComparatorProvider.getAnimeComparator(getPresenter().getApplicationPref() , user.getTitle_language())).toList();
         else
-            seriesListFiltered = Stream.of(seriesList).sorted(ComparatorProvider.getMangaComparator(getPresenter().getApplicationPref(), user.getTitle_language())).toList();
-        return seriesListFiltered;
+            mediaListFiltered = Stream.of(mediaList).sorted(ComparatorProvider.getMangaComparator(getPresenter().getApplicationPref(), user.getTitle_language())).toList();
+        return mediaListFiltered;
     }
 
     private String getListType() {
@@ -217,10 +217,10 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<SeriesList> consumer) {
+    public void onModelChanged(BaseConsumer<MediaList> consumer) {
         if(getPresenter().isCurrentUser(userName)) {
             int pairIndex;
-            Optional<IntPair<SeriesList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+            Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
             if(consumer.getRequestMode() == KeyUtils.ANIME_LIST_EDIT_REQ || consumer.getRequestMode() == KeyUtils.MANGA_LIST_EDIT_REQ) {
                 if (pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();

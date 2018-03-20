@@ -27,7 +27,7 @@ android:
     # addons
     - addon-google_apis-google-$ANDROID_API_LEVEL
 
-    # The SDK version used to compile your project
+    # The SDK versionBase used to compile your project
     - android-$ANDROID_API_LEVEL
 
 licenses:

@@ -26,7 +26,7 @@ import butterknife.OnLongClick;
 
 /**
  * Created by max on 2017/10/30.
- * Series review adapter
+ * Media review adapter
  */
 
 public class SeriesReviewAdapter extends RecyclerViewAdapter<Review> {

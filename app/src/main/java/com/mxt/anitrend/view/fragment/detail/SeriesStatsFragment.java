@@ -31,8 +31,8 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesStatsBinding;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Rank;
-import com.mxt.anitrend.model.entity.anilist.Series;
 import com.mxt.anitrend.model.entity.general.ExternalLink;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.ChartUtil;
@@ -54,10 +54,10 @@ import butterknife.ButterKnife;
  * Created by max on 2017/12/28.
  */
 
-public class SeriesStatsFragment extends FragmentBase<Series, SeriesPresenter, Series> implements PublisherListener<Series> {
+public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
 
     private FragmentSeriesStatsBinding binding;
-    private Series model;
+    private Media model;
 
     private RankAdapter rankAdapter;
     private LinkAdapter linkAdapter;
@@ -231,7 +231,7 @@ public class SeriesStatsFragment extends FragmentBase<Series, SeriesPresenter, S
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable Series model) {
+    public void onChanged(@Nullable Media model) {
 
     }
 
@@ -242,7 +242,7 @@ public class SeriesStatsFragment extends FragmentBase<Series, SeriesPresenter, S
      * @see Subscribe
      */
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Series param) {
+    public void onEventPublished(Media param) {
         if(model == null) {
             model = param;
             makeRequest();

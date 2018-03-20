@@ -1,0 +1,51 @@
+query AnimeFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $name) {
+    favourites {
+      anime(page: $page, perPage: $perPage) {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
+        }
+        nodes {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            type
+            status
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

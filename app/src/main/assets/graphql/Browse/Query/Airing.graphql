@@ -1,0 +1,47 @@
+query Airing($page: Int, $perPage: Int, $type: MediaType, $format: MediaFormat, $startDate: String, $endDate: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    media(onList: true, status: RELEASING, startDate_like: $startDate, endDate_like: $endDate, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, isAdult: $isAdult, sort: $sort) {
+      ... on Media {
+        id
+        title {
+          ... on MediaTitle {
+            english
+            romaji
+            native
+            userPreferred
+          }
+        }
+        type
+        status
+        startDate {
+          ... on FuzzyDate {
+            day
+            month
+            year
+          }
+        }
+        episodes
+        chapters
+        volumes
+        isAdult
+        isFavourite
+        nextAiringEpisode {
+          ... on AiringSchedule {
+            id
+            airingAt
+            timeUntilAiring
+            episode
+          }
+        }
+      }
+    }
+  }
+}

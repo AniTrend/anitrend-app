@@ -8,13 +8,12 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.general.SeriesList_;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.KeyUtils;
@@ -31,7 +30,7 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
 
     protected SeriesPresenter presenter;
 
-    protected SeriesList model;
+    protected MediaList model;
 
     public CustomSeriesManageBase(Context context) {
         super(context);
@@ -62,9 +61,9 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         presenter = new SeriesPresenter(getContext());
     }
 
-    public void setModel(Series model, boolean isNewEntry) {
+    public void setModel(Media model, boolean isNewEntry) {
         if(isNewEntry) {
-            this.model = new SeriesList();
+            this.model = new MediaList();
             if(model.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
                 this.model.setAnime(model);
             else
@@ -76,9 +75,9 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         populateFields();
     }
 
-    public void setModel(SeriesBase model, boolean isNewEntry) {
+    public void setModel(MediaBase model, boolean isNewEntry) {
         if(isNewEntry) {
-            this.model = new SeriesList();
+            this.model = new MediaList();
             if(model.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
                 this.model.setAnime(model);
             else
@@ -90,9 +89,9 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         populateFields();
     }
 
-    public void setModel(SeriesList model, boolean isNewEntry) {
+    public void setModel(MediaList model, boolean isNewEntry) {
         if(isNewEntry) {
-            this.model = new SeriesList();
+            this.model = new MediaList();
             this.model.setManga(model.getManga());
             this.model.setAnime(model.getAnime());
         }
@@ -102,7 +101,8 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         populateFields();
     }
 
-    public @NonNull SeriesList getModel() {
+    public @NonNull
+    MediaList getModel() {
         return model;
     }
 
@@ -129,9 +129,9 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         return bundle;
     }
 
-    private SeriesList findSeriesFor(long id) {
-        Box<SeriesList> box = presenter.getDatabase().getBoxStore(SeriesList.class);
-        Query<SeriesList> query = box.query().equal(SeriesList_.series_id, id).build();
+    private MediaList findSeriesFor(long id) {
+        Box<MediaList> box = presenter.getDatabase().getBoxStore(MediaList.class);
+        Query<MediaList> query = box.query().equal(SeriesList_.series_id, id).build();
         return query.findFirst();
     }
 
@@ -144,7 +144,7 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
 
     protected abstract void bindFields();
 
-    protected SeriesBase getSeriesModel() {
+    protected MediaBase getSeriesModel() {
         return model.getAnime() != null ? model.getAnime() : model.getManga();
     }
 

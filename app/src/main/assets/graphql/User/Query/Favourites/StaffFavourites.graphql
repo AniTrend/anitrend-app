@@ -1,0 +1,35 @@
+query StaffFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $name) {
+    favourites {
+      staff(page: $page, perPage: $perPage) {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
+        }
+        nodes {
+          ... on Staff {
+            id
+            name {
+              ... on StaffName {
+                first
+                last
+                native
+              }
+            }
+            image {
+              ... on StaffImage {
+                large
+                medium
+              }
+            }
+            isFavourite
+          }
+        }
+      }
+    }
+  }
+}

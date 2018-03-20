@@ -8,7 +8,7 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseListSingle;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
@@ -23,7 +23,7 @@ import java.util.List;
  * Created by max on 2018/01/18.
  */
 
-public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<EntityGroup>, SeriesPresenter, Series> {
+public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<EntityGroup>, SeriesPresenter, Media> {
 
     private @KeyUtils.SeriesType int seriesType;
     private long seriesId;
@@ -73,7 +73,7 @@ public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<
     }
 
     @Override
-    public void onChanged(@Nullable Series content) {
+    public void onChanged(@Nullable Media content) {
         if(content != null) {
             if(content.getCharacters() != null && !content.getCharacters().isEmpty()) {
                 if(isPager) {

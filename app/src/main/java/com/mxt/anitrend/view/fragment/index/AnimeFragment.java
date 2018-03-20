@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -25,7 +25,7 @@ import java.util.List;
  * Created by max on 2017/10/30.
  */
 
-public class AnimeFragment extends FragmentBaseList<Series, List<Series>, BasePresenter> {
+public class AnimeFragment extends FragmentBaseList<Media, List<Media>, BasePresenter> {
 
     private @KeyUtils.RequestMode int requestMode;
 
@@ -88,7 +88,7 @@ public class AnimeFragment extends FragmentBaseList<Series, List<Series>, BasePr
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, Series data) {
+    public void onItemClick(View target, Media data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
@@ -107,7 +107,7 @@ public class AnimeFragment extends FragmentBaseList<Series, List<Series>, BasePr
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, Series data) {
+    public void onItemLongClick(View target, Media data) {
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {

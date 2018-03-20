@@ -6,7 +6,7 @@ import com.mxt.anitrend.data.converter.UserStatsConverter;
 import com.mxt.anitrend.data.converter.list.CustomListConverter;
 import com.mxt.anitrend.data.converter.list.SeriesListTrackingConverter;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.general.UserStats;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class User extends UserBase {
     private List<String> advanced_rating_names;
     private int notifications;
     @Convert(converter = SeriesListTrackingConverter.class, dbType = String.class)
-    private Map<String, List<SeriesList>> lists;
+    private Map<String, List<MediaList>> lists;
 
     public User() {
 
@@ -147,7 +147,7 @@ public class User extends UserBase {
         notifications = count;
     }
 
-    public Map<String, List<SeriesList>> getLists() {
+    public Map<String, List<MediaList>> getLists() {
         return lists;
     }
 
@@ -207,7 +207,7 @@ public class User extends UserBase {
         this.advanced_rating_names = advanced_rating_names;
     }
 
-    public void setLists(Map<String, List<SeriesList>> lists) {
+    public void setLists(Map<String, List<MediaList>> lists) {
         this.lists = lists;
     }
 

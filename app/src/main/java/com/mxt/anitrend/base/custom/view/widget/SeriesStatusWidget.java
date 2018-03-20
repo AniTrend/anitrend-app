@@ -12,9 +12,9 @@ import android.widget.FrameLayout;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.SeriesUtil;
@@ -65,7 +65,7 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
 
     /** Give the current airing status of the series */
     @BindingAdapter("seriesStatus")
-    public static void setStatus(SeriesStatusWidget view, Series model) {
+    public static void setStatus(SeriesStatusWidget view, Media model) {
         if(model != null) {
             String status = TextUtils.isEmpty(model.getAiring_status()) ? model.getPublishing_status() : model.getAiring_status();
             if (status == null)
@@ -97,7 +97,7 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     }
     /** Give the current airing status of the series */
     @BindingAdapter("seriesStatus")
-    public static void setStatus(SeriesStatusWidget view, SeriesBase model) {
+    public static void setStatus(SeriesStatusWidget view, MediaBase model) {
         if(model != null) {
             String status = TextUtils.isEmpty(model.getAiring_status()) ? model.getPublishing_status() : model.getAiring_status();
             if (status == null)
@@ -130,9 +130,9 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
 
     /** Give the current airing status of the series */
     @BindingAdapter("seriesStatus")
-    public static void setStatus(SeriesStatusWidget view, SeriesList seriesList) {
-        if (seriesList != null) {
-            SeriesBase model = SeriesUtil.getSeriesModel(seriesList);
+    public static void setStatus(SeriesStatusWidget view, MediaList mediaList) {
+        if (mediaList != null) {
+            MediaBase model = SeriesUtil.getSeriesModel(mediaList);
             String status = SeriesUtil.isAnimeType(model) ? model.getAiring_status() : model.getPublishing_status();
             if(status == null)
                 status = KeyUtils.key_not_yet_published;
@@ -164,9 +164,9 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
 
     /** Give the current airing status of the series */
     @BindingAdapter("airingStatus")
-    public static void setAiringStatus(SeriesStatusWidget view, SeriesList seriesList) {
-        if(seriesList != null && seriesList.getAnime() != null && seriesList.getAnime().getAiring() != null) {
-            if(seriesList.getAnime().getAiring().getNext_episode() - seriesList.getEpisodes_watched() > 1)
+    public static void setAiringStatus(SeriesStatusWidget view, MediaList mediaList) {
+        if(mediaList != null && mediaList.getAnime() != null && mediaList.getAnime().getAiring() != null) {
+            if(mediaList.getAnime().getAiring().getNext_episode() - mediaList.getEpisodes_watched() > 1)
                 view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
         } else
             view.setVisibility(GONE);

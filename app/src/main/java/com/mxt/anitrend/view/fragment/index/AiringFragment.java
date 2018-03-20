@@ -12,8 +12,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -30,7 +30,7 @@ import java.util.List;
  * Created by max on 2017/11/03.
  */
 
-public class AiringFragment extends FragmentBaseList<SeriesList, List<SeriesList>, BasePresenter> implements BaseConsumer.onRequestModelChange<SeriesList> {
+public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>, BasePresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
     public static AiringFragment newInstance() {
         return new AiringFragment();
@@ -75,7 +75,7 @@ public class AiringFragment extends FragmentBaseList<SeriesList, List<SeriesList
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, SeriesList data) {
+    public void onItemClick(View target, MediaList data) {
         String seriesType = KeyUtils.SeriesTypes[data.getAnime() != null ? KeyUtils.ANIME: KeyUtils.MANGA];
         switch (target.getId()) {
             case R.id.series_image:
@@ -95,7 +95,7 @@ public class AiringFragment extends FragmentBaseList<SeriesList, List<SeriesList
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, SeriesList data) {
+    public void onItemLongClick(View target, MediaList data) {
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -109,14 +109,14 @@ public class AiringFragment extends FragmentBaseList<SeriesList, List<SeriesList
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<SeriesList> consumer) {
-        Optional<IntPair<SeriesList>> pairOptional;
+    public void onModelChanged(BaseConsumer<MediaList> consumer) {
+        Optional<IntPair<MediaList>> pairOptional;
         switch (consumer.getRequestMode()) {
             case KeyUtils.ANIME_LIST_EDIT_REQ:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
-                    SeriesBase seriesBase = model.get(pairOptional.get().getFirst()).getAnime();
-                    consumer.getChangeModel().setAnime(seriesBase);
+                    MediaBase mediaBase = model.get(pairOptional.get().getFirst()).getAnime();
+                    consumer.getChangeModel().setAnime(mediaBase);
                     model.set(pairOptional.get().getFirst(), consumer.getChangeModel());
                     mAdapter.onItemChanged(consumer.getChangeModel(), pairOptional.get().getFirst());
                 }

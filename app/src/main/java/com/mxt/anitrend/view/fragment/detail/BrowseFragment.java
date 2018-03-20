@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -26,7 +26,7 @@ import java.util.List;
  * Browser fragment, creates it's own request
  */
 
-public class BrowseFragment extends FragmentBaseList<Series, List<Series>, SeriesPresenter> {
+public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesPresenter> {
 
     public static BrowseFragment newInstance(Bundle args) {
         BrowseFragment fragment = new BrowseFragment();
@@ -81,7 +81,7 @@ public class BrowseFragment extends FragmentBaseList<Series, List<Series>, Serie
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, Series data) {
+    public void onItemClick(View target, Media data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
@@ -100,7 +100,7 @@ public class BrowseFragment extends FragmentBaseList<Series, List<Series>, Serie
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, Series data) {
+    public void onItemLongClick(View target, Media data) {
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {

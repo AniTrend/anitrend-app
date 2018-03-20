@@ -1,0 +1,27 @@
+query UserOverview($id: Int, $name: String) {
+  User(id: $id, name: $name) {
+    ... on User {
+      id
+      name
+      about(asHtml: true)
+      avatar {
+        ... on UserAvatar {
+          medium
+          large
+        }
+      }
+      stats {
+        ... on UserStats {
+          favouredGenresOverview {
+            ... on GenreStats {
+              genre
+              amount
+            }
+          }
+        }
+      }
+      isFollowing
+      donatorTier
+    }
+  }
+}

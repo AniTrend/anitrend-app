@@ -15,7 +15,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetToolbarFavouriteBinding;
 import com.mxt.anitrend.model.entity.anilist.Character;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Staff;
 import com.mxt.anitrend.model.entity.anilist.Studio;
 import com.mxt.anitrend.model.entity.base.UserBase;
@@ -38,7 +38,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private @KeyUtils.RequestMode int requestType;
 
     private Staff staff;
-    private Series series;
+    private Media series;
     private Studio studio;
     private Character character;
 
@@ -108,7 +108,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
-    public void setModel(Series series) {
+    public void setModel(Media series) {
         presenter.getParams().putLong(KeyUtils.arg_id, series.getId());
         this.requestType = series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
                 KeyUtils.ANIME_FAVOURITE_REQ : KeyUtils.MANGA_FAVOURITE_REQ;

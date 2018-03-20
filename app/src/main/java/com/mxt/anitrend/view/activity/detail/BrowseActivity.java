@@ -9,7 +9,7 @@ import android.text.Spanned;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.KeyUtils;
@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * browse activity for studios, tags, genres etc.
  */
 
-public class BrowseActivity extends ActivityBase<SeriesBase, SeriesPresenter> {
+public class BrowseActivity extends ActivityBase<MediaBase, SeriesPresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
 

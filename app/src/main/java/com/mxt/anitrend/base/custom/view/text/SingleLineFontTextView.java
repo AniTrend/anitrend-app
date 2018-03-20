@@ -31,8 +31,8 @@ public class SingleLineFontTextView extends SingleLineTextView {
     @Override
     public void onInit() {
         super.onInit();
-        AssetManager assertManager = getContext().getAssets();
-        setTypeface(Typeface.createFromAsset(assertManager, "fonts/Lobster-Regular.ttf"));
+        AssetManager assetManager = getContext().getAssets();
+        setTypeface(Typeface.createFromAsset(assetManager, "fonts/Lobster-Regular.ttf"));
     }
 
     @BindingAdapter({"fontName"})

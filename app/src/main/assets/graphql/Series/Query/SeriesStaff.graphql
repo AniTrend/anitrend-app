@@ -1,0 +1,37 @@
+query SeriesStaff($id: Int!, $type: MediaType, $isAdult: Boolean = false, $page: Int, $perPage: Int) {
+  Media(id: $id, type: $type, isAdult: $isAdult) {
+    staff(sort: ROLE, page: $page, perPage: $perPage) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      edges {
+        role
+        node {
+          ... on Staff {
+            id
+            name {
+              ... on StaffName {
+                first
+                last
+                native
+              }
+            }
+            language
+            image {
+              ... on StaffImage {
+                large
+                medium
+              }
+            }
+            language
+          }
+        }
+      }
+    }
+  }
+}

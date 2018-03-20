@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.SeriesUtil;
 
@@ -31,8 +31,8 @@ public class SeriesProgressTextView extends SingleLineTextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setSeriesModel(SeriesList seriesModel, boolean isCurrentUser) {
-        SeriesBase model = SeriesUtil.getSeriesModel(seriesModel);
+    public void setSeriesModel(MediaList seriesModel, boolean isCurrentUser) {
+        MediaBase model = SeriesUtil.getSeriesModel(seriesModel);
         if (SeriesUtil.isAnimeType(model)) {
             if(TextUtils.isEmpty(model.getAiring_status()) || model.getAiring_status().equals(KeyUtils.key_not_yet_aired))
                 setText(R.string.TBA);

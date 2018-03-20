@@ -4,10 +4,10 @@ import android.text.TextUtils;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.model.entity.group.EntityHeader;
 
@@ -25,8 +25,8 @@ public class GroupingUtil {
     /**
      * Groups series relations by the relation type of the series
      */
-    public static List<EntityGroup> getGroupedSeriesRelated(Series series) {
-        List<Series> seriesList = new ArrayList<>();
+    public static List<EntityGroup> getGroupedSeriesRelated(Media series) {
+        List<Media> seriesList = new ArrayList<>();
         if(series != null) {
             if(series.getRelations() != null)
                 seriesList.addAll(series.getRelations());
@@ -37,10 +37,10 @@ public class GroupingUtil {
         }
         List<EntityGroup> entityMap = new ArrayList<>();
         if(!seriesList.isEmpty()) {
-            Map<String, List<Series>> map = Stream.of(seriesList)
+            Map<String, List<Media>> map = Stream.of(seriesList)
                     .filter(value -> !TextUtils.isEmpty(value.getRelation_type()))
-                    .collect(Collectors.groupingBy(Series::getRelation_type));
-            for (Map.Entry<String, List<Series>> entry: CompatUtil.getKeyFilteredMap(map)) {
+                    .collect(Collectors.groupingBy(Media::getRelation_type));
+            for (Map.Entry<String, List<Media>> entry: CompatUtil.getKeyFilteredMap(map)) {
                 entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
                 entityMap.addAll(entry.getValue());
             }
@@ -51,13 +51,13 @@ public class GroupingUtil {
     /**
      * Groups series relations by the relation type of the series
      */
-    public static List<EntityGroup> getGroupedSeriesBaseType(List<SeriesBase> seriesList) {
+    public static List<EntityGroup> getGroupedSeriesBaseType(List<MediaBase> seriesList) {
         List<EntityGroup> entityMap = new ArrayList<>();
         if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<SeriesBase>> map = Stream.of(seriesList)
+            Map<String, List<MediaBase>> map = Stream.of(seriesList)
                     .filter(value -> !TextUtils.isEmpty(value.getType()))
-                    .collect(Collectors.groupingBy(SeriesBase::getType));
-            for (Map.Entry<String, List<SeriesBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
+                    .collect(Collectors.groupingBy(MediaBase::getType));
+            for (Map.Entry<String, List<MediaBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
                 entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
                 entityMap.addAll(entry.getValue());
             }
@@ -68,13 +68,13 @@ public class GroupingUtil {
     /**
      * Groups series relations by the relation type of the series
      */
-    public static List<EntityGroup> getGroupedSeriesType(List<Series> seriesList) {
+    public static List<EntityGroup> getGroupedSeriesType(List<Media> seriesList) {
         List<EntityGroup> entityMap = new ArrayList<>();
         if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<Series>> map = Stream.of(seriesList)
+            Map<String, List<Media>> map = Stream.of(seriesList)
                     .filter(value -> !TextUtils.isEmpty(value.getType()))
-                    .collect(Collectors.groupingBy(Series::getType));
-            for (Map.Entry<String, List<Series>> entry: CompatUtil.getKeyFilteredMap(map)) {
+                    .collect(Collectors.groupingBy(Media::getType));
+            for (Map.Entry<String, List<Media>> entry: CompatUtil.getKeyFilteredMap(map)) {
                 entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
                 entityMap.addAll(entry.getValue());
             }
@@ -85,13 +85,13 @@ public class GroupingUtil {
     /**
      * Groups series relations by the relation type of the role type
      */
-    public static List<EntityGroup> getGroupedSeriesRoleType(List<SeriesBase> seriesList) {
+    public static List<EntityGroup> getGroupedSeriesRoleType(List<MediaBase> seriesList) {
         List<EntityGroup> entityMap = new ArrayList<>();
         if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<SeriesBase>> map = Stream.of(seriesList)
+            Map<String, List<MediaBase>> map = Stream.of(seriesList)
                     .filter(value -> !TextUtils.isEmpty(value.getType()))
-                    .collect(Collectors.groupingBy(SeriesBase::getRole));
-            for (Map.Entry<String, List<SeriesBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
+                    .collect(Collectors.groupingBy(MediaBase::getRole));
+            for (Map.Entry<String, List<MediaBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
                 entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
                 entityMap.addAll(entry.getValue());
             }
@@ -102,14 +102,14 @@ public class GroupingUtil {
     /**
      * Groups series relations by the type
      */
-    public static List<EntityGroup> getGroupedSeriesListType(List<SeriesList> seriesList) {
+    public static List<EntityGroup> getGroupedSeriesListType(List<MediaList> mediaList) {
         List<EntityGroup> entityMap = new ArrayList<>();
-        if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<SeriesList>> map = Stream.of(seriesList)
+        if(mediaList != null && !mediaList.isEmpty()) {
+            Map<String, List<MediaList>> map = Stream.of(mediaList)
                     .filter(value -> !TextUtils.isEmpty(SeriesUtil.getSeriesModel(value).getType()))
                     .collect(Collectors.groupingBy(o -> SeriesUtil.getSeriesModel(o).getType()));
 
-            for (Map.Entry<String, List<SeriesList>> entry: CompatUtil.getKeyFilteredMap(map)) {
+            for (Map.Entry<String, List<MediaList>> entry: CompatUtil.getKeyFilteredMap(map)) {
                 entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
                 entityMap.addAll(entry.getValue());
             }
@@ -120,7 +120,7 @@ public class GroupingUtil {
     /**
      * Groups characters based on roles
      */
-    public static List<EntityGroup> getGroupedRoleCharacters(Series series) {
+    public static List<EntityGroup> getGroupedRoleCharacters(Media series) {
         List<EntityGroup> entityMap = new ArrayList<>();
         if(!series.getCharacters().isEmpty()) {
             Map<String, List<CharacterBase>> map = Stream.of(series.getCharacters())

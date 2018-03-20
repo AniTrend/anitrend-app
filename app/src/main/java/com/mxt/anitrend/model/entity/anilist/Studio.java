@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class Studio extends StudioBase {
 
-    private List<Series> anime;
+    private List<Media> anime;
 
     protected Studio(Parcel in) {
         super(in);
-        anime = in.createTypedArrayList(Series.CREATOR);
+        anime = in.createTypedArrayList(Media.CREATOR);
     }
 
     @Override
@@ -41,9 +41,9 @@ public class Studio extends StudioBase {
         }
     };
 
-    public List<Series> getAnime() { return anime; }
+    public List<Media> getAnime() { return anime; }
 
-    public void setAnime(List<Series> anime) {
+    public void setAnime(List<Media> anime) {
         this.anime = anime;
     }
 }

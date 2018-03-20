@@ -1,0 +1,15 @@
+query CharacterBase($id: Int!, $characterSort: [CharacterSort]) {
+  Character(id: $id, sort: $characterSort) {
+    ... on Character {
+      id
+      isFavourite
+      name {
+        ... on CharacterName {
+          first
+          last
+        }
+      }
+      siteUrl
+    }
+  }
+}

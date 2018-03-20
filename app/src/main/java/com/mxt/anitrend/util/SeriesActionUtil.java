@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.general.SeriesList_;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
@@ -23,21 +23,21 @@ import retrofit2.Response;
 
 /**
  * Created by max on 2018/01/05.
- * Series list action helper class is responsible for showing the correct dialog
+ * Media list action helper class is responsible for showing the correct dialog
  * for a given series
  */
 
-public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleListener {
+public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleListener {
 
     private ProgressDialog progressDialog;
-    private WidgetPresenter<SeriesList> presenter;
+    private WidgetPresenter<MediaList> presenter;
     private FragmentActivity context;
 
     private Lifecycle lifecycle;
 
-    private Series series;
-    private SeriesList seriesList;
-    private SeriesBase seriesBase;
+    private Media series;
+    private MediaList mediaList;
+    private MediaBase mediaBase;
 
     SeriesActionUtil(FragmentActivity context) {
         this.context = context;
@@ -45,10 +45,10 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
         presenter = new WidgetPresenter<>(context);
     }
 
-    private void setModels(Series series, SeriesList seriesList, SeriesBase seriesBase) {
+    private void setModels(Media series, MediaList mediaList, MediaBase mediaBase) {
         this.series = series;
-        this.seriesList = seriesList;
-        this.seriesBase = seriesBase;
+        this.mediaList = mediaList;
+        this.mediaBase = mediaBase;
     }
 
     private void actionPicker() {
@@ -57,14 +57,14 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
             presenter.requestData(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
                             KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
         }
-        else if (seriesBase != null) {
-            presenter.getParams().putLong(KeyUtils.arg_id, seriesBase.getId());
-            presenter.requestData(seriesBase.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
+        else if (mediaBase != null) {
+            presenter.getParams().putLong(KeyUtils.arg_id, mediaBase.getId());
+            presenter.requestData(mediaBase.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
                     KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
         }
         else {
-            presenter.getParams().putLong(KeyUtils.arg_id, seriesList.getSeries_id());
-            presenter.requestData(seriesList.getAnime() != null ?
+            presenter.getParams().putLong(KeyUtils.arg_id, mediaList.getSeries_id());
+            presenter.requestData(mediaList.getAnime() != null ?
                     KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
         }
     }
@@ -81,7 +81,7 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
     }
 
     private boolean isNewEntry(long seriesId) {
-        return presenter.getDatabase().getBoxStore(SeriesList.class).query()
+        return presenter.getDatabase().getBoxStore(MediaList.class).query()
                 .equal(SeriesList_.series_id, seriesId)
                 .build().count() < 1;
     }
@@ -90,10 +90,10 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
         try {
             if(series != null)
                 SeriesDialogUtil.createSeriesManage(context, series, isNewEntry(series.getId()), SeriesUtil.getSeriesTitle(series, presenter.getLanguagePreference()));
-            else if(seriesBase != null)
-                SeriesDialogUtil.createSeriesManage(context, seriesBase, isNewEntry(seriesBase.getId()), SeriesUtil.getSeriesTitle(seriesBase, presenter.getLanguagePreference()));
+            else if(mediaBase != null)
+                SeriesDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), SeriesUtil.getSeriesTitle(mediaBase, presenter.getLanguagePreference()));
             else
-                SeriesDialogUtil.createSeriesManage(context, seriesList, isNewEntry(seriesList.getSeries_id()), SeriesUtil.getSeriesTitle(seriesList, presenter.getLanguagePreference()));
+                SeriesDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getSeries_id()), SeriesUtil.getSeriesTitle(mediaList, presenter.getLanguagePreference()));
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());
@@ -110,12 +110,12 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
      * @param response the response from the network
      */
     @Override
-    public void onResponse(@NonNull Call<SeriesList> call, @NonNull Response<SeriesList> response) {
+    public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-            SeriesList seriesStatus;
+            MediaList seriesStatus;
             if(response.isSuccessful() && (seriesStatus = response.body()) != null) {
                 if(!TextUtils.isEmpty(seriesStatus.getList_status()))
-                    presenter.getDatabase().getBoxStore(SeriesList.class).put(seriesStatus);
+                    presenter.getDatabase().getBoxStore(MediaList.class).put(seriesStatus);
                 showActionDialog();
             } else {
                 Log.e(this.toString(), ErrorUtil.getError(response));
@@ -133,7 +133,7 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
      * @param throwable contains information about the error
      */
     @Override
-    public void onFailure(@NonNull Call<SeriesList> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress();
             throwable.printStackTrace();
@@ -177,29 +177,29 @@ public class SeriesActionUtil implements RetroCallback<SeriesList>, LifecycleLis
 
     public static class Builder {
 
-        private Series series;
-        private SeriesList seriesList;
-        private SeriesBase seriesBase;
+        private Media series;
+        private MediaList mediaList;
+        private MediaBase mediaBase;
         private SeriesActionUtil seriesActionUtil;
 
-        public Builder setModel(Series series) {
+        public Builder setModel(Media series) {
             this.series = series;
             return this;
         }
 
-        public Builder setModel(SeriesList seriesList) {
-            this.seriesList = seriesList;
+        public Builder setModel(MediaList mediaList) {
+            this.mediaList = mediaList;
             return this;
         }
 
-        public Builder setModel(SeriesBase seriesBase) {
-            this.seriesBase = seriesBase;
+        public Builder setModel(MediaBase mediaBase) {
+            this.mediaBase = mediaBase;
             return this;
         }
 
         public SeriesActionUtil build(FragmentActivity context) {
             seriesActionUtil = new SeriesActionUtil(context);
-            seriesActionUtil.setModels(series, seriesList, seriesBase);
+            seriesActionUtil.setModels(series, mediaList, mediaBase);
             return seriesActionUtil;
         }
     }

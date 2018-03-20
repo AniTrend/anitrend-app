@@ -18,7 +18,7 @@ import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.databinding.ActivityLoginBinding;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.base.Message;
+import com.mxt.anitrend.model.entity.base.MessageBase;
 import com.mxt.anitrend.presenter.activity.LoginPresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.service.AuthenticatorService;
@@ -179,17 +179,17 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
 
     private void checkNewIntent(Intent intent) {
         if (intent != null && intent.getData() != null) {
-            Message message = new Message(intent.getData());
-            if (isAlive() && message.isValid()) {
+            MessageBase messageBase = new MessageBase(intent.getData());
+            if (isAlive() && messageBase.isValid()) {
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE)
                     binding.widgetFlipper.showNext();
-                if (getPresenter().handleIntentCallback(message))
+                if (getPresenter().handleIntentCallback(messageBase))
                     viewModel.requestData(KeyUtils.CURRENT_USER_REQ, getApplicationContext());
                 else {
                     // intent://com.mxt.anitrend?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.
-                    if (!TextUtils.isEmpty(message.getQueryParam("error")) && !TextUtils.isEmpty(message.getQueryParam("error_description")))
-                        NotifyUtil.createAlerter(this, message.getQueryParam("error"),
-                                message.getQueryParam("error_description"), R.drawable.ic_warning_white_18dp,
+                    if (!TextUtils.isEmpty(messageBase.getQueryParam("error")) && !TextUtils.isEmpty(messageBase.getQueryParam("error_description")))
+                        NotifyUtil.createAlerter(this, messageBase.getQueryParam("error"),
+                                messageBase.getQueryParam("error_description"), R.drawable.ic_warning_white_18dp,
                                 R.color.colorStateOrange, KeyUtils.DURATION_LONG);
                     else
                         NotifyUtil.createAlerter(this, R.string.login_error_title,

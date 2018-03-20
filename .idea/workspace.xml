@@ -32,12 +32,442 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e886c41-2ca4-4f09-a790-00ea2865c607" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/graphql/GenreQuery.graphql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/graphql/TagQuery.graphql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/graphql/schema.json" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_flatbuffers_flatbuffers_java_1_8_0_jar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/io_objectbox_objectbox_android_1_4_4.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/io_objectbox_objectbox_java_1_4_4_jar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/io_objectbox_objectbox_java_api_1_4_4_jar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/GraphQuery.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/processor/GraphProcessor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/Edge.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/Node.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/PageInfo.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/ConnectionContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/Container.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/DataContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/EdgeContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/GraphContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/NodeContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/PageContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/request/GraphQueryContainer.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_flatbuffers_flatbuffers_java_1_7_2_jar.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/io_objectbox_objectbox_android_1_4_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/io_objectbox_objectbox_java_1_4_1_jar.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/io_objectbox_objectbox_java_api_1_4_1_jar.xml" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/BodyConverter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphConverter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Series.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/AuthCode.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/AuthBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/Message.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MessageBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/SeriesBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/Version.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/general/SeriesList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/general/MediaList.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_arch_core_runtime_1_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_arch_core_runtime_1_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_extensions_1_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_extensions_1_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_livedata_1_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_livedata_1_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_livedata_core_1_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_livedata_core_1_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_runtime_1_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_runtime_1_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_viewmodel_1_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_arch_lifecycle_viewmodel_1_1_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/cn_jzvd_jiaozivideoplayer_6_2_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/cn_jzvd_jiaozivideoplayer_6_2_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_afollestad_material_dialogs_core_0_9_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_afollestad_material_dialogs_core_0_9_6_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_databinding_adapters_1_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_databinding_adapters_1_3_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_databinding_library_1_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_databinding_library_1_3_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_animated_vector_drawable_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_animated_vector_drawable_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_appcompat_v7_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_appcompat_v7_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_cardview_v7_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_cardview_v7_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_constraint_constraint_layout_1_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_constraint_constraint_layout_1_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_design_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_design_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_recyclerview_v7_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_recyclerview_v7_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_compat_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_compat_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_core_ui_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_core_ui_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_core_utils_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_core_utils_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_fragment_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_fragment_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_media_compat_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_media_compat_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_v4_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_v4_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_vector_drawable_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_vector_drawable_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_espresso_espresso_core_2_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_espresso_espresso_core_2_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_espresso_espresso_idling_resource_2_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_espresso_espresso_idling_resource_2_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_exposed_instrumentation_api_publish_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_exposed_instrumentation_api_publish_0_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_rules_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_rules_0_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_runner_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_runner_0_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_transition_27_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_android_support_transition_27_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_codemybrainsout_onboarding_onboarder_1_0_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_codemybrainsout_onboarding_onboarder_1_0_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_answers_1_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_answers_1_4_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_beta_1_2_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_beta_1_2_7.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_crashlytics_2_7_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_crashlytics_2_7_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_crashlytics_core_2_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_crashlytics_sdk_android_crashlytics_core_2_4_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_firebase_firebase_jobdispatcher_0_8_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_firebase_firebase_jobdispatcher_0_8_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_XunMengWinter_CircularAnim_0_3_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_XunMengWinter_CircularAnim_0_3_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_bumptech_glide_gifdecoder_4_6_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_bumptech_glide_gifdecoder_4_6_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_bumptech_glide_glide_4_6_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_bumptech_glide_glide_4_6_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_chrisbanes_PhotoView_2_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_chrisbanes_PhotoView_2_1_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_medyo_android_about_page_1_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_medyo_android_about_page_1_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_nguyenhoanglam_ProgressLayout_1_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_nguyenhoanglam_ProgressLayout_1_0_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_rahatarmanahmed_circularprogressview_2_5_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_rahatarmanahmed_circularprogressview_2_5_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_wax911_android_emojify_emojify_0_1_4_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_wax911_android_emojify_emojify_0_1_4_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_github_wax911_android_emojify_emojifykeyboard_0_1_4_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_github_wax911_android_emojify_emojifykeyboard_0_1_4_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_basement_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_basement_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_basement_license_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_basement_license_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_tasks_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_tasks_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_tasks_license_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_tasks_license_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_impl_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_impl_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_impl_license_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_impl_license_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_license_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_license_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_common_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_common_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_common_license_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_common_license_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_core_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_core_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_iid_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_iid_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_iid_license_11_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_iid_license_11_8_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_jakewharton_butterknife_8_8_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_jakewharton_butterknife_8_8_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_miguelcatalan_materialsearchview_1_4_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_miguelcatalan_materialsearchview_1_4_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_ogaclejapan_smarttablayout_library_1_6_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_ogaclejapan_smarttablayout_library_1_6_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_tapadoo_android_alerter_2_0_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_tapadoo_android_alerter_2_0_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_zzhoujay_markdown_markdown_1_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_zzhoujay_markdown_markdown_1_0_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/com_zzhoujay_richtext_richtext_3_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/com_zzhoujay_richtext_richtext_3_0_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/io_fabric_sdk_android_fabric_1_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/io_fabric_sdk_android_fabric_1_4_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/me_zhanghai_android_materialprogressbar_library_1_4_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/me_zhanghai_android_materialprogressbar_library_1_4_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/uk_co_samuelwall_material_tap_target_prompt_2_7_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/uk_co_samuelwall_material_tap_target_prompt_2_7_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.travis.yml" afterPath="$PROJECT_DIR$/.travis.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CODE_OF_CONDUCT.md" afterPath="$PROJECT_DIR$/CODE_OF_CONDUCT.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/CharacterModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/CharacterModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/objectbox-models/default.json.bak" afterPath="$PROJECT_DIR$/app/objectbox-models/default.json.bak" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/mxt/anitrend/ExampleInstrumentedTest.java" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/mxt/anitrend/ExampleInstrumentedTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupRoleCharacterAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupRoleCharacterAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesListAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAiringAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAiringAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAnimeAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAnimeAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesListAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesMangaAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesMangaAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesReviewAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesReviewAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentChannelBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentChannelBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentUserListBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentUserListBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SeriesProgressTextView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SeriesProgressTextView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SeriesTitleView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SeriesTitleView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SingleLineFontTextView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SingleLineFontTextView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteToolbarWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteToolbarWidget.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/SeriesStatusWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/SeriesStatusWidget.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/dao/BoxQuery.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/dao/BoxQuery.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/SeriesAiringConverter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/SeriesAiringConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/SeriesBaseConverter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/SeriesBaseConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/SeriesListConverter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/SeriesListConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/SeriesListTrackingConverter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/SeriesListTrackingConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/SeriesSmallListConverter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/SeriesSmallListConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/SeriesModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/SeriesModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/UserListModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/UserListModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/UserModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/UserModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/base/RepositoryModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/base/RepositoryModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Character.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Character.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Favourite.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Favourite.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Staff.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Staff.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Studio.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Studio.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/UserActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/UserActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/general/Notification.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/general/Notification.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/activity/LoginPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/activity/LoginPresenter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/service/DownloaderService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/service/DownloaderService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ComparatorProvider.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ComparatorProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/FilterProvider.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/FilterProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/SeriesActionUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/SeriesActionUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/SeriesDialogUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/SeriesDialogUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/SeriesUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/SeriesUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/BrowseActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/BrowseActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/SeriesActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/SeriesActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/LoginActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/SplashActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/SplashActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/AboutFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/AboutFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CommentFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CommentFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesListFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesOverviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesOverviewFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesReviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesReviewFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesStatsFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesStatsFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SocialFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SocialFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/UserFeedFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/UserFeedFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/SeriesRelationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/SeriesRelationFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/SeriesRolesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/SeriesRolesFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/SeriesStaffRoleFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/SeriesStaffRoleFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/AiringFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/AiringFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/AnimeFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/AnimeFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/FeedFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/FeedFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/FragmentFeedReview.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/FragmentFeedReview.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/MangaFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/MangaFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SeasonFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SeasonFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SuggestionFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SuggestionFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/SeriesSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/SeriesSearchFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_airing.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_airing.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_anime.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_anime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_feeds.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_feeds.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_hub.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_hub.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_manga.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_manga.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_notifications.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_notifications.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_profile.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_profile.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_search.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_search.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_trending.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v26/ic_shortcut_trending.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/avatar_placeholder.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/avatar_placeholder.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/bubble_background.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/bubble_background.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/dashed_background.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/dashed_background.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/dot_indicator.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/dot_indicator.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/feed_status_frame.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/feed_status_frame.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/finish_button_style.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/finish_button_style.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_shadow.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_shadow.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_shadow_inverted.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_shadow_inverted.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_arrow_back_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_arrow_back_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_attach_file_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_attach_file_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_attach_money_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_attach_money_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_av_timer_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_av_timer_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_book_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_book_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_book_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_book_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_bookmark_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_bookmark_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_border_color_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_border_color_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_broken_image_white_48dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_broken_image_white_48dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_bubble_chart_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_bubble_chart_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_build_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_build_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_calendar_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_calendar_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_circle_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_circle_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_circle_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_circle_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_close_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_close_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_cloud_done_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_cloud_done_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_cloud_download_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_cloud_download_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_code_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_code_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_crop_original_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_crop_original_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_delete_red_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_delete_red_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_delete_sweep_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_delete_sweep_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_do_not_disturb_on_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_do_not_disturb_on_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_done_all_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_done_all_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_edit_green_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_edit_green_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_exit_to_app_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_exit_to_app_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_border_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_border_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_red_700_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_red_700_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_favorite_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_fiber_new_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_fiber_new_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_fiber_smart_record_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_fiber_smart_record_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_filter_list_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_filter_list_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_flip_to_back_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_flip_to_back_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_flip_to_front_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_flip_to_front_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_align_center_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_align_center_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_bold_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_bold_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_italic_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_italic_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_list_bulleted_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_list_bulleted_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_list_numbered_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_list_numbered_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_quote_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_quote_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_size_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_format_size_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_genre_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_genre_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_gesture_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_gesture_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_gif_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_gif_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_group_add_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_group_add_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_group_work_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_group_work_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_help_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_help_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_help_outline_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_help_outline_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_home_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_home_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_hourglass_empty_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_hourglass_empty_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_insert_emoticon_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_insert_emoticon_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_invert_colors_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_invert_colors_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_keyboard_arrow_down_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_keyboard_arrow_down_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_label_outline_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_label_outline_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_library_books_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_library_books_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_library_books_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_library_books_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_link_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_link_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_live_tv_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_live_tv_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_loyalty_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_loyalty_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_mail_outline_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_mail_outline_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_mode_comment_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_mode_comment_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_movie_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_movie_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_movie_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_movie_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_new_releases_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_new_releases_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notification_dot.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notification_dot.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notifications_active_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notifications_active_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notifications_active_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notifications_active_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notifications_none_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_notifications_none_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_order_by_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_order_by_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_people_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_people_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_pin_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_pin_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_play_circle_outline_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_play_circle_outline_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_player.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_player.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_rate_review_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_rate_review_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_remove_circle_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_remove_circle_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_reply_blue_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_reply_blue_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_search_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_search_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_send_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_send_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_airing.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_airing.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_airing_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_airing_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_anime.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_anime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_anime_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_anime_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_background.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_background.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_feeds.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_feeds.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_feeds_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_feeds_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_hub.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_hub.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_hub_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_hub_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_manga.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_manga.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_manga_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_manga_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_notifications.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_notifications.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_notifications_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_notifications_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_profile.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_profile.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_profile_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_profile_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_search.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_search.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_search_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_search_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_trending.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_trending.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_trending_foreground.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_shortcut_trending_foreground.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_slow_motion_video_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_slow_motion_video_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sort_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sort_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_star_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_star_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_star_yellow_700_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_star_yellow_700_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_status_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_status_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_strikethrough_s_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_strikethrough_s_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_style_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_style_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sync_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sync_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_textsms_white_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_textsms_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_thumb_down_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_thumb_down_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_thumb_up_grey_600_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_thumb_up_grey_600_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_time_white_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_time_white_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_touch_app_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_touch_app_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_type_grey_600_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_type_grey_600_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_warning_white_18dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_warning_white_18dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/link_button.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/link_button.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/material_search_cursor.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/material_search_cursor.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/nav_color_state.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/nav_color_state.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/rating_bubble.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rating_bubble.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/rounded_background.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/rounded_background.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/selectable_background_rounded.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/selectable_background_rounded.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/selection_frame.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/selection_frame.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/action_view_type.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/action_view_type.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/action_view_update.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/action_view_update.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_frame_generic.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_frame_generic.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_giphy_preview.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_giphy_preview.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_image_preview.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_image_preview.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_pager_generic.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_pager_generic.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_profile.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_profile.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_series.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_series.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_share_content.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_share_content.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_splash.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_splash.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_video_player.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_video_player.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_anime.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_anime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_character.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_character.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_comment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_comment.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_emoticon.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_emoticon.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_entity_group.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_entity_group.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_episode.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_episode.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_feed_progress.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_feed_progress.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_feed_slide.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_feed_slide.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_feed_status.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_feed_status.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_genre.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_genre.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_giphy.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_giphy.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_link.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_link.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_manga.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_manga.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_notification.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_notification.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_ranking.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_ranking.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_airing.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_airing.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_character.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_character.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_list.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_review.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_review.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff_role.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff_role.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_spinner_item.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_spinner_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_staff.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_staff.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_studio.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_studio.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_tag.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_tag.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_user.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_user.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_composer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_composer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_list.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_message.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_message.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_review.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_review.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_generic.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_generic.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_notification.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_notification.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_view_pager.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_view_pager.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_action_anime.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_action_anime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_action_manga.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_action_manga.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_auth_toast.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_auth_toast.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_nav_header.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_nav_header.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_rating_widget.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_rating_widget.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_loading.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_loading.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_loading_footer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_loading_footer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_review_template.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_review_template.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_sheet_toolbar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_sheet_toolbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_tab.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_toast.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_toast.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_toolbar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_toolbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_toolbar_transparent.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_toolbar_transparent.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_character_overview.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_character_overview.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comment.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_list.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_overview.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_overview.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_stats.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_stats.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_staff_overview.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_staff_overview.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_user_about.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_user_about.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/remote_notification.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/remote_notification.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/section_series_description.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/section_series_description.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/section_series_details.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/section_series_details.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/section_series_info.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/section_series_info.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_avatar_indicator.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_avatar_indicator.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_composer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_composer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_delete.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_delete.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_favourite.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_favourite.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_follow_state.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_follow_state.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_profile_about_panel.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_profile_about_panel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_profile_stats.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_profile_stats.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_status.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_status.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_toolbar_favourite.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_toolbar_favourite.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/action_mode.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/action_mode.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/custom_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/custom_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/editor_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/editor_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/main_drawer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/main_drawer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/profile_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/profile_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/series_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/series_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/shared_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/shared_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-ar/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-ar/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-it/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-it/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-large-land/config.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-large-land/config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-large-port/config.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-large-port/config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-normal-land/config.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-normal-land/config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-v21/style.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-v21/style.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-v23/style.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-v23/style.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-v26/style.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-v26/style.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-w600dp/dimens.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-w600dp/dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-xlarge-land/config.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-xlarge-land/config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-xlarge-port/config.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-xlarge-port/config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/attr.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/attr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/color.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/color.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/config.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/config.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/xml-v25/shortcuts.xml" afterPath="$PROJECT_DIR$/app/src/main/res/xml-v25/shortcuts.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/xml/backup_descriptor.xml" afterPath="$PROJECT_DIR$/app/src/main/res/xml/backup_descriptor.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/xml/pref_general.xml" afterPath="$PROJECT_DIR$/app/src/main/res/xml/pref_general.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gradlew.bat" afterPath="$PROJECT_DIR$/gradlew.bat" />
     </list>
     <ignored path="Anitrend.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -81,32 +511,7 @@
     <favorites_list name="Anitrend" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="WebFactory.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="44" column="29" lean-forward="false" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BodyConverter.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/BodyConverter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="34" column="13" lean-forward="true" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#554#555#0" expanded="false" />
-                <element signature="e#586#587#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -1803,17 +2208,19 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/a9d34c567b0c1f327f48aead2c1e171f39aad939/google-services-3.1.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/1fc9eb41c1937a7364345d13349682db7785546e/google-services-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.fabric.tools/gradle/1.25.1/d090f5b0e22035e2ce468ac22cc1d51943a151de/gradle-1.25.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.4.1/92a9b4ec09092fcaf5b054886054b2ca4863f0bc/objectbox-gradle-plugin-1.4.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.4.4/14f11c26955e39b92495056cf7c3805036dddabf/objectbox-gradle-plugin-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.4.4/bb6d6967cb0d1b6e61675570689df9eafe8510e3/objectbox-gradle-plugin-1.4.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle-core/3.0.1/gradle-core-3.0.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.4.1/d1df9f9b3604307afb8f7463c38f717668efe376/objectbox-code-modifier-1.4.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.20/9ab74271f4694e32e8b2ee645a96ac9bcaf0bc32/kotlin-stdlib-1.2.20-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.20/1ce9e25c74aade0aa039cce459f2906a8c8ffc8e/kotlin-stdlib-1.2.20.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.4.4/b596b38599355942fba9fb771300091280b5c2ee/objectbox-code-modifier-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.4.4/6d95265740a9aa3ca5d9cfb6e15ecafaa56f0a3f/objectbox-code-modifier-1.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.30/50878770fd010106bd91f2f5c3b7904a56883ec3/kotlin-stdlib-1.2.30-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.30/2dfac33f8b4e92c9dd1422cd286834701a6f6d6/kotlin-stdlib-1.2.30.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/81fefbd46ba6a18fc7af83b9c60b28c0862cd492/javassist-3.21.0-GA-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/598244f595db5c5fb713731eddbb1c91a58d959b/javassist-3.21.0-GA.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.1/8acef2b464171124cb7c1c2ab93144f3587700f6/objectbox-java-1.4.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.1/6ff72317fff65f1bbb687b1ddca70875bd8838c/objectbox-java-1.4.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.1/98cb2cf384b0268c4a7f6fc3e85b107399035a21/objectbox-java-api-1.4.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.1/ab03375b50d8a6e647dc9087d005e519af78e3c7/objectbox-java-api-1.4.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.4/562eee5bd2c966f7b79c3bd4fcb90b710a149eea/objectbox-java-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.4/805fdce32708b96f38501a3d52b6babeeb8011b0/objectbox-java-1.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.4/e240c0b877483f093eecd5c9148143c3d1c361b7/objectbox-java-api-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.4/b9e3a3a1fc436a8321bfc07d6a059dd56976f3a/objectbox-java-api-1.4.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/3.0.1/builder-3.0.1.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/lint/lint/26.0.1/lint-26.0.1.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/org-jetbrains/uast/26.0.1/uast-26.0.1.jar" />
@@ -1829,15 +2236,16 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/net/sf/jopt-simple/jopt-simple/4.9/jopt-simple-4.9.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/net/sf/proguard/proguard-gradle/5.3.3/proguard-gradle-5.3.3.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/google/protobuf/protobuf-java/3.0.0/protobuf-java-3.0.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.20/5eaa1d20b6029bb97ccbd700cc12cd122fa0ae58/kotlin-reflect-1.2.20-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.20/f6f78911d9abbc803697a9030962258d9bda49b3/kotlin-reflect-1.2.20.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.30/90b7cf3d8d1968c05cff525d61aa8f08a8e1668a/kotlin-reflect-1.2.30-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.30/9758025a415ee400e1f90ff222bcfec247779133/kotlin-reflect-1.2.30.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.greenrobot/essentials/3.0.0-RC1/eea524c7b7db9702a2dddd12e431882f3055e991/essentials-3.0.0-RC1-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.greenrobot/essentials/3.0.0-RC1/dfc6cd070e196e63df53c90abd2c3e1e02ee40e9/essentials-3.0.0-RC1.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.moshi/moshi/1.4.0/49dd1b44daa338c6f3dac72a52c7c0e38e888478/moshi-1.4.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.moshi/moshi/1.4.0/d67ad038adfd55dc276488a54f4944dfae5ff8ec/moshi-1.4.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-generator/1.4.1/b3523dcd516084e57711d2f46f54cf5f8bdf7725/objectbox-generator-1.4.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.7.2/3614c35f8be29c674afbc6b3d6cc192d298d8827/flatbuffers-java-1.7.2-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.7.2/17ca97417bdfc0f725307e2f5c802d5bba9c0b97/flatbuffers-java-1.7.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-generator/1.4.4/21bcec51d8d0ebf2c1b508db888c914cf822d1e6/objectbox-generator-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-generator/1.4.4/a122ab0f8028f49c3c12119389d09dd2a023be0a/objectbox-generator-1.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.8.0/647581613c450697b4984fa2134734110f69685d/flatbuffers-java-1.8.0-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.8.0/c0a904119659fd9cd667e6e37fbcb6bab790edf4/flatbuffers-java-1.8.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/b19b5927c2c25b6c70f093767041e641ae0b1b35/jsr305-3.0.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/3.0.1/builder-model-3.0.1.jar" />
@@ -1906,17 +2314,19 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/a9d34c567b0c1f327f48aead2c1e171f39aad939/google-services-3.1.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/1fc9eb41c1937a7364345d13349682db7785546e/google-services-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.fabric.tools/gradle/1.25.1/d090f5b0e22035e2ce468ac22cc1d51943a151de/gradle-1.25.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.4.1/92a9b4ec09092fcaf5b054886054b2ca4863f0bc/objectbox-gradle-plugin-1.4.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.4.4/14f11c26955e39b92495056cf7c3805036dddabf/objectbox-gradle-plugin-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.4.4/bb6d6967cb0d1b6e61675570689df9eafe8510e3/objectbox-gradle-plugin-1.4.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle-core/3.0.1/gradle-core-3.0.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.4.1/d1df9f9b3604307afb8f7463c38f717668efe376/objectbox-code-modifier-1.4.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.20/9ab74271f4694e32e8b2ee645a96ac9bcaf0bc32/kotlin-stdlib-1.2.20-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.20/1ce9e25c74aade0aa039cce459f2906a8c8ffc8e/kotlin-stdlib-1.2.20.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.4.4/b596b38599355942fba9fb771300091280b5c2ee/objectbox-code-modifier-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.4.4/6d95265740a9aa3ca5d9cfb6e15ecafaa56f0a3f/objectbox-code-modifier-1.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.30/50878770fd010106bd91f2f5c3b7904a56883ec3/kotlin-stdlib-1.2.30-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.2.30/2dfac33f8b4e92c9dd1422cd286834701a6f6d6/kotlin-stdlib-1.2.30.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/81fefbd46ba6a18fc7af83b9c60b28c0862cd492/javassist-3.21.0-GA-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/598244f595db5c5fb713731eddbb1c91a58d959b/javassist-3.21.0-GA.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.1/8acef2b464171124cb7c1c2ab93144f3587700f6/objectbox-java-1.4.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.1/6ff72317fff65f1bbb687b1ddca70875bd8838c/objectbox-java-1.4.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.1/98cb2cf384b0268c4a7f6fc3e85b107399035a21/objectbox-java-api-1.4.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.1/ab03375b50d8a6e647dc9087d005e519af78e3c7/objectbox-java-api-1.4.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.4/562eee5bd2c966f7b79c3bd4fcb90b710a149eea/objectbox-java-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.4.4/805fdce32708b96f38501a3d52b6babeeb8011b0/objectbox-java-1.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.4/e240c0b877483f093eecd5c9148143c3d1c361b7/objectbox-java-api-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.4.4/b9e3a3a1fc436a8321bfc07d6a059dd56976f3a/objectbox-java-api-1.4.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/3.0.1/builder-3.0.1.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/lint/lint/26.0.1/lint-26.0.1.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/org-jetbrains/uast/26.0.1/uast-26.0.1.jar" />
@@ -1932,15 +2342,16 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/net/sf/jopt-simple/jopt-simple/4.9/jopt-simple-4.9.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/net/sf/proguard/proguard-gradle/5.3.3/proguard-gradle-5.3.3.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/google/protobuf/protobuf-java/3.0.0/protobuf-java-3.0.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.20/5eaa1d20b6029bb97ccbd700cc12cd122fa0ae58/kotlin-reflect-1.2.20-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.20/f6f78911d9abbc803697a9030962258d9bda49b3/kotlin-reflect-1.2.20.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.30/90b7cf3d8d1968c05cff525d61aa8f08a8e1668a/kotlin-reflect-1.2.30-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.2.30/9758025a415ee400e1f90ff222bcfec247779133/kotlin-reflect-1.2.30.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.greenrobot/essentials/3.0.0-RC1/eea524c7b7db9702a2dddd12e431882f3055e991/essentials-3.0.0-RC1-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.greenrobot/essentials/3.0.0-RC1/dfc6cd070e196e63df53c90abd2c3e1e02ee40e9/essentials-3.0.0-RC1.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.moshi/moshi/1.4.0/49dd1b44daa338c6f3dac72a52c7c0e38e888478/moshi-1.4.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.moshi/moshi/1.4.0/d67ad038adfd55dc276488a54f4944dfae5ff8ec/moshi-1.4.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-generator/1.4.1/b3523dcd516084e57711d2f46f54cf5f8bdf7725/objectbox-generator-1.4.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.7.2/3614c35f8be29c674afbc6b3d6cc192d298d8827/flatbuffers-java-1.7.2-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.7.2/17ca97417bdfc0f725307e2f5c802d5bba9c0b97/flatbuffers-java-1.7.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-generator/1.4.4/21bcec51d8d0ebf2c1b508db888c914cf822d1e6/objectbox-generator-1.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-generator/1.4.4/a122ab0f8028f49c3c12119389d09dd2a023be0a/objectbox-generator-1.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.8.0/647581613c450697b4984fa2134734110f69685d/flatbuffers-java-1.8.0-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.8.0/c0a904119659fd9cd667e6e37fbcb6bab790edf4/flatbuffers-java-1.8.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/b19b5927c2c25b6c70f093767041e641ae0b1b35/jsr305-3.0.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/3.0.1/builder-model-3.0.1.jar" />
@@ -2153,24 +2564,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/AnimeFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SeasonFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SuggestionFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/MangaFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtils.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/general/SeriesList.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupRoleCharacterAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesListAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesListFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentUserListBase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtils.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/glide/GlideAppModule.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/youtube/YoutubePlayerFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_comment.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/animation/AlphaAnimation.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/animation/SlideUpAnimation.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/base/BaseAnimation.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/animation/ScaleAnimation.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java" />
@@ -2199,11 +2592,29 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/Version.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/base/AboutActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/AboutFragment.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/BodyConverter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/Edge.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/PageInfo.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/Container.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/EdgeContainer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/GraphContainer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SingleLineFontTextView.java" />
+        <option value="$PROJECT_DIR$/app/src/androidTest/java/com/mxt/anitrend/ExampleInstrumentedTest.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/com/mxt/anitrend/BuildConfig.java" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/processor/GraphProcessor.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphConverter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/App.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/SeriesBase.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/Message.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MessageBase.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/AuthCode.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/AuthBase.java" />
       </list>
     </option>
   </component>
@@ -2227,6 +2638,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2239,19 +2652,167 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidBuildScriptsGroupNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="general" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anilist" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend-app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anitrend" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="SearchEverywhereHistoryKey" value="About&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.base.AboutActivity&#10;Versi&#9;ACTION&#9;ActivateVersionControlToolWindow&#10;Filter&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/FilterProvider.java&#10;Studio&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.StudioActivity&#10;StaffAc&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.StaffActivity&#10;Charact&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.CharacterActivity&#10;SeriesAc&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.SeriesActivity&#10;Profile&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.ProfileActivity&#10;Mai&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java&#10;Frag&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java&#10;Main&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java&#10;FragmentBa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java&#10;Pref&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ApplicationPref&#10;KeyU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.KeyUtils&#10;RecyclerView&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerViewAdapter.java&#10;Notifi&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java&#10;Base&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/interfaces/base/BaseAnimation.java&#10;CommentFr&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.detail.CommentFragment&#10;You&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/youtube/YoutubePlayerFragment.java&#10;YouT&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.youtube.YoutubePlayerFragment&#10;AutoIn&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java&#10;SeriesLis&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesListFragment.java&#10;Comp&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/CompatUtils.java&#10;Compa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/CompatUtils.java&#10;CompatU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.CompatUtils&#10;Notification&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java&#10;Anal&#9;PSI&#9;JAVA://com.mxt.anitrend.util.AnalyticsUtils&#10;NotificationB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java&#10;Database&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java&#10;NotificationBa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java&#10;Series&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Series.java&#10;NotificationAc&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.NotificationActivity&#10;FragmentStats&#9;PSI&#9;JAVA://com.mxt.anitrend.databinding.FragmentSeriesStatsBinding&#10;AutoI&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java&#10;AiringA&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAiringAdapter.java&#10;SeriesPrese&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java&#10;SeriesAction&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/SeriesActionUtil.java&#10;Airing&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAiringAdapter.java&#10;SeriesListAda&#9;PSI&#9;JAVA://com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter&#10;SeriesPre&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java&#10;Shared&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.base.SharedContentActivity&#10;Composer&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.editor.ComposerWidget&#10;AdapterRa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/build/generated/source/apt/debug/com/mxt/anitrend/databinding/AdapterRankingBinding.java&#10;Web&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.retro.WebFactory&#10;Ke&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java&#10;BasePre&#9;PSI&#9;JAVA://com.mxt.anitrend.presenter.base.BasePresenter&#10;NotifyU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.NotifyUtil&#10;EntityMapAd&#9;PSI&#9;JAVA://com.mxt.anitrend.adapter.recycler.base.EntityMapAdapter&#10;EntityM&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.general.EntityMap&#10;Avatar&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AvatarIndicatorView.java" />
-    <property name="device.picker.selection" value="ea6d9ced" />
+    <property name="SearchEverywhereHistoryKey" value="KeyU&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java&#10;GraphC&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphConverter.java&#10;App&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/App.java&#10;BuildCo&#9;PSI&#9;JAVA://com.mxt.anitrend.BuildConfig&#10;Font&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView&#10;About&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.base.AboutActivity&#10;Versi&#9;ACTION&#9;ActivateVersionControlToolWindow&#10;Filter&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/FilterProvider.java&#10;Studio&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.StudioActivity&#10;StaffAc&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.StaffActivity&#10;Charact&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.CharacterActivity&#10;SeriesAc&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.SeriesActivity&#10;Profile&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.ProfileActivity&#10;Mai&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java&#10;Frag&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java&#10;Main&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java&#10;FragmentBa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java&#10;Pref&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ApplicationPref&#10;RecyclerView&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerViewAdapter.java&#10;Notifi&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java&#10;Base&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/interfaces/base/BaseAnimation.java&#10;CommentFr&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.detail.CommentFragment&#10;You&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/youtube/YoutubePlayerFragment.java&#10;YouT&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.youtube.YoutubePlayerFragment&#10;AutoIn&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java&#10;SeriesLis&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/detail/SeriesListFragment.java&#10;Comp&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/CompatUtils.java&#10;Compa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/CompatUtils.java&#10;CompatU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.CompatUtils&#10;Notification&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java&#10;Anal&#9;PSI&#9;JAVA://com.mxt.anitrend.util.AnalyticsUtils&#10;NotificationB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java&#10;Database&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java&#10;NotificationBa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java&#10;Series&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Series.java&#10;NotificationAc&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.NotificationActivity&#10;FragmentStats&#9;PSI&#9;JAVA://com.mxt.anitrend.databinding.FragmentSeriesStatsBinding&#10;AutoI&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java&#10;AiringA&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAiringAdapter.java&#10;SeriesPrese&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java&#10;SeriesAction&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/SeriesActionUtil.java&#10;Airing&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/SeriesAiringAdapter.java&#10;SeriesListAda&#9;PSI&#9;JAVA://com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter&#10;SeriesPre&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java&#10;Shared&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.base.SharedContentActivity&#10;Composer&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.editor.ComposerWidget&#10;AdapterRa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/build/generated/source/apt/debug/com/mxt/anitrend/databinding/AdapterRankingBinding.java&#10;Web&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.retro.WebFactory&#10;Ke&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java&#10;BasePre&#9;PSI&#9;JAVA://com.mxt.anitrend.presenter.base.BasePresenter" />
+    <property name="device.picker.selection" value="Nexus_5X_API_26" />
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
     <property name="DEBUGGABLE_PROCESS" value="com.mxt.anitrend" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
@@ -2281,9 +2842,6 @@
       <recent name="com.mxt.anitrend.util" />
       <recent name="com.mxt.anitrend.base.custom.view.image" />
     </key>
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="" />
-    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.mxt.anitrend.base.custom.async" />
       <recent name="com.mxt.anitrend.view.activity.base" />
@@ -2291,12 +2849,15 @@
       <recent name="com.mxt.anitrend.base.custom.recycler" />
       <recent name="com.mxt.anitrend.base.interfaces.event" />
     </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image" />
       <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/values-fr" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/detail" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -2337,6 +2898,102 @@
       <envs />
       <patterns />
       <method />
+    </configuration>
+    <configuration default="false" name="ExampleInstrumentedT..." type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <option name="TESTING_TYPE" value="2" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="com.mxt.anitrend.ExampleInstrumentedTest" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+      </Profilers>
+      <method>
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521542868549" />
+      </method>
+    </configuration>
+    <configuration default="false" name="findRoot()" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <option name="TESTING_TYPE" value="3" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="findRoot" />
+      <option name="CLASS_NAME" value="com.mxt.anitrend.ExampleInstrumentedTest" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+      </Profilers>
+      <method>
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521542868549" />
+      </method>
     </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
@@ -2408,7 +3065,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521530733243" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521542868550" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2456,7 +3113,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521530733243" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521542868550" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2488,6 +3145,27 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -2618,16 +3296,20 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521530733245" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521542868551" />
       </method>
     </configuration>
-    <list size="2">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Android App.app" />
       <item index="1" class="java.lang.String" itemvalue="Android JUnit.ExampleUnitTest.milliseconds_Condition" />
+      <item index="2" class="java.lang.String" itemvalue="Android Instrumented Tests.ExampleInstrumentedT..." />
+      <item index="3" class="java.lang.String" itemvalue="Android Instrumented Tests.findRoot()" />
     </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Android JUnit.ExampleUnitTest.milliseconds_Condition" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Android Instrumented Tests.findRoot()" />
+        <item index="1" class="java.lang.String" itemvalue="Android Instrumented Tests.ExampleInstrumentedT..." />
+        <item index="2" class="java.lang.String" itemvalue="Android JUnit.ExampleUnitTest.milliseconds_Condition" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
@@ -2666,8 +3348,17 @@
     <servers />
   </component>
   <component name="TestHistory">
+    <history-entry file="ExampleInstrumentedT___ - 2018.03.20 at 09h 51m 58s.xml">
+      <configuration name="ExampleInstrumentedT..." configurationId="AndroidTestRunConfigurationType" />
+    </history-entry>
     <history-entry file="ExampleUnitTest_milliseconds_Condition - 2017.11.06 at 11h 59m 50s.xml">
       <configuration name="ExampleUnitTest.milliseconds_Condition" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="findRoot() - 2018.03.20 at 09h 57m 52s.xml">
+      <configuration name="findRoot()" configurationId="AndroidTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="findRoot() - 2018.03.20 at 09h 58m 22s.xml">
+      <configuration name="findRoot()" configurationId="AndroidTestRunConfigurationType" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -2682,8 +3373,9 @@
   <component name="ToolWindowManager">
     <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <layout>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.5416216" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5416216" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32540542" sideWeight="0.4850587" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21024546" sideWeight="0.5059459" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2697,7 +3389,8 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21024546" sideWeight="0.49405405" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21024546" sideWeight="0.49405405" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32540542" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
@@ -2713,13 +3406,11 @@
       <window_info id="Dynamic Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32540542" sideWeight="0.4850587" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="StringPreview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="2020" y="511" width="894" height="477" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30843115" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32540542" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -2761,233 +3452,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/Message.java</url>
-          <line>47</line>
-          <properties />
-          <option name="timeStamp" value="344" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="546" />
+      <option name="time" value="554" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../anitrend-resources/screenshots/Pixel/device-2018-02-26-150213.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../anitrend-resources/screenshots/Pixel/device-2018-02-26-150919.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
-          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/presenter/CommonPresenter.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/sheet/BottomSheetGiphy.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ApplicationPref.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/shared_menu.xml" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_staff_overview.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="35">
-          <caret line="103" column="56" lean-forward="false" selection-start-line="103" selection-start-column="56" selection-end-line="103" selection-end-column="56" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffOverviewFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/color.xml" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/SeasonFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/attr.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="32" lean-forward="false" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.0.2.aar/093f4beebfdc79e24ecd085abba200d5/res/values/values.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="66" lean-forward="false" selection-start-line="6" selection-start-column="66" selection-end-line="6" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/style.xml" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ActionModeHelper.java" />
-    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-27/android/util/SparseArray.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="86" column="26" lean-forward="false" selection-start-line="86" selection-start-column="26" selection-end-line="86" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-core-utils/27.0.2/800ca6dd3ce3d83aa50249ae273ca5f02f7ddc5f/support-core-utils-27.0.2-sources.jar!/android/support/v4/graphics/ColorUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4342">
-          <caret line="294" column="22" lean-forward="false" selection-start-line="294" selection-start-column="22" selection-end-line="294" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/uk.co.samuelwall/material-tap-target-prompt/2.7.0/6080c9a741ae1b19b79c34224fe44859cad94fef/material-tap-target-prompt-2.7.0-sources.jar!/uk/co/samuelwall/materialtaptargetprompt/MaterialTapTargetPrompt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="94" column="43" lean-forward="false" selection-start-line="94" selection-start-column="28" selection-end-line="94" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/index/FeedFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="80" column="8" lean-forward="false" selection-start-line="80" selection-start-column="8" selection-end-line="91" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="719">
-          <caret line="348" column="29" lean-forward="false" selection-start-line="348" selection-start-column="29" selection-end-line="348" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/TapTargetUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="33" column="126" lean-forward="false" selection-start-line="33" selection-start-column="110" selection-end-line="33" selection-end-column="126" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/SeriesActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="179" column="26" lean-forward="true" selection-start-line="179" selection-start-column="26" selection-end-line="179" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/StaffActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="99" column="44" lean-forward="false" selection-start-line="99" selection-start-column="44" selection-end-line="99" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/ProfileActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="151" column="32" lean-forward="false" selection-start-line="151" selection-start-column="32" selection-end-line="151" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FollowStateWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="16" column="41" lean-forward="false" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_list.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="75" lean-forward="true" selection-start-line="19" selection-start-column="75" selection-end-line="19" selection-end-column="75" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/FilterProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-558">
-          <caret line="57" column="20" lean-forward="false" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/App.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/Version.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="31" column="5" lean-forward="true" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/base/RepositoryModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/base/GiphyModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="12" column="17" lean-forward="false" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="338" column="73" lean-forward="false" selection-start-line="338" selection-start-column="73" selection-end-line="338" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/base/WelcomeActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/CharacterActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="100" column="44" lean-forward="false" selection-start-line="100" selection-start-column="44" selection-end-line="100" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/base/GiphyPreviewActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="35" column="13" lean-forward="false" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/StudioActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="84" column="94" lean-forward="true" selection-start-line="84" selection-start-column="94" selection-end-line="88" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" />
     <entry file="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/android-about-page-1.2.2.aar/cf6a3aff8cbbde9702ecc82f3797e328/res/values/values.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -3027,22 +3496,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2465">
-          <caret line="145" column="0" lean-forward="false" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="33" lean-forward="false" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/list/CharacterSmallListConverter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -3071,23 +3524,357 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/PageInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="44" column="29" lean-forward="false" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/BodyConverter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/Node.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="34" column="13" lean-forward="true" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
+        <state relative-caret-position="34">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/Edge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/Container.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="32" lean-forward="false" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#554#555#0" expanded="false" />
-            <element signature="e#586#587#0" expanded="false" />
+            <element signature="e#217#218#0" expanded="true" />
+            <element signature="e#248#249#0" expanded="true" />
+            <element signature="e#284#285#0" expanded="true" />
+            <element signature="e#323#324#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/ConnectionContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/DataContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/GraphContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/EdgeContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/request/GraphQueryContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/PageContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/NodeContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SingleLineFontTextView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/androidTest/java/com/mxt/anitrend/ExampleInstrumentedTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="34" column="5" lean-forward="false" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="15" column="32" lean-forward="false" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle-core/3.0.1/gradle-core-3.0.1.jar!/com/android/build/gradle/internal/dsl/BuildType.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-311">
+          <caret line="57" column="16" lean-forward="false" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/com/mxt/anitrend/BuildConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1095">
+          <caret line="57" column="1" lean-forward="false" selection-start-line="57" selection-start-column="1" selection-end-line="57" selection-end-column="1" />
+          <folding>
+            <element signature="e#586#958#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/processor/GraphProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="16" column="41" lean-forward="true" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+          <folding>
+            <element signature="method#getQuery#0;class#GraphProcessor#0" expanded="false" />
+            <element signature="method#findAllFiles#0;class#GraphProcessor#0" expanded="false" />
+            <element signature="method#getFileContents#0;class#GraphProcessor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="72" column="23" lean-forward="false" selection-start-line="72" selection-start-column="23" selection-end-line="72" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="29" column="33" lean-forward="false" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="33" />
+          <folding>
+            <element signature="e#1075#1076#0" expanded="true" />
+            <element signature="e#1125#1126#0" expanded="true" />
+            <element signature="e#1172#1173#0" expanded="true" />
+            <element signature="e#1232#1233#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="799">
+          <caret line="90" column="0" lean-forward="true" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="719">
+          <caret line="348" column="29" lean-forward="false" selection-start-line="348" selection-start-column="29" selection-end-line="348" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityGroup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="22" lean-forward="false" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/giphy/Gif.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/giphy/Giphy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/giphy/GiphyContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/giphy/Meta.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/giphy/Pagination.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="13" column="44" lean-forward="false" selection-start-line="13" selection-start-column="44" selection-end-line="13" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/UserActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="24" column="33" lean-forward="true" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="13" column="13" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="21" column="30" lean-forward="true" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4653">
+          <caret line="49" column="14" lean-forward="true" selection-start-line="49" selection-start-column="14" selection-end-line="49" selection-end-column="14" />
+          <folding>
+            <marker date="1521541900373" expanded="true" signature="2007:3325" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Character.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="18" column="17" lean-forward="false" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/general/Airing.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MessageBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="12" column="26" lean-forward="false" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/AuthBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="13" column="21" lean-forward="false" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>

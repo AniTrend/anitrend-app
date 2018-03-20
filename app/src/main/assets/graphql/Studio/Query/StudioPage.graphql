@@ -1,0 +1,49 @@
+query StudioPage($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort]) {
+  Studio(id: $id) {
+    media(page: $page, perPage: $perPage, sort: $seriesSort) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      nodes {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          type
+          status
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+        }
+      }
+    }
+  }
+}

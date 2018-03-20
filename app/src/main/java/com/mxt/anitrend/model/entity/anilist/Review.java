@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -24,8 +24,8 @@ public class Review implements Parcelable {
     private int user_rating;
     private String text;
     private int score;
-    private SeriesBase anime;
-    private SeriesBase manga;
+    private MediaBase anime;
+    private MediaBase manga;
     private UserBase user;
 
     protected Review(Parcel in) {
@@ -38,8 +38,8 @@ public class Review implements Parcelable {
         user_rating = in.readInt();
         text = in.readString();
         score = in.readInt();
-        anime = in.readParcelable(SeriesBase.class.getClassLoader());
-        manga = in.readParcelable(SeriesBase.class.getClassLoader());
+        anime = in.readParcelable(MediaBase.class.getClassLoader());
+        manga = in.readParcelable(MediaBase.class.getClassLoader());
         user = in.readParcelable(UserBase.class.getClassLoader());
     }
 
@@ -106,7 +106,7 @@ public class Review implements Parcelable {
         return score * 5 / 100;
     }
 
-    public SeriesBase getAnime() {
+    public MediaBase getAnime() {
         return anime;
     }
 
@@ -114,7 +114,7 @@ public class Review implements Parcelable {
         return user;
     }
 
-    public SeriesBase getManga() {
+    public MediaBase getManga() {
         return manga;
     }
 
@@ -154,11 +154,11 @@ public class Review implements Parcelable {
         this.score = score;
     }
 
-    public void setAnime(SeriesBase anime) {
+    public void setAnime(MediaBase anime) {
         this.anime = anime;
     }
 
-    public void setManga(SeriesBase manga) {
+    public void setManga(MediaBase manga) {
         this.manga = manga;
     }
 

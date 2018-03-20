@@ -3,7 +3,7 @@ package com.mxt.anitrend.model.entity.anilist;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.general.UserActivityReply;
 import com.mxt.anitrend.util.DateUtil;
@@ -23,7 +23,7 @@ public class UserActivity implements Parcelable {
     private String value;
     private String created_at;
     private List<UserBase> users;
-    private SeriesBase series;
+    private MediaBase series;
     private UserBase messenger;
     private List<UserBase> likes;
 
@@ -36,7 +36,7 @@ public class UserActivity implements Parcelable {
         value = in.readString();
         created_at = in.readString();
         users = in.createTypedArrayList(UserBase.CREATOR);
-        series = in.readParcelable(SeriesBase.class.getClassLoader());
+        series = in.readParcelable(MediaBase.class.getClassLoader());
         messenger = in.readParcelable(UserBase.class.getClassLoader());
         likes = in.createTypedArrayList(UserBase.CREATOR);
     }
@@ -109,7 +109,7 @@ public class UserActivity implements Parcelable {
         return likes;
     }
 
-    public SeriesBase getSeries() {
+    public MediaBase getSeries() {
         return series;
     }
 
@@ -149,7 +149,7 @@ public class UserActivity implements Parcelable {
         this.users = users;
     }
 
-    public void setSeries(SeriesBase series) {
+    public void setSeries(MediaBase series) {
         this.series = series;
     }
 

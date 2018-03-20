@@ -12,7 +12,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterAnimeBinding;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +26,14 @@ import butterknife.OnLongClick;
  * Created by max on 2017/10/25.
  */
 
-public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
+public class SeriesAnimeAdapter extends RecyclerViewAdapter<Media> {
 
-    public SeriesAnimeAdapter(List<Series> data, Context context) {
+    public SeriesAnimeAdapter(List<Media> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<Series> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<Media> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new SeriesViewHolder(AdapterAnimeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -57,13 +57,13 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<Series>) results.values);
+                data = new ArrayList<>((List<Media>) results.values);
                 notifyDataSetChanged();
             }
         };
     }
 
-    protected class SeriesViewHolder extends RecyclerViewHolder<Series> {
+    protected class SeriesViewHolder extends RecyclerViewHolder<Media> {
 
         private AdapterAnimeBinding binding;
 
@@ -83,10 +83,10 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Series> {
          * <br/>
          *
          * @param model Is the model at the current adapter position
-         * @see Series
+         * @see Media
          */
         @Override
-        public void onBindViewHolder(Series model) {
+        public void onBindViewHolder(Media model) {
             binding.setModel(model);
             binding.executePendingBindings();
         }

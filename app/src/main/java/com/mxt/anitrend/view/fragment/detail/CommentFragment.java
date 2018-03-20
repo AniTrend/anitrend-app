@@ -18,7 +18,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseComment;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.general.UserActivityReply;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -175,7 +175,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                SeriesBase series = userActivity.getSeries();
+                MediaBase series = userActivity.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
                 intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());

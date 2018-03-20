@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml versionBase="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Discover</string>
     <string name="nav_header_manage">Manage</string>
@@ -326,13 +326,13 @@
     <string name="tip_messages_title">Messages</string>
     <string name="tip_messages_text">Affiche tout les messages qui vous ont été envoyés et ceux que vous avez envoyés. \n\nAppuyez ici pour Fermer</string>
     <string name="tip_status_post_title">Créer une publication</string>
-    <string name="tip_status_post_text">Publiez un message que tout le monde peut voir ! \n\nAppuyez ici pour Fermer</string>
+    <string name="tip_status_post_text">Publiez un messageBase que tout le monde peut voir ! \n\nAppuyez ici pour Fermer</string>
     <string name="tip_notifications_title">Notifications</string>
     <string name="tip_notifications_text">Accédez à toutes les notifications au même endroit. \n\nAppuyez ici pour Fermer</string>
     <string name="tip_more_actions_title">Plus de Fonctionnalités</string>
     <string name="tip_more_actions_text">Appuyez ici pour plus d\'options comme afficher les "j\'aime". \n\nAppuyez ici pour Fermer</string>
     <string name="tip_compose_message_title">Composer un Message</string>
-    <string name="tip_compose_message_text">Envoyer un message à cet utilisateur. \n\nAppuyez ici pour Fermer</string>
+    <string name="tip_compose_message_text">Envoyer un messageBase à cet utilisateur. \n\nAppuyez ici pour Fermer</string>
 
     <!--Media attachments on the reply activity-->
     <string name="attach_media">Ajouter un Media</string>
@@ -413,7 +413,7 @@
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_header_notifications_summary">Configurer comment les notifications sont gérer</string>
 
-    <string name="pref_title_new_message_notifications">nouveau message de notification</string>
+    <string name="pref_title_new_message_notifications">nouveau messageBase de notification</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
     <string name="pref_title_ringtone">Sonnerie de Notification</string>
@@ -446,7 +446,7 @@
         <item>360</item>
     </string-array>
 
-    <!--Another long message using a bit of html the p tags represent new paragraphs-->
+    <!--Another lmessageBasesage using a bit of html the p tags represent new paragraphs-->
     <string name="login_notice">
         <![CDATA[
             <p>
@@ -494,14 +494,14 @@
     </string>
 
     <string name="title_view_likes">Voir les "J\'aime"</string>
-    <string name="input_empty_warning">Il n\'est pas possible d\'envoyer un message vide !</string>
+    <string name="input_empty_warning">Il n\'est pas possible d\'envoyer un messageBase vide !</string>
     <string name="completed_success">Action complétée avec succès</string>
 
     <string name="drawer_update_title">Mettre à Jour AniTrend ?</string>
 
     <string name="drawer_update_text">
         <![CDATA[
-        Vérifie si vous avez la dernière version d\'AniTrend. Si ce n\'est pas le cas, une version plus récente sera
+        Vérifie si vous avez la dernière versionBase d\'AniTrend. Si ce n\'est pas le cas, une versionBase plus récente sera
         téléchargée depuis <b><a href="https://github.com/wax911/AniTrend">le dépôt d\'AniTrend</a></b>.
         <br/><br/>
         <b>N.B.</b> Si vous avez téléchargé l\'application depuis <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">le Play Store</a></b>,
@@ -531,7 +531,7 @@
         ]]>
     </string>
 
-    <string name="app_no_date">Vous avez la dernière version d\'AniTrend !</string>
+    <string name="app_no_date">Vous avez la dernière versionBase d\'AniTrend !</string>
 
     <string name="title_permission_write">Permission requise</string>
 
@@ -692,7 +692,7 @@
     <string name="text_anime_length">%d Minutes</string>
     <string name="text_anime_score">%.1f %% Avg</string>
 
-    <string name="text_message_to">Envoyer un message à %s</string>
+    <string name="text_message_to">Envoyer un messageBase à %s</string>
     <string name="title_bottom_sheet_favourites">Favoris de l\'Utilisateur</string>
     <string name="warning_anime_is_airing">Anime encore en diffusion !</string>
     <string name="warning_anime_not_airing">Anime pas encore diffusé !</string>

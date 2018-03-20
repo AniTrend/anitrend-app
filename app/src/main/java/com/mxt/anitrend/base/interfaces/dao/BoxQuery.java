@@ -5,12 +5,10 @@ import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Tag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
-import com.mxt.anitrend.model.entity.base.AuthCode;
-import com.mxt.anitrend.model.entity.base.NotificationBase;
+import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.Version;
-import com.mxt.anitrend.model.entity.general.Notification;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.VersionBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public interface BoxQuery {
     /**
      * Get default authentication code
      */
-    AuthCode getAuthCode();
+    AuthBase getAuthCode();
 
     /**
      * Get web token
@@ -34,7 +32,7 @@ public interface BoxQuery {
     /**
      * Get the application version on github
      */
-    Version getRemoteVersion();
+    VersionBase getRemoteVersion();
 
     /**
      * Get all users
@@ -54,7 +52,7 @@ public interface BoxQuery {
     /**
      * Gets all saved series lists
      */
-    List<SeriesList> getAllSeries();
+    List<MediaList> getAllSeries();
 
     /**
      * Saves current authenticated user
@@ -64,7 +62,7 @@ public interface BoxQuery {
     /**
      * Get default authentication code
      */
-    boolean saveAuthCode(AuthCode authCode);
+    boolean saveAuthCode(AuthBase authBase);
 
     /**
      * Get web token
@@ -72,9 +70,9 @@ public interface BoxQuery {
     boolean saveWebToken(WebToken webToken);
 
     /**
-     * Save the application version on github
+     * Save the application versionBase on github
      */
-    boolean saveRemoteVersion(Version version);
+    boolean saveRemoteVersion(VersionBase versionBase);
 
     /**
      * Saves all the users
@@ -94,7 +92,7 @@ public interface BoxQuery {
     /**
      * Saves all series lists
      */
-    void saveSeries(List<SeriesList> seriesLists);
+    void saveSeries(List<MediaList> mediaLists);
 
     /**
      * Adds a user item

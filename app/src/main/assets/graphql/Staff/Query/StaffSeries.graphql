@@ -1,0 +1,71 @@
+query StaffSeries($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort]) {
+  Staff(id: $id, sort: $staffSort) {
+    characters(page: $page, perPage: $perPage) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      edges {
+        role
+        media {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            type
+            status
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+        node {
+          ... on Character {
+            id
+            name {
+              ... on CharacterName {
+                first
+                last
+                native
+              }
+            }
+            image {
+              ... on CharacterImage {
+                large
+                medium
+              }
+            }
+            isFavourite
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,9 @@
 package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 
 import java.util.List;
@@ -20,9 +19,9 @@ public class Staff extends StaffBase {
     private boolean favourite;
     private String name_first_japanese;
     private String name_last_japanese;
-    private List<SeriesBase> anime_staff;
-    private List<SeriesBase> manga_staff;
-    private List<SeriesBase> anime;
+    private List<MediaBase> anime_staff;
+    private List<MediaBase> manga_staff;
+    private List<MediaBase> anime;
 
     protected Staff(Parcel in) {
         super(in);
@@ -32,9 +31,9 @@ public class Staff extends StaffBase {
         favourite = in.readByte() != 0;
         name_first_japanese = in.readString();
         name_last_japanese = in.readString();
-        anime_staff = in.createTypedArrayList(SeriesBase.CREATOR);
-        manga_staff = in.createTypedArrayList(SeriesBase.CREATOR);
-        anime = in.createTypedArrayList(SeriesBase.CREATOR);
+        anime_staff = in.createTypedArrayList(MediaBase.CREATOR);
+        manga_staff = in.createTypedArrayList(MediaBase.CREATOR);
+        anime = in.createTypedArrayList(MediaBase.CREATOR);
     }
 
     @Override
@@ -94,18 +93,18 @@ public class Staff extends StaffBase {
         return String.format("%s %s", name_first_japanese, name_last_japanese);
     }
 
-    public List<SeriesBase> getAnime_staff() {
+    public List<MediaBase> getAnime_staff() {
         return anime_staff;
     }
 
-    public List<SeriesBase> getManga_staff() {
+    public List<MediaBase> getManga_staff() {
         return manga_staff;
     }
 
     /**
      * Mostly visible to actors
      */
-    public List<SeriesBase> getAnime() {
+    public List<MediaBase> getAnime() {
         return anime;
     }
 

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="com.github.XunMengWinter:CircularAnim-0.3.4">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/CircularAnim-0.3.4.aar/cba6d4d917b5a6e5fcad0cc7155bb80c/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/CircularAnim-0.3.4.aar/cba6d4d917b5a6e5fcad0cc7155bb80c/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/CircularAnim-0.3.4.aar/fb9264e83372a5e9b601489f14bf3f57/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/CircularAnim-0.3.4.aar/fb9264e83372a5e9b601489f14bf3f57/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

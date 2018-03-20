@@ -10,7 +10,7 @@ import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
-import com.mxt.anitrend.model.entity.base.AuthCode;
+import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
@@ -89,7 +89,7 @@ public class WebTokenRequest {
         if(authenticatedToken != null) {
             DatabaseHelper databaseHelper = new DatabaseHelper(context);
             databaseHelper.saveWebToken(authenticatedToken);
-            databaseHelper.saveAuthCode(new AuthCode(code, authenticatedToken.getRefresh_token()));
+            databaseHelper.saveAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
             createNewTokenReference(authenticatedToken);
             return true;
         }

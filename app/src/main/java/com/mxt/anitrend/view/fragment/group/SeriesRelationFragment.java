@@ -10,7 +10,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -29,7 +29,7 @@ import java.util.List;
  * Created by max on 2018/01/05.
  */
 
-public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<EntityGroup>, SeriesPresenter> implements PublisherListener<Series> {
+public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<EntityGroup>, SeriesPresenter> implements PublisherListener<Media> {
 
     private @KeyUtils.ActivityType int requestType;
     private @KeyUtils.SeriesType int seriesType;
@@ -88,8 +88,8 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((Series) data).getId());
-                intent.putExtra(KeyUtils.arg_series_type, ((Series) data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_id, ((Media) data).getId());
+                intent.putExtra(KeyUtils.arg_series_type, ((Media) data).getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -108,7 +108,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel((Series) data).build(getActivity());
+                            .setModel((Media) data).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -123,7 +123,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
      * @see Subscribe
      */
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Series param) {
+    public void onEventPublished(Media param) {
         if(model == null) {
             seriesId = param.getId();
             onChanged(GroupingUtil.getGroupedSeriesRelated(param));

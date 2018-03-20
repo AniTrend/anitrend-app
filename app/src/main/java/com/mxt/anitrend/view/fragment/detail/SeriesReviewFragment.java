@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Created by max on 2017/10/30.
- * Series review type
+ * Media review type
  */
 
 public class SeriesReviewFragment extends FragmentBaseList<Review, List<Review>, BasePresenter> {

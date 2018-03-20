@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist;
 
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -26,10 +26,10 @@ public interface UserListModel {
     Call<User> getAnimeList(@Path("displayname") String displayname);
 
     @GET("animelist/{anime_id}")
-    Call<SeriesList> getAnimeListStatus(@Path("anime_id") long id);
+    Call<MediaList> getAnimeListStatus(@Path("anime_id") long id);
 
     @GET("mangalist/{manga_id}")
-    Call<SeriesList> getMangaListStatus(@Path("manga_id") long id);
+    Call<MediaList> getMangaListStatus(@Path("manga_id") long id);
 
     /**
      * Raw outputs the same as the standard animelist output but the without anime relation data.
@@ -59,16 +59,16 @@ public interface UserListModel {
      */
     @FormUrlEncoded
     @POST("animelist")
-    Call<SeriesList> addAnimeItem(@Field("id") long id,
-                                  @Field("list_status") String list_status,
-                                  @Field("score") String score,
-                                  @Field("score_raw") Integer score_raw,
-                                  @Field("episodes_watched") Integer episodes_watched,
-                                  @Field("rewatched") Integer rewatched,
-                                  @Field("notes") String notes,
-                                  @Field("advanced_rating_scores") String advanced_rating_scores,
-                                  @Field("custom_lists") Integer custom_lists,
-                                  @Field("hidden_default") Integer hidden_default);
+    Call<MediaList> addAnimeItem(@Field("id") long id,
+                                 @Field("list_status") String list_status,
+                                 @Field("score") String score,
+                                 @Field("score_raw") Integer score_raw,
+                                 @Field("episodes_watched") Integer episodes_watched,
+                                 @Field("rewatched") Integer rewatched,
+                                 @Field("notes") String notes,
+                                 @Field("advanced_rating_scores") String advanced_rating_scores,
+                                 @Field("custom_lists") Integer custom_lists,
+                                 @Field("hidden_default") Integer hidden_default);
 
     /**
      * Used for editing an anime list item
@@ -86,16 +86,16 @@ public interface UserListModel {
      */
     @FormUrlEncoded
     @PUT("animelist")
-    Call<SeriesList> editAnimeItem(@Field("id") long id,
-                               @Field("list_status") String list_status,
-                               @Field("score") String score,
-                               @Field("score_raw") Integer score_raw,
-                               @Field("episodes_watched") Integer episodes_watched,
-                               @Field("rewatched") Integer rewatched,
-                               @Field("notes") String notes,
-                               @Field("advanced_rating_scores") String advanced_rating_scores,
-                               @Field("custom_lists") Integer custom_lists,
-                               @Field("hidden_default") Integer hidden_default);
+    Call<MediaList> editAnimeItem(@Field("id") long id,
+                                  @Field("list_status") String list_status,
+                                  @Field("score") String score,
+                                  @Field("score_raw") Integer score_raw,
+                                  @Field("episodes_watched") Integer episodes_watched,
+                                  @Field("rewatched") Integer rewatched,
+                                  @Field("notes") String notes,
+                                  @Field("advanced_rating_scores") String advanced_rating_scores,
+                                  @Field("custom_lists") Integer custom_lists,
+                                  @Field("hidden_default") Integer hidden_default);
 
 
 
@@ -134,17 +134,17 @@ public interface UserListModel {
      */
     @FormUrlEncoded
     @POST("mangalist")
-    Call<SeriesList> addMangaItem(@Field("id") long id,
-                              @Field("list_status") String list_status,
-                              @Field("score") String score,
-                              @Field("score_raw") Integer score_raw,
-                              @Field("volumes_read") Integer volumes_read,
-                              @Field("chapters_read") Integer chapters_read,
-                              @Field("reread") Integer reread,
-                              @Field("notes") String notes,
-                              @Field("advanced_rating_scores") String advanced_rating_scores,
-                              @Field("custom_lists") Integer custom_lists,
-                              @Field("hidden_default") Integer hidden_default);
+    Call<MediaList> addMangaItem(@Field("id") long id,
+                                 @Field("list_status") String list_status,
+                                 @Field("score") String score,
+                                 @Field("score_raw") Integer score_raw,
+                                 @Field("volumes_read") Integer volumes_read,
+                                 @Field("chapters_read") Integer chapters_read,
+                                 @Field("reread") Integer reread,
+                                 @Field("notes") String notes,
+                                 @Field("advanced_rating_scores") String advanced_rating_scores,
+                                 @Field("custom_lists") Integer custom_lists,
+                                 @Field("hidden_default") Integer hidden_default);
 
     /**
      * Used for editing manga list item
@@ -163,17 +163,17 @@ public interface UserListModel {
      */
     @FormUrlEncoded
     @PUT("mangalist")
-    Call<SeriesList> editMangaItem(@Field("id") long id,
-                               @Field("list_status") String list_status,
-                               @Field("score") String score,
-                               @Field("score_raw") Integer score_raw,
-                               @Field("volumes_read") Integer volumes_read,
-                               @Field("chapters_read") Integer chapters_read,
-                               @Field("reread") Integer reread,
-                               @Field("notes") String notes,
-                               @Field("advanced_rating_scores") String advanced_rating_scores,
-                               @Field("custom_lists") Integer custom_lists,
-                               @Field("hidden_default") Integer hidden_default);
+    Call<MediaList> editMangaItem(@Field("id") long id,
+                                  @Field("list_status") String list_status,
+                                  @Field("score") String score,
+                                  @Field("score_raw") Integer score_raw,
+                                  @Field("volumes_read") Integer volumes_read,
+                                  @Field("chapters_read") Integer chapters_read,
+                                  @Field("reread") Integer reread,
+                                  @Field("notes") String notes,
+                                  @Field("advanced_rating_scores") String advanced_rating_scores,
+                                  @Field("custom_lists") Integer custom_lists,
+                                  @Field("hidden_default") Integer hidden_default);
 
 
     @DELETE("animelist/{anime_id}")

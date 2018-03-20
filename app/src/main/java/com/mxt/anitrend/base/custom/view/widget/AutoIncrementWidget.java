@@ -15,8 +15,8 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -32,12 +32,12 @@ import retrofit2.Response;
  * auto increment widget for changing series progress with just a tap
  */
 
-public class AutoIncrementWidget extends LinearLayout implements CustomView, View.OnClickListener, RetroCallback<SeriesList> {
+public class AutoIncrementWidget extends LinearLayout implements CustomView, View.OnClickListener, RetroCallback<MediaList> {
 
-    private WidgetPresenter<SeriesList> presenter;
+    private WidgetPresenter<MediaList> presenter;
     private @KeyUtils.RequestMode int requestType;
     private WidgetAutoIncrementerBinding binding;
-    private SeriesList model;
+    private MediaList model;
 
     private String currentUser;
 
@@ -88,7 +88,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         }
     }
 
-    public void setModel(SeriesList model, String currentUser) {
+    public void setModel(MediaList model, String currentUser) {
         this.model = model; this.currentUser = currentUser;
         binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
         requestType = model.getAnime() != null? KeyUtils.ANIME_LIST_EDIT_REQ : KeyUtils.MANGA_LIST_EDIT_REQ;
@@ -108,14 +108,14 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     }
 
     @Override
-    public void onResponse(@NonNull Call<SeriesList> call, @NonNull Response<SeriesList> response) {
+    public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
         try {
-            SeriesList seriesList;
-            if(response.isSuccessful() && (seriesList = response.body()) != null) {
-                boolean isModelCategoryChanged = !seriesList.getList_status().equals(model.getList_status());
-                seriesList.setAnime(model.getAnime()); seriesList.setManga(model.getManga()); model = seriesList;
+            MediaList mediaList;
+            if(response.isSuccessful() && (mediaList = response.body()) != null) {
+                boolean isModelCategoryChanged = !mediaList.getList_status().equals(model.getList_status());
+                mediaList.setAnime(model.getAnime()); mediaList.setManga(model.getManga()); model = mediaList;
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
-                presenter.getDatabase().getBoxStore(SeriesList.class).put(model); resetFlipperState();
+                presenter.getDatabase().getBoxStore(MediaList.class).put(model); resetFlipperState();
                 if(isModelCategoryChanged) {
                     NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, model), false);
@@ -131,7 +131,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     }
 
     @Override
-    public void onFailure(@NonNull Call<SeriesList> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
         try {
             Log.e(toString(), throwable.getLocalizedMessage());
             throwable.printStackTrace();
@@ -176,7 +176,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         return bundle;
     }
 
-    private SeriesBase getSeriesModel() {
+    private MediaBase getSeriesModel() {
         return model.getAnime() != null ? model.getAnime() : model.getManga();
     }
 }

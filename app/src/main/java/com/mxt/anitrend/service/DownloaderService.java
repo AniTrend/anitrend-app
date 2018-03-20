@@ -8,22 +8,22 @@ import android.webkit.MimeTypeMap;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.model.api.retro.base.RepositoryModel;
-import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.base.VersionBase;
 
 public class DownloaderService {
 
     /**
-     * Handles downloading of new version of AniTrend
+     * Handles downloading of new versionBase of AniTrend
      */
-    public static void downloadNewVersion(Context context, Version version) {
+    public static void downloadNewVersion(Context context, VersionBase versionBase) {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RepositoryModel.DOWNLOAD_LINK));
-        request.setTitle(String.format("AniTrend v%s.apk", version.getVersion()));
+        request.setTitle(String.format("AniTrend v%s.apk", versionBase.getVersion()));
         request.allowScanningByMediaScanner();
         String ext = MimeTypeMap.getFileExtensionFromUrl(RepositoryModel.DOWNLOAD_LINK);
         request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext));
         request.setDescription(context.getString(R.string.text_downloading_update));
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, String.format("AniTrend v%s.apk", version.getVersion()));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, String.format("AniTrend v%s.apk", versionBase.getVersion()));
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         if(downloadManager != null)
             downloadManager.enqueue(request);

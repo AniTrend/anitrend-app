@@ -1,5 +1,5 @@
 {
-  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note1": "KEEP THIS FILE! Check it into a versionBase control system (VCS) like git.",
   "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
@@ -312,7 +312,7 @@
         },
         {
           "id": "2:5330112884900128504",
-          "name": "version"
+          "name": "versionBase"
         },
         {
           "id": "3:3430541957216003755",
@@ -611,5 +611,5 @@
     4117267305388460974
   ],
   "retiredRelationUids": [],
-  "version": 1
+  "versionBase": 1
 }

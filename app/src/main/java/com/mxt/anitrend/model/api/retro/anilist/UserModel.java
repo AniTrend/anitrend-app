@@ -4,7 +4,7 @@ import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.general.UserActivityReply;
 import com.mxt.anitrend.model.entity.general.Notification;
 
@@ -176,7 +176,7 @@ public interface UserModel {
     Call<Favourite> getFavourites(@Path("displayname") String displayname);
 
     @GET("user/airing")
-    Call<List<SeriesList>> getAiring(@Query("limit") int limit);
+    Call<List<MediaList>> getAiring(@Query("limit") int limit);
 
     @GET("user/search/{query}")
     Call<List<UserBase>> searchUser(@Path("query") String query, @Query("page") int page);

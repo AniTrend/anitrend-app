@@ -14,7 +14,7 @@ import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -32,13 +32,13 @@ import java.util.List;
  * Created by max on 2018/01/05.
  */
 
-public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActivity>, BasePresenter> implements BaseConsumer.onRequestModelChange<UserActivity>, PublisherListener<Series> {
+public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActivity>, BasePresenter> implements BaseConsumer.onRequestModelChange<UserActivity>, PublisherListener<Media> {
 
     private @KeyUtils.ActivityType int requestType;
     private @KeyUtils.SeriesType int seriesType;
     private long seriesId;
 
-    private Series series;
+    private Media series;
 
     public static SocialFragment newInstance(Bundle args) {
         SocialFragment fragment = new SocialFragment();
@@ -181,7 +181,7 @@ public class SocialFragment extends FragmentBaseList<UserActivity, List<UserActi
      * @see Subscribe
      */
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Series param) {
+    public void onEventPublished(Media param) {
         if(model == null) {
             seriesId = param.getId();
             series = param;

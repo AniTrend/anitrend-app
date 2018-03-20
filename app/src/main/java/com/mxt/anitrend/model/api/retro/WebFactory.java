@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
+import com.mxt.anitrend.model.api.converter.GraphConverter;
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor;
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor;
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor;
@@ -17,7 +18,7 @@ import com.mxt.anitrend.model.api.retro.base.GiphyModel;
 import com.mxt.anitrend.model.api.retro.base.RepositoryModel;
 import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
-import com.mxt.anitrend.model.entity.base.AuthCode;
+import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -88,7 +89,9 @@ public class WebFactory {
                 httpClient.addInterceptor(httpLoggingInterceptor);
             }
 
-            mRetrofit = anitrendBuilder.client(httpClient.build()).build();
+            mRetrofit = anitrendBuilder.client(httpClient.build())
+                    .addConverterFactory(GraphConverter.create(context))
+                    .build();
         }
         return mRetrofit.create(serviceClass);
     }
@@ -142,13 +145,13 @@ public class WebFactory {
      * Get a new token, the token that will be requested will vary depending on the authentication
      * state of the application
      */
-    public static @Nullable WebToken refreshTokenSync(AuthCode authCode, boolean isAuthenticated) {
+    public static @Nullable WebToken refreshTokenSync(AuthBase authBase, boolean isAuthenticated) {
         try {
             Call<WebToken> refreshTokenCall;
             if (isAuthenticated)
                 refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
                         .create(AuthModel.class).getAccessToken(GrantTypes[KeyUtils.REFRESH_TYPE],
-                                BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, authCode.getRefresh_code());
+                                BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, authBase.getRefresh_code());
             else
                 refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
                         .create(AuthModel.class).getAccessToken(GrantTypes[KeyUtils.AUTHENTICATION_TYPE],

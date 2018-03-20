@@ -11,7 +11,7 @@ import com.mxt.anitrend.adapter.recycler.group.GroupRoleCharacterAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Character;
 import com.mxt.anitrend.model.entity.anilist.Staff;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -67,8 +67,8 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((SeriesBase)data).getId());
-                intent.putExtra(KeyUtils.arg_series_type, ((SeriesBase)data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
+                intent.putExtra(KeyUtils.arg_series_type, ((MediaBase)data).getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -87,7 +87,7 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel(((SeriesBase)data)).build(getActivity());
+                            .setModel(((MediaBase)data)).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

@@ -8,7 +8,7 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StaffAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseListSingle;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -21,7 +21,7 @@ import java.util.List;
  * Created by max on 2018/01/18.
  */
 
-public class StaffFragment extends FragmentBaseListSingle<StaffBase, List<StaffBase>, SeriesPresenter, Series> {
+public class StaffFragment extends FragmentBaseListSingle<StaffBase, List<StaffBase>, SeriesPresenter, Media> {
 
     private @KeyUtils.SeriesType int seriesType;
     private long seriesId;
@@ -72,7 +72,7 @@ public class StaffFragment extends FragmentBaseListSingle<StaffBase, List<StaffB
     }
 
     @Override
-    public void onChanged(@Nullable Series content) {
+    public void onChanged(@Nullable Media content) {
         if(content != null) {
             if(content.getStaff() != null && !content.getStaff().isEmpty()) {
                 if(isPager) {

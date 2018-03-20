@@ -1,0 +1,20 @@
+query SeriesEpisodes($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
+  Media(id: $id, type: $type, isAdult: $isAdult) {
+    ... on Media {
+      externalLinks {
+        ... on MediaExternalLink {
+          url
+          site
+        }
+      }
+      streamingEpisodes {
+        ... on MediaStreamingEpisode {
+          title
+          thumbnail
+          url
+          site
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 package com.mxt.anitrend.util;
 
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.general.MediaList;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public final class ComparatorProvider {
 
-    public static Comparator<Series> getSeriesComparator(ApplicationPref prefs, String languageTitle) {
+    public static Comparator<Media> getSeriesComparator(ApplicationPref prefs, String languageTitle) {
         if(prefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
             return (s1, s2) -> {
                 switch (prefs.getSort()){
@@ -63,7 +63,7 @@ public final class ComparatorProvider {
         };
     }
 
-    public static Comparator<SeriesList> getAnimeComparator(ApplicationPref prefs, String languageTitle) {
+    public static Comparator<MediaList> getAnimeComparator(ApplicationPref prefs, String languageTitle) {
         if(prefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
             return (s1, s2) -> {
                 switch (prefs.getSort()){
@@ -114,7 +114,7 @@ public final class ComparatorProvider {
         };
     }
 
-    public static Comparator<SeriesList> getMangaComparator(ApplicationPref prefs, String languageTitle) {
+    public static Comparator<MediaList> getMangaComparator(ApplicationPref prefs, String languageTitle) {
         if(prefs.getOrder().equals(KeyUtils.OrderTypes[KeyUtils.DESC]))
             return (s1, s2) -> {
                 switch (prefs.getSort()) {
@@ -177,7 +177,7 @@ public final class ComparatorProvider {
         return (o1, o2) -> o1.getKey().compareTo(o2.getKey());
     }
 
-    public static Comparator<Series> getSeriesStudioComparator(ApplicationPref prefs, String languageTitle) {
+    public static Comparator<Media> getSeriesStudioComparator(ApplicationPref prefs, String languageTitle) {
         return (s1, s2) -> {
             switch (prefs.getSort()) {
                 case KeyUtils.key_sort_title:

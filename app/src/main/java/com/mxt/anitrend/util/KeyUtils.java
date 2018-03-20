@@ -81,7 +81,7 @@ public interface KeyUtils {
     String key_sort_start_date = "start_date";
     String key_sort_end_date = "end_date";
 
-    /** Series List Keys */
+    /** Media List Keys */
     String arg_list_status = "arg_list_status";
     String arg_list_score = "arg_list_score";
     String arg_list_score_raw = "arg_list_score_raw";
@@ -175,7 +175,7 @@ public interface KeyUtils {
     @IntDef({AUTHENTICATION_TYPE, AUTHENTICATION_CODE, REFRESH_TYPE})
     @interface GrantType {}
 
-    // Series Types
+    // Media Types
     int ANIME = 0, MANGA = 1;
 
     String[] SeriesTypes = {"anime", "manga"};

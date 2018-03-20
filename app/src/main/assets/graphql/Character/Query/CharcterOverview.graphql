@@ -1,0 +1,23 @@
+query CharacterOverview($id: Int!, $characterSort: [CharacterSort]) {
+  Character(id: $id, sort: $characterSort) {
+    ... on Character {
+      id
+      name {
+        ... on CharacterName {
+          first
+          last
+          native
+          alternative
+        }
+      }
+      description(asHtml: true)
+      image {
+        ... on CharacterImage {
+          large
+          medium
+        }
+      }
+      isFavourite
+    }
+  }
+}

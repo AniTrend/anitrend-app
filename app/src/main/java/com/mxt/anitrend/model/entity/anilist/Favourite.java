@@ -27,9 +27,9 @@ public class Favourite implements Parcelable {
     @Id(assignable = true)
     private long id;
     @Convert(converter = SeriesListConverter.class, dbType = String.class)
-    private List<Series> anime;
+    private List<Media> anime;
     @Convert(converter = SeriesListConverter.class, dbType = String.class)
-    private List<Series> manga;
+    private List<Media> manga;
     @Convert(converter = CharacterSmallListConverter.class, dbType = String.class)
     private List<CharacterBase> character;
     @Convert(converter = StaffSmallListConverter.class, dbType = String.class)
@@ -51,8 +51,8 @@ public class Favourite implements Parcelable {
 
     protected Favourite(Parcel in) {
         id = in.readLong();
-        anime = in.createTypedArrayList(Series.CREATOR);
-        manga = in.createTypedArrayList(Series.CREATOR);
+        anime = in.createTypedArrayList(Media.CREATOR);
+        manga = in.createTypedArrayList(Media.CREATOR);
         character = in.createTypedArrayList(CharacterBase.CREATOR);
         staff = in.createTypedArrayList(StaffBase.CREATOR);
         studio = in.createTypedArrayList(StudioBase.CREATOR);
@@ -78,11 +78,11 @@ public class Favourite implements Parcelable {
         this.id = id;
     }
 
-    public void setAnime(List<Series> anime) {
+    public void setAnime(List<Media> anime) {
         this.anime = anime;
     }
 
-    public void setManga(List<Series> manga) {
+    public void setManga(List<Media> manga) {
         this.manga = manga;
     }
 
@@ -98,11 +98,11 @@ public class Favourite implements Parcelable {
         this.studio = studio;
     }
 
-    public List<Series> getAnime() {
+    public List<Media> getAnime() {
         return anime;
     }
 
-    public List<Series> getManga() {
+    public List<Media> getManga() {
         return manga;
     }
 

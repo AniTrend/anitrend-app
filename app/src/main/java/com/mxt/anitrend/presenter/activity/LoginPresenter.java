@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
-import com.mxt.anitrend.model.entity.base.Message;
+import com.mxt.anitrend.model.entity.base.MessageBase;
 
 import java.util.concurrent.ExecutionException;
 
@@ -21,8 +21,8 @@ public class LoginPresenter extends CommonPresenter {
         super(context);
     }
 
-    public boolean handleIntentCallback(Message message) {
-        String response = message.getQueryParam(BuildConfig.RESPONSE_TYPE);
+    public boolean handleIntentCallback(MessageBase messageBase) {
+        String response = messageBase.getQueryParam(BuildConfig.RESPONSE_TYPE);
         try {
             if(!TextUtils.isEmpty(response) && WebTokenRequest.getToken(getContext(), response)) {
                 getApplicationPref().setAuthenticated(true);

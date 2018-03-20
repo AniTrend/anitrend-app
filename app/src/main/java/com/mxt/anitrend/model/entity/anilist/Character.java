@@ -1,11 +1,9 @@
 package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.mxt.anitrend.model.entity.base.CharacterBase;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 
 import java.util.List;
 
@@ -18,8 +16,8 @@ public class Character extends CharacterBase {
     private String name_alt;
     private String name_japanese;
     private boolean favourite;
-    private List<SeriesBase> anime;
-    private List<SeriesBase> manga;
+    private List<MediaBase> anime;
+    private List<MediaBase> manga;
 
     protected Character(Parcel in) {
         super(in);
@@ -27,8 +25,8 @@ public class Character extends CharacterBase {
         name_alt = in.readString();
         name_japanese = in.readString();
         favourite = in.readByte() != 0;
-        anime = in.createTypedArrayList(SeriesBase.CREATOR);
-        manga = in.createTypedArrayList(SeriesBase.CREATOR);
+        anime = in.createTypedArrayList(MediaBase.CREATOR);
+        manga = in.createTypedArrayList(MediaBase.CREATOR);
     }
 
     public static final Creator<Character> CREATOR = new Creator<Character>() {
@@ -75,11 +73,11 @@ public class Character extends CharacterBase {
         return favourite;
     }
 
-    public List<SeriesBase> getAnime() {
+    public List<MediaBase> getAnime() {
         return anime;
     }
 
-    public List<SeriesBase> getManga() {
+    public List<MediaBase> getManga() {
         return manga;
     }
 

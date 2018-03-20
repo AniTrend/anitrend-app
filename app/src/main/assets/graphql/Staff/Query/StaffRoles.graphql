@@ -1,0 +1,52 @@
+query StaffRoles($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort], $seriesSort: [MediaSort], $seriesType: MediaType) {
+  Staff(id: $id, sort: $staffSort) {
+    staffMedia(page: $page, perPage: $perPage, sort: $seriesSort, type: $seriesType) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      edges {
+        staffRole
+        node {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            type
+            status
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

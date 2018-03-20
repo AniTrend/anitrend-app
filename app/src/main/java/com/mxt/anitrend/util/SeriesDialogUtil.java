@@ -13,9 +13,9 @@ import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.model.entity.anilist.Series;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
 import okhttp3.ResponseBody;
@@ -39,7 +39,7 @@ final class SeriesDialogUtil extends DialogUtil {
      * @param isNewEntry represents the existence or absence of a series entity in the users list
      * @param title series title based on user preferences
      */
-    static void createSeriesManage(Context context, @NonNull Series model, boolean isNewEntry, String title) {
+    static void createSeriesManage(Context context, @NonNull Media model, boolean isNewEntry, String title) {
         CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getSeries_type());
         seriesManageBase.setModel(model, isNewEntry);
 
@@ -71,7 +71,7 @@ final class SeriesDialogUtil extends DialogUtil {
      * @param isNewEntry represents the existence or absence of a series entity in the users list
      * @param title series title based on user preferences
      */
-    static void createSeriesManage(Context context, @NonNull SeriesBase model, boolean isNewEntry, String title) {
+    static void createSeriesManage(Context context, @NonNull MediaBase model, boolean isNewEntry, String title) {
         CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getSeries_type());
         seriesManageBase.setModel(model, isNewEntry);
 
@@ -103,9 +103,9 @@ final class SeriesDialogUtil extends DialogUtil {
      * @param isNewEntry represents the existence or absence of a series entity in the users list
      * @param title series title based on user preferences
      */
-    static void createSeriesManage(Context context, @NonNull SeriesList model, boolean isNewEntry, String title) {
-        SeriesBase seriesBase = model.getAnime() != null ? model.getAnime() : model.getManga();
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, seriesBase.getSeries_type());
+    static void createSeriesManage(Context context, @NonNull MediaList model, boolean isNewEntry, String title) {
+        MediaBase mediaBase = model.getAnime() != null ? model.getAnime() : model.getManga();
+        CustomSeriesManageBase seriesManageBase = buildManagerType(context, mediaBase.getSeries_type());
         seriesManageBase.setModel(model, isNewEntry);
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
@@ -140,23 +140,23 @@ final class SeriesDialogUtil extends DialogUtil {
 
         seriesManageBase.persistChanges();
 
-        WidgetPresenter<SeriesList> presenter = new WidgetPresenter<>(context);
+        WidgetPresenter<MediaList> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
         @KeyUtils.RequestMode int requestMode = getRequestType(seriesManageBase.getModel(), isNewEntry);
 
-        presenter.requestData(requestMode, context, new RetroCallback<SeriesList>() {
+        presenter.requestData(requestMode, context, new RetroCallback<MediaList>() {
             @Override
-            public void onResponse(@NonNull Call<SeriesList> call, @NonNull Response<SeriesList> response) {
+            public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
                 try {
-                    SeriesList responseBody;
+                    MediaList responseBody;
                     progressDialog.dismiss();
                     if(response.isSuccessful() && (responseBody = response.body()) != null) {
                         if(seriesManageBase.getModel().getAnime() != null)
                             responseBody.setAnime(seriesManageBase.getModel().getAnime());
                         else
                             responseBody.setManga(seriesManageBase.getModel().getManga());
-                        presenter.getDatabase().getBoxStore(SeriesList.class).put(responseBody);
+                        presenter.getDatabase().getBoxStore(MediaList.class).put(responseBody);
                         presenter.notifyAllListeners(new BaseConsumer<>(requestMode, responseBody), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
@@ -170,7 +170,7 @@ final class SeriesDialogUtil extends DialogUtil {
             }
 
             @Override
-            public void onFailure(@NonNull Call<SeriesList> call, @NonNull Throwable throwable) {
+            public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
                 throwable.printStackTrace();
                 try {
                     progressDialog.dismiss();
@@ -209,7 +209,7 @@ final class SeriesDialogUtil extends DialogUtil {
                 try {
                     progressDialog.dismiss();
                     if(response.isSuccessful()) {
-                        presenter.getDatabase().getBoxStore(SeriesList.class).remove(seriesManageBase.getModel());
+                        presenter.getDatabase().getBoxStore(MediaList.class).remove(seriesManageBase.getModel());
                         presenter.notifyAllListeners(new BaseConsumer<>(deleteType, seriesManageBase.getModel()), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
@@ -237,7 +237,7 @@ final class SeriesDialogUtil extends DialogUtil {
     /**
      * @return the request type for a given series entry
      */
-    private static @KeyUtils.RequestMode int getRequestType(SeriesList model, boolean isNewEntry) {
+    private static @KeyUtils.RequestMode int getRequestType(MediaList model, boolean isNewEntry) {
         if(model.getAnime() != null)
             return isNewEntry ? KeyUtils.ANIME_LIST_ADD_REQ : KeyUtils.ANIME_LIST_EDIT_REQ;
         else

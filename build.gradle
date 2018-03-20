@@ -13,7 +13,7 @@ buildscript {
         'retrofit'      : '2.3.0',
         'supportLibrary': '27.0.2',
         'firebase'      : '11.8.0',
-        'objectBox'     : '1.4.1',
+        'objectBox'     : '1.4.4',
         'architecture'  : '1.1.0',
         'emojify'       : '0.1.4.2'
     ]

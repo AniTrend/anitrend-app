@@ -1,0 +1,45 @@
+query FeedReply($page: Int, $perPage: Int, $id: Int, $activityId: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    activityReplies(id: $id, activityId: $activityId) {
+      ... on ActivityReply {
+        id
+        text
+        createdAt
+        user {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        likes {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+      }
+    }
+  }
+}

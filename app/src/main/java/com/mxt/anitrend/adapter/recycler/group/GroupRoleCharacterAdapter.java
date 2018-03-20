@@ -13,7 +13,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesCharacterBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -26,12 +26,12 @@ import butterknife.OnLongClick;
 
 /**
  * Created by max on 2018/01/27.
- * Character Staff Series Roles
+ * Character Staff Media Roles
  */
 
 public class GroupRoleCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
 
-    private List<SeriesBase> favouriteSeries;
+    private List<MediaBase> favouriteSeries;
 
     public GroupRoleCharacterAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
@@ -85,7 +85,7 @@ public class GroupRoleCharacterAdapter extends RecyclerViewAdapter<EntityGroup> 
          */
         @Override
         public void onBindViewHolder(EntityGroup entityGroup) {
-            SeriesBase model = (SeriesBase) entityGroup;
+            MediaBase model = (MediaBase) entityGroup;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(model));

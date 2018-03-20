@@ -1,0 +1,23 @@
+query StaffOverview($id: Int!, $staffSort: [StaffSort]) {
+  Staff(id: $id, sort: $staffSort) {
+    ... on Staff {
+      id
+      name {
+        ... on StaffName {
+          first
+          last
+          native
+        }
+      }
+      language
+      image {
+        ... on StaffImage {
+          large
+          medium
+        }
+      }
+      description(asHtml: true)
+      language
+    }
+  }
+}

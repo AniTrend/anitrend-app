@@ -12,7 +12,7 @@ import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Studio;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -101,8 +101,8 @@ public class SeriesSearchFragment extends FragmentBaseList<EntityGroup, List<Ent
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((Series)data).getId());
-                intent.putExtra(KeyUtils.arg_series_type, ((Series)data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_id, ((Media)data).getId());
+                intent.putExtra(KeyUtils.arg_series_type, ((Media)data).getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -120,10 +120,10 @@ public class SeriesSearchFragment extends FragmentBaseList<EntityGroup, List<Ent
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    if(TextUtils.isEmpty(((Series)data).getSeries_type()))
-                        ((Series)data).setSeries_type(KeyUtils.SeriesTypes[seriesType]);
+                    if(TextUtils.isEmpty(((Media)data).getSeries_type()))
+                        ((Media)data).setSeries_type(KeyUtils.SeriesTypes[seriesType]);
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel(((Series)data)).build(getActivity());
+                            .setModel(((Media)data)).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

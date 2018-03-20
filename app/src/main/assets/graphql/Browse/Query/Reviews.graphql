@@ -1,0 +1,74 @@
+query Reviews($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    reviews(mediaId: $mediaId, mediaType: $type, sort: $sort) {
+      ... on Review {
+        id
+        summary
+        mediaType
+        body(asHtml: true)
+        rating
+        ratingAmount
+        userRating
+        score
+        private
+        createdAt
+        user {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        media {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            type
+            status
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

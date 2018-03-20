@@ -17,7 +17,7 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by max on 2017/12/19.
  */
 
-public abstract class FragmentUserListBase extends FragmentBase<SeriesList, ProfilePresenter, User> implements RecyclerLoadListener,
+public abstract class FragmentUserListBase extends FragmentBase<MediaList, ProfilePresenter, User> implements RecyclerLoadListener,
         CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
@@ -47,11 +47,11 @@ public abstract class FragmentUserListBase extends FragmentBase<SeriesList, Prof
     protected @BindView(R.id.stateLayout)
     ProgressLayout stateLayout;
 
-    protected List<SeriesList> model;
+    protected List<MediaList> model;
     protected String query;
     protected boolean isLimit;
 
-    protected RecyclerViewAdapter<SeriesList> mAdapter;
+    protected RecyclerViewAdapter<MediaList> mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
 
     private final View.OnClickListener stateLayoutOnClick = view -> {
@@ -360,7 +360,7 @@ public abstract class FragmentUserListBase extends FragmentBase<SeriesList, Prof
      * @param data   the model that at the click index
      */
     @Override
-    public abstract void onItemClick(View target, SeriesList data);
+    public abstract void onItemClick(View target, MediaList data);
 
     /**
      * When the target view from {@link View.OnLongClickListener}
@@ -370,6 +370,6 @@ public abstract class FragmentUserListBase extends FragmentBase<SeriesList, Prof
      * @param data   the model that at the long click index
      */
     @Override
-    public abstract void onItemLongClick(View target, SeriesList data);
+    public abstract void onItemLongClick(View target, MediaList data);
 
 }

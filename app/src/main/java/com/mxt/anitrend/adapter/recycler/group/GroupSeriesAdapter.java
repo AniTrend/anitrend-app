@@ -14,7 +14,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -31,7 +31,7 @@ import butterknife.OnLongClick;
 
 public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
 
-    private List<Series> favouriteSeries;
+    private List<Media> favouriteSeries;
 
     public GroupSeriesAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
@@ -93,7 +93,7 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
          */
         @Override
         public void onBindViewHolder(EntityGroup entityGroup) {
-            Series model = (Series) entityGroup;
+            Media model = (Media) entityGroup;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(model));

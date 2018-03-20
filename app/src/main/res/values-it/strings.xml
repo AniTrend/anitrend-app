@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml versionBase="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Discover</string>
     <string name="nav_header_manage">Manage</string>
@@ -444,7 +444,7 @@
         <item>360</item>
     </string-array>
 
-    <!--Another long message using a bit of html the p tags represent new paragraphs-->
+    <!--Another lmessageBasesage using a bit of html the p tags represent new paragraphs-->
     <string name="login_notice">
         <![CDATA[
             <p>

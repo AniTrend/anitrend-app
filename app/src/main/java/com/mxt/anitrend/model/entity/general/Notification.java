@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 
 import java.io.Serializable;
@@ -20,7 +20,7 @@ public class Notification extends NotificationBase implements Parcelable {
     private Object meta_value;
     private UserBase user;
     private Comment comment;
-    private SeriesBase series;
+    private MediaBase series;
 
 
     protected Notification(Parcel in) {
@@ -28,7 +28,7 @@ public class Notification extends NotificationBase implements Parcelable {
         meta_value = in.readSerializable();
         user = in.readParcelable(UserBase.class.getClassLoader());
         comment = in.readParcelable(Comment.class.getClassLoader());
-        series = in.readParcelable(SeriesBase.class.getClassLoader());
+        series = in.readParcelable(MediaBase.class.getClassLoader());
     }
 
     public static final Creator<Notification> CREATOR = new Creator<Notification>() {
@@ -51,7 +51,7 @@ public class Notification extends NotificationBase implements Parcelable {
         return comment;
     }
 
-    public SeriesBase getSeries() {
+    public MediaBase getSeries() {
         return series;
     }
 

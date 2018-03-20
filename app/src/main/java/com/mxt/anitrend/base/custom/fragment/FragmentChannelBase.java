@@ -20,7 +20,7 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.crunchy.Channel;
 import com.mxt.anitrend.model.entity.crunchy.Episode;
 import com.mxt.anitrend.model.entity.crunchy.Rss;
@@ -320,7 +320,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, BasePres
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Series param) {
+    public void onEventPublished(Media param) {
         if(isAlive() && externalLinks == null) {
             externalLinks = param.getExternal_links();
             if(model == null && externalLinks != null)

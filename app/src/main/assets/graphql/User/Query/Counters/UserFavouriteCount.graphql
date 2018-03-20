@@ -1,0 +1,44 @@
+query UserFavouriteCount($id: Int, $name: String) {
+  User(id: $id, name: $name) {
+    id
+    favourites {
+      ... on Favourites {
+        anime {
+          pageInfo {
+            ... on PageInfo {
+              total
+            }
+          }
+        }
+        manga {
+          pageInfo {
+            ... on PageInfo {
+              total
+            }
+          }
+        }
+        characters {
+          pageInfo {
+            ... on PageInfo {
+              total
+            }
+          }
+        }
+        staff {
+          pageInfo {
+            ... on PageInfo {
+              total
+            }
+          }
+        }
+        studios {
+          pageInfo {
+            ... on PageInfo {
+              total
+            }
+          }
+        }
+      }
+    }
+  }
+}

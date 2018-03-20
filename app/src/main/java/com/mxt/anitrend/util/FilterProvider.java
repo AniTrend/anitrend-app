@@ -6,12 +6,12 @@ import com.annimon.stream.Stream;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.model.entity.anilist.Series;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.Studio;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.general.FeedReview;
-import com.mxt.anitrend.model.entity.general.SeriesList;
+import com.mxt.anitrend.model.entity.general.MediaList;
 import com.mxt.anitrend.model.entity.general.SeriesList_;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 
@@ -100,7 +100,7 @@ public final class FilterProvider {
      * <br/>
      * @param model the response body from a request or any object matching the signature of this method
      */
-    public static List<Series> getSeriesFilter(List<Series> model) {
+    public static List<Media> getSeriesFilter(List<Media> model) {
         if(model != null)
             return Stream.of(model).filter(value -> !value.isAdult()).toList();
         return null;
@@ -113,15 +113,15 @@ public final class FilterProvider {
      */
     public static List<EntityGroup> getSeriesGroupFilter(List<EntityGroup> model) {
         if(model != null)
-            return Stream.of(model).filter(value -> value.getContentType() != KeyUtils.RECYCLER_TYPE_HEADER && !((Series)value).isAdult()).toList();
+            return Stream.of(model).filter(value -> value.getContentType() != KeyUtils.RECYCLER_TYPE_HEADER && !((Media)value).isAdult()).toList();
         return null;
     }
 
 
 
-    public static List<Series> getRecommendedFilter(List<Series> model, DatabaseHelper helper) {
+    public static List<Media> getRecommendedFilter(List<Media> model, DatabaseHelper helper) {
         if(model != null)
-            return Stream.of(model).filter(value -> helper.getBoxStore(SeriesList.class)
+            return Stream.of(model).filter(value -> helper.getBoxStore(MediaList.class)
                             .query().equal(SeriesList_.series_id, value.getId())
                             .build().count() < 1).toList();
         return null;
@@ -132,7 +132,7 @@ public final class FilterProvider {
      * <br/>
      * @param model the response body from a request or any object matching the signature of this method
      */
-    public static List<SeriesList> getListItemFilter(final boolean owner, List<SeriesList> model) {
+    public static List<MediaList> getListItemFilter(final boolean owner, List<MediaList> model) {
         if(model != null)
             return Stream.of(model)
                     .filter(value -> {

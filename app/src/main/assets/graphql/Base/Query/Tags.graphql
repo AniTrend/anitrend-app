@@ -1,0 +1,13 @@
+query Tag {
+  MediaTagCollection {
+    ... on MediaTag {
+      id
+      name
+      description
+      category
+      rank
+      isGeneralSpoiler
+      isAdult
+    }
+  }
+}

@@ -1,0 +1,60 @@
+query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    activities(type: MESSAGE, sort: ID_DESC, messengerId: $messengerId, userId: $userId) {
+      ... on MessageActivity {
+        id
+        messageBase(asHtml: true)
+        createdAt
+        type
+        messenger {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        recipient {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        replyCount
+        likes {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+      }
+    }
+  }
+}

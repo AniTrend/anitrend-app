@@ -16,7 +16,7 @@ import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.UserActivity;
-import com.mxt.anitrend.model.entity.base.SeriesBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -115,7 +115,7 @@ public class FeedFragment extends FragmentBaseList<UserActivity, List<UserActivi
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                SeriesBase series = data.getSeries();
+                MediaBase series = data.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
                 intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());

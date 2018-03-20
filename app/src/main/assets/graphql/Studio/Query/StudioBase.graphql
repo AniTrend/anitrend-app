@@ -1,0 +1,10 @@
+query StudioBase($id: Int!, $studioSort: [StudioSort]) {
+  Studio(id: $id, sort: $studioSort) {
+    ... on Studio {
+      id
+      name
+      siteUrl
+      isFavourite
+    }
+  }
+}

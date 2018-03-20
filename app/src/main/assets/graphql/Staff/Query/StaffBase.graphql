@@ -1,0 +1,16 @@
+query StaffBase($id: Int!, $staffSort: [StaffSort]) {
+  Staff(id: $id, sort: $staffSort) {
+    ... on Staff {
+      id
+      siteUrl
+      name {
+        ... on StaffName {
+          first
+          last
+          native
+        }
+      }
+      isFavourite
+    }
+  }
+}
