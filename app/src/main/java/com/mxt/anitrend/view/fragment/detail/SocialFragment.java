@@ -35,7 +35,8 @@ import java.util.List;
 public class SocialFragment extends FragmentBaseList<FeedList, List<FeedList>, BasePresenter> implements BaseConsumer.onRequestModelChange<FeedList>, PublisherListener<Media> {
 
     private @KeyUtils.ActivityType int requestType;
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
     private long seriesId;
 
     private Media series;

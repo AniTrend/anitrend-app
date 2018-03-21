@@ -126,7 +126,7 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     @Override
     public void onItemLongClick(View target, Giphy data) {
         if(getActivity() != null) {
-            String index = KeyUtils.GiphyTypes[KeyUtils.GIPHY_LARGE_DOWN_SAMPLE];
+            String index = KeyUtils.GIPHY_LARGE_DOWN_SAMPLE;
             Gif giphySample = data.getImages().get(index);
             Intent intent = new Intent(getActivity(), GiphyPreviewActivity.class);
             intent.putExtra(KeyUtils.arg_model, giphySample.getUrl());

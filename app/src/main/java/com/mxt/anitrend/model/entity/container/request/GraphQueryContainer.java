@@ -50,8 +50,9 @@ public class GraphQueryContainer implements Parcelable {
         return variables;
     }
 
-    public void setQuery(String query) {
+    public GraphQueryContainer setQuery(String query) {
         this.query = query;
+        return this;
     }
 
     public GraphQueryContainer setVariable(String key, Object value) {

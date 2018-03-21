@@ -47,4 +47,9 @@ public class ImageBase implements Parcelable {
     public String getMedium() {
         return medium;
     }
+
+    @Override
+    public String toString() {
+        return large;
+    }
 }

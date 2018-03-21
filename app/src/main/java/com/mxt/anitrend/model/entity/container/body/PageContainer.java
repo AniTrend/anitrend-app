@@ -20,4 +20,9 @@ public class PageContainer<T> extends Container {
     public List<T> getPageData() {
         return pageData;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return pageData != null && pageData.isEmpty();
+    }
 }

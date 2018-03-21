@@ -16,11 +16,11 @@ public class Review implements Parcelable {
 
     private long id;
     private String summary;
-    private String mediaType;
+    private @KeyUtils.MediaType String mediaType;
     private String body;
     private int rating;
     private int ratingAmount;
-    private String userRating;
+    private @KeyUtils.ReviewRating String userRating;
     private int score;
     @SerializedName("private")
     private boolean isPrivate;
@@ -84,7 +84,7 @@ public class Review implements Parcelable {
         return summary;
     }
 
-    public String getMediaType() {
+    public @KeyUtils.MediaType String getMediaType() {
         return mediaType;
     }
 
@@ -100,7 +100,7 @@ public class Review implements Parcelable {
         return ratingAmount;
     }
 
-    public String getUserRating() {
+    public @KeyUtils.ReviewRating String getUserRating() {
         return userRating;
     }
 

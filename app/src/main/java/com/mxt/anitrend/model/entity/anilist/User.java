@@ -3,12 +3,8 @@ package com.mxt.anitrend.model.entity.anilist;
 import android.os.Parcel;
 
 import com.mxt.anitrend.data.converter.UserStatsConverter;
-import com.mxt.anitrend.data.converter.list.SeriesListTrackingConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.UserOptions;
 import com.mxt.anitrend.model.entity.base.UserBase;
-
-import java.util.List;
-import java.util.Map;
 
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
@@ -23,7 +19,6 @@ public class User extends UserBase {
     private UserOptions options;
     @Convert(converter = UserStatsConverter.class, dbType = String.class)
     private UserStats stats;
-    private Favourite favourites;
     private int unreadNotificationCount;
 
     public User() {
@@ -72,10 +67,6 @@ public class User extends UserBase {
 
     public void setStats(UserStats stats) {
         this.stats = stats;
-    }
-
-    public Favourite getFavourites() {
-        return favourites;
     }
 
     public UserOptions getOptions() {

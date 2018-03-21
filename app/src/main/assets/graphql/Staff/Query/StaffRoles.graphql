@@ -1,4 +1,5 @@
-query StaffRoles($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort], $seriesSort: [MediaSort], $seriesType: MediaType) {
+query StaffRoles($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort], 
+	$seriesSort: [MediaSort], $seriesType: MediaType) {
   Staff(id: $id, sort: $staffSort) {
     staffMedia(page: $page, perPage: $perPage, sort: $seriesSort, type: $seriesType) {
       pageInfo {
@@ -23,7 +24,10 @@ query StaffRoles($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort], 
               }
             }
             type
+            season
             status
+            meanScore
+            averageScore
             startDate {
               ... on FuzzyDate {
                 day

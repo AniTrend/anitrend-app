@@ -14,7 +14,7 @@ public interface KeyUtils {
     float AspectRatio = 1.37f;
     float WideAspectRatio = 0.95f;
     float PEEK_HEIGHT = 200f;
-    int AIRING_LIMIT = 22, PAGING_LIMIT = 24, GLIDE_REQUEST_TIMEOUT = 10000;
+    int PAGING_LIMIT = 21, GLIDE_REQUEST_TIMEOUT = 10000;
 
     /** Notification Channels */
     String CHANNEL_ID = "anitrend_app";
@@ -22,7 +22,8 @@ public interface KeyUtils {
 
     /** Base Application Args */
     String arg_id = "arg_id";
-    String arg_page = "arg_page";
+    String arg_page = "page";
+    String arg_per_page = "perPage";
     String arg_text = "arg_text";
     String arg_feed = "arg_feed";
     String arg_title = "arg_title";
@@ -75,13 +76,6 @@ public interface KeyUtils {
     String arg_series_tag_exclude = "arg_series_tag_exclude";
     String arg_series_genres_exclude = "arg_series_genres_exclude";
 
-    /** Sort Types */
-    String key_sort_title = "title_romaji";
-    String key_sort_score = "score";
-    String key_sort_popularity = "popularity";
-    String key_sort_start_date = "start_date";
-    String key_sort_end_date = "end_date";
-
     /** Media List Keys */
     String arg_list_status = "arg_list_status";
     String arg_list_score = "arg_list_score";
@@ -98,30 +92,19 @@ public interface KeyUtils {
     String arg_list_re_read = "arg_list_re_read";
     String arg_list_volumes = "arg_list_volumes";
 
-    /** keys to use for series list fragment */
-    String[] AnimeListKeys = {"watching","plan_to_watch","completed","on_hold","dropped"};
-    String[] MangaListKeys = {"reading","plan_to_read","completed","on_hold","dropped"};
-
-
-    /** Alerter Durations */
-    long DURATION_SHORT = 2000L, DURATION_MEDIUM = 3500L, DURATION_LONG = 6500L;
-
-    @IntDef({DURATION_SHORT, DURATION_MEDIUM, DURATION_LONG})
-    @interface AlerterDuration {}
-
 
     /** Request types */
     int GENRE_LIST_REQ = 1, TAG_LIST_REQ = 2, EPISODE_LATEST_REQ = 3, EPISODE_POPULAR_REQ = 4, EPISODE_FEED_REQ = 5,
-        UPDATE_CHECKER_REQ = 6, GIPHY_TRENDING_REQ = 7, GIPHY_SEARCH_REQ = 8;
+            UPDATE_CHECKER_REQ = 6, GIPHY_TRENDING_REQ = 7, GIPHY_SEARCH_REQ = 8,
+
+    MEDIA_BROWSE_REQ = 10, MEDIA_LIST_REQ = 11, MEDIA_LIST_BROWSE_REQ = 12,
+            MEDIA_LIST_SAVE = 13, MEDIA_LIST_UPDATE = 14, MEDIA_LIST_DELETE = 15 ;
 
     @IntDef({GENRE_LIST_REQ, TAG_LIST_REQ, EPISODE_LATEST_REQ, EPISODE_POPULAR_REQ, EPISODE_FEED_REQ,
-            UPDATE_CHECKER_REQ, GIPHY_TRENDING_REQ, GIPHY_SEARCH_REQ
+            UPDATE_CHECKER_REQ, GIPHY_TRENDING_REQ, GIPHY_SEARCH_REQ, MEDIA_BROWSE_REQ,
+            MEDIA_LIST_REQ, MEDIA_LIST_BROWSE_REQ, MEDIA_LIST_SAVE, MEDIA_LIST_UPDATE, MEDIA_LIST_DELETE
     })
     @interface RequestMode {}
-
-    // Unaffiliated values
-    String[] AnimeMediaTypes = {null, "Tv","Tv Short","Movie","Special","OVA","ONA"};
-    String[] MangaMediaTypes = {null, "Manga","Novel","One Shot","Doujin","Manhua","Manhwa"};
 
     // Deep link types
     String DEEP_LINK_USER = "user", DEEP_LINK_MANGA = "manga", DEEP_LINK_ANIME = "anime",
@@ -149,124 +132,156 @@ public interface KeyUtils {
     @interface HubType {}
 
     // Token grant types
-    int AUTHENTICATION_TYPE = 0, AUTHENTICATION_CODE = 1, REFRESH_TYPE = 2;
-
-    String[] GrantTypes = {"client_credentials", "authorization_code", "refresh_token"};
-    @IntDef({AUTHENTICATION_TYPE, AUTHENTICATION_CODE, REFRESH_TYPE})
+    String AUTHENTICATION_TYPE = "client_credentials", AUTHENTICATION_CODE = "authorization_code", REFRESH_TYPE = "refresh_token";
+    @StringDef({AUTHENTICATION_TYPE, AUTHENTICATION_CODE, REFRESH_TYPE})
     @interface GrantType {}
 
-    // Media Types
-    int ANIME = 0, MANGA = 1;
+    // Language Title Preference
+    String ROMAJI = "ROMAJI", ENGLISH = "ENGLISH", NATIVE = "NATIVE",
+            ROMAJI_STYLISED = "ROMAJI_STYLISED", ENGLISH_STYLISED = "ENGLISH_STYLISED",
+            NATIVE_STYLISED = "NATIVE_STYLISED";
 
-    String[] SeriesTypes = {"anime", "manga"};
-    @IntDef({ANIME, MANGA})
-    @interface SeriesType {}
-
-    // Season Types
-    int WINTER = 0, SPRING = 1, SUMMER = 2, FALL = 3;
-
-    String[] SeasonTitles = {"winter","spring","summer","fall"};
-    @IntDef({WINTER, SPRING, SUMMER, FALL})
-    @interface SeasonType {}
+    @StringDef({ROMAJI, ENGLISH, NATIVE, ROMAJI_STYLISED, ENGLISH_STYLISED, NATIVE_STYLISED})
+    @interface UserLanguageTitle {}
 
 
-    // Activity types
-    int PROGRESS = 0, STATUS = 1, PUBIC_STATUS = 2, MESSAGE = 3, LIST = 4;
+    // ------------------------------------------------------------------------------------
+    // Sorting & Order Type Attributes
+    // ------------------------------------------------------------------------------------
 
-    String[] ActivityTypes = { "series", "text", "public-status-replies", "message", "list"};
-    @IntDef({PROGRESS, STATUS, PUBIC_STATUS, MESSAGE, LIST})
-    @interface ActivityType {}
-
-    // Review Types
-    int LATEST = 0, POPULAR = 1, NEED_LOVE = 2, CONTROVERSIAL = 3;
-
-    String[] ReviewTypes = { "latest", "popular", "love", "controversial" };
-    @IntDef({LATEST,POPULAR,NEED_LOVE,CONTROVERSIAL})
-    @interface ReviewType {}
-
-    // Review Request Types
-    int SERIES_REVIEW_ANIME = 0, SERIES_REVIEW_MANGA = 1;
-
-    @IntDef({SERIES_REVIEW_ANIME, SERIES_REVIEW_MANGA})
-    @interface SeriesReviewType {}
-
-    // Review Status
-    int NO_RATING = 0, UP_VOTE = 1, DOWN_VOTE = 2;
-
-    @IntDef({NO_RATING, UP_VOTE, DOWN_VOTE})
-    @interface ReviewStatus {}
-
-    // Share series status types
-    int ALL_ITEMS = 0, CANCELLED = 4; String key_cancelled = "cancelled";
-
-    String key_finished_airing = "finished airing";
-    String key_currently_airing = "currently airing";
-    String key_not_yet_aired = "not yet aired";
-
-    // Anime status types
-    int FINISHED_AIRING = 1, CURRENTLY_AIRING = 2, NOT_YET_AIRED = 3;
-
-    String[] AnimeStatusTypes = {null,key_finished_airing,key_currently_airing,key_not_yet_aired,key_cancelled};
-    @IntDef({ALL_ITEMS, FINISHED_AIRING, CURRENTLY_AIRING, NOT_YET_AIRED, CANCELLED})
-    @interface AnimeStatusType {}
+    String ID = "ID", MEDIA_ID = "MEDIA_ID", SCORE = "SCORE", STATUS = "STATUS", SEARCH_MATCH = "SEARCH_MATCH", ROLE = "ROLE", LANGUAGE = "LANGUAGE";
 
 
-    // Manga status types
-    int FINISHED_PUBLISHING = 1, PUBLISHING = 2, NOT_YET_PUBLISHED = 3;
+    String ASC = "", DESC = "_DESC";
+    @StringDef({ASC, DESC})
+    @interface SortOrderType {}
 
-    String key_finished_publishing = "finished publishing";
-    String key_publishing = "publishing";
-    String key_not_yet_published = "not yet published";
-
-    String[] MangaStatusTypes = {null,key_finished_publishing,key_publishing,key_not_yet_published,key_cancelled};
-    @IntDef({ALL_ITEMS ,FINISHED_PUBLISHING, PUBLISHING, NOT_YET_PUBLISHED, CANCELLED})
-    @interface MangaStatusType {}
-
-
-    // Season sorting types
-    int TITLE = 0 ,SCORE = 1, POPULARITY = 2, START_DATE = 3, END_DATE = 4;
-
-    String[] SeriesSortTypes = { "title_romaji" ,"score", "popularity", "start_date" ,"end_date" };
-    @IntDef({TITLE ,SCORE, POPULARITY, START_DATE, END_DATE})
-    @interface SeriesSortType {}
+    String TITLE_ROMAJI = "TITLE_ROMAJI", TITLE_ENGLISH = "TITLE_ENGLISH", TITLE_NATIVE = "TITLE_NATIVE", TYPE = "TYPE",
+            FORMAT = "FORMAT", START_DATE = "START_DATE", END_DATE = "END_DATE", POPULARITY = "POPULARITY", TRENDING = "TRENDING",
+            EPISODES = "EPISODES", DURATION = "DURATION", CHAPTERS = "CHAPTERS", VOLUMES = "VOLUMES";
+    @StringDef({ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE,
+            SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES})
+    @interface MediaSort {}
 
 
-    // Order types
-    int ASC = 0, DESC = 1;
-
-    String[] OrderTypes = { "asc", "desc" };
-    @IntDef({ASC, DESC})
-    @interface OrderType {}
+    String PROGRESS = "PROGRESS",PROGRESS_VOLUMES = "PROGRESS_VOLUMES", REPEAT = "REPEAT", PRIORITY = "PRIORITY", STARTED_ON = "STARTED_ON",
+            FINISHED_ON = "FINISHED_ON", ADDED_TIME = "ADDED_TIME", UPDATED_TIME = "UPDATED_TIME";
+    @StringDef({MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME})
+    @interface MediaListSort {}
 
 
-    // Shared int defs
-    int COMPLETED = 2, ON_HOLD = 3, DROPPED = 4;
-
-    // Anime Status
-    int PLAN_TO_WATCH = 1,  WATCHING= 0;
-
-    String[] UserAnimeStatus = {"watching","plan to watch","completed","on-hold","dropped"};
-    @IntDef({PLAN_TO_WATCH, WATCHING, COMPLETED, ON_HOLD, DROPPED})
-    @interface UserAnimeStatusKey {}
+    String RATING = "RATING", CREATED_AT = "CREATED_AT", UPDATED_AT = "UPDATED_AT";
+    @StringDef({ID, SCORE, RATING, CREATED_AT, UPDATED_AT})
+    @interface ReviewSort {}
 
 
-    // Manga Status
-    int PLAN_TO_READ = 1, READING = 0;
-
-    String[] UserMangaStatus = {"reading","plan to read","completed","on-hold","dropped"};
-    @IntDef({PLAN_TO_READ, READING, COMPLETED, ON_HOLD, DROPPED})
-    @interface UserMangaStatusKey {}
-
-    // User List Keys
-    int KEY_ON_HOLD = 0, KEY_PLAN_TO_READ = 1, KEY_DROPPED = 2, KEY_COMPLETED = 3,
-            KEY_READING = 4, KEY_WATCHING = 5, KEY_PLAN_TO_WATCH = 6;
-
-    String[] UserListKeys = {"on_hold", "plan_to_read", "dropped", "completed", "reading", "watching", "plan_to_watch"};
-    @IntDef({KEY_ON_HOLD, KEY_PLAN_TO_READ, KEY_DROPPED, KEY_COMPLETED, KEY_READING, KEY_WATCHING, KEY_PLAN_TO_WATCH})
-    @interface UserListType {}
+    String TIME = "TIME", EPISODE = "EPISODE";
+    @StringDef({ID, MEDIA_ID, TIME, EPISODE})
+    @interface AiringSort {}
 
 
-    // Application shortcuts
+    @StringDef({ID, ROLE, SEARCH_MATCH})
+    @interface CharacterSort {}
+
+
+    String[] SortOrderTypes = {ASC, DESC};
+    String[] MediaSortTypes = {ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES};
+    String[] MediaListSortTypes = {MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME};
+    String[] ReviewSortTypes = {ID, SCORE, RATING, CREATED_AT, UPDATED_AT};
+    String[] AiringSortTypes = {ID, MEDIA_ID, TIME, EPISODE};
+    String[] CharacterSortTypes = {ID, ROLE, SEARCH_MATCH};
+
+    // ------------------------------------------------------------------------------------
+
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Media Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String ANIME = "ANIME", MANGA = "MANGA";
+    @StringDef({ANIME, MANGA})
+    @interface MediaType {}
+
+
+    String WINTER = "WINTER", SPRING = "SPRING", SUMMER = "SUMMER", FALL = "FALL";
+    @StringDef({WINTER, SPRING, SUMMER, FALL})
+    @interface MediaSeason {}
+
+
+    String FINISHED = "FINISHED", RELEASING = "RELEASING",NOT_YET_RELEASED = "NOT_YET_RELEASED",
+            CANCELLED = "CANCELLED";
+    @StringDef({FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED})
+    @interface MediaStatus {}
+
+
+    String ORIGINAL = "ORIGINAL", LIGHT_NOVEL = "LIGHT_NOVEL",
+            VISUAL_NOVEL = "VISUAL_NOVEL", VIDEO_GAME = "VIDEO_GAME", OTHER = "OTHER";
+    @StringDef({ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER})
+    @interface MediaSource {}
+
+
+    String TV = "TV", TV_SHORT = "TV_SHORT", MOVIE = "MOVIE", SPECIAL = "SPECIAL",
+            OVA = "OVA", ONA = "ONA", MUSIC = "MUSIC", NOVEL = "NOVEL", ONE_SHOT = "ONE_SHOT";
+    @StringDef({TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT})
+    @interface MediaFormat {}
+
+
+    String[] MediaSeasons = {WINTER, SPRING, SUMMER, FALL};
+    String[] MediaSources = {null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER};
+    String[] MediaFormats = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT};
+
+    // ------------------------------------------------------------------------------------
+
+
+
+
+    // ------------------------------------------------------------------------------------
+    // MediaList Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String CURRENT = "CURRENT", PLANNING = "PLANNING", COMPLETED = "COMPLETED",
+            DROPPED = "DROPPED", PAUSED = "PAUSED", REPEATING = "REPEATING";
+    @StringDef({CURRENT, PLANNING, COMPLETED, DROPPED, PAUSED, REPEATING})
+    @interface MediaListStatus {}
+
+    // ------------------------------------------------------------------------------------
+
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Feed Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String TEXT = "TEXT", ANIME_LIST = "ANIME_LIST", MANGA_LIST = "MANGA_LIST",
+            MESSAGE = "MESSAGE", MEDIA_LIST = "MEDIA_LIST";
+    @StringDef({TEXT, ANIME_LIST, MANGA_LIST, MESSAGE, MEDIA_LIST})
+    @interface FeedType {}
+
+    // ------------------------------------------------------------------------------------
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Review Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String NO_VOTE = "NO_VOTE", UP_VOTE = "UP_VOTE", DOWN_VOTE = "DOWN_VOTE";
+    @StringDef({NO_VOTE, UP_VOTE, DOWN_VOTE})
+    @interface ReviewRating {}
+
+    // ------------------------------------------------------------------------------------
+
+
+    /** Alerter Durations */
+    long DURATION_SHORT = 2000L, DURATION_MEDIUM = 3500L, DURATION_LONG = 6500L;
+
+    @IntDef({DURATION_SHORT, DURATION_MEDIUM, DURATION_LONG})
+    @interface AlerterDuration {}
+
+
     int SHORTCUT_SEARCH = 0, SHORTCUT_NOTIFICATION = 1, SHORTCUT_AIRING = 2, SHORTCUT_TRENDING = 3, SHORTCUT_MY_ANIME = 4,
             SHORTCUT_MY_MANGA = 5, SHORTCUT_FEEDS = 6, SHORTCUT_PROFILE = 7;
 
@@ -277,30 +292,9 @@ public interface KeyUtils {
     @interface ShortcutType {}
 
 
-    // TitleBase preferences for series
-    int LANGUAGE_ROMAJI = 0, LANGUAGE_ENGLISH = 1, LANGUAGE_JAPANESE = 2;
-
-    String key_language_romaji = "romaji", key_language_english = "english", key_language_japanese = "japanese";
-
-    @IntDef({LANGUAGE_ROMAJI, LANGUAGE_ENGLISH, LANGUAGE_JAPANESE})
-    @interface LanguageType {}
-
-    // Notification Types
-    int NOTIFICATION_DIRECT_MESSAGE = 2, NOTIFICATION_REPLY_ACTIVITY = 3, NOTIFICATION_FOLLOW_ACTIVITY = 4, NOTIFICATION_MENTION_ACTIVITY = 5,
-    NOTIFICATION_COMMENT_FORUM = 7, NOTIFICATION_REPLY_FORUM = 8, NOTIFICATION_AIRING = 9, NOTIFICATION_LIKE_ACTIVITY = 10,
-    NOTIFICATION_LIKE_ACTIVITY_REPLY = 11, NOTIFICATION_LIKE_FORUM = 12, NOTIFICATION_LIKE_FORUM_COMMENT = 13;
-
-
-    @IntDef({NOTIFICATION_DIRECT_MESSAGE, NOTIFICATION_REPLY_ACTIVITY, NOTIFICATION_FOLLOW_ACTIVITY, NOTIFICATION_MENTION_ACTIVITY,
-            NOTIFICATION_COMMENT_FORUM, NOTIFICATION_REPLY_FORUM, NOTIFICATION_AIRING, NOTIFICATION_LIKE_ACTIVITY,
-            NOTIFICATION_LIKE_ACTIVITY_REPLY, NOTIFICATION_LIKE_FORUM, NOTIFICATION_LIKE_FORUM_COMMENT})
-    @interface NotificationType {}
-
-    // Giphy types
-    int GIPHY_LARGE_DOWN_SAMPLE = 0, GIPHY_ORIGINAL_STILL = 1, GIPHY_ORIGINAL_ANIMATED = 2, GIPHY_PREVIEW = 3;
-
-    String[] GiphyTypes = { "downsized_large", "original_still", "original", "preview_gif" };
-    @IntDef({GIPHY_LARGE_DOWN_SAMPLE, GIPHY_ORIGINAL_STILL, GIPHY_ORIGINAL_ANIMATED, GIPHY_PREVIEW})
+    String GIPHY_LARGE_DOWN_SAMPLE = "downsized_large", GIPHY_ORIGINAL_STILL = "original_still",
+            GIPHY_ORIGINAL_ANIMATED = "original", GIPHY_PREVIEW = "preview_gif";
+    @StringDef({GIPHY_LARGE_DOWN_SAMPLE, GIPHY_ORIGINAL_STILL, GIPHY_ORIGINAL_ANIMATED, GIPHY_PREVIEW})
     @interface GiphyType {}
 
 
@@ -328,14 +322,4 @@ public interface KeyUtils {
             KEY_STAFF_TIP, KEY_STATUS_POST_TIP, KEY_USER_PROFILE_TIP, KEY_REVIEW_TYPE_TIP, KEY_LOGIN_TIP, KEY_GIPHY_TIP,
             KEY_POST_TYPE_TIP})
     @interface TapTargetType {}
-
-
-    String ROMAJI = "ROMAJI", ENGLISH = "ENGLISH", NATIVE = "NATIVE",
-            ROMAJI_STYLISED = "ROMAJI_STYLISED",
-            ENGLISH_STYLISED = "ENGLISH_STYLISED",
-            NATIVE_STYLISED = "NATIVE_STYLISED";
-
-    @StringDef({ROMAJI, ENGLISH, NATIVE, ROMAJI_STYLISED,
-            ENGLISH_STYLISED, NATIVE_STYLISED})
-    @interface UserLanguageTitle {}
 }

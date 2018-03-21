@@ -1,4 +1,4 @@
-query CharacterSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [CharacterSort]) {
+query CharacterSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query CharacterSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sor
         hasNextPage
       }
     }
-    characters(id: $id, search: $search, sort: $sort) {
+    characters(id: $id, search: $search, sort: SEARCH_MATCH) {
       ... on Character {
         id
         name {

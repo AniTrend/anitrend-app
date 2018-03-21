@@ -9,24 +9,28 @@ import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle;
 import com.mxt.anitrend.model.entity.anilist.meta.TitleBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.util.KeyUtils;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
  * Created by Maxwell on 10/3/2016.
+ * Media base entity
  */
-@Entity
+
 public class MediaBase extends EntityGroup implements Parcelable {
 
-    @Id(assignable = true)
     private long id;
     private MediaTitle title;
     private ImageBase coverImage;
     private String bannerImage;
-    private String type;
-    private String season;
-    private String status;
+    private @KeyUtils.MediaType String type;
+    private @KeyUtils.MediaSeason String season;
+    private @KeyUtils.MediaFormat String format;
+    private @KeyUtils.MediaStatus String status;
+    private int meanScore;
+    private int averageScore;
     private FuzzyDate startDate;
     private FuzzyDate endDate;
     private int episodes;
@@ -36,6 +40,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
     private boolean isFavourite;
     private AiringSchedule nextAiringEpisode;
 
+
     protected MediaBase(Parcel in) {
         id = in.readLong();
         title = in.readParcelable(MediaTitle.class.getClassLoader());
@@ -43,7 +48,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
         bannerImage = in.readString();
         type = in.readString();
         season = in.readString();
+        format = in.readString();
         status = in.readString();
+        meanScore = in.readInt();
+        averageScore = in.readInt();
         startDate = in.readParcelable(FuzzyDate.class.getClassLoader());
         endDate = in.readParcelable(FuzzyDate.class.getClassLoader());
         episodes = in.readInt();
@@ -62,7 +70,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
         dest.writeString(bannerImage);
         dest.writeString(type);
         dest.writeString(season);
+        dest.writeString(format);
         dest.writeString(status);
+        dest.writeInt(meanScore);
+        dest.writeInt(averageScore);
         dest.writeParcelable(startDate, flags);
         dest.writeParcelable(endDate, flags);
         dest.writeInt(episodes);
@@ -106,15 +117,19 @@ public class MediaBase extends EntityGroup implements Parcelable {
         return bannerImage;
     }
 
-    public String getType() {
+    public @KeyUtils.MediaType String getType() {
         return type;
     }
 
-    public String getSeason() {
+    public @KeyUtils.MediaSeason String getSeason() {
         return season;
     }
 
-    public String getStatus() {
+    public @KeyUtils.MediaFormat String getFormat() {
+        return format;
+    }
+
+    public @KeyUtils.MediaStatus String getStatus() {
         return status;
     }
 
@@ -148,6 +163,14 @@ public class MediaBase extends EntityGroup implements Parcelable {
 
     public AiringSchedule getNextAiringEpisode() {
         return nextAiringEpisode;
+    }
+
+    public int getMeanScore() {
+        return meanScore;
+    }
+
+    public int getAverageScore() {
+        return averageScore;
     }
 
     @Override

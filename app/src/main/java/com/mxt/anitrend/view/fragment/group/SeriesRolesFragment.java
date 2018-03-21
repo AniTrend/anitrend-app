@@ -31,7 +31,8 @@ import java.util.List;
 
 public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<EntityGroup>, SeriesPresenter> {
 
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
 
     public static SeriesRolesFragment newInstance(Bundle args) {
         SeriesRolesFragment fragment = new SeriesRolesFragment();

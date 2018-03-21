@@ -1,0 +1,52 @@
+query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $characterSort: [CharacterSort], $seriesSort: [MediaSort]) {
+  Character(id: $id, sort: $characterSort) {
+    media(page: $page, perPage: $perPage, sort: $seriesSort) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      nodes {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          type
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+        }
+      }
+    }
+  }
+}

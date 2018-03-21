@@ -42,7 +42,8 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
 
     private String userName;
     private int contentIndex;
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
 
     public static FragmentUserListBase newInstance(Bundle params, int position) {
         Bundle args = new Bundle(params);

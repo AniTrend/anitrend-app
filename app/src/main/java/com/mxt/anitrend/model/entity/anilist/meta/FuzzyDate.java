@@ -3,6 +3,8 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Locale;
+
 /**
  * Created by max on 2018/03/20.
  */
@@ -53,5 +55,10 @@ public class FuzzyDate implements Parcelable {
 
     public int getYear() {
         return year;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.getDefault(),"%d/%d/%d", year, month, day);
     }
 }

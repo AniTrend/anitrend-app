@@ -1,5 +1,5 @@
-query UserOverview($id: Int, $name: String) {
-  User(id: $id, name: $name) {
+query CurrentUser {
+  Viewer {
     ... on User {
       id
       name

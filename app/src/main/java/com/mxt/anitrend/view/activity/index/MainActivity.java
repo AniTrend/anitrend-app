@@ -72,7 +72,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Base main_menu activity to show case template
  */
 
-public class MainActivity extends ActivityBase<Void, MainPresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<Integer>,
+public class MainActivity extends ActivityBase<Void, MainPresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<User>,
         NavigationView.OnNavigationItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     protected @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -424,8 +424,8 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         User user;
         if((user = getPresenter().getDatabase().getCurrentUser()) != null) {
             mUserName.setText(user.getName());
-            mUserAvatar.setImageSrc(user.getAvatar());
-            HeaderImageView.setImage(mHeaderView, user.getImage_url_banner());
+            mUserAvatar.setImageSrc(user.getAvatar().getLarge());
+            HeaderImageView.setImage(mHeaderView, user.getBannerImage());
 
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(MainActivity.this, user);
@@ -505,7 +505,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<Integer> consumer) {
+    public void onModelChanged(BaseConsumer<User> consumer) {
         if(consumer.getRequestMode() == KeyUtils.USER_NOTIFICATION_COUNT)
             NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);

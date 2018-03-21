@@ -1,4 +1,4 @@
-query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: MediaType, $format: MediaFormat, $startDate: String, $endDate: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort]) {
+query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,37 +8,22 @@ query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: M
         hasNextPage
       }
     }
-    media(id: $id, search: $search, startDate_like: $startDate, endDate_like: $endDate, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, isAdult: $isAdult, sort: $sort) {
-      ... on Media {
+    staff(id: $id, search: $search, sort: SEARCH_MATCH) {
+      ... on Staff {
         id
-        title {
-          ... on MediaTitle {
-            english
-            romaji
+        name {
+          ... on StaffName {
+            first
+            last
             native
-            userPreferred
           }
         }
-        type
-        status
-        startDate {
-          ... on FuzzyDate {
-            day
-            month
-            year
-          }
-        }
-        episodes
-        chapters
-        volumes
-        isAdult
         isFavourite
-        nextAiringEpisode {
-          ... on AiringSchedule {
-            id
-            airingAt
-            timeUntilAiring
-            episode
+        language
+        image {
+          ... on StaffImage {
+            large
+            medium
           }
         }
       }

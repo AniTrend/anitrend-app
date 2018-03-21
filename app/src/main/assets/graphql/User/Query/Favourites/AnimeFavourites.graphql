@@ -22,7 +22,10 @@ query AnimeFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
               }
             }
             type
+            season
             status
+            meanScore
+            averageScore
             startDate {
               ... on FuzzyDate {
                 day

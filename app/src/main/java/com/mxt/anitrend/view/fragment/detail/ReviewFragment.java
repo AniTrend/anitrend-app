@@ -33,7 +33,8 @@ import java.util.List;
 
 public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BasePresenter> implements PublisherListener<Media> {
 
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
     private long seriesId;
 
     public static ReviewFragment newInstance(Bundle args) {

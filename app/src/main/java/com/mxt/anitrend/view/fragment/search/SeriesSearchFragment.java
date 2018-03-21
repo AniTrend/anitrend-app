@@ -36,9 +36,10 @@ public class SeriesSearchFragment extends FragmentBaseList<EntityGroup, List<Ent
 
     private long userId;
     private String searchQuery;
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
 
-    public static SeriesSearchFragment newInstance(Bundle bundle, @KeyUtils.SeriesType int seriesType) {
+    public static SeriesSearchFragment newInstance(Bundle bundle, @KeyUtils.MediaType int seriesType) {
         Bundle args = new Bundle(bundle);
         args.putInt(KeyUtils.arg_series_type, seriesType);
         SeriesSearchFragment fragment = new SeriesSearchFragment();

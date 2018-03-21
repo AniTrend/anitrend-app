@@ -1,15 +1,17 @@
-query SeriesListForId($id: Int, $mediaId: Int, $userName: String, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
+query MediaList($id: Int, $mediaId: Int, $userName: String, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
   MediaList(id: $id, userName: $userName, sort: $sort, type: $type, status: $status, mediaId: $mediaId) {
     ... on MediaList {
       id
       mediaId
       status
-      score
+      score(format: POINT_100)
       progress
       progressVolumes
       repeat
       priority
       private
+      hiddenFromStatusLists
+      customLists(asArray: true)
       notes
       startedAt {
         ... on FuzzyDate {
@@ -50,7 +52,10 @@ query SeriesListForId($id: Int, $mediaId: Int, $userName: String, $type: MediaTy
             }
           }
           type
+          season
           status
+          meanScore
+          averageScore
           startDate {
             ... on FuzzyDate {
               day

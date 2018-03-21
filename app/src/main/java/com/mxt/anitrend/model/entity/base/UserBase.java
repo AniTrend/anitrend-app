@@ -73,6 +73,10 @@ public class UserBase implements Parcelable {
         return avatar;
     }
 
+    public String getBannerImage() {
+        return bannerImage;
+    }
+
     public boolean isFollowing() {
         return isFollowing;
     }

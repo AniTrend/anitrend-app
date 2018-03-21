@@ -1,6 +1,5 @@
 query UserFavouriteCount($id: Int, $name: String) {
   User(id: $id, name: $name) {
-    id
     favourites {
       ... on Favourites {
         anime {

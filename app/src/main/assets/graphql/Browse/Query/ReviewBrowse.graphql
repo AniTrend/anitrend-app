@@ -1,4 +1,4 @@
-query SeriesLists($id: Int, $userName: String, $page: Int, $perPage: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
+query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort]) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,32 +8,18 @@ query SeriesLists($id: Int, $userName: String, $page: Int, $perPage: Int, $type:
         hasNextPage
       }
     }
-    mediaList(id: $id, userName: $userName, sort: $sort, type: $type, status: $status) {
-      ... on MediaList {
+    reviews(mediaId: $mediaId, mediaType: $type, sort: $sort) {
+      ... on Review {
         id
-        mediaId
-        status
+        summary
+        mediaType
+        body(asHtml: true)
+        rating
+        ratingAmount
+        userRating
         score
-        progress
-        progressVolumes
-        repeat
-        priority
         private
-        notes
-        startedAt {
-          ... on FuzzyDate {
-            year
-            month
-            day
-          }
-        }
-        completedAt {
-          ... on FuzzyDate {
-            year
-            month
-            day
-          }
-        }
+        createdAt
         user {
           ... on User {
             id
@@ -58,8 +44,18 @@ query SeriesLists($id: Int, $userName: String, $page: Int, $perPage: Int, $type:
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
+            bannerImage
             type
+            season
             status
+            meanScore
+            averageScore
             startDate {
               ... on FuzzyDate {
                 day

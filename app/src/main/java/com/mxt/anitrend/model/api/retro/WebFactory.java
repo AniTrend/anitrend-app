@@ -32,9 +32,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-import static com.mxt.anitrend.util.KeyUtils.AUTHENTICATION_CODE;
-import static com.mxt.anitrend.util.KeyUtils.GrantTypes;
-
 /**
  * Created by max on 2017/10/14.
  * Retrofit service factory
@@ -61,7 +58,7 @@ public class WebFactory {
 
     public final static String API_AUTH_LINK =
             String.format("%s/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
-                    BuildConfig.API_AUTH_LINK ,GrantTypes[AUTHENTICATION_CODE],
+                    BuildConfig.API_AUTH_LINK, KeyUtils.AUTHENTICATION_CODE,
                     BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI,
                     BuildConfig.RESPONSE_TYPE);
 
@@ -148,7 +145,7 @@ public class WebFactory {
     public static @Nullable WebToken requestCodeTokenSync(String code) {
         try {
             Call<WebToken> refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
-                        .create(AuthModel.class).getAuthRequest(GrantTypes[KeyUtils.AUTHENTICATION_CODE],
+                        .create(AuthModel.class).getAuthRequest(KeyUtils.AUTHENTICATION_CODE,
                                 BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.REDIRECT_URI, code);
 
             Response<WebToken> response = refreshTokenCall.execute();

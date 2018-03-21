@@ -4,13 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mxt.anitrend.data.converter.FuzzyDateConverter;
 import com.mxt.anitrend.data.converter.SeriesBaseConverter;
-import com.mxt.anitrend.data.converter.list.CustomListConverter;
+import com.mxt.anitrend.data.converter.StringListConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
 
@@ -31,9 +32,8 @@ public class MediaList extends EntityGroup implements Parcelable {
     private long id;
     @Index
     private long mediaId;
-    private String status;
-    private int score;
-    private int score_raw;
+    private @KeyUtils.MediaListStatus String status;
+    private float score;
     private int progress;
     private int progressVolumes;
     private int repeat;
@@ -42,9 +42,11 @@ public class MediaList extends EntityGroup implements Parcelable {
     @SerializedName("private")
     private boolean hidden;
     private boolean hiddenFromStatusLists;
-    @Convert(converter = CustomListConverter.class, dbType = String.class)
+    @Convert(converter = StringListConverter.class, dbType = String.class)
     private List<String> customLists;
+    @Convert(converter = FuzzyDateConverter.class, dbType = String.class)
     private FuzzyDate startedAt;
+    @Convert(converter = FuzzyDateConverter.class, dbType = String.class)
     private FuzzyDate completedAt;
     private long updatedAt;
     private long createdAt;
@@ -61,8 +63,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         id = in.readLong();
         mediaId = in.readLong();
         status = in.readString();
-        score = in.readInt();
-        score_raw = in.readInt();
+        score = in.readFloat();
         progress = in.readInt();
         progressVolumes = in.readInt();
         repeat = in.readInt();
@@ -84,8 +85,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         dest.writeLong(id);
         dest.writeLong(mediaId);
         dest.writeString(status);
-        dest.writeInt(score);
-        dest.writeInt(score_raw);
+        dest.writeFloat(score);
         dest.writeInt(progress);
         dest.writeInt(progressVolumes);
         dest.writeInt(repeat);
@@ -127,16 +127,12 @@ public class MediaList extends EntityGroup implements Parcelable {
         return mediaId;
     }
 
-    public String getStatus() {
+    public @KeyUtils.MediaListStatus String getStatus() {
         return status;
     }
 
-    public int getScore() {
+    public float getScore() {
         return score;
-    }
-
-    public int getScore_raw() {
-        return score_raw;
     }
 
     public int getProgress() {

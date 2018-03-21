@@ -19,11 +19,6 @@ import retrofit2.http.POST;
 public interface BrowseModel {
 
     @POST("/")
-    @GraphQuery("AiringBrowse")
-    @Headers("Content-Type: application/json")
-    Call<PageContainer<MediaBase>> getAiringBrowse(@Body GraphQueryContainer request);
-
-    @POST("/")
     @GraphQuery("MediaBrowse")
     @Headers("Content-Type: application/json")
     Call<PageContainer<MediaBase>> getMediaBrowse(@Body GraphQueryContainer request);

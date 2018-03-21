@@ -11,7 +11,7 @@ query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int) {
     activities(type: MESSAGE, sort: ID_DESC, messengerId: $messengerId, userId: $userId) {
       ... on MessageActivity {
         id
-        messageBase(asHtml: true)
+        message(asHtml: true)
         createdAt
         type
         messenger {

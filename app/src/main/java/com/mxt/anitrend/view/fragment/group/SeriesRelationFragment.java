@@ -32,7 +32,8 @@ import java.util.List;
 public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<EntityGroup>, SeriesPresenter> implements PublisherListener<Media> {
 
     private @KeyUtils.ActivityType int requestType;
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
     private long seriesId;
 
     public static SeriesRelationFragment newInstance(Bundle args) {

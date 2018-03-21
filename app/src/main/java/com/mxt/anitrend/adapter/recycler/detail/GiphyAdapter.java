@@ -68,10 +68,10 @@ public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
         public void onBindViewHolder(Giphy model) {
             HashMap<String, Gif> giphy = model.getImages();
             Gif giphyImage;
-            if(giphy.containsKey(KeyUtils.GiphyTypes[KeyUtils.GIPHY_PREVIEW]))
-                giphyImage = giphy.get(KeyUtils.GiphyTypes[KeyUtils.GIPHY_PREVIEW]);
+            if(giphy.containsKey(KeyUtils.GIPHY_PREVIEW))
+                giphyImage = giphy.get(KeyUtils.GIPHY_PREVIEW);
             else
-                giphyImage = giphy.get(KeyUtils.GiphyTypes[KeyUtils.GIPHY_ORIGINAL_ANIMATED]);
+                giphyImage = giphy.get(KeyUtils.GIPHY_ORIGINAL_ANIMATED);
             Glide.with(getContext()).load(giphyImage.getUrl())
                     .transition(DrawableTransitionOptions.withCrossFade(250))
                     .apply(RequestOptions.centerCropTransform())

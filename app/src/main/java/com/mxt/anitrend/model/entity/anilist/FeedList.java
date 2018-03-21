@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class FeedList implements Parcelable {
 
     private long id;
     private int replyCount;
-    private String type;
+    private @KeyUtils.FeedType String type;
     private String status;
     @SerializedName(value = "progress", alternate = {"message"})
     private String value;
@@ -86,7 +87,7 @@ public class FeedList implements Parcelable {
         return replyCount;
     }
 
-    public String getType() {
+    public @KeyUtils.FeedType String getType() {
         return type;
     }
 

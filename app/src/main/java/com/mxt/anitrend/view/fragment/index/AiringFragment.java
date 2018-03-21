@@ -10,10 +10,13 @@ import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
+import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -30,7 +33,7 @@ import java.util.List;
  * Created by max on 2017/11/03.
  */
 
-public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>, BasePresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
+public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, BasePresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
     public static AiringFragment newInstance() {
         return new AiringFragment();
@@ -45,7 +48,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setPresenter(new BasePresenter(getContext()));
-        isPager = false; mColumnSize = R.integer.grid_list_x2;
+        isPager = true; mColumnSize = R.integer.grid_list_x2;
         setViewModel(true);
     }
 
@@ -64,7 +67,10 @@ public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>,
      */
     @Override
     public void makeRequest() {
-        getViewModel().requestData(KeyUtils.BROWSE_AIRING_REQ, getContext());
+        GraphQueryContainer params = RequestHandler.getDefaultQueryContainer()
+                .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, params);
+        getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
     }
 
     /**
@@ -76,12 +82,11 @@ public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>,
      */
     @Override
     public void onItemClick(View target, MediaList data) {
-        String seriesType = KeyUtils.SeriesTypes[data.getAnime() != null ? KeyUtils.ANIME: KeyUtils.MANGA];
         switch (target.getId()) {
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_series_type, seriesType);
+                intent.putExtra(KeyUtils.arg_series_type, data.getMedia().getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -112,16 +117,14 @@ public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>,
     public void onModelChanged(BaseConsumer<MediaList> consumer) {
         Optional<IntPair<MediaList>> pairOptional;
         switch (consumer.getRequestMode()) {
-            case KeyUtils.ANIME_LIST_EDIT_REQ:
+            case KeyUtils.MEDIA_LIST_UPDATE:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
-                    MediaBase mediaBase = model.get(pairOptional.get().getFirst()).getAnime();
-                    consumer.getChangeModel().setAnime(mediaBase);
                     model.set(pairOptional.get().getFirst(), consumer.getChangeModel());
                     mAdapter.onItemChanged(consumer.getChangeModel(), pairOptional.get().getFirst());
                 }
                 break;
-            case KeyUtils.ANIME_LIST_DELETE_REQ:
+            case KeyUtils.MEDIA_LIST_DELETE:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     int index = pairOptional.get().getFirst();
@@ -129,6 +132,16 @@ public class AiringFragment extends FragmentBaseList<MediaList, List<MediaList>,
                     mAdapter.onItemRemoved(index);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onChanged(@Nullable PageContainer<MediaList> content) {
+        if(content != null) {
+            if(content.hasPageInfo())
+                pageInfo = content.getPageInfo();
+            if(!content.isEmpty())
+                onPostProcessed(content.getPageData());
         }
     }
 }

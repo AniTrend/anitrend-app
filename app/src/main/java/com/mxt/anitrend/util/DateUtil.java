@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -26,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 public class DateUtil {
 
     private static final String seasons[] = {
-            "Winter", "Winter",
-            "Spring", "Spring", "Spring",
-            "Summer", "Summer", "Summer",
-            "Fall", "Fall", "Fall",
-            "Winter"
+            KeyUtils.WINTER, KeyUtils.WINTER,
+            KeyUtils.SPRING, KeyUtils.SPRING, KeyUtils.SPRING,
+            KeyUtils.SUMMER, KeyUtils.SUMMER, KeyUtils.SUMMER,
+            KeyUtils.FALL, KeyUtils.FALL, KeyUtils.FALL,
+            KeyUtils.WINTER
     };
 
     /**
@@ -41,20 +42,20 @@ public class DateUtil {
      */
     public static String getSeason(){
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        return seasons[month].toLowerCase();
+        return seasons[month];
     }
 
-    public static String getSeriesSeason(long date){
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd",Locale.getDefault());
+    public static String getSeriesSeason(FuzzyDate fuzzyDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd",Locale.getDefault());
         try {
-            Date converted = format.parse(String.valueOf(date));
+            Date converted = format.parse(String.valueOf(fuzzyDate));
             Calendar calendar = new GregorianCalendar(Locale.getDefault());
             calendar.setTime(converted);
             return String.format(Locale.getDefault(),"%s %d", seasons[calendar.get(Calendar.MONTH)], calendar.get(Calendar.YEAR));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return String.valueOf(date);
+        return String.valueOf(fuzzyDate);
     }
 
     /**
@@ -64,8 +65,8 @@ public class DateUtil {
      * @return Season name
      */
     public static int getMenuSelect(){
-        String value = seasons[Calendar.getInstance().get(Calendar.MONTH)].toLowerCase();
-        return CompatUtil.getListFromArray(new String[]{"winter","spring","summer","fall"}).indexOf(value);
+        String value = seasons[Calendar.getInstance().get(Calendar.MONTH)];
+        return CompatUtil.getListFromArray(KeyUtils.MediaSeasons).indexOf(value);
     }
 
     /**
@@ -75,7 +76,7 @@ public class DateUtil {
      * @return Year
      */
     public static int getYear(){
-        if(Calendar.getInstance().get(Calendar.MONTH) >= 11 && getSeason().equals("winter"))
+        if(Calendar.getInstance().get(Calendar.MONTH) >= 11 && getSeason().equals(KeyUtils.WINTER))
             return Calendar.getInstance().get(Calendar.YEAR)+ 1;
         return Calendar.getInstance().get(Calendar.YEAR);
     }
@@ -86,7 +87,6 @@ public class DateUtil {
      *
      * @return A time format of dd MMM yyyy
      */
-    @Deprecated
     public static @Nullable String convertLongDate(long value) {
         try {
             if(value != 0)
@@ -98,65 +98,46 @@ public class DateUtil {
     }
 
     /**
-     * Converts date types of 20170218 from the API endpoint
-     * <br/>
-     *
-     * @return A date format of MMM dd yyyy
-     */
-    public static String convertDate(long date){
-        if(date == 0)
-            return "TBA";
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd",Locale.getDefault());
-        try {
-            Date converted = format.parse(String.valueOf(date));
-            return new SimpleDateFormat("dd MMM yyyy",Locale.getDefault()).format(converted);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return String.valueOf(date);
-    }
-
-    /**
-     * Converts any date format of yyyy-MM-dd'T'HH:mm:ss+HH:mm
-     * <br/>
-     *
-     * @return A date format of MMM dd yyyy
-     */
-    public static @Nullable String convertDateString(String value){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+HH:mm",Locale.getDefault());
-        try {
-            Date converted = format.parse(value);
-            return new SimpleDateFormat("MMM dd yyyy",Locale.getDefault()).format(converted);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
      * Only for fuzzy dates
      */
-    private static boolean isNewerDate(long date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy",Locale.getDefault());
-        Date strDate = sdf.parse(convertDate(date));
-        return strDate.getTime() > System.currentTimeMillis();
+    private static boolean isNewerDate(FuzzyDate fuzzyDate) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd",Locale.getDefault());
+        Date converted = format.parse(String.valueOf(fuzzyDate));
+        return converted.getTime() > System.currentTimeMillis();
     }
 
     /**
      * Returns appropriate title for ends or ended
      * <br/>
-     * @param time - unix time representations
+     * @param fuzzyDate - fuzzy date
      */
-    public static String getEndTitle(long time) {
-        if(time == 0)
+    public static String getEndTitle(FuzzyDate fuzzyDate) {
+        if(fuzzyDate == null)
             return "Ends";
 
         try {
-            return isNewerDate(time)? "Ends":"Ended";
+            return isNewerDate(fuzzyDate)? "Ends":"Ended";
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return "Ends";
+    }
+
+    /**
+     * Returns appropriate title for starts or started
+     * <br/>
+     * @param fuzzyDate - fuzzy date
+     */
+    public static String getStartTitle(FuzzyDate fuzzyDate){
+        if(fuzzyDate == null)
+            return "Starts";
+
+        try {
+            return isNewerDate(fuzzyDate)? "Starts":"Started";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "Starts";
     }
 
     /**
@@ -165,46 +146,21 @@ public class DateUtil {
      * @return string such as "EP 6 AiringSchedule in 2 hours"
      * @param airingSchedule - the current airingSchedule object of a series
      */
-    public static String getNextEpDate(@NonNull AiringSchedule airingSchedule){
+    public static @NonNull String getNextEpDate(@NonNull AiringSchedule airingSchedule){
         PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
         String from_now = prettyTime.format(new Date(System.currentTimeMillis()+(airingSchedule.getTimeUntilAiring() * 1000L)));
         return String.format(Locale.getDefault(), "EP %d: %s", airingSchedule.getEpisode(), from_now);
     }
 
     /**
-     * Returns appropriate title for starts or started
-     * <br/>
-     * @param time - unix time representations
-     */
-    public static String getStartTitle(long time){
-        if(time == 0)
-            return "Starts";
-
-        try {
-            return isNewerDate(time)? "Starts":"Started";
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "Starts";
-    }
-
-    /**
      * For dates that don't include a timezones,
      * the underlying method sets the time with a +7 offset
      * <br/>
-     * @param date - a date with the format of yyyy-MM-dd HH:mm:ss
+     * @param date - a unix timestamp
      */
-    public static @Nullable String getPrettyDateCustom(String date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
-        format.setTimeZone(TimeZone.getTimeZone("Japan"));
-        try {
-            Date converted = format.parse(date);
-            PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
-            return prettyTime.format(converted);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static @NonNull String getPrettyDateCustom(long date) {
+        PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
+        return prettyTime.format(new Date(date * 1000L));
     }
 
     /**
@@ -216,15 +172,6 @@ public class DateUtil {
         List<Integer> years = new ArrayList<>((getYear()+1)-start);
         for (int i = start; i <= getYear()+1; i++)
             years.add(i);
-        return years;
-    }
-
-    public static Integer[] getStringYearRanges() {
-        final int start = 1951; // default used to be 1995
-        Integer[] years = new Integer[(getYear()+2)-start];
-        for (int i = start; i <= getYear()+1; i++) {
-            years[(i - start)] = i;
-        }
         return years;
     }
 

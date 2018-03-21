@@ -1,4 +1,4 @@
-query SeriesRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
+query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     relations {
       pageInfo {
@@ -23,7 +23,10 @@ query SeriesRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
               }
             }
             type
+            season
             status
+            meanScore
+            averageScore
             startDate {
               ... on FuzzyDate {
                 day

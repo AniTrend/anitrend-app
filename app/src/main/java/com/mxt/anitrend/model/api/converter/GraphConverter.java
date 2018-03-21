@@ -11,6 +11,7 @@ import com.mxt.anitrend.model.entity.container.attribute.GraphError;
 import com.mxt.anitrend.model.entity.container.body.DataContainer;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -49,6 +50,10 @@ public final class GraphConverter extends Converter.Factory {
         return new GraphRequestConverter(methodAnnotations);
     }
 
+    /**
+     * GraphQL response body converter to unwrap nested object results,
+     * resulting in a smaller generic tree for requests
+     */
     private class GraphResponseConverter<T> implements Converter<ResponseBody, T> {
         private Type type;
 
@@ -84,6 +89,9 @@ public final class GraphConverter extends Converter.Factory {
         }
     }
 
+    /**
+     * GraphQL request body converter and injector, uses method annotation for a given retrofit call
+     */
     private class GraphRequestConverter implements Converter<GraphQueryContainer, RequestBody> {
         private Annotation[] methodAnnotations;
 
@@ -93,7 +101,8 @@ public final class GraphConverter extends Converter.Factory {
 
         @Override
         public RequestBody convert(@NonNull GraphQueryContainer container) {
-            container.setQuery(graphProcessor.getQuery(methodAnnotations));
+            container.setQuery(graphProcessor.getQuery(methodAnnotations))
+                    .setVariable(KeyUtils.arg_per_page, KeyUtils.PAGING_LIMIT);
             String queryJson = WebFactory.gson.toJson(container);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);
         }

@@ -43,7 +43,10 @@ query CharacterActors($id: Int!, $page: Int, $perPage: Int, $characterSort: [Cha
               }
             }
             type
+            season
             status
+            meanScore
+            averageScore
             startDate {
               ... on FuzzyDate {
                 day

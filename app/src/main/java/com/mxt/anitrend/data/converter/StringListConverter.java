@@ -1,4 +1,4 @@
-package com.mxt.anitrend.data.converter.list;
+package com.mxt.anitrend.data.converter;
 
 import com.google.gson.reflect.TypeToken;
 import com.mxt.anitrend.model.api.retro.WebFactory;
@@ -14,7 +14,7 @@ import io.objectbox.converter.PropertyConverter;
  * Entity Converter
  */
 
-public class CustomListConverter implements PropertyConverter<List<String>, String> {
+public class StringListConverter implements PropertyConverter<List<String>, String> {
 
     @Override
     public synchronized List<String> convertToEntityProperty(String databaseValue) {

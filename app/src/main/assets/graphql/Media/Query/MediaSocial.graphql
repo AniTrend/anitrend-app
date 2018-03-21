@@ -1,4 +1,4 @@
-query Reviews($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort]) {
+query MediaSocial($mediaId: Int!, $isFollowing: Boolean = false, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,19 +8,28 @@ query Reviews($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort:
         hasNextPage
       }
     }
-    reviews(mediaId: $mediaId, mediaType: $type, sort: $sort) {
-      ... on Review {
+    activities(mediaId: $mediaId, type: MEDIA_LIST, sort: ID_DESC, isFollowing: $isFollowing) {
+      ... on ListActivity {
         id
-        summary
-        mediaType
-        body(asHtml: true)
-        rating
-        ratingAmount
-        userRating
-        score
-        private
+        status
+        progress
         createdAt
+        type
         user {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        replyCount
+        likes {
           ... on User {
             id
             name
@@ -45,7 +54,10 @@ query Reviews($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort:
               }
             }
             type
+            season
             status
+            meanScore
+            averageScore
             startDate {
               ... on FuzzyDate {
                 day

@@ -23,7 +23,8 @@ import java.util.List;
 
 public class StaffFragment extends FragmentBaseListSingle<StaffBase, List<StaffBase>, SeriesPresenter, Media> {
 
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
     private long seriesId;
 
     public static StaffFragment newInstance(Bundle args) {

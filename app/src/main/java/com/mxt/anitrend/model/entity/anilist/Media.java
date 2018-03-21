@@ -5,36 +5,39 @@ import android.os.Parcel;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaStats;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
 
 /**
  * Created by Maxwell on 10/2/2016.
- * This include Anime or Manga
+ * Media extension
  */
+
 public class Media extends MediaBase {
 
     private String description;
+    private List<String> synonyms;
     private List<String> genres;
     private List<MediaTag> tags;
     private String trailer;
     private String hashtag;
-    private String source;
-    private int meanScore;
+    private @KeyUtils.MediaSource String source;
     private List<ExternalLink> externalLinks;
-    private NodeContainer<StudioBase> studios;
+    private ConnectionContainer<StudioBase> studios;
     private MediaStats stats;
     private List<MediaRank> rankings;
 
     protected Media(Parcel in) {
         super(in);
         description = in.readString();
+        synonyms = in.createStringArrayList();
         genres = in.createStringArrayList();
         tags = in.createTypedArrayList(MediaTag.CREATOR);
         trailer = in.readString();
         hashtag = in.readString();
         source = in.readString();
-        meanScore = in.readInt();
         externalLinks = in.createTypedArrayList(ExternalLink.CREATOR);
         stats = in.readParcelable(MediaStats.class.getClassLoader());
         rankings = in.createTypedArrayList(MediaRank.CREATOR);
@@ -44,12 +47,12 @@ public class Media extends MediaBase {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(description);
+        dest.writeStringList(synonyms);
         dest.writeStringList(genres);
         dest.writeTypedList(tags);
         dest.writeString(trailer);
         dest.writeString(hashtag);
         dest.writeString(source);
-        dest.writeInt(meanScore);
         dest.writeTypedList(externalLinks);
         dest.writeParcelable(stats, flags);
         dest.writeTypedList(rankings);
@@ -71,5 +74,49 @@ public class Media extends MediaBase {
             return new Media[size];
         }
     };
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public List<String> getSynonyms() {
+        return synonyms;
+    }
+
+    public List<MediaTag> getTags() {
+        return tags;
+    }
+
+    public String getTrailer() {
+        return trailer;
+    }
+
+    public String getHashtag() {
+        return hashtag;
+    }
+
+    public @KeyUtils.MediaSource String getSource() {
+        return source;
+    }
+
+    public List<ExternalLink> getExternalLinks() {
+        return externalLinks;
+    }
+
+    public ConnectionContainer<StudioBase> getStudios() {
+        return studios;
+    }
+
+    public MediaStats getStats() {
+        return stats;
+    }
+
+    public List<MediaRank> getRankings() {
+        return rankings;
+    }
 }
 

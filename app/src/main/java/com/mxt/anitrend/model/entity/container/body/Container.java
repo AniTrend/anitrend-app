@@ -13,4 +13,6 @@ abstract class Container {
     public boolean hasPageInfo() {
         return pageInfo != null;
     }
+
+    public abstract boolean isEmpty();
 }

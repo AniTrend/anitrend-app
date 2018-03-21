@@ -1,17 +1,6 @@
-query UserOverview($id: Int, $name: String) {
+query UserStats($id: Int, $name: String) {
   User(id: $id, name: $name) {
     ... on User {
-      id
-      name
-      avatar {
-        ... on UserAvatar {
-          large
-          medium
-        }
-      }
-      bannerImage
-      about(asHtml: true)
-      isFollowing
       stats {
         ... on UserStats {
           watchedTime
@@ -30,8 +19,6 @@ query UserOverview($id: Int, $name: String) {
           }
         }
       }
-      unreadNotificationCount
-      donatorTier
     }
   }
 }

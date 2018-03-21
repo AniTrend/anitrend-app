@@ -1,4 +1,4 @@
-query SeriesBase($id: Int!, $isAdult: Boolean = false) {
+query MediaBase($id: Int!, $isAdult: Boolean = false) {
   Media(id: $id, isAdult: $isAdult) {
     ... on Media {
       id

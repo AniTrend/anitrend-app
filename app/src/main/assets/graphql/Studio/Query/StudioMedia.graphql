@@ -1,4 +1,4 @@
-query StudioPage($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort]) {
+query StudioMedia($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort]) {
   Studio(id: $id) {
     media(page: $page, perPage: $perPage, sort: $seriesSort) {
       pageInfo {
@@ -21,7 +21,10 @@ query StudioPage($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort])
             }
           }
           type
+          season
           status
+          meanScore
+          averageScore
           startDate {
             ... on FuzzyDate {
               day

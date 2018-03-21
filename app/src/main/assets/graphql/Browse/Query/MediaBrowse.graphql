@@ -1,4 +1,4 @@
-query Airing($page: Int, $perPage: Int, $type: MediaType, $format: MediaFormat, $startDate: String, $endDate: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort]) {
+query MediaBrowse($id: Int, $page: Int, $perPage: Int, $type: MediaType, $format: MediaFormat, $startDate: String, $endDate: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort], $onList: Boolean, $status: MediaStatus) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query Airing($page: Int, $perPage: Int, $type: MediaType, $format: MediaFormat, 
         hasNextPage
       }
     }
-    media(onList: true, status: RELEASING, startDate_like: $startDate, endDate_like: $endDate, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, isAdult: $isAdult, sort: $sort) {
+    media(id: $id, startDate_like: $startDate, endDate_like: $endDate, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, isAdult: $isAdult, sort: $sort, onList: $onList, status: $status) {
       ... on Media {
         id
         title {
@@ -20,7 +20,10 @@ query Airing($page: Int, $perPage: Int, $type: MediaType, $format: MediaFormat, 
           }
         }
         type
+        season
         status
+        meanScore
+        averageScore
         startDate {
           ... on FuzzyDate {
             day

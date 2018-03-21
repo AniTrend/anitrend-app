@@ -3,25 +3,14 @@ query UserBase($id: Int, $name: String) {
     ... on User {
       id
       name
-      bannerImage
-      stats {
-        ... on UserStats {
-          watchedTime
-          chaptersRead
-          animeStatusDistribution {
-            ... on StatusDistribution {
-              status
-              amount
-            }
-          }
-          mangaStatusDistribution {
-            ... on StatusDistribution {
-              status
-              amount
-            }
-          }
+      avatar {
+        ... on UserAvatar {
+          large
+          medium
         }
       }
+      bannerImage
+      isFollowing
     }
   }
 }

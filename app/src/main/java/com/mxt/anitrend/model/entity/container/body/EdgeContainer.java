@@ -13,7 +13,12 @@ public class EdgeContainer<T, V> extends Container {
 
     private List<Edge<T, V>> edges;
 
-    public List<Edge<T, V>>  getEdges() {
+    public List<Edge<T, V>> getEdges() {
         return edges;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return edges != null && edges.isEmpty();
     }
 }

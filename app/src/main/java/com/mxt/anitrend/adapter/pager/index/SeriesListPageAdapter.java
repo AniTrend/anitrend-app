@@ -21,7 +21,7 @@ public class SeriesListPageAdapter extends BaseStatePageAdapter {
         super(fragmentManager, context);
     }
 
-    private void setSeriesType(@KeyUtils.SeriesType int seriesType) {
+    private void setSeriesType(@KeyUtils.MediaType int seriesType) {
         switch (seriesType) {
             case KeyUtils.ANIME:
                 setPagerTitles(R.array.anime_listing_status);

@@ -54,7 +54,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     protected boolean isFilterable, isPager, isMenuDisabled, isFeed;
     protected @MenuRes int inflateMenu;
 
-    protected SortHelperTask<M> sortHelperTask;
     private ActionModeHelper<M> actionMode;
     protected ViewModelBase<VM> viewModel;
     private CommonPresenter presenter;
@@ -115,8 +114,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
             presenter.onDestroy();
         if(seriesActionUtil != null)
             seriesActionUtil.onDestroy();
-        if(sortHelperTask != null && sortHelperTask.getStatus() != AsyncTask.Status.FINISHED)
-            sortHelperTask.cancel(true);
         actionMode = null;
     }
 

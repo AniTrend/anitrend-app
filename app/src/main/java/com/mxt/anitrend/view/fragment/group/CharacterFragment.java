@@ -25,7 +25,8 @@ import java.util.List;
 
 public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<EntityGroup>, SeriesPresenter, Media> {
 
-    private @KeyUtils.SeriesType int seriesType;
+    private @KeyUtils.MediaType
+    int seriesType;
     private long seriesId;
 
     public static CharacterFragment newInstance(Bundle args) {

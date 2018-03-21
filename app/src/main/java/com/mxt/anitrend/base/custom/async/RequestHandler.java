@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.api.retro.anilist.BaseModel;
+import com.mxt.anitrend.model.api.retro.anilist.BrowseModel;
+import com.mxt.anitrend.model.api.retro.anilist.MediaModel;
 import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.KeyUtils;
@@ -40,11 +42,11 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
         if(!isCancelled() && callback != null) {
             Context context = contexts[0];
             switch (requestType) {
+
                 case GENRE_LIST_REQ:
                     return (Call<T>) WebFactory.createService(BaseModel.class, context).getGenres(param.getParcelable(arg_graph_params));
                 case TAG_LIST_REQ:
                     return (Call<T>) WebFactory.createService(BaseModel.class, context).getTags(param.getParcelable(arg_graph_params));
-
 
 
                 case EPISODE_FEED_REQ:
@@ -55,7 +57,6 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createCrunchyService(param.getBoolean(arg_feed), context).getPopularFeed();
 
 
-
                 case GIPHY_SEARCH_REQ:
                     return (Call<T>) WebFactory.createGiphyService(context).findGif(BuildConfig.GIPHY_KEY, param.getString(arg_search_query),
                             PAGING_LIMIT, param.getInt(arg_page_offset), "PG", "en");
@@ -63,11 +64,23 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createGiphyService(context).getTrending(BuildConfig.GIPHY_KEY, PAGING_LIMIT, param.getInt(arg_page_offset), "PG");
 
 
-
                 case UPDATE_CHECKER_REQ:
-                    if(param.containsKey(arg_branch_name))
+                    if (param.containsKey(arg_branch_name))
                         return (Call<T>) WebFactory.createRepositoryService().checkVersion(param.getString(arg_branch_name));
                     return (Call<T>) WebFactory.createRepositoryService().checkVersion();
+
+                case KeyUtils.MEDIA_BROWSE_REQ:
+                    return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaBrowse(param.getParcelable(arg_graph_params));
+                case KeyUtils.MEDIA_LIST_BROWSE_REQ:
+                    return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaListBrowse(param.getParcelable(arg_graph_params));
+                case KeyUtils.MEDIA_LIST_DELETE:
+                    break;
+                case KeyUtils.MEDIA_LIST_REQ:
+                    return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaList(param.getParcelable(arg_graph_params));
+                case KeyUtils.MEDIA_LIST_SAVE:
+                    break;
+                case KeyUtils.MEDIA_LIST_UPDATE:
+                    break;
             }
         }
         return null;

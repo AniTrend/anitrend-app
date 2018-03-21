@@ -1,4 +1,4 @@
-query FeedActivity($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $userId: Int, $type: ActivityType, $isMixed: Boolean) {
+query FeedListReply($page: Int, $perPage: Int, $activityId: Int) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query FeedActivity($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $
         hasNextPage
       }
     }
-    activities(id: $id, hasRepliesOrTypeText: $isMixed, type: $type, sort: ID_DESC, isFollowing: $isFollowing, userId: $userId) {
+    activities(id: $activityId) {
       ... on ListActivity {
         id
         status
@@ -29,6 +29,39 @@ query FeedActivity($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $
           }
         }
         replyCount
+        replies {
+          ... on ActivityReply {
+            id
+            text
+            createdAt
+            user {
+              ... on User {
+                id
+                name
+                avatar {
+                  ... on UserAvatar {
+                    large
+                    medium
+                  }
+                }
+                isFollowing
+              }
+            }
+            likes {
+              ... on User {
+                id
+                name
+                avatar {
+                  ... on UserAvatar {
+                    large
+                    medium
+                  }
+                }
+                isFollowing
+              }
+            }
+          }
+        }
         likes {
           ... on User {
             id
@@ -108,6 +141,39 @@ query FeedActivity($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $
               }
             }
             isFollowing
+          }
+        }
+        replies {
+          ... on ActivityReply {
+            id
+            text
+            createdAt
+            user {
+              ... on User {
+                id
+                name
+                avatar {
+                  ... on UserAvatar {
+                    large
+                    medium
+                  }
+                }
+                isFollowing
+              }
+            }
+            likes {
+              ... on User {
+                id
+                name
+                avatar {
+                  ... on UserAvatar {
+                    large
+                    medium
+                  }
+                }
+                isFollowing
+              }
+            }
           }
         }
       }

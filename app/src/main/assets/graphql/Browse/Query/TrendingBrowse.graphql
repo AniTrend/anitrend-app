@@ -1,15 +1,22 @@
-query CharacterSeries($id: Int!, $page: Int, $perPage: Int, $characterSort: [CharacterSort], $seriesSort: [MediaSort]) {
-  Character(id: $id, sort: $characterSort) {
-    media(page: $page, perPage: $perPage, sort: $seriesSort) {
-      pageInfo {
-        ... on PageInfo {
-          total
-          perPage
-          currentPage
-          hasNextPage
-        }
+query TrendingBrowse($page: Int, $perPage: Int, $sort: [MediaTrendSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
       }
-      nodes {
+    }
+    mediaTrends(sort: $sort, releasing: true) {
+      mediaId
+      date
+      trending
+      averageScore
+      popularity
+      releasing
+      episode
+      media {
         ... on Media {
           id
           title {
@@ -21,6 +28,7 @@ query CharacterSeries($id: Int!, $page: Int, $perPage: Int, $characterSort: [Cha
             }
           }
           type
+          season
           status
           startDate {
             ... on FuzzyDate {

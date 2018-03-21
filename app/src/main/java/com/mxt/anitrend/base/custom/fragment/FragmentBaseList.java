@@ -17,6 +17,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -37,14 +38,15 @@ import butterknife.ButterKnife;
  * Abstract fragment list base class
  */
 
-public abstract class FragmentBaseList<M, C extends List<M>, P extends CommonPresenter> extends FragmentBase<M, P, C> implements
+public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends FragmentBase<M, P, C> implements
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
     protected @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
     protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
 
-    protected C model;
+    protected List<M> model;
+    protected PageInfo pageInfo;
     protected String query;
     protected boolean isLimit;
 
@@ -356,13 +358,7 @@ public abstract class FragmentBaseList<M, C extends List<M>, P extends CommonPre
             showEmpty(getString(R.string.layout_empty_response));
     }
 
-    /**
-     * Called when the model state is changed.
-     *
-     * @param content The new data
-     */
-    @Override
-    public void onChanged(@Nullable C content) {
+    protected void onPostProcessed(List<M> content) {
         if(content != null) {
             if(content.size() > 0) {
                 if(isPager) {
@@ -381,6 +377,14 @@ public abstract class FragmentBaseList<M, C extends List<M>, P extends CommonPre
         } else
             showEmpty(getString(R.string.layout_empty_response));
     }
+
+    /**
+     * Called when the model state is changed.
+     *
+     * @param content The new data
+     */
+    @Override
+    public abstract void onChanged(@Nullable C content);
 
     /**
      * When the target view from {@link View.OnClickListener}
