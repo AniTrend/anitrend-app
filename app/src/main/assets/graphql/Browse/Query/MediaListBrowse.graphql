@@ -1,4 +1,4 @@
-query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort]) {
+query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort], $scoreFormat: ScoreFormat = POINT_100) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -13,7 +13,7 @@ query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $t
         id
         mediaId
         status
-        score(format: POINT_100)
+        score(format: $scoreFormat)
         progress
         progressVolumes
         repeat
@@ -61,6 +61,7 @@ query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $t
               }
             }
             type
+            format
             season
             status
             meanScore

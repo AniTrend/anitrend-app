@@ -1,5 +1,4 @@
-query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $userId: Int, 
-	$type: ActivityType, $isMixed: Boolean) {
+query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean = true, $userId: Int, $type: ActivityType, $isMixed: Boolean, $asHtml: Boolean = true) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -9,8 +8,7 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $user
         hasNextPage
       }
     }
-    activities(id: $id, hasRepliesOrTypeText: $isMixed, type: $type, sort: ID_DESC, 
-		isFollowing: $isFollowing, userId: $userId) {
+    activities(id: $id, hasRepliesOrTypeText: $isMixed, type: $type, sort: ID_DESC, isFollowing: $isFollowing, userId: $userId) {
       ... on ListActivity {
         id
         status
@@ -56,6 +54,7 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $user
               }
             }
             type
+            format
             season
             status
             meanScore
@@ -85,7 +84,7 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $user
       }
       ... on TextActivity {
         id
-        text(asHtml: true)
+        text(asHtml: $asHtml)
         createdAt
         type
         user {

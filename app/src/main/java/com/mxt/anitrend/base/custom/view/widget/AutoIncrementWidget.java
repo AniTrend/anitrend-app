@@ -15,14 +15,15 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphParameterUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -34,8 +35,8 @@ import retrofit2.Response;
 
 public class AutoIncrementWidget extends LinearLayout implements CustomView, View.OnClickListener, RetroCallback<MediaList> {
 
+    private @KeyUtils.RequestType int requestType = KeyUtils.MUT_SAVE_MEDIA_LIST;
     private WidgetPresenter<MediaList> presenter;
-    private @KeyUtils.RequestMode int requestType;
     private WidgetAutoIncrementerBinding binding;
     private MediaList model;
 
@@ -70,8 +71,8 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
 
     @Override
     public void onClick(View view) {
-        if(presenter.isCurrentUser(currentUser) && SeriesUtil.isAllowedStatus(model)) {
-            if (!SeriesUtil.isIncrementLimitReached(model)) {
+        if(presenter.isCurrentUser(currentUser) && MediaUtil.isAllowedStatus(model)) {
+            if (!MediaUtil.isIncrementLimitReached(model)) {
                 switch (view.getId()) {
                     case R.id.widget_flipper:
                         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
@@ -82,7 +83,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
                         break;
                 }
             } else
-                NotifyUtil.makeText(getContext(), SeriesUtil.isAnimeType(getSeriesModel()) ?
+                NotifyUtil.makeText(getContext(), MediaUtil.isAnimeType(model.getMedia()) ?
                                 R.string.text_unable_to_increment_episodes : R.string.text_unable_to_increment_chapters,
                         R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
         }
@@ -91,7 +92,6 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     public void setModel(MediaList model, String currentUser) {
         this.model = model; this.currentUser = currentUser;
         binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
-        requestType = model.getAnime() != null? KeyUtils.ANIME_LIST_EDIT_REQ : KeyUtils.MANGA_LIST_EDIT_REQ;
     }
 
     @Override
@@ -113,7 +113,9 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
             MediaList mediaList;
             if(response.isSuccessful() && (mediaList = response.body()) != null) {
                 boolean isModelCategoryChanged = !mediaList.getStatus().equals(model.getStatus());
-                mediaList.setAnime(model.getAnime()); mediaList.setManga(model.getManga()); model = mediaList;
+
+                model = mediaList;
+
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
                 presenter.getDatabase().getBoxStore(MediaList.class).put(model); resetFlipperState();
                 if(isModelCategoryChanged) {
@@ -142,41 +144,32 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     }
 
     private void updateModelState() {
-        model.setChapters_read(model.getChapters_read() + 1);
         model.setProgress(model.getProgress() + 1);
-        if(SeriesUtil.isIncrementLimitReached(model))
-            model.setStatus(KeyUtils.UserAnimeStatus[KeyUtils.COMPLETED]);
-        if(SeriesUtil.isIncrementLimitReached(model))
-            model.setStatus(KeyUtils.UserMangaStatus[KeyUtils.COMPLETED]);
-
+        if(MediaUtil.isIncrementLimitReached(model))
+            model.setStatus(KeyUtils.COMPLETED);
         presenter.setParams(getParam());
         presenter.requestData(requestType, getContext(), this);
     }
 
     private Bundle getParam() {
+        GraphQueryContainer queryContainer = GraphParameterUtil.getDefaultQueryContainer(false);
+        queryContainer.setVariable(KeyUtils.arg_mediaId, model.getMediaId());
+        queryContainer.setVariable(KeyUtils.arg_list_status, model.getStatus());
+        queryContainer.setVariable(KeyUtils.arg_list_score_raw, model.getScore());
+        queryContainer.setVariable(KeyUtils.arg_list_notes, model.getNotes());
+        queryContainer.setVariable(KeyUtils.arg_list_private, model.isHidden());
+        queryContainer.setVariable(KeyUtils.arg_list_priority, model.getPriority());
+        queryContainer.setVariable(KeyUtils.arg_list_hiddenFromStatusLists, model.isHiddenFromStatusLists());
+
+        queryContainer.setVariable(KeyUtils.arg_list_advanced_score, model.getAdvancedScores());
+        queryContainer.setVariable(KeyUtils.arg_list_custom_list, model.getCustomLists());
+
+        queryContainer.setVariable(KeyUtils.arg_list_repeat, model.getRepeat());
+        queryContainer.setVariable(KeyUtils.arg_list_progress, model.getProgress());
+        queryContainer.setVariable(KeyUtils.arg_list_progressVolumes, model.getProgressVolumes());
+
         Bundle bundle = new Bundle();
-        bundle.putLong(KeyUtils.arg_id, model.getMediaId());
-
-        bundle.putString(KeyUtils.arg_list_status, model.getStatus());
-        bundle.putString(KeyUtils.arg_list_score, model.getScore());
-        bundle.putInt(KeyUtils.arg_list_score_raw, model.getScore_raw());
-        bundle.putString(KeyUtils.arg_list_notes, model.getNotes());
-        bundle.putInt(KeyUtils.arg_list_hidden, model.getPrivate());
-
-        // bundle.putString(KeyUtils.arg_list_advanced_rating, name_of_rating);
-        // bundle.putInt(KeyUtils.arg_list_custom_list, model.getCustom_lists()[selected_index]);
-
-        bundle.putInt(KeyUtils.arg_list_watched, model.getProgress());
-        bundle.putInt(KeyUtils.arg_list_re_watched, model.getRepeat());
-
-        bundle.putInt(KeyUtils.arg_list_read, model.getChapters_read());
-        bundle.putInt(KeyUtils.arg_list_re_read, model.getReread());
-        bundle.putInt(KeyUtils.arg_list_volumes, model.getProgressVolumes());
-
+        bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);
         return bundle;
-    }
-
-    private MediaBase getSeriesModel() {
-        return model.getAnime() != null ? model.getAnime() : model.getManga();
     }
 }

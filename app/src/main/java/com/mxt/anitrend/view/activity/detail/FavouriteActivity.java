@@ -28,8 +28,7 @@ public class FavouriteActivity extends ActivityBase<Favourite, BasePresenter> {
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
-    private Favourite model;
-
+    private FavouritePageAdapter pageAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +37,11 @@ public class FavouriteActivity extends ActivityBase<Favourite, BasePresenter> {
         setSupportActionBar(toolbar);
         setPresenter(new BasePresenter(this));
         setViewModel(true);
-        id = getIntent().getLongExtra(KeyUtils.arg_user_id, 0);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        FavouritePageAdapter pageAdapter = new FavouritePageAdapter(getSupportFragmentManager(), getApplicationContext());
-        getViewModel().getParams().putLong(KeyUtils.arg_user_id, id);
-        pageAdapter.setParams(getViewModel().getParams());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit + 1);
-        smartTabLayout.setViewPager(viewPager);
         onActivityReady();
     }
 
@@ -59,33 +51,20 @@ public class FavouriteActivity extends ActivityBase<Favourite, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        if(model == null)
-            makeRequest();
-        else
-            updateUI();
+        pageAdapter = new FavouritePageAdapter(getSupportFragmentManager(), getApplicationContext());
+        pageAdapter.setParams(getIntent().getExtras());
+        updateUI();
     }
 
     @Override
     protected void updateUI() {
-        getPresenter().notifyAllListeners(model, false);
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit);
+        smartTabLayout.setViewPager(viewPager);
     }
 
     @Override
     protected void makeRequest() {
-        getViewModel().requestData(KeyUtils.USER_FAVOURITES_REQ, getApplicationContext());
-    }
 
-    /**
-     * Called when the model state is changed.
-     *
-     * @param model The new data
-     */
-    @Override
-    public void onChanged(@Nullable Favourite model) {
-        super.onChanged(model);
-        if(model != null) {
-            this.model = model;
-            updateUI();
-        }
     }
 }

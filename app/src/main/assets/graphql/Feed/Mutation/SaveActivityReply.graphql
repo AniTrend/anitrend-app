@@ -1,0 +1,35 @@
+mutation SaveActivityReply($id: Int, $activityId: Int, $text: String) {
+  SaveActivityReply(id: $id, activityId: $activityId, text: $text) {
+    ... on ActivityReply {
+      id
+      text
+      createdAt
+      user {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+      likes {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+    }
+  }
+}

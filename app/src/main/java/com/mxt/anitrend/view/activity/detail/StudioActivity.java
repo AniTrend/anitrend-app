@@ -13,7 +13,7 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.fragment.search.SeriesSearchFragment;
+import com.mxt.anitrend.view.fragment.search.MediaSearchFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +77,7 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        mFragment = SeriesSearchFragment.newInstance(getIntent().getExtras(), KeyUtils.ANIME);
+        mFragment = MediaSearchFragment.newInstance(getIntent().getExtras(), KeyUtils.ANIME);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, mFragment, mFragment.TAG);

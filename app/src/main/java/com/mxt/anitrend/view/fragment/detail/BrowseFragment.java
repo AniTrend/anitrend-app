@@ -86,7 +86,7 @@ public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesP
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_series_type, data.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, data.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

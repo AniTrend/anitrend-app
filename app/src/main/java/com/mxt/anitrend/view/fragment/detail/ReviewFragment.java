@@ -52,7 +52,7 @@ public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BaseP
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
         mColumnSize = R.integer.single_list_x1;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
@@ -96,7 +96,7 @@ public class ReviewFragment extends FragmentBaseList<Review, List<Review>, BaseP
                 MediaBase mediaBase = reviewType? data.getAnime() : data.getManga();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, mediaBase.getId());
-                intent.putExtra(KeyUtils.arg_series_type, mediaBase.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, mediaBase.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.user_avatar:

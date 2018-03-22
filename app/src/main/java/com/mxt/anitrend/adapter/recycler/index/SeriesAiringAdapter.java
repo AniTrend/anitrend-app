@@ -14,7 +14,7 @@ import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.util.SeriesUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,7 @@ public class SeriesAiringAdapter extends RecyclerViewAdapter<MediaList> {
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.seriesEpisodes.setModel(model, currentUser);
-            binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(SeriesUtil.getSeriesModel(model)));
+            binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(MediaUtil.getSeriesModel(model)));
             binding.executePendingBindings();
         }
 

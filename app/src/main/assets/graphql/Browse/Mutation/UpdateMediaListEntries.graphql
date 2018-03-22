@@ -1,0 +1,84 @@
+mutation UpdateMediaListEntries($ids: [Int], $scoreFormat: ScoreFormat = POINT_100) {
+  UpdateMediaListEntries(ids: $ids) {
+    ... on MediaList {
+      id
+      mediaId
+      status
+      score(format: $scoreFormat)
+      progress
+      progressVolumes
+      repeat
+      priority
+      private
+      hiddenFromStatusLists
+      customLists(asArray: true)
+      notes
+      startedAt {
+        ... on FuzzyDate {
+          year
+          month
+          day
+        }
+      }
+      completedAt {
+        ... on FuzzyDate {
+          year
+          month
+          day
+        }
+      }
+      user {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+      media {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          type
+          format
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+        }
+      }
+    }
+  }
+}

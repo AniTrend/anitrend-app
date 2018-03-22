@@ -16,7 +16,7 @@ public class FeedReply implements Parcelable {
 
     private long id;
     private String text;
-    private String createdAt;
+    private long createdAt;
     private UserBase user;
     private List<UserBase> likes;
 
@@ -24,7 +24,7 @@ public class FeedReply implements Parcelable {
     protected FeedReply(Parcel in) {
         id = in.readLong();
         text = in.readString();
-        createdAt = in.readString();
+        createdAt = in.readLong();
         user = in.readParcelable(UserBase.class.getClassLoader());
         likes = in.createTypedArrayList(UserBase.CREATOR);
     }
@@ -50,7 +50,7 @@ public class FeedReply implements Parcelable {
     }
 
     public String getCreatedAt() {
-        return DateUtil.getPrettyDateCustom(createdAt);
+        return DateUtil.getPrettyDateUnix(createdAt);
     }
 
 
@@ -70,7 +70,7 @@ public class FeedReply implements Parcelable {
         this.text = text;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -109,7 +109,7 @@ public class FeedReply implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(text);
-        dest.writeString(createdAt);
+        dest.writeLong(createdAt);
         dest.writeParcelable(user, flags);
         dest.writeTypedList(likes);
     }

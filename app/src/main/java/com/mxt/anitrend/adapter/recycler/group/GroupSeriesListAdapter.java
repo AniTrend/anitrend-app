@@ -18,7 +18,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.SeriesUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +77,7 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
                     data = new ArrayList<>();
                     for (EntityGroup model : clone) {
                         if(model instanceof MediaList) {
-                            MediaBase mediaBase = SeriesUtil.getSeriesModel((MediaList) model);
+                            MediaBase mediaBase = MediaUtil.getSeriesModel((MediaList) model);
 
                             if (mediaBase.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
                                     mediaBase.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||

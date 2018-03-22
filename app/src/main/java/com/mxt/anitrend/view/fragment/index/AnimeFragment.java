@@ -27,9 +27,10 @@ import java.util.List;
 
 public class AnimeFragment extends FragmentBaseList<Media, List<Media>, BasePresenter> {
 
-    private @KeyUtils.RequestMode int requestMode;
+    private @KeyUtils.RequestType
+    int requestMode;
 
-    public static AnimeFragment newInstance(@KeyUtils.RequestMode int requestMode) {
+    public static AnimeFragment newInstance(@KeyUtils.RequestType int requestMode) {
         Bundle args = new Bundle();
         args.putInt(KeyUtils.arg_request_type, requestMode);
         AnimeFragment fragment = new AnimeFragment();
@@ -93,7 +94,7 @@ public class AnimeFragment extends FragmentBaseList<Media, List<Media>, BasePres
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_series_type, data.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, data.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

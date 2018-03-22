@@ -1,4 +1,4 @@
-query UserSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
+query UserSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [UserSort] = SEARCH_MATCH) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query UserSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
         hasNextPage
       }
     }
-    users(id: $id, search: $search, sort: SEARCH_MATCH) {
+    users(id: $id, search: $search, sort: $sort) {
       ... on User {
         id
         name

@@ -54,7 +54,7 @@ public final class NotificationDispatcher {
             case KeyUtils.NOTIFICATION_AIRING:
                 intent = new Intent(context, SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, notification.getSeries().getId());
-                intent.putExtra(KeyUtils.arg_series_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
+                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:

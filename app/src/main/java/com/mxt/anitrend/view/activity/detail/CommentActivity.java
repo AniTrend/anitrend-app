@@ -40,18 +40,6 @@ public class CommentActivity extends ActivityBase<FeedList, BasePresenter> {
     }
 
     /**
-     * Take care of popping the fragment back stack or finishing the activity
-     * as appropriate.
-     */
-    @Override
-    public void onBackPressed() {
-        if(mFragment != null)
-            if(mFragment.onBackPress())
-                return;
-        super.onBackPressed();
-    }
-
-    /**
      * Make decisions, check for permissions or fire background threads from this method
      * N.B. Must be called after onPostCreate
      */

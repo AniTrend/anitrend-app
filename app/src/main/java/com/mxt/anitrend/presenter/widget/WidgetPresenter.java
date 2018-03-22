@@ -2,7 +2,6 @@ package com.mxt.anitrend.presenter.widget;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
 import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
@@ -30,7 +29,7 @@ public class WidgetPresenter<T> extends CommonPresenter {
      * <br/>
      * @param request_type the type of request to execute
      */
-    public void requestData(@KeyUtils.RequestMode int request_type, Context context, RetroCallback<T> callback) {
+    public void requestData(@KeyUtils.RequestType int request_type, Context context, RetroCallback<T> callback) {
         mLoader = new RequestHandler<>(getParams(), callback, request_type);
         mLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context);
     }

@@ -117,7 +117,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, List<FeedList>, Bas
                 MediaBase series = data.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_series_type, series.getType());
+                intent.putExtra(KeyUtils.arg_media_type, series.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_comment:

@@ -28,7 +28,8 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
 
     private WidgetDeleteBinding binding;
     private WidgetPresenter<ResponseBody> presenter;
-    private @KeyUtils.RequestMode int requestType;
+    private @KeyUtils.RequestType
+    int requestType;
     private FeedList feedList;
     private FeedReply feedReply;
 
@@ -60,13 +61,13 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
     }
 
 
-    public void setModel(FeedList feedList, @KeyUtils.RequestMode int requestType) {
+    public void setModel(FeedList feedList, @KeyUtils.RequestType int requestType) {
         this.requestType = requestType;
         this.feedList = feedList;
         presenter.getParams().putInt(KeyUtils.arg_id, feedList.getId());
     }
 
-    public void setModel(FeedReply feedReply, @KeyUtils.RequestMode int requestType) {
+    public void setModel(FeedReply feedReply, @KeyUtils.RequestType int requestType) {
         this.requestType = requestType;
         this.feedReply = feedReply;
         presenter.getParams().putInt(KeyUtils.arg_id, feedReply.getId());

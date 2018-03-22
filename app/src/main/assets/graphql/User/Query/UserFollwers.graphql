@@ -1,4 +1,4 @@
-query UserFollowers($id: Int!, $page: Int, $perPage: Int, $sort: [UserSort]) {
+query UserFollowers($id: Int!, $page: Int, $perPage: Int, $sort: [UserSort] = USERNAME) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {

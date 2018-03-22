@@ -45,14 +45,14 @@ public class SeriesListActivity extends ActivityBase<User, BasePresenter> {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         Bundle bundle = getViewModel().getParams();
-        bundle.putInt(KeyUtils.arg_series_type, getIntent().getIntExtra(KeyUtils.arg_series_type, KeyUtils.ANIME));
+        bundle.putInt(KeyUtils.arg_media_type, getIntent().getIntExtra(KeyUtils.arg_media_type, KeyUtils.ANIME));
         bundle.putString(KeyUtils.arg_user_name, getIntent().getStringExtra(KeyUtils.arg_user_name));
         SeriesListPageAdapter pageAdapter = new SeriesListPageAdapter(getSupportFragmentManager(), getApplicationContext());
         pageAdapter.setParams(bundle);
         viewPager.setAdapter(pageAdapter);
         viewPager.setOffscreenPageLimit(offScreenLimit + 1);
         smartTabLayout.setViewPager(viewPager);
-        setTitle(bundle.getInt(KeyUtils.arg_series_type) == KeyUtils.ANIME? R.string.title_anime_list: R.string.title_manga_list);
+        setTitle(bundle.getInt(KeyUtils.arg_media_type) == KeyUtils.ANIME? R.string.title_anime_list: R.string.title_manga_list);
     }
 
     @Override

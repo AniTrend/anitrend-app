@@ -10,15 +10,14 @@ import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
-import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphParameterUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -26,8 +25,6 @@ import com.mxt.anitrend.view.activity.detail.SeriesActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 /**
  * Created by max on 2017/11/03.
@@ -67,7 +64,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
      */
     @Override
     public void makeRequest() {
-        GraphQueryContainer params = RequestHandler.getDefaultQueryContainer()
+        GraphQueryContainer params = GraphParameterUtil.getDefaultQueryContainer(true)
                 .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, params);
         getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
@@ -86,7 +83,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_series_type, data.getMedia().getType());
+                intent.putExtra(KeyUtils.arg_media_type, data.getMedia().getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -117,14 +114,14 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
     public void onModelChanged(BaseConsumer<MediaList> consumer) {
         Optional<IntPair<MediaList>> pairOptional;
         switch (consumer.getRequestMode()) {
-            case KeyUtils.MEDIA_LIST_UPDATE:
+            case KeyUtils.MUT_SAVE_MEDIA_LIST:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     model.set(pairOptional.get().getFirst(), consumer.getChangeModel());
                     mAdapter.onItemChanged(consumer.getChangeModel(), pairOptional.get().getFirst());
                 }
                 break;
-            case KeyUtils.MEDIA_LIST_DELETE:
+            case KeyUtils.MUT_DELETE_MEDIA_LIST:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     int index = pairOptional.get().getFirst();

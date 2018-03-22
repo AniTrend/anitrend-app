@@ -1,0 +1,85 @@
+mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $priority: Int, $private: Boolean = false, $hiddenFromStatusLists: Boolean = false, $customLists: [String], $advancedScores: [Float], $notes: String, $scoreFormat: ScoreFormat = POINT_100) {
+  SaveMediaListEntry(id: $id, mediaId: $mediaId, status: $status, scoreRaw: $scoreRaw, progress: $progress, progressVolumes: $progressVolumes, repeat: $repeat, priority: $priority, private: $private, hiddenFromStatusLists: $hiddenFromStatusLists, customLists: $customLists, advancedScores: $advancedScores, notes: $notes) {
+    ... on MediaList {
+      id
+      mediaId
+      status
+      score(format: $scoreFormat)
+      progress
+      progressVolumes
+      repeat
+      priority
+      private
+      hiddenFromStatusLists
+      advancedScores
+      customLists(asArray: true)
+      notes
+      startedAt {
+        ... on FuzzyDate {
+          year
+          month
+          day
+        }
+      }
+      completedAt {
+        ... on FuzzyDate {
+          year
+          month
+          day
+        }
+      }
+      user {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+      media {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          type
+          format
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+        }
+      }
+    }
+  }
+}

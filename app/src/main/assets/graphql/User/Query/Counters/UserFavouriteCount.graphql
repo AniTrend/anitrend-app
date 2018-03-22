@@ -1,36 +1,36 @@
-query UserFavouriteCount($id: Int, $name: String) {
+query UserFavouriteCount($id: Int, $name: String, $page: Int, $perPage: Int) {
   User(id: $id, name: $name) {
     favourites {
       ... on Favourites {
-        anime {
+        anime(page: $page, perPage: $perPage) {
           pageInfo {
             ... on PageInfo {
               total
             }
           }
         }
-        manga {
+        manga(page: $page, perPage: $perPage) {
           pageInfo {
             ... on PageInfo {
               total
             }
           }
         }
-        characters {
+        characters(page: $page, perPage: $perPage) {
           pageInfo {
             ... on PageInfo {
               total
             }
           }
         }
-        staff {
+        staff(page: $page, perPage: $perPage) {
           pageInfo {
             ... on PageInfo {
               total
             }
           }
         }
-        studios {
+        studios(page: $page, perPage: $perPage) {
           pageInfo {
             ... on PageInfo {
               total

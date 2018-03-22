@@ -1,4 +1,4 @@
-query CurrentUser {
+query CurrentUser($asHtml: Boolean = true) {
   Viewer {
     ... on User {
       id
@@ -10,7 +10,7 @@ query CurrentUser {
         }
       }
       bannerImage
-      about(asHtml: true)
+      about(asHtml: $asHtml)
       isFollowing
       stats {
         ... on UserStats {

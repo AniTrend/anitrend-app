@@ -23,6 +23,8 @@ public class SearchActivity extends ActivityBase<Void, BasePresenter> {
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
+    private SearchPageAdapter pageAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +38,7 @@ public class SearchActivity extends ActivityBase<Void, BasePresenter> {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        SearchPageAdapter pageAdapter = new SearchPageAdapter(getSupportFragmentManager(), getApplicationContext());
-        getViewModel().getParams().putString(KeyUtils.arg_search_query, getIntent().getStringExtra(KeyUtils.arg_search_query));
-        pageAdapter.setParams(getViewModel().getParams());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
-        smartTabLayout.setViewPager(viewPager);
+        onActivityReady();
     }
 
     /**
@@ -50,12 +47,16 @@ public class SearchActivity extends ActivityBase<Void, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        makeRequest();
+        pageAdapter = new SearchPageAdapter(getSupportFragmentManager(), getApplicationContext());
+        pageAdapter.setParams(getIntent().getExtras());
+        updateUI();
     }
 
     @Override
     protected void updateUI() {
-
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit);
+        smartTabLayout.setViewPager(viewPager);
     }
 
     @Override

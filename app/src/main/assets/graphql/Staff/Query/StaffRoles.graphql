@@ -1,7 +1,6 @@
-query StaffRoles($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort], 
-	$seriesSort: [MediaSort], $seriesType: MediaType) {
-  Staff(id: $id, sort: $staffSort) {
-    staffMedia(page: $page, perPage: $perPage, sort: $seriesSort, type: $seriesType) {
+query StaffRoles($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPULARITY, $seriesType: MediaType) {
+  Staff(id: $id) {
+    staffMedia(page: $page, perPage: $perPage, type: $seriesType, sort: $sort) {
       pageInfo {
         ... on PageInfo {
           total
@@ -11,41 +10,44 @@ query StaffRoles($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort],
         }
       }
       edges {
-        staffRole
-        node {
-          ... on Media {
-            id
-            title {
-              ... on MediaTitle {
-                english
-                romaji
-                native
-                userPreferred
+        ... on MediaEdge {
+          staffRole
+          node {
+            ... on Media {
+              id
+              title {
+                ... on MediaTitle {
+                  english
+                  romaji
+                  native
+                  userPreferred
+                }
               }
-            }
-            type
-            season
-            status
-            meanScore
-            averageScore
-            startDate {
-              ... on FuzzyDate {
-                day
-                month
-                year
+              type
+              format
+              season
+              status
+              meanScore
+              averageScore
+              startDate {
+                ... on FuzzyDate {
+                  day
+                  month
+                  year
+                }
               }
-            }
-            episodes
-            chapters
-            volumes
-            isAdult
-            isFavourite
-            nextAiringEpisode {
-              ... on AiringSchedule {
-                id
-                airingAt
-                timeUntilAiring
-                episode
+              episodes
+              chapters
+              volumes
+              isAdult
+              isFavourite
+              nextAiringEpisode {
+                ... on AiringSchedule {
+                  id
+                  airingAt
+                  timeUntilAiring
+                  episode
+                }
               }
             }
           }

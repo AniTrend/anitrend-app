@@ -80,6 +80,10 @@ public class StaffBase extends EntityGroup implements Parcelable {
         return language;
     }
 
+    public void toggleFavourite() {
+        isFavourite = !isFavourite;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof StaffBase)

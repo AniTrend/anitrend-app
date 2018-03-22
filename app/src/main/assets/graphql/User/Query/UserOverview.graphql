@@ -1,4 +1,4 @@
-query UserOverview($id: Int, $name: String) {
+query UserOverview($id: Int, $name: String, $asHtml: Boolean = true) {
   User(id: $id, name: $name) {
     ... on User {
       id
@@ -10,7 +10,7 @@ query UserOverview($id: Int, $name: String) {
         }
       }
       bannerImage
-      about(asHtml: true)
+      about(asHtml: $asHtml)
       isFollowing
       stats {
         ... on UserStats {

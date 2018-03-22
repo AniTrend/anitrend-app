@@ -72,6 +72,10 @@ public class CharacterBase extends EntityGroup implements Parcelable {
         return siteUrl;
     }
 
+    public void toggleFavourite() {
+        isFavourite = !isFavourite;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof CharacterBase)

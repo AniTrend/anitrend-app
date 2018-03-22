@@ -1,4 +1,4 @@
-query FeedListReply($page: Int, $perPage: Int, $activityId: Int) {
+query FeedListReply($page: Int, $perPage: Int, $activityId: Int, $asHtml: Boolean = true) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -113,7 +113,7 @@ query FeedListReply($page: Int, $perPage: Int, $activityId: Int) {
       }
       ... on TextActivity {
         id
-        text(asHtml: true)
+        text(asHtml: $asHtml)
         createdAt
         type
         user {

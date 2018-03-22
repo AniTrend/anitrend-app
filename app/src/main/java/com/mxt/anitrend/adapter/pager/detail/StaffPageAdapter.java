@@ -36,11 +36,11 @@ public class StaffPageAdapter extends BaseStatePageAdapter {
                 return StaffOverviewFragment.newInstance(getParams());
             case 1:
                 bundle = new Bundle();
-                bundle.putInt(KeyUtils.arg_series_type, KeyUtils.ANIME);
+                bundle.putInt(KeyUtils.arg_media_type, KeyUtils.ANIME);
                 return SeriesRolesFragment.newInstance(bundle);
             case 2:
                 bundle = new Bundle();
-                bundle.putInt(KeyUtils.arg_series_type, KeyUtils.MANGA);
+                bundle.putInt(KeyUtils.arg_media_type, KeyUtils.MANGA);
                 return SeriesRolesFragment.newInstance(bundle);
             case 3:
                 return SeriesStaffRoleFragment.newInstance(getParams());

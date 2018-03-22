@@ -1,5 +1,5 @@
-query StudioBase($id: Int!, $studioSort: [StudioSort]) {
-  Studio(id: $id, sort: $studioSort) {
+query StudioBase($id: Int!) {
+  Studio(id: $id) {
     ... on Studio {
       id
       name

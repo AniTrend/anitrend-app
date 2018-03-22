@@ -1,50 +1,55 @@
 query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     relations {
-      pageInfo {
-        ... on PageInfo {
-          total
-          perPage
-          currentPage
-          hasNextPage
+      ... on MediaConnection {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
         }
-      }
-      edges {
-        relationType
-        node {
-          ... on Media {
-            id
-            title {
-              ... on MediaTitle {
-                english
-                romaji
-                native
-                userPreferred
-              }
-            }
-            type
-            season
-            status
-            meanScore
-            averageScore
-            startDate {
-              ... on FuzzyDate {
-                day
-                month
-                year
-              }
-            }
-            episodes
-            chapters
-            volumes
-            isAdult
-            isFavourite
-            nextAiringEpisode {
-              ... on AiringSchedule {
+        edges {
+          ... on MediaEdge {
+            relationType
+            node {
+              ... on Media {
                 id
-                airingAt
-                timeUntilAiring
-                episode
+                title {
+                  ... on MediaTitle {
+                    english
+                    romaji
+                    native
+                    userPreferred
+                  }
+                }
+                type
+                format
+                season
+                status
+                meanScore
+                averageScore
+                startDate {
+                  ... on FuzzyDate {
+                    day
+                    month
+                    year
+                  }
+                }
+                episodes
+                chapters
+                volumes
+                isAdult
+                isFavourite
+                nextAiringEpisode {
+                  ... on AiringSchedule {
+                    id
+                    airingAt
+                    timeUntilAiring
+                    episode
+                  }
+                }
               }
             }
           }

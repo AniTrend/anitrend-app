@@ -131,7 +131,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
                 case KeyUtils.NOTIFICATION_AIRING:
                     intent = new Intent(getActivity(), SeriesActivity.class);
                     intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
-                    intent.putExtra(KeyUtils.arg_series_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
+                    intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;

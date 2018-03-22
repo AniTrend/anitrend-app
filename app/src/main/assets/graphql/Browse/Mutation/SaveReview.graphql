@@ -1,0 +1,75 @@
+mutation SaveReview($id: Int, $mediaId: Int, $body: String, $summary: String, $score: Int, $private: Boolean, $asHtml: Boolean = true) {
+  SaveReview(id: $id, mediaId: $mediaId, body: $body, summary: $summary, score: $score, private: $private) {
+    ... on Review {
+      id
+      summary
+      mediaType
+      body(asHtml: $asHtml)
+      rating
+      ratingAmount
+      userRating
+      score
+      private
+      createdAt
+      user {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+      media {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
+          bannerImage
+          type
+          format
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+        }
+      }
+    }
+  }
+}

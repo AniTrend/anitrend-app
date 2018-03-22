@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.SeriesUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 /**
  * Created by max on 2017/10/27.
@@ -132,8 +132,8 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     @BindingAdapter("seriesStatus")
     public static void setStatus(SeriesStatusWidget view, MediaList mediaList) {
         if (mediaList != null) {
-            MediaBase model = SeriesUtil.getSeriesModel(mediaList);
-            String status = SeriesUtil.isAnimeType(model) ? model.getAiring_status() : model.getPublishing_status();
+            MediaBase model = MediaUtil.getSeriesModel(mediaList);
+            String status = MediaUtil.isAnimeType(model) ? model.getAiring_status() : model.getPublishing_status();
             if(status == null)
                 status = KeyUtils.key_not_yet_published;
             switch (status) {

@@ -34,7 +34,8 @@ import retrofit2.Response;
 public class VoteWidget extends LinearLayout implements CustomView, View.OnClickListener, RetroCallback<Review> {
 
     private WidgetPresenter<Review> presenter;
-    private @KeyUtils.RequestMode int seriesType;
+    private @KeyUtils.RequestType
+    int seriesType;
     private WidgetVoteBinding binding;
     private Review model;
 

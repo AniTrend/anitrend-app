@@ -15,8 +15,9 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.general.SeriesList_;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -24,7 +25,7 @@ import retrofit2.Response;
 /**
  * Created by max on 2018/01/05.
  * Media list action helper class is responsible for showing the correct dialog
- * for a given series
+ * for a given media
  */
 
 public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleListener {
@@ -35,7 +36,7 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
 
     private Lifecycle lifecycle;
 
-    private Media series;
+    private Media media;
     private MediaList mediaList;
     private MediaBase mediaBase;
 
@@ -45,27 +46,24 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
         presenter = new WidgetPresenter<>(context);
     }
 
-    private void setModels(Media series, MediaList mediaList, MediaBase mediaBase) {
-        this.series = series;
+    private void setModels(Media media, MediaList mediaList, MediaBase mediaBase) {
+        this.media = media;
         this.mediaList = mediaList;
         this.mediaBase = mediaBase;
     }
 
     private void actionPicker() {
-        if(series != null) {
-            presenter.getParams().putLong(KeyUtils.arg_id, series.getId());
-            presenter.requestData(series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
-                            KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
+        if(media != null) {
+            presenter.getParams().putLong(KeyUtils.arg_mediaId, media.getId());
+            presenter.requestData(KeyUtils.MUT_SAVE_MEDIA_LIST, context, this);
         }
         else if (mediaBase != null) {
-            presenter.getParams().putLong(KeyUtils.arg_id, mediaBase.getId());
-            presenter.requestData(mediaBase.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
-                    KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
+            presenter.getParams().putLong(KeyUtils.arg_mediaId, mediaBase.getId());
+            presenter.requestData(KeyUtils.MUT_SAVE_MEDIA_LIST, context, this);
         }
         else {
             presenter.getParams().putLong(KeyUtils.arg_id, mediaList.getMediaId());
-            presenter.requestData(mediaList.getAnime() != null ?
-                    KeyUtils.ANIME_LIST_ITEM_REQ : KeyUtils.MANGA_LIST_ITEM_REQ, context, this);
+            presenter.requestData(KeyUtils.MUT_SAVE_MEDIA_LIST, context, this);
         }
     }
 
@@ -80,20 +78,20 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
         actionPicker();
     }
 
-    private boolean isNewEntry(long seriesId) {
+    private boolean isNewEntry(long mediaId) {
         return presenter.getDatabase().getBoxStore(MediaList.class).query()
-                .equal(SeriesList_.series_id, seriesId)
+                .equal(MediaList_.mediaId, mediaId)
                 .build().count() < 1;
     }
 
     private void showActionDialog() {
         try {
-            if(series != null)
-                SeriesDialogUtil.createSeriesManage(context, series, isNewEntry(series.getId()), SeriesUtil.getSeriesTitle(series, presenter.getLanguagePreference()));
+            if(media != null)
+                SeriesDialogUtil.createSeriesManage(context, media, isNewEntry(media.getId()), MediaUtil.getMediaListTitle(media, presenter.getLanguagePreference()));
             else if(mediaBase != null)
-                SeriesDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), SeriesUtil.getSeriesTitle(mediaBase, presenter.getLanguagePreference()));
+                SeriesDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), MediaUtil.getMediaListTitle(mediaBase, presenter.getLanguagePreference()));
             else
-                SeriesDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), SeriesUtil.getSeriesTitle(mediaList, presenter.getLanguagePreference()));
+                SeriesDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), MediaUtil.getMediaListTitle(mediaList, presenter.getLanguagePreference()));
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());

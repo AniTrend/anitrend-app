@@ -1,17 +1,19 @@
 package com.mxt.anitrend.util;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.StaffBase;
+import com.mxt.anitrend.model.entity.container.attribute.Edge;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.model.entity.group.EntityHeader;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,114 +25,93 @@ import java.util.Map;
 public class GroupingUtil {
 
     /**
-     * Groups series relations by the relation type of the series
+     * Groups media by the media format, assuming that the media has be sorted by format
+     * @see KeyUtils.MediaFormat
+     * <br/>
+     *
+     * Only to be used when the sort type is @{@link KeyUtils.MediaSort#FORMAT}
+     * which is the default sort type for the request @{@link KeyUtils#STAFF_MEDIA_REQ}
+     * <br/>
+     *
+     * @param modelItems The potential external model response which needs to be grouped
+     * @param entityGroups The current model item/s containing all data minus current mediaItems
      */
-    public static List<EntityGroup> getGroupedSeriesRelated(Media series) {
-        List<Media> seriesList = new ArrayList<>();
-        if(series != null) {
-            if(series.getRelations() != null)
-                seriesList.addAll(series.getRelations());
-            if(series.getRelations_anime() != null)
-                seriesList.addAll(series.getRelations_anime());
-            if(series.getRelations_manga() != null)
-                seriesList.addAll(series.getRelations_manga());
-        }
+    public static List<EntityGroup> groupMediaByFormat(@NonNull List<MediaBase> modelItems, @Nullable List<EntityGroup> entityGroups) {
         List<EntityGroup> entityMap = new ArrayList<>();
-        if(!seriesList.isEmpty()) {
-            Map<String, List<Media>> map = Stream.of(seriesList)
-                    .filter(value -> !TextUtils.isEmpty(value.getRelation_type()))
-                    .collect(Collectors.groupingBy(Media::getRelation_type));
-            for (Map.Entry<String, List<Media>> entry: CompatUtil.getKeyFilteredMap(map)) {
-                entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
-                entityMap.addAll(entry.getValue());
-            }
+
+        Map<String, List<MediaBase>> map = Stream.of(modelItems)
+                .filter(value -> !TextUtils.isEmpty(value.getFormat()))
+                .collect(Collectors.groupingBy(MediaBase::getFormat));
+        for (Map.Entry<String, List<MediaBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
+            EntityHeader entityHeader = new EntityHeader(entry.getKey(), entry.getValue().size());
+            if(entityGroups == null || !entityGroups.contains(entityHeader))
+                entityMap.add(entityHeader);
+            entityMap.addAll(entry.getValue());
         }
+
         return entityMap;
     }
 
     /**
-     * Groups series relations by the relation type of the series
+     * Groups media by the media format, assuming that the media has be sorted by language
+     * @see KeyUtils.StaffSort
+     * <br/>
+     *
+     * Only to be used when the sort type is @{@link KeyUtils.StaffSort#LANGUAGE}
+     * which is the default sort type for the request @{@link KeyUtils#STAFF_MEDIA_REQ}
+     * <br/>
+     *
+     * @param modelItems The potential external model response which needs to be grouped
+     * @param entityGroups The current model item/s containing all data minus current mediaItems
      */
-    public static List<EntityGroup> getGroupedSeriesBaseType(List<MediaBase> seriesList) {
+    public static List<EntityGroup> groupStaffByLanguage(@NonNull List<StaffBase> modelItems, @Nullable List<EntityGroup> entityGroups) {
         List<EntityGroup> entityMap = new ArrayList<>();
-        if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<MediaBase>> map = Stream.of(seriesList)
-                    .filter(value -> !TextUtils.isEmpty(value.getType()))
-                    .collect(Collectors.groupingBy(MediaBase::getType));
-            for (Map.Entry<String, List<MediaBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
-                entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
-                entityMap.addAll(entry.getValue());
-            }
+
+        Map<String, List<StaffBase>> map = Stream.of(modelItems)
+                .filter(value -> !TextUtils.isEmpty(value.getLanguage()))
+                .collect(Collectors.groupingBy(StaffBase::getLanguage));
+        for (Map.Entry<String, List<StaffBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
+            EntityHeader entityHeader = new EntityHeader(entry.getKey(), entry.getValue().size());
+            if(entityGroups == null || !entityGroups.contains(entityHeader))
+                entityMap.add(entityHeader);
+            entityMap.addAll(entry.getValue());
         }
+
         return entityMap;
     }
 
     /**
-     * Groups series relations by the relation type of the series
+     * Groups edge container items by the type/key of the object, this collection is preset to sort by ROLE or similar
+     * @see com.mxt.anitrend.model.entity.container.body.EdgeContainer
+     * <br/>
+     *
+     * @param edgeList The potential external model response which needs to be grouped
+     * @param entityGroups The current model item/s containing all data minus current mediaItems
      */
-    public static List<EntityGroup> getGroupedSeriesType(List<Media> seriesList) {
+    public static <V extends EntityGroup> List<EntityGroup> groupItemsByKey(@NonNull List<Edge<String, V>> edgeList, @Nullable List<EntityGroup> entityGroups) {
         List<EntityGroup> entityMap = new ArrayList<>();
-        if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<Media>> map = Stream.of(seriesList)
-                    .filter(value -> !TextUtils.isEmpty(value.getType()))
-                    .collect(Collectors.groupingBy(Media::getType));
-            for (Map.Entry<String, List<Media>> entry: CompatUtil.getKeyFilteredMap(map)) {
-                entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
-                entityMap.addAll(entry.getValue());
+
+        LinkedHashMap<String, List<V>> map = new LinkedHashMap<>();
+        for (Edge<String, V> edge: edgeList) {
+            String key = edge.getType();
+            List<V> listItems;
+            if (map.containsKey(edge.getType())) {
+                listItems = map.get(key);
+                listItems.add(edge.getValue());
+            } else {
+                listItems = new ArrayList<>();
+                listItems.add(edge.getValue());
+                map.put(key, listItems);
             }
+        }
+
+        for (Map.Entry<String, List<V>> entry: map.entrySet()) {
+            EntityHeader entityHeader = new EntityHeader(entry.getKey(), entry.getValue().size());
+            if(entityGroups == null || !entityGroups.contains(entityHeader))
+                entityMap.add(entityHeader);
+            entityMap.addAll(entry.getValue());
         }
         return entityMap;
     }
 
-    /**
-     * Groups series relations by the relation type of the role type
-     */
-    public static List<EntityGroup> getGroupedSeriesRoleType(List<MediaBase> seriesList) {
-        List<EntityGroup> entityMap = new ArrayList<>();
-        if(seriesList != null && !seriesList.isEmpty()) {
-            Map<String, List<MediaBase>> map = Stream.of(seriesList)
-                    .filter(value -> !TextUtils.isEmpty(value.getType()))
-                    .collect(Collectors.groupingBy(MediaBase::getRole));
-            for (Map.Entry<String, List<MediaBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
-                entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
-                entityMap.addAll(entry.getValue());
-            }
-        }
-        return entityMap;
-    }
-
-    /**
-     * Groups series relations by the type
-     */
-    public static List<EntityGroup> getGroupedSeriesListType(List<MediaList> mediaList) {
-        List<EntityGroup> entityMap = new ArrayList<>();
-        if(mediaList != null && !mediaList.isEmpty()) {
-            Map<String, List<MediaList>> map = Stream.of(mediaList)
-                    .filter(value -> !TextUtils.isEmpty(SeriesUtil.getSeriesModel(value).getType()))
-                    .collect(Collectors.groupingBy(o -> SeriesUtil.getSeriesModel(o).getType()));
-
-            for (Map.Entry<String, List<MediaList>> entry: CompatUtil.getKeyFilteredMap(map)) {
-                entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
-                entityMap.addAll(entry.getValue());
-            }
-        }
-        return entityMap;
-    }
-
-    /**
-     * Groups characters based on roles
-     */
-    public static List<EntityGroup> getGroupedRoleCharacters(Media series) {
-        List<EntityGroup> entityMap = new ArrayList<>();
-        if(!series.getCharacters().isEmpty()) {
-            Map<String, List<CharacterBase>> map = Stream.of(series.getCharacters())
-                    .filter(value -> !TextUtils.isEmpty(value.getRole()))
-                    .collect(Collectors.groupingBy(CharacterBase::getRole));
-            for (Map.Entry<String, List<CharacterBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
-                entityMap.add(new EntityHeader(entry.getKey(), entry.getValue().size()));
-                entityMap.addAll(entry.getValue());
-            }
-        }
-        return entityMap;
-    }
 }

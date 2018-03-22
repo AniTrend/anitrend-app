@@ -16,7 +16,6 @@ import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.base.custom.fragment.FragmentUserListBase;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
@@ -63,7 +62,7 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             userName = getArguments().getString(KeyUtils.arg_user_name);
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
             contentIndex = getArguments().getInt(KeyUtils.arg_series_show_type);
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true;
@@ -132,7 +131,7 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_series_type, KeyUtils.SeriesTypes[seriesType]);
+                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[seriesType]);
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

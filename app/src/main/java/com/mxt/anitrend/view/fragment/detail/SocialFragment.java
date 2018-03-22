@@ -57,7 +57,7 @@ public class SocialFragment extends FragmentBaseList<FeedList, List<FeedList>, B
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             requestType = getArguments().getInt(KeyUtils.arg_request_type);
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
         }
         isPager = true; mColumnSize = R.integer.single_list_x1;
         setPresenter(new BasePresenter(getContext()));
@@ -82,7 +82,7 @@ public class SocialFragment extends FragmentBaseList<FeedList, List<FeedList>, B
         if(seriesId != 0) {
             Bundle bundle = getViewModel().getParams();
             bundle.putLong(KeyUtils.arg_id, seriesId);
-            bundle.putInt(KeyUtils.arg_series_type, seriesType);
+            bundle.putInt(KeyUtils.arg_media_type, seriesType);
             bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
             bundle.putString(KeyUtils.arg_request_type, KeyUtils.ActivityTypes[requestType]);
             getViewModel().requestData(KeyUtils.SERIES_ACTIVITY_REQ, getContext());

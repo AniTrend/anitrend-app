@@ -52,6 +52,7 @@ query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $
             }
             bannerImage
             type
+            format
             season
             status
             meanScore

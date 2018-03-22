@@ -1,5 +1,5 @@
-query CharacterOverview($id: Int!, $characterSort: [CharacterSort]) {
-  Character(id: $id, sort: $characterSort) {
+query CharacterOverview($id: Int!) {
+  Character(id: $id) {
     ... on Character {
       id
       name {

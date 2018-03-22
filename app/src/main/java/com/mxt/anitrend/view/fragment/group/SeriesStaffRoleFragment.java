@@ -62,7 +62,7 @@ public class SeriesStaffRoleFragment  extends FragmentBaseList<EntityGroup, List
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_series_type, ((MediaBase)data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

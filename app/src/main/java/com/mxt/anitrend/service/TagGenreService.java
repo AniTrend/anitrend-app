@@ -50,7 +50,7 @@ public class TagGenreService extends IntentService {
             if(basePresenter.getDatabase().getBoxStore(MediaTag.class).count() < 1) {
                 Response<List<MediaTag>> tagsResponse = baseModel.getTags(RequestHandler.getDefaultQueryContainer()).execute();
                 if (tagsResponse.isSuccessful() && tagsResponse.body() != null)
-                    basePresenter.getDatabase().saveTags(tagsResponse.body());
+                    basePresenter.getDatabase().saveMediaTags(tagsResponse.body());
                 else
                     Log.e(ServiceName, ErrorUtil.getError(tagsResponse));
             }
@@ -59,7 +59,7 @@ public class TagGenreService extends IntentService {
                 List<String> genres;
                 if (genreResponse.isSuccessful() && (genres = genreResponse.body()) != null) {
                     List<Genre> genreList = Stream.of(genres).map(Genre::new).toList();
-                    basePresenter.getDatabase().saveGenres(genreList);
+                    basePresenter.getDatabase().saveGenreCollection(genreList);
                 }
                 else
                     Log.e(ServiceName, ErrorUtil.getError(genreResponse));

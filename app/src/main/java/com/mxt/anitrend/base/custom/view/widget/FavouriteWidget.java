@@ -31,7 +31,8 @@ import retrofit2.Response;
 public class FavouriteWidget extends FrameLayout implements CustomView, RetroCallback<ResponseBody>, View.OnClickListener {
 
     private WidgetPresenter<ResponseBody> presenter;
-    private @KeyUtils.RequestMode int requestType;
+    private @KeyUtils.RequestType
+    int requestType;
     private WidgetFavouriteBinding binding;
     private List<UserBase> model;
 
@@ -81,7 +82,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
         setIconType();
     }
 
-    public void setRequestParams(@KeyUtils.RequestMode int requestType, int modelId) {
+    public void setRequestParams(@KeyUtils.RequestType int requestType, int modelId) {
         presenter.getParams().putInt(KeyUtils.arg_id, modelId);
         this.requestType = requestType;
     }

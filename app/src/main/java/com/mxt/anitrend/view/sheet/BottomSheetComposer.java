@@ -34,7 +34,8 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
 
     protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
 
-    private @KeyUtils.RequestMode int requestType;
+    private @KeyUtils.RequestType
+    int requestType;
 
     private BottomSheetBase mBottomSheet;
 
@@ -175,7 +176,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             return newInstance(bundle);
         }
 
-        public Builder setRequestMode(@KeyUtils.RequestMode int requestType) {
+        public Builder setRequestMode(@KeyUtils.RequestType int requestType) {
             bundle.putInt(KeyUtils.arg_request_type, requestType);
             return this;
         }

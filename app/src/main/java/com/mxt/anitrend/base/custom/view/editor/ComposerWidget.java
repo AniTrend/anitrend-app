@@ -50,7 +50,8 @@ import retrofit2.Response;
 public class ComposerWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<ResponseBody> {
 
     private WidgetComposerBinding binding;
-    private @KeyUtils.RequestMode int requestType;
+    private @KeyUtils.RequestType
+    int requestType;
     private WidgetPresenter<ResponseBody> presenter;
     private ItemClickListener<Object> itemClickListener;
 
@@ -131,7 +132,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         presenter.getParams().putInt(KeyUtils.arg_activity_id, feedReply.getId());
     }
 
-    public void setRequestMode(@KeyUtils.RequestMode int requestType) {
+    public void setRequestMode(@KeyUtils.RequestType int requestType) {
         if(requestType == KeyUtils.ACTIVITY_EDIT_REQ) {
             long userId = presenter.getDatabase().getCurrentUser().getId();
             presenter.getParams().putLong(KeyUtils.arg_user_id, userId);

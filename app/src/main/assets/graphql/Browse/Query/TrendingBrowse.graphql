@@ -28,6 +28,7 @@ query TrendingBrowse($page: Int, $perPage: Int, $sort: [MediaTrendSort]) {
             }
           }
           type
+          format
           season
           status
           startDate {

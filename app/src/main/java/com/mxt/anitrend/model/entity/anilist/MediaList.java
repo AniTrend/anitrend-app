@@ -42,6 +42,7 @@ public class MediaList extends EntityGroup implements Parcelable {
     @SerializedName("private")
     private boolean hidden;
     private boolean hiddenFromStatusLists;
+    private List<Float> advancedScores;
     @Convert(converter = StringListConverter.class, dbType = String.class)
     private List<String> customLists;
     @Convert(converter = FuzzyDateConverter.class, dbType = String.class)
@@ -167,6 +168,10 @@ public class MediaList extends EntityGroup implements Parcelable {
         return customLists;
     }
 
+    public List<Float> getAdvancedScores() {
+        return advancedScores;
+    }
+
     public FuzzyDate getStartedAt() {
         return startedAt;
     }
@@ -189,6 +194,58 @@ public class MediaList extends EntityGroup implements Parcelable {
 
     public UserBase getUser() {
         return user;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setMediaId(long mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public void setStatus(@KeyUtils.MediaListStatus String status) {
+        this.status = status;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public void setProgressVolumes(int progressVolumes) {
+        this.progressVolumes = progressVolumes;
+    }
+
+    public void setRepeat(int repeat) {
+        this.repeat = repeat;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public void setHiddenFromStatusLists(boolean hiddenFromStatusLists) {
+        this.hiddenFromStatusLists = hiddenFromStatusLists;
+    }
+
+    public void setAdvancedScores(List<Float> advancedScores) {
+        this.advancedScores = advancedScores;
+    }
+
+    public void setCustomLists(List<String> customLists) {
+        this.customLists = customLists;
     }
 
     @Override

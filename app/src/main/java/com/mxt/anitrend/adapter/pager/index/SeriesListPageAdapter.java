@@ -35,7 +35,7 @@ public class SeriesListPageAdapter extends BaseStatePageAdapter {
     @Override
     public void setParams(Bundle params) {
         super.setParams(params);
-        setSeriesType(params.getInt(KeyUtils.arg_series_type));
+        setSeriesType(params.getInt(KeyUtils.arg_media_type));
     }
 
     /**

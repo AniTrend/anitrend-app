@@ -14,16 +14,51 @@ public interface KeyUtils {
     float AspectRatio = 1.37f;
     float WideAspectRatio = 0.95f;
     float PEEK_HEIGHT = 200f;
-    int PAGING_LIMIT = 21, GLIDE_REQUEST_TIMEOUT = 10000;
+    int PAGING_LIMIT = 21, GLIDE_REQUEST_TIMEOUT = 10000, SINGLE_ITEM_LIMIT = 1;
 
     /** Notification Channels */
     String CHANNEL_ID = "anitrend_app";
     String CHANNEL_TITLE = "AniTrend Notifications";
 
+
+    // ------------------------------------------------------------------------------------
+    // GraphQL Variable Params Keys
+    // ------------------------------------------------------------------------------------
+
+    String arg_graph_params = "arg_graph_params";
+
+    String arg_page = "page";
+    String arg_sort = "sort";
+    String arg_per_page = "perPage";
+
+    String arg_mediaId = "mediaId";
+    String arg_animeId = "animeId";
+    String arg_mangaId = "mangaId";
+    String arg_staffId = "staffId";
+    String arg_studioId = "studioId";
+    String arg_characterId = "characterId";
+
+    String arg_media_type = "type";
+    String arg_search_query = "search";
+
+    /** Media List Keys */
+    String arg_list_status = "status";
+    String arg_list_score_raw = "scoreRaw";
+    String arg_list_progress = "progress";
+    String arg_list_progressVolumes = "progressVolumes";
+    String arg_list_repeat = "repeat";
+    String arg_list_priority = "priority";
+    String arg_list_private = "private";
+    String arg_list_notes = "notes";
+    String arg_list_hiddenFromStatusLists = "hiddenFromStatusLists";
+    String arg_list_advanced_score = "advancedScores";
+    String arg_list_custom_list = "customLists";
+
+    // ------------------------------------------------------------------------------------
+
+
     /** Base Application Args */
     String arg_id = "arg_id";
-    String arg_page = "page";
-    String arg_per_page = "perPage";
     String arg_text = "arg_text";
     String arg_feed = "arg_feed";
     String arg_title = "arg_title";
@@ -40,12 +75,10 @@ public interface KeyUtils {
     String arg_review_type = "arg_review_type";
     String arg_page_offset = "arg_page_offset";
     String arg_request_type = "arg_request_type";
-    String arg_search_query = "arg_search_query";
     String arg_recipient_id = "arg_recipient_id";
     String arg_activity_tag = "arg_activity_tag";
     String arg_shortcut_used = "arg_shortcut_used";
     String arg_deep_link_type = "arg_deep_link_type";
-    String arg_graph_params = "arg_graph_params";
 
     String arg_positive_text = "arg_positive_text";
     String arg_negative_text = "arg_negative_text";
@@ -64,7 +97,6 @@ public interface KeyUtils {
     /** Browse Keys */
     String arg_series_tag = "arg_series_tag";
     String arg_series_year = "arg_series_year";
-    String arg_series_type = "arg_series_type";
     String arg_season_title = "arg_season_title";
     String arg_series_season = "arg_series_season";
     String arg_series_status = "arg_series_status";
@@ -76,35 +108,73 @@ public interface KeyUtils {
     String arg_series_tag_exclude = "arg_series_tag_exclude";
     String arg_series_genres_exclude = "arg_series_genres_exclude";
 
-    /** Media List Keys */
-    String arg_list_status = "arg_list_status";
-    String arg_list_score = "arg_list_score";
-    String arg_list_score_raw = "arg_list_score_raw";
-    String arg_list_notes = "arg_list_notes";
-    String arg_list_advanced_rating = "arg_list_advanced_rating";
-    String arg_list_custom_list = "arg_list_custom_list";
-    String arg_list_hidden = "arg_list_hidden";
 
-    String arg_list_watched = "arg_list_watched";
-    String arg_list_re_watched = "arg_list_re_watched";
+    // Base Model Requests
+    int GENRE_COLLECTION_REQ = 1, MEDIA_TAG_REQ = 2,
 
-    String arg_list_read = "arg_list_read";
-    String arg_list_re_read = "arg_list_re_read";
-    String arg_list_volumes = "arg_list_volumes";
+    // None AniList affiliated Request Types
+    EPISODE_LATEST_REQ = 3, EPISODE_POPULAR_REQ = 4, EPISODE_FEED_REQ = 5, UPDATE_CHECKER_REQ = 6, GIPHY_TRENDING_REQ = 7, GIPHY_SEARCH_REQ = 8,
 
+    // Browse Model Requests
+    MEDIA_TRENDS_REQ = 9, MEDIA_BROWSE_REQ = 10, MEDIA_LIST_BROWSE_REQ = 11, MEDIA_LIST_REQ = 12, MEDIA_REVIEWS_REQ = 13,
 
-    /** Request types */
-    int GENRE_LIST_REQ = 1, TAG_LIST_REQ = 2, EPISODE_LATEST_REQ = 3, EPISODE_POPULAR_REQ = 4, EPISODE_FEED_REQ = 5,
-            UPDATE_CHECKER_REQ = 6, GIPHY_TRENDING_REQ = 7, GIPHY_SEARCH_REQ = 8,
+    // Character Model Requests
+    CHARACTER_BASE_REQ = 14, CHARACTER_OVERVIEW_REQ = 15, CHARACTER_MEDIA_REQ = 16, CHARACTER_ACTORS_REQ =17,
 
-    MEDIA_BROWSE_REQ = 10, MEDIA_LIST_REQ = 11, MEDIA_LIST_BROWSE_REQ = 12,
-            MEDIA_LIST_SAVE = 13, MEDIA_LIST_UPDATE = 14, MEDIA_LIST_DELETE = 15 ;
+    // Feed Model Requests
+    FEED_LIST_REQ = 18, FEED_LIST_REPLY = 19, FEED_MESSAGE_REQ = 20,
 
-    @IntDef({GENRE_LIST_REQ, TAG_LIST_REQ, EPISODE_LATEST_REQ, EPISODE_POPULAR_REQ, EPISODE_FEED_REQ,
-            UPDATE_CHECKER_REQ, GIPHY_TRENDING_REQ, GIPHY_SEARCH_REQ, MEDIA_BROWSE_REQ,
-            MEDIA_LIST_REQ, MEDIA_LIST_BROWSE_REQ, MEDIA_LIST_SAVE, MEDIA_LIST_UPDATE, MEDIA_LIST_DELETE
+    // Media Model Requests
+    MEDIA_BASE_REQ = 21, MEDIA_OVERVIEW_REQ = 22, MEDIA_RELATION_REQ = 23, MEDIA_STATS_REQ = 24, MEDIA_EPISODES_REQ = 25,
+    MEDIA_CHARACTERS_REQ = 26, MEDIA_STAFF_REQ = 27, MEDIA_SOCIAL_REQ = 28,
+
+    // Search Model Requests
+    MEDIA_SEARCH_REQ = 29, STUDIO_SEARCH_REQ = 30, STAFF_SEARCH_REQ = 31, CHARACTER_SEARCH_REQ = 32, USER_SEARCH_REQ = 33,
+
+    // Staff Model Requests
+    STAFF_BASE_REQ = 34, STAFF_OVERVIEW_REQ = 35, STAFF_MEDIA_REQ = 36, STAFF_ROLES_REQ = 37,
+
+    // Studio Model Requests
+    STUDIO_BASE_REQ = 38, STUDIO_MEDIA_REQ = 39,
+
+    // User Model Requests
+    USER_FAVOURITES_COUNT_REQ = 40, USER_ANIME_FAVOURITES_REQ = 41, USER_MANGA_FAVOURITES_REQ = 42, USER_CHARACTER_FAVOURITES_REQ = 43,
+    USER_STAFF_FAVOURITES_REQ = 44, USER_STUDIO_FAVOURITES_REQ = 45, USER_CURRENT_REQ = 46, USER_BASE_REQ = 47, USER_STATS_REQ = 48,
+    USER_OVERVIEW_REQ = 49, USER_FOLLOWING_REQ = 50, USER_FOLLOWERS_REQ = 51,
+
+    // Mutation Requests
+    MUT_TOGGLE_LIKE = 52, MUT_TOGGLE_FAVOURITE = 53, MUT_SAVE_MEDIA_LIST = 54, MUT_UPDATE_MEDIA_LISTS = 55, MUT_DELETE_MEDIA_LIST = 56,
+    MUT_RATE_REVIEW = 57, MUT_SAVE_REVIEW = 58, MUT_DELETE_REVIEW = 59, MUT_TOGGLE_FOLLOW = 60, MUT_SAVE_TEXT_FEED = 61,
+    MUT_SAVE_MESSAGE_FEED = 62, MUT_SAVE_FEED_REPLY = 63, MUT_DELETE_FEED = 64, MUT_DELETE_FEED_REPLY = 65;
+
+    @IntDef({GENRE_COLLECTION_REQ, MEDIA_TAG_REQ,
+
+            EPISODE_LATEST_REQ, EPISODE_POPULAR_REQ, EPISODE_FEED_REQ, UPDATE_CHECKER_REQ, GIPHY_TRENDING_REQ, GIPHY_SEARCH_REQ,
+
+            MEDIA_TRENDS_REQ, MEDIA_BROWSE_REQ, MEDIA_LIST_BROWSE_REQ, MEDIA_LIST_REQ, MEDIA_REVIEWS_REQ,
+
+            CHARACTER_BASE_REQ, CHARACTER_OVERVIEW_REQ, CHARACTER_MEDIA_REQ, CHARACTER_ACTORS_REQ,
+
+            FEED_LIST_REQ, FEED_LIST_REPLY, FEED_MESSAGE_REQ,
+
+            MEDIA_BASE_REQ, MEDIA_OVERVIEW_REQ, MEDIA_RELATION_REQ, MEDIA_STATS_REQ, MEDIA_EPISODES_REQ,
+            MEDIA_CHARACTERS_REQ, MEDIA_STAFF_REQ, MEDIA_SOCIAL_REQ,
+
+            MEDIA_SEARCH_REQ, STUDIO_SEARCH_REQ, STAFF_SEARCH_REQ, CHARACTER_SEARCH_REQ, USER_SEARCH_REQ,
+
+            STAFF_BASE_REQ, STAFF_OVERVIEW_REQ, STAFF_MEDIA_REQ, STAFF_ROLES_REQ,
+
+            STUDIO_BASE_REQ, STUDIO_MEDIA_REQ,
+
+            USER_FAVOURITES_COUNT_REQ, USER_ANIME_FAVOURITES_REQ, USER_MANGA_FAVOURITES_REQ, USER_CHARACTER_FAVOURITES_REQ,
+            USER_STAFF_FAVOURITES_REQ, USER_STUDIO_FAVOURITES_REQ, USER_CURRENT_REQ, USER_BASE_REQ, USER_STATS_REQ,
+            USER_OVERVIEW_REQ, USER_FOLLOWING_REQ, USER_FOLLOWERS_REQ,
+
+            MUT_TOGGLE_LIKE, MUT_TOGGLE_FAVOURITE, MUT_SAVE_MEDIA_LIST, MUT_UPDATE_MEDIA_LISTS, MUT_DELETE_MEDIA_LIST,
+            MUT_RATE_REVIEW, MUT_SAVE_REVIEW, MUT_DELETE_REVIEW, MUT_TOGGLE_FOLLOW, MUT_SAVE_TEXT_FEED,
+            MUT_SAVE_MESSAGE_FEED, MUT_SAVE_FEED_REPLY, MUT_DELETE_FEED, MUT_DELETE_FEED_REPLY
     })
-    @interface RequestMode {}
+    @interface RequestType {}
 
     // Deep link types
     String DEEP_LINK_USER = "user", DEEP_LINK_MANGA = "manga", DEEP_LINK_ANIME = "anime",
@@ -159,8 +229,8 @@ public interface KeyUtils {
     String TITLE_ROMAJI = "TITLE_ROMAJI", TITLE_ENGLISH = "TITLE_ENGLISH", TITLE_NATIVE = "TITLE_NATIVE", TYPE = "TYPE",
             FORMAT = "FORMAT", START_DATE = "START_DATE", END_DATE = "END_DATE", POPULARITY = "POPULARITY", TRENDING = "TRENDING",
             EPISODES = "EPISODES", DURATION = "DURATION", CHAPTERS = "CHAPTERS", VOLUMES = "VOLUMES";
-    @StringDef({ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE,
-            SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES})
+    @StringDef({ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING, EPISODES,
+            DURATION, STATUS, CHAPTERS, VOLUMES})
     @interface MediaSort {}
 
 
@@ -184,12 +254,17 @@ public interface KeyUtils {
     @interface CharacterSort {}
 
 
+    @StringDef({ID, ROLE, LANGUAGE, SEARCH_MATCH})
+    @interface StaffSort {}
+
+
     String[] SortOrderTypes = {ASC, DESC};
     String[] MediaSortTypes = {ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES};
     String[] MediaListSortTypes = {MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME};
     String[] ReviewSortTypes = {ID, SCORE, RATING, CREATED_AT, UPDATED_AT};
     String[] AiringSortTypes = {ID, MEDIA_ID, TIME, EPISODE};
     String[] CharacterSortTypes = {ID, ROLE, SEARCH_MATCH};
+    String[] StaffSortTypes = {ID, ROLE, LANGUAGE, SEARCH_MATCH};
 
     // ------------------------------------------------------------------------------------
 
@@ -245,6 +320,12 @@ public interface KeyUtils {
             DROPPED = "DROPPED", PAUSED = "PAUSED", REPEATING = "REPEATING";
     @StringDef({CURRENT, PLANNING, COMPLETED, DROPPED, PAUSED, REPEATING})
     @interface MediaListStatus {}
+
+
+    String POINT_100 = "POINT_100", POINT_10_DECIMAL = "POINT_10_DECIMAL", POINT_10 = "POINT_10",
+            POINT_5 = "POINT_5", POINT_3 = "POINT_3";
+    @StringDef({POINT_100, POINT_10_DECIMAL, POINT_10,  POINT_5, POINT_3})
+    @interface ScoreFormat {}
 
     // ------------------------------------------------------------------------------------
 

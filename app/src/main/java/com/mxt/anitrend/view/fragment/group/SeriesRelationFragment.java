@@ -52,7 +52,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             requestType = getArguments().getInt(KeyUtils.arg_request_type);
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
         } mColumnSize = R.integer.grid_giphy_x3;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
@@ -90,7 +90,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((Media) data).getId());
-                intent.putExtra(KeyUtils.arg_series_type, ((Media) data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, ((Media) data).getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -127,7 +127,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
     public void onEventPublished(Media param) {
         if(model == null) {
             seriesId = param.getId();
-            onChanged(GroupingUtil.getGroupedSeriesRelated(param));
+            onChanged(GroupingUtil.groupMediaByFormat(param));
         }
     }
 }

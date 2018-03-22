@@ -10,14 +10,15 @@ import com.google.gson.annotations.SerializedName;
 public class Edge<T, V> {
 
     @SerializedName(value = "role", alternate = {"staffRole", "relationType", "voiceActors"})
-    private V type;
-    private T node;
+    private T type;
+    @SerializedName(value = "media", alternate = "node")
+    private V value;
 
-    public V getType() {
+    public T getType() {
         return type;
     }
 
-    public T getNode() {
-        return node;
+    public V getValue() {
+        return value;
     }
 }

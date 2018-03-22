@@ -80,4 +80,9 @@ public interface UserModel {
     @GraphQuery("StudioFavourites")
     @Headers("Content-Type: application/json")
     Call<ConnectionContainer<Favourite>> getStudioFavourites(@Body GraphQueryContainer request);
+
+    @POST("/")
+    @GraphQuery("ToggleFollow")
+    @Headers("Content-Type: application/json")
+    Call<UserBase> toggleFollow(@Body GraphQueryContainer request);
 }

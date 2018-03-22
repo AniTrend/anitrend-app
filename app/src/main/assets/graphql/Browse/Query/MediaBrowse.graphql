@@ -20,6 +20,7 @@ query MediaBrowse($id: Int, $page: Int, $perPage: Int, $type: MediaType, $format
           }
         }
         type
+        format
         season
         status
         meanScore

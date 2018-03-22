@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.MenuRes;
@@ -216,7 +215,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
                 });
                 return true;
             case R.id.action_genre:
-                final List<Genre> genres = presenter.getDatabase().getAllGenres();
+                final List<Genre> genres = presenter.getDatabase().getGenreCollection();
                 if(genres == null)
                     NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_new_releases_white_24dp, Toast.LENGTH_SHORT).show();
                 else

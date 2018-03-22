@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter;
-import com.mxt.anitrend.base.custom.fragment.FragmentBaseListSingle;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
@@ -45,7 +44,7 @@ public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             seriesId = getArguments().getLong(KeyUtils.arg_id);
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
         } mColumnSize = R.integer.grid_giphy_x3;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
@@ -69,7 +68,7 @@ public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
         bundle.putLong(KeyUtils.arg_id, seriesId);
-        bundle.putString(KeyUtils.arg_series_type, KeyUtils.SeriesTypes[seriesType]);
+        bundle.putString(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[seriesType]);
         getViewModel().requestData(KeyUtils.SERIES_CHARACTER_PAGE_REQ, getContext());
     }
 

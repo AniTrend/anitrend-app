@@ -8,7 +8,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.SeriesUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.Locale;
 
@@ -32,23 +32,23 @@ public class SeriesProgressTextView extends SingleLineTextView {
     }
 
     public void setSeriesModel(MediaList seriesModel, boolean isCurrentUser) {
-        MediaBase model = SeriesUtil.getSeriesModel(seriesModel);
-        if (SeriesUtil.isAnimeType(model)) {
+        MediaBase model = MediaUtil.getSeriesModel(seriesModel);
+        if (MediaUtil.isAnimeType(model)) {
             if(TextUtils.isEmpty(model.getAiring_status()) || model.getAiring_status().equals(KeyUtils.key_not_yet_aired))
                 setText(R.string.TBA);
             else {
-                if (isCurrentUser && !SeriesUtil.isIncrementLimitReached(seriesModel))
+                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(seriesModel))
                     setText(String.format(Locale.getDefault(), "%s/%s +", seriesModel.getProgress(),
                             seriesModel.getAnime().getTotal_episodes() < 1 ? "?" : seriesModel.getAnime().getTotal_episodes()));
                 else
                     setText(String.format(Locale.getDefault(), "%s/%s", seriesModel.getProgress(),
                             seriesModel.getAnime().getTotal_episodes() < 1 ? "?" : seriesModel.getAnime().getTotal_episodes()));
             }
-        } else if (SeriesUtil.isMangaType(model)) {
+        } else if (MediaUtil.isMangaType(model)) {
             if(TextUtils.isEmpty(model.getPublishing_status()) || model.getPublishing_status().equals(KeyUtils.key_not_yet_published))
                 setText(R.string.TBA);
             else {
-                if (isCurrentUser && !SeriesUtil.isIncrementLimitReached(seriesModel))
+                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(seriesModel))
                     setText(String.format(Locale.getDefault(), "%s/%s +", seriesModel.getChapters_read(),
                             seriesModel.getManga().getTotal_chapters() < 1 ? "?" : seriesModel.getManga().getTotal_chapters()));
                 else

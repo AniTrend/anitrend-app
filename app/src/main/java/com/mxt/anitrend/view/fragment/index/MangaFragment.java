@@ -26,9 +26,10 @@ import java.util.List;
  */
 public class MangaFragment extends FragmentBaseList<Media, List<Media>, BasePresenter> {
 
-    private @KeyUtils.RequestMode int requestMode;
+    private @KeyUtils.RequestType
+    int requestMode;
 
-    public static MangaFragment newInstance(@KeyUtils.RequestMode int requestMode) {
+    public static MangaFragment newInstance(@KeyUtils.RequestType int requestMode) {
         Bundle args = new Bundle();
         args.putInt(KeyUtils.arg_request_type, requestMode);
         MangaFragment fragment = new MangaFragment();
@@ -45,7 +46,7 @@ public class MangaFragment extends FragmentBaseList<Media, List<Media>, BasePres
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null && getArguments().containsKey(KeyUtils.arg_request_type)) {
-            @KeyUtils.RequestMode int requestMode = getArguments().getInt(KeyUtils.arg_request_type);
+            @KeyUtils.RequestType int requestMode = getArguments().getInt(KeyUtils.arg_request_type);
             this.requestMode = requestMode;
         }
         isPager = true; isFilterable = requestMode != KeyUtils.BROWSE_MANGA_LATEST_REQ;
@@ -94,7 +95,7 @@ public class MangaFragment extends FragmentBaseList<Media, List<Media>, BasePres
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_series_type, data.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, data.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

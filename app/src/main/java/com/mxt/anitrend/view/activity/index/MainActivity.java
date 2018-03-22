@@ -272,13 +272,13 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                 break;
             case R.id.nav_myanime:
                 intent = new Intent(this, SeriesListActivity.class);
-                intent.putExtra(KeyUtils.arg_series_type, KeyUtils.ANIME);
+                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.ANIME);
                 intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                 startActivity(intent);
                 break;
             case R.id.nav_mymanga:
                 intent = new Intent(this, SeriesListActivity.class);
-                intent.putExtra(KeyUtils.arg_series_type, KeyUtils.MANGA);
+                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.MANGA);
                 intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                 startActivity(intent);
                 break;

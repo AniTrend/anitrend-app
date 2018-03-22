@@ -1,4 +1,4 @@
-query MediaSocial($mediaId: Int!, $isFollowing: Boolean = false, $page: Int, $perPage: Int) {
+query MediaSocial($mediaId: Int!, $isFollowing: Boolean = true, $page: Int, $perPage: Int) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -54,6 +54,7 @@ query MediaSocial($mediaId: Int!, $isFollowing: Boolean = false, $page: Int, $pe
               }
             }
             type
+            format
             season
             status
             meanScore

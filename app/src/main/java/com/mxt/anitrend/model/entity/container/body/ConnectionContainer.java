@@ -6,7 +6,8 @@ public class ConnectionContainer<T> {
 
     @SerializedName(value = "relations", alternate = {"anime", "manga", "media",
             "characters", "staff", "staffMedia",
-            "stats", "favourites"
+            "stats", "favourites",
+            "externalLink"
     })
     private T connection;
 

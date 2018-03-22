@@ -19,7 +19,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.SeriesUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,13 +156,13 @@ public class SeriesPresenter extends CommonPresenter {
     }
 
     public int isAnime(Media series) {
-        if(SeriesUtil.isAnimeType(series))
+        if(MediaUtil.isAnimeType(series))
             return View.VISIBLE;
         return View.GONE;
     }
 
     public int isManga(Media series) {
-        if(SeriesUtil.isMangaType(series))
+        if(MediaUtil.isMangaType(series))
             return View.VISIBLE;
         return View.GONE;
     }

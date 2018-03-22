@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Created by max on 2018/02/23.
  */
-public class SeriesUtilTest {
+public class MediaUtilTest {
     @Test
     public void isAnimeType() throws Exception {
     }

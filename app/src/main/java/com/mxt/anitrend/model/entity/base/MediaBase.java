@@ -7,12 +7,8 @@ import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle;
-import com.mxt.anitrend.model.entity.anilist.meta.TitleBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.KeyUtils;
-
-import io.objectbox.annotation.Entity;
-import io.objectbox.annotation.Id;
 
 /**
  * Created by Maxwell on 10/3/2016.
@@ -26,9 +22,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
     private ImageBase coverImage;
     private String bannerImage;
     private @KeyUtils.MediaType String type;
-    private @KeyUtils.MediaSeason String season;
     private @KeyUtils.MediaFormat String format;
+    private @KeyUtils.MediaSeason String season;
     private @KeyUtils.MediaStatus String status;
+    private String siteUrl;
     private int meanScore;
     private int averageScore;
     private FuzzyDate startDate;
@@ -50,6 +47,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
         season = in.readString();
         format = in.readString();
         status = in.readString();
+        siteUrl = in.readString();
         meanScore = in.readInt();
         averageScore = in.readInt();
         startDate = in.readParcelable(FuzzyDate.class.getClassLoader());
@@ -72,6 +70,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
         dest.writeString(season);
         dest.writeString(format);
         dest.writeString(status);
+        dest.writeString(siteUrl);
         dest.writeInt(meanScore);
         dest.writeInt(averageScore);
         dest.writeParcelable(startDate, flags);
@@ -133,6 +132,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
         return status;
     }
 
+    public String getSiteUrl() {
+        return siteUrl;
+    }
+
     public FuzzyDate getStartDate() {
         return startDate;
     }
@@ -171,6 +174,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
 
     public int getAverageScore() {
         return averageScore;
+    }
+
+    public void toggleFavourite() {
+        isFavourite = !isFavourite;
     }
 
     @Override

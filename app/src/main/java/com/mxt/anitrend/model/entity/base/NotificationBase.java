@@ -21,7 +21,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     private int object_id;
     private int object_type;
     private String meta_data;
-    private String created_at;
+    private long created_at;
     private boolean read;
 
     public NotificationBase() {
@@ -35,7 +35,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
         object_id = in.readInt();
         object_type = in.readInt();
         meta_data = in.readString();
-        created_at = in.readString();
+        created_at = in.readLong();
         read = in.readByte() != 0;
     }
 
@@ -47,7 +47,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
         dest.writeInt(object_id);
         dest.writeInt(object_type);
         dest.writeString(meta_data);
-        dest.writeString(created_at);
+        dest.writeLong(created_at);
         dest.writeByte((byte) (read ? 1 : 0));
     }
 
@@ -93,8 +93,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     }
 
     public String getCreated_at() {
-        //JSP time zone
-        return DateUtil.getPrettyDateCustom(created_at);
+        return DateUtil.getPrettyDateUnix(created_at);
     }
 
     public boolean isRead() {

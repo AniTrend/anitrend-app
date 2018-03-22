@@ -41,5 +41,5 @@ public interface CharacterModel {
     @POST("/")
     @GraphQuery("CharacterActors")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<List<StaffBase>,StaffBase>>> getCharacterActors(@Body GraphQueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<List<StaffBase>, StaffBase>>> getCharacterActors(@Body GraphQueryContainer request);
 }

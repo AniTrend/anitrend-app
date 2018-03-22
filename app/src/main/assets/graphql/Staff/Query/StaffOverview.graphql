@@ -1,5 +1,5 @@
-query StaffOverview($id: Int!, $staffSort: [StaffSort]) {
-  Staff(id: $id, sort: $staffSort) {
+query StaffOverview($id: Int!, $asHtml: Boolean = true) {
+  Staff(id: $id) {
     ... on Staff {
       id
       name {
@@ -16,7 +16,7 @@ query StaffOverview($id: Int!, $staffSort: [StaffSort]) {
           medium
         }
       }
-      description(asHtml: true)
+      description(asHtml: $asHtml)
     }
   }
 }

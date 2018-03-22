@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StaffAdapter;
-import com.mxt.anitrend.base.custom.fragment.FragmentBaseListSingle;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
@@ -43,7 +42,7 @@ public class StaffFragment extends FragmentBaseListSingle<StaffBase, List<StaffB
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             seriesId = getArguments().getLong(KeyUtils.arg_id);
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
         }
         setPresenter(new SeriesPresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = false;
@@ -68,7 +67,7 @@ public class StaffFragment extends FragmentBaseListSingle<StaffBase, List<StaffB
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
         bundle.putLong(KeyUtils.arg_id, seriesId);
-        bundle.putString(KeyUtils.arg_series_type, KeyUtils.SeriesTypes[seriesType]);
+        bundle.putString(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[seriesType]);
         getViewModel().requestData(KeyUtils.SERIES_CHARACTER_PAGE_REQ, getContext());
     }
 

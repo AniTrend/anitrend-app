@@ -7,14 +7,12 @@ import com.mxt.anitrend.App;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.Genre_;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.UserBase_;
 import com.mxt.anitrend.model.entity.base.Version;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 
@@ -110,23 +108,10 @@ public class DatabaseHelper implements BoxQuery {
     }
 
     /**
-     * Gets all saved users except the current user
-     */
-    @Override
-    public List<UserBase> getAllUsers() {
-        if(getCurrentUser() != null)
-            return getBoxStore(UserBase.class).query().
-                    notEqual(UserBase_.id, getCurrentUser().getId())
-                    .build().findLazy();
-        return getBoxStore(UserBase.class)
-                .query().build().findLazy();
-    }
-
-    /**
      * Gets all saved tags
      */
     @Override
-    public List<MediaTag> getAllTags() {
+    public List<MediaTag> getMediaTags() {
         return getBoxStore(MediaTag.class)
                 .query().build()
                 .findLazy();
@@ -136,7 +121,7 @@ public class DatabaseHelper implements BoxQuery {
      * Gets all saved genres
      */
     @Override
-    public List<Genre> getAllGenres() {
+    public List<Genre> getGenreCollection() {
         return getBoxStore(Genre.class).query()
                 .notEqual(Genre_.genre, "Hentai")
                 .build().findLazy();
@@ -146,7 +131,7 @@ public class DatabaseHelper implements BoxQuery {
      * Gets all saved series lists
      */
     @Override
-    public List<MediaList> getAllSeries() {
+    public List<MediaList> getMediaLists() {
         return getBoxStore(MediaList.class)
                 .query().build()
                 .findLazy();
@@ -158,9 +143,9 @@ public class DatabaseHelper implements BoxQuery {
      * @param user
      */
     @Override
-    public boolean saveCurrentUser(User user) {
+    public void saveCurrentUser(User user) {
         this.user = user;
-        return getBoxStore(User.class).put(user) > -1;
+        getBoxStore(User.class).put(user);
     }
 
     /**
@@ -169,9 +154,9 @@ public class DatabaseHelper implements BoxQuery {
      * @param authBase
      */
     @Override
-    public boolean saveAuthCode(AuthBase authBase) {
+    public void saveAuthCode(AuthBase authBase) {
         getBoxStore(AuthBase.class).removeAll();
-        return getBoxStore(AuthBase.class).put(authBase) > -1;
+        getBoxStore(AuthBase.class).put(authBase);
     }
 
     /**
@@ -180,10 +165,10 @@ public class DatabaseHelper implements BoxQuery {
      * @param webToken
      */
     @Override
-    public boolean saveWebToken(WebToken webToken) {
+    public void saveWebToken(WebToken webToken) {
         getBoxStore(WebToken.class).removeAll();
         Box<WebToken> tokenBox = getBoxStore(WebToken.class);
-        return tokenBox.put(webToken) > -1;
+        tokenBox.put(webToken);
     }
 
     /**
@@ -192,25 +177,12 @@ public class DatabaseHelper implements BoxQuery {
      * @param version
      */
     @Override
-    public boolean saveRemoteVersion(Version version) {
+    public void saveRemoteVersion(Version version) {
         Box<Version> versionBox = getBoxStore(Version.class);
         if(versionBox.count() > 0)
             versionBox.removeAll();
         version.setLast_checked(System.currentTimeMillis());
         versionBox.put(version);
-        return false;
-    }
-
-    /**
-     * Saves all users
-     *
-     * @param users
-     */
-    @Override
-    public void saveUsers(List<UserBase> users) {
-        Box<UserBase> userSmallBox = getBoxStore(UserBase.class);
-        if(userSmallBox.count() < users.size())
-            userSmallBox.put(users);
     }
 
     /**
@@ -219,7 +191,7 @@ public class DatabaseHelper implements BoxQuery {
      * @param mediaTags
      */
     @Override
-    public void saveTags(List<MediaTag> mediaTags) {
+    public void saveMediaTags(List<MediaTag> mediaTags) {
         Box<MediaTag> tagBox = getBoxStore(MediaTag.class);
         if(tagBox.count() < mediaTags.size())
             tagBox.put(mediaTags);
@@ -231,7 +203,7 @@ public class DatabaseHelper implements BoxQuery {
      * @param genres
      */
     @Override
-    public void saveGenres(List<Genre> genres) {
+    public void saveGenreCollection(List<Genre> genres) {
         Box<Genre> genreBox = getBoxStore(Genre.class);
         if(genreBox.count() < genres.size())
             genreBox.put(genres);
@@ -243,21 +215,12 @@ public class DatabaseHelper implements BoxQuery {
      * @param mediaLists
      */
     @Override
-    public void saveSeries(List<MediaList> mediaLists) {
+    public void saveMediaLists(List<MediaList> mediaLists) {
         Box<MediaList> seriesListBox = getBoxStore(MediaList.class);
         if(seriesListBox.count() < mediaLists.size())
             seriesListBox.put(mediaLists);
     }
 
-    /**
-     * Adds a user item
-     *
-     * @param user
-     */
-    @Override
-    public void addUser(UserBase user) {
-        getBoxStore(UserBase.class).put(user);
-    }
 
     /**
      * Removes following of a specific user
@@ -267,24 +230,6 @@ public class DatabaseHelper implements BoxQuery {
     @Override
     public void removeUser(UserBase userBase) {
         getBoxStore(UserBase.class).remove(userBase);
-    }
-
-    /**
-     * Save current user favourites
-     *
-     * @param favourite
-     */
-    @Override
-    public void saveFavourite(Favourite favourite) {
-        getBoxStore(Favourite.class).put(favourite);
-    }
-
-    /**
-     * Get current user favourites
-     */
-    @Override
-    public Favourite getFavourite(long userId) {
-        return getBoxStore(Favourite.class).get(userId);
     }
 
     public void saveNotifications(NotificationBase... notification) {
@@ -300,6 +245,6 @@ public class DatabaseHelper implements BoxQuery {
         List<MediaList> mediaLists = new ArrayList<>();
         for (List<MediaList> list: seriesMap.values())
             mediaLists.addAll(list);
-        saveSeries(mediaLists);
+        saveMediaLists(mediaLists);
     }
 }

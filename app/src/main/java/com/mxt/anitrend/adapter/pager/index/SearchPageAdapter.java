@@ -9,7 +9,7 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.fragment.search.CharacterSearchFragment;
-import com.mxt.anitrend.view.fragment.search.SeriesSearchFragment;
+import com.mxt.anitrend.view.fragment.search.MediaSearchFragment;
 import com.mxt.anitrend.view.fragment.search.StaffSearchFragment;
 import com.mxt.anitrend.view.fragment.search.StudioSearchFragment;
 import com.mxt.anitrend.view.fragment.search.UserSearchFragment;
@@ -34,9 +34,9 @@ public class SearchPageAdapter extends BaseStatePageAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return SeriesSearchFragment.newInstance(getParams(), KeyUtils.ANIME);
+                return MediaSearchFragment.newInstance(getParams(), KeyUtils.ANIME);
             case 1:
-                return SeriesSearchFragment.newInstance(getParams(), KeyUtils.MANGA);
+                return MediaSearchFragment.newInstance(getParams(), KeyUtils.MANGA);
             case 2:
                 return StudioSearchFragment.newInstance(getParams());
             case 3:

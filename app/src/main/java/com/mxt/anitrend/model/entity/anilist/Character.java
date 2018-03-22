@@ -3,9 +3,6 @@ package com.mxt.anitrend.model.entity.anilist;
 import android.os.Parcel;
 
 import com.mxt.anitrend.model.entity.base.CharacterBase;
-import com.mxt.anitrend.model.entity.base.MediaBase;
-
-import java.util.List;
 
 /**
  * Created by Maxwell on 10/4/2016.

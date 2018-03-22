@@ -1,4 +1,4 @@
-query StudioSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
+query StudioSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [StudioSort] = SEARCH_MATCH) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query StudioSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
         hasNextPage
       }
     }
-    studios(id: $id, search: $search, sort: SEARCH_MATCH) {
+    studios(id: $id, search: $search, sort: $sort) {
       ... on Studio {
         id
         name

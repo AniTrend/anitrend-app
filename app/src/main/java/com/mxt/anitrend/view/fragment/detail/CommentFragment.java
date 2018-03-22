@@ -178,7 +178,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                 MediaBase series = feedList.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, series.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_mention:
@@ -235,7 +235,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                         case R.id.series_image:
                             intent = new Intent(getActivity(), SeriesActivity.class);
                             intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
-                            intent.putExtra(KeyUtils.arg_series_type, data.getSeries().getSeries_type());
+                            intent.putExtra(KeyUtils.arg_media_type, data.getSeries().getSeries_type());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.widget_users:

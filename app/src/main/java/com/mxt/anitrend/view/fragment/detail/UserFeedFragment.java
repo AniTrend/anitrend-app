@@ -123,7 +123,7 @@ public class UserFeedFragment extends FragmentBaseList<FeedList, List<FeedList>,
                 MediaBase series = data.getSeries();
                 intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_series_type, series.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, series.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_comment:

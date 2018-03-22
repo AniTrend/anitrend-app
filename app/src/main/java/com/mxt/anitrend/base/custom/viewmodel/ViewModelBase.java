@@ -75,7 +75,7 @@ public class ViewModelBase<T> extends ViewModel implements RetroCallback<T> {
      * <br/>
      * @param request_type the type of request to execute
      */
-    public void requestData(@KeyUtils.RequestMode int request_type, Context context) {
+    public void requestData(@KeyUtils.RequestType int request_type, Context context) {
         mLoader = new RequestHandler<>(getParams(), this, request_type);
         mLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context);
     }

@@ -86,7 +86,7 @@ public class ParamBuilderUtil {
 
     public Bundle build() {
         if(!TextUtils.isEmpty(series_type))
-            bundle.putString(KeyUtils.arg_series_type, series_type);
+            bundle.putString(KeyUtils.arg_media_type, series_type);
         if(year != 0)
             bundle.putInt(KeyUtils.arg_series_year, year);
         if(!TextUtils.isEmpty(season))

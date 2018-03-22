@@ -25,7 +25,7 @@ import retrofit2.Retrofit;
 
 /**
  * Created by max on 2017/10/22.
- * Body factory default implementation
+ * Body for GraphQL requests and responses
  */
 
 public final class GraphConverter extends Converter.Factory {
@@ -42,12 +42,16 @@ public final class GraphConverter extends Converter.Factory {
 
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+        if(type instanceof ResponseBody)
+            return super.responseBodyConverter(type, annotations, retrofit);
         return new GraphResponseConverter<>(type);
     }
 
     @Override
     public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
-        return new GraphRequestConverter(methodAnnotations);
+        if(type instanceof GraphQueryContainer)
+            return new GraphRequestConverter(methodAnnotations);
+        return super.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
     }
 
     /**
@@ -101,8 +105,7 @@ public final class GraphConverter extends Converter.Factory {
 
         @Override
         public RequestBody convert(@NonNull GraphQueryContainer container) {
-            container.setQuery(graphProcessor.getQuery(methodAnnotations))
-                    .setVariable(KeyUtils.arg_per_page, KeyUtils.PAGING_LIMIT);
+            container.setQuery(graphProcessor.getQuery(methodAnnotations));
             String queryJson = WebFactory.gson.toJson(container);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);
         }

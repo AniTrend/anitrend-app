@@ -1,70 +1,75 @@
-query CharacterActors($id: Int!, $page: Int, $perPage: Int, $characterSort: [CharacterSort], $staffSort: [StaffSort]) {
-  Character(id: $id, sort: $characterSort) {
+query CharacterActors($id: Int!, $page: Int, $perPage: Int, $staffSort: [StaffSort] = [LANGUAGE_DESC, ROLE_DESC], $language: StaffLanguage, $asHtml: Boolean = true) {
+  Character(id: $id) {
     media(page: $page, perPage: $perPage) {
-      pageInfo {
-        ... on PageInfo {
-          total
-          perPage
-          currentPage
-          hasNextPage
-        }
-      }
-      edges {
-        voiceActors(sort: $staffSort) {
-          ... on Staff {
-            id
-            name {
-              ... on StaffName {
-                first
-                last
-                native
-              }
-            }
-            language
-            image {
-              ... on StaffImage {
-                large
-                medium
-              }
-            }
-            description(asHtml: true)
-            language
+      ... on MediaConnection {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
           }
         }
-        node {
-          ... on Media {
-            id
-            title {
-              ... on MediaTitle {
-                english
-                romaji
-                native
-                userPreferred
-              }
-            }
-            type
-            season
-            status
-            meanScore
-            averageScore
-            startDate {
-              ... on FuzzyDate {
-                day
-                month
-                year
-              }
-            }
-            episodes
-            chapters
-            volumes
-            isAdult
-            isFavourite
-            nextAiringEpisode {
-              ... on AiringSchedule {
+        edges {
+          ... on MediaEdge {
+            voiceActors(sort: $staffSort, language: $language) {
+              ... on Staff {
                 id
-                airingAt
-                timeUntilAiring
-                episode
+                name {
+                  ... on StaffName {
+                    first
+                    last
+                    native
+                  }
+                }
+                language
+                image {
+                  ... on StaffImage {
+                    large
+                    medium
+                  }
+                }
+                description(asHtml: $asHtml)
+                language
+              }
+            }
+            node {
+              ... on Media {
+                id
+                title {
+                  ... on MediaTitle {
+                    english
+                    romaji
+                    native
+                    userPreferred
+                  }
+                }
+                type
+                format
+                season
+                status
+                meanScore
+                averageScore
+                startDate {
+                  ... on FuzzyDate {
+                    day
+                    month
+                    year
+                  }
+                }
+                episodes
+                chapters
+                volumes
+                isAdult
+                isFavourite
+                nextAiringEpisode {
+                  ... on AiringSchedule {
+                    id
+                    airingAt
+                    timeUntilAiring
+                    episode
+                  }
+                }
               }
             }
           }

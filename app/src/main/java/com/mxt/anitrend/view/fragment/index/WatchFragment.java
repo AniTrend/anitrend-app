@@ -76,7 +76,8 @@ public class WatchFragment extends FragmentChannelBase {
         }
     }
 
-    private @KeyUtils.RequestMode int getRequestMode(boolean feed) {
+    private @KeyUtils.RequestType
+    int getRequestMode(boolean feed) {
         if(feed)
             return isPopular? KeyUtils.EPISODE_POPULAR_REQ:KeyUtils.EPISODE_LATEST_REQ;
         return KeyUtils.EPISODE_FEED_REQ;

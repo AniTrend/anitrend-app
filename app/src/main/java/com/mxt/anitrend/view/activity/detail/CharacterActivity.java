@@ -13,7 +13,9 @@ import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.model.entity.anilist.Character;
+import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.GraphParameterUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.TapTargetUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -27,14 +29,14 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
  * character activity
  */
 
-public class CharacterActivity extends ActivityBase<Character, BasePresenter> {
+public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
     protected @BindView(R.id.page_container) ViewPager viewPager;
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
-    private Character model;
+    private CharacterBase model;
 
     private FavouriteToolbarWidget favouriteWidget;
 
@@ -104,7 +106,9 @@ public class CharacterActivity extends ActivityBase<Character, BasePresenter> {
 
     @Override
     protected void makeRequest() {
-        getViewModel().requestData(KeyUtils.CHARACTER_INFO_REQ, getApplicationContext());
+        Bundle bundle = getViewModel().getParams();
+        bundle.putParcelable(KeyUtils.arg_graph_params, GraphParameterUtil.getDefaultQueryContainer(false));
+        getViewModel().requestData(KeyUtils.CHARACTER_BASE_REQ, getApplicationContext());
     }
 
     /**
@@ -113,7 +117,7 @@ public class CharacterActivity extends ActivityBase<Character, BasePresenter> {
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable Character model) {
+    public void onChanged(@Nullable CharacterBase model) {
         super.onChanged(model);
         if(model != null) {
             this.model = model;

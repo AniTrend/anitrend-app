@@ -13,7 +13,6 @@ public class AiringSchedule implements Parcelable {
     private long timeUntilAiring;
     private int episode;
 
-
     protected AiringSchedule(Parcel in) {
         airingAt = in.readLong();
         timeUntilAiring = in.readLong();

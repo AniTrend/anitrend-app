@@ -143,7 +143,7 @@ final class SeriesDialogUtil extends DialogUtil {
         WidgetPresenter<MediaList> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
-        @KeyUtils.RequestMode int requestMode = getRequestType(seriesManageBase.getModel(), isNewEntry);
+        @KeyUtils.RequestType int requestMode = getRequestType(seriesManageBase.getModel(), isNewEntry);
 
         presenter.requestData(requestMode, context, new RetroCallback<MediaList>() {
             @Override
@@ -200,7 +200,7 @@ final class SeriesDialogUtil extends DialogUtil {
         WidgetPresenter<ResponseBody> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
-        @KeyUtils.RequestMode int deleteType = seriesManageBase.getModel().getAnime() != null ?
+        @KeyUtils.RequestType int deleteType = seriesManageBase.getModel().getAnime() != null ?
                 KeyUtils.ANIME_LIST_DELETE_REQ : KeyUtils.MANGA_LIST_DELETE_REQ;
 
         presenter.requestData(deleteType, context, new RetroCallback<ResponseBody>() {
@@ -237,7 +237,8 @@ final class SeriesDialogUtil extends DialogUtil {
     /**
      * @return the request type for a given series entry
      */
-    private static @KeyUtils.RequestMode int getRequestType(MediaList model, boolean isNewEntry) {
+    private static @KeyUtils.RequestType
+    int getRequestType(MediaList model, boolean isNewEntry) {
         if(model.getAnime() != null)
             return isNewEntry ? KeyUtils.ANIME_LIST_ADD_REQ : KeyUtils.ANIME_LIST_EDIT_REQ;
         else

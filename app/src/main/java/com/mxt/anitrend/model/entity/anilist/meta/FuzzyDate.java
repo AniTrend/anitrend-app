@@ -57,6 +57,10 @@ public class FuzzyDate implements Parcelable {
         return year;
     }
 
+    public boolean isValidDate() {
+        return day != 0 || month != 0 || year != 0;
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.getDefault(),"%d/%d/%d", year, month, day);

@@ -34,7 +34,8 @@ import butterknife.ButterKnife;
 public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
 
     private BottomSheetListBinding binding;
-    private @KeyUtils.RequestMode int requestMode;
+    private @KeyUtils.RequestType
+    int requestMode;
 
 
     public static BottomSheetGiphy newInstance(Bundle bundle) {

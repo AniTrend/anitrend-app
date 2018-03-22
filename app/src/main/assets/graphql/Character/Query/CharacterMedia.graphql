@@ -1,48 +1,51 @@
-query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $characterSort: [CharacterSort], $seriesSort: [MediaSort]) {
-  Character(id: $id, sort: $characterSort) {
+query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort]) {
+  Character(id: $id) {
     media(page: $page, perPage: $perPage, sort: $seriesSort) {
-      pageInfo {
-        ... on PageInfo {
-          total
-          perPage
-          currentPage
-          hasNextPage
+      ... on MediaConnection {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
         }
-      }
-      nodes {
-        ... on Media {
-          id
-          title {
-            ... on MediaTitle {
-              english
-              romaji
-              native
-              userPreferred
+        nodes {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
             }
-          }
-          type
-          season
-          status
-          meanScore
-          averageScore
-          startDate {
-            ... on FuzzyDate {
-              day
-              month
-              year
+            type
+            format
+            season
+            status
+            meanScore
+            averageScore
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
             }
-          }
-          episodes
-          chapters
-          volumes
-          isAdult
-          isFavourite
-          nextAiringEpisode {
-            ... on AiringSchedule {
-              id
-              airingAt
-              timeUntilAiring
-              episode
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
             }
           }
         }

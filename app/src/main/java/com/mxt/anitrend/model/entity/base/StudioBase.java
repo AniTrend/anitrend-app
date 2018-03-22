@@ -49,8 +49,8 @@ public class StudioBase implements Parcelable {
         return isFavourite;
     }
 
-    public void setFavourite(boolean favourite) {
-        this.isFavourite = favourite;
+    public void toggleFavourite() {
+        isFavourite = !isFavourite;
     }
 
     @Override

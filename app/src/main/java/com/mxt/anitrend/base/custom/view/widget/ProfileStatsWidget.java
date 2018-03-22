@@ -112,14 +112,14 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
             case R.id.user_anime_total_container:
                 intent = new Intent(getContext(), SeriesListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtils.arg_series_type, KeyUtils.ANIME);
+                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.ANIME);
                 intent.putExtra(KeyUtils.arg_user_name, user.getName());
                 getContext().startActivity(intent);
                 break;
             case R.id.user_manga_total_container:
                 intent = new Intent(getContext(), SeriesListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtils.arg_series_type, KeyUtils.MANGA);
+                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.MANGA);
                 intent.putExtra(KeyUtils.arg_user_name, user.getName());
                 getContext().startActivity(intent);
                 break;

@@ -12,7 +12,6 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 
 public class Favourite {
 
-    private long id;
     private PageContainer<MediaBase> anime;
     private PageContainer<MediaBase> manga;
     private PageContainer<CharacterBase> character;
@@ -21,10 +20,6 @@ public class Favourite {
 
     public Favourite() {
 
-    }
-
-    public long getId() {
-        return id;
     }
 
     public PageContainer<MediaBase> getAnime() {

@@ -22,6 +22,7 @@ query MangaFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
               }
             }
             type
+            format
             season
             status
             meanScore

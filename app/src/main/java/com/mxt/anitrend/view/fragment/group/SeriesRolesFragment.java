@@ -49,7 +49,7 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            seriesType = getArguments().getInt(KeyUtils.arg_series_type);
+            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
         mColumnSize = R.integer.grid_giphy_x3;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
@@ -68,7 +68,7 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
             case R.id.container:
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_series_type, ((MediaBase)data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

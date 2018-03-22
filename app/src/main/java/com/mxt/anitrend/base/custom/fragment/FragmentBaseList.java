@@ -358,7 +358,11 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
             showEmpty(getString(R.string.layout_empty_response));
     }
 
-    protected void onPostProcessed(List<M> content) {
+    /**
+     * Handles post view model result after extraction or processing
+     * @param content The main data model for the class
+     */
+    protected void onPostProcessed(@Nullable List<M> content) {
         if(content != null) {
             if(content.size() > 0) {
                 if(isPager) {

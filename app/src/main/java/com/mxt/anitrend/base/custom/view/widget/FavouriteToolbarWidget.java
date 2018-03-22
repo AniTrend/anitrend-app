@@ -16,10 +16,17 @@ import com.mxt.anitrend.databinding.WidgetToolbarFavouriteBinding;
 import com.mxt.anitrend.model.entity.anilist.Character;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.CharacterBase;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.base.StaffBase;
+import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphParameterUtil;
 import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -27,18 +34,21 @@ import retrofit2.Response;
 
 /**
  * Created by max on 2018/01/31.
+ * Widget for handling favourite toggles
  */
 
 public class FavouriteToolbarWidget extends FrameLayout implements CustomView, RetroCallback<ResponseBody>, View.OnClickListener {
 
     private WidgetPresenter<ResponseBody> presenter;
     private WidgetToolbarFavouriteBinding binding;
-    private @KeyUtils.RequestMode int requestType;
+    private @KeyUtils.RequestType int requestType = KeyUtils.MUT_TOGGLE_FAVOURITE;
 
-    private Staff staff;
-    private Media series;
-    private Studio studio;
-    private Character character;
+    private StaffBase staffBase;
+    private MediaBase mediaBase;
+    private StudioBase studioBase;
+    private CharacterBase characterBase;
+
+    private GraphQueryContainer queryContainer;
 
     public FavouriteToolbarWidget(@NonNull Context context) {
         super(context);
@@ -64,6 +74,8 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
         binding = WidgetToolbarFavouriteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        queryContainer = GraphParameterUtil.getDefaultQueryContainer(false)
+                .setVariable(KeyUtils.arg_per_page, KeyUtils.SINGLE_ITEM_LIMIT);
         binding.setOnClickEvent(this);
     }
 
@@ -82,36 +94,35 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
             binding.widgetFlipper.setDisplayedChild(WidgetPresenter.CONTENT_STATE);
     }
 
-    public void setModel(Staff staff) {
-        presenter.getParams().putLong(KeyUtils.arg_id, staff.getId());
-        this.requestType = KeyUtils.STAFF_FAVOURITE_REQ;
-        this.staff = staff;
+    public void setModel(StaffBase staffBase) {
+        this.staffBase = staffBase;
         setIconType();
+        queryContainer.setVariable(KeyUtils.arg_staffId, staffBase.getId());
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
-    public void setModel(Character character) {
-        presenter.getParams().putLong(KeyUtils.arg_id, character.getId());
-        this.requestType = KeyUtils.CHARACTER_FAVOURITE_REQ;
-        this.character = character;
+    public void setModel(CharacterBase characterBase) {
+        this.characterBase = characterBase;
         setIconType();
+        queryContainer.setVariable(KeyUtils.arg_characterId, characterBase.getId());
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
-    public void setModel(Studio studio) {
-        presenter.getParams().putLong(KeyUtils.arg_id, studio.getId());
-        this.requestType = KeyUtils.STUDIO_FAVOURITE_REQ;
-        this.studio = studio;
+    public void setModel(StudioBase studioBase) {
+        this.studioBase = studioBase;
         setIconType();
+        queryContainer.setVariable(KeyUtils.arg_studioId, studioBase.getId());
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
-    public void setModel(Media series) {
-        presenter.getParams().putLong(KeyUtils.arg_id, series.getId());
-        this.requestType = series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]) ?
-                KeyUtils.ANIME_FAVOURITE_REQ : KeyUtils.MANGA_FAVOURITE_REQ;
-        this.series = series;
+    public void setModel(MediaBase mediaBase) {
+        this.mediaBase = mediaBase;
         setIconType();
+        queryContainer.setVariable(MediaUtil.isAnimeType(mediaBase) ? KeyUtils.arg_animeId : KeyUtils.arg_mangaId, mediaBase.getId());
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
@@ -138,17 +149,17 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private void setIconType() {
         boolean isFavourite, requiresTint = true;
         switch (requestType) {
-            case KeyUtils.CHARACTER_FAVOURITE_REQ:
-                isFavourite = character.isFavourite();
+            case KeyUtils.CHARACTER_BASE_REQ:
+                isFavourite = characterBase.isFavourite();
                 break;
-            case KeyUtils.STAFF_FAVOURITE_REQ:
-                isFavourite = staff.isFavourite();
+            case KeyUtils.STAFF_BASE_REQ:
+                isFavourite = staffBase.isFavourite();
                 break;
-            case KeyUtils.STUDIO_FAVOURITE_REQ:
-                isFavourite = studio.isFavourite();
+            case KeyUtils.STUDIO_BASE_REQ:
+                isFavourite = studioBase.isFavourite();
                 break;
             default:
-                isFavourite = series.isFavourite();
+                isFavourite = mediaBase.isFavourite();
                 requiresTint = false;
                 break;
         }
@@ -167,60 +178,14 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
         try {
             if(response.isSuccessful()) {
-                UserBase currentUser = presenter.getDatabase().getCurrentUser();
-                Favourite favourite = presenter.getDatabase().getFavourite(currentUser.getId());
-                if(favourite == null) {
-                    favourite = new Favourite();
-                    favourite.initCollections();
-                }
-                switch (requestType) {
-                    case KeyUtils.ANIME_FAVOURITE_REQ:
-                        series.setFavourite(!series.isFavourite());
-                        if(favourite.getAnime() == null)
-                            favourite.createAnimeCollection();
-                        if(series.isFavourite())
-                            favourite.getAnime().add(series);
-                        else
-                            favourite.getAnime().remove(series);
-                        break;
-                    case KeyUtils.MANGA_FAVOURITE_REQ:
-                        series.setFavourite(!series.isFavourite());
-                        if(favourite.getManga() == null)
-                            favourite.createMangaCollection();
-                        if(series.isFavourite())
-                            favourite.getManga().add(series);
-                        else
-                            favourite.getManga().remove(series);
-                        break;
-                    case KeyUtils.CHARACTER_FAVOURITE_REQ:
-                        character.setFavourite(!character.isFavourite());
-                        if(favourite.getCharacter() == null)
-                            favourite.createCharacterCollection();
-                        if(character.isFavourite())
-                            favourite.getCharacter().add(character);
-                        else
-                            favourite.getCharacter().remove(character);
-                        break;
-                    case KeyUtils.STAFF_FAVOURITE_REQ:
-                        staff.setFavourite(!staff.isFavourite());
-                        if(favourite.getStaff() == null)
-                            favourite.createStaffCollection();
-                        if(staff.isFavourite())
-                            favourite.getStaff().add(staff);
-                        else
-                            favourite.getStaff().remove(staff);
-                        break;
-                    case KeyUtils.STUDIO_FAVOURITE_REQ:
-                        studio.setFavourite(!studio.isFavourite());
-                        if(favourite.getStudio() == null)
-                            favourite.createStudioCollection();
-                        if(studio.isFavourite())
-                            favourite.getStudio().add(studio);
-                        else
-                            favourite.getStudio().remove(studio);
-                        break;
-                }
-                presenter.getDatabase().saveFavourite(favourite);
+                if(mediaBase != null)
+                    mediaBase.toggleFavourite();
+                else if (studioBase != null)
+                    studioBase.toggleFavourite();
+                else if (staffBase != null)
+                    staffBase.toggleFavourite();
+                else if (characterBase != null)
+                    characterBase.toggleFavourite();
                 setIconType();
             }
         } catch (Exception e) {

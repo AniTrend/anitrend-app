@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesReviewAdapter;
-import com.mxt.anitrend.base.custom.fragment.FragmentReviewBase;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -108,7 +107,7 @@ public class FragmentFeedReview extends FragmentReviewBase {
                 MediaBase mediaBase = reviewType? data.getAnime() : data.getManga();
                 Intent intent = new Intent(getActivity(), SeriesActivity.class);
                 intent.putExtra(KeyUtils.arg_id, mediaBase.getId());
-                intent.putExtra(KeyUtils.arg_series_type, mediaBase.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, mediaBase.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.review_read_more:

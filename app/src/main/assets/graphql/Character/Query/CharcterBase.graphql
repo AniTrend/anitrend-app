@@ -1,5 +1,5 @@
-query CharacterBase($id: Int!, $characterSort: [CharacterSort]) {
-  Character(id: $id, sort: $characterSort) {
+query CharacterBase($id: Int!) {
+  Character(id: $id) {
     ... on Character {
       id
       isFavourite

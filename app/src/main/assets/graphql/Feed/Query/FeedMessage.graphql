@@ -1,4 +1,4 @@
-query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int) {
+query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int, $asHtml: Boolean = true) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -11,7 +11,7 @@ query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int) {
     activities(type: MESSAGE, sort: ID_DESC, messengerId: $messengerId, userId: $userId) {
       ... on MessageActivity {
         id
-        message(asHtml: true)
+        message(asHtml: $asHtml)
         createdAt
         type
         messenger {

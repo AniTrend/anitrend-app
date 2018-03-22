@@ -1,4 +1,4 @@
-query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
+query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [StaffSort] = SEARCH_MATCH) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String) {
         hasNextPage
       }
     }
-    staff(id: $id, search: $search, sort: SEARCH_MATCH) {
+    staff(id: $id, search: $search, sort: $sort) {
       ... on Staff {
         id
         name {

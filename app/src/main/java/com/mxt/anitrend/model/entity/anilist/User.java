@@ -2,7 +2,10 @@ package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 
+import com.mxt.anitrend.data.converter.MediaListOptionsConverter;
+import com.mxt.anitrend.data.converter.UserOptionsConverter;
 import com.mxt.anitrend.data.converter.UserStatsConverter;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.anilist.meta.UserOptions;
 import com.mxt.anitrend.model.entity.base.UserBase;
 
@@ -16,7 +19,10 @@ import io.objectbox.annotation.Entity;
 public class User extends UserBase {
 
     private String about;
+    @Convert(converter = UserOptionsConverter.class, dbType = String.class)
     private UserOptions options;
+    @Convert(converter = MediaListOptionsConverter.class, dbType = String.class)
+    private MediaListOptions mediaListOptions;
     @Convert(converter = UserStatsConverter.class, dbType = String.class)
     private UserStats stats;
     private int unreadNotificationCount;
@@ -29,6 +35,7 @@ public class User extends UserBase {
         super(in);
         about = in.readString();
         options = in.readParcelable(UserOptions.class.getClassLoader());
+        mediaListOptions = in.readParcelable(MediaListOptions.class.getClassLoader());
         stats = in.readParcelable(UserStats.class.getClassLoader());
         unreadNotificationCount = in.readInt();
     }
@@ -44,34 +51,6 @@ public class User extends UserBase {
             return new User[size];
         }
     };
-
-    public String getAbout() {
-        return about;
-    }
-
-    public UserStats getStats() {
-        return stats;
-    }
-
-    public int getUnreadNotificationCount() {
-        return unreadNotificationCount;
-    }
-
-    public void setUnreadNotificationCount(int count) {
-        unreadNotificationCount = count;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
-    }
-
-    public void setStats(UserStats stats) {
-        this.stats = stats;
-    }
-
-    public UserOptions getOptions() {
-        return options;
-    }
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
@@ -101,7 +80,36 @@ public class User extends UserBase {
         super.writeToParcel(dest, flags);
         dest.writeString(about);
         dest.writeParcelable(options, flags);
+        dest.writeParcelable(mediaListOptions, flags);
         dest.writeParcelable(stats, flags);
         dest.writeInt(unreadNotificationCount);
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public UserStats getStats() {
+        return stats;
+    }
+
+    public int getUnreadNotificationCount() {
+        return unreadNotificationCount;
+    }
+
+    public void setUnreadNotificationCount(int count) {
+        unreadNotificationCount = count;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public void setStats(UserStats stats) {
+        this.stats = stats;
+    }
+
+    public UserOptions getOptions() {
+        return options;
     }
 }

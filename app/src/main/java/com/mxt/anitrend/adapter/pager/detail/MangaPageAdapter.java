@@ -33,7 +33,7 @@ public class MangaPageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        getParams().putInt(KeyUtils.arg_series_type, KeyUtils.MANGA);
+        getParams().putInt(KeyUtils.arg_media_type, KeyUtils.MANGA);
         getParams().putInt(KeyUtils.arg_request_type, KeyUtils.LIST);
         switch (position) {
             case 0:

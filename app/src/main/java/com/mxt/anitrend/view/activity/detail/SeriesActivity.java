@@ -61,8 +61,8 @@ public class SeriesActivity extends ActivityBase<Media, SeriesPresenter> impleme
         setViewModel(true);
         if(getIntent().hasExtra(KeyUtils.arg_id))
             id = getIntent().getLongExtra(KeyUtils.arg_id, 0);
-        if(getIntent().hasExtra(KeyUtils.arg_series_type))
-            seriesType = getIntent().getStringExtra(KeyUtils.arg_series_type);
+        if(getIntent().hasExtra(KeyUtils.arg_media_type))
+            seriesType = getIntent().getStringExtra(KeyUtils.arg_media_type);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class SeriesActivity extends ActivityBase<Media, SeriesPresenter> impleme
     protected void makeRequest() {
         Bundle params = getViewModel().getParams();
         params.putLong(KeyUtils.arg_id, id);
-        params.putString(KeyUtils.arg_series_type, seriesType);
+        params.putString(KeyUtils.arg_media_type, seriesType);
         getViewModel().requestData(KeyUtils.SERIES_PAGE_REQ, getApplicationContext());
     }
 

@@ -112,7 +112,7 @@ public class DateUtil {
      * @param fuzzyDate - fuzzy date
      */
     public static String getEndTitle(FuzzyDate fuzzyDate) {
-        if(fuzzyDate == null)
+        if(fuzzyDate == null || !fuzzyDate.isValidDate())
             return "Ends";
 
         try {
@@ -129,7 +129,7 @@ public class DateUtil {
      * @param fuzzyDate - fuzzy date
      */
     public static String getStartTitle(FuzzyDate fuzzyDate){
-        if(fuzzyDate == null)
+        if(fuzzyDate == null || !fuzzyDate.isValidDate())
             return "Starts";
 
         try {
@@ -153,12 +153,11 @@ public class DateUtil {
     }
 
     /**
-     * For dates that don't include a timezones,
-     * the underlying method sets the time with a +7 offset
+     * Unix time stamps dates
      * <br/>
      * @param date - a unix timestamp
      */
-    public static @NonNull String getPrettyDateCustom(long date) {
+    public static @NonNull String getPrettyDateUnix(long date) {
         PrettyTime prettyTime = new PrettyTime(Locale.getDefault());
         return prettyTime.format(new Date(date * 1000L));
     }

@@ -10,10 +10,11 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public class BaseConsumer<T> {
 
-    private @KeyUtils.RequestMode int requestMode;
+    private @KeyUtils.RequestType
+    int requestMode;
     private T changeModel;
 
-    public BaseConsumer(@KeyUtils.RequestMode int requestMode, T changeModel) {
+    public BaseConsumer(@KeyUtils.RequestType int requestMode, T changeModel) {
         this.requestMode = requestMode;
         this.changeModel = changeModel;
     }
@@ -22,7 +23,8 @@ public class BaseConsumer<T> {
         this.requestMode = requestMode;
     }
 
-    public @KeyUtils.RequestMode int getRequestMode() {
+    public @KeyUtils.RequestType
+    int getRequestMode() {
         return requestMode;
     }
 

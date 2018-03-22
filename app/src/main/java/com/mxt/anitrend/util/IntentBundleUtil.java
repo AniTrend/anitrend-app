@@ -60,14 +60,14 @@ public class IntentBundleUtil {
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
                 else
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtils.arg_series_type, type);
+                intent.putExtra(KeyUtils.arg_media_type, type);
                     break;
             case KeyUtils.DEEP_LINK_ANIME:
                 if ((splitKeys = hasDepth(lastKey)) != null)
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
                 else
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtils.arg_series_type, type);
+                intent.putExtra(KeyUtils.arg_media_type, type);
                     break;
             case KeyUtils.DEEP_LINK_CHARACTER:
                 if ((splitKeys = hasDepth(lastKey)) != null)

@@ -1,5 +1,5 @@
-query StaffBase($id: Int!, $staffSort: [StaffSort]) {
-  Staff(id: $id, sort: $staffSort) {
+query StaffBase($id: Int!) {
+  Staff(id: $id) {
     ... on Staff {
       id
       siteUrl
