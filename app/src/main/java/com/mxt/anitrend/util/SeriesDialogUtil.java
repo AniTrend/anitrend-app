@@ -18,6 +18,8 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
+import java.util.Objects;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -40,7 +42,7 @@ final class SeriesDialogUtil extends DialogUtil {
      * @param title series title based on user preferences
      */
     static void createSeriesManage(Context context, @NonNull Media model, boolean isNewEntry, String title) {
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getSeries_type());
+        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getType());
         seriesManageBase.setModel(model, isNewEntry);
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
@@ -72,7 +74,7 @@ final class SeriesDialogUtil extends DialogUtil {
      * @param title series title based on user preferences
      */
     static void createSeriesManage(Context context, @NonNull MediaBase model, boolean isNewEntry, String title) {
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getSeries_type());
+        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getType());
         seriesManageBase.setModel(model, isNewEntry);
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
@@ -104,8 +106,7 @@ final class SeriesDialogUtil extends DialogUtil {
      * @param title series title based on user preferences
      */
     static void createSeriesManage(Context context, @NonNull MediaList model, boolean isNewEntry, String title) {
-        MediaBase mediaBase = model.getAnime() != null ? model.getAnime() : model.getManga();
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, mediaBase.getSeries_type());
+        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getMedia().getType());
         seriesManageBase.setModel(model, isNewEntry);
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
@@ -143,21 +144,19 @@ final class SeriesDialogUtil extends DialogUtil {
         WidgetPresenter<MediaList> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
-        @KeyUtils.RequestType int requestMode = getRequestType(seriesManageBase.getModel(), isNewEntry);
+        @KeyUtils.RequestType int requestType = KeyUtils.MUT_SAVE_MEDIA_LIST;
 
-        presenter.requestData(requestMode, context, new RetroCallback<MediaList>() {
+        presenter.requestData(requestType, context, new RetroCallback<MediaList>() {
             @Override
             public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
                 try {
                     MediaList responseBody;
                     progressDialog.dismiss();
                     if(response.isSuccessful() && (responseBody = response.body()) != null) {
-                        if(seriesManageBase.getModel().getAnime() != null)
-                            responseBody.setAnime(seriesManageBase.getModel().getAnime());
-                        else
-                            responseBody.setManga(seriesManageBase.getModel().getManga());
+                        if(seriesManageBase.getModel().getMedia() != null)
+                            responseBody.setMedia(seriesManageBase.getModel().getMedia());
                         presenter.getDatabase().getBoxStore(MediaList.class).put(responseBody);
-                        presenter.notifyAllListeners(new BaseConsumer<>(requestMode, responseBody), false);
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, responseBody), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e(this.toString(), ErrorUtil.getError(response));
@@ -200,17 +199,16 @@ final class SeriesDialogUtil extends DialogUtil {
         WidgetPresenter<ResponseBody> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
-        @KeyUtils.RequestType int deleteType = seriesManageBase.getModel().getAnime() != null ?
-                KeyUtils.ANIME_LIST_DELETE_REQ : KeyUtils.MANGA_LIST_DELETE_REQ;
+        @KeyUtils.RequestType int requestType = KeyUtils.MUT_DELETE_MEDIA_LIST;
 
-        presenter.requestData(deleteType, context, new RetroCallback<ResponseBody>() {
+        presenter.requestData(requestType, context, new RetroCallback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     progressDialog.dismiss();
                     if(response.isSuccessful()) {
                         presenter.getDatabase().getBoxStore(MediaList.class).remove(seriesManageBase.getModel());
-                        presenter.notifyAllListeners(new BaseConsumer<>(deleteType, seriesManageBase.getModel()), false);
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, seriesManageBase.getModel()), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e(this.toString(), ErrorUtil.getError(response));
@@ -235,24 +233,13 @@ final class SeriesDialogUtil extends DialogUtil {
     }
 
     /**
-     * @return the request type for a given series entry
-     */
-    private static @KeyUtils.RequestType
-    int getRequestType(MediaList model, boolean isNewEntry) {
-        if(model.getAnime() != null)
-            return isNewEntry ? KeyUtils.ANIME_LIST_ADD_REQ : KeyUtils.ANIME_LIST_EDIT_REQ;
-        else
-            return isNewEntry ? KeyUtils.MANGA_LIST_ADD_REQ : KeyUtils.MANGA_LIST_EDIT_REQ;
-    }
-
-    /**
      * Creates manager view class for both anime and manga depending on
      * <br/>
      *
      * @param context from a fragment activity derived class
      */
-    private static CustomSeriesManageBase buildManagerType(Context context, String seriesType) {
-        if(seriesType.equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
+    private static CustomSeriesManageBase buildManagerType(Context context, @KeyUtils.MediaType String seriesType) {
+        if(Objects.equals(seriesType, KeyUtils.ANIME))
             return new CustomSeriesAnimeManage(context);
         return new CustomSeriesMangaManage(context);
     }

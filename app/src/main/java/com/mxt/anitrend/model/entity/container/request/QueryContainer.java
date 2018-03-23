@@ -5,16 +5,16 @@ import android.os.Parcelable;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class GraphQueryContainer implements Parcelable {
+public class QueryContainer implements Parcelable {
 
     private String query;
     private Map<String, Object> variables;
 
-    public GraphQueryContainer() {
+    public QueryContainer() {
 
     }
 
-    public GraphQueryContainer(Parcel in) {
+    public QueryContainer(Parcel in) {
         query = in.readString();
         variables = in.readHashMap(WeakHashMap.class.getClassLoader());
     }
@@ -30,15 +30,15 @@ public class GraphQueryContainer implements Parcelable {
         return 0;
     }
 
-    public static final Creator<GraphQueryContainer> CREATOR = new Creator<GraphQueryContainer>() {
+    public static final Creator<QueryContainer> CREATOR = new Creator<QueryContainer>() {
         @Override
-        public GraphQueryContainer createFromParcel(Parcel in) {
-            return new GraphQueryContainer(in);
+        public QueryContainer createFromParcel(Parcel in) {
+            return new QueryContainer(in);
         }
 
         @Override
-        public GraphQueryContainer[] newArray(int size) {
-            return new GraphQueryContainer[size];
+        public QueryContainer[] newArray(int size) {
+            return new QueryContainer[size];
         }
     };
 
@@ -50,12 +50,12 @@ public class GraphQueryContainer implements Parcelable {
         return variables;
     }
 
-    public GraphQueryContainer setQuery(String query) {
+    public QueryContainer setQuery(String query) {
         this.query = query;
         return this;
     }
 
-    public GraphQueryContainer setVariable(String key, Object value) {
+    public QueryContainer setVariable(String key, Object value) {
         if(variables == null)
             variables = new WeakHashMap<>();
         variables.put(key, value);

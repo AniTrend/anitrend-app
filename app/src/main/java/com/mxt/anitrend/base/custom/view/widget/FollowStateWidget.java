@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -14,13 +15,14 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.databinding.WidgetFollowStateBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.UserBase_;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -30,12 +32,11 @@ import retrofit2.Response;
  * external user, either following or not
  */
 
-public class FollowStateWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<ResponseBody> {
+public class FollowStateWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<UserBase> {
 
     private UserBase model;
-    private boolean following;
     private WidgetFollowStateBinding binding;
-    private WidgetPresenter<ResponseBody> presenter;
+    private WidgetPresenter<UserBase> presenter;
 
     public FollowStateWidget(Context context) {
         super(context);
@@ -74,10 +75,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
     }
 
     private void setControlText() {
-        following = presenter.getDatabase().getBoxStore(UserBase.class)
-                .query().equal(UserBase_.id, model.getId())
-                .build().count() > 0;
-        if (following) {
+        if (model.isFollowing()) {
             binding.userFollowStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccentDark));
             binding.userFollowStateText.setText(R.string.following);
         } else {
@@ -109,8 +107,10 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
             case R.id.widget_flipper:
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    presenter.getParams().putLong(KeyUtils.arg_id, model.getId());
-                    presenter.requestData(KeyUtils.ACTION_FOLLOW_TOGGLE_REQ, getContext(), this);
+                    QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
+                            .setVariable(KeyUtils.arg_userId, model.getId());
+                    presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+                    presenter.requestData(KeyUtils.MUT_TOGGLE_FOLLOW, getContext(), this);
                 }
                 else
                     NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -132,18 +132,17 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
      * @param response the response from the network
      */
     @Override
-    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+    public void onResponse(@NonNull Call<UserBase> call, @NonNull Response<UserBase> response) {
         try {
             if(response.isSuccessful()) {
-                DatabaseHelper database = presenter.getDatabase();
-                if(following) database.removeUser(model);
-                else database.addUser(model);
-                if(database.getCurrentUser() != null)
-                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.ACTION_FOLLOW_TOGGLE_REQ,
-                            database.getCurrentUser()), false);
+                model.toggleFollow();
+                UserBase currentUser = presenter.getDatabase().getCurrentUser();
+                if(currentUser != null)
+                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.MUT_TOGGLE_FOLLOW, currentUser), false);
                 if(isAlive())
                     setControlText();
-            }
+            } else
+                Log.e(this.toString(), ErrorUtil.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,7 +156,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
      * @param throwable contains information about the error
      */
     @Override
-    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<UserBase> call, @NonNull Throwable throwable) {
         try {
             if (isAlive()) {
                 throwable.printStackTrace();

@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
+import com.mxt.anitrend.adapter.recycler.index.SeriesMediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -18,7 +18,7 @@ import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.ParamBuilderUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new SeriesAnimeAdapter(model, getContext());
+            mAdapter = new SeriesMediaAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -100,7 +100,7 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
     public void onItemClick(View target, Media data) {
         switch (target.getId()) {
             case R.id.container:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
                 intent.putExtra(KeyUtils.arg_media_type, data.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);

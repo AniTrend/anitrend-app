@@ -127,6 +127,10 @@ public class FeedList implements Parcelable {
         return replies;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof FeedReply)

@@ -54,7 +54,7 @@ public class PageInfo implements Parcelable {
         return currentPage;
     }
 
-    public boolean isHasNextPage() {
+    public boolean hasNextPage() {
         return hasNextPage;
     }
 }

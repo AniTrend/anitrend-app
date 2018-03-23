@@ -12,15 +12,15 @@ import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphParameterUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 /**
  * Created by max on 2017/12/20.
@@ -74,7 +74,7 @@ public class MediaSearchFragment extends FragmentBaseList<EntityGroup, PageConta
     public void makeRequest() {
         if(TextUtils.isEmpty(searchQuery))
             return;
-        GraphQueryContainer queryContainer = GraphParameterUtil.getDefaultQueryContainer(true)
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(true)
                 .setVariable(KeyUtils.arg_search_query, searchQuery)
                 .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
                 .setVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
@@ -93,7 +93,7 @@ public class MediaSearchFragment extends FragmentBaseList<EntityGroup, PageConta
     public void onItemClick(View target, EntityGroup data) {
         switch (target.getId()) {
             case R.id.container:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
                 intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);

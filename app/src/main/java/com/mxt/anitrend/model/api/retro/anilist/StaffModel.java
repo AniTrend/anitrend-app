@@ -5,7 +5,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,20 +22,20 @@ public interface StaffModel {
     @POST("/")
     @GraphQuery("StaffBase")
     @Headers("Content-Type: application/json")
-    Call<StaffBase> getStaffBase(@Body GraphQueryContainer request);
+    Call<StaffBase> getStaffBase(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("StaffOverview")
     @Headers("Content-Type: application/json")
-    Call<StaffBase> getStaffOverview(@Body GraphQueryContainer request);
+    Call<StaffBase> getStaffOverview(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("StaffMedia")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, MediaBase>>> getStaffMedia(@Body GraphQueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<String, MediaBase>>> getStaffMedia(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("StaffRoles")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, StaffBase>>> getStaffRoles(@Body GraphQueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<String, StaffBase>>> getStaffRoles(@Body QueryContainer request);
 }

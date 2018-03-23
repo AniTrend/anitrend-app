@@ -14,17 +14,19 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphParameterUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Collections;
 
 /**
  * Created by max on 2017/11/03.
@@ -64,7 +66,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
      */
     @Override
     public void makeRequest() {
-        GraphQueryContainer params = GraphParameterUtil.getDefaultQueryContainer(true)
+        QueryContainer params = GraphUtil.getDefaultQuery(isPager)
                 .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, params);
         getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
@@ -81,7 +83,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
     public void onItemClick(View target, MediaList data) {
         switch (target.getId()) {
             case R.id.series_image:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getMediaId());
                 intent.putExtra(KeyUtils.arg_media_type, data.getMedia().getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
@@ -139,6 +141,10 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
                 pageInfo = content.getPageInfo();
             if(!content.isEmpty())
                 onPostProcessed(content.getPageData());
+            else
+                onPostProcessed(Collections.emptyList());
         }
+        if(model == null)
+            onPostProcessed(null);
     }
 }

@@ -16,11 +16,11 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphParameterUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaUtil;
@@ -152,7 +152,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     }
 
     private Bundle getParam() {
-        GraphQueryContainer queryContainer = GraphParameterUtil.getDefaultQueryContainer(false);
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false);
         queryContainer.setVariable(KeyUtils.arg_mediaId, model.getMediaId());
         queryContainer.setVariable(KeyUtils.arg_list_status, model.getStatus());
         queryContainer.setVariable(KeyUtils.arg_list_score_raw, model.getScore());

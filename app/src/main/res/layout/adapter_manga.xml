@@ -5,7 +5,7 @@
 
     <data>
         <import type="com.mxt.anitrend.util.DateUtil" />
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -26,7 +26,7 @@
                 android:id="@+id/series_title_romanji"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{model.title_romaji}"
+                android:text="@{model.title.romaji}"
                 android:layout_margin="@dimen/md_margin"
                 android:layout_centerHorizontal="true"
                 android:textAlignment="center"
@@ -62,7 +62,7 @@
                     android:id="@+id/series_title_eng"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{model.title_english}"
+                    android:text="@{model.title.english}"
                     tools:text="Gintama. Porori-hen" />
 
                 <android.support.v4.widget.Space
@@ -101,7 +101,7 @@
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/series_chapters"
-                    android:text="@{String.valueOf(model.total_chapters)}"
+                    android:text="@{String.valueOf(model.chapters)}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(model.total_volumes)}"
+                    android:text="@{String.valueOf(model.volumes)}"
                     tools:text="8" />
 
             </LinearLayout>
@@ -151,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/SmallRating"
-                    app:averageScore="@{model.average_score}"
+                    app:averageScore="@{model.averageScore}"
                     tools:rating="1"/>
 
                 <com.mxt.anitrend.base.custom.view.text.RangeDateTextView
@@ -159,7 +159,7 @@
                     android:layout_gravity="start|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:startDate="@{model.start_date_fuzzy}"
+                    app:startDate="@{model.startDate}"
                     android:textStyle="bold"
                     android:textSize="10sp"
                     tools:text="Started: 2017/09/30"/>

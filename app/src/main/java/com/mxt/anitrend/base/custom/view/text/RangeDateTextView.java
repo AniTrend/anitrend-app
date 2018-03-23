@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.util.AttributeSet;
 
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.DateUtil;
 
 /**
@@ -26,12 +27,12 @@ public class RangeDateTextView extends SingleLineTextView {
     }
 
     @BindingAdapter("startDate")
-    public static void setStartDate(RangeDateTextView view, int fuzzyDate) {
+    public static void setStartDate(RangeDateTextView view, FuzzyDate fuzzyDate) {
         view.setText(String.format("%s: %s", DateUtil.getStartTitle(fuzzyDate), DateUtil.convertDate(fuzzyDate)));
     }
 
     @BindingAdapter("endDate")
-    public static void setEndDate(RangeDateTextView view, int fuzzyDate) {
+    public static void setEndDate(RangeDateTextView view, FuzzyDate fuzzyDate) {
         view.setText(String.format("%s: %s", DateUtil.getEndTitle(fuzzyDate), DateUtil.convertDate(fuzzyDate)));
     }
 }

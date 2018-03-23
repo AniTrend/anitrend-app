@@ -167,7 +167,7 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
     protected void makeRequest() {
         Bundle params = getViewModel().getParams();
         if(id != 0)
-            params.putLong(KeyUtils.arg_user_id, id);
+            params.putLong(KeyUtils.arg_userId, id);
         else
             params.putString(KeyUtils.arg_user_name, userName);
         getViewModel().requestData(KeyUtils.USER_ACCOUNT_REQ, getApplicationContext());

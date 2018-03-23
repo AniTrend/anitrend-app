@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.fragment.index.MangaFragment;
 
 /**
  * Created by max on 2017/10/30.

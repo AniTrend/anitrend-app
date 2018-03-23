@@ -11,22 +11,18 @@ import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.general.SeriesList_;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
-
-import io.objectbox.Box;
-import io.objectbox.query.Query;
 
 /**
  * Created by max on 2018/01/20.
  */
 
-public abstract class CustomSeriesManageBase extends RelativeLayout implements CustomView, View.OnClickListener,
-        AdapterView.OnItemSelectedListener {
+public abstract class CustomSeriesManageBase extends RelativeLayout implements CustomView, View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     protected SeriesPresenter presenter;
 
@@ -61,30 +57,11 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         presenter = new SeriesPresenter(getContext());
     }
 
-    public void setModel(Media model, boolean isNewEntry) {
-        if(isNewEntry) {
-            this.model = new MediaList();
-            if(model.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
-                this.model.setAnime(model);
-            else
-                this.model.setManga(model);
-        }
-        else
-            this.model = findSeriesFor(model.getId());
-        bindFields();
-        populateFields();
-    }
-
     public void setModel(MediaBase model, boolean isNewEntry) {
         if(isNewEntry) {
             this.model = new MediaList();
-            if(model.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME]))
-                this.model.setAnime(model);
-            else
-                this.model.setManga(model);
+            this.model.setMedia(model);
         }
-        else
-            this.model = findSeriesFor(model.getId());
         bindFields();
         populateFields();
     }
@@ -92,11 +69,8 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     public void setModel(MediaList model, boolean isNewEntry) {
         if(isNewEntry) {
             this.model = new MediaList();
-            this.model.setManga(model.getManga());
-            this.model.setAnime(model.getAnime());
+            this.model.setMedia(model.getMedia());
         }
-        else
-            this.model = findSeriesFor(model.getMediaId());
         bindFields();
         populateFields();
     }
@@ -107,32 +81,25 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     }
 
     public Bundle getParam() {
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false);
+        queryContainer.setVariable(KeyUtils.arg_mediaId, model.getMediaId());
+        queryContainer.setVariable(KeyUtils.arg_list_status, model.getStatus());
+        queryContainer.setVariable(KeyUtils.arg_list_score_raw, model.getScore());
+        queryContainer.setVariable(KeyUtils.arg_list_notes, model.getNotes());
+        queryContainer.setVariable(KeyUtils.arg_list_private, model.isHidden());
+        queryContainer.setVariable(KeyUtils.arg_list_priority, model.getPriority());
+        queryContainer.setVariable(KeyUtils.arg_list_hiddenFromStatusLists, model.isHiddenFromStatusLists());
+
+        queryContainer.setVariable(KeyUtils.arg_list_advanced_score, model.getAdvancedScores());
+        queryContainer.setVariable(KeyUtils.arg_list_custom_list, model.getCustomLists());
+
+        queryContainer.setVariable(KeyUtils.arg_list_repeat, model.getRepeat());
+        queryContainer.setVariable(KeyUtils.arg_list_progress, model.getProgress());
+        queryContainer.setVariable(KeyUtils.arg_list_progressVolumes, model.getProgressVolumes());
+
         Bundle bundle = new Bundle();
-        bundle.putLong(KeyUtils.arg_id, getSeriesModel().getId());
-
-        bundle.putString(KeyUtils.arg_list_status, model.getStatus());
-        bundle.putString(KeyUtils.arg_list_score, model.getScore());
-        bundle.putInt(KeyUtils.arg_list_score_raw, model.getScore_raw());
-        bundle.putString(KeyUtils.arg_list_notes, model.getNotes());
-        bundle.putInt(KeyUtils.arg_list_hidden, model.getPrivate());
-
-        // bundle.putString(KeyUtils.arg_list_advanced_rating, name_of_rating);
-        // bundle.putInt(KeyUtils.arg_list_custom_list, model.getCustom_lists()[selected_index]);
-
-        bundle.putInt(KeyUtils.arg_list_watched, model.getProgress());
-        bundle.putInt(KeyUtils.arg_list_re_watched, model.getRepeat());
-
-        bundle.putInt(KeyUtils.arg_list_read, model.getChapters_read());
-        bundle.putInt(KeyUtils.arg_list_re_read, model.getReread());
-        bundle.putInt(KeyUtils.arg_list_volumes, model.getProgressVolumes());
-
+        bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);
         return bundle;
-    }
-
-    private MediaList findSeriesFor(long id) {
-        Box<MediaList> box = presenter.getDatabase().getBoxStore(MediaList.class);
-        Query<MediaList> query = box.query().equal(SeriesList_.series_id, id).build();
-        return query.findFirst();
     }
 
     /**
@@ -144,10 +111,6 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
 
     protected abstract void bindFields();
 
-    protected MediaBase getSeriesModel() {
-        return model.getAnime() != null ? model.getAnime() : model.getManga();
-    }
-
     /**
      * Clean up any resources that won't be needed
      */
@@ -155,5 +118,9 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     public void onViewRecycled() {
         if(presenter != null)
             presenter.onDestroy();
+    }
+
+    protected MediaBase getSeriesModel() {
+        return model.getMedia();
     }
 }

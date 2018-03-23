@@ -29,6 +29,8 @@ import java.util.List;
 
 /**
  * Created by max on 2017/12/01.
+ * Originally created by ldoublem
+ * https://github.com/ldoublem/RingProgress
  */
 
 public class RingProgress extends View implements CustomView {

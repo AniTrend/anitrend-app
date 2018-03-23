@@ -13,8 +13,10 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentCharacterOverviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Character;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
@@ -28,9 +30,10 @@ import butterknife.OnClick;
  * Created by max on 2018/01/30.
  */
 
-public class CharacterOverviewFragment extends FragmentBase<Character, BasePresenter, Character> implements PublisherListener<Character> {
+public class CharacterOverviewFragment extends FragmentBase<Character, BasePresenter, Character> {
 
     private Character model;
+    private QueryContainer queryContainer;
 
     private FragmentCharacterOverviewBinding binding;
 
@@ -43,6 +46,9 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null)
+            queryContainer = GraphUtil.getDefaultQuery(false)
+                    .setVariable(KeyUtils.arg_id, getArguments().getInt(KeyUtils.arg_id));
     }
 
     @Nullable @Override
@@ -55,24 +61,33 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
 
     @Override
     protected void updateUI() {
-        binding.setModel(model);
-        binding.stateLayout.showContent();
+        if(model != null) {
+            binding.setModel(model);
+            binding.stateLayout.showContent();
+        } else
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
+                    getString(R.string.layout_empty_response), getString(R.string.try_again), (view) -> makeRequest());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(model != null)
+            updateUI();
+        else
+            makeRequest();
     }
 
     @Override
     public void makeRequest() {
-
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.CHARACTER_OVERVIEW_REQ, getContext());
     }
 
     @Override
     public void onChanged(@Nullable Character model) {
-
-    }
-
-    @Override
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Character param) {
-        this.model = param;
+        if(model != null)
+            this.model = model;
         updateUI();
     }
 
@@ -86,7 +101,7 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
         switch (v.getId()) {
             case R.id.character_img:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage_url_lge());
+                intent.putExtra(KeyUtils.arg_model, model.getImage().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             default:

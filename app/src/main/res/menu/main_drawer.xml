@@ -25,8 +25,7 @@
                 <item
                     android:id="@+id/nav_reviews"
                     android:icon="@drawable/ic_rate_review_white_24dp"
-                    android:title="@string/drawer_title_anime_reviews"
-                    app:actionLayout="@layout/action_view_type"/>
+                    android:title="@string/drawer_title_reviews" />
             </group>
         </menu>
     </item>

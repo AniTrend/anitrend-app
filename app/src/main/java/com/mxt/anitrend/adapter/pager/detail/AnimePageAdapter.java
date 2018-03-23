@@ -9,9 +9,9 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.fragment.group.CharacterFragment;
 import com.mxt.anitrend.view.fragment.detail.ReviewFragment;
-import com.mxt.anitrend.view.fragment.detail.SeriesOverviewFragment;
+import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment;
 import com.mxt.anitrend.view.fragment.group.SeriesRelationFragment;
-import com.mxt.anitrend.view.fragment.detail.SeriesStatsFragment;
+import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment;
 import com.mxt.anitrend.view.fragment.detail.SocialFragment;
 import com.mxt.anitrend.view.fragment.detail.StaffFragment;
 import com.mxt.anitrend.view.fragment.index.WatchFragment;
@@ -34,15 +34,15 @@ public class AnimePageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        getParams().putInt(KeyUtils.arg_media_type, KeyUtils.ANIME);
+        getParams().putString(KeyUtils.arg_media_type, KeyUtils.ANIME);
         getParams().putInt(KeyUtils.arg_request_type, KeyUtils.LIST);
         switch (position) {
             case 0:
-                return SeriesOverviewFragment.newInstance(getParams());
+                return MediaOverviewFragment.newInstance(getParams());
             case 1:
                 return SeriesRelationFragment.newInstance(getParams());
             case 2:
-                return SeriesStatsFragment.newInstance(getParams());
+                return MediaStatsFragment.newInstance(getParams());
             case 3:
                 return WatchFragment.newInstance(false);
             case 4:

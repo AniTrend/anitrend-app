@@ -14,7 +14,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MarkDown;
-import com.mxt.anitrend.view.fragment.detail.BrowseFragment;
+import com.mxt.anitrend.view.fragment.detail.MediaBrowseFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * browse activity for studios, tags, genres etc.
  */
 
-public class BrowseActivity extends ActivityBase<MediaBase, SeriesPresenter> {
+public class MediaBrowseActivity extends ActivityBase<MediaBase, SeriesPresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -59,7 +59,7 @@ public class BrowseActivity extends ActivityBase<MediaBase, SeriesPresenter> {
 
     @Override
     protected void updateUI() {
-        mFragment = BrowseFragment.newInstance(getIntent().getExtras());
+        mFragment = MediaBrowseFragment.newInstance(getIntent().getExtras());
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, mFragment, mFragment.TAG);

@@ -1,11 +1,9 @@
 package com.mxt.anitrend.model.api.retro.anilist;
 
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 
 import java.util.List;
 
@@ -24,20 +22,20 @@ public interface BaseModel {
     @POST("/")
     @GraphQuery("Genres")
     @Headers("Content-Type: application/json")
-    Call<List<String>> getGenres(@Body GraphQueryContainer request);
+    Call<List<String>> getGenres(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("Tags")
     @Headers("Content-Type: application/json")
-    Call<List<MediaTag>> getTags(@Body GraphQueryContainer request);
+    Call<List<MediaTag>> getTags(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("ToggleLike")
     @Headers("Content-Type: application/json")
-    Call<List<UserBase>> toggleLike(@Body GraphQueryContainer request);
+    Call<List<UserBase>> toggleLike(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("ToggleFavourite")
     @Headers("Content-Type: application/json")
-    Call<ResponseBody> toggleFavourite(@Body GraphQueryContainer request);
+    Call<ResponseBody> toggleFavourite(@Body QueryContainer request);
 }

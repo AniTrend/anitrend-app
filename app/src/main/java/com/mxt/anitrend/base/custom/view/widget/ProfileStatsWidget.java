@@ -19,7 +19,7 @@ import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.activity.detail.SeriesListActivity;
+import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 
 import java.util.HashMap;
 
@@ -110,14 +110,14 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                 Snackbar.make(this, getContext().getString(R.string.text_user_manga_chapters, presenter.getMangaChaptersCount(user.getManga_chap())), Snackbar.LENGTH_LONG).show();
                 break;
             case R.id.user_anime_total_container:
-                intent = new Intent(getContext(), SeriesListActivity.class);
+                intent = new Intent(getContext(), MediaListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtils.arg_media_type, KeyUtils.ANIME);
                 intent.putExtra(KeyUtils.arg_user_name, user.getName());
                 getContext().startActivity(intent);
                 break;
             case R.id.user_manga_total_container:
-                intent = new Intent(getContext(), SeriesListActivity.class);
+                intent = new Intent(getContext(), MediaListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtils.arg_media_type, KeyUtils.MANGA);
                 intent.putExtra(KeyUtils.arg_user_name, user.getName());

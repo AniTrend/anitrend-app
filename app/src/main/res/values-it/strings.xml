@@ -118,32 +118,6 @@
         <item>Ultimi episodi</item>
     </string-array>
 
-    <!--Do not Translate-->
-    <string-array name="myanime_title">
-        <item>w.t.g</item>
-        <item>p.t.w</item>
-        <item>c.m.p</item>
-        <item>o.h.d</item>
-        <item>d.r.p</item>
-    </string-array>
-
-    <!--Do not Translate-->
-    <string-array name="mymanga_title">
-        <item>r.d.g</item>
-        <item>p.t.r</item>
-        <item>o.h.d</item>
-        <item>c.m.p</item>
-        <item>d.r.p</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="reviews_title">
-        <item>nuovo</item>
-        <item>loved</item>
-        <item>unloved</item>
-        <item>contestato</item>
-    </string-array>
-
     <!--Try to keep all titles short-->
     <string-array name="manga_title">
         <item>lista manga</item>
@@ -167,22 +141,6 @@
         <item>studio</item>
         <item>staff</item>
         <item>characters</item>
-    </string-array>
-
-    <string-array name="anime_listing_status">
-        <item>In visione</item>
-        <item>Da vedere</item>
-        <item>Completati</item>
-        <item>In attesa</item>
-        <item>Abbandonati</item>
-    </string-array>
-
-    <string-array name="manga_listing_status">
-        <item>In lettura</item>
-        <item>Da leggere</item>
-        <item>Completati</item>
-        <item>In attesa</item>
-        <item>Abbandonati</item>
     </string-array>
 
     <!--First time usage intro screen-->
@@ -292,8 +250,6 @@
     <string name="drawer_title_myanime">Lista Anime</string>
     <string name="drawer_title_mymanga">Lista Manga</string>
     <string name="drawer_title_reviews">Recensioni</string>
-    <string name="drawer_title_anime_reviews">Recensioni Anime</string>
-    <string name="drawer_title_manga_reviews">Recensioni Manga</string>
     <string name="drawer_title_hub">AniTrend Hub</string>
 
     <string name="drawer_section_configuration">Configurazione</string>
@@ -862,7 +818,7 @@
     <string name="anime_time_days">%.1f Days</string>
     <string name="anime_time_years">%.1f Years</string>
 
-    <string-array name="anime_media_types">
+    <string-array name="media_formats">
         <item>All</item>
         <item>TV</item>
         <item>TV Short</item>
@@ -870,15 +826,34 @@
         <item>Special</item>
         <item>OVA</item>
         <item>ONA</item>
-    </string-array>
-
-    <string-array name="manga_media_types">
-        <item>All</item>
+        <item>Music</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
-        <item>Doujin</item>
-        <item>Manhua</item>
+    </string-array>
+
+    <string-array name="media_sources">
+        <item>All</item>
+        <item>Original</item>
+        <item>Manga</item>
+        <item>Light Novel</item>
+        <item>Visual Novel</item>
+        <item>Video Game</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="reviews_title">
+        <item>@string/anime</item>
+        <item>@string/manga</item>
+    </string-array>
+
+    <string-array name="media_list_status">
+        <item>Current</item>
+        <item>Planning</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+        <item>Paused</item>
+        <item>Repeating</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

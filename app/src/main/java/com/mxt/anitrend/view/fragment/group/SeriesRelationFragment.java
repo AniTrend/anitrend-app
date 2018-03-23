@@ -11,6 +11,7 @@ import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -18,7 +19,7 @@ import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -88,9 +89,9 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
     public void onItemClick(View target, EntityGroup data) {
         switch (target.getId()) {
             case R.id.container:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((Media) data).getId());
-                intent.putExtra(KeyUtils.arg_media_type, ((Media) data).getSeries_type());
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
+                intent.putExtra(KeyUtils.arg_id, ((MediaBase) data).getId());
+                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase) data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -109,7 +110,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, List<E
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel((Media) data).build(getActivity());
+                            .setModel((MediaBase) data).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

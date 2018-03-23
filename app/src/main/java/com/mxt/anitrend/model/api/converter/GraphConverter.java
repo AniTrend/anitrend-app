@@ -10,8 +10,7 @@ import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
 import com.mxt.anitrend.model.entity.container.body.DataContainer;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -49,7 +48,7 @@ public final class GraphConverter extends Converter.Factory {
 
     @Override
     public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
-        if(type instanceof GraphQueryContainer)
+        if(type instanceof QueryContainer)
             return new GraphRequestConverter(methodAnnotations);
         return super.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
     }
@@ -96,7 +95,7 @@ public final class GraphConverter extends Converter.Factory {
     /**
      * GraphQL request body converter and injector, uses method annotation for a given retrofit call
      */
-    private class GraphRequestConverter implements Converter<GraphQueryContainer, RequestBody> {
+    private class GraphRequestConverter implements Converter<QueryContainer, RequestBody> {
         private Annotation[] methodAnnotations;
 
         GraphRequestConverter(Annotation[] methodAnnotations) {
@@ -104,7 +103,7 @@ public final class GraphConverter extends Converter.Factory {
         }
 
         @Override
-        public RequestBody convert(@NonNull GraphQueryContainer container) {
+        public RequestBody convert(@NonNull QueryContainer container) {
             container.setQuery(graphProcessor.getQuery(methodAnnotations));
             String queryJson = WebFactory.gson.toJson(container);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);

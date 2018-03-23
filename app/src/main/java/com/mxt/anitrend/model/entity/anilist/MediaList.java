@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.data.converter.FuzzyDateConverter;
-import com.mxt.anitrend.data.converter.SeriesBaseConverter;
-import com.mxt.anitrend.data.converter.StringListConverter;
+import com.mxt.anitrend.data.converter.MediaBaseConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
@@ -16,21 +14,15 @@ import com.mxt.anitrend.util.KeyUtils;
 import java.util.List;
 
 import io.objectbox.annotation.Convert;
-import io.objectbox.annotation.Entity;
-import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Index;
 import io.objectbox.annotation.Transient;
 
 /**
  * Created by Maxwell on 1/12/2017.
  */
 
-@Entity
 public class MediaList extends EntityGroup implements Parcelable {
 
-    @Id(assignable = true)
     private long id;
-    @Index
     private long mediaId;
     private @KeyUtils.MediaListStatus String status;
     private float score;
@@ -43,17 +35,12 @@ public class MediaList extends EntityGroup implements Parcelable {
     private boolean hidden;
     private boolean hiddenFromStatusLists;
     private List<Float> advancedScores;
-    @Convert(converter = StringListConverter.class, dbType = String.class)
     private List<String> customLists;
-    @Convert(converter = FuzzyDateConverter.class, dbType = String.class)
     private FuzzyDate startedAt;
-    @Convert(converter = FuzzyDateConverter.class, dbType = String.class)
     private FuzzyDate completedAt;
     private long updatedAt;
     private long createdAt;
-    @Convert(converter = SeriesBaseConverter.class, dbType = String.class)
     private MediaBase media;
-    @Transient
     private UserBase user;
 
     public MediaList() {
@@ -204,6 +191,10 @@ public class MediaList extends EntityGroup implements Parcelable {
         this.mediaId = mediaId;
     }
 
+    public void setMedia(MediaBase media) {
+        this.media = media;
+    }
+
     public void setStatus(@KeyUtils.MediaListStatus String status) {
         this.status = status;
     }
@@ -252,8 +243,6 @@ public class MediaList extends EntityGroup implements Parcelable {
     public boolean equals(Object obj) {
         if(obj instanceof MediaList)
             return ((MediaList)obj).id == id && ((MediaList)obj).mediaId == mediaId;
-        else if (obj instanceof Media)
-            return ((Media)obj).getId() == mediaId;
         else if (obj instanceof MediaBase)
             return ((MediaBase)obj).getId() == mediaId;
         return super.equals(obj);

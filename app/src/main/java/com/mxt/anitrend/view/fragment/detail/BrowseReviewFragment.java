@@ -9,29 +9,29 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesReviewAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Review;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.sheet.BottomReviewReader;
 
-import java.util.List;
-
 /**
  * Created by max on 2017/10/30.
- * Media review type
+ * Media review browse
+ * // TODO: 2018/03/23 Add review sorting
  */
 
-public class SeriesReviewFragment extends FragmentBaseList<Review, List<Review>, BasePresenter> {
+public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer<Review>, BasePresenter> {
 
-    private int id;
-    private @KeyUtils.SeriesReviewType int reviewType;
+    private @KeyUtils.MediaType String mediaType;
 
-    public static SeriesReviewFragment newInstance(@KeyUtils.SeriesReviewType int reviewType, int id) {
+    public static BrowseReviewFragment newInstance(@KeyUtils.MediaType String mediaType) {
         Bundle args = new Bundle();
-        args.putInt(KeyUtils.arg_id, id);
-        args.putInt(KeyUtils.arg_request_type, reviewType);
-        SeriesReviewFragment fragment = new SeriesReviewFragment();
+        args.putString(KeyUtils.arg_media_type, mediaType);
+        BrowseReviewFragment fragment = new BrowseReviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,11 +45,8 @@ public class SeriesReviewFragment extends FragmentBaseList<Review, List<Review>,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
-            id = getArguments().getInt(KeyUtils.arg_id);
-            @KeyUtils.SeriesReviewType int reviewType = getArguments().getInt(KeyUtils.arg_request_type);
-            this.reviewType = reviewType;
-        }
+        if(getArguments() != null)
+            mediaType = getArguments().getString(KeyUtils.arg_media_type);
         isPager = true; mColumnSize = R.integer.single_list_x1;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
@@ -70,9 +67,11 @@ public class SeriesReviewFragment extends FragmentBaseList<Review, List<Review>,
      */
     @Override
     public void makeRequest() {
-        Bundle bundle = getViewModel().getParams();
-        bundle.putInt(KeyUtils.arg_id, id);
-        getViewModel().requestData(reviewType, getContext());
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(true)
+                .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
+                .setVariable(KeyUtils.arg_media_type, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_REVIEWS_REQ, getContext());
     }
 
     /**
@@ -110,11 +109,21 @@ public class SeriesReviewFragment extends FragmentBaseList<Review, List<Review>,
             case R.id.series_image:
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 seriesActionUtil = new SeriesActionUtil.Builder()
-                        .setModel(data.getAnime() != null? data.getAnime() : data.getManga()).build(getActivity());
+                        .setModel(data.getMedia()).build(getActivity());
                 seriesActionUtil.startSeriesAction();
             } else
                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
+        }
+    }
+
+    @Override
+    public void onChanged(@Nullable PageContainer<Review> content) {
+        if(content != null) {
+            if (content.hasPageInfo())
+                pageInfo = content.getPageInfo();
+            if (!content.isEmpty())
+                onPostProcessed(content.getPageData());
         }
     }
 }

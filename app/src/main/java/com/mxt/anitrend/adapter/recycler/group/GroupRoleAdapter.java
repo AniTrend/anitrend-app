@@ -1,79 +1,69 @@
-package com.mxt.anitrend.adapter.recycler.index;
+package com.mxt.anitrend.adapter.recycler.group;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
-import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.shared.GroupTitleViewHolder;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.databinding.AdapterAnimeBinding;
-import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
+import com.mxt.anitrend.databinding.AdapterSeriesCharacterBinding;
+import com.mxt.anitrend.model.entity.anilist.Favourite;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 
 /**
- * Created by max on 2017/10/25.
+ * Created by max on 2018/01/27.
+ * Role Based Adapter Media Roles
  */
 
-public class SeriesAnimeAdapter extends RecyclerViewAdapter<Media> {
+public class GroupRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
 
-    public SeriesAnimeAdapter(List<Media> data, Context context) {
+
+    public GroupRoleAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<Media> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SeriesViewHolder(AdapterAnimeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtils.RecyclerViewType int viewType) {
+        if (viewType == KeyUtils.RECYCLER_TYPE_HEADER)
+            return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new SeriesCharacterViewHolder(AdapterSeriesCharacterBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+    }
+
+    @Override
+    public @KeyUtils.RecyclerViewType
+    int getItemViewType(int position) {
+        return data.get(position).getContentType();
     }
 
     @Override
     public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
-                } else {
-                    data = new ArrayList<>(Stream.of(clone).filter((model) -> model.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                            model.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                            model.getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)).toList());
-                }
-                FilterResults results = new FilterResults();
-                results.values = data;
-                return results;
-            }
-
-            @Override @SuppressWarnings("unchecked")
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<Media>) results.values);
-                notifyDataSetChanged();
-            }
-        };
+        return null;
     }
 
-    protected class SeriesViewHolder extends RecyclerViewHolder<Media> {
+    protected class SeriesCharacterViewHolder extends RecyclerViewHolder<EntityGroup> {
 
-        private AdapterAnimeBinding binding;
+        private AdapterSeriesCharacterBinding binding;
 
         /**
          * Default constructor which includes binding with butter knife
          *
          * @param binding
-         * @see ButterKnife
          */
-        SeriesViewHolder(AdapterAnimeBinding binding) {
+        SeriesCharacterViewHolder(AdapterSeriesCharacterBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -82,12 +72,14 @@ public class SeriesAnimeAdapter extends RecyclerViewAdapter<Media> {
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br/>
          *
-         * @param model Is the model at the current adapter position
-         * @see Media
+         * @param entityGroup Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(Media model) {
+        public void onBindViewHolder(EntityGroup entityGroup) {
+            MediaBase model = (MediaBase) entityGroup;
             binding.setModel(model);
+            binding.seriesTitle.setTitle(model);
+            binding.customRatingWidget.setFavourState(model.isFavourite());
             binding.executePendingBindings();
         }
 

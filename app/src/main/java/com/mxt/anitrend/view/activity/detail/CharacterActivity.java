@@ -12,17 +12,15 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
-import com.mxt.anitrend.model.entity.anilist.Character;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.GraphParameterUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.TapTargetUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by max on 2017/12/14.
@@ -37,6 +35,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
     private CharacterBase model;
+    private CharacterPageAdapter pageAdapter;
 
     private FavouriteToolbarWidget favouriteWidget;
 
@@ -56,11 +55,6 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getViewModel().getParams().putLong(KeyUtils.arg_id, id);
-        CharacterPageAdapter pageAdapter = new CharacterPageAdapter(getSupportFragmentManager(), getApplicationContext());
-        pageAdapter.setParams(getViewModel().getParams());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit + 1);
-        smartTabLayout.setViewPager(viewPager);
         onActivityReady();
     }
 
@@ -74,17 +68,10 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
             if(model != null)
                 favouriteWidget.setModel(model);
+            else
+                makeRequest();
         }
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(model == null)
-            makeRequest();
-        else
-            updateUI();
     }
 
     /**
@@ -93,21 +80,24 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
      */
     @Override
     protected void onActivityReady() {
-
+        pageAdapter = new CharacterPageAdapter(getSupportFragmentManager(), getApplicationContext());
+        pageAdapter.setParams(getViewModel().getParams());
+        updateUI();
     }
 
     @Override
     protected void updateUI() {
-        getPresenter().notifyAllListeners(model, false);
-        if(favouriteWidget != null)
-            favouriteWidget.setModel(model);
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit);
+        smartTabLayout.setViewPager(viewPager);
     }
 
 
     @Override
     protected void makeRequest() {
-        Bundle bundle = getViewModel().getParams();
-        bundle.putParcelable(KeyUtils.arg_graph_params, GraphParameterUtil.getDefaultQueryContainer(false));
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
+                .setVariable(KeyUtils.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.CHARACTER_BASE_REQ, getApplicationContext());
     }
 
@@ -121,7 +111,8 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
         super.onChanged(model);
         if(model != null) {
             this.model = model;
-            updateUI();
+            if(favouriteWidget != null)
+                favouriteWidget.setModel(model);
         }
     }
 }

@@ -31,18 +31,8 @@ import butterknife.OnLongClick;
 
 public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
 
-    private List<Media> favouriteSeries;
-
     public GroupSeriesAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
-        Favourite favourite = presenter.getFavourites();
-        if(favourite != null) {
-            favouriteSeries = new ArrayList<>();
-            if(favourite.getAnime() != null)
-                favouriteSeries.addAll(favourite.getAnime());
-            if(favourite.getManga() != null)
-                favouriteSeries.addAll(favourite.getManga());
-        }
     }
 
     @Override
@@ -50,14 +40,6 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
         if (viewType == KeyUtils.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new SeriesViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
-    }
-
-    @Override
-    public void onViewAttachedToWindow(RecyclerViewHolder<EntityGroup> holder) {
-        super.onViewAttachedToWindow(holder);
-        StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-        if(getItemViewType(holder.getLayoutPosition()) == KeyUtils.RECYCLER_TYPE_HEADER)
-            layoutParams.setFullSpan(true);
     }
 
     @Override
@@ -96,7 +78,7 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
             Media model = (Media) entityGroup;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
-            binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(model));
+            binding.customRatingWidget.setFavourState(model.isFavourite());
             binding.executePendingBindings();
         }
 

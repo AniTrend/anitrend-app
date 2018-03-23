@@ -23,7 +23,7 @@ import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.activity.detail.CommentActivity;
 import com.mxt.anitrend.view.activity.detail.MessageActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import java.util.List;
 
 /**
@@ -129,7 +129,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
         else
             switch (data.getObject_type()) {
                 case KeyUtils.NOTIFICATION_AIRING:
-                    intent = new Intent(getActivity(), SeriesActivity.class);
+                    intent = new Intent(getActivity(), MediaActivity.class);
                     intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
                     intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

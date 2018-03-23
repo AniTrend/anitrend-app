@@ -10,7 +10,7 @@ import io.objectbox.converter.PropertyConverter;
  * Media small entity converter
  */
 
-public class SeriesBaseConverter implements PropertyConverter<MediaBase, String> {
+public class MediaBaseConverter implements PropertyConverter<MediaBase, String> {
 
     @Override
     public MediaBase convertToEntityProperty(String databaseValue) {

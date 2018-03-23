@@ -24,7 +24,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.activity.detail.CommentActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
 import com.mxt.anitrend.view.sheet.BottomSheetUsers;
 
@@ -121,7 +121,7 @@ public class UserFeedFragment extends FragmentBaseList<FeedList, List<FeedList>,
         switch (target.getId()) {
             case R.id.series_image:
                 MediaBase series = data.getSeries();
-                intent = new Intent(getActivity(), SeriesActivity.class);
+                intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
                 intent.putExtra(KeyUtils.arg_media_type, series.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);

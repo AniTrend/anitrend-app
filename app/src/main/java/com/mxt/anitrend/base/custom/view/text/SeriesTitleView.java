@@ -19,9 +19,6 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public class SeriesTitleView extends SingleLineTextView implements CustomView {
 
-    private BasePresenter presenter;
-    private boolean isAuthenticated;
-
     public SeriesTitleView(Context context) {
         super(context);
     }
@@ -40,63 +37,18 @@ public class SeriesTitleView extends SingleLineTextView implements CustomView {
     @Override
     public void onInit() {
         super.onInit();
-        presenter = new BasePresenter(getContext());
-        isAuthenticated = presenter.getApplicationPref().isAuthenticated();
     }
 
-    public void setTitle(Media series) {
-        switch (getLanguagePreference()) {
-            case KeyUtils.LANGUAGE_ENGLISH:
-                setText(series.getTitle_english());
-                break;
-            case KeyUtils.LANGUAGE_JAPANESE:
-                setText(series.getTitle_japanese());
-                break;
-            case KeyUtils.LANGUAGE_ROMAJI:
-                setText(series.getTitle_romaji());
-                break;
-        }
+    public void setTitle(MediaBase mediaBase) {
+        setText(mediaBase.getTitle().getUserPreferred());
     }
 
-    public void setTitle(MediaBase series) {
-        switch (getLanguagePreference()) {
-            case KeyUtils.LANGUAGE_ENGLISH:
-                setText(series.getTitle_english());
-                break;
-            case KeyUtils.LANGUAGE_JAPANESE:
-                setText(series.getTitle_japanese());
-                break;
-            case KeyUtils.LANGUAGE_ROMAJI:
-                setText(series.getTitle_romaji());
-                break;
-        }
+    public void setTitle(MediaList mediaList) {
+        setTitle(mediaList.getMedia());
     }
 
-    public void setTitle(MediaList series) {
-        if(series.getAnime() != null)
-            setTitle(series.getAnime());
-        else if(series.getManga() != null)
-            setTitle(series.getManga());
-    }
-
-    public void setTitle(Review series) {
-        if(series.getAnime() != null)
-            setTitle(series.getAnime());
-        else if(series.getManga() != null)
-            setTitle(series.getManga());
-    }
-
-    private @KeyUtils.LanguageType int getLanguagePreference() {
-        if(isAuthenticated)
-            switch (presenter.getDatabase().getCurrentUser().getTitle_language()) {
-                case KeyUtils.key_language_english:
-                    return KeyUtils.LANGUAGE_ENGLISH;
-                case KeyUtils.key_language_romaji:
-                    return KeyUtils.LANGUAGE_ROMAJI;
-                case KeyUtils.key_language_japanese:
-                    return KeyUtils.LANGUAGE_JAPANESE;
-            }
-        return KeyUtils.LANGUAGE_ROMAJI;
+    public void setTitle(Review review) {
+        setTitle(review.getMedia());
     }
 
     /**

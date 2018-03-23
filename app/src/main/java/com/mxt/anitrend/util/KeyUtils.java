@@ -26,10 +26,24 @@ public interface KeyUtils {
     // ------------------------------------------------------------------------------------
 
     String arg_graph_params = "arg_graph_params";
-
-    String arg_page = "page";
+    String arg_id = "id";
+    String arg_type = "type";
     String arg_sort = "sort";
-    String arg_per_page = "perPage";
+    String arg_status = "status";
+    String arg_format = "format";
+    String arg_page = "page";
+    String arg_page_limit = "perPage";
+
+    String arg_userId = "userId";
+    String arg_recipientId = "recipientId";
+
+    String arg_text = "text";
+    String arg_message = "message";
+    String arg_asHtml = "asHtml";
+    String arg_isMixed = "isMixed";
+    String arg_isFollowing = "isFollowing";
+
+    String arg_activityId = "activityId";
 
     String arg_mediaId = "mediaId";
     String arg_animeId = "animeId";
@@ -40,6 +54,8 @@ public interface KeyUtils {
 
     String arg_media_type = "type";
     String arg_search_query = "search";
+
+    String arg_user_name = "userName";
 
     /** Media List Keys */
     String arg_list_status = "status";
@@ -54,31 +70,38 @@ public interface KeyUtils {
     String arg_list_advanced_score = "advancedScores";
     String arg_list_custom_list = "customLists";
 
+    /** Media Browse Keys */
+    String arg_startDateLike = "startDateLike";
+    String arg_endDateLike = "endDateLike";
+    String arg_season = "season";
+    String arg_genres = "genres";
+    String arg_genresExclude = "genresExclude";
+    String arg_isAdult = "isAdult";
+    String arg_onList = "onList";
+    String arg_tags = "tags";
+    String arg_tagsExlcude = "tagsExclude";
+
+    /** Review Keys */
+    String arg_rating = "rating";
+
     // ------------------------------------------------------------------------------------
 
 
     /** Base Application Args */
-    String arg_id = "arg_id";
-    String arg_text = "arg_text";
     String arg_feed = "arg_feed";
     String arg_title = "arg_title";
     String arg_model = "arg_model";
-    String arg_rating = "arg_rating";
     String arg_popular = "arg_popular";
-    String arg_user_id = "arg_user_id";
     String arg_redirect = "arg_redirect";
-    String arg_user_name = "arg_user_name";
-    String arg_activity_id = "arg_user_id";
     String arg_user_model = "arg_user_model";
     String arg_list_model = "arg_list_model";
     String arg_branch_name = "arg_branch_name";
-    String arg_review_type = "arg_review_type";
     String arg_page_offset = "arg_page_offset";
     String arg_request_type = "arg_request_type";
-    String arg_recipient_id = "arg_recipient_id";
     String arg_activity_tag = "arg_activity_tag";
     String arg_shortcut_used = "arg_shortcut_used";
     String arg_deep_link_type = "arg_deep_link_type";
+    String arg_media_list_type = "arg_media_list_type";
 
     String arg_positive_text = "arg_positive_text";
     String arg_negative_text = "arg_negative_text";
@@ -88,26 +111,16 @@ public interface KeyUtils {
     String key_model_state = "key_model_state";
     String key_pagination = "key_pagination";
     String key_columns = "key_columns";
-    String key_page_limit = "key_page_limit";
     String key_navigation_selected = "key_navigation_selected";
     String key_navigation_title = "key_navigation_title";
     String key_bundle_param = "key_bundle_param";
     String key_analytics_error = "key_analytics_error";
 
-    /** Browse Keys */
-    String arg_series_tag = "arg_series_tag";
-    String arg_series_year = "arg_series_year";
-    String arg_season_title = "arg_season_title";
-    String arg_series_season = "arg_series_season";
-    String arg_series_status = "arg_series_status";
-    String arg_series_genres = "arg_series_genres";
-    String arg_series_sort_by = "arg_series_sort_by";
-    String arg_series_order_by = "arg_series_order_by";
-    String arg_series_show_type = "arg_series_show_type";
-    String arg_series_airing_data = "arg_series_airing_data";
-    String arg_series_tag_exclude = "arg_series_tag_exclude";
-    String arg_series_genres_exclude = "arg_series_genres_exclude";
 
+
+    // ------------------------------------------------------------------------------------
+    // Application Request Types
+    // ------------------------------------------------------------------------------------
 
     // Base Model Requests
     int GENRE_COLLECTION_REQ = 1, MEDIA_TAG_REQ = 2,
@@ -175,6 +188,11 @@ public interface KeyUtils {
             MUT_SAVE_MESSAGE_FEED, MUT_SAVE_FEED_REPLY, MUT_DELETE_FEED, MUT_DELETE_FEED_REPLY
     })
     @interface RequestType {}
+
+    // ------------------------------------------------------------------------------------
+
+
+
 
     // Deep link types
     String DEEP_LINK_USER = "user", DEEP_LINK_MANGA = "manga", DEEP_LINK_ANIME = "anime",
@@ -258,13 +276,13 @@ public interface KeyUtils {
     @interface StaffSort {}
 
 
-    String[] SortOrderTypes = {ASC, DESC};
-    String[] MediaSortTypes = {ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES};
-    String[] MediaListSortTypes = {MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME};
-    String[] ReviewSortTypes = {ID, SCORE, RATING, CREATED_AT, UPDATED_AT};
-    String[] AiringSortTypes = {ID, MEDIA_ID, TIME, EPISODE};
-    String[] CharacterSortTypes = {ID, ROLE, SEARCH_MATCH};
-    String[] StaffSortTypes = {ID, ROLE, LANGUAGE, SEARCH_MATCH};
+    String[] SortOrderType = {ASC, DESC};
+    String[] MediaSortType = {ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES};
+    String[] MediaListSortType = {MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME};
+    String[] ReviewSortType = {ID, SCORE, RATING, CREATED_AT, UPDATED_AT};
+    String[] AiringSortType = {ID, MEDIA_ID, TIME, EPISODE};
+    String[] CharacterSortType = {ID, ROLE, SEARCH_MATCH};
+    String[] StaffSortType = {ID, ROLE, LANGUAGE, SEARCH_MATCH};
 
     // ------------------------------------------------------------------------------------
 
@@ -285,8 +303,7 @@ public interface KeyUtils {
     @interface MediaSeason {}
 
 
-    String FINISHED = "FINISHED", RELEASING = "RELEASING",NOT_YET_RELEASED = "NOT_YET_RELEASED",
-            CANCELLED = "CANCELLED";
+    String FINISHED = "FINISHED", RELEASING = "RELEASING",NOT_YET_RELEASED = "NOT_YET_RELEASED", CANCELLED = "CANCELLED";
     @StringDef({FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED})
     @interface MediaStatus {}
 
@@ -303,9 +320,10 @@ public interface KeyUtils {
     @interface MediaFormat {}
 
 
-    String[] MediaSeasons = {WINTER, SPRING, SUMMER, FALL};
-    String[] MediaSources = {null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER};
-    String[] MediaFormats = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT};
+    String[] MediaSeason = {WINTER, SPRING, SUMMER, FALL};
+    String[] MediaStatus = {FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED};
+    String[] MediaSource = {null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER};
+    String[] MediaFormat = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT};
 
     // ------------------------------------------------------------------------------------
 
@@ -327,6 +345,9 @@ public interface KeyUtils {
     @StringDef({POINT_100, POINT_10_DECIMAL, POINT_10,  POINT_5, POINT_3})
     @interface ScoreFormat {}
 
+    String[] MediaListStatus = {CURRENT, PLANNING, COMPLETED, DROPPED, PAUSED, REPEATING};
+    String[] ScoreFormat = {POINT_100, POINT_10_DECIMAL, POINT_10,  POINT_5, POINT_3};
+
     // ------------------------------------------------------------------------------------
 
 
@@ -336,10 +357,13 @@ public interface KeyUtils {
     // Feed Type Attributes
     // ------------------------------------------------------------------------------------
 
-    String TEXT = "TEXT", ANIME_LIST = "ANIME_LIST", MANGA_LIST = "MANGA_LIST",
-            MESSAGE = "MESSAGE", MEDIA_LIST = "MEDIA_LIST";
+    String TEXT = "TEXT", ANIME_LIST = "ANIME_LIST", MANGA_LIST = "MANGA_LIST", MESSAGE = "MESSAGE", MEDIA_LIST = "MEDIA_LIST";
     @StringDef({TEXT, ANIME_LIST, MANGA_LIST, MESSAGE, MEDIA_LIST})
     @interface FeedType {}
+
+    String THREAD = "THREAD", THREAD_COMMENT = "THREAD_COMMENT", ACTIVITY = "ACTIVITY", ACTIVITY_REPLY = "ACTIVITY_REPLY";
+    @StringDef({THREAD, THREAD_COMMENT, ACTIVITY, ACTIVITY_REPLY})
+    @interface LikeType {}
 
     // ------------------------------------------------------------------------------------
 
@@ -387,20 +411,22 @@ public interface KeyUtils {
 
 
     // Group types for recycler view
-    int RECYCLER_TYPE_CONTENT = 0x00000010,  RECYCLER_TYPE_HEADER = 0x00000011, RECYCLER_TYPE_LOADING = 0x00000100, RECYCLER_TYPE_EMPTY = 0x00000101;
+    int RECYCLER_TYPE_CONTENT = 0x00000010,  RECYCLER_TYPE_HEADER = 0x00000011, RECYCLER_TYPE_LOADING = 0x00000100, RECYCLER_TYPE_EMPTY = 0x00000101,
+            RECYCLER_TYPE_ANIME = 0x00000111, RECYCLER_TYPE_MANGA = 0x00001000;
 
-    @IntDef({RECYCLER_TYPE_CONTENT, RECYCLER_TYPE_HEADER, RECYCLER_TYPE_LOADING, RECYCLER_TYPE_EMPTY})
+    @IntDef({RECYCLER_TYPE_CONTENT, RECYCLER_TYPE_HEADER, RECYCLER_TYPE_LOADING, RECYCLER_TYPE_EMPTY,
+            RECYCLER_TYPE_ANIME, RECYCLER_TYPE_MANGA})
     @interface RecyclerViewType {}
 
     /** Application Tips */
     String KEY_MAIN_TIP = "KEY_MAIN_TIP", KEY_DETAIL_TIP = "KEY_DETAIL_TIP", KEY_NOTIFICATION_TIP = "KEY_NOTIFICATION_TIP",
     KEY_MESSAGE_TIP = "KEY_MESSAGE_TIP", KEY_COMPOSE_TIP = "KEY_COMPOSE_TIP", KEY_CHARACTER_TIP = "KEY_CHARACTER_TIP",
     KEY_STAFF_TIP = "KEY_STAFF_TIP", KEY_STATUS_POST_TIP = "KEY_STATUS_POST_TIP", KEY_USER_PROFILE_TIP = "KEY_USER_PROFILE_TIP",
-    KEY_REVIEW_TYPE_TIP = "KEY_REVIEW_TYPE_TIP", KEY_LOGIN_TIP = "KEY_LOGIN_TIP", KEY_GIPHY_TIP = "KEY_GIPHY_TIP",
+    KEY_LOGIN_TIP = "KEY_LOGIN_TIP", KEY_GIPHY_TIP = "KEY_GIPHY_TIP",
     KEY_POST_TYPE_TIP = "KEY_POST_TYPE_TIP";
 
     @StringDef({KEY_MAIN_TIP, KEY_DETAIL_TIP, KEY_NOTIFICATION_TIP, KEY_MESSAGE_TIP, KEY_COMPOSE_TIP, KEY_CHARACTER_TIP,
-            KEY_STAFF_TIP, KEY_STATUS_POST_TIP, KEY_USER_PROFILE_TIP, KEY_REVIEW_TYPE_TIP, KEY_LOGIN_TIP, KEY_GIPHY_TIP,
+            KEY_STAFF_TIP, KEY_STATUS_POST_TIP, KEY_USER_PROFILE_TIP, KEY_LOGIN_TIP, KEY_GIPHY_TIP,
             KEY_POST_TYPE_TIP})
     @interface TapTargetType {}
 }

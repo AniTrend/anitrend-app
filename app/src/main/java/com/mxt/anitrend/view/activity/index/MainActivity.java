@@ -41,6 +41,7 @@ import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView;
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
 import com.mxt.anitrend.model.entity.anilist.User;
+import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.Version;
 import com.mxt.anitrend.presenter.activity.MainPresenter;
 import com.mxt.anitrend.service.DownloaderService;
@@ -51,9 +52,9 @@ import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
+import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.activity.detail.SeriesListActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetMessage;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -72,8 +73,8 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Base main_menu activity to show case template
  */
 
-public class MainActivity extends ActivityBase<Void, MainPresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<User>,
-        NavigationView.OnNavigationItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends ActivityBase<Void, MainPresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<UserBase>,
+        NavigationView.OnNavigationItemSelectedListener {
 
     protected @BindView(R.id.toolbar) Toolbar mToolbar;
     protected @BindView(R.id.page_container) ViewPager mViewPager;
@@ -92,7 +93,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
 
     private Menu menuItems;
 
-    private MenuItem mHomeFeed, mReviewMenu, mAccountLogin, mSignOutProfile, mManageMenu;
+    private MenuItem mHomeFeed, mAccountLogin, mSignOutProfile, mManageMenu;
 
     private HeaderImageView mHeaderView;
     private TextView mUserName;
@@ -271,13 +272,13 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                 selectedItem = menu;
                 break;
             case R.id.nav_myanime:
-                intent = new Intent(this, SeriesListActivity.class);
+                intent = new Intent(this, MediaListActivity.class);
                 intent.putExtra(KeyUtils.arg_media_type, KeyUtils.ANIME);
                 intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                 startActivity(intent);
                 break;
             case R.id.nav_mymanga:
-                intent = new Intent(this, SeriesListActivity.class);
+                intent = new Intent(this, MediaListActivity.class);
                 intent.putExtra(KeyUtils.arg_media_type, KeyUtils.MANGA);
                 intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
                 startActivity(intent);
@@ -378,8 +379,6 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
 
     @Override
     protected void updateUI() {
-        boolean reviewType = getPresenter().getApplicationPref().getReviewType();
-
         Version version = getPresenter().getDatabase().getRemoteVersion();
         View HeaderContainer = mNavigationView.getHeaderView(0);
 
@@ -392,14 +391,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         mSignOutProfile = menuItems.findItem(R.id.nav_sign_out);
         mManageMenu = menuItems.findItem(R.id.nav_header_manage);
 
-        mReviewMenu = menuItems.findItem(R.id.nav_reviews);
-        mReviewMenu.setTitle(reviewType?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
         HeaderContainer.findViewById(R.id.banner_clickable).setOnClickListener(this);
-
-        SwitchCompat mReviewTypeSwitch = menuItems.findItem(R.id.nav_reviews).getActionView().findViewById(R.id.app_review_type);
-
-        mReviewTypeSwitch.setChecked(reviewType);
-        mReviewTypeSwitch.setOnCheckedChangeListener(this);
 
         if(getPresenter().getApplicationPref().isAuthenticated())
             setupUserItems();
@@ -484,19 +476,6 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         }
     }
 
-    /**
-     * Menu items switches events are handled in here
-     */
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean state) {
-        switch (compoundButton.getId()) {
-            case R.id.app_review_type:
-                getPresenter().getApplicationPref().setReviewType(state);
-                mReviewMenu.setTitle(state?R.string.drawer_title_anime_reviews:R.string.drawer_title_manga_reviews);
-                break;
-        }
-    }
-
     @Override
     protected void onDestroy() {
         if(mUserAvatar != null)
@@ -505,8 +484,8 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<User> consumer) {
-        if(consumer.getRequestMode() == KeyUtils.USER_NOTIFICATION_COUNT)
+    public void onModelChanged(BaseConsumer<UserBase> consumer) {
+        if(consumer.getRequestMode() == KeyUtils.USER_CURRENT_REQ)
             NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
     }

@@ -38,7 +38,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
  * Media activity
  */
 
-public class SeriesActivity extends ActivityBase<Media, SeriesPresenter> implements View.OnClickListener {
+public class MediaActivity extends ActivityBase<Media, SeriesPresenter> implements View.OnClickListener {
 
     private ActivitySeriesBinding binding;
     private String seriesType;

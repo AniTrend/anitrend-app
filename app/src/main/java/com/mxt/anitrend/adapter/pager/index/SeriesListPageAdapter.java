@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.fragment.detail.SeriesListFragment;
+import com.mxt.anitrend.view.fragment.detail.MediaListFragment;
 
 /**
  * Created by max on 2017/12/17.
@@ -24,7 +24,7 @@ public class SeriesListPageAdapter extends BaseStatePageAdapter {
     private void setSeriesType(@KeyUtils.MediaType int seriesType) {
         switch (seriesType) {
             case KeyUtils.ANIME:
-                setPagerTitles(R.array.anime_listing_status);
+                setPagerTitles(R.array.media_list_status);
                 break;
             case KeyUtils.MANGA:
                 setPagerTitles(R.array.manga_listing_status);
@@ -45,6 +45,6 @@ public class SeriesListPageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        return SeriesListFragment.newInstance(getParams(), position);
+        return MediaListFragment.newInstance(getParams(), position);
     }
 }

@@ -65,60 +65,17 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
 
     /** Give the current airing status of the series */
     @BindingAdapter("seriesStatus")
-    public static void setStatus(SeriesStatusWidget view, Media model) {
-        if(model != null) {
-            String status = TextUtils.isEmpty(model.getAiring_status()) ? model.getPublishing_status() : model.getAiring_status();
-            if (status == null)
-                status = KeyUtils.key_not_yet_published;
-            switch (status) {
-                case KeyUtils.key_currently_airing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
-                    break;
-                case KeyUtils.key_publishing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
-                    break;
-                case KeyUtils.key_finished_airing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
-                    break;
-                case KeyUtils.key_finished_publishing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
-                    break;
-                case KeyUtils.key_not_yet_aired:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
-                    break;
-                case KeyUtils.key_not_yet_published:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
-                    break;
-                default:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateRed));
-                    break;
-            }
-        }
-    }
-    /** Give the current airing status of the series */
-    @BindingAdapter("seriesStatus")
     public static void setStatus(SeriesStatusWidget view, MediaBase model) {
         if(model != null) {
-            String status = TextUtils.isEmpty(model.getAiring_status()) ? model.getPublishing_status() : model.getAiring_status();
-            if (status == null)
-                status = KeyUtils.key_not_yet_published;
-            switch (status) {
-                case KeyUtils.key_currently_airing:
+            @KeyUtils.MediaStatus String mediaStatus = TextUtils.isEmpty(model.getStatus()) ? model.getStatus() : KeyUtils.NOT_YET_RELEASED;
+            switch (mediaStatus) {
+                case KeyUtils.RELEASING:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
                     break;
-                case KeyUtils.key_publishing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
-                    break;
-                case KeyUtils.key_finished_airing:
+                case KeyUtils.FINISHED:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
                     break;
-                case KeyUtils.key_finished_publishing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
-                    break;
-                case KeyUtils.key_not_yet_aired:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
-                    break;
-                case KeyUtils.key_not_yet_published:
+                case KeyUtils.NOT_YET_RELEASED:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
                     break;
                 default:
@@ -131,42 +88,15 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     /** Give the current airing status of the series */
     @BindingAdapter("seriesStatus")
     public static void setStatus(SeriesStatusWidget view, MediaList mediaList) {
-        if (mediaList != null) {
-            MediaBase model = MediaUtil.getSeriesModel(mediaList);
-            String status = MediaUtil.isAnimeType(model) ? model.getAiring_status() : model.getPublishing_status();
-            if(status == null)
-                status = KeyUtils.key_not_yet_published;
-            switch (status) {
-                case KeyUtils.key_currently_airing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
-                    break;
-                case KeyUtils.key_publishing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
-                    break;
-                case KeyUtils.key_finished_airing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
-                    break;
-                case KeyUtils.key_finished_publishing:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
-                    break;
-                case KeyUtils.key_not_yet_aired:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
-                    break;
-                case KeyUtils.key_not_yet_published:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
-                    break;
-                default:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateRed));
-                    break;
-            }
-        }
+        if (mediaList != null)
+            setStatus(view, mediaList.getMedia());
     }
 
     /** Give the current airing status of the series */
     @BindingAdapter("airingStatus")
     public static void setAiringStatus(SeriesStatusWidget view, MediaList mediaList) {
-        if(mediaList != null && mediaList.getAnime() != null && mediaList.getAnime().getAiringSchedule() != null) {
-            if(mediaList.getAnime().getAiringSchedule().getNext_episode() - mediaList.getProgress() > 1)
+        if(mediaList != null && mediaList.getMedia() != null && mediaList.getMedia().getNextAiringEpisode() != null) {
+            if(mediaList.getMedia().getNextAiringEpisode().getEpisode() - mediaList.getProgress() > 1)
                 view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
         } else
             view.setVisibility(GONE);

@@ -16,6 +16,8 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 
+import java.util.Objects;
+
 /**
  * Created by max on 2018/01/03.
  */
@@ -57,10 +59,10 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     public void persistChanges() {
         model.setProgress(!TextUtils.isEmpty(binding.diaCurrentProgress.getText())? Integer.valueOf(binding.diaCurrentProgress.getText().toString()): 0);
         model.setRepeat(!TextUtils.isEmpty(binding.diaCurrentRewatch.getText()) ? Integer.valueOf(binding.diaCurrentRewatch.getText().toString()): 0);
-        model.setScore_raw(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
-        model.setPrivate(binding.diaCurrentPrivacy.isChecked()? 1 : 0);
+        model.setScore(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
+        model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
-        model.setStatus(KeyUtils.UserAnimeStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
+        model.setStatus(KeyUtils.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
     }
 
     @Override
@@ -72,20 +74,20 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     @Override
     protected void bindFields() {
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.anime_listing_status, R.layout.adapter_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.media_list_status, R.layout.adapter_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         binding.diaCurrentStatus.setAdapter(adapter);
 
         if(!TextUtils.isEmpty(model.getStatus()))
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserAnimeStatus).indexOf(model.getStatus()));
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.MediaListStatus).indexOf(model.getStatus()));
         else
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.UserAnimeStatus).indexOf(KeyUtils.UserAnimeStatus[KeyUtils.PLAN_TO_WATCH]));
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.MediaListStatus).indexOf(KeyUtils.PLANNING));
 
-        binding.diaCurrentPrivacy.setChecked(model.isPrivate());
-        if(model.getScore_raw() != 0)
-            binding.diaCurrentScore.setText(String.valueOf(model.getScore_raw()));
+        binding.diaCurrentPrivacy.setChecked(model.isHidden());
+        if(model.getScore() != 0)
+            binding.diaCurrentScore.setText(String.valueOf(model.getScore()));
         if(model.getProgress() != 0)
             binding.diaCurrentProgress.setText(String.valueOf(model.getProgress()));
         if(model.getRepeat() != 0)
@@ -107,29 +109,25 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        model.setStatus(KeyUtils.UserAnimeStatus[i]);
-        switch (KeyUtils.UserAnimeStatus[i]) {
-            case "watching":
-                if (getSeriesModel().getAiring_status().equals(KeyUtils.AnimeStatusTypes[KeyUtils.NOT_YET_AIRED]))
+        model.setStatus(KeyUtils.MediaListStatus[i]);
+        switch (KeyUtils.MediaListStatus[i]) {
+            case KeyUtils.CURRENT:
+                if (Objects.equals(getSeriesModel().getStatus(), KeyUtils.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
-            case "plan to watch":
+            case KeyUtils.PLANNING:
                 break;
-            case "completed":
-                if (!getSeriesModel().getAiring_status().equals(KeyUtils.AnimeStatusTypes[KeyUtils.FINISHED_AIRING]))
+            case KeyUtils.COMPLETED:
+                if (!Objects.equals(getSeriesModel().getStatus(), KeyUtils.FINISHED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
                 else {
-                    int total = getSeriesModel().getTotal_episodes();
+                    int total = getSeriesModel().getEpisodes();
                     model.setProgress(total);
                     binding.diaCurrentProgress.setText(String.valueOf(total));
                 }
                 break;
-            case "on hold":
-                if (getSeriesModel().getAiring_status().equals(KeyUtils.AnimeStatusTypes[KeyUtils.NOT_YET_AIRED]))
-                    NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
-                break;
-            case "dropped":
-                if (getSeriesModel().getAiring_status().equals(KeyUtils.AnimeStatusTypes[KeyUtils.NOT_YET_AIRED]))
+            default:
+                if (Objects.equals(getSeriesModel().getStatus(), KeyUtils.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
         }

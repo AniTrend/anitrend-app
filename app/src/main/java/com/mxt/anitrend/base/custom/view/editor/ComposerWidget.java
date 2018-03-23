@@ -1,5 +1,6 @@
 package com.mxt.anitrend.base.custom.view.editor;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
 import android.os.Build;
@@ -23,11 +24,14 @@ import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
+import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.model.entity.giphy.Gif;
 import com.mxt.anitrend.model.entity.giphy.Giphy;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -45,16 +49,17 @@ import retrofit2.Response;
 
 /**
  * Created by max on 2017/12/02.
+ * Composer widget for multiple feed types
  */
 
 public class ComposerWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<ResponseBody> {
 
     private WidgetComposerBinding binding;
-    private @KeyUtils.RequestType
-    int requestType;
+    private @KeyUtils.RequestType int requestType;
     private WidgetPresenter<ResponseBody> presenter;
     private ItemClickListener<Object> itemClickListener;
 
+    private UserBase recipient;
     private FeedList feedList;
     private FeedReply feedReply;
 
@@ -120,24 +125,17 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
 
     public void setModel(FeedList feedList) {
         this.feedList = feedList;
-        presenter.getParams().putInt(KeyUtils.arg_id, feedList.getId());
+        this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
     }
 
-    public void setModel(User user) {
-        presenter.getParams().putLong(KeyUtils.arg_recipient_id, user.getId());
+    public void setModel(UserBase recipient) {
+        this.recipient = recipient;
+        this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
     }
 
     public void setModel(FeedReply feedReply) {
         this.feedReply = feedReply;
-        presenter.getParams().putInt(KeyUtils.arg_activity_id, feedReply.getId());
-    }
-
-    public void setRequestMode(@KeyUtils.RequestType int requestType) {
-        if(requestType == KeyUtils.ACTIVITY_EDIT_REQ) {
-            long userId = presenter.getDatabase().getCurrentUser().getId();
-            presenter.getParams().putLong(KeyUtils.arg_user_id, userId);
-        }
-        this.requestType = requestType;
+        this.requestType = KeyUtils.MUT_SAVE_FEED_REPLY;
     }
 
     /**
@@ -152,16 +150,39 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         itemClickListener = null;
     }
 
+    @SuppressLint("SwitchIntDef")
     public void startRequestData() {
         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
             binding.widgetFlipper.showNext();
 
-            if(requestType == KeyUtils.ACTIVITY_EDIT_REQ)
-                feedList.setValue(binding.comment.getFormattedText());
-            else if(requestType == KeyUtils.ACTIVITY_REPLY_EDIT_REQ)
-                feedReply.setText(binding.comment.getFormattedText());
+            QueryContainer queryContainer = GraphUtil.getDefaultQuery(false);
 
-            presenter.getParams().putString(KeyUtils.arg_text, binding.comment.getFormattedText());
+            switch (requestType) {
+                case KeyUtils.MUT_SAVE_TEXT_FEED:
+                    if(feedList != null) {
+                        feedList.setValue(binding.comment.getFormattedText());
+                        queryContainer.setVariable(KeyUtils.arg_id, feedList.getId());
+                    }
+                    queryContainer.setVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
+                    break;
+                case KeyUtils.MUT_SAVE_FEED_REPLY:
+                    if(feedReply != null) {
+                        feedReply.setText(binding.comment.getFormattedText());
+                        queryContainer.setVariable(KeyUtils.arg_activityId, feedReply.getId());
+                    }
+                    queryContainer.setVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
+                    break;
+                case KeyUtils.MUT_SAVE_MESSAGE_FEED:
+                    if(feedList != null) {
+                        feedList.setValue(binding.comment.getFormattedText());
+                        queryContainer.setVariable(KeyUtils.arg_id, feedList.getId());
+                    }
+                    queryContainer.setVariable(KeyUtils.arg_recipientId, recipient.getId());
+                    queryContainer.setVariable(KeyUtils.arg_message, binding.comment.getFormattedText());
+                    break;
+            }
+
+            presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
             presenter.requestData(requestType, getContext(), this);
         } else
             NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -204,12 +225,19 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
             if(response.isSuccessful()) {
                 binding.comment.getText().clear();
 
-                if(requestType == KeyUtils.ACTIVITY_EDIT_REQ)
-                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
-                else if(requestType == KeyUtils.ACTIVITY_REPLY_EDIT_REQ)
-                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
-                else
+                if (requestType == KeyUtils.MUT_SAVE_TEXT_FEED) {
+                    if(feedList != null)
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
                     presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
+                } else if (requestType == KeyUtils.MUT_SAVE_FEED_REPLY) {
+                    if(feedReply != null)
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
+                    presenter.notifyAllListeners(new BaseConsumer<FeedReply>(requestType), false);
+                } else if (requestType == KeyUtils.MUT_SAVE_MESSAGE_FEED) {
+                    if(feedList != null)
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
+                    presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
+                }
             }
             else
                 NotifyUtil.makeText(getContext(), ErrorUtil.getError(response), Toast.LENGTH_SHORT).show();
@@ -243,7 +271,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onGiphyClicked(Giphy giphy) {
-        String index = KeyUtils.GiphyTypes[KeyUtils.GIPHY_LARGE_DOWN_SAMPLE];
+        String index = KeyUtils.GIPHY_LARGE_DOWN_SAMPLE;
         EditText editor = binding.comment;
         int start = editor.getSelectionStart();
         Gif gif = giphy.getImages().get(index);

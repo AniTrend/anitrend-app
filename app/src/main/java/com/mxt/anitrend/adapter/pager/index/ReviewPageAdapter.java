@@ -1,16 +1,18 @@
 package com.mxt.anitrend.adapter.pager.index;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.fragment.index.FragmentFeedReview;
+import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment;
 
 /**
  * Created by max on 2017/10/30.
+ * ReviewPageAdapter
  */
 
 public class ReviewPageAdapter extends BaseStatePageAdapter {
@@ -29,13 +31,9 @@ public class ReviewPageAdapter extends BaseStatePageAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return FragmentFeedReview.newInstance(KeyUtils.LATEST);
+                return BrowseReviewFragment.newInstance(KeyUtils.ANIME);
             case 1:
-                return FragmentFeedReview.newInstance(KeyUtils.POPULAR);
-            case 2:
-                return FragmentFeedReview.newInstance(KeyUtils.NEED_LOVE);
-            case 3:
-                return FragmentFeedReview.newInstance(KeyUtils.CONTROVERSIAL);
+                return BrowseReviewFragment.newInstance(KeyUtils.MANGA);
         }
         return null;
     }

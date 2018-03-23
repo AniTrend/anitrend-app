@@ -5,7 +5,7 @@
 
     <data>
         <import type="com.mxt.anitrend.util.DateUtil" />
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -101,7 +101,7 @@
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/series_episodes"
-                    android:text="@{String.valueOf(model.total_episodes)}"
+                    android:text="@{String.valueOf(model.episodes)}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textSize="10sp"
-                    app:startDate="@{model.start_date_fuzzy}"
+                    app:startDate="@{model.startDate}"
                     tools:text="Started: 2017/09/30"/>
 
             </FrameLayout>

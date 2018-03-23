@@ -28,8 +28,8 @@ import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetEmoticon;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 import com.mxt.anitrend.view.sheet.BottomSheetUsers;
@@ -176,7 +176,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
         switch (target.getId()) {
             case R.id.series_image:
                 MediaBase series = feedList.getSeries();
-                intent = new Intent(getActivity(), SeriesActivity.class);
+                intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
                 intent.putExtra(KeyUtils.arg_media_type, series.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
@@ -233,7 +233,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                     Intent intent;
                     switch (target.getId()) {
                         case R.id.series_image:
-                            intent = new Intent(getActivity(), SeriesActivity.class);
+                            intent = new Intent(getActivity(), MediaActivity.class);
                             intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
                             intent.putExtra(KeyUtils.arg_media_type, data.getSeries().getSeries_type());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);

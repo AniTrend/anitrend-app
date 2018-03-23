@@ -114,4 +114,24 @@ public class GroupingUtil {
         return entityMap;
     }
 
+    /**
+     * Groups edge container items by the type/key of the object
+     * @see com.mxt.anitrend.model.entity.container.body.EdgeContainer
+     * <br/>
+     *
+     * @param edges The potential external model response which needs to be grouped
+     */
+    public static List<EntityGroup> groupActorMediaEdge(List<Edge<List<StaffBase>, MediaBase>> edges) {
+        List<EntityGroup> entityMap = new ArrayList<>();
+        for (Edge<List<StaffBase>, MediaBase> edge : edges) {
+            if(edge.getValue() != null) {
+                edge.getValue().setContentType(KeyUtils.RECYCLER_TYPE_HEADER);
+                entityMap.add(edge.getValue());
+            }
+            if(edge.getType() != null || !edge.getType().isEmpty()) {
+                entityMap.addAll(edge.getType());
+            }
+        }
+        return entityMap;
+    }
 }

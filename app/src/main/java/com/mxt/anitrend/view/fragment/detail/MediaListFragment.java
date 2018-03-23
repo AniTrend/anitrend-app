@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.fragment.detail;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,42 +13,39 @@ import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
-import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.model.entity.anilist.User;
+import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.activity.ProfilePresenter;
-import com.mxt.anitrend.util.ComparatorProvider;
+import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by max on 2017/12/18.
  * series list fragment
  */
 
-public class SeriesListFragment extends FragmentUserListBase implements BaseConsumer.onRequestModelChange<MediaList> {
+public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, SeriesPresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
     private String userName;
-    private int contentIndex;
-    private @KeyUtils.MediaType
-    int seriesType;
+    private QueryContainer queryContainer;
 
-    public static FragmentUserListBase newInstance(Bundle params, int position) {
+    public static MediaListFragment newInstance(Bundle params, QueryContainer queryContainer) {
         Bundle args = new Bundle(params);
-        args.putInt(KeyUtils.arg_series_show_type, position);
-        FragmentUserListBase fragment = new SeriesListFragment();
+        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        MediaListFragment fragment = new MediaListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +60,9 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             userName = getArguments().getString(KeyUtils.arg_user_name);
-            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
-            contentIndex = getArguments().getInt(KeyUtils.arg_series_show_type);
+            queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
         }
-        mColumnSize = R.integer.grid_list_x2; isFilterable = true;
+        mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = true;
         setPresenter(new ProfilePresenter(getContext()));
         setViewModel(true);
     }
@@ -81,7 +78,7 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
         }
         if(model != null && model.size() > 0)
             if(getPresenter().isCurrentUser(userName))
-                getPresenter().getDatabase().saveSeries(model);
+                getPresenter().getDatabase().saveMediaLists(model);
         injectAdapter();
     }
 
@@ -90,9 +87,11 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
      */
     @Override
     public void makeRequest() {
-        Bundle params = getViewModel().getParams();
-        params.putString(KeyUtils.arg_user_name, userName);
-        getViewModel().requestData(seriesType == KeyUtils.ANIME? KeyUtils.USER_ANIME_LIST_REQ : KeyUtils.USER_MANGA_LIST_REQ, getContext());
+        queryContainer.setVariable(KeyUtils.arg_user_name, userName)
+                .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
+                .setVariable(KeyUtils.arg_sort, null);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
     }
 
     /**
@@ -129,14 +128,14 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
     public void onItemClick(View target, MediaList data) {
         switch (target.getId()) {
             case R.id.series_image:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
+                MediaBase mediaBase = data.getMedia();
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[seriesType]);
+                intent.putExtra(KeyUtils.arg_media_type, mediaBase.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }
-
 
     /**
      * When the target view from {@link View.OnLongClickListener}
@@ -161,78 +160,39 @@ public class SeriesListFragment extends FragmentUserListBase implements BaseCons
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(model != null) {
-            model = sortedFilteredList(model);
-            mAdapter.onItemsInserted(model);
+        onRefresh();
+    }
+
+
+    @SuppressLint("SwitchIntDef")
+    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onModelChanged(BaseConsumer<MediaList> consumer) {
+        int pairIndex;
+        if(getPresenter().isCurrentUser(userName)) {
+            Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+            if (pairOptional.isPresent())
+                switch (consumer.getRequestMode()) {
+                    case KeyUtils.MUT_SAVE_MEDIA_LIST:
+                        pairIndex = pairOptional.get().getFirst();
+                        model.set(pairIndex, consumer.getChangeModel());
+                        mAdapter.onItemChanged(consumer.getChangeModel(),pairIndex);
+                        break;
+                    case KeyUtils.MUT_DELETE_MEDIA_LIST:
+                        pairIndex = pairOptional.get().getFirst();
+                        model.remove(pairIndex);
+                        mAdapter.onItemRemoved(pairIndex);
+                        break;
+                }
         }
     }
 
-    /**
-     * Called when the model state is changed.
-     *
-     * @param content The new data
-     */
     @Override
-    public void onChanged(@Nullable User content) {
+    public void onChanged(@Nullable PageContainer<MediaList> content) {
         if(content != null) {
-            if(content.getLists() != null) {
-                if(isPager) {
-                    if (model == null) model = getList(content.getLists());
-                    else model.addAll(getList(content.getLists()));
-                }
-                else
-                    model = getList(content.getLists());
-                updateUI();
-            } else {
-                if (isPager)
-                    setLimitReached();
-                if (model == null || model.size() < 1)
-                    showEmpty(getString(R.string.layout_empty_response));
-            }
-        } else
-            showEmpty(getString(R.string.layout_empty_response));
-    }
-
-    private List<MediaList> getList(Map<String, List<MediaList>> seriesMap) {
-        List<MediaList> mediaList = seriesMap.get(getListType());
-        List<MediaList> filtered = FilterProvider.getListItemFilter(getPresenter().isCurrentUser(userName), mediaList);
-        if(filtered != null)
-            return sortedFilteredList(filtered);
-        return mediaList;
-    }
-
-    private List<MediaList> sortedFilteredList(List<MediaList> mediaList) {
-        User user = getPresenter().getDatabase().getCurrentUser();
-        List<MediaList> mediaListFiltered;
-        if(seriesType == KeyUtils.ANIME)
-            mediaListFiltered = Stream.of(mediaList).sorted(ComparatorProvider.getAnimeComparator(getPresenter().getApplicationPref() , user.getTitle_language())).toList();
-        else
-            mediaListFiltered = Stream.of(mediaList).sorted(ComparatorProvider.getMangaComparator(getPresenter().getApplicationPref(), user.getTitle_language())).toList();
-        return mediaListFiltered;
-    }
-
-    private String getListType() {
-        return seriesType == KeyUtils.ANIME? KeyUtils.AnimeListKeys[contentIndex] : KeyUtils.MangaListKeys[contentIndex];
-    }
-
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<MediaList> consumer) {
-        if(getPresenter().isCurrentUser(userName)) {
-            int pairIndex;
-            Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
-            if(consumer.getRequestMode() == KeyUtils.ANIME_LIST_EDIT_REQ || consumer.getRequestMode() == KeyUtils.MANGA_LIST_EDIT_REQ) {
-                if (pairOptional.isPresent()) {
-                    pairIndex = pairOptional.get().getFirst();
-                    model.set(pairIndex, consumer.getChangeModel());
-                    mAdapter.onItemChanged(consumer.getChangeModel(),pairIndex);
-                }
-            } else if(consumer.getRequestMode() == KeyUtils.ANIME_LIST_DELETE_REQ || consumer.getRequestMode() == KeyUtils.MANGA_LIST_DELETE_REQ) {
-                if (pairOptional.isPresent()) {
-                    pairIndex = pairOptional.get().getFirst();
-                    model.remove(pairIndex);
-                    mAdapter.onItemRemoved(pairIndex);
-                }
-            }
+            if(content.hasPageInfo())
+                pageInfo = content.getPageInfo();
+            if(!content.isEmpty())
+                onPostProcessed(content.getPageData());
         }
     }
 }

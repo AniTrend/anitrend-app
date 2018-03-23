@@ -98,7 +98,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private void requestFollowers() {
         followersPresenter = new WidgetPresenter<>(getContext());
-        followersPresenter.getParams().putLong(KeyUtils.arg_user_id, userId);
+        followersPresenter.getParams().putLong(KeyUtils.arg_userId, userId);
         followersPresenter.requestData(KeyUtils.USER_FOLLOWERS_REQ, getContext(), new RetroCallback<List<UserBase>>() {
             @Override
             public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
@@ -118,7 +118,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private void requestFollowing() {
         followingPresenter = new WidgetPresenter<>(getContext());
-        followingPresenter.getParams().putLong(KeyUtils.arg_user_id, userId);
+        followingPresenter.getParams().putLong(KeyUtils.arg_userId, userId);
         followingPresenter.requestData(KeyUtils.USER_FOLLOWING_REQ, getContext(), new RetroCallback<List<UserBase>>() {
             @Override
             public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
@@ -141,7 +141,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private void requestFavourites() {
         favouritePresenter = new WidgetPresenter<>(getContext());
-        favouritePresenter.getParams().putLong(KeyUtils.arg_user_id, userId);
+        favouritePresenter.getParams().putLong(KeyUtils.arg_userId, userId);
         favouritePresenter.requestData(KeyUtils.USER_FAVOURITES_REQ, getContext(), new RetroCallback<Favourite>() {
             @Override
             public void onResponse(@NonNull Call<Favourite> call, @NonNull Response<Favourite> response) {
@@ -188,7 +188,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 else {
                     Intent intent = new Intent(getContext(), FavouriteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtils.arg_user_id, userId);
+                    intent.putExtra(KeyUtils.arg_userId, userId);
                     getContext().startActivity(intent);
                 }
                 break;

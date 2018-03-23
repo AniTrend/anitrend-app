@@ -119,32 +119,6 @@
         <item>آخر الحلقات</item>
     </string-array>
 
-    <!--Do not Translate-->
-    <string-array name="myanime_title">
-        <item>w.t.g</item>
-        <item>p.t.w</item>
-        <item>c.m.p</item>
-        <item>o.h.d</item>
-        <item>d.r.p</item>
-    </string-array>
-
-    <!--Do not Translate-->
-    <string-array name="mymanga_title">
-        <item>r.d.g</item>
-        <item>p.t.r</item>
-        <item>o.h.d</item>
-        <item>c.m.p</item>
-        <item>d.r.p</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="reviews_title">
-        <item>جديد</item>
-        <item>محبوب</item>
-        <item>غير محبوب</item>
-        <item>مثير للجدل</item>
-    </string-array>
-
     <!--Try to keep all titles short-->
     <string-array name="manga_title">
         <item>قائمة المانغا</item>
@@ -168,22 +142,6 @@
         <item>استوديو</item>
         <item>طاقم</item>
         <item>شخصيات</item>
-    </string-array>
-
-    <string-array name="anime_listing_status">
-        <item>قيد المشاهدة</item>
-        <item>أرغب بمشاهدته</item>
-        <item>أكملت المشاهدة</item>
-        <item>توقف مؤقت</item>
-        <item>توقف نهائي</item>
-    </string-array>
-
-    <string-array name="manga_listing_status">
-        <item>قيد القراءة</item>
-        <item>أرغب بقراءته</item>
-        <item>أكملت القراءة</item>
-        <item>توقف مؤقت</item>
-        <item>توقف نهائي</item>
     </string-array>
 
     <!--First time usage intro screen-->
@@ -294,8 +252,6 @@
     <string name="drawer_title_myanime">قائمة أنيمياتي</string>
     <string name="drawer_title_mymanga">قائمة المانغا الخاصة بي</string>
     <string name="drawer_title_reviews">مراجعات</string>
-    <string name="drawer_title_anime_reviews">مراجعات الأنيمي</string>
-    <string name="drawer_title_manga_reviews">مراجعات المانغا</string>
     <string name="drawer_title_hub">AniTrend مركز</string>
 
     <string name="drawer_section_configuration">إعداد</string>
@@ -866,24 +822,7 @@
     <string name="anime_time_days">%.1f Days</string>
     <string name="anime_time_years">%.1f Years</string>
 
-    <!-- just left these uncommented so you don't have to rewrite everything :) -->
-<!--    <string-array name="series_types">
-        <item>كل القوائم</item>
-        <item>تلفزيوني</item>
-        <item>تلفزيوني قصير</item>
-        <item>فيلم</item>
-        <item>حلقة خاصة</item>
-        <item>اوفا</item>
-        <item>اونا</item>
-        <item>مانغا</item>
-        <item>رواية</item>
-        <item>ون شوت</item>
-        <item>دوجين</item>
-        <item>مانوا صينية</item>
-        <item>مانهوا كورية</item>
-    </string-array>-->
-
-    <string-array name="anime_media_types">
+    <string-array name="media_formats">
         <item>All</item>
         <item>TV</item>
         <item>TV Short</item>
@@ -891,15 +830,34 @@
         <item>Special</item>
         <item>OVA</item>
         <item>ONA</item>
-    </string-array>
-
-    <string-array name="manga_media_types">
-        <item>All</item>
+        <item>Music</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
-        <item>Doujin</item>
-        <item>Manhua</item>
+    </string-array>
+
+    <string-array name="media_sources">
+        <item>All</item>
+        <item>Original</item>
+        <item>Manga</item>
+        <item>Light Novel</item>
+        <item>Visual Novel</item>
+        <item>Video Game</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="reviews_title">
+        <item>@string/anime</item>
+        <item>@string/manga</item>
+    </string-array>
+
+    <string-array name="media_list_status">
+        <item>Current</item>
+        <item>Planning</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+        <item>Paused</item>
+        <item>Repeating</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

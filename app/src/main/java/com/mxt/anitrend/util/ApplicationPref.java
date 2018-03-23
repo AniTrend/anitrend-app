@@ -28,7 +28,6 @@ public class ApplicationPref {
 
     /** Application Base Options */
     private final String KEY_LIGHT_THEME = "KEY_LIGHT_THEME";
-    public static final String KEY_REVIEW_TYPES = "KEY_REVIEW_TYPES";
 
     /** AniList Preferences */
     private static final String KEY_SORT_TYPE = "KEY_SORT_TYPE";
@@ -169,17 +168,17 @@ public class ApplicationPref {
     }
 
 
-    public void saveOrder(String order) {
+    public void saveOrder(@KeyUtils.SortOrderType String order) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_ORDER_TYPE, order);
         editor.apply();
     }
 
-    public String getOrder() {
-        return sharedPreferences.getString(KEY_ORDER_TYPE, KeyUtils.OrderTypes[KeyUtils.DESC]);
+    public @KeyUtils.SortOrderType String getOrder() {
+        return sharedPreferences.getString(KEY_ORDER_TYPE, KeyUtils.DESC);
     }
 
-    public void saveYear(int year){
+    public void saveYear(int year) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_FILTER_YEAR, year);
         editor.apply();
@@ -243,16 +242,6 @@ public class ApplicationPref {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(KEY_GENRE_TYPE);
         editor.remove(KEY_GENRE_INDICES);
-        editor.apply();
-    }
-
-    public boolean getReviewType() {
-        return sharedPreferences.getBoolean(KEY_REVIEW_TYPES, true);
-    }
-
-    public void setReviewType(boolean isAnime) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_REVIEW_TYPES, isAnime);
         editor.apply();
     }
 

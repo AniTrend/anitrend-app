@@ -44,11 +44,6 @@ public interface BoxQuery {
     List<Genre> getGenreCollection();
 
     /**
-     * Gets all saved series lists
-     */
-    List<MediaList> getMediaLists();
-
-    /**
      * Saves current authenticated user
      */
     void saveCurrentUser(User user);
@@ -77,14 +72,4 @@ public interface BoxQuery {
      * Saves all saved genres
      */
     void saveGenreCollection(List<Genre> genres);
-
-    /**
-     * Saves all series lists
-     */
-    void saveMediaLists(List<MediaList> mediaLists);
-
-    /**
-     * Removes following of a specific user
-     */
-    void removeUser(UserBase userBase);
 }

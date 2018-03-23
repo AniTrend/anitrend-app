@@ -81,6 +81,10 @@ public class UserBase implements Parcelable {
         return isFollowing;
     }
 
+    public void toggleFollow() {
+        isFollowing = !isFollowing;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof UserBase)

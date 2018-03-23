@@ -4,7 +4,7 @@ import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -21,40 +21,40 @@ public interface FeedModel {
     @POST("/")
     @GraphQuery("FeedList")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<FeedList>> getFeedList(@Body GraphQueryContainer request);
+    Call<PageContainer<FeedList>> getFeedList(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("FeedListReply")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<FeedList>> getFeedListReply(@Body GraphQueryContainer request);
+    Call<PageContainer<FeedList>> getFeedListReply(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("FeedMessage")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<FeedList>> getFeedMessage(@Body GraphQueryContainer request);
+    Call<PageContainer<FeedList>> getFeedMessage(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("SaveTextActivity")
     @Headers("Content-Type: application/json")
-    Call<FeedList> saveTextActivity(@Body GraphQueryContainer request);
+    Call<FeedList> saveTextActivity(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("SaveMessageActivity")
     @Headers("Content-Type: application/json")
-    Call<FeedList> saveMessageActivity(@Body GraphQueryContainer request);
+    Call<FeedList> saveMessageActivity(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("SaveActivityReply")
     @Headers("Content-Type: application/json")
-    Call<FeedReply> saveActivityReply(@Body GraphQueryContainer request);
+    Call<FeedReply> saveActivityReply(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("DeleteActivity")
     @Headers("Content-Type: application/json")
-    Call<Boolean> deleteActivity(@Body GraphQueryContainer request);
+    Call<Boolean> deleteActivity(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("DeleteActivityReply")
     @Headers("Content-Type: application/json")
-    Call<Boolean> deleteActivityReply(@Body GraphQueryContainer request);
+    Call<Boolean> deleteActivityReply(@Body QueryContainer request);
 }

@@ -39,7 +39,7 @@ import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.ParamBuilderUtil;
-import com.mxt.anitrend.view.activity.detail.BrowseActivity;
+import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -54,7 +54,7 @@ import butterknife.ButterKnife;
  * Created by max on 2017/12/28.
  */
 
-public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
+public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
 
     private FragmentSeriesStatsBinding binding;
     private Media model;
@@ -62,8 +62,8 @@ public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Me
     private RankAdapter rankAdapter;
     private LinkAdapter linkAdapter;
 
-    public static SeriesStatsFragment newInstance(Bundle args) {
-        SeriesStatsFragment fragment = new SeriesStatsFragment();
+    public static MediaStatsFragment newInstance(Bundle args) {
+        MediaStatsFragment fragment = new MediaStatsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -104,7 +104,7 @@ public class SeriesStatsFragment extends FragmentBase<Media, SeriesPresenter, Me
             rankAdapter.setClickListener(new ItemClickListener<MediaRank>() {
                 @Override
                 public void onItemClick(View target, MediaRank data) {
-                    Intent intent = new Intent(getActivity(), BrowseActivity.class);
+                    Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                     Bundle args = ParamBuilderUtil.Builder()
                             .setSeries_type(model.getSeries_type())
                             .setSeason(data.getSeason())

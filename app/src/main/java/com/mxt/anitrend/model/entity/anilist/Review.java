@@ -123,4 +123,16 @@ public class Review implements Parcelable {
     public MediaBase getMedia() {
         return media;
     }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setRatingAmount(int ratingAmount) {
+        this.ratingAmount = ratingAmount;
+    }
+
+    public void setUserRating(String userRating) {
+        this.userRating = userRating;
+    }
 }

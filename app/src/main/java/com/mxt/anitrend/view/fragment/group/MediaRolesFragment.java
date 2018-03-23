@@ -7,35 +7,39 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.group.GroupRoleCharacterAdapter;
+import com.mxt.anitrend.adapter.recycler.group.GroupRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.anilist.Character;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by max on 2018/01/27.
+ * Shared fragment between media for staff and character
  */
 
-public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<EntityGroup>, SeriesPresenter> {
+public class MediaRolesFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<PageContainer<MediaBase>>, SeriesPresenter> {
 
-    private @KeyUtils.MediaType
-    int seriesType;
+    private QueryContainer queryContainer;
+    private @KeyUtils.RequestType int requestType;
 
-    public static SeriesRolesFragment newInstance(Bundle args) {
-        SeriesRolesFragment fragment = new SeriesRolesFragment();
+    public static MediaRolesFragment newInstance(Bundle params, @KeyUtils.MediaType String mediaType, @KeyUtils.RequestType int requestType) {
+        Bundle args = new Bundle(params);
+        args.putString(KeyUtils.arg_media_type, mediaType);
+        args.putInt(KeyUtils.arg_request_type, requestType);
+        MediaRolesFragment fragment = new MediaRolesFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,9 +52,13 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
-            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
-        mColumnSize = R.integer.grid_giphy_x3;
+        if(getArguments() != null) {
+            requestType = getArguments().getInt(KeyUtils.arg_request_type);
+            queryContainer = GraphUtil.getDefaultQuery(true)
+                    .setVariable(KeyUtils.arg_id, getArguments().getLong(KeyUtils.arg_id))
+                    .setVariable(KeyUtils.arg_media_type, getArguments().getString(KeyUtils.arg_media_type));
+        }
+        mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
     }
@@ -66,9 +74,9 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
     public void onItemClick(View target, EntityGroup data) {
         switch (target.getId()) {
             case R.id.container:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -101,7 +109,7 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new GroupRoleCharacterAdapter(model, getContext());
+            mAdapter = new GroupRoleAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -111,22 +119,25 @@ public class SeriesRolesFragment extends FragmentBaseList<EntityGroup, List<Enti
      */
     @Override
     public void makeRequest() {
-
+        queryContainer.setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(requestType, getContext());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Character param) {
-        if(seriesType == KeyUtils.ANIME)
-            onChanged(GroupingUtil.getGroupedSeriesBaseType(param.getAnime()));
-        else
-            onChanged(GroupingUtil.getGroupedSeriesBaseType(param.getManga()));
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Staff param) {
-        if(seriesType == KeyUtils.ANIME)
-            onChanged(GroupingUtil.getGroupedSeriesBaseType(param.getAnime_staff()));
-        else
-            onChanged(GroupingUtil.getGroupedSeriesBaseType(param.getManga_staff()));
+    @Override
+    public void onChanged(@Nullable ConnectionContainer<PageContainer<MediaBase>> content) {
+        PageContainer<MediaBase> pageContainer;
+        if (content != null && (pageContainer = content.getConnection()) != null) {
+            if(!pageContainer.isEmpty()) {
+                if (pageContainer.hasPageInfo())
+                    pageInfo = pageContainer.getPageInfo();
+                if (!pageContainer.isEmpty())
+                    onPostProcessed(GroupingUtil.groupMediaByFormat(pageContainer.getPageData(), model));
+                else
+                    onPostProcessed(Collections.emptyList());
+            }
+        }
+        if(model == null)
+            onPostProcessed(null);
     }
 }

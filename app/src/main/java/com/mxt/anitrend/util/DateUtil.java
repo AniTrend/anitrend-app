@@ -98,7 +98,26 @@ public class DateUtil {
     }
 
     /**
-     * Only for fuzzy dates
+     * Converts unix time representation into current readable time
+     * <br/>
+     *
+     * @return A time format of dd MMM yyyy
+     */
+    public static @Nullable String convertDate(FuzzyDate fuzzyDate) {
+        try {
+            if(fuzzyDate != null && fuzzyDate.isValidDate()) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+                Date converted = simpleDateFormat.parse(String.valueOf(fuzzyDate));
+                return new SimpleDateFormat("dd MMM yyyy",Locale.getDefault()).format(converted);
+            }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "TBA";
+    }
+
+    /**
+     * Checks if the given data is newer than the current data on the device
      */
     private static boolean isNewerDate(FuzzyDate fuzzyDate) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd",Locale.getDefault());

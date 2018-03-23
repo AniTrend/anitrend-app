@@ -221,7 +221,6 @@ public class DatabaseHelper implements BoxQuery {
             seriesListBox.put(mediaLists);
     }
 
-
     /**
      * Removes following of a specific user
      *
@@ -232,19 +231,17 @@ public class DatabaseHelper implements BoxQuery {
         getBoxStore(UserBase.class).remove(userBase);
     }
 
-    public void saveNotifications(NotificationBase... notification) {
-        getBoxStore(NotificationBase.class).put(notification);
+    /**
+     * Adds following of a specific user
+     *
+     * @param userBase
+     */
+    @Override
+    public void addUser(UserBase userBase) {
+        getBoxStore(UserBase.class).put(userBase);
     }
 
-    /**
-     * Saves all series lists
-     *
-     * @param seriesMap
-     */
-    public void saveSeries(Map<String, List<MediaList>> seriesMap) {
-        List<MediaList> mediaLists = new ArrayList<>();
-        for (List<MediaList> list: seriesMap.values())
-            mediaLists.addAll(list);
-        saveMediaLists(mediaLists);
+    public void saveNotifications(NotificationBase... notification) {
+        getBoxStore(NotificationBase.class).put(notification);
     }
 }

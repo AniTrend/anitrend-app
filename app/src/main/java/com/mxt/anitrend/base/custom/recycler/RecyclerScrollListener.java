@@ -1,10 +1,12 @@
 package com.mxt.anitrend.base.custom.recycler;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.util.KeyUtils;
 
 
@@ -25,6 +27,7 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
     private int mCurrentPage = 1;
     private int mCurrentOffset = 0;
     private RecyclerLoadListener mLoadListener;
+    private PageInfo pageInfo;
 
     private GridLayoutManager mGridLayoutManager;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
@@ -37,6 +40,10 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
     public void initListener(StaggeredGridLayoutManager staggeredGridLayoutManager, RecyclerLoadListener mLoadListener) {
         mStaggeredGridLayoutManager = staggeredGridLayoutManager;
         this.mLoadListener = mLoadListener;
+    }
+
+    public void setPageInfo(@Nullable PageInfo pageInfo) {
+        this.pageInfo = pageInfo;
     }
 
     @Override
@@ -63,14 +70,14 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
             }
         }
         int mVisibleThreshold = 3; //minimum allowed threshold before next page reload request
-        if (!mLoading && (mTotalItemCount - mVisibleItemCount)
-                <= (mFirstVisibleItem + mVisibleThreshold)) {
+        if (!mLoading && (mTotalItemCount - mVisibleItemCount) <= (mFirstVisibleItem + mVisibleThreshold)) {
             // End has been reached
-
-            mCurrentPage++;
-            mCurrentOffset += KeyUtils.PAGING_LIMIT;
-            mLoadListener.onLoadMore();
-            mLoading = true;
+            if(pageInfo != null && pageInfo.hasNextPage()) {
+                mCurrentPage++;
+                mCurrentOffset += KeyUtils.PAGING_LIMIT;
+                mLoadListener.onLoadMore();
+                mLoading = true;
+            }
         }
     }
 

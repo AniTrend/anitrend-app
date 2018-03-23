@@ -12,9 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.activity.detail.SeriesListActivity;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 
@@ -66,14 +66,14 @@ public class ShortcutHelper {
                             .setShortLabel(context.getString(R.string.drawer_title_myanime))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_anime))
-                            .setIntent(createIntentAction(context, SeriesListActivity.class, shortcutBuilder.getParams())).build());
+                            .setIntent(createIntentAction(context, MediaListActivity.class, shortcutBuilder.getParams())).build());
                     break;
                 case KeyUtils.SHORTCUT_MY_MANGA:
                     shortcutInfo.add(new ShortcutInfo.Builder(context, KeyUtils.ShortcutTypes[shortcutBuilder.getShortcutType()])
                             .setShortLabel(context.getString(R.string.drawer_title_mymanga))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_manga))
-                            .setIntent(createIntentAction(context, SeriesListActivity.class, shortcutBuilder.getParams())).build());
+                            .setIntent(createIntentAction(context, MediaListActivity.class, shortcutBuilder.getParams())).build());
                     break;
                 case KeyUtils.SHORTCUT_FEEDS:
                     shortcutInfo.add(new ShortcutInfo.Builder(context, KeyUtils.ShortcutTypes[shortcutBuilder.getShortcutType()])

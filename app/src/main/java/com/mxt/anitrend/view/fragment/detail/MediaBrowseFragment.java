@@ -9,29 +9,39 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.index.SeriesAnimeAdapter;
+import com.mxt.anitrend.adapter.recycler.index.SeriesMediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
-
-import java.util.List;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 /**
  * Created by max on 2018/02/03.
- * Browser fragment, creates it's own request
+ * Multi purpose media browse fragment
  */
 
-public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesPresenter> {
+public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, SeriesPresenter> {
 
-    public static BrowseFragment newInstance(Bundle args) {
-        BrowseFragment fragment = new BrowseFragment();
+    private QueryContainer queryContainer;
+    private boolean isCompatType;
+
+    public static MediaBrowseFragment newInstance(Bundle params, QueryContainer queryContainer, boolean isCompatType) {
+        Bundle args = new Bundle(params);
+        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        args.putBoolean(KeyUtils.arg_media_list_type, isCompatType);
+        MediaBrowseFragment fragment = new MediaBrowseFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static MediaBrowseFragment newInstance(Bundle params, QueryContainer queryContainer) {
+        return newInstance(params, queryContainer, false);
     }
 
     /**
@@ -42,6 +52,10 @@ public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesP
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
+            isCompatType = getArguments().getBoolean(KeyUtils.arg_media_list_type);
+        }
         isPager = true; isFilterable = true;
         mColumnSize = R.integer.single_list_x1;
         setPresenter(new SeriesPresenter(getContext()));
@@ -56,21 +70,21 @@ public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesP
         menu.findItem(R.id.action_type).setVisible(false);
         menu.findItem(R.id.action_year).setVisible(false);
         menu.findItem(R.id.action_status).setVisible(false);
-
     }
 
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new SeriesAnimeAdapter(model, getContext());
+            mAdapter = new SeriesMediaAdapter(model, getContext(), isCompatType);
         injectAdapter();
     }
 
     @Override
     public void makeRequest() {
-        Bundle bundle = getViewModel().setParams(getArguments());
-        bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().requestData(KeyUtils.BROWSE_FILTER_REQ, getContext());
+        Bundle bundle = getViewModel().getParams();
+        queryContainer.setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_BROWSE_REQ, getContext());
     }
 
     /**
@@ -81,12 +95,12 @@ public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesP
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, Media data) {
+    public void onItemClick(View target, MediaBase data) {
         switch (target.getId()) {
             case R.id.container:
-                Intent intent = new Intent(getActivity(), SeriesActivity.class);
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_media_type, data.getSeries_type());
+                intent.putExtra(KeyUtils.arg_media_type, data.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -100,7 +114,7 @@ public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesP
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, Media data) {
+    public void onItemLongClick(View target, MediaBase data) {
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -111,5 +125,18 @@ public class BrowseFragment extends FragmentBaseList<Media, List<Media>, SeriesP
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public void onChanged(@Nullable PageContainer<MediaBase> content) {
+        if(content != null) {
+            if(content.hasPageInfo())
+                pageInfo = content.getPageInfo();
+            if(!content.isEmpty())
+                onPostProcessed(content.getPageData());
+        }
+
+        if(model == null)
+            showEmpty(getString(R.string.layout_empty_response));
     }
 }

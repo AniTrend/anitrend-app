@@ -14,10 +14,10 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.view.activity.detail.CommentActivity;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.activity.detail.MessageActivity;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.activity.detail.SeriesActivity;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public final class NotificationDispatcher {
         Intent intent;
         switch (notification.getObject_type()) {
             case KeyUtils.NOTIFICATION_AIRING:
-                intent = new Intent(context, SeriesActivity.class);
+                intent = new Intent(context, MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, notification.getSeries().getId());
                 intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

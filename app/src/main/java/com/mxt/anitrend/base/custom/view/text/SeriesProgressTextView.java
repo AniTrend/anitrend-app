@@ -11,6 +11,7 @@ import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Created by max on 2017/10/29.
@@ -31,29 +32,29 @@ public class SeriesProgressTextView extends SingleLineTextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setSeriesModel(MediaList seriesModel, boolean isCurrentUser) {
-        MediaBase model = MediaUtil.getSeriesModel(seriesModel);
+    public void setSeriesModel(MediaList mediaList, boolean isCurrentUser) {
+        MediaBase model = mediaList.getMedia();
         if (MediaUtil.isAnimeType(model)) {
-            if(TextUtils.isEmpty(model.getAiring_status()) || model.getAiring_status().equals(KeyUtils.key_not_yet_aired))
+            if(Objects.equals(model.getStatus(), KeyUtils.NOT_YET_RELEASED))
                 setText(R.string.TBA);
             else {
-                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(seriesModel))
-                    setText(String.format(Locale.getDefault(), "%s/%s +", seriesModel.getProgress(),
-                            seriesModel.getAnime().getTotal_episodes() < 1 ? "?" : seriesModel.getAnime().getTotal_episodes()));
+                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))
+                    setText(String.format(Locale.getDefault(), "%s/%s +", mediaList.getProgress(),
+                            model.getEpisodes() < 1 ? "?" : model.getEpisodes()));
                 else
-                    setText(String.format(Locale.getDefault(), "%s/%s", seriesModel.getProgress(),
-                            seriesModel.getAnime().getTotal_episodes() < 1 ? "?" : seriesModel.getAnime().getTotal_episodes()));
+                    setText(String.format(Locale.getDefault(), "%s/%s", mediaList.getProgress(),
+                            model.getEpisodes() < 1 ? "?" : model.getEpisodes()));
             }
         } else if (MediaUtil.isMangaType(model)) {
-            if(TextUtils.isEmpty(model.getPublishing_status()) || model.getPublishing_status().equals(KeyUtils.key_not_yet_published))
+            if(Objects.equals(model.getStatus(), KeyUtils.NOT_YET_RELEASED))
                 setText(R.string.TBA);
             else {
-                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(seriesModel))
-                    setText(String.format(Locale.getDefault(), "%s/%s +", seriesModel.getChapters_read(),
-                            seriesModel.getManga().getTotal_chapters() < 1 ? "?" : seriesModel.getManga().getTotal_chapters()));
+                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))
+                    setText(String.format(Locale.getDefault(), "%s/%s +", mediaList.getProgress(),
+                            model.getChapters() < 1 ? "?" : model.getChapters()));
                 else
-                    setText(String.format(Locale.getDefault(), "%s/%s", seriesModel.getChapters_read(),
-                            seriesModel.getManga().getTotal_chapters() < 1 ? "?" : seriesModel.getManga().getTotal_chapters()));
+                    setText(String.format(Locale.getDefault(), "%s/%s", mediaList.getProgress(),
+                            model.getChapters() < 1 ? "?" : model.getChapters()));
             }
         }
     }

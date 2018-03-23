@@ -15,8 +15,11 @@ import com.mxt.anitrend.databinding.WidgetDeleteBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 
@@ -28,8 +31,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
 
     private WidgetDeleteBinding binding;
     private WidgetPresenter<ResponseBody> presenter;
-    private @KeyUtils.RequestType
-    int requestType;
+    private @KeyUtils.RequestType int requestType;
     private FeedList feedList;
     private FeedReply feedReply;
 
@@ -60,17 +62,21 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
         binding.setOnClickEvent(this);
     }
 
+    private void setParameters(long feedId, @KeyUtils.RequestType int requestType) {
+        this.requestType = requestType;
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
+                .setVariable(KeyUtils.arg_id, feedId);
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+    }
 
     public void setModel(FeedList feedList, @KeyUtils.RequestType int requestType) {
-        this.requestType = requestType;
+        setParameters(feedList.getId(), requestType);
         this.feedList = feedList;
-        presenter.getParams().putInt(KeyUtils.arg_id, feedList.getId());
     }
 
     public void setModel(FeedReply feedReply, @KeyUtils.RequestType int requestType) {
-        this.requestType = requestType;
+        setParameters(feedReply.getId(), requestType);
         this.feedReply = feedReply;
-        presenter.getParams().putInt(KeyUtils.arg_id, feedReply.getId());
     }
 
     /**
@@ -118,11 +124,12 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
         try {
             if(response.isSuccessful()) {
                 resetFlipperState();
-                if(requestType == KeyUtils.ACTIVITY_DELETE_REQ)
+                if(requestType == KeyUtils.MUT_DELETE_FEED)
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
-                else if (requestType == KeyUtils.ACTIVITY_REPLY_DELETE_REQ)
+                else if (requestType == KeyUtils.MUT_DELETE_FEED_REPLY)
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
-            }
+            } else
+                Log.e(this.toString(), ErrorUtil.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }

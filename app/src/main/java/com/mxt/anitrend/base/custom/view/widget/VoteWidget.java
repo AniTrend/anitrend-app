@@ -18,10 +18,16 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
+
+import java.security.Key;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -34,8 +40,6 @@ import retrofit2.Response;
 public class VoteWidget extends LinearLayout implements CustomView, View.OnClickListener, RetroCallback<Review> {
 
     private WidgetPresenter<Review> presenter;
-    private @KeyUtils.RequestType
-    int seriesType;
     private WidgetVoteBinding binding;
     private Review model;
 
@@ -62,24 +66,29 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
         onInit();
     }
 
+    private void setParameters(@KeyUtils.ReviewRating String ratingType) {
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
+                .setVariable(KeyUtils.arg_id, model.getId())
+                .setVariable(KeyUtils.arg_rating, ratingType);
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        presenter.requestData(KeyUtils.MUT_RATE_REVIEW, getContext(), this);
+    }
+
     @Override
     public void onClick(View view) {
         if(presenter.getApplicationPref().isAuthenticated()) {
-            presenter.getParams().putInt(KeyUtils.arg_id, model.getId());
             switch (view.getId()) {
                 case R.id.widget_thumb_up_flipper:
                     if (binding.widgetThumbUpFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext();
-                        presenter.getParams().putInt(KeyUtils.arg_rating, KeyUtils.UP_VOTE);
-                        presenter.requestData(seriesType, getContext(), this);
+                        setParameters(Objects.equals(model.getUserRating(), KeyUtils.UP_VOTE) ? KeyUtils.NO_VOTE : KeyUtils.UP_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.widget_thumb_down_flipper:
                     if (binding.widgetThumbDownFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext();
-                        presenter.getParams().putInt(KeyUtils.arg_rating, KeyUtils.DOWN_VOTE);
-                        presenter.requestData(seriesType, getContext(), this);
+                        setParameters(Objects.equals(model.getUserRating(), KeyUtils.DOWN_VOTE) ? KeyUtils.NO_VOTE : KeyUtils.DOWN_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
@@ -118,13 +127,12 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
 
     public void setModel(Review model, @ColorRes int colorStyle) {
         this.model = model; this.colorStyle = colorStyle;
-        this.seriesType = model.getAnime() != null? KeyUtils.REVIEW_ANIME_RATE_REQ : KeyUtils.REVIEW_MANGA_RATE_REQ;
         resetFlipperState();
         setReviewStatus();
     }
 
     public void setReviewStatus() {
-        switch (model.getUser_rating()) {
+        switch (model.getUserRating()) {
             case KeyUtils.UP_VOTE:
                 binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                         R.drawable.ic_thumb_up_grey_600_18dp, R.color.colorStateGreen), null, null, null);
@@ -152,7 +160,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
         }
 
         binding.widgetThumbUp.setText(WidgetPresenter.convertToText(model.getRating()));
-        final int downVotes = model.getRating_amount()- model.getRating();
+        final int downVotes = model.getRatingAmount() - model.getRating();
         binding.widgetThumbDown.setText(WidgetPresenter.convertToText(downVotes < 0 ? 0 : downVotes));
         resetFlipperState();
     }
@@ -169,12 +177,14 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     @Override
     public void onResponse(@NonNull Call<Review> call, @NonNull Response<Review> response) {
         try {
-            Review reviewResponse = response.body();
-            if(response.isSuccessful() && reviewResponse != null) {
-                model.setRating(reviewResponse.getRating());
-                model.setRating_amount(reviewResponse.getRating_amount());
+            Review model;
+            if(response.isSuccessful() && (model = response.body()) != null) {
+                this.model.setRating(model.getRating());
+                this.model.setRatingAmount(model.getRatingAmount());
+                this.model.setUserRating(model.getUserRating());
                 setReviewStatus();
-            }
+            } else
+                Log.e(this.toString(), ErrorUtil.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,9 +200,9 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     @Override
     public void onFailure(@NonNull Call<Review> call, @NonNull Throwable throwable) {
         try {
-                Log.e(toString(), throwable.getLocalizedMessage());
-                throwable.printStackTrace();
-                resetFlipperState();
+            Log.e(toString(), throwable.getLocalizedMessage());
+            throwable.printStackTrace();
+            resetFlipperState();
         } catch (Exception e) {
             e.printStackTrace();
         }

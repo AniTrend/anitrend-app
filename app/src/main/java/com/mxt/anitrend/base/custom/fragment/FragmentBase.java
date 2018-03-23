@@ -40,6 +40,7 @@ import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
+import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,8 +52,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
         SharedPreferences.OnSharedPreferenceChangeListener, CommonPresenter.AbstractPresenter<P>, Observer<VM>, ResponseCallback, ItemClickListener<M> {
 
     protected boolean isFilterable, isPager, isMenuDisabled, isFeed;
-    protected @MenuRes int inflateMenu;
 
+    private @MenuRes int inflateMenu;
     private ActionModeHelper<M> actionMode;
     protected ViewModelBase<VM> viewModel;
     private CommonPresenter presenter;
@@ -62,7 +63,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     protected BottomSheetBase mBottomSheet;
     protected Unbinder unbinder;
     protected @IntegerRes int mColumnSize;
-
 
     public String TAG;
 
@@ -195,6 +195,10 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
         }
     }
 
+    public void setInflateMenu(@MenuRes int inflateMenu) {
+        this.inflateMenu = inflateMenu;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -233,7 +237,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
                 return true;
             case R.id.action_type_anime:
                 DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.getIndexOf(KeyUtils.AnimeMediaTypes,
-                        presenter.getApplicationPref().getAnimeMediaType()), CompatUtil.getStringList(getContext(), R.array.anime_media_types),
+                        presenter.getApplicationPref().getAnimeMediaType()), CompatUtil.getStringList(getContext(), R.array.media_formats),
                         (dialog, which) -> {
                     if(which == DialogAction.POSITIVE)
                         presenter.getApplicationPref().saveAnimeMediaType(KeyUtils.AnimeMediaTypes[dialog.getSelectedIndex()]);
@@ -241,7 +245,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
                 return true;
             case R.id.action_type_manga:
                 DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.getIndexOf(KeyUtils.MangaMediaTypes,
-                        presenter.getApplicationPref().getMangaMediaType()), CompatUtil.getStringList(getContext(), R.array.manga_media_types),
+                        presenter.getApplicationPref().getMangaMediaType()), CompatUtil.getStringList(getContext(), R.array.media_sources),
                         (dialog, which) -> {
                     if(which == DialogAction.POSITIVE)
                         presenter.getApplicationPref().saveMangaMediaType(KeyUtils.MangaMediaTypes[dialog.getSelectedIndex()]);

@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * users anime / manga list impl
  */
 
-public class SeriesListActivity extends ActivityBase<User, BasePresenter> {
+public class MediaListActivity extends ActivityBase<User, BasePresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
     protected @BindView(R.id.page_container) ViewPager viewPager;

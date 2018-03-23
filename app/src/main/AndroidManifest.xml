@@ -78,7 +78,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.activity.detail.SeriesActivity"
+        <activity android:name=".view.activity.detail.MediaActivity"
             android:label="@string/title_activity_series">
             <intent-filter>
                 <data
@@ -143,10 +143,10 @@
         <activity android:name=".view.activity.detail.FavouriteActivity"
             android:label="@string/title_favourites_list" />
 
-        <activity android:name=".view.activity.detail.SeriesListActivity"
+        <activity android:name=".view.activity.detail.MediaListActivity"
             android:label="@string/title_activity_user_list_view" />
 
-        <activity android:name=".view.activity.detail.BrowseActivity"
+        <activity android:name=".view.activity.detail.MediaBrowseActivity"
             android:launchMode="singleTop" />
 
         <activity android:name=".view.activity.base.AboutActivity"

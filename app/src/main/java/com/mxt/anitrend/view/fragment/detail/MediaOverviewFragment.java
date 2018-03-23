@@ -29,7 +29,7 @@ import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.ParamBuilderUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
-import com.mxt.anitrend.view.activity.detail.BrowseActivity;
+import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 import com.mxt.anitrend.view.fragment.youtube.YoutubePlayerFragment;
 
@@ -43,7 +43,7 @@ import butterknife.OnClick;
  * Created by max on 2017/12/31.
  */
 
-public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
+public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
 
     private FragmentSeriesOverviewBinding binding;
     private YoutubePlayerFragment youtubePlayerFragment;
@@ -52,8 +52,8 @@ public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter,
     private GenreAdapter genreAdapter;
     private TagAdapter tagAdapter;
 
-    public static SeriesOverviewFragment newInstance(Bundle args) {
-        SeriesOverviewFragment fragment = new SeriesOverviewFragment();
+    public static MediaOverviewFragment newInstance(Bundle args) {
+        MediaOverviewFragment fragment = new MediaOverviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,7 +107,7 @@ public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter,
                 public void onItemClick(View target, Genre data) {
                     switch (target.getId()) {
                         case R.id.container:
-                            Intent intent = new Intent(getActivity(), BrowseActivity.class);
+                            Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                             Bundle args = ParamBuilderUtil.Builder()
                                     .setSeries_type(model.getSeries_type())
                                     .addGenre(data.getGenre())
@@ -138,7 +138,7 @@ public class SeriesOverviewFragment extends FragmentBase<Media, SeriesPresenter,
                                     R.string.More, R.string.Close, (dialog, which) -> {
                                         switch (which) {
                                             case POSITIVE:
-                                                Intent intent = new Intent(getActivity(), BrowseActivity.class);
+                                                Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                                                 Bundle args = ParamBuilderUtil.Builder()
                                                         .setSeries_type(KeyUtils.SeriesTypes[KeyUtils.ANIME])
                                                         .addTag(data.getName())

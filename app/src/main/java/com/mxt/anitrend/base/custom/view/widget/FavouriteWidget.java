@@ -13,26 +13,26 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFavouriteBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
 /**
  * Created by max on 2017/10/29.
- * Like or favourite view which manages independently
+ * Like or favourite view which manages state independently
  */
-public class FavouriteWidget extends FrameLayout implements CustomView, RetroCallback<ResponseBody>, View.OnClickListener {
+public class FavouriteWidget extends FrameLayout implements CustomView, RetroCallback<List<UserBase>>, View.OnClickListener {
 
-    private WidgetPresenter<ResponseBody> presenter;
-    private @KeyUtils.RequestType
-    int requestType;
+    private WidgetPresenter<List<UserBase>> presenter;
     private WidgetFavouriteBinding binding;
     private List<UserBase> model;
 
@@ -82,9 +82,11 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
         setIconType();
     }
 
-    public void setRequestParams(@KeyUtils.RequestType int requestType, int modelId) {
-        presenter.getParams().putInt(KeyUtils.arg_id, modelId);
-        this.requestType = requestType;
+    public void setRequestParams(@KeyUtils.LikeType String likeType, long modelId) {
+        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
+                .setVariable(KeyUtils.arg_id, modelId)
+                .setVariable(KeyUtils.arg_type, likeType);
+        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
             case R.id.widget_flipper:
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    presenter.requestData(requestType, getContext(), this);
+                    presenter.requestData(KeyUtils.MUT_TOGGLE_FAVOURITE, getContext(), this);
                 }
                 else
                     NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -122,7 +124,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
      * @param response the response from the network
      */
     @Override
-    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+    public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
         try {
             if(response.isSuccessful()) {
                 if(model.contains(presenter.getDatabase().getCurrentUser()))
@@ -130,7 +132,8 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
                 else
                     model.add(presenter.getDatabase().getCurrentUser());
                 setIconType();
-            }
+            } else
+                Log.e(this.toString(), ErrorUtil.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,7 +147,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
      * @param throwable contains information about the error
      */
     @Override
-    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<List<UserBase>> call, @NonNull Throwable throwable) {
         try {
             Log.e(toString(), throwable.getLocalizedMessage());
             throwable.printStackTrace();

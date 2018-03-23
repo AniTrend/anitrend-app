@@ -13,18 +13,14 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetToolbarFavouriteBinding;
-import com.mxt.anitrend.model.entity.anilist.Character;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
-import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphParameterUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -48,7 +44,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private StudioBase studioBase;
     private CharacterBase characterBase;
 
-    private GraphQueryContainer queryContainer;
+    private QueryContainer queryContainer;
 
     public FavouriteToolbarWidget(@NonNull Context context) {
         super(context);
@@ -74,8 +70,8 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
         binding = WidgetToolbarFavouriteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
-        queryContainer = GraphParameterUtil.getDefaultQueryContainer(false)
-                .setVariable(KeyUtils.arg_per_page, KeyUtils.SINGLE_ITEM_LIMIT);
+        queryContainer = GraphUtil.getDefaultQuery(false)
+                .setVariable(KeyUtils.arg_page_limit, KeyUtils.SINGLE_ITEM_LIMIT);
         binding.setOnClickEvent(this);
     }
 

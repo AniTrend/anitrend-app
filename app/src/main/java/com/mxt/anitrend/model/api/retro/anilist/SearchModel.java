@@ -7,7 +7,7 @@ import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.GraphQueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -24,25 +24,25 @@ public interface SearchModel {
     @POST("/")
     @GraphQuery("MediaSearch")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<MediaBase>> getMediaSearch(@Body GraphQueryContainer request);
+    Call<PageContainer<MediaBase>> getMediaSearch(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("StudioSearch")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<StudioBase>> getStudioSearch(@Body GraphQueryContainer request);
+    Call<PageContainer<StudioBase>> getStudioSearch(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("StaffSearch")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<StaffBase>> getStaffSearch(@Body GraphQueryContainer request);
+    Call<PageContainer<StaffBase>> getStaffSearch(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("CharacterSearch")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<CharacterBase>> getCharacterSearch(@Body GraphQueryContainer request);
+    Call<PageContainer<CharacterBase>> getCharacterSearch(@Body QueryContainer request);
 
     @POST("/")
     @GraphQuery("UserSearch")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<UserBase>> getUserSearch(@Body GraphQueryContainer request);
+    Call<PageContainer<UserBase>> getUserSearch(@Body QueryContainer request);
 }
