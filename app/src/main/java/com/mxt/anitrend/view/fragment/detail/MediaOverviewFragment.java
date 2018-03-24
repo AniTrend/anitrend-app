@@ -10,31 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Optional;
-import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter;
 import com.mxt.anitrend.adapter.recycler.detail.TagAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.StudioBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.ParamBuilderUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 import com.mxt.anitrend.view.fragment.youtube.YoutubePlayerFragment;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,7 +39,7 @@ import butterknife.OnClick;
  * Created by max on 2017/12/31.
  */
 
-public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
+public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, Media> {
 
     private FragmentSeriesOverviewBinding binding;
     private YoutubePlayerFragment youtubePlayerFragment;
@@ -51,6 +47,9 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
 
     private GenreAdapter genreAdapter;
     private TagAdapter tagAdapter;
+
+    private long mediaId;
+    private @KeyUtils.MediaType String mediaType;
 
     public static MediaOverviewFragment newInstance(Bundle args) {
         MediaOverviewFragment fragment = new MediaOverviewFragment();
@@ -61,6 +60,10 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mediaId = getArguments().getLong(KeyUtils.arg_id);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+        }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
@@ -83,14 +86,20 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
         return binding.getRoot();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        makeRequest();
+    }
+
     /**
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     @Override
     protected void updateUI() {
-        if(!TextUtils.isEmpty(model.getYoutube_id())) {
+        if(!TextUtils.isEmpty(model.getTrailer())) {
             if (youtubePlayerFragment == null) {
-                youtubePlayerFragment = YoutubePlayerFragment.newInstance(getViewModel().getParams());
+                youtubePlayerFragment = YoutubePlayerFragment.newInstance(model.getTrailer());
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.youtube_view, youtubePlayerFragment)
                         .commit();
@@ -107,12 +116,14 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
                 public void onItemClick(View target, Genre data) {
                     switch (target.getId()) {
                         case R.id.container:
+                            Bundle args = new Bundle();
                             Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                            Bundle args = ParamBuilderUtil.Builder()
-                                    .setSeries_type(model.getSeries_type())
-                                    .addGenre(data.getGenre())
-                                    .build();
+                            args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                                    .putVariable(KeyUtils.arg_id, mediaId)
+                                    .putVariable(KeyUtils.arg_type, mediaType)
+                                    .putVariable(KeyUtils.arg_genres, data.getGenre()));
                             args.putString(KeyUtils.arg_activity_tag, data.getGenre());
+                            args.putBoolean(KeyUtils.arg_media_compact, true);
                             intent.putExtras(args);
                             startActivity(intent);
                             break;
@@ -128,7 +139,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
         binding.genreRecycler.setAdapter(genreAdapter);
 
         if(tagAdapter == null) {
-            tagAdapter = new TagAdapter(model.getMediaTags(), getContext());
+            tagAdapter = new TagAdapter(model.getTags(), getContext());
             tagAdapter.setClickListener(new ItemClickListener<MediaTag>() {
                 @Override
                 public void onItemClick(View target, MediaTag data) {
@@ -138,12 +149,14 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
                                     R.string.More, R.string.Close, (dialog, which) -> {
                                         switch (which) {
                                             case POSITIVE:
+                                                Bundle args = new Bundle();
                                                 Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                                                Bundle args = ParamBuilderUtil.Builder()
-                                                        .setSeries_type(KeyUtils.SeriesTypes[KeyUtils.ANIME])
-                                                        .addTag(data.getName())
-                                                        .build();
+                                                args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                                                        .putVariable(KeyUtils.arg_id, mediaId)
+                                                        .putVariable(KeyUtils.arg_type, mediaType)
+                                                        .putVariable(KeyUtils.arg_tags, data.getName()));
                                                 args.putString(KeyUtils.arg_activity_tag, data.getName());
+                                                args.putBoolean(KeyUtils.arg_media_compact, true);
                                                 intent.putExtras(args);
                                                 startActivity(intent);
                                                 break;
@@ -169,7 +182,11 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
      */
     @Override
     public void makeRequest() {
-
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_id, mediaId)
+                .putVariable(KeyUtils.arg_type, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_OVERVIEW_REQ, getContext());
     }
 
     /**
@@ -179,22 +196,12 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
      */
     @Override
     public void onChanged(@Nullable Media model) {
-
-    }
-
-    /**
-     * Responds to published events, be sure to add subscribe annotation
-     *
-     * @param param passed event
-     * @see Subscribe
-     */
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Media param) {
-        if(model == null) {
-            model = param;
-            getViewModel().getParams().putString(KeyUtils.arg_model, model.getYoutube_id());
+        if(model != null) {
+            this.model = model;
             updateUI();
-        }
+        } else
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateOrange),
+                    getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 
     /**
@@ -208,16 +215,14 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
         switch (v.getId()) {
             case R.id.series_image:
                 intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage_url_lge());
+                intent.putExtra(KeyUtils.arg_model, model.getCoverImage().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
             break;
             case R.id.anime_main_studio_container:
-                Optional<StudioBase> result = Stream.of(model.getStudio())
-                        .filter(studio -> studio.getMain_studio() == 1)
-                        .findFirst();
-                if(result.isPresent()) {
+                ConnectionContainer<StudioBase> connectionContainer;
+                if((connectionContainer =model.getStudios()) != null && !connectionContainer.isEmpty()) {
                     intent = new Intent(getActivity(), StudioActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, result.get().getId());
+                    intent.putExtra(KeyUtils.arg_id, connectionContainer.getConnection().getId());
                     startActivity(intent);
                 }
                 break;

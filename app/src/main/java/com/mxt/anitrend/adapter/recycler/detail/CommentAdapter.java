@@ -65,11 +65,11 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
             binding.widgetStatus.setModel(model);
             binding.widgetMention.setVisibility(View.GONE);
 
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_REPLY_FAVOURITE_REQ, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_REPLY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
             if(presenter.isCurrentUser(model.getUser().getId())) {
-                binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_REPLY_DELETE_REQ);
+                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED_REPLY);
 
                 binding.widgetMention.setVisibility(View.GONE);
                 binding.widgetEdit.setVisibility(View.VISIBLE);

@@ -10,7 +10,7 @@ import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
 import com.mxt.anitrend.model.entity.container.body.DataContainer;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -48,7 +48,7 @@ public final class GraphConverter extends Converter.Factory {
 
     @Override
     public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
-        if(type instanceof QueryContainer)
+        if(type instanceof QueryContainerBuilder)
             return new GraphRequestConverter(methodAnnotations);
         return super.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
     }
@@ -95,7 +95,7 @@ public final class GraphConverter extends Converter.Factory {
     /**
      * GraphQL request body converter and injector, uses method annotation for a given retrofit call
      */
-    private class GraphRequestConverter implements Converter<QueryContainer, RequestBody> {
+    private class GraphRequestConverter implements Converter<QueryContainerBuilder, RequestBody> {
         private Annotation[] methodAnnotations;
 
         GraphRequestConverter(Annotation[] methodAnnotations) {
@@ -103,9 +103,11 @@ public final class GraphConverter extends Converter.Factory {
         }
 
         @Override
-        public RequestBody convert(@NonNull QueryContainer container) {
-            container.setQuery(graphProcessor.getQuery(methodAnnotations));
-            String queryJson = WebFactory.gson.toJson(container);
+        public RequestBody convert(@NonNull QueryContainerBuilder containerBuilder) {
+            QueryContainerBuilder.QueryContainer queryContainer = containerBuilder
+                    .setQuery(graphProcessor.getQuery(methodAnnotations))
+                    .build();
+            String queryJson = WebFactory.gson.toJson(queryContainer);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);
         }
     }

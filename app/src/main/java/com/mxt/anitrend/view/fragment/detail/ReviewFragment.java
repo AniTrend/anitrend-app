@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -49,7 +49,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             mediaId = getArguments().getLong(KeyUtils.arg_id);
-            mediaType = getArguments().getString(KeyUtils.arg_media_type);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         }
         mColumnSize = R.integer.single_list_x1; isPager = true;
         setPresenter(new BasePresenter(getContext()));
@@ -73,10 +73,10 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
     public void makeRequest() {
         if(mediaId == 0)
             return;
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .setVariable(KeyUtils.arg_mediaId, mediaId)
-                .setVariable(KeyUtils.arg_media_type, mediaType)
-                .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_mediaId, mediaId)
+                .putVariable(KeyUtils.arg_mediaType, mediaType)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.MEDIA_REVIEWS_REQ, getContext());
     }
@@ -96,7 +96,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
                 MediaBase mediaBase = data.getMedia();
                 intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, mediaBase.getId());
-                intent.putExtra(KeyUtils.arg_media_type, mediaBase.getType());
+                intent.putExtra(KeyUtils.arg_mediaType, mediaBase.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.user_avatar:

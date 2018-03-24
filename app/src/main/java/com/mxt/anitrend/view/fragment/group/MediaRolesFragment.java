@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -32,12 +32,12 @@ import java.util.Collections;
 
 public class MediaRolesFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<PageContainer<MediaBase>>, SeriesPresenter> {
 
-    private QueryContainer queryContainer;
+    private QueryContainerBuilder queryContainer;
     private @KeyUtils.RequestType int requestType;
 
     public static MediaRolesFragment newInstance(Bundle params, @KeyUtils.MediaType String mediaType, @KeyUtils.RequestType int requestType) {
         Bundle args = new Bundle(params);
-        args.putString(KeyUtils.arg_media_type, mediaType);
+        args.putString(KeyUtils.arg_mediaType, mediaType);
         args.putInt(KeyUtils.arg_request_type, requestType);
         MediaRolesFragment fragment = new MediaRolesFragment();
         fragment.setArguments(args);
@@ -55,8 +55,8 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
         if(getArguments() != null) {
             requestType = getArguments().getInt(KeyUtils.arg_request_type);
             queryContainer = GraphUtil.getDefaultQuery(true)
-                    .setVariable(KeyUtils.arg_id, getArguments().getLong(KeyUtils.arg_id))
-                    .setVariable(KeyUtils.arg_media_type, getArguments().getString(KeyUtils.arg_media_type));
+                    .putVariable(KeyUtils.arg_id, getArguments().getLong(KeyUtils.arg_id))
+                    .putVariable(KeyUtils.arg_mediaType, getArguments().getString(KeyUtils.arg_mediaType));
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setPresenter(new SeriesPresenter(getContext()));
@@ -76,7 +76,7 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getType());
+                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -119,7 +119,7 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
      */
     @Override
     public void makeRequest() {
-        queryContainer.setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(requestType, getContext());
     }

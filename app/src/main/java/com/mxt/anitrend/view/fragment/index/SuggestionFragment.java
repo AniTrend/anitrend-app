@@ -16,7 +16,6 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.ParamBuilderUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
@@ -102,7 +101,7 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_media_type, data.getSeries_type());
+                intent.putExtra(KeyUtils.arg_mediaType, data.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

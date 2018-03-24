@@ -16,6 +16,8 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -31,6 +33,8 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
+    private SeriesListPageAdapter pageAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,20 +48,8 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Bundle bundle = getViewModel().getParams();
-        bundle.putInt(KeyUtils.arg_media_type, getIntent().getIntExtra(KeyUtils.arg_media_type, KeyUtils.ANIME));
-        bundle.putString(KeyUtils.arg_user_name, getIntent().getStringExtra(KeyUtils.arg_user_name));
-        SeriesListPageAdapter pageAdapter = new SeriesListPageAdapter(getSupportFragmentManager(), getApplicationContext());
-        pageAdapter.setParams(bundle);
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit + 1);
-        smartTabLayout.setViewPager(viewPager);
-        setTitle(bundle.getInt(KeyUtils.arg_media_type) == KeyUtils.ANIME? R.string.title_anime_list: R.string.title_manga_list);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
+        if(getIntent().getExtras() != null)
+            setTitle(Objects.equals(getIntent().getExtras().getString(KeyUtils.arg_mediaType), KeyUtils.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
         onActivityReady();
     }
 
@@ -79,12 +71,16 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        makeRequest();
+        pageAdapter = new SeriesListPageAdapter(getSupportFragmentManager(), getApplicationContext());
+        pageAdapter.setParams(getIntent().getExtras());
+        updateUI();
     }
 
     @Override
     protected void updateUI() {
-
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit + 2);
+        smartTabLayout.setViewPager(viewPager);
     }
 
     @Override

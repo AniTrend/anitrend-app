@@ -123,7 +123,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
         setReadItems(data);
         if(target.getId() == R.id.notification_img && data.getObject_type() != KeyUtils.NOTIFICATION_AIRING) {
             intent = new Intent(getActivity(), ProfileActivity.class);
-            intent.putExtra(KeyUtils.arg_user_name, data.getUser().getName());
+            intent.putExtra(KeyUtils.arg_userName, data.getUser().getName());
             CompatUtil.startRevealAnim(getActivity(), target, intent);
         }
         else
@@ -131,7 +131,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
                 case KeyUtils.NOTIFICATION_AIRING:
                     intent = new Intent(getActivity(), MediaActivity.class);
                     intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
-                    intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
+                    intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
@@ -168,7 +168,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
                     break;
                 case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
                     intent = new Intent(getActivity(), ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_user_name, data.getUser().getName());
+                    intent.putExtra(KeyUtils.arg_userName, data.getUser().getName());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:

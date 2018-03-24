@@ -45,7 +45,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, List<StaffB
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_search_query);
+            searchQuery = getArguments().getString(KeyUtils.arg_searchQuery);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = false;
         setViewModel(true);
@@ -70,7 +70,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, List<StaffB
         if(TextUtils.isEmpty(searchQuery))
             return;
         Bundle bundle = getViewModel().getParams();
-        bundle.putString(KeyUtils.arg_search_query, searchQuery);
+        bundle.putString(KeyUtils.arg_searchQuery, searchQuery);
         bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().requestData(KeyUtils.STAFF_SEARCH_REQ, getContext());
     }

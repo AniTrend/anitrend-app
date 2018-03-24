@@ -20,8 +20,8 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
-import com.mxt.anitrend.presenter.activity.ProfilePresenter;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -40,9 +40,9 @@ import org.greenrobot.eventbus.ThreadMode;
 public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, SeriesPresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
     private String userName;
-    private QueryContainer queryContainer;
+    private QueryContainerBuilder queryContainer;
 
-    public static MediaListFragment newInstance(Bundle params, QueryContainer queryContainer) {
+    public static MediaListFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
         MediaListFragment fragment = new MediaListFragment();
@@ -59,11 +59,11 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            userName = getArguments().getString(KeyUtils.arg_user_name);
+            userName = getArguments().getString(KeyUtils.arg_userName);
             queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = true;
-        setPresenter(new ProfilePresenter(getContext()));
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -87,9 +87,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     public void makeRequest() {
-        queryContainer.setVariable(KeyUtils.arg_user_name, userName)
-                .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .setVariable(KeyUtils.arg_sort, null);
+        queryContainer.putVariable(KeyUtils.arg_userName, userName)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
     }
@@ -131,7 +130,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 MediaBase mediaBase = data.getMedia();
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_media_type, mediaBase.getType());
+                intent.putExtra(KeyUtils.arg_mediaType, mediaBase.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

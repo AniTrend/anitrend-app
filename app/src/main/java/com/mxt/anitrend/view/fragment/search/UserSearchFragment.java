@@ -42,7 +42,7 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, List<UserBas
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_search_query);
+            searchQuery = getArguments().getString(KeyUtils.arg_searchQuery);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.single_list_x1; isPager = false;
         setViewModel(true);
@@ -66,7 +66,7 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, List<UserBas
         if(TextUtils.isEmpty(searchQuery))
             return;
         Bundle bundle = getViewModel().getParams();
-        bundle.putString(KeyUtils.arg_search_query, searchQuery);
+        bundle.putString(KeyUtils.arg_searchQuery, searchQuery);
         bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().requestData(KeyUtils.USER_SEARCH_REQ, getContext());
     }

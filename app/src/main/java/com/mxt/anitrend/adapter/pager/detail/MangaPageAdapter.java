@@ -6,14 +6,15 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment;
-import com.mxt.anitrend.view.fragment.group.CharacterFragment;
+import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment;
 import com.mxt.anitrend.view.fragment.detail.ReviewFragment;
 import com.mxt.anitrend.view.fragment.group.SeriesRelationFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment;
-import com.mxt.anitrend.view.fragment.detail.SocialFragment;
-import com.mxt.anitrend.view.fragment.detail.StaffFragment;
+import com.mxt.anitrend.view.fragment.detail.MediaStaffFragment;
 
 /**
  * Created by max on 2017/12/01.
@@ -33,8 +34,6 @@ public class MangaPageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        getParams().putInt(KeyUtils.arg_media_type, KeyUtils.MANGA);
-        getParams().putInt(KeyUtils.arg_request_type, KeyUtils.LIST);
         switch (position) {
             case 0:
                 return MediaOverviewFragment.newInstance(getParams());
@@ -43,11 +42,14 @@ public class MangaPageAdapter extends BaseStatePageAdapter {
             case 2:
                 return MediaStatsFragment.newInstance(getParams());
             case 3:
-                return CharacterFragment.newInstance(getParams());
+                return MediaCharacterFragment.newInstance(getParams());
             case 4:
-                return StaffFragment.newInstance(getParams());
+                return MediaStaffFragment.newInstance(getParams());
             case 5:
-                return SocialFragment.newInstance(getParams());
+                return MediaFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtils.arg_mediaId, getParams().getLong(KeyUtils.arg_id))
+                        .putVariable(KeyUtils.arg_type, KeyUtils.MANGA_LIST)
+                        .putVariable(KeyUtils.arg_isFollowing, true));
             case 6:
                 return ReviewFragment.newInstance(getParams());
         }

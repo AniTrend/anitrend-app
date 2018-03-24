@@ -1,6 +1,6 @@
 package com.mxt.anitrend.util;
 
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2018/03/22.
@@ -9,10 +9,10 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 
 public class GraphUtil {
 
-    public static QueryContainer getDefaultQuery(boolean includePaging) {
-        QueryContainer queryContainer = new QueryContainer();
+    public static QueryContainerBuilder getDefaultQuery(boolean includePaging) {
+        QueryContainerBuilder queryContainer = new QueryContainerBuilder();
         if(includePaging)
-            queryContainer.setVariable(KeyUtils.arg_page_limit, KeyUtils.PAGING_LIMIT);
+            queryContainer.putVariable(KeyUtils.arg_page_limit, KeyUtils.PAGING_LIMIT);
         return queryContainer;
     }
 }

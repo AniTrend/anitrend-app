@@ -15,7 +15,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.databinding.WidgetFollowStateBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -107,8 +107,8 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
             case R.id.widget_flipper:
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
-                            .setVariable(KeyUtils.arg_userId, model.getId());
+                    QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                            .putVariable(KeyUtils.arg_userId, model.getId());
                     presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
                     presenter.requestData(KeyUtils.MUT_TOGGLE_FOLLOW, getContext(), this);
                 }

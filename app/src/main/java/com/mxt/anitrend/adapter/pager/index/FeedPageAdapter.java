@@ -32,14 +32,14 @@ public class FeedPageAdapter extends BaseStatePageAdapter {
         {
             case 0:
                 return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .setVariable(KeyUtils.arg_type, KeyUtils.MEDIA_LIST));
+                        .putVariable(KeyUtils.arg_type, KeyUtils.MEDIA_LIST));
             case 1:
                 return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .setVariable(KeyUtils.arg_type, KeyUtils.TEXT));
+                        .putVariable(KeyUtils.arg_type, KeyUtils.TEXT));
             case 2:
                 return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .setVariable(KeyUtils.arg_isFollowing, false)
-                        .setVariable(KeyUtils.arg_isMixed, true));
+                        .putVariable(KeyUtils.arg_isFollowing, false)
+                        .putVariable(KeyUtils.arg_isMixed, true));
         }
         return null;
     }

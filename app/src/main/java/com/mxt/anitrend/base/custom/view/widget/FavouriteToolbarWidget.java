@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -44,7 +44,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private StudioBase studioBase;
     private CharacterBase characterBase;
 
-    private QueryContainer queryContainer;
+    private QueryContainerBuilder queryContainer;
 
     public FavouriteToolbarWidget(@NonNull Context context) {
         super(context);
@@ -71,7 +71,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
         presenter = new WidgetPresenter<>(getContext());
         binding = WidgetToolbarFavouriteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
         queryContainer = GraphUtil.getDefaultQuery(false)
-                .setVariable(KeyUtils.arg_page_limit, KeyUtils.SINGLE_ITEM_LIMIT);
+                .putVariable(KeyUtils.arg_page_limit, KeyUtils.SINGLE_ITEM_LIMIT);
         binding.setOnClickEvent(this);
     }
 
@@ -93,7 +93,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void setModel(StaffBase staffBase) {
         this.staffBase = staffBase;
         setIconType();
-        queryContainer.setVariable(KeyUtils.arg_staffId, staffBase.getId());
+        queryContainer.putVariable(KeyUtils.arg_staffId, staffBase.getId());
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
@@ -101,7 +101,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void setModel(CharacterBase characterBase) {
         this.characterBase = characterBase;
         setIconType();
-        queryContainer.setVariable(KeyUtils.arg_characterId, characterBase.getId());
+        queryContainer.putVariable(KeyUtils.arg_characterId, characterBase.getId());
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
@@ -109,7 +109,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void setModel(StudioBase studioBase) {
         this.studioBase = studioBase;
         setIconType();
-        queryContainer.setVariable(KeyUtils.arg_studioId, studioBase.getId());
+        queryContainer.putVariable(KeyUtils.arg_studioId, studioBase.getId());
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
@@ -117,7 +117,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void setModel(MediaBase mediaBase) {
         this.mediaBase = mediaBase;
         setIconType();
-        queryContainer.setVariable(MediaUtil.isAnimeType(mediaBase) ? KeyUtils.arg_animeId : KeyUtils.arg_mangaId, mediaBase.getId());
+        queryContainer.putVariable(MediaUtil.isAnimeType(mediaBase) ? KeyUtils.arg_animeId : KeyUtils.arg_mangaId, mediaBase.getId());
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }

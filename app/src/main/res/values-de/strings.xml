@@ -654,7 +654,6 @@
     <string name="text_downloading_update">Downloade die neueste Version von AniTrend!</string>
 
     <string name="title_new_feature">Neues Feature!</string>
-    <string name="text_reviews_feature">Wusstest du schon, dass du zwischen Anime und Manga Reviews wechseln kannst, indem du den Schalter antippst?</string>
 
     <!--
         End of strings used in Antrend v0.9.9r7
@@ -856,6 +855,11 @@
         <item>Dropped</item>
         <item>Paused</item>
         <item>Repeating</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>Inbox</item>
+        <item>Outbox</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

@@ -10,7 +10,7 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesReviewAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -30,7 +30,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
 
     public static BrowseReviewFragment newInstance(@KeyUtils.MediaType String mediaType) {
         Bundle args = new Bundle();
-        args.putString(KeyUtils.arg_media_type, mediaType);
+        args.putString(KeyUtils.arg_mediaType, mediaType);
         BrowseReviewFragment fragment = new BrowseReviewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -46,7 +46,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            mediaType = getArguments().getString(KeyUtils.arg_media_type);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         isPager = true; mColumnSize = R.integer.single_list_x1;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
@@ -67,9 +67,9 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
      */
     @Override
     public void makeRequest() {
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(true)
-                .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .setVariable(KeyUtils.arg_media_type, mediaType);
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtils.arg_mediaType, mediaType);
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.MEDIA_REVIEWS_REQ, getContext());
     }

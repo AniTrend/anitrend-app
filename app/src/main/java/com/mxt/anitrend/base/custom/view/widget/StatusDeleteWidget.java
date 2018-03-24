@@ -15,7 +15,7 @@ import com.mxt.anitrend.databinding.WidgetDeleteBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -64,8 +64,8 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
 
     private void setParameters(long feedId, @KeyUtils.RequestType int requestType) {
         this.requestType = requestType;
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
-                .setVariable(KeyUtils.arg_id, feedId);
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, feedId);
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
     }
 

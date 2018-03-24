@@ -2,6 +2,9 @@ package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.Locale;
 
@@ -13,10 +16,10 @@ public class MediaRank implements Parcelable {
 
     private int id;
     private int rank;
-    private String type;
-    private String format;
+    private @KeyUtils.MediaRankType String type;
+    private @KeyUtils.MediaFormat String format;
     private int year;
-    private String season;
+    private @KeyUtils.MediaSeason String season;
     private boolean allTime;
     private String context;
 
@@ -74,11 +77,11 @@ public class MediaRank implements Parcelable {
     public String getTypeHtmlPlainTitle() {
         if(year == 0)
             if(season != null)
-                return String.format(Locale.getDefault(), "%s <small>%s<small/> <small>(%s)</small>", context.toUpperCase(), season.toUpperCase(), format);
+                return String.format(Locale.getDefault(), "%s <small>%s<small/> <small>(%s)</small>", context.toUpperCase(), season, format);
             else
                 return String.format(Locale.getDefault(), "%s <small>(%s)</small>", context.toUpperCase(), format);
         if(season != null)
-            return String.format(Locale.getDefault(), "%s <small>%s %d</small> <small>(%s)</small>", context.toUpperCase(), season.toUpperCase(), year, format);
+            return String.format(Locale.getDefault(), "%s <small>%s %d</small> <small>(%s)</small>", context.toUpperCase(), season, year, format);
         return String.format(Locale.getDefault(), "%s <small>%d</small> <small>(%s)</small>", context.toUpperCase(), year, format);
     }
 
@@ -90,11 +93,11 @@ public class MediaRank implements Parcelable {
         return rank;
     }
 
-    public String getType() {
+    public @NonNull @KeyUtils.MediaRankType String getType() {
         return type;
     }
 
-    public String getFormat() {
+    public @NonNull @KeyUtils.MediaFormat String getFormat() {
         return format;
     }
 
@@ -102,7 +105,7 @@ public class MediaRank implements Parcelable {
         return year;
     }
 
-    public String getSeason() {
+    public @KeyUtils.MediaSeason String getSeason() {
         return season;
     }
 
@@ -110,7 +113,7 @@ public class MediaRank implements Parcelable {
         return allTime;
     }
 
-    public String getContext() {
+    public @NonNull String getContext() {
         return context;
     }
 }

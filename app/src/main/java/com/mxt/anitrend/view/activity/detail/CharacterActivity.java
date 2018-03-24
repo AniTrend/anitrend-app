@@ -13,7 +13,7 @@ import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -48,7 +48,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
         setPresenter(new BasePresenter(this));
         setViewModel(true);
         if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, 0);
+            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
     }
 
     @Override
@@ -95,8 +95,8 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
 
     @Override
     protected void makeRequest() {
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
-                .setVariable(KeyUtils.arg_id, id);
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, id);
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.CHARACTER_BASE_REQ, getApplicationContext());
     }

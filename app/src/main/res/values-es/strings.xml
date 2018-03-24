@@ -653,7 +653,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_downloading_update">¡Descarga la versión más reciente de Anitrend!</string>
 
     <string name="title_new_feature">¡Novedad!</string>
-    <string name="text_reviews_feature">¿Sabias que puedes desplazarte entre las reseñas de anime y manga al deslizar el interruptor?</string>
 
     <!--
         End of strings used in Antrend v0.9.9r7
@@ -855,6 +854,11 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>Dropped</item>
         <item>Paused</item>
         <item>Repeating</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>Inbox</item>
+        <item>Outbox</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

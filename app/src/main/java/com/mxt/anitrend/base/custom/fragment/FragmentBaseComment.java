@@ -20,6 +20,7 @@ import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
  * Comment fragment base class style
  */
 
-public abstract class FragmentBaseComment extends FragmentBase<FeedReply, WidgetPresenter<FeedList>, List<FeedReply>> implements
+public abstract class FragmentBaseComment extends FragmentBase<FeedReply, WidgetPresenter<FeedList>, FeedList> implements
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
@@ -49,7 +50,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
     protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
     protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
 
-    protected int userActivityId;
+    protected long userActivityId;
     protected FeedList feedList;
     protected List<FeedReply> model;
 
@@ -338,15 +339,15 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      * @param content The new data
      */
     @Override
-    public void onChanged(@Nullable List<FeedReply> content) {
+    public void onChanged(@Nullable FeedList content) {
         if(content != null) {
-            if(content.size() > 0) {
+            if(content.getReplies() != null && !content.getReplies().isEmpty()) {
                 if(isPager) {
-                    if (model == null) model = content;
-                    else model.addAll(content);
+                    if (model == null) model = content.getReplies();
+                    else model.addAll(content.getReplies());
                 }
                 else
-                    model = content;
+                    model = content.getReplies();
                 updateUI();
             } else {
                 if (isPager)

@@ -39,7 +39,7 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
         setViewModel(true);
         setPresenter(new BasePresenter(this));
         if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, 0);
+            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
     }
 
     @Override

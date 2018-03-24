@@ -32,6 +32,10 @@ public class BaseConsumer<T> {
         return changeModel;
     }
 
+    public boolean hasModel() {
+        return changeModel != null;
+    }
+
     public interface onRequestModelChange<T> {
         void onModelChanged(BaseConsumer<T> consumer);
     }

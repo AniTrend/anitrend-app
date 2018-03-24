@@ -10,7 +10,7 @@ import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.util.List;
 
@@ -29,40 +29,40 @@ public interface MediaModel {
     @POST("/")
     @GraphQuery("MediaBase")
     @Headers("Content-Type: application/json")
-    Call<MediaBase> getMediaBase(@Body QueryContainer request);
+    Call<MediaBase> getMediaBase(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaOverview")
     @Headers("Content-Type: application/json")
-    Call<Media> getMediaOverview(@Body QueryContainer request);
+    Call<Media> getMediaOverview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaRelations")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, MediaBase>>> getMediaRelations(@Body QueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<String, MediaBase>>> getMediaRelations(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaStats")
     @Headers("Content-Type: application/json")
-    Call<Media> getMediaStats(@Body QueryContainer request);
+    Call<Media> getMediaStats(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaEpisodes")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<List<ExternalLink>>> getMediaEpisodes(@Body QueryContainer request);
+    Call<ConnectionContainer<List<ExternalLink>>> getMediaEpisodes(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaCharacters")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, CharacterBase>>> getMediaCharacters(@Body QueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<String, CharacterBase>>> getMediaCharacters(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaStaff")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, StaffBase>>> getMediaStaff(@Body QueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<String, StaffBase>>> getMediaStaff(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaSocial")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<FeedList>> getMediaSocial(@Body QueryContainer request);
+    Call<PageContainer<FeedList>> getMediaSocial(@Body QueryContainerBuilder request);
 }

@@ -31,6 +31,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
     private FuzzyDate startDate;
     private FuzzyDate endDate;
     private int episodes;
+    private int duration;
     private int chapters;
     private int volumes;
     private boolean isAdult;
@@ -53,6 +54,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
         startDate = in.readParcelable(FuzzyDate.class.getClassLoader());
         endDate = in.readParcelable(FuzzyDate.class.getClassLoader());
         episodes = in.readInt();
+        duration = in.readInt();
         chapters = in.readInt();
         volumes = in.readInt();
         isAdult = in.readByte() != 0;
@@ -76,6 +78,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
         dest.writeParcelable(startDate, flags);
         dest.writeParcelable(endDate, flags);
         dest.writeInt(episodes);
+        dest.writeInt(duration);
         dest.writeInt(chapters);
         dest.writeInt(volumes);
         dest.writeByte((byte) (isAdult ? 1 : 0));
@@ -146,6 +149,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
 
     public int getEpisodes() {
         return episodes;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public int getChapters() {

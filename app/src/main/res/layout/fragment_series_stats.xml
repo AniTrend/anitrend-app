@@ -47,19 +47,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/lg_margin"
-                    android:visibility="@{model.airing_stats != null &amp; !model.airing_stats.isEmpty() ? View.VISIBLE : View.GONE}">
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/series_airing_correlation"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp" />
-
-                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
-
-                <com.mxt.anitrend.base.custom.view.container.CardViewBase
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/lg_margin"
                     android:visibility="@{model.list_stats != null &amp; !model.list_stats.isEmpty() ? View.VISIBLE : View.GONE}">
 
                     <com.github.mikephil.charting.charts.PieChart

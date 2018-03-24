@@ -1,9 +1,7 @@
 package com.mxt.anitrend.view.fragment.detail;
 
-import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
@@ -16,15 +14,15 @@ import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseComment;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
-import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -41,15 +39,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Response;
-
 /**
  * Created by max on 2017/11/16.
  * Comment fragment
  */
 
-public class CommentFragment extends FragmentBaseComment implements RetroCallback<FeedList>, BaseConsumer.onRequestModelChange<FeedReply> {
+public class CommentFragment extends FragmentBaseComment implements BaseConsumer.onRequestModelChange<FeedReply> {
 
     private StatusFeedAdapter feedAdapter;
 
@@ -119,15 +114,6 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
 
             }
         });
-        if(feedList != null) {
-            userActivityId = feedList.getId();
-            initExtraComponents();
-        }
-        else {
-            Bundle params = getPresenter().getParams();
-            params.putInt(KeyUtils.arg_id, userActivityId);
-            getPresenter().requestData(KeyUtils.USER_ACTIVITY_BY_ID_REQ, getContext(), this);
-        }
         super.onStart();
     }
 
@@ -146,9 +132,15 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
      */
     @Override
     public void makeRequest() {
-        Bundle bundle = getViewModel().getParams();
-        bundle.putInt(KeyUtils.arg_id, userActivityId);
-        getViewModel().requestData(KeyUtils.USER_ACTIVITY_REPLIES_BY_ID_REQ, getContext());
+        if(feedList != null) {
+            userActivityId = feedList.getId();
+            initExtraComponents();
+        }
+
+        QueryContainerBuilder.QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, userActivityId).build();
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.FEED_LIST_REPLY_REQ, getContext());
     }
 
     /**
@@ -175,18 +167,17 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                MediaBase series = feedList.getSeries();
+                MediaBase mediaBase = feedList.getMedia();
                 intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_media_type, series.getSeries_type());
+                intent.putExtra(KeyUtils.arg_id, mediaBase.getId());
+                intent.putExtra(KeyUtils.arg_mediaType, mediaBase.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_mention:
                 composerWidget.mentionUserFrom(data);
                 break;
             case R.id.widget_edit:
-                composerWidget.setModel(data);
-                composerWidget.setRequestMode(KeyUtils.ACTIVITY_REPLY_EDIT_REQ);
+                composerWidget.setModel(data, KeyUtils.MUT_SAVE_FEED_REPLY);
                 composerWidget.setText(data.getReply());
                 break;
             case R.id.widget_users:
@@ -222,8 +213,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
     }
 
     private void initExtraComponents() {
-        composerWidget.setModel(feedList);
-        composerWidget.setRequestMode(KeyUtils.ACTIVITY_REPLY_REQ);
+        composerWidget.setModel(feedList, KeyUtils.MUT_SAVE_FEED_REPLY);
 
         if(feedAdapter == null) {
             feedAdapter = new StatusFeedAdapter(Collections.singletonList(feedList), getContext());
@@ -234,8 +224,8 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                     switch (target.getId()) {
                         case R.id.series_image:
                             intent = new Intent(getActivity(), MediaActivity.class);
-                            intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
-                            intent.putExtra(KeyUtils.arg_media_type, data.getSeries().getSeries_type());
+                            intent.putExtra(KeyUtils.arg_id, data.getMedia().getId());
+                            intent.putExtra(KeyUtils.arg_mediaType, data.getMedia().getType());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.widget_users:
@@ -252,7 +242,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                         case R.id.user_avatar:
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra(KeyUtils.arg_id, data.getUsers().get(0).getId());
+                            intent.putExtra(KeyUtils.arg_id, data.getUser().getId());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                     }
@@ -264,7 +254,7 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
                         case R.id.series_image:
                             if(getPresenter().getApplicationPref().isAuthenticated()) {
                                 seriesActionUtil = new SeriesActionUtil.Builder()
-                                        .setModel(data.getSeries()).build(getActivity());
+                                        .setModel(data.getMedia()).build(getActivity());
                                 seriesActionUtil.startSeriesAction();
                             } else
                                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -277,63 +267,26 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
             originRecycler.setAdapter(feedAdapter);
     }
 
-    /**
-     * Invoked for a received HTTP response.
-     * <p>
-     * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-     * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-     *
-     * @param call     the origination requesting object
-     * @param response the response from the network
-     */
-    @Override
-    public void onResponse(@NonNull Call<FeedList> call, @NonNull Response<FeedList> response) {
-        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-            if(response.isSuccessful() && response.body() != null) {
-                feedList = response.body();
-                initExtraComponents();
-            } else {
-                NotifyUtil.createAlerter(getActivity(), getString(R.string.text_error_request),
-                        ErrorUtil.getError(response), R.drawable.ic_warning_white_18dp, R.color.colorStateOrange);
-            }
-        }
-    }
-
-    /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
-     *
-     * @param call      the origination requesting object
-     * @param throwable contains information about the error
-     */
-    @Override
-    public void onFailure(@NonNull Call<FeedList> call, @NonNull Throwable throwable) {
-        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-            throwable.printStackTrace();
-            NotifyUtil.createAlerter(getActivity(), getString(R.string.text_error_request),
-                    throwable.getLocalizedMessage(), R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
-        }
-    }
-
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<FeedReply> consumer) {
         Optional<IntPair<FeedReply>> pairOptional;
         int pairIndex;
         switch (consumer.getRequestMode()) {
-            case KeyUtils.ACTIVITY_REPLY_REQ:
-                if(model != null && !model.isEmpty())
-                    swipeRefreshLayout.setRefreshing(true);
-                onRefresh();
-                break;
-            case KeyUtils.ACTIVITY_REPLY_EDIT_REQ:
-                pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
-                if(pairOptional.isPresent()) {
-                    pairIndex = pairOptional.get().getFirst();
-                    model.set(pairIndex, consumer.getChangeModel());
-                    mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
+            case KeyUtils.MUT_SAVE_FEED_REPLY:
+                if(!consumer.hasModel()) {
+                    if (model != null && !model.isEmpty())
+                        swipeRefreshLayout.setRefreshing(true);
+                    onRefresh();
+                } else {
+                    pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                    if(pairOptional.isPresent()) {
+                        pairIndex = pairOptional.get().getFirst();
+                        model.set(pairIndex, consumer.getChangeModel());
+                        mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
+                    }
                 }
                 break;
-            case KeyUtils.ACTIVITY_REPLY_DELETE_REQ:
+            case KeyUtils.MUT_DELETE_FEED_REPLY:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
@@ -352,5 +305,16 @@ public class CommentFragment extends FragmentBaseComment implements RetroCallbac
         if(composerWidget != null)
             composerWidget.onViewRecycled();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onChanged(@Nullable FeedList content) {
+        super.onChanged(content);
+        if(content != null) {
+            feedList = content;
+            initExtraComponents();
+        } else
+            NotifyUtil.createAlerter(getActivity(), R.string.text_error_request, R.string.layout_empty_response,
+                    R.drawable.ic_warning_white_18dp, R.color.colorStateOrange);
     }
 }

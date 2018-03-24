@@ -13,7 +13,7 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFavouriteBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -83,9 +83,9 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     }
 
     public void setRequestParams(@KeyUtils.LikeType String likeType, long modelId) {
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
-                .setVariable(KeyUtils.arg_id, modelId)
-                .setVariable(KeyUtils.arg_type, likeType);
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, modelId)
+                .putVariable(KeyUtils.arg_type, likeType);
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
     }
 

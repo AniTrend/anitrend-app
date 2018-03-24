@@ -14,6 +14,7 @@ import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.User;
+import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -34,8 +35,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
 
     protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
 
-    private @KeyUtils.RequestType
-    int requestType;
+    private @KeyUtils.RequestType int requestType;
 
     private BottomSheetBase mBottomSheet;
 
@@ -87,22 +87,18 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
         if(!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         switch (requestType) {
-            case KeyUtils.ACTIVITY_EDIT_REQ:
+            case KeyUtils.MUT_SAVE_TEXT_FEED:
                 composerWidget.setModel(feedList);
                 composerWidget.setText(feedList.getValue());
                 break;
-            case KeyUtils.DIRECT_MESSAGE_SEND_REQ:
+            case KeyUtils.MUT_SAVE_MESSAGE_FEED:
                 toolbarTitle.setText(getString(mTitle, user.getName()));
-                composerWidget.setModel(user);
-                break;
-            case KeyUtils.DIRECT_MESSAGE_EDIT_REQ:
-                toolbarTitle.setText(getString(mTitle, user.getName()));
-                composerWidget.setText(feedList.getValue());
+                if(feedList != null)
+                    composerWidget.setText(feedList.getValue());
                 composerWidget.setModel(user);
                 break;
         }
         composerWidget.setItemClickListener(this);
-        composerWidget.setRequestMode(requestType);
         composerWidget.setLifecycle(getLifecycle());
     }
 
@@ -186,7 +182,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             return this;
         }
 
-        public Builder setUserModel(User userModel) {
+        public Builder setUserModel(UserBase userModel) {
             bundle.putParcelable(KeyUtils.arg_user_model, userModel);
             return this;
         }

@@ -7,29 +7,32 @@ import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter;
-import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.activity.detail.CharacterActivity;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by max on 2018/01/18.
  */
 
-public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<EntityGroup>, SeriesPresenter, Media> {
+public class MediaCharacterFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<String, CharacterBase>>, SeriesPresenter> {
 
-    private @KeyUtils.MediaType
-    int seriesType;
-    private long seriesId;
+    private @KeyUtils.MediaType String mediaType;
+    private long mediaId;
 
-    public static CharacterFragment newInstance(Bundle args) {
-        CharacterFragment fragment = new CharacterFragment();
+    public static MediaCharacterFragment newInstance(Bundle args) {
+        MediaCharacterFragment fragment = new MediaCharacterFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,9 +46,9 @@ public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            seriesId = getArguments().getLong(KeyUtils.arg_id);
-            seriesType = getArguments().getInt(KeyUtils.arg_media_type);
-        } mColumnSize = R.integer.grid_giphy_x3;
+            mediaId = getArguments().getLong(KeyUtils.arg_id);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+        } mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
     }
@@ -66,31 +69,13 @@ public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<
      */
     @Override
     public void makeRequest() {
-        Bundle bundle = getViewModel().getParams();
-        bundle.putLong(KeyUtils.arg_id, seriesId);
-        bundle.putString(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[seriesType]);
-        getViewModel().requestData(KeyUtils.SERIES_CHARACTER_PAGE_REQ, getContext());
-    }
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_id, mediaId)
+                .putVariable(KeyUtils.arg_type, mediaType)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
 
-    @Override
-    public void onChanged(@Nullable Media content) {
-        if(content != null) {
-            if(content.getCharacters() != null && !content.getCharacters().isEmpty()) {
-                if(isPager) {
-                    if (model == null) model = GroupingUtil.getGroupedRoleCharacters(content);
-                    else model.addAll(GroupingUtil.getGroupedRoleCharacters(content));
-                }
-                else
-                    model = GroupingUtil.getGroupedRoleCharacters(content);
-                updateUI();
-            } else {
-                if (isPager)
-                    setLimitReached();
-                if (model == null || model.size() < 1)
-                    showEmpty(getString(R.string.layout_empty_response));
-            }
-        } else
-            showEmpty(getString(R.string.layout_empty_response));
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_CHARACTERS_REQ, getContext());
     }
 
     /**
@@ -121,5 +106,22 @@ public class CharacterFragment extends FragmentBaseListSingle<EntityGroup, List<
     @Override
     public void onItemLongClick(View target, EntityGroup data) {
 
+    }
+
+    @Override
+    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<String, CharacterBase>> content) {
+        EdgeContainer<String, CharacterBase> edgeContainer;
+        if (content != null && (edgeContainer = content.getConnection()) != null) {
+            if(!edgeContainer.isEmpty()) {
+                if (edgeContainer.hasPageInfo())
+                    pageInfo = edgeContainer.getPageInfo();
+                if (!edgeContainer.isEmpty())
+                    onPostProcessed(GroupingUtil.groupItemsByKey(edgeContainer.getEdges(), model));
+                else
+                    onPostProcessed(Collections.emptyList());
+            }
+        }
+        if(model == null)
+            onPostProcessed(null);
     }
 }

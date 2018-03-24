@@ -410,11 +410,11 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(query)) {
             Intent intent = new Intent(this, SearchActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(KeyUtils.arg_search_query, query);
+            intent.putExtra(KeyUtils.arg_searchQuery, query);
             CompatUtil.startRevealAnim(this, mSearchView, intent);
             Bundle bundle = new Bundle();
-            bundle.putString(KeyUtils.arg_search_query, query);
-            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtils.arg_search_query, bundle);
+            bundle.putString(KeyUtils.arg_searchQuery, query);
+            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtils.arg_searchQuery, bundle);
             return true;
         }
         NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();

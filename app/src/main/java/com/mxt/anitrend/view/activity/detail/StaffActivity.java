@@ -43,7 +43,7 @@ public class StaffActivity extends ActivityBase<Staff, BasePresenter> {
         setSupportActionBar(toolbar);
         setPresenter(new BasePresenter(this));
         setViewModel(true);
-        id = getIntent().getLongExtra(KeyUtils.arg_id, 0);
+        id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
     }
 
     @Override

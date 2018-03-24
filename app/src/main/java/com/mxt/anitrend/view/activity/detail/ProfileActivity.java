@@ -16,9 +16,11 @@ import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.databinding.ActivityProfileBinding;
-import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.presenter.activity.ProfilePresenter;
+import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.TapTargetUtil;
@@ -35,37 +37,38 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
  * Profile activity
  */
 
-public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implements View.OnClickListener {
+public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> implements View.OnClickListener {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
     protected @BindView(R.id.page_container) ViewPager viewPager;
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
 
     private ActivityProfileBinding binding;
-
     private String userName;
-    private User model;
+    private UserBase model;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
-        setPresenter(new ProfilePresenter(getApplicationContext()));
+        setPresenter(new BasePresenter(getApplicationContext()));
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         disableToolbarTitle();
         setViewModel(true);
         if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, 0);
-        else if(getIntent().hasExtra(KeyUtils.arg_user_name))
-            userName = getIntent().getStringExtra(KeyUtils.arg_user_name);
+            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
+        else if(getIntent().hasExtra(KeyUtils.arg_userName))
+            userName = getIntent().getStringExtra(KeyUtils.arg_userName);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mActionBar.setHomeAsUpIndicator(CompatUtil.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
-        viewPager.setAdapter(new ProfilePageAdapter(getSupportFragmentManager(), getApplicationContext()));
+        ProfilePageAdapter profilePageAdapter = new ProfilePageAdapter(getSupportFragmentManager(), getApplicationContext());
+        profilePageAdapter.setParams(getIntent().getExtras());
+        viewPager.setAdapter(profilePageAdapter);
         viewPager.setOffscreenPageLimit(offScreenLimit);
         smartTabLayout.setViewPager(viewPager);
     }
@@ -100,7 +103,7 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
                         startActivity(new Intent(ProfileActivity.this, MessageActivity.class));
                     else {
                         mBottomSheet = new BottomSheetComposer.Builder().setUserModel(model)
-                                .setRequestMode(KeyUtils.DIRECT_MESSAGE_SEND_REQ)
+                                .setRequestMode(KeyUtils.MUT_SAVE_MESSAGE_FEED)
                                 .setTitle(R.string.text_message_to)
                                 .build();
                         mBottomSheet.show(getSupportFragmentManager(), mBottomSheet.getTag());
@@ -118,8 +121,8 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
      */
     @Override
     protected void onActivityReady() {
-        if(id == 0 && userName == null)
-            NotifyUtil.createAlerter(this, R.string.text_user_model, R.string.dialog_action_null, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
+        if(id == -1 && userName == null)
+            NotifyUtil.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
         else
             makeRequest();
     }
@@ -127,14 +130,12 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
     @Override
     protected void updateUI() {
         binding.setOnClickListener(this);
-        binding.profileStatsWidget.setModel(model);
-        WideImageView.setImage(binding.profileBanner, model.getImage_url_banner());
+        binding.profileStatsWidget.setParams(getIntent().getExtras());
+        WideImageView.setImage(binding.profileBanner, model.getBannerImage());
 
         getPresenter().notifyAllListeners(model, false);
 
         if(getPresenter().isCurrentUser(model.getId())) {
-            getPresenter().getDatabase().saveCurrentUser(model);
-
             if (!TapTargetUtil.isActive(KeyUtils.KEY_NOTIFICATION_TIP)) {
                 if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_NOTIFICATION_TIP)) {
                     TapTargetUtil.buildDefault(this, R.string.tip_notifications_title, R.string.tip_notifications_text, R.id.action_notification)
@@ -165,12 +166,12 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
 
     @Override
     protected void makeRequest() {
-        Bundle params = getViewModel().getParams();
-        if(id != 0)
-            params.putLong(KeyUtils.arg_userId, id);
-        else
-            params.putString(KeyUtils.arg_user_name, userName);
-        getViewModel().requestData(KeyUtils.USER_ACCOUNT_REQ, getApplicationContext());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+            .putVariable(KeyUtils.arg_userId, id)
+            .putVariable(KeyUtils.arg_userName, userName);
+
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.USER_BASE_REQ, getApplicationContext());
     }
 
     /**
@@ -179,10 +180,14 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable User model) {
+    public void onChanged(@Nullable UserBase model) {
         super.onChanged(model);
-        this.model = model;
-        updateUI();
+        if(model != null) {
+            this.id = model.getId();
+            this.model = model;
+            updateUI();
+        } else
+            NotifyUtil.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
     }
 
     @Override
@@ -190,7 +195,7 @@ public class ProfileActivity extends ActivityBase<User, ProfilePresenter> implem
         switch (view.getId()) {
             case R.id.profile_banner:
                 Intent intent = new Intent(this, ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage_url_banner());
+                intent.putExtra(KeyUtils.arg_model, model.getBannerImage());
                 CompatUtil.startSharedImageTransition(this, view, intent, R.string.transition_image_preview);
                 break;
         }

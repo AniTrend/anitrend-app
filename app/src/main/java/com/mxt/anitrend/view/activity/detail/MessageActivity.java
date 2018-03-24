@@ -2,43 +2,49 @@ package com.mxt.anitrend.view.activity.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.pager.detail.MessagePageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.model.entity.anilist.Notification;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.view.fragment.detail.UserFeedFragment;
-
-import java.util.List;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by max on 2017/12/07.
+ * MessageActivity
  */
 
-public class MessageActivity extends ActivityBase<List<Notification>, BasePresenter> {
+public class MessageActivity extends ActivityBase<FeedList, BasePresenter> {
 
-    protected @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    protected @BindView(R.id.toolbar) Toolbar toolbar;
+    protected @BindView(R.id.page_container) ViewPager viewPager;
+    protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
+    protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
+
+    private MessagePageAdapter messagePageAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frame_generic);
+        setContentView(R.layout.activity_pager_generic);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        setPresenter(new BasePresenter(this));
+        setViewModel(true);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        setPresenter(new BasePresenter(this));
+        getViewModel().getParams().putLong(KeyUtils.arg_userId, getPresenter().getDatabase().getCurrentUser().getId());
         onActivityReady();
     }
 
@@ -48,18 +54,16 @@ public class MessageActivity extends ActivityBase<List<Notification>, BasePresen
      */
     @Override
     protected void onActivityReady() {
-        mFragment = UserFeedFragment.newInstance(KeyUtils.MESSAGE);
+        messagePageAdapter = new MessagePageAdapter(getSupportFragmentManager(), getApplicationContext());
+        messagePageAdapter.setParams(getViewModel().getParams());
         updateUI();
     }
 
     @Override
     protected void updateUI() {
-        if (mFragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, mFragment, mFragment.TAG);
-            fragmentTransaction.commit();
-        }
+        viewPager.setAdapter(messagePageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit);
+        smartTabLayout.setViewPager(viewPager);
     }
 
     @Override

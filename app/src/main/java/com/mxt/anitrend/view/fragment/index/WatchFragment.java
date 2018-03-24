@@ -1,30 +1,46 @@
 package com.mxt.anitrend.view.fragment.index;
 
+import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.EpisodeAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase;
+import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
-import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.EpisodeHelper;
+import com.mxt.anitrend.util.ErrorUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 /**
  * Created by max on 2017/11/03.
+ * WatchFragment for anime types
  */
 
-public class WatchFragment extends FragmentChannelBase {
+public class WatchFragment extends FragmentChannelBase implements RetroCallback<ConnectionContainer<List<ExternalLink>>> {
 
-    public static Fragment newInstance(boolean popular) {
+    private long mediaId;
+    private @KeyUtils.MediaType String mediaType;
+
+    public static Fragment newInstance(Bundle params, boolean popular) {
+        Bundle args = new Bundle(params);
         WatchFragment fragment = new WatchFragment();
-        Bundle args = new Bundle();
         args.putBoolean(KeyUtils.arg_popular, popular);
         fragment.setArguments(args);
         return fragment;
@@ -47,7 +63,11 @@ public class WatchFragment extends FragmentChannelBase {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setPresenter(new BasePresenter(getContext()));
+        if (getArguments() != null) {
+            mediaId = getArguments().getLong(KeyUtils.arg_id);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+        }
+        setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
         mColumnSize = R.integer.single_list_x1;
     }
@@ -70,9 +90,15 @@ public class WatchFragment extends FragmentChannelBase {
         if(externalLinks != null) {
             boolean feed = targetLink != null && targetLink.startsWith(BuildConfig.FEEDS_LINK);
             Bundle bundle = getViewModel().getParams();
-            bundle.putString(KeyUtils.arg_search_query, targetLink);
+            bundle.putString(KeyUtils.arg_searchQuery, targetLink);
             bundle.putBoolean(KeyUtils.arg_feed, feed);
             getViewModel().requestData(getRequestMode(feed), getContext());
+        } else {
+            QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                    .putVariable(KeyUtils.arg_id, mediaId)
+                    .putVariable(KeyUtils.arg_type, mediaType);
+            getPresenter().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+            getPresenter().requestData(KeyUtils.MEDIA_EPISODES_REQ, getContext(), this);
         }
     }
 
@@ -81,5 +107,33 @@ public class WatchFragment extends FragmentChannelBase {
         if(feed)
             return isPopular? KeyUtils.EPISODE_POPULAR_REQ:KeyUtils.EPISODE_LATEST_REQ;
         return KeyUtils.EPISODE_FEED_REQ;
+    }
+
+    @Override
+    public void onResponse(@NonNull Call<ConnectionContainer<List<ExternalLink>>> call, @NonNull Response<ConnectionContainer<List<ExternalLink>>> response) {
+        if(isAlive() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            ConnectionContainer<List<ExternalLink>> connectionContainer;
+            if(response.isSuccessful() && (connectionContainer = response.body()) != null) {
+                if(!connectionContainer.isEmpty()) {
+                    externalLinks = connectionContainer.getConnection();
+                    if(model == null && externalLinks != null)
+                        targetLink = EpisodeHelper.episodeSupport(externalLinks);
+
+                    if (targetLink == null)
+                        showEmpty(getString(R.string.waring_missing_episode_links));
+                    else
+                        makeRequest();
+                }
+            } else
+                Log.e(TAG, ErrorUtil.getError(response));
+        }
+    }
+
+    @Override
+    public void onFailure(@NonNull Call<ConnectionContainer<List<ExternalLink>>> call, @NonNull Throwable throwable) {
+        if(isAlive() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            throwable.printStackTrace();
+            Log.e(TAG, throwable.getMessage());
+        }
     }
 }

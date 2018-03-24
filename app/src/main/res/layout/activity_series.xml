@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
         <variable name="onClickListener" type="android.view.View.OnClickListener" />
     </data>
 

@@ -16,6 +16,7 @@ import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -26,17 +27,19 @@ import butterknife.OnLongClick;
 
 public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
 
+    private final int FEED_STATUS = 10, FEED_MESSAGE = 11, FEED_LIST = 20, FEED_PROGRESS = 21;
+
     public StatusFeedAdapter(List<FeedList> data, Context context) {
         super(data, context);
     }
 
     @Override
-    public RecyclerViewHolder<FeedList> onCreateViewHolder(ViewGroup parent, @KeyUtils.ActivityType int viewType) {
-        if(viewType == KeyUtils.STATUS)
+    public RecyclerViewHolder<FeedList> onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == FEED_STATUS)
             return new StatusFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-        else if(viewType == KeyUtils.MESSAGE)
+        else if(viewType == FEED_MESSAGE)
             return new MessageFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-        else if(viewType == KeyUtils.LIST)
+        else if(viewType == FEED_LIST)
             return new ListFeedViewHolder(AdapterFeedProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         return new ProgressFeedViewHolder(AdapterFeedProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
@@ -54,16 +57,16 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
      * <code>position</code>. Type codes need not be contiguous.
      */
     @Override
-    public @KeyUtils.ActivityType int getItemViewType(int position) {
+    public int getItemViewType(int position) {
         FeedList model = data.get(position);
-        if(model.getType().equals(KeyUtils.ActivityTypes[KeyUtils.STATUS]))
-            return KeyUtils.STATUS;
-        else if(model.getType().equals(KeyUtils.ActivityTypes[KeyUtils.MESSAGE]))
-            return KeyUtils.MESSAGE;
-        else if(model.getType().equals(KeyUtils.ActivityTypes[KeyUtils.LIST]) && model.getLikes() == null)
-            return KeyUtils.LIST;
+        if(Objects.equals(model.getType(), KeyUtils.TEXT))
+            return FEED_STATUS;
+        else if(Objects.equals(model.getType(), KeyUtils.MESSAGE))
+            return FEED_MESSAGE;
+        else if(Objects.equals(model.getType(), KeyUtils.MEDIA_LIST) && model.getLikes() == null)
+            return FEED_LIST;
 
-        return KeyUtils.PROGRESS;
+        return FEED_PROGRESS;
     }
 
     @Override
@@ -94,11 +97,11 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_FAVOURITE_REQ, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
             binding.widgetComment.setReplyCount(model.getReplyCount());
-            if(presenter.isCurrentUser(model.getUser_id())) {
-                binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
+            if(presenter.isCurrentUser(model.getUser())) {
+                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
             }
             else
@@ -170,13 +173,13 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
 
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_FAVOURITE_REQ, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
             binding.widgetComment.setReplyCount(model.getReplyCount());
 
-            if(presenter.isCurrentUser(model.getUser_id())) {
-                binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
+            if(presenter.isCurrentUser(model.getUser())) {
+                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
 
                 binding.widgetEdit.setVisibility(View.VISIBLE);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
@@ -253,13 +256,13 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
 
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_FAVOURITE_REQ, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
             binding.widgetComment.setReplyCount(model.getReplyCount());
 
             if(presenter.isCurrentUser(model.getMessenger())) {
-                binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
+                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
 
                 binding.widgetEdit.setVisibility(View.VISIBLE);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
@@ -332,8 +335,8 @@ public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.widgetUsers.setVisibility(View.GONE);
             binding.widgetFavourite.setVisibility(View.GONE);
             binding.widgetComment.setReplyCount(model.getReplyCount());
-            if(presenter.isCurrentUser(model.getUser_id())) {
-                binding.widgetDelete.setModel(model, KeyUtils.ACTIVITY_DELETE_REQ);
+            if(presenter.isCurrentUser(model.getUser())) {
+                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
             }
             else

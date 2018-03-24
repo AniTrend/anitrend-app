@@ -3,31 +3,30 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by max on 2018/03/20.
+ * MediaStats
  */
 
 public class MediaStats implements Parcelable {
 
-    private List<MediaAiringProgression> airingProgression;
-    private HashMap<String, Map<Integer, Integer>> scoreDistribution;
-    private HashMap<String, Map<String, Integer>> statusDistribution;
+    private List<MediaTrend> airingProgression;
+    private List<ScoreDistribution> scoreDistribution;
+    private List<StatusDistribution> statusDistribution;
 
     protected MediaStats(Parcel in) {
-        airingProgression = in.createTypedArrayList(MediaAiringProgression.CREATOR);
-        scoreDistribution = in.readHashMap(HashMap.class.getClassLoader());
-        statusDistribution = in.readHashMap(HashMap.class.getClassLoader());
+        airingProgression = in.createTypedArrayList(MediaTrend.CREATOR);
+        scoreDistribution = in.createTypedArrayList(ScoreDistribution.CREATOR);
+        statusDistribution = in.createTypedArrayList(StatusDistribution.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(airingProgression);
-        dest.writeMap(scoreDistribution);
-        dest.writeMap(statusDistribution);
+        dest.writeTypedList(scoreDistribution);
+        dest.writeTypedList(statusDistribution);
     }
 
     @Override
@@ -47,15 +46,15 @@ public class MediaStats implements Parcelable {
         }
     };
 
-    public List<MediaAiringProgression> getAiringProgression() {
+    public List<MediaTrend> getAiringProgression() {
         return airingProgression;
     }
 
-    public HashMap<String, Map<Integer, Integer>> getScoreDistribution() {
+    public List<ScoreDistribution> getScoreDistribution() {
         return scoreDistribution;
     }
 
-    public HashMap<String, Map<String, Integer>> getStatusDistribution() {
+    public List<StatusDistribution> getStatusDistribution() {
         return statusDistribution;
     }
 }

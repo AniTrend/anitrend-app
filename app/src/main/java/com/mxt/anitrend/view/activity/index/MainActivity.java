@@ -16,12 +16,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -273,14 +271,16 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                 break;
             case R.id.nav_myanime:
                 intent = new Intent(this, MediaListActivity.class);
-                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.ANIME);
-                intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
+                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.ANIME);
+                intent.putExtra(KeyUtils.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                intent.putExtra(KeyUtils.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
                 startActivity(intent);
                 break;
             case R.id.nav_mymanga:
                 intent = new Intent(this, MediaListActivity.class);
-                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.MANGA);
-                intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
+                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.MANGA);
+                intent.putExtra(KeyUtils.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                intent.putExtra(KeyUtils.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
                 startActivity(intent);
                 break;
             case R.id.nav_hub:
@@ -294,11 +294,6 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                 selectedItem = menu;
                 mViewPager.setAdapter(new ReviewPageAdapter(getSupportFragmentManager(), getApplicationContext()));
                 mNavigationTabStrip.setViewPager(mViewPager);
-                if(getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_REVIEW_TYPE_TIP)) {
-                    NotifyUtil.createAlerter(this, R.string.title_new_feature, R.string.text_reviews_feature,
-                            R.drawable.ic_bookmark_white_24dp, R.color.colorStateBlue, KeyUtils.DURATION_LONG);
-                    getPresenter().getApplicationPref().disableTipFor(KeyUtils.KEY_REVIEW_TYPE_TIP);
-                }
                 break;
             case R.id.nav_sign_in:
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -461,7 +456,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
             case R.id.banner_clickable:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     Intent intent = new Intent(this, ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_user_name, getPresenter().getDatabase().getCurrentUser().getName());
+                    intent.putExtra(KeyUtils.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
                     CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
                 }
                 else

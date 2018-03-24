@@ -19,10 +19,9 @@ import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -48,11 +47,11 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter> implements BaseConsumer.onRequestModelChange<FeedList> {
 
-    private QueryContainer queryContainer;
+    protected QueryContainerBuilder queryContainer;
 
-    public static FeedFragment newInstance(Bundle params, QueryContainer queryContainer) {
+    public static FeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainerBuilder) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        args.putParcelable(KeyUtils.arg_graph_params, queryContainerBuilder);
         FeedFragment fragment = new FeedFragment();
         fragment.setArguments(args);
         return fragment;
@@ -81,7 +80,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
         if(mAdapter == null)
             mAdapter = new StatusFeedAdapter(model, getContext());
         injectAdapter();
-        if(!TapTargetUtil.isActive(KeyUtils.KEY_POST_TYPE_TIP)) {
+        if(!TapTargetUtil.isActive(KeyUtils.KEY_POST_TYPE_TIP) && isFeed) {
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_POST_TYPE_TIP)) {
                 TapTargetUtil.buildDefault(getActivity(), R.string.tip_status_post_title, R.string.tip_status_post_text, R.id.action_post)
                         .setPromptStateChangeListener((prompt, state) -> {
@@ -100,7 +99,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
      */
     @Override
     public void makeRequest() {
-        queryContainer.setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.FEED_LIST_REQ, getContext());
     }
@@ -117,10 +116,10 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
         Intent intent;
         switch (target.getId()) {
             case R.id.series_image:
-                MediaBase series = data.getSeries();
+                MediaBase series = data.getMedia();
                 intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_media_type, series.getType());
+                intent.putExtra(KeyUtils.arg_mediaType, series.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_comment:
@@ -147,10 +146,10 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
                     NotifyUtil.makeText(getActivity(), R.string.text_no_likes, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.user_avatar:
-                if(data.getUsers() != null) {
+                if(data.getUser() != null) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtils.arg_id, data.getUsers().get(0).getId());
+                    intent.putExtra(KeyUtils.arg_id, data.getUser().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
@@ -170,7 +169,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel(data.getSeries()).build(getActivity());
+                            .setModel(data.getMedia()).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-query FeedListReply($page: Int, $perPage: Int, $activityId: Int, $asHtml: Boolean = true) {
+query FeedListReply($page: Int, $perPage: Int, $id: Int, $asHtml: Boolean = true) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query FeedListReply($page: Int, $perPage: Int, $activityId: Int, $asHtml: Boolea
         hasNextPage
       }
     }
-    activities(id: $activityId) {
+    activities(id: $id) {
       ... on ListActivity {
         id
         status

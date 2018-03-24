@@ -53,21 +53,21 @@ public class IntentBundleUtil {
                 if(TextUtils.isDigitsOnly(lastKey))
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
                 else
-                    intent.putExtra(KeyUtils.arg_user_name, lastKey);
+                    intent.putExtra(KeyUtils.arg_userName, lastKey);
                 break;
             case KeyUtils.DEEP_LINK_MANGA:
                 if ((splitKeys = hasDepth(lastKey)) != null)
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
                 else
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtils.arg_media_type, type);
+                intent.putExtra(KeyUtils.arg_mediaType, type);
                     break;
             case KeyUtils.DEEP_LINK_ANIME:
                 if ((splitKeys = hasDepth(lastKey)) != null)
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
                 else
                     intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtils.arg_media_type, type);
+                intent.putExtra(KeyUtils.arg_mediaType, type);
                     break;
             case KeyUtils.DEEP_LINK_CHARACTER:
                 if ((splitKeys = hasDepth(lastKey)) != null)

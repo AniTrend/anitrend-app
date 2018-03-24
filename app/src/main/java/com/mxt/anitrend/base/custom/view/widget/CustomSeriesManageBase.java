@@ -83,19 +83,19 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     public Bundle getParam() {
         QueryContainer queryContainer = GraphUtil.getDefaultQuery(false);
         queryContainer.setVariable(KeyUtils.arg_mediaId, model.getMediaId());
-        queryContainer.setVariable(KeyUtils.arg_list_status, model.getStatus());
-        queryContainer.setVariable(KeyUtils.arg_list_score_raw, model.getScore());
-        queryContainer.setVariable(KeyUtils.arg_list_notes, model.getNotes());
-        queryContainer.setVariable(KeyUtils.arg_list_private, model.isHidden());
-        queryContainer.setVariable(KeyUtils.arg_list_priority, model.getPriority());
-        queryContainer.setVariable(KeyUtils.arg_list_hiddenFromStatusLists, model.isHiddenFromStatusLists());
+        queryContainer.setVariable(KeyUtils.arg_listStatus, model.getStatus());
+        queryContainer.setVariable(KeyUtils.arg_listScore_raw, model.getScore());
+        queryContainer.setVariable(KeyUtils.arg_listNotes, model.getNotes());
+        queryContainer.setVariable(KeyUtils.arg_listPrivate, model.isHidden());
+        queryContainer.setVariable(KeyUtils.arg_listPriority, model.getPriority());
+        queryContainer.setVariable(KeyUtils.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
 
-        queryContainer.setVariable(KeyUtils.arg_list_advanced_score, model.getAdvancedScores());
-        queryContainer.setVariable(KeyUtils.arg_list_custom_list, model.getCustomLists());
+        queryContainer.setVariable(KeyUtils.arg_listAdvancedScore, model.getAdvancedScores());
+        queryContainer.setVariable(KeyUtils.arg_listCustom, model.getCustomLists());
 
-        queryContainer.setVariable(KeyUtils.arg_list_repeat, model.getRepeat());
-        queryContainer.setVariable(KeyUtils.arg_list_progress, model.getProgress());
-        queryContainer.setVariable(KeyUtils.arg_list_progressVolumes, model.getProgressVolumes());
+        queryContainer.setVariable(KeyUtils.arg_listRepeat, model.getRepeat());
+        queryContainer.setVariable(KeyUtils.arg_listProgress, model.getProgress());
+        queryContainer.setVariable(KeyUtils.arg_listProgressVolumes, model.getProgressVolumes());
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);

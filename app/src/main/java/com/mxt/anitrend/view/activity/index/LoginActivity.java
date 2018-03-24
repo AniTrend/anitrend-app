@@ -85,15 +85,15 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
         startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             Bundle SHORTCUT_MY_ANIME_BUNDLE = new Bundle();
-            SHORTCUT_MY_ANIME_BUNDLE.putInt(KeyUtils.arg_media_type, KeyUtils.ANIME);
-            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_user_name, model.getName());
+            SHORTCUT_MY_ANIME_BUNDLE.putInt(KeyUtils.arg_mediaType, KeyUtils.ANIME);
+            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
 
             Bundle SHORTCUT_MY_MANGA_BUNDLE = new Bundle();
-            SHORTCUT_MY_MANGA_BUNDLE.putInt(KeyUtils.arg_media_type, KeyUtils.MANGA);
-            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_user_name, model.getName());
+            SHORTCUT_MY_MANGA_BUNDLE.putInt(KeyUtils.arg_mediaType, KeyUtils.MANGA);
+            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
 
             Bundle SHORTCUT_PROFILE_BUNDLE = new Bundle();
-            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtils.arg_user_name, model.getName());
+            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
 
             ShortcutHelper.createShortcuts(LoginActivity.this,
                     new ShortcutHelper.ShortcutBuilder()

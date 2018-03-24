@@ -659,7 +659,6 @@
     <string name="text_downloading_update">Mise à Jour d\'AniTrend en Téléchargement !</string>
 
     <string name="title_new_feature">Nouvelle Fonctionnalité !</string>
-    <string name="text_reviews_feature">Saviez-vous qu\'il est possible de passer des critiques de Manga aux critiques d\'Anime en appuyant sur le bouton ?</string>
 
     <!--
         End of strings used in Antrend v0.9.9r7
@@ -861,6 +860,11 @@
         <item>Dropped</item>
         <item>Paused</item>
         <item>Repeating</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>Inbox</item>
+        <item>Outbox</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

@@ -656,7 +656,6 @@
     <string name="text_downloading_update">جارٍ تحميل أحدث نسخة من AniTrend!</string>
 
     <string name="title_new_feature">ميزة جديدة!</string>
-    <string name="text_reviews_feature">هل تعلم انه يمكنك التبديل بين مراجعات الأنيمي والمانغا بتفعيل وإلغاء تفعيل خيار ’’مراجعات الأنيمي‘‘ ؟</string>
 
     <!--
         End of strings used in Antrend v0.9.9r7
@@ -858,6 +857,11 @@
         <item>Dropped</item>
         <item>Paused</item>
         <item>Repeating</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>Inbox</item>
+        <item>Outbox</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

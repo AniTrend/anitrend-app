@@ -24,7 +24,9 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
 
     private YouTubePlayer youTubePlayer;
 
-    public static YoutubePlayerFragment newInstance(Bundle args) {
+    public static YoutubePlayerFragment newInstance(String resourceId) {
+        Bundle args = new Bundle();
+        args.putString(KeyUtils.arg_trailerId, resourceId);
         YoutubePlayerFragment fragment = new YoutubePlayerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -34,7 +36,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if(getArguments() != null)
-            streamLink = getArguments().getString(KeyUtils.arg_model);
+            streamLink = getArguments().getString(KeyUtils.arg_trailerId);
     }
 
     @Override

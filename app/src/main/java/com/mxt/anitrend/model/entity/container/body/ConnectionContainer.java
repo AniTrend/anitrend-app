@@ -14,4 +14,8 @@ public class ConnectionContainer<T> {
     public T getConnection() {
         return connection;
     }
+
+    public boolean isEmpty() {
+        return connection == null;
+    }
 }

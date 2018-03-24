@@ -26,6 +26,8 @@ public interface KeyUtils {
     // ------------------------------------------------------------------------------------
 
     String arg_graph_params = "arg_graph_params";
+    String arg_trailerId = "trailerId";
+
     String arg_id = "id";
     String arg_type = "type";
     String arg_sort = "sort";
@@ -36,6 +38,7 @@ public interface KeyUtils {
 
     String arg_userId = "userId";
     String arg_recipientId = "recipientId";
+    String arg_messengerId = "messengerId";
 
     String arg_text = "text";
     String arg_message = "message";
@@ -52,28 +55,29 @@ public interface KeyUtils {
     String arg_studioId = "studioId";
     String arg_characterId = "characterId";
 
-    String arg_media_type = "type";
-    String arg_search_query = "search";
+    String arg_mediaType = "type";
+    String arg_searchQuery = "search";
 
-    String arg_user_name = "userName";
+    String arg_userName = "userName";
 
     /** Media List Keys */
-    String arg_list_status = "status";
-    String arg_list_score_raw = "scoreRaw";
-    String arg_list_progress = "progress";
-    String arg_list_progressVolumes = "progressVolumes";
-    String arg_list_repeat = "repeat";
-    String arg_list_priority = "priority";
-    String arg_list_private = "private";
-    String arg_list_notes = "notes";
-    String arg_list_hiddenFromStatusLists = "hiddenFromStatusLists";
-    String arg_list_advanced_score = "advancedScores";
-    String arg_list_custom_list = "customLists";
+    String arg_listStatus = "status";
+    String arg_listScore_raw = "scoreRaw";
+    String arg_listProgress = "progress";
+    String arg_listProgressVolumes = "progressVolumes";
+    String arg_listRepeat = "repeat";
+    String arg_listPriority = "priority";
+    String arg_listPrivate = "private";
+    String arg_listNotes = "notes";
+    String arg_listHiddenFromStatusLists = "hiddenFromStatusLists";
+    String arg_listAdvancedScore = "advancedScores";
+    String arg_listCustom = "customLists";
 
     /** Media Browse Keys */
     String arg_startDateLike = "startDateLike";
     String arg_endDateLike = "endDateLike";
     String arg_season = "season";
+    String arg_seasonYear = "seasonYear";
     String arg_genres = "genres";
     String arg_genresExclude = "genresExclude";
     String arg_isAdult = "isAdult";
@@ -99,9 +103,11 @@ public interface KeyUtils {
     String arg_page_offset = "arg_page_offset";
     String arg_request_type = "arg_request_type";
     String arg_activity_tag = "arg_activity_tag";
+    String arg_message_type = "arg_message_type";
     String arg_shortcut_used = "arg_shortcut_used";
     String arg_deep_link_type = "arg_deep_link_type";
-    String arg_media_list_type = "arg_media_list_type";
+
+    String arg_media_compact = "arg_media_compact";
 
     String arg_positive_text = "arg_positive_text";
     String arg_negative_text = "arg_negative_text";
@@ -135,7 +141,7 @@ public interface KeyUtils {
     CHARACTER_BASE_REQ = 14, CHARACTER_OVERVIEW_REQ = 15, CHARACTER_MEDIA_REQ = 16, CHARACTER_ACTORS_REQ =17,
 
     // Feed Model Requests
-    FEED_LIST_REQ = 18, FEED_LIST_REPLY = 19, FEED_MESSAGE_REQ = 20,
+    FEED_LIST_REQ = 18, FEED_LIST_REPLY_REQ = 19, FEED_MESSAGE_REQ = 20,
 
     // Media Model Requests
     MEDIA_BASE_REQ = 21, MEDIA_OVERVIEW_REQ = 22, MEDIA_RELATION_REQ = 23, MEDIA_STATS_REQ = 24, MEDIA_EPISODES_REQ = 25,
@@ -168,7 +174,7 @@ public interface KeyUtils {
 
             CHARACTER_BASE_REQ, CHARACTER_OVERVIEW_REQ, CHARACTER_MEDIA_REQ, CHARACTER_ACTORS_REQ,
 
-            FEED_LIST_REQ, FEED_LIST_REPLY, FEED_MESSAGE_REQ,
+            FEED_LIST_REQ, FEED_LIST_REPLY_REQ, FEED_MESSAGE_REQ,
 
             MEDIA_BASE_REQ, MEDIA_OVERVIEW_REQ, MEDIA_RELATION_REQ, MEDIA_STATS_REQ, MEDIA_EPISODES_REQ,
             MEDIA_CHARACTERS_REQ, MEDIA_STAFF_REQ, MEDIA_SOCIAL_REQ,
@@ -320,10 +326,16 @@ public interface KeyUtils {
     @interface MediaFormat {}
 
 
+    String RATED = "RATED", POPULAR = "POPULAR";
+    @StringDef({RATED, POPULAR})
+    @interface MediaRankType {}
+
+
     String[] MediaSeason = {WINTER, SPRING, SUMMER, FALL};
     String[] MediaStatus = {FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED};
     String[] MediaSource = {null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER};
     String[] MediaFormat = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT};
+    String[] MediaRankType = {RATED, POPULAR};
 
     // ------------------------------------------------------------------------------------
 
@@ -408,6 +420,11 @@ public interface KeyUtils {
 
     @IntDef({TIME_UNIT_DAYS, TIME_UNIT_HOURS, TIME_UNIT_MINUTES, TIME_UNITS_SECONDS})
     @interface TimeTargetType {}
+
+    int MESSAGE_TYPE_INBOX = 0, MESSAGE_TYPE_OUTBOX = 1;
+
+    @IntDef({MESSAGE_TYPE_INBOX, MESSAGE_TYPE_OUTBOX})
+    @interface MessageType {}
 
 
     // Group types for recycler view

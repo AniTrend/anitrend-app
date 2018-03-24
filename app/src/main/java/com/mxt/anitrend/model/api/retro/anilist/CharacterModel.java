@@ -7,7 +7,7 @@ import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.util.List;
 
@@ -26,20 +26,20 @@ public interface CharacterModel {
     @POST("/")
     @GraphQuery("CharacterBase")
     @Headers("Content-Type: application/json")
-    Call<CharacterBase> getCharacterBase(@Body QueryContainer request);
+    Call<CharacterBase> getCharacterBase(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterOverview")
     @Headers("Content-Type: application/json")
-    Call<Character> getCharacterOverview(@Body QueryContainer request);
+    Call<Character> getCharacterOverview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterMedia")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<PageContainer<MediaBase>>> getCharacterMedia(@Body QueryContainer request);
+    Call<ConnectionContainer<PageContainer<MediaBase>>> getCharacterMedia(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterActors")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<List<StaffBase>, MediaBase>>> getCharacterActors(@Body QueryContainer request);
+    Call<ConnectionContainer<EdgeContainer<List<StaffBase>, MediaBase>>> getCharacterActors(@Body QueryContainerBuilder request);
 }

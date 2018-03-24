@@ -54,7 +54,7 @@ public final class NotificationDispatcher {
             case KeyUtils.NOTIFICATION_AIRING:
                 intent = new Intent(context, MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, notification.getSeries().getId());
-                intent.putExtra(KeyUtils.arg_media_type, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
+                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:
@@ -67,7 +67,7 @@ public final class NotificationDispatcher {
                 break;
             case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
                 intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra(KeyUtils.arg_user_name, notification.getUser().getName());
+                intent.putExtra(KeyUtils.arg_userName, notification.getUser().getName());
                 break;
             case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
                 intent = new Intent(context, MessageActivity.class);

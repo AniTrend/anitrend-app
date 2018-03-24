@@ -123,19 +123,23 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         this.lifecycle = lifecycle;
     }
 
-    public void setModel(FeedList feedList) {
+    public void setModel(FeedList feedList, @KeyUtils.RequestType int requestType) {
         this.feedList = feedList;
         this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
     }
 
-    public void setModel(UserBase recipient) {
+    public void setModel(UserBase recipient, @KeyUtils.RequestType int requestType) {
         this.recipient = recipient;
         this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
     }
 
-    public void setModel(FeedReply feedReply) {
+    public void setModel(FeedReply feedReply, @KeyUtils.RequestType int requestType) {
         this.feedReply = feedReply;
         this.requestType = KeyUtils.MUT_SAVE_FEED_REPLY;
+    }
+
+    public void setRequestType(@KeyUtils.RequestType int requestType) {
+        this.requestType = requestType;
     }
 
     /**

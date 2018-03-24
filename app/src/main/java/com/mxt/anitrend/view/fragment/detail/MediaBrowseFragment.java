@@ -13,13 +13,15 @@ import com.mxt.anitrend.adapter.recycler.index.SeriesMediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
+
+import java.util.Collections;
 
 /**
  * Created by max on 2018/02/03.
@@ -28,20 +30,28 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, SeriesPresenter> {
 
-    private QueryContainer queryContainer;
+    private QueryContainerBuilder queryContainer;
     private boolean isCompatType;
 
-    public static MediaBrowseFragment newInstance(Bundle params, QueryContainer queryContainer, boolean isCompatType) {
+    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer, boolean isCompatType) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        args.putBoolean(KeyUtils.arg_media_list_type, isCompatType);
+        args.putBoolean(KeyUtils.arg_media_compact, isCompatType);
         MediaBrowseFragment fragment = new MediaBrowseFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static MediaBrowseFragment newInstance(Bundle params, QueryContainer queryContainer) {
+    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         return newInstance(params, queryContainer, false);
+    }
+
+    public static MediaBrowseFragment newInstance(Bundle params) {
+        Bundle args = new Bundle(params);
+        args.putBoolean(KeyUtils.arg_media_compact, false);
+        MediaBrowseFragment fragment = new MediaBrowseFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     /**
@@ -54,7 +64,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
-            isCompatType = getArguments().getBoolean(KeyUtils.arg_media_list_type);
+            isCompatType = getArguments().getBoolean(KeyUtils.arg_media_compact);
         }
         isPager = true; isFilterable = true;
         mColumnSize = R.integer.single_list_x1;
@@ -82,7 +92,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     @Override
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
-        queryContainer.setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.MEDIA_BROWSE_REQ, getContext());
     }
@@ -100,7 +110,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_media_type, data.getType());
+                intent.putExtra(KeyUtils.arg_mediaType, data.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -135,8 +145,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
             if(!content.isEmpty())
                 onPostProcessed(content.getPageData());
         }
-
         if(model == null)
-            showEmpty(getString(R.string.layout_empty_response));
+            onPostProcessed(Collections.emptyList());
     }
 }

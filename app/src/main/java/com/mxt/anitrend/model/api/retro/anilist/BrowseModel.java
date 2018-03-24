@@ -5,7 +5,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.util.List;
 
@@ -23,50 +23,50 @@ public interface BrowseModel {
     @POST("/")
     @GraphQuery("MediaBrowse")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<MediaBase>> getMediaBrowse(@Body QueryContainer request);
+    Call<PageContainer<MediaBase>> getMediaBrowse(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("ReviewBrowse")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<Review>> getReviewBrowse(@Body QueryContainer request);
+    Call<PageContainer<Review>> getReviewBrowse(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaListBrowse")
     @Headers("Content-Type: application/json")
-    Call<PageContainer<MediaList>> getMediaListBrowse(@Body QueryContainer request);
+    Call<PageContainer<MediaList>> getMediaListBrowse(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaList")
     @Headers("Content-Type: application/json")
-    Call<MediaList> getMediaList(@Body QueryContainer request);
+    Call<MediaList> getMediaList(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("DeleteMediaListEntry")
     @Headers("Content-Type: application/json")
-    Call<Boolean> deleteMediaListEntry(@Body QueryContainer request);
+    Call<Boolean> deleteMediaListEntry(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("DeleteReview")
     @Headers("Content-Type: application/json")
-    Call<Boolean> deleteReview(@Body QueryContainer request);
+    Call<Boolean> deleteReview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("SaveMediaListEntry")
     @Headers("Content-Type: application/json")
-    Call<MediaList> saveMediaListEntry(@Body QueryContainer request);
+    Call<MediaList> saveMediaListEntry(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("UpdateMediaListEntries")
     @Headers("Content-Type: application/json")
-    Call<List<MediaList>> updateMediaListEntries(@Body QueryContainer request);
+    Call<List<MediaList>> updateMediaListEntries(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("RateReview")
     @Headers("Content-Type: application/json")
-    Call<Review> rateReview(@Body QueryContainer request);
+    Call<Review> rateReview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("SaveReview")
     @Headers("Content-Type: application/json")
-    Call<Review> saveReview(@Body QueryContainer request);
+    Call<Review> saveReview(@Body QueryContainerBuilder request);
 }

@@ -45,7 +45,7 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, List<Stud
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_search_query);
+            searchQuery = getArguments().getString(KeyUtils.arg_searchQuery);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_list_x2;  isPager = false;
         setViewModel(true);
@@ -69,7 +69,7 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, List<Stud
         if(TextUtils.isEmpty(searchQuery))
             return;
         Bundle bundle = getViewModel().getParams();
-        bundle.putString(KeyUtils.arg_search_query, searchQuery);
+        bundle.putString(KeyUtils.arg_searchQuery, searchQuery);
         bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().requestData(KeyUtils.STUDIO_SEARCH_REQ, getContext());
     }

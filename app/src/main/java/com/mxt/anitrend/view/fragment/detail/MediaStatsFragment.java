@@ -13,17 +13,12 @@ import android.view.ViewGroup;
 
 import com.annimon.stream.Stream;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.LinkAdapter;
 import com.mxt.anitrend.adapter.recycler.detail.RankAdapter;
@@ -31,22 +26,19 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesStatsBinding;
+import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaRank;
-import com.mxt.anitrend.model.entity.anilist.ExternalLink;
+import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.ParamBuilderUtil;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -54,13 +46,16 @@ import butterknife.ButterKnife;
  * Created by max on 2017/12/28.
  */
 
-public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Media> implements PublisherListener<Media> {
+public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Media> {
 
     private FragmentSeriesStatsBinding binding;
     private Media model;
 
     private RankAdapter rankAdapter;
     private LinkAdapter linkAdapter;
+
+    private long mediaId;
+    private @KeyUtils.MediaType String mediaType;
 
     public static MediaStatsFragment newInstance(Bundle args) {
         MediaStatsFragment fragment = new MediaStatsFragment();
@@ -71,6 +66,10 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mediaId = getArguments().getLong(KeyUtils.arg_id);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+        }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
         setPresenter(new SeriesPresenter(getContext()));
         setViewModel(true);
@@ -91,6 +90,7 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
     @Override
     public void onStart() {
         super.onStart();
+        makeRequest();
     }
 
     /**
@@ -105,13 +105,14 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
                 @Override
                 public void onItemClick(View target, MediaRank data) {
                     Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                    Bundle args = ParamBuilderUtil.Builder()
-                            .setSeries_type(model.getSeries_type())
-                            .setSeason(data.getSeason())
-                            .setYear(data.getYear())
-                            .setSeries_show_type(data.getFormat())
-                            .build();
+                    Bundle args = new Bundle();
+                    args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                            .putVariable(KeyUtils.arg_type, mediaType)
+                            .putVariable(KeyUtils.arg_season, data.getSeason())
+                            .putVariable(KeyUtils.arg_seasonYear, data.getYear())
+                            .putVariable(KeyUtils.arg_format, data.getFormat()));
                     args.putString(KeyUtils.arg_activity_tag, data.getTypeHtmlPlainTitle());
+                    args.putBoolean(KeyUtils.arg_media_compact, true);
                     intent.putExtras(args);
                     startActivity(intent);
                 }
@@ -141,7 +142,7 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
             });
         }
         binding.linksRecycler.setAdapter(linkAdapter);  binding.stateLayout.showContent();
-        showRingStats(); showScoreDistribution(); showAiringScoreCorrelation();
+        showStatusDistribution(); showScoreDistribution();
     }
 
     /**
@@ -149,17 +150,19 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
      */
     @Override
     public void makeRequest() {
-        updateUI();
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, mediaId)
+                .putVariable(KeyUtils.arg_type, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_STATS_REQ, getContext());
     }
 
     private void showScoreDistribution() {
-        if(model.getScore_distribution() != null && !model.getScore_distribution().isEmpty()) {
-            List<Map.Entry<Integer, Float>> scoreDist = Stream.of(model.getScore_distribution().entrySet())
-                    .sorted((o1, o2) -> o1.getKey() > o2.getKey() ? 1 : -1).toList();
+        if(model.getStats() != null && model.getStats().getScoreDistribution() != null) {
 
-            configureScoreDistribution(scoreDist);
+            configureScoreDistribution(model.getStats().getScoreDistribution());
 
-            BarDataSet barDataSet = new BarDataSet(getPresenter().getSeriesScoreDistribution(scoreDist), getString(R.string.title_score_distribution));
+            BarDataSet barDataSet = new BarDataSet(getPresenter().getSeriesScoreDistribution(model.getStats().getScoreDistribution()), getString(R.string.title_score_distribution));
             barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 253);
             barDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
             BarData barData = new BarData(barDataSet);
@@ -171,45 +174,12 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
         }
     }
 
-    private void showAiringScoreCorrelation() {
-        if(model.getAiring_stats() != null && !model.getAiring_stats().isEmpty()) {
-            List<Map.Entry<String, Map<String, Float>>> scoreCorrelation = Stream.of(model.getAiring_stats().entrySet()).toList();
+    private void showStatusDistribution() {
+        if(model.getStats() != null && model.getStats().getStatusDistribution() != null) {
 
-            configureAiringScoreCorrelation(model.getAiring_stats());
-
-            List<List<Entry>> correlation = getPresenter().getSeriesAiringCorrelation(scoreCorrelation);
-
-            List<ILineDataSet> dataSets = new ArrayList<>();
-
-            LineDataSet scoreDataSet = new LineDataSet(correlation.get(0), getString(R.string.title_score));
-            scoreDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            scoreDataSet.setHighLightColor(CompatUtil.getColor(getContext(), R.color.colorStateGreen));
-            scoreDataSet.setCircleColor(CompatUtil.getColor(getContext(), R.color.colorStateGreen));
-            scoreDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
-            dataSets.add(scoreDataSet);
-
-            LineDataSet watchingDataSet = new LineDataSet(correlation.get(1), getString(R.string.title_watching));
-            watchingDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-            watchingDataSet.setHighLightColor(CompatUtil.getColor(getContext(), R.color.colorStateBlue));
-            watchingDataSet.setCircleColor(CompatUtil.getColor(getContext(), R.color.colorStateBlue));
-            watchingDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
-            dataSets.add(watchingDataSet);
-
-            LineData data = new LineData(dataSets);
-            binding.seriesAiringCorrelation.setData(data);
-            binding.seriesAiringCorrelation.invalidate();
-        }
-    }
-
-    private void showRingStats() {
-        if(model.getList_stats() != null && !model.getList_stats().isEmpty()) {
             configureSeriesStats();
 
-            List<Map.Entry<String, Float>> seriesStats = Stream.of(model.getList_stats())
-                    .sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
-                    .toList();
-
-            List<PieEntry> pieEntries = getPresenter().getSeriesStats(seriesStats);
+            List<PieEntry> pieEntries = getPresenter().getSeriesStats(model.getStats().getStatusDistribution());
             PieDataSet pieDataSet = new PieDataSet(pieEntries, getString(R.string.title_series_stats));
             pieDataSet.setSliceSpace(3f);
             pieDataSet.setColors(Color.parseColor("#6fc1ea"), Color.parseColor("#48c76d"),
@@ -232,30 +202,21 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
      */
     @Override
     public void onChanged(@Nullable Media model) {
-
+        if(model != null) {
+            this.model = model;
+            updateUI();
+        } else
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateOrange),
+                    getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 
-    /**
-     * Responds to published events, be sure to add subscribe annotation
-     *
-     * @param param passed event
-     * @see Subscribe
-     */
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Media param) {
-        if(model == null) {
-            model = param;
-            makeRequest();
-        }
-    }
-
-    private void configureScoreDistribution(List<Map.Entry<Integer, Float>> scoreDistribution) {
+    private void configureScoreDistribution(List<ScoreDistribution> scoreDistribution) {
         binding.seriesScoreDist.getDescription().setEnabled(false);
         binding.seriesScoreDist.setDrawGridBackground(false);
         binding.seriesScoreDist.setDrawBarShadow(false);
 
         List<Integer> mapKeys = Stream.of(scoreDistribution)
-                .map(Map.Entry::getKey)
+                .map(ScoreDistribution::getAmount)
                 .toList();
 
         new ChartUtil.StepXAxisFormatter<Integer>()
@@ -266,23 +227,6 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
         new ChartUtil.StepYAxisFormatter()
                 .setChartBase(binding.seriesScoreDist)
                 .build();
-    }
-
-    private void configureAiringScoreCorrelation(Map<String, Map<String, Float>> scoreCorrelation) {
-        binding.seriesAiringCorrelation.getDescription().setEnabled(false);
-        binding.seriesAiringCorrelation.setDrawGridBackground(false);
-        List<String> mapKeys = Stream.of(scoreCorrelation)
-                .map(Map.Entry::getKey)
-                .toList();
-
-        new ChartUtil.StepXAxisFormatter<String>()
-                .setDataModel(mapKeys)
-                .setChartBase(binding.seriesAiringCorrelation)
-                .build();
-
-        /*new ChartUtil.StepYAxisFormatter()
-                .setChartBase(binding.seriesAiringCorrelation)
-                .build();*/
     }
 
     private void configureSeriesStats() {

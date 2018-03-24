@@ -15,7 +15,10 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
+import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
 import com.mxt.anitrend.model.entity.base.StudioBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -35,117 +38,84 @@ public class SeriesPresenter extends CommonPresenter {
         super(context);
     }
 
-    public Spanned getHashTag(Media series) {
-        if(series != null && !TextUtils.isEmpty(series.getHashtag()))
+    public Spanned getHashTag(Media media) {
+        if(media != null && !TextUtils.isEmpty(media.getHashtag()))
             return Html.fromHtml(String.format("<a href=\"https://twitter.com/search?q=%%23%s&src=typd\">%s</a>",
-                    series.getHashtag().replace("#", ""), series.getHashtag()));
+                    media.getHashtag().replace("#", ""), media.getHashtag()));
         return Html.fromHtml(getContext().getString(R.string.TBA));
     }
 
-    public String getMainStudio(Media series) {
-        if(series != null) {
-           Optional<StudioBase> result = Stream.of(series.getStudio())
-                    .filter(model -> model.getMain_studio() == 1)
-                    .findFirst();
+    public String getMainStudio(Media media) {
+        if(media != null) {
+           Optional<StudioBase> result = Stream.of(media.getStudios())
+                   .map(ConnectionContainer::getConnection)
+                   .findFirst();
            if(result.isPresent())
                return result.get().getName();
         }
         return getContext().getString(R.string.TBA);
     }
 
-    public List<PieEntry> getSeriesStats(List<Map.Entry<String, Float>> model) {
-        List<PieEntry> entries = new ArrayList<>(model.size());
-        Float maximum = getMaximumOf(model);
+    public List<PieEntry> getSeriesStats(List<StatusDistribution> statusDistribution) {
+        int highestStatus = Stream.of(statusDistribution)
+                .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
+                .get().getAmount();
 
-        List<Map.Entry<String, Float>> mapEntry = Stream.of(model).toList();
+        List<PieEntry> entries = Stream.of(statusDistribution)
+                .map(st -> new PieEntry((((st.getAmount()) / (highestStatus)) * 100), CompatUtil.capitalizeWords(st.getStatus())))
+                .toList();
 
-        for (Map.Entry<String, Float> entry: mapEntry) {
-            float percentage = ((entry.getValue()) / ((float)maximum)) * 100f;
-            String key = entry.getKey().replace("_", " ");
-            entries.add(new PieEntry(percentage, CompatUtil.capitalizeWords(key)));
-        }
         return entries;
     }
 
-    public List<BarEntry> getSeriesScoreDistribution(List<Map.Entry<Integer, Float>> model) {
-        List<BarEntry> results = new ArrayList<>();
-        if(model != null) {
-            float index = 0f;
-            for (Map.Entry<Integer, Float> entry: model) {
-                results.add(new BarEntry(index, entry.getValue()));
-                index++;
-            }
-        }
+    public List<BarEntry> getSeriesScoreDistribution(List<ScoreDistribution> scoreDistribution) {
+        List<BarEntry> results = Stream.of(scoreDistribution)
+                .map(sc -> new BarEntry(sc.getAmount(), sc.getScore()))
+                .toList();
+
         return results;
     }
 
-    public List<List<Entry>> getSeriesAiringCorrelation(List<Map.Entry<String, Map<String, Float>>> model) {
-        List<List<Entry>> results = new ArrayList<>();
-        if(model != null) {
-            List<Entry> score = new ArrayList<>();
-            List<Entry> watching = new ArrayList<>();
-            float index = 0f;
-            for (Map.Entry<String, Map<String, Float>> entry : model) {
-                score.add(new Entry(index, entry.getValue().get("score")));
-                watching.add(new Entry(index, entry.getValue().get("watching")));
-                index += 0.5f;
-            }
-            results.add(score);
-            results.add(watching);
-        }
-        return results;
-    }
-
-    private Float getMaximumOf(List<Map.Entry<String, Float>> map) {
-        return Stream.of(map)
-                .max((o1, o2) -> o1.getValue() > o2.getValue() ? 1:-1)
-                .get().getValue();
-    }
-
-    public String getEpisodeDuration(Media series) {
-        if(series != null && series.getDuration() > 0)
-            getContext().getString(R.string.text_anime_length, series.getDuration());
+    public String getEpisodeDuration(Media media) {
+        if(media != null && media.getDuration() > 0)
+            getContext().getString(R.string.text_anime_length, media.getDuration());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getSeriesSeason(Media series) {
-        if(series != null && series.getStart_date_fuzzy() > 0)
-            return DateUtil.getSeriesSeason(series.getStart_date_fuzzy());
+    public String getSeriesSeason(Media media) {
+        if(media != null && media.getStartDate() != null)
+            return DateUtil.getSeriesSeason(media.getStartDate());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getSeriesStatus(Media series) {
-        if(series != null && (!TextUtils.isEmpty(series.getAiring_status()) || !TextUtils.isEmpty(series.getPublishing_status()))) {
-            if (series.getSeries_type().equals(KeyUtils.SeriesTypes[KeyUtils.ANIME])) {
-                return CompatUtil.capitalizeWords(series.getAiring_status());
-            }
-            return CompatUtil.capitalizeWords(series.getPublishing_status());
-        }
+    public String getSeriesStatus(Media media) {
+        if(media != null && (!TextUtils.isEmpty(media.getStatus())))
+            return CompatUtil.capitalizeWords(media.getStatus());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getEpisodeCount(Media series) {
-        if(series != null && series.getTotal_episodes() > 0)
-            return getContext().getString(R.string.text_anime_episodes, series.getTotal_episodes());
+    public String getEpisodeCount(Media media) {
+        if(media != null && media.getEpisodes() > 0)
+            return getContext().getString(R.string.text_anime_episodes, media.getEpisodes());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getVolumeCount(Media series) {
-        if(series != null && series.getTotal_volumes() > 0)
-            return getContext().getString(R.string.text_manga_volumes, series.getTotal_volumes());
+    public String getVolumeCount(Media media) {
+        if(media != null && media.getVolumes() > 0)
+            return getContext().getString(R.string.text_manga_volumes, media.getVolumes());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getChapterCount(Media series) {
-        if(series != null && series.getTotal_chapters() > 0)
-            return getContext().getString(R.string.text_manga_chapters, series.getTotal_chapters());
+    public String getChapterCount(Media media) {
+        if(media != null && media.getChapters() > 0)
+            return getContext().getString(R.string.text_manga_chapters, media.getChapters());
         return getContext().getString(R.string.TBA);
     }
 
-    public List<Genre> buildGenres(Media series) {
+    public List<Genre> buildGenres(Media media) {
         List<Genre> genres = new ArrayList<>();
-        if(series != null && series.getGenres() != null) {
-            for (String genre: series.getGenres()) {
+        if(media != null && media.getGenres() != null) {
+            for (String genre: media.getGenres()) {
                 if(!TextUtils.isEmpty(genre))
                     genres.add(new Genre(genre));
                 else
@@ -155,14 +125,14 @@ public class SeriesPresenter extends CommonPresenter {
         return genres;
     }
 
-    public int isAnime(Media series) {
-        if(MediaUtil.isAnimeType(series))
+    public int isAnime(Media media) {
+        if(MediaUtil.isAnimeType(media))
             return View.VISIBLE;
         return View.GONE;
     }
 
-    public int isManga(Media series) {
-        if(MediaUtil.isMangaType(series))
+    public int isManga(Media media) {
+        if(MediaUtil.isMangaType(media))
             return View.VISIBLE;
         return View.GONE;
     }

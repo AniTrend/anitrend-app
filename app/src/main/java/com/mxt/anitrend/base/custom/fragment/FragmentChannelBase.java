@@ -21,11 +21,13 @@ import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.crunchy.Channel;
 import com.mxt.anitrend.model.entity.crunchy.Episode;
 import com.mxt.anitrend.model.entity.crunchy.Rss;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.EpisodeHelper;
@@ -47,7 +49,7 @@ import butterknife.ButterKnife;
  * Created by max on 2017/11/04.
  */
 
-public abstract class FragmentChannelBase extends FragmentBase<Channel, BasePresenter, Rss> implements RecyclerLoadListener,
+public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPresenter<ConnectionContainer<List<ExternalLink>>>, Rss> implements RecyclerLoadListener,
         CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
@@ -319,19 +321,6 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, BasePres
             showEmpty(getString(R.string.layout_empty_response));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Media param) {
-        if(isAlive() && externalLinks == null) {
-            externalLinks = param.getExternalLinks();
-            if(model == null && externalLinks != null)
-                targetLink = EpisodeHelper.episodeSupport(externalLinks);
-            if (targetLink == null)
-                showEmpty(getString(R.string.waring_missing_episode_links));
-            else
-                makeRequest();
-        }
-    }
-
     /**
      * Called when the model state is changed.
      *
@@ -365,7 +354,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, BasePres
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtils.arg_search_query, EpisodeHelper.getActualTile(data.getTitle()));
+                                            intent.putExtra(KeyUtils.arg_searchQuery, EpisodeHelper.getActualTile(data.getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;

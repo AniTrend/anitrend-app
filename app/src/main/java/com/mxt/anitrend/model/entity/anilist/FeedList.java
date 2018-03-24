@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
@@ -23,8 +22,8 @@ public class FeedList implements Parcelable {
     @SerializedName(value = "progress", alternate = {"message"})
     private String value;
     private String createdAt;
-    private List<UserBase> users;
-    private MediaBase series;
+    private UserBase user;
+    private MediaBase media;
     private UserBase messenger;
     private UserBase recipient;
     private List<UserBase> likes;
@@ -38,8 +37,8 @@ public class FeedList implements Parcelable {
         status = in.readString();
         value = in.readString();
         createdAt = in.readString();
-        users = in.createTypedArrayList(UserBase.CREATOR);
-        series = in.readParcelable(MediaBase.class.getClassLoader());
+        user = in.readParcelable(UserBase.class.getClassLoader());
+        media = in.readParcelable(MediaBase.class.getClassLoader());
         messenger = in.readParcelable(UserBase.class.getClassLoader());
         recipient = in.readParcelable(UserBase.class.getClassLoader());
         likes = in.createTypedArrayList(UserBase.CREATOR);
@@ -54,8 +53,8 @@ public class FeedList implements Parcelable {
         dest.writeString(status);
         dest.writeString(value);
         dest.writeString(createdAt);
-        dest.writeTypedList(users);
-        dest.writeParcelable(series, flags);
+        dest.writeParcelable(user, flags);
+        dest.writeParcelable(media, flags);
         dest.writeParcelable(messenger, flags);
         dest.writeParcelable(recipient, flags);
         dest.writeTypedList(likes);
@@ -103,12 +102,12 @@ public class FeedList implements Parcelable {
         return createdAt;
     }
 
-    public List<UserBase> getUsers() {
-        return users;
+    public UserBase getUser() {
+        return user;
     }
 
-    public MediaBase getSeries() {
-        return series;
+    public MediaBase getMedia() {
+        return media;
     }
 
     public UserBase getMessenger() {

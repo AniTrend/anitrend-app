@@ -16,9 +16,11 @@ import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentUserAboutBinding;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.StatsRing;
-import com.mxt.anitrend.presenter.activity.ProfilePresenter;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ComparatorProvider;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
@@ -39,20 +41,31 @@ import butterknife.OnClick;
  * about user fragment for the profile
  */
 
-public class UserAboutFragment extends FragmentBase<User, ProfilePresenter, User> implements PublisherListener<User> {
+public class UserAboutFragment extends FragmentBase<User, BasePresenter, User> {
 
     private FragmentUserAboutBinding binding;
     private User model;
 
-    public static UserAboutFragment newInstance() {
-        return new UserAboutFragment();
+    private long userId;
+    private String userName;
+
+    private QueryContainerBuilder queryContainer;
+
+    public static UserAboutFragment newInstance(Bundle args) {
+        UserAboutFragment fragment = new UserAboutFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userId = getArguments().getLong(KeyUtils.arg_id);
+            userName = getArguments().getString(KeyUtils.arg_userName);
+        }
         isMenuDisabled = true;
-        setPresenter(new ProfilePresenter(getContext()));
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -82,6 +95,12 @@ public class UserAboutFragment extends FragmentBase<User, ProfilePresenter, User
         return binding.getRoot();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        makeRequest();
+    }
+
     /**
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
@@ -102,14 +121,11 @@ public class UserAboutFragment extends FragmentBase<User, ProfilePresenter, User
      */
     @Override
     public void makeRequest() {
-
-    }
-
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(User param) {
-        if(model == null)
-            model = param;
-        updateUI();
+        queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_userName, userName)
+                .putVariable(KeyUtils.arg_id, userId);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.USER_OVERVIEW_REQ, getContext());
     }
 
     /**
@@ -119,7 +135,12 @@ public class UserAboutFragment extends FragmentBase<User, ProfilePresenter, User
      */
     @Override
     public void onChanged(@Nullable User model) {
-
+        if(model != null) {
+            this.model = model;
+            updateUI();
+        } else
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateOrange),
+                    getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 
     /**

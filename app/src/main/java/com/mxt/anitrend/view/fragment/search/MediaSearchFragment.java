@@ -34,7 +34,7 @@ public class MediaSearchFragment extends FragmentBaseList<EntityGroup, PageConta
 
     public static MediaSearchFragment newInstance(Bundle bundle, @KeyUtils.MediaType String seriesType) {
         Bundle args = new Bundle(bundle);
-        args.putString(KeyUtils.arg_media_type, seriesType);
+        args.putString(KeyUtils.arg_mediaType, seriesType);
         MediaSearchFragment fragment = new MediaSearchFragment();
         fragment.setArguments(args);
         return fragment;
@@ -49,8 +49,8 @@ public class MediaSearchFragment extends FragmentBaseList<EntityGroup, PageConta
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            searchQuery = getArguments().getString(KeyUtils.arg_search_query);
-            mediaType = getArguments().getString(KeyUtils.arg_media_type);
+            searchQuery = getArguments().getString(KeyUtils.arg_searchQuery);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         }
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
@@ -75,7 +75,7 @@ public class MediaSearchFragment extends FragmentBaseList<EntityGroup, PageConta
         if(TextUtils.isEmpty(searchQuery))
             return;
         QueryContainer queryContainer = GraphUtil.getDefaultQuery(true)
-                .setVariable(KeyUtils.arg_search_query, searchQuery)
+                .setVariable(KeyUtils.arg_searchQuery, searchQuery)
                 .setVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
                 .setVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
@@ -95,7 +95,7 @@ public class MediaSearchFragment extends FragmentBaseList<EntityGroup, PageConta
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_media_type, ((MediaBase)data).getType());
+                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
