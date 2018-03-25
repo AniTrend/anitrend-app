@@ -85,4 +85,11 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     public void setRead(boolean read) {
         this.read = read;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof NotificationBase)
+            return ((NotificationBase)obj).getId() == id;
+        return super.equals(obj);
+    }
 }

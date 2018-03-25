@@ -1,4 +1,4 @@
-query CurrentUser($asHtml: Boolean = true) {
+query CurrentUser($asHtml: Boolean = false) {
   Viewer {
     ... on User {
       id
@@ -26,6 +26,14 @@ query CurrentUser($asHtml: Boolean = true) {
             ... on StatusDistribution {
               status
               amount
+            }
+          }
+          favouredGenresOverview {
+            ... on GenreStats {
+              genre
+              amount
+              meanScore
+              timeWatched
             }
           }
         }

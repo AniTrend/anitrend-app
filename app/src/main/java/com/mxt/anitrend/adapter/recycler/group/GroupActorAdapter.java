@@ -26,6 +26,7 @@ import butterknife.OnLongClick;
 /**
  * Created by max on 2018/03/23.
  * Character Actor Adapter
+ * todo rework this fragment to present data correctly
  */
 
 public class GroupActorAdapter extends RecyclerViewAdapter<EntityGroup> {

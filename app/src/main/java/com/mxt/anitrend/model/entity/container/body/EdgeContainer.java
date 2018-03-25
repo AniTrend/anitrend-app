@@ -9,11 +9,11 @@ import java.util.List;
  * T - Relation type
  * V - Data model
 */
-public class EdgeContainer<T, V> extends Container {
+public class EdgeContainer<T extends Edge> extends Container {
 
-    private List<Edge<T, V>> edges;
+    private List<T> edges;
 
-    public List<Edge<T, V>> getEdges() {
+    public List<T> getEdges() {
         return edges;
     }
 

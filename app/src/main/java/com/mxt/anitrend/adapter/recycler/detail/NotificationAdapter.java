@@ -12,12 +12,13 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.base.custom.view.image.AspectImageView;
 import com.mxt.anitrend.databinding.AdapterNotificationBinding;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
-import com.mxt.anitrend.model.entity.base.NotificationBase_;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -84,76 +85,64 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
             else
                 binding.notificationIndicator.setVisibility(View.VISIBLE);
 
-            binding.notificationTime.setText(model.getCreated_at());
+            binding.notificationTime.setText(model.getCreatedAt());
 
-            if(model.getObject_type() != KeyUtils.NOTIFICATION_AIRING)
-                AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar());
+            if(!Objects.equals(model.getType(), KeyUtils.AIRING))
+                AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar().getLarge());
             else
-                AspectImageView.setImage(binding.notificationImg, model.getSeries().getImage_url_lge());
+                AspectImageView.setImage(binding.notificationImg, model.getMedia().getCoverImage().getLarge());
 
-            switch (model.getObject_type()) {
-                case KeyUtils.NOTIFICATION_AIRING:
-                    binding.notificationSubject.setText(R.string.notification_series);
-                    binding.notificationHeader.setText(model.getSeries().getTitle_romaji());
-                    binding.notificationContent.setText(context.getString(R.string.notification_episode, model.getMeta_data(), model.getSeries().getTitle_english()));
-                    break;
-                case KeyUtils.NOTIFICATION_COMMENT_FORUM:
-                    binding.notificationSubject.setText(R.string.notification_user_comment_forum);
-                    binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(model.getComment().getComment());
-                    break;
-                case KeyUtils.NOTIFICATION_LIKE_FORUM:
-                    binding.notificationSubject.setText(R.string.notification_user_like_forum);
-                    binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
-                    break;
-                case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:
-                    binding.notificationSubject.setText(R.string.notification_user_like_activity);
-                    binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
-                    break;
-                case KeyUtils.NOTIFICATION_REPLY_ACTIVITY:
-                    binding.notificationSubject.setText(R.string.notification_user_reply_activity);
-                    binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
-                    break;
-                case KeyUtils.NOTIFICATION_REPLY_FORUM:
-                    binding.notificationSubject.setText(R.string.notification_user_reply_forum);
-                    binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getComment().getComment()));
-                    break;
-                case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
-                    binding.notificationSubject.setText(R.string.notification_user_follow_activity);
-                    binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
-                    break;
-                case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
+            switch (model.getType()) {
+                case KeyUtils.ACTIVITY_MESSAGE:
                     binding.notificationSubject.setText(R.string.notification_user_activity_message);
                     binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
+                    binding.notificationContent.setText(model.getContext());
                     break;
-                case KeyUtils.NOTIFICATION_LIKE_ACTIVITY_REPLY:
-                    binding.notificationSubject.setText(R.string.notification_user_like_activity);
+                case KeyUtils.FOLLOWING:
+                    binding.notificationSubject.setText(R.string.notification_user_follow_activity);
                     binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
+                    binding.notificationContent.setText(model.getContext());
                     break;
-                case KeyUtils.NOTIFICATION_MENTION_ACTIVITY:
+                case KeyUtils.THREAD_COMMENT_MENTION:
                     binding.notificationSubject.setText(R.string.notification_user_activity_mention);
                     binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
+                    binding.notificationContent.setText(model.getContext());
                     break;
-                case KeyUtils.NOTIFICATION_LIKE_FORUM_COMMENT:
+                case KeyUtils.THREAD_SUBSCRIBED:
+                    binding.notificationSubject.setText(R.string.notification_default);
+                    binding.notificationHeader.setText(model.getUser().getName());
+                    binding.notificationContent.setText(model.getContext());
+                    break;
+                case KeyUtils.THREAD_COMMENT_REPLY:
+                    binding.notificationSubject.setText(R.string.notification_user_comment_forum);
+                    binding.notificationHeader.setText(model.getUser().getName());
+                    binding.notificationContent.setText(model.getContext());
+                    break;
+                case KeyUtils.AIRING:
+                    binding.notificationSubject.setText(R.string.notification_series);
+                    binding.notificationHeader.setText(model.getMedia().getTitle().getUserPreferred());
+                    binding.notificationContent.setText(context.getString(R.string.notification_episode,
+                            String.valueOf(model.getEpisodes()), model.getMedia().getTitle().getUserPreferred()));
+                    break;
+                case KeyUtils.ACTIVITY_LIKE:
+                    binding.notificationSubject.setText(R.string.notification_user_like_activity);
+                    binding.notificationHeader.setText(model.getUser().getName());
+                    binding.notificationContent.setText(model.getContext());
+                    break;
+                case KeyUtils.ACTIVITY_REPLY_LIKE:
+                    binding.notificationSubject.setText(R.string.notification_user_like_forum);
+                    binding.notificationHeader.setText(model.getUser().getName());
+                    binding.notificationContent.setText(model.getContext());
+                    break;
+                case KeyUtils.THREAD_LIKE:
+                    binding.notificationSubject.setText(R.string.notification_user_like_activity);
+                    binding.notificationHeader.setText(model.getUser().getName());
+                    binding.notificationContent.setText(model.getContext());
+                    break;
+                case KeyUtils.THREAD_COMMENT_LIKE:
                     binding.notificationSubject.setText(R.string.notification_user_like_comment);
                     binding.notificationHeader.setText(model.getUser().getName());
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
-                    break;
-                default:
-                    binding.notificationSubject.setText(R.string.notification_default);
-                    if(model.getUser() != null)
-                        binding.notificationHeader.setText(model.getUser().getName());
-                    else
-                        binding.notificationHeader.setText(R.string.notification_default);
-                    binding.notificationContent.setText(String.format("%s", model.getMeta_data()));
+                    binding.notificationContent.setText(model.getContext());
                     break;
             }
             binding.executePendingBindings();

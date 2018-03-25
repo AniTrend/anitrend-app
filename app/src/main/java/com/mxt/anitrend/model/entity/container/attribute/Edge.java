@@ -1,24 +1,15 @@
 package com.mxt.anitrend.model.entity.container.attribute;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
- * Edge attribute item with type and value
- * T - Type of relation for the edge
- * V - Type of the model
+ * Created by max on 2018/03/25.
+ * Base or common type of edge
  */
-public class Edge<T, V> {
 
-    @SerializedName(value = "role", alternate = {"staffRole", "relationType", "voiceActors"})
-    private T type;
-    @SerializedName(value = "media", alternate = "node")
-    private V value;
+public class Edge<T> {
 
-    public T getType() {
-        return type;
-    }
+    private T node;
 
-    public V getValue() {
-        return value;
+    public T getNode() {
+        return node;
     }
 }

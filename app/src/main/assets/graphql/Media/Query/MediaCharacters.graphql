@@ -32,6 +32,18 @@ query MediaCharacters($id: Int!, $type: MediaType, $isAdult: Boolean = false, $p
                 isFavourite
               }
             }
+			voiceActors {
+				... on Staff {
+					id
+					name {
+						first
+						last
+						native
+					}
+					language
+					isFavourite
+				}
+			}
           }
         }
       }

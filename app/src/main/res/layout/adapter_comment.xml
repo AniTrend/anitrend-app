@@ -30,7 +30,7 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="@dimen/avatar_ripple_radius"
                     android:layout_height="@dimen/avatar_ripple_radius"
-                    app:avatarUrl="@{model.user.image_url_med}"
+                    app:avatarUrl="@{model.user.avatar}"
                     tools:src="@drawable/ic_player" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -51,7 +51,7 @@
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
                     android:text="@{model.createdAt}"
-                    tools:text="Oct 28 2017" />
+                    tools:text="20 mintus ago" />
 
             </LinearLayout>
 

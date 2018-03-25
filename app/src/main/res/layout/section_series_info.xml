@@ -20,7 +20,7 @@
             android:foreground="?selectableItemBackground"
             android:layout_width="@dimen/series_image_md"
             android:layout_height="wrap_content"
-            app:imageUrl="@{model.avatar}"
+            app:imageUrl="@{model.coverImage}"
             tools:src="@drawable/sample_img"/>
 
         <android.support.v4.widget.Space
@@ -38,7 +38,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textStyle="bold"
-                android:text="@{model.title_romaji}"
+                android:text="@{model.title.romaji}"
                 tools:text="Gintama, Gin Tama, Silver Soul, Yorinuki Gintama-san"/>
 
             <android.support.v4.widget.Space
@@ -63,7 +63,7 @@
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{model.title_english}"
+                android:text="@{model.title.english}"
                 android:fontFamily="sans-serif-light"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="@{model.type}"
+                android:text="@{presenter.getSeriesFormat(model)}"
                 tools:text="TV"/>
 
             <android.support.v4.widget.Space
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                app:startDate="@{model.start_date_fuzzy}"
+                app:startDate="@{model.startDate}"
                 tools:text="Started: 2017/09/30"/>
 
             <android.support.v4.widget.Space
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                app:endDate="@{model.end_date_fuzzy}"
+                app:endDate="@{model.endDate}"
                 tools:text="Ended: 2017/10/30"/>
 
         </LinearLayout>

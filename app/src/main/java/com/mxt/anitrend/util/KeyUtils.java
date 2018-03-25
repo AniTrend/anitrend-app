@@ -164,7 +164,7 @@ public interface KeyUtils {
     // User Model Requests
     USER_FAVOURITES_COUNT_REQ = 40, USER_ANIME_FAVOURITES_REQ = 41, USER_MANGA_FAVOURITES_REQ = 42, USER_CHARACTER_FAVOURITES_REQ = 43,
     USER_STAFF_FAVOURITES_REQ = 44, USER_STUDIO_FAVOURITES_REQ = 45, USER_CURRENT_REQ = 46, USER_BASE_REQ = 47, USER_STATS_REQ = 48,
-    USER_OVERVIEW_REQ = 49, USER_FOLLOWING_REQ = 50, USER_FOLLOWERS_REQ = 51,
+    USER_OVERVIEW_REQ = 49, USER_FOLLOWING_REQ = 50, USER_FOLLOWERS_REQ = 51, USER_NOTIFICATION_REQ = 66,
 
     // Mutation Requests
     MUT_TOGGLE_LIKE = 52, MUT_TOGGLE_FAVOURITE = 53, MUT_SAVE_MEDIA_LIST = 54, MUT_UPDATE_MEDIA_LISTS = 55, MUT_DELETE_MEDIA_LIST = 56,
@@ -192,7 +192,7 @@ public interface KeyUtils {
 
             USER_FAVOURITES_COUNT_REQ, USER_ANIME_FAVOURITES_REQ, USER_MANGA_FAVOURITES_REQ, USER_CHARACTER_FAVOURITES_REQ,
             USER_STAFF_FAVOURITES_REQ, USER_STUDIO_FAVOURITES_REQ, USER_CURRENT_REQ, USER_BASE_REQ, USER_STATS_REQ,
-            USER_OVERVIEW_REQ, USER_FOLLOWING_REQ, USER_FOLLOWERS_REQ,
+            USER_OVERVIEW_REQ, USER_FOLLOWING_REQ, USER_FOLLOWERS_REQ, USER_NOTIFICATION_REQ,
 
             MUT_TOGGLE_LIKE, MUT_TOGGLE_FAVOURITE, MUT_SAVE_MEDIA_LIST, MUT_UPDATE_MEDIA_LISTS, MUT_DELETE_MEDIA_LIST,
             MUT_RATE_REVIEW, MUT_SAVE_REVIEW, MUT_DELETE_REVIEW, MUT_TOGGLE_FOLLOW, MUT_SAVE_TEXT_FEED,
@@ -414,6 +414,28 @@ public interface KeyUtils {
     @interface NotificationType {}
 
     // ------------------------------------------------------------------------------------
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Edge Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String MAIN = "MAIN", SUPPORTING = "SUPPORTING", BACKGROUND = "BACKGROUND";
+
+    @StringDef({MAIN, SUPPORTING, BACKGROUND})
+    @interface CharacterRole {}
+
+
+    String ADAPTATION = "ADAPTATION", PREQUEL = "PREQUEL", SEQUEL = "SEQUEL", PARENT = "PARENT",
+            SIDE_STORY = "SIDE_STORY", CHARACTER = "CHARACTER", SUMMARY = "SUMMARY",
+            ALTERNATIVE = "ALTERNATIVE", SPIN_OFF = "SPIN_OFF";
+
+    @StringDef({ADAPTATION, PREQUEL, SEQUEL, PARENT, SIDE_STORY, CHARACTER, SUMMARY, ALTERNATIVE, SPIN_OFF, OTHER})
+    @interface MediaRelation {}
+
+    // ------------------------------------------------------------------------------------
+
 
 
     /** Alerter Durations */

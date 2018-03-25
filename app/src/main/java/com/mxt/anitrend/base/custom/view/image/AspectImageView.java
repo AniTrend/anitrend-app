@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
@@ -73,6 +74,14 @@ public class AspectImageView extends android.support.v7.widget.AppCompatImageVie
     @BindingAdapter({"imageUrl"})
     public static void setImage(AspectImageView view, String url) {
         Glide.with(view.getContext()).load(url)
+                .transition(DrawableTransitionOptions.withCrossFade(350))
+                .apply(RequestOptions.centerCropTransform())
+                .into(view);
+    }
+
+    @BindingAdapter({"imageUrl"})
+    public static void setImage(AspectImageView view, ImageBase imageBase) {
+        Glide.with(view.getContext()).load(imageBase.getLarge())
                 .transition(DrawableTransitionOptions.withCrossFade(350))
                 .apply(RequestOptions.centerCropTransform())
                 .into(view);

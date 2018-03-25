@@ -1,4 +1,4 @@
-query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort]) {
+query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort] = CREATED_AT_DESC) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {

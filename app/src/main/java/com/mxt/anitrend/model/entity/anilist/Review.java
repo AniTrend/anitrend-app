@@ -112,8 +112,8 @@ public class Review implements Parcelable {
         return isPrivate;
     }
 
-    public long getCreatedAt() {
-        return createdAt;
+    public String getCreatedAt() {
+        return DateUtil.convertLongDate(createdAt);
     }
 
     public UserBase getUser() {

@@ -6,11 +6,13 @@ import android.text.TextUtils;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
-import com.mxt.anitrend.model.entity.container.attribute.Edge;
+import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.model.entity.group.EntityHeader;
+import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -81,56 +83,24 @@ public class GroupingUtil {
     }
 
     /**
-     * Groups edge container items by the type/key of the object, this collection is preset to sort by ROLE or similar
-     * @see com.mxt.anitrend.model.entity.container.body.EdgeContainer
-     * <br/>
-     *
-     * @param edgeList The potential external model response which needs to be grouped
-     * @param entityGroups The current model item/s containing all data minus current mediaItems
-     */
-    public static <V extends EntityGroup> List<EntityGroup> groupItemsByKey(@NonNull List<Edge<String, V>> edgeList, @Nullable List<EntityGroup> entityGroups) {
-        List<EntityGroup> entityMap = new ArrayList<>();
-
-        LinkedHashMap<String, List<V>> map = new LinkedHashMap<>();
-        for (Edge<String, V> edge: edgeList) {
-            String key = edge.getType();
-            List<V> listItems;
-            if (map.containsKey(edge.getType())) {
-                listItems = map.get(key);
-                listItems.add(edge.getValue());
-            } else {
-                listItems = new ArrayList<>();
-                listItems.add(edge.getValue());
-                map.put(key, listItems);
-            }
-        }
-
-        for (Map.Entry<String, List<V>> entry: map.entrySet()) {
-            EntityHeader entityHeader = new EntityHeader(entry.getKey(), entry.getValue().size());
-            if(entityGroups == null || !entityGroups.contains(entityHeader))
-                entityMap.add(entityHeader);
-            entityMap.addAll(entry.getValue());
-        }
-        return entityMap;
-    }
-
-    /**
-     * Groups edge container items by the type/key of the object
-     * @see com.mxt.anitrend.model.entity.container.body.EdgeContainer
+     * Groups edge container items the media/node and the character role
+     * @see CharacterActorsFragment restricted and should only be used by this
+     * @see EdgeContainer
      * <br/>
      *
      * @param edges The potential external model response which needs to be grouped
      */
-    public static List<EntityGroup> groupActorMediaEdge(List<Edge<List<StaffBase>, MediaBase>> edges) {
+    public static List<EntityGroup> groupActorMediaEdge(List<MediaEdge> edges) {
         List<EntityGroup> entityMap = new ArrayList<>();
-        for (Edge<List<StaffBase>, MediaBase> edge : edges) {
-            if(edge.getValue() != null) {
-                edge.getValue().setContentType(KeyUtils.RECYCLER_TYPE_HEADER);
-                entityMap.add(edge.getValue());
+        for (MediaEdge edge : edges) {
+            if(edge.getNode() != null) {
+                if(!TextUtils.isEmpty(edge.getCharacterRole()))
+                    edge.getNode().setSubGroupTitle(edge.getCharacterRole());
+                edge.getNode().setContentType(KeyUtils.RECYCLER_TYPE_HEADER);
+                entityMap.add(edge.getNode());
             }
-            if(edge.getType() != null || !edge.getType().isEmpty()) {
-                entityMap.addAll(edge.getType());
-            }
+            if(!CompatUtil.isEmpty(edge.getVoiceActors()))
+                entityMap.addAll(edge.getVoiceActors());
         }
         return entityMap;
     }

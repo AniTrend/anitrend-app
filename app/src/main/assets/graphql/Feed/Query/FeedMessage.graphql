@@ -1,4 +1,4 @@
-query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int, $asHtml: Boolean = true) {
+query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int, $asHtml: Boolean = false) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {

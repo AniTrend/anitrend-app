@@ -1,4 +1,4 @@
-query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean = true, $userId: Int, $type: ActivityType, $isMixed: Boolean, $asHtml: Boolean = true) {
+query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean = true, $userId: Int, $type: ActivityType, $isMixed: Boolean, $asHtml: Boolean = false) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {

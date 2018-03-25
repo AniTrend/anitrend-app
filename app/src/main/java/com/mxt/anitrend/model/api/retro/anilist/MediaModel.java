@@ -4,6 +4,9 @@ import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge;
+import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
+import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
@@ -39,7 +42,7 @@ public interface MediaModel {
     @POST("/")
     @GraphQuery("MediaRelations")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, MediaBase>>> getMediaRelations(@Body QueryContainerBuilder request);
+    Call<ConnectionContainer<EdgeContainer<MediaEdge>>> getMediaRelations(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaStats")
@@ -54,12 +57,12 @@ public interface MediaModel {
     @POST("/")
     @GraphQuery("MediaCharacters")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, CharacterBase>>> getMediaCharacters(@Body QueryContainerBuilder request);
+    Call<ConnectionContainer<EdgeContainer<CharacterEdge>>> getMediaCharacters(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaStaff")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<String, StaffBase>>> getMediaStaff(@Body QueryContainerBuilder request);
+    Call<ConnectionContainer<EdgeContainer<StaffEdge>>> getMediaStaff(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaSocial")

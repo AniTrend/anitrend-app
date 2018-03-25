@@ -1,5 +1,5 @@
-query MediaBase($id: Int!, $isAdult: Boolean = false) {
-  Media(id: $id, isAdult: $isAdult) {
+query MediaBase($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
+  Media(id: $id, type: $type, isAdult: $isAdult) {
     ... on Media {
       id
       bannerImage

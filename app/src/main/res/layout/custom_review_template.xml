@@ -20,7 +20,7 @@
             <com.mxt.anitrend.base.custom.view.image.AvatarImageView
                 android:layout_width="@dimen/avatar_ripple_radius"
                 android:layout_height="@dimen/avatar_ripple_radius"
-                app:avatarUrl="@{model.user.image_url_med}"
+                app:avatarUrl="@{model.user.avatar}"
                 tools:src="@drawable/ic_player" />
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:textAlignment="viewEnd"
-                android:text="@{model.date}"
+                android:text="@{model.createdAt}"
                 tools:text="Oct 28 2017" />
 
         </LinearLayout>
@@ -96,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/SmallRating"
-                        app:averageScore="@{model.anime != null? model.anime.average_score : model.manga.average_score}"
+                        app:averageScore="@{model.media.averageScore}"
                         tools:rating="1"/>
 
                 </FrameLayout>
@@ -111,7 +111,7 @@
                 <com.mxt.anitrend.base.custom.view.image.AspectImageView
                     android:layout_width="@dimen/series_image_xs"
                     android:layout_height="match_parent"
-                    app:imageUrl="@{model.anime != null? model.anime.avatar : model.manga.avatar}"
+                    app:imageUrl="@{model.media.coverImage}"
                     tools:src="@drawable/sample_img" />
 
             </LinearLayout>

@@ -1,5 +1,5 @@
-query UserFavouriteCount($id: Int, $name: String, $page: Int, $perPage: Int) {
-  User(id: $id, name: $name) {
+query UserFavouriteCount($id: Int, $userName: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $userName) {
     favourites {
       ... on Favourites {
         anime(page: $page, perPage: $perPage) {

@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 
 /**
  * Created by max on 2017/10/29.
@@ -52,6 +53,15 @@ public class AvatarImageView extends AppCompatImageView implements CustomView {
     @BindingAdapter({"avatarUrl"})
     public static void setImage(AvatarImageView view, String url) {
         Glide.with(view.getContext()).load(url).apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.placeholderOf(R.drawable.avatar_placeholder))
+                .transition(DrawableTransitionOptions.withCrossFade(150))
+                .apply(RequestOptions.circleCropTransform())
+                .into(view);
+    }
+
+    @BindingAdapter({"avatarUrl"})
+    public static void setImage(AvatarImageView view, ImageBase imageBase) {
+        Glide.with(view.getContext()).load(imageBase.getLarge()).apply(RequestOptions.centerCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.avatar_placeholder))
                 .transition(DrawableTransitionOptions.withCrossFade(150))
                 .apply(RequestOptions.circleCropTransform())

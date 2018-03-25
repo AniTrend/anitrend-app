@@ -10,6 +10,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupActorAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
+import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
@@ -34,7 +35,7 @@ import java.util.List;
  * Character actors with their respective media
  */
 
-public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<List<StaffBase>, MediaBase>>, SeriesPresenter> {
+public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, SeriesPresenter> {
 
     private QueryContainerBuilder queryContainer;
 
@@ -146,8 +147,8 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
     }
 
     @Override
-    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<List<StaffBase>, MediaBase>> content) {
-        EdgeContainer<List<StaffBase>, MediaBase> edgeContainer;
+    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<MediaEdge>> content) {
+        EdgeContainer<MediaEdge> edgeContainer;
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())

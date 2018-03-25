@@ -1,5 +1,5 @@
-query StaffFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
-  User(id: $id, name: $name) {
+query StaffFavourites($id: Int, $userName: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $userName) {
     favourites {
       staff(page: $page, perPage: $perPage) {
         pageInfo {

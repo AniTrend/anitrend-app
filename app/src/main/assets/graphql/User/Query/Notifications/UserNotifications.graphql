@@ -1,0 +1,398 @@
+query UserNotification($page: Int, $perPage: Int, $type: NotificationType, $resetNotificationCount: Boolean = false) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    notifications(type: $type, resetNotificationCount: $resetNotificationCount) {
+      ... on AiringNotification {
+        id
+        type
+        createdAt
+        contexts
+        episode
+        media {
+          ...mediaBase
+        }
+      }
+      ... on FollowingNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityMessageNotification {
+        id
+        type
+        createdAt
+        context
+        message {
+          ...feedMessage
+        }
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityMentionNotification {
+        id
+        type
+        createdAt
+        context
+        activity {
+          ...feedList
+        }
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityReplyNotification {
+        id
+        type
+        createdAt
+        context
+        activity {
+          ...feedList
+        }
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityLikeNotification {
+        id
+        type
+        createdAt
+        context
+        activity {
+          ...feedList
+        }
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityReplyLikeNotification {
+        id
+        type
+        createdAt
+        context
+        activity {
+          ...feedList
+        }
+        user {
+          ...userBase
+        }
+      }
+      ... on ThreadCommentMentionNotification {
+        id
+        type
+        createdAt
+        context
+      }
+      ... on ThreadCommentReplyNotification {
+        id
+        type
+        createdAt
+        context
+      }
+      ... on ThreadCommentSubscribedNotification {
+        id
+        type
+        createdAt
+        context
+      }
+      ... on ThreadCommentLikeNotification {
+        id
+        type
+        createdAt
+        context
+      }
+      ... on ThreadLikeNotification {
+        id
+        type
+        createdAt
+        context
+      }
+    }
+  }
+}
+
+fragment mediaBase on Media {
+  ... on Media {
+    id
+    title {
+      ... on MediaTitle {
+        english
+        romaji
+        native
+        userPreferred
+      }
+    }
+    type
+    format
+    season
+    status
+    meanScore
+    averageScore
+    startDate {
+      ... on FuzzyDate {
+        day
+        month
+        year
+      }
+    }
+    episodes
+    chapters
+    volumes
+    isAdult
+    isFavourite
+    nextAiringEpisode {
+      ... on AiringSchedule {
+        id
+        airingAt
+        timeUntilAiring
+        episode
+      }
+    }
+  }
+}
+
+fragment userBase on User {
+  ... on User {
+    id
+    name
+    avatar {
+      ... on UserAvatar {
+        large
+        medium
+      }
+    }
+    bannerImage
+    isFollowing
+  }
+}
+
+fragment feedList on ActivityUnion {
+  ... on ListActivity {
+    id
+    status
+    progress
+    createdAt
+    type
+    user {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+    replyCount
+    replies {
+      ... on ActivityReply {
+        id
+        text
+        createdAt
+        user {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        likes {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+      }
+    }
+    likes {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+    media {
+      ... on Media {
+        id
+        title {
+          ... on MediaTitle {
+            english
+            romaji
+            native
+            userPreferred
+          }
+        }
+        type
+        status
+        startDate {
+          ... on FuzzyDate {
+            day
+            month
+            year
+          }
+        }
+        episodes
+        chapters
+        volumes
+        isAdult
+        isFavourite
+        nextAiringEpisode {
+          ... on AiringSchedule {
+            id
+            airingAt
+            timeUntilAiring
+            episode
+          }
+        }
+      }
+    }
+  }
+  ... on TextActivity {
+    id
+    text(asHtml: false)
+    createdAt
+    type
+    user {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+    replyCount
+    likes {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+    replies {
+      ... on ActivityReply {
+        id
+        text
+        createdAt
+        user {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        likes {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment feedMessage on MessageActivity {
+  ... on MessageActivity {
+    id
+    message(asHtml: false)
+    createdAt
+    type
+    messenger {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+    recipient {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+    replyCount
+    likes {
+      ... on User {
+        id
+        name
+        avatar {
+          ... on UserAvatar {
+            large
+            medium
+          }
+        }
+        isFollowing
+      }
+    }
+  }
+}

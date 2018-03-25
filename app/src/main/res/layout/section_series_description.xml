@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="@{model.title_japanese}"
+            android:text="@{model.title.original}"
             tools:text="銀魂" />
 
         <android.support.v4.widget.Space

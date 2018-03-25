@@ -1,5 +1,5 @@
-query CharacterFavourites($id: Int, $name: String, $page: Int, $perPage: Int) {
-  User(id: $id, name: $name) {
+query CharacterFavourites($id: Int, $userName: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $userName) {
     favourites {
       characters(page: $page, perPage: $perPage) {
         pageInfo {

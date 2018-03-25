@@ -9,10 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
+import com.mxt.anitrend.model.entity.anilist.Notification;
+import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -24,9 +27,11 @@ import com.mxt.anitrend.view.activity.detail.MessageActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by max on 2017/12/06.
+ * NotificationFragment
  */
 
 public class NotificationFragment extends FragmentBaseList<Notification, List<Notification>, BasePresenter> {
@@ -43,7 +48,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mColumnSize = R.integer.single_list_x1; inflateMenu = R.menu.shared_menu;
+        mColumnSize = R.integer.single_list_x1; setInflateMenu(R.menu.shared_menu);
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
@@ -74,10 +79,12 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
         switch (item.getItemId()) {
             case R.id.action_mark_all:
                 if(model != null) {
-                    Stream.of(model).forEach(notification -> {
-                        notification.setRead(true);
-                        getPresenter().getDatabase().saveNotifications(notification);
-                    });
+                    Stream.of(model)
+                            .filter(notification -> !notification.isRead())
+                            .forEach(notification -> notification.setRead(true));
+                    /*getPresenter().getDatabase()
+                            .getBoxStore(NotificationBase.class)
+                            .put(model);*/
                     if (mAdapter != null)
                         mAdapter.notifyDataSetChanged();
                 } else
@@ -94,6 +101,11 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
             mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onChanged(@Nullable List<Notification> content) {
+        onPostProcessed(content);
+    }
+
     /**
      * All new or updated network requests should be handled in this method
      */
@@ -103,10 +115,10 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
     }
 
     private void setReadItems(Notification data) {
-        Stream.of(model).filter(value -> value.getObject_id() == data.getObject_id() || value.getId() == data.getId())
-                .forEach(notification -> {
-                    notification.setRead(true); getPresenter().getDatabase().saveNotifications(notification);
-                });
+        data.setRead(true);
+        getPresenter().getDatabase()
+                .getBoxStore(NotificationBase.class)
+                .put(data);
     }
 
     /**
@@ -120,83 +132,55 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
     public void onItemClick(View target, Notification data) {
         Intent intent;
         setReadItems(data);
-        if(target.getId() == R.id.notification_img && data.getObject_type() != KeyUtils.NOTIFICATION_AIRING) {
+        if(target.getId() == R.id.notification_img && !Objects.equals(data.getType(), KeyUtils.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
             intent.putExtra(KeyUtils.arg_userName, data.getUser().getName());
             CompatUtil.startRevealAnim(getActivity(), target, intent);
         }
         else
-            switch (data.getObject_type()) {
-                case KeyUtils.NOTIFICATION_AIRING:
-                    intent = new Intent(getActivity(), MediaActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getSeries().getId());
-                    intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.SeriesTypes[KeyUtils.ANIME]);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtils.NOTIFICATION_COMMENT_FORUM:
-                    if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
-                    } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
-                    }
-                    break;
-                case KeyUtils.NOTIFICATION_LIKE_FORUM:
-                    if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
-                    } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
-                    }
-                    break;
-                case KeyUtils.NOTIFICATION_LIKE_ACTIVITY:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getObject_id());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtils.NOTIFICATION_REPLY_ACTIVITY:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getObject_id());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtils.NOTIFICATION_REPLY_FORUM:
-                    if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
-                    } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
-                    }
-                    break;
-                case KeyUtils.NOTIFICATION_FOLLOW_ACTIVITY:
-                    intent = new Intent(getActivity(), ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_userName, data.getUser().getName());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtils.NOTIFICATION_DIRECT_MESSAGE:
+            switch (data.getType()) {
+                case KeyUtils.ACTIVITY_MESSAGE:
                     intent = new Intent(getActivity(), MessageActivity.class);
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.NOTIFICATION_LIKE_ACTIVITY_REPLY:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getObject_id());
+                case KeyUtils.FOLLOWING:
+                    intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.putExtra(KeyUtils.arg_id, data.getUser().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.NOTIFICATION_MENTION_ACTIVITY:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getObject_id());
+                case KeyUtils.THREAD_COMMENT_MENTION:
+                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
+                    break;
+                case KeyUtils.THREAD_SUBSCRIBED:
+                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
+                    break;
+                case KeyUtils.THREAD_COMMENT_REPLY:
+                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
+                    break;
+                case KeyUtils.AIRING:
+                    intent = new Intent(getActivity(), MediaActivity.class);
+                    intent.putExtra(KeyUtils.arg_id, data.getMedia().getId());
+                    intent.putExtra(KeyUtils.arg_mediaType, data.getMedia().getType());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.NOTIFICATION_LIKE_FORUM_COMMENT:
-                    if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
-                    } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
-                    }
+                case KeyUtils.ACTIVITY_LIKE:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtils.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtils.arg_model, data.getActivity());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                default:
-                    if(data.getComment() != null) {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getComment().getComment());
-                    } else {
-                        DialogUtil.createMessage(getContext(), data.getUser().getName(), String.valueOf(data.getMeta_value()));
-                    }
+                case KeyUtils.ACTIVITY_REPLY_LIKE:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtils.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtils.arg_model, data.getActivity());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtils.THREAD_LIKE:
+                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
+                    break;
+                case KeyUtils.THREAD_COMMENT_LIKE:
+                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
                     break;
             }
     }
@@ -211,11 +195,11 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
      */
     @Override
     public void onItemLongClick(View target, Notification data) {
-        if(data.getObject_type() == KeyUtils.NOTIFICATION_AIRING) {
+        if(Objects.equals(data.getType(), KeyUtils.AIRING)) {
             setReadItems(data);
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 seriesActionUtil = new SeriesActionUtil.Builder()
-                        .setModel(data.getSeries()).build(getActivity());
+                        .setModel(data.getMedia()).build(getActivity());
                 seriesActionUtil.startSeriesAction();
             } else
                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

@@ -22,6 +22,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_series_status" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@{presenter.getSeriesStatus(model)}"
+                    tools:text="Not Released" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -265,38 +298,6 @@
                     android:fontFamily="sans-serif-condensed-light"
                     app:airingDate="@{model.airingSchedule}"
                     tools:text="EP 3 Airing In 2 days" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/xl_margin" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_series_status" />
-
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{presenter.getSeriesStatus(model)}"
-                    tools:text="not yet aired" />
-
             </LinearLayout>
 
         </LinearLayout>

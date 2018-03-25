@@ -125,6 +125,12 @@ public class SeriesPresenter extends CommonPresenter {
         return genres;
     }
 
+    public String getSeriesFormat(Media media) {
+        if(media != null && !TextUtils.isEmpty(media.getFormat()))
+            return CompatUtil.capitalizeWords(media.getFormat());
+        return getContext().getString(R.string.tba_placeholder);
+    }
+
     public int isAnime(Media media) {
         if(MediaUtil.isAnimeType(media))
             return View.VISIBLE;
