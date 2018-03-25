@@ -1,100 +1,78 @@
-package com.mxt.anitrend.view.fragment.detail;
+package com.mxt.anitrend.view.fragment.favourite;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
+import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
+import java.util.Objects;
 
 /**
- * Created by max on 2018/02/03.
- * Multi purpose media browse fragment
+ * Created by max on 2018/03/25.
+ * MediaFavouriteFragment
  */
 
-public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, SeriesPresenter> {
+public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, ConnectionContainer<Favourite>, BasePresenter> {
 
-    private QueryContainerBuilder queryContainer;
-    private boolean isCompatType;
+    private long userId;
+    private @KeyUtils.MediaType String mediaType;
 
-    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer, boolean isCompatType) {
+    public static MediaFavouriteFragment newInstance(Bundle params, @KeyUtils.MediaType String mediaType) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        args.putBoolean(KeyUtils.arg_media_compact, isCompatType);
-        MediaBrowseFragment fragment = new MediaBrowseFragment();
+        args.putString(KeyUtils.arg_mediaType, mediaType);
+        MediaFavouriteFragment fragment = new MediaFavouriteFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
-        return newInstance(params, queryContainer, false);
-    }
-
-    public static MediaBrowseFragment newInstance(Bundle params) {
-        Bundle args = new Bundle(params);
-        args.putBoolean(KeyUtils.arg_media_compact, false);
-        MediaBrowseFragment fragment = new MediaBrowseFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /**
-     * Override and set presenter, mColumnSize, and fetch argument/s
-     *
-     * @param savedInstanceState
-     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
-            isCompatType = getArguments().getBoolean(KeyUtils.arg_media_compact);
+            userId = getArguments().getLong(KeyUtils.arg_id);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         }
-        isPager = true; isFilterable = true;
-        mColumnSize = R.integer.single_list_x1;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new BasePresenter(getContext()));
+        mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.findItem(R.id.action_share).setVisible(false);
-        menu.findItem(R.id.action_genre).setVisible(false);
-        menu.findItem(R.id.action_type).setVisible(false);
-        menu.findItem(R.id.action_year).setVisible(false);
-        menu.findItem(R.id.action_status).setVisible(false);
     }
 
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new MediaAdapter(model, getContext(), isCompatType);
+            mAdapter = new MediaAdapter(model, getContext(), true);
         injectAdapter();
     }
 
+    /**
+     * All new or updated network requests should be handled in this method
+     */
     @Override
     public void makeRequest() {
-        Bundle bundle = getViewModel().getParams();
-        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_BROWSE_REQ, getContext());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_id, userId)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(Objects.equals(mediaType, KeyUtils.ANIME) ?
+                KeyUtils.USER_ANIME_FAVOURITES_REQ : KeyUtils.USER_MANGA_FAVOURITES_REQ, getContext());
     }
 
     /**
@@ -138,14 +116,19 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     }
 
     @Override
-    public void onChanged(@Nullable PageContainer<MediaBase> content) {
+    public void onChanged(@Nullable ConnectionContainer<Favourite> content) {
         if(content != null) {
-            if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
-            if(!content.isEmpty())
-                onPostProcessed(content.getPageData());
+            if(!content.isEmpty()) {
+                PageContainer<MediaBase> pageContainer = Objects.equals(mediaType, KeyUtils.ANIME) ?
+                        content.getConnection().getAnime() : content.getConnection().getManga();
+                if(pageContainer.hasPageInfo())
+                    pageInfo = pageContainer.getPageInfo();
+                onPostProcessed(pageContainer.getPageData());
+            }
+            else
+                onPostProcessed(Collections.emptyList());
         }
         if(model == null)
-            onPostProcessed(Collections.emptyList());
+            onPostProcessed(null);
     }
 }

@@ -56,7 +56,7 @@ public interface KeyUtils {
     String arg_characterId = "characterId";
 
     String arg_mediaType = "type";
-    String arg_searchQuery = "search";
+    String arg_search = "search";
 
     String arg_userName = "userName";
 
@@ -88,6 +88,9 @@ public interface KeyUtils {
     /** Review Keys */
     String arg_rating = "rating";
 
+    /** Notification Keys */
+    String arg_resetNotificationCount = "resetNotificationCount";
+
     // ------------------------------------------------------------------------------------
 
 
@@ -113,6 +116,8 @@ public interface KeyUtils {
     String arg_negative_text = "arg_negative_text";
 
     /** Application State Keys */
+
+    String arg_order = "order";
     String key_recycler_state = "key_recycler_state";
     String key_model_state = "key_model_state";
     String key_pagination = "key_pagination";
@@ -388,6 +393,25 @@ public interface KeyUtils {
     String NO_VOTE = "NO_VOTE", UP_VOTE = "UP_VOTE", DOWN_VOTE = "DOWN_VOTE";
     @StringDef({NO_VOTE, UP_VOTE, DOWN_VOTE})
     @interface ReviewRating {}
+
+    // ------------------------------------------------------------------------------------
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Notification Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String ACTIVITY_MESSAGE = "ACTIVITY_MESSAGE", FOLLOWING = "FOLLOWING", ACTIVITY_MENTION = "ACTIVITY_MENTION",
+            THREAD_COMMENT_MENTION = "THREAD_COMMENT_MENTION", THREAD_SUBSCRIBED = "THREAD_SUBSCRIBED",
+            THREAD_COMMENT_REPLY = "THREAD_COMMENT_REPLY", AIRING = "AIRING", ACTIVITY_LIKE = "ACTIVITY_LIKE",
+            ACTIVITY_REPLY_LIKE = "ACTIVITY_REPLY_LIKE", THREAD_LIKE = "THREAD_LIKE", THREAD_COMMENT_LIKE = "THREAD_COMMENT_LIKE";
+
+
+    @StringDef({ACTIVITY_MESSAGE, FOLLOWING, ACTIVITY_MENTION, THREAD_COMMENT_MENTION, THREAD_SUBSCRIBED,
+            THREAD_COMMENT_REPLY, AIRING, ACTIVITY_LIKE, ACTIVITY_REPLY_LIKE, THREAD_LIKE, THREAD_COMMENT_LIKE
+    })
+    @interface NotificationType {}
 
     // ------------------------------------------------------------------------------------
 

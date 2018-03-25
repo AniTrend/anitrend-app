@@ -316,11 +316,11 @@
         },
         {
           "id": "3:3430541957216003755",
-          "name": "app_id"
+          "name": "appId"
         },
         {
           "id": "4:3840672239741329836",
-          "name": "last_checked"
+          "name": "lastChecked"
         }
       ],
       "relations": []

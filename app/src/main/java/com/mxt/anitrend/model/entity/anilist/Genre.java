@@ -9,7 +9,9 @@ import io.objectbox.annotation.Index;
 
 /**
  * Created by Maxwell on 10/24/2016.
+ * API Genres
  */
+
 @Entity
 public class Genre implements Parcelable {
 
@@ -17,34 +19,28 @@ public class Genre implements Parcelable {
     private long id;
     @Index
     private String genre;
+    private boolean isSelected;
 
     public Genre() {
 
     }
 
-    public Genre(String genre) {
-        this.genre = genre;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
     protected Genre(Parcel in) {
         id = in.readLong();
         genre = in.readString();
+        isSelected = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(genre);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Genre> CREATOR = new Creator<Genre>() {
@@ -59,15 +55,28 @@ public class Genre implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public long getId() {
+        return id;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeString(genre);
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     @Override

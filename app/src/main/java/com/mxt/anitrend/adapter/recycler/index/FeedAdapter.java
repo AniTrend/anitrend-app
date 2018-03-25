@@ -25,11 +25,11 @@ import butterknife.OnLongClick;
  * Created by max on 2017/11/07.
  */
 
-public class StatusFeedAdapter extends RecyclerViewAdapter<FeedList> {
+public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
 
     private final int FEED_STATUS = 10, FEED_MESSAGE = 11, FEED_LIST = 20, FEED_PROGRESS = 21;
 
-    public StatusFeedAdapter(List<FeedList> data, Context context) {
+    public FeedAdapter(List<FeedList> data, Context context) {
         super(data, context);
     }
 

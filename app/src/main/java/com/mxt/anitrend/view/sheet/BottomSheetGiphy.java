@@ -100,7 +100,7 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
         bundle.putInt(KeyUtils.arg_page_offset, presenter.getCurrentOffset());
         requestMode = hasQuery? KeyUtils.GIPHY_SEARCH_REQ : KeyUtils.GIPHY_TRENDING_REQ;
         if(hasQuery)
-            bundle.putString(KeyUtils.arg_searchQuery, searchQuery);
+            bundle.putString(KeyUtils.arg_search, searchQuery);
         viewModel.requestData(requestMode, getContext());
     }
 

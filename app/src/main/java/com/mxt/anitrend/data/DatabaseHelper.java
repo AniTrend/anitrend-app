@@ -7,6 +7,7 @@ import com.mxt.anitrend.App;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Genre;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
@@ -14,11 +15,8 @@ import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.Version;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -33,7 +31,7 @@ public class DatabaseHelper implements BoxQuery {
     private BoxStore boxStore;
     private Context context;
 
-    // frequently used instance variables
+    // Frequently used instance variables
     private User user;
 
     public DatabaseHelper(Context context) {
@@ -73,9 +71,8 @@ public class DatabaseHelper implements BoxQuery {
     @Override
     public User getCurrentUser() {
         if(user == null)
-            user = getBoxStore(User.class)
-                    .query().build()
-                    .findFirst();
+            user = getBoxStore(User.class).query()
+                    .build().findFirst();
         return user;
     }
 
@@ -84,9 +81,8 @@ public class DatabaseHelper implements BoxQuery {
      */
     @Override
     public AuthBase getAuthCode() {
-        return getBoxStore(AuthBase.class)
-                .query().build()
-                .findFirst();
+        return getBoxStore(AuthBase.class).query()
+                .build().findFirst();
     }
 
     /**
@@ -94,8 +90,8 @@ public class DatabaseHelper implements BoxQuery {
      */
     @Override
     public @Nullable WebToken getWebToken() {
-        return getBoxStore(WebToken.class)
-                .query().build().findFirst();
+        return getBoxStore(WebToken.class).query()
+                .build().findFirst();
     }
 
     /**
@@ -103,8 +99,8 @@ public class DatabaseHelper implements BoxQuery {
      */
     @Override
     public Version getRemoteVersion() {
-        return getBoxStore(Version.class)
-                .query().build().findFirst();
+        return getBoxStore(Version.class).query()
+                .build().findFirst();
     }
 
     /**
@@ -112,9 +108,8 @@ public class DatabaseHelper implements BoxQuery {
      */
     @Override
     public List<MediaTag> getMediaTags() {
-        return getBoxStore(MediaTag.class)
-                .query().build()
-                .findLazy();
+        return getBoxStore(MediaTag.class).query()
+                .build().findLazy();
     }
 
     /**
@@ -123,18 +118,7 @@ public class DatabaseHelper implements BoxQuery {
     @Override
     public List<Genre> getGenreCollection() {
         return getBoxStore(Genre.class).query()
-                .notEqual(Genre_.genre, "Hentai")
                 .build().findLazy();
-    }
-
-    /**
-     * Gets all saved series lists
-     */
-    @Override
-    public List<MediaList> getMediaLists() {
-        return getBoxStore(MediaList.class)
-                .query().build()
-                .findLazy();
     }
 
     /**
@@ -181,7 +165,7 @@ public class DatabaseHelper implements BoxQuery {
         Box<Version> versionBox = getBoxStore(Version.class);
         if(versionBox.count() > 0)
             versionBox.removeAll();
-        version.setLast_checked(System.currentTimeMillis());
+        version.setLastChecked(System.currentTimeMillis());
         versionBox.put(version);
     }
 
@@ -207,41 +191,5 @@ public class DatabaseHelper implements BoxQuery {
         Box<Genre> genreBox = getBoxStore(Genre.class);
         if(genreBox.count() < genres.size())
             genreBox.put(genres);
-    }
-
-    /**
-     * Saves all series lists
-     *
-     * @param mediaLists
-     */
-    @Override
-    public void saveMediaLists(List<MediaList> mediaLists) {
-        Box<MediaList> seriesListBox = getBoxStore(MediaList.class);
-        if(seriesListBox.count() < mediaLists.size())
-            seriesListBox.put(mediaLists);
-    }
-
-    /**
-     * Removes following of a specific user
-     *
-     * @param userBase
-     */
-    @Override
-    public void removeUser(UserBase userBase) {
-        getBoxStore(UserBase.class).remove(userBase);
-    }
-
-    /**
-     * Adds following of a specific user
-     *
-     * @param userBase
-     */
-    @Override
-    public void addUser(UserBase userBase) {
-        getBoxStore(UserBase.class).put(userBase);
-    }
-
-    public void saveNotifications(NotificationBase... notification) {
-        getBoxStore(NotificationBase.class).put(notification);
     }
 }

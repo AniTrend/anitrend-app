@@ -10,6 +10,10 @@ public class PageInfo implements Parcelable {
     private int currentPage;
     private boolean hasNextPage;
 
+    public PageInfo() {
+
+    }
+
     protected PageInfo(Parcel in) {
         total = in.readInt();
         perPage = in.readInt();
@@ -56,5 +60,9 @@ public class PageInfo implements Parcelable {
 
     public boolean hasNextPage() {
         return hasNextPage;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

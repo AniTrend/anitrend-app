@@ -20,13 +20,11 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
-import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.crunchy.Channel;
 import com.mxt.anitrend.model.entity.crunchy.Episode;
 import com.mxt.anitrend.model.entity.crunchy.Rss;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
-import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -354,7 +352,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtils.arg_searchQuery, EpisodeHelper.getActualTile(data.getTitle()));
+                                            intent.putExtra(KeyUtils.arg_search, EpisodeHelper.getActualTile(data.getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;

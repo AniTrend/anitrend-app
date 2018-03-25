@@ -23,6 +23,7 @@ import com.mxt.anitrend.presenter.activity.LoginPresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.service.AuthenticatorService;
 import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -85,11 +86,11 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
         startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             Bundle SHORTCUT_MY_ANIME_BUNDLE = new Bundle();
-            SHORTCUT_MY_ANIME_BUNDLE.putInt(KeyUtils.arg_mediaType, KeyUtils.ANIME);
+            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_mediaType, KeyUtils.ANIME);
             SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
 
             Bundle SHORTCUT_MY_MANGA_BUNDLE = new Bundle();
-            SHORTCUT_MY_MANGA_BUNDLE.putInt(KeyUtils.arg_mediaType, KeyUtils.MANGA);
+            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_mediaType, KeyUtils.MANGA);
             SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
 
             Bundle SHORTCUT_PROFILE_BUNDLE = new Bundle();
@@ -122,9 +123,8 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
 
     @Override
     public void onChanged(@Nullable User model) {
-        if(isAlive() && model != null) {
+        if(isAlive() && (this.model = model) != null) {
             getPresenter().getDatabase().saveCurrentUser(model);
-            this.model = model;
             updateUI();
         }
     }
@@ -151,8 +151,8 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             if(error == null) error = getString(R.string.text_error_auth_login);
             NotifyUtil.createAlerter(this, getString(R.string.login_error_title),
                     error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtils.DURATION_LONG);
-            viewModel.getParams().putString(KeyUtils.key_analytics_error, error);
-            FirebaseAnalytics.getInstance(this).logEvent(this.toString(), viewModel.getParams());
+            getPresenter().getParams().putString(KeyUtils.key_analytics_error, error);
+            FirebaseAnalytics.getInstance(this).logEvent(this.toString(), getPresenter().getParams());
             binding.widgetFlipper.showPrevious();
             Log.e(this.toString(), error);
         }
@@ -183,8 +183,10 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             if (isAlive() && messageBase.isValid()) {
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE)
                     binding.widgetFlipper.showNext();
-                if (getPresenter().handleIntentCallback(messageBase))
-                    viewModel.requestData(KeyUtils.CURRENT_USER_REQ, getApplicationContext());
+                if (getPresenter().handleIntentCallback(messageBase)) {
+                    getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(false));
+                    getViewModel().requestData(KeyUtils.USER_CURRENT_REQ, getApplicationContext());
+                }
                 else {
                     // intent://com.mxt.anitrend?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.
                     if (!TextUtils.isEmpty(messageBase.getQueryParam("error")) && !TextUtils.isEmpty(messageBase.getQueryParam("error_description")))

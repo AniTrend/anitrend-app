@@ -12,7 +12,10 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
+import com.mxt.anitrend.model.entity.base.StaffBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -24,14 +27,14 @@ import butterknife.ButterKnife;
  * staff activity
  */
 
-public class StaffActivity extends ActivityBase<Staff, BasePresenter> {
+public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
     protected @BindView(R.id.page_container) ViewPager viewPager;
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
-    private Staff model;
+    private StaffBase model;
 
     private FavouriteToolbarWidget favouriteWidget;
 
@@ -50,11 +53,6 @@ public class StaffActivity extends ActivityBase<Staff, BasePresenter> {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getViewModel().getParams().putLong(KeyUtils.arg_id, id);
-        StaffPageAdapter pageAdapter = new StaffPageAdapter(getSupportFragmentManager(), getApplicationContext());
-        pageAdapter.setParams(getViewModel().getParams());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit + 1);
-        smartTabLayout.setViewPager(viewPager);
         onActivityReady();
     }
 
@@ -66,10 +64,21 @@ public class StaffActivity extends ActivityBase<Staff, BasePresenter> {
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            if(model != null)
-                favouriteWidget.setModel(model);
         }
         return true;
+    }
+
+    /**
+     * Make decisions, check for permissions or fire background threads from this method
+     * N.B. Must be called after onPostCreate
+     */
+    @Override
+    protected void onActivityReady() {
+        StaffPageAdapter pageAdapter = new StaffPageAdapter(getSupportFragmentManager(), getApplicationContext());
+        pageAdapter.setParams(getViewModel().getParams());
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit + 1);
+        smartTabLayout.setViewPager(viewPager);
     }
 
     @Override
@@ -81,25 +90,19 @@ public class StaffActivity extends ActivityBase<Staff, BasePresenter> {
             updateUI();
     }
 
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    @Override
-    protected void onActivityReady() {
-
-    }
-
     @Override
     protected void updateUI() {
-        getPresenter().notifyAllListeners(model, false);
-        if(favouriteWidget != null)
-            favouriteWidget.setModel(model);
+        if(model != null)
+            if(favouriteWidget != null)
+                favouriteWidget.setModel(model);
     }
 
     @Override
     protected void makeRequest() {
-        getViewModel().requestData(KeyUtils.STAFF_INFO_REQ, getApplicationContext());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.STAFF_BASE_REQ, getApplicationContext());
     }
 
     /**
@@ -108,11 +111,9 @@ public class StaffActivity extends ActivityBase<Staff, BasePresenter> {
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable Staff model) {
+    public void onChanged(@Nullable StaffBase model) {
         super.onChanged(model);
-        if(model != null) {
-            this.model = model;
-            updateUI();
-        }
+        this.model = model;
+        updateUI();
     }
 }

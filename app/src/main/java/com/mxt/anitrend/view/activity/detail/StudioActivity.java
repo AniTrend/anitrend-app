@@ -11,8 +11,12 @@ import android.view.MenuItem;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
+import com.mxt.anitrend.model.entity.base.StudioBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment;
 import com.mxt.anitrend.view.fragment.search.MediaSearchFragment;
 
 import butterknife.BindView;
@@ -20,14 +24,16 @@ import butterknife.ButterKnife;
 
 /**
  * Created by max on 2017/12/14.
+ * StudioActivity
  */
 
-public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
+public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
 
     protected @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    private Studio model;
+    private StudioBase model;
+
     private FavouriteToolbarWidget favouriteWidget;
 
     @Override
@@ -45,6 +51,7 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        getViewModel().getParams().putLong(KeyUtils.arg_id, id);
         onActivityReady();
     }
 
@@ -56,8 +63,6 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            if(model != null)
-                favouriteWidget.setModel(model);
         }
         return true;
     }
@@ -77,7 +82,7 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        mFragment = MediaSearchFragment.newInstance(getIntent().getExtras(), KeyUtils.ANIME);
+        mFragment = StudioMediaFragment.newInstance(getIntent().getExtras());
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, mFragment, mFragment.TAG);
@@ -86,17 +91,19 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
 
     @Override
     protected void updateUI() {
-        mActionBar.setTitle(model.getName());
-        getPresenter().notifyAllListeners(model, false);
-        if(favouriteWidget != null)
-            favouriteWidget.setModel(model);
+        if(model != null) {
+            if (favouriteWidget != null)
+                favouriteWidget.setModel(model);
+            mActionBar.setTitle(model.getName());
+        }
     }
 
     @Override
     protected void makeRequest() {
-        Bundle params = getViewModel().getParams();
-        params.putLong(KeyUtils.arg_id, id);
-        getViewModel().requestData(KeyUtils.STUDIO_INFO_REQ, getApplicationContext());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.STUDIO_BASE_REQ, getApplicationContext());
     }
 
     /**
@@ -105,14 +112,9 @@ public class StudioActivity extends ActivityBase<Studio, BasePresenter> {
      * @param model The new data
      */
     @Override
-    public void onChanged(@Nullable Studio model) {
+    public void onChanged(@Nullable StudioBase model) {
         super.onChanged(model);
-        if(model != null) {
-            if(getPresenter().getApplicationPref().isAuthenticated() && getPresenter().getDatabase().getCurrentUser() != null)
-                this.model = FilterProvider.getStudioFilter(model, getPresenter().getApplicationPref(), getPresenter().getDatabase().getCurrentUser().getTitle_language());
-            else
-                this.model = FilterProvider.getStudioFilter(model);
-            updateUI();
-        }
+        this.model = model;
+        updateUI();
     }
 }

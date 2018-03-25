@@ -80,11 +80,11 @@ public class QueryContainerBuilder implements Parcelable {
         private String query;
         private Map<String, Object> variables;
 
-        public QueryContainer() {
+        QueryContainer() {
             variables = new WeakHashMap<>();
         }
 
-        protected QueryContainer(Parcel in) {
+        QueryContainer(Parcel in) {
             query = in.readString();
             variables = in.readHashMap(WeakHashMap.class.getClassLoader());
         }

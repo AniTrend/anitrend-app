@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.index.SeriesListAdapter;
+import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
@@ -73,8 +73,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @Override
     protected void updateUI() {
         if(mAdapter == null) {
-            mAdapter = new SeriesListAdapter(model, getContext());
-            ((SeriesListAdapter)mAdapter).setCurrentUser(userName);
+            mAdapter = new MediaListAdapter(model, getContext());
+            ((MediaListAdapter)mAdapter).setCurrentUser(userName);
         }
         if(model != null && model.size() > 0)
             if(getPresenter().isCurrentUser(userName))

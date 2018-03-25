@@ -35,7 +35,6 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
     private CharacterBase model;
-    private CharacterPageAdapter pageAdapter;
 
     private FavouriteToolbarWidget favouriteWidget;
 
@@ -66,10 +65,6 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            if(model != null)
-                favouriteWidget.setModel(model);
-            else
-                makeRequest();
         }
         return true;
     }
@@ -80,16 +75,27 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
      */
     @Override
     protected void onActivityReady() {
-        pageAdapter = new CharacterPageAdapter(getSupportFragmentManager(), getApplicationContext());
+        CharacterPageAdapter pageAdapter = new CharacterPageAdapter(getSupportFragmentManager(), getApplicationContext());
         pageAdapter.setParams(getViewModel().getParams());
-        updateUI();
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setOffscreenPageLimit(offScreenLimit);
+        smartTabLayout.setViewPager(viewPager);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(model == null)
+            makeRequest();
+        else
+            updateUI();
     }
 
     @Override
     protected void updateUI() {
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
-        smartTabLayout.setViewPager(viewPager);
+        if(model != null)
+            if(favouriteWidget != null)
+                favouriteWidget.setModel(model);
     }
 
 
@@ -109,10 +115,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     @Override
     public void onChanged(@Nullable CharacterBase model) {
         super.onChanged(model);
-        if(model != null) {
-            this.model = model;
-            if(favouriteWidget != null)
-                favouriteWidget.setModel(model);
-        }
+        this.model = model;
+        updateUI();
     }
 }

@@ -10,7 +10,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.SearchPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.KeyUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;

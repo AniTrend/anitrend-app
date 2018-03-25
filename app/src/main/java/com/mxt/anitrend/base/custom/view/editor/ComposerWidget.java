@@ -22,10 +22,9 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetComposerBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
-import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.giphy.Gif;
 import com.mxt.anitrend.model.entity.giphy.Giphy;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -125,21 +124,20 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
 
     public void setModel(FeedList feedList, @KeyUtils.RequestType int requestType) {
         this.feedList = feedList;
-        this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
+        this.requestType = requestType;
+        // this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
     }
 
     public void setModel(UserBase recipient, @KeyUtils.RequestType int requestType) {
         this.recipient = recipient;
-        this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
+        this.requestType = requestType;
+        // this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
     }
 
     public void setModel(FeedReply feedReply, @KeyUtils.RequestType int requestType) {
         this.feedReply = feedReply;
-        this.requestType = KeyUtils.MUT_SAVE_FEED_REPLY;
-    }
-
-    public void setRequestType(@KeyUtils.RequestType int requestType) {
         this.requestType = requestType;
+        // this.requestType = KeyUtils.MUT_SAVE_FEED_REPLY;
     }
 
     /**
@@ -154,35 +152,36 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         itemClickListener = null;
     }
 
+    // TODO: 2018/03/25 Check how parameters are being passed
     @SuppressLint("SwitchIntDef")
     public void startRequestData() {
         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
             binding.widgetFlipper.showNext();
 
-            QueryContainer queryContainer = GraphUtil.getDefaultQuery(false);
+            QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
 
             switch (requestType) {
                 case KeyUtils.MUT_SAVE_TEXT_FEED:
                     if(feedList != null) {
                         feedList.setValue(binding.comment.getFormattedText());
-                        queryContainer.setVariable(KeyUtils.arg_id, feedList.getId());
+                        queryContainer.putVariable(KeyUtils.arg_id, feedList.getId());
                     }
-                    queryContainer.setVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
                     break;
                 case KeyUtils.MUT_SAVE_FEED_REPLY:
                     if(feedReply != null) {
                         feedReply.setText(binding.comment.getFormattedText());
-                        queryContainer.setVariable(KeyUtils.arg_activityId, feedReply.getId());
+                        queryContainer.putVariable(KeyUtils.arg_activityId, feedReply.getId());
                     }
-                    queryContainer.setVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
                     break;
                 case KeyUtils.MUT_SAVE_MESSAGE_FEED:
                     if(feedList != null) {
                         feedList.setValue(binding.comment.getFormattedText());
-                        queryContainer.setVariable(KeyUtils.arg_id, feedList.getId());
+                        queryContainer.putVariable(KeyUtils.arg_id, feedList.getId());
                     }
-                    queryContainer.setVariable(KeyUtils.arg_recipientId, recipient.getId());
-                    queryContainer.setVariable(KeyUtils.arg_message, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtils.arg_recipientId, recipient.getId());
+                    queryContainer.putVariable(KeyUtils.arg_message, binding.comment.getFormattedText());
                     break;
             }
 

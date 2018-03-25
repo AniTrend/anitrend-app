@@ -32,7 +32,9 @@ import java.util.Collections;
 
 public class MediaRolesFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<PageContainer<MediaBase>>, SeriesPresenter> {
 
-    private QueryContainerBuilder queryContainer;
+    private long id;
+    private @KeyUtils.MediaType String mediaType;
+
     private @KeyUtils.RequestType int requestType;
 
     public static MediaRolesFragment newInstance(Bundle params, @KeyUtils.MediaType String mediaType, @KeyUtils.RequestType int requestType) {
@@ -54,9 +56,8 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             requestType = getArguments().getInt(KeyUtils.arg_request_type);
-            queryContainer = GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtils.arg_id, getArguments().getLong(KeyUtils.arg_id))
-                    .putVariable(KeyUtils.arg_mediaType, getArguments().getString(KeyUtils.arg_mediaType));
+            id = getArguments().getLong(KeyUtils.arg_id);
+            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setPresenter(new SeriesPresenter(getContext()));
@@ -119,7 +120,10 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
      */
     @Override
     public void makeRequest() {
-        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
+                .putVariable(KeyUtils.arg_id, id)
+                .putVariable(KeyUtils.arg_mediaType, mediaType)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(requestType, getContext());
     }

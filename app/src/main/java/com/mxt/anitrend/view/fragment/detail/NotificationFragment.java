@@ -13,7 +13,6 @@ import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;

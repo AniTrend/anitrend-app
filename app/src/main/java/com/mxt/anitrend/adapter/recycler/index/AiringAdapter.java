@@ -26,12 +26,12 @@ import butterknife.OnLongClick;
  * Created by max on 2017/12/19.
  */
 
-public class SeriesAiringAdapter extends RecyclerViewAdapter<MediaList> {
+public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
     private String currentUser;
     private List<MediaBase> favouriteSeries;
 
-    public SeriesAiringAdapter(List<MediaList> data, Context context) {
+    public AiringAdapter(List<MediaList> data, Context context) {
         super(data, context);
         Favourite favourite = presenter.getFavourites();
         if(presenter.getApplicationPref().isAuthenticated())

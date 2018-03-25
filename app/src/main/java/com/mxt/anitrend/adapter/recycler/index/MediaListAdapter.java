@@ -25,11 +25,11 @@ import butterknife.OnLongClick;
  * adapter for series lists
  */
 
-public class SeriesListAdapter extends RecyclerViewAdapter<MediaList> {
+public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
 
     private String currentUser;
 
-    public SeriesListAdapter(List<MediaList> data, Context context) {
+    public MediaListAdapter(List<MediaList> data, Context context) {
         super(data, context);
     }
 

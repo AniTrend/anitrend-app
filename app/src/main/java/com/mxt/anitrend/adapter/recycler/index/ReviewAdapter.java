@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
-import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
@@ -14,11 +13,8 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterReviewBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.util.ApplicationPref;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -28,55 +24,29 @@ import butterknife.OnLongClick;
  * Media review adapter
  */
 
-public class SeriesReviewAdapter extends RecyclerViewAdapter<Review> {
+public class ReviewAdapter extends RecyclerViewAdapter<Review> {
 
-    private Boolean reviewType;
+    private boolean isMediaType;
 
-    public SeriesReviewAdapter(List<Review> data, Context context) {
+    public ReviewAdapter(List<Review> data, Context context) {
         super(data, context);
     }
 
-    public SeriesReviewAdapter(FeedReview data, Context context) {
-        super(new ApplicationPref(context).getReviewType()?
-                data.getAnime():data.getManga(), context);
-        reviewType = presenter.getApplicationPref().getReviewType();
+    public ReviewAdapter(List<Review> data, Context context, boolean isMediaType) {
+        super(data, context);
+        this.isMediaType = isMediaType;
     }
 
     @Override
     public RecyclerViewHolder<Review> onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(reviewType != null)
+        if(!isMediaType)
             return new ReviewBanner(AdapterReviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         return new ReviewDefault(AdapterSeriesReviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
-                } else {
-                    data = new ArrayList<>(Stream.of(clone).filter((model) -> model.getUser().getName().toLowerCase(Locale.getDefault()).contains(filter) || model.getAnime() != null? (
-                            model.getAnime().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getAnime().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getAnime().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) :
-                            model.getManga().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getManga().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getManga().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)).toList());
-                }
-                FilterResults results = new FilterResults();
-                results.values = data;
-                return results;
-            }
-
-            @Override @SuppressWarnings("unchecked")
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<Review>) results.values);
-                notifyDataSetChanged();
-            }
-        };
+        return null;
     }
 
     protected class ReviewBanner extends RecyclerViewHolder<Review> {

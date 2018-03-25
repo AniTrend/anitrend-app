@@ -14,7 +14,6 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView;
 import com.mxt.anitrend.databinding.AdapterNotificationBinding;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase_;
-import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 

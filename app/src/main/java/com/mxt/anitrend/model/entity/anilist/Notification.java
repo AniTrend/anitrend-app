@@ -1,75 +1,72 @@
 package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
- * Created by Maxwell on 1/9/2017.
+ * Created by max on 2018/03/25.
+ * Notification
  */
 
-public class Notification extends NotificationBase implements Parcelable {
+public class Notification extends NotificationBase {
 
-    @SerializedName("value")
-    private Object meta_value;
+    // activity notifications
+    private FeedList activity;
+
+    // following or activity notification
     private UserBase user;
-    private Comment comment;
-    private MediaBase series;
 
+    // airing notification
+    private int episodes;
+    private List<String> contexts;
+    private MediaBase media;
 
     protected Notification(Parcel in) {
         super(in);
-        meta_value = in.readSerializable();
+        activity = in.readParcelable(FeedList.class.getClassLoader());
         user = in.readParcelable(UserBase.class.getClassLoader());
-        comment = in.readParcelable(Comment.class.getClassLoader());
-        series = in.readParcelable(MediaBase.class.getClassLoader());
+        episodes = in.readInt();
+        contexts = in.createStringArrayList();
+        media = in.readParcelable(MediaBase.class.getClassLoader());
     }
 
-    public static final Creator<Notification> CREATOR = new Creator<Notification>() {
-        @Override
-        public Notification createFromParcel(Parcel in) {
-            return new Notification(in);
-        }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeParcelable(activity, flags);
+        dest.writeParcelable(user, flags);
+        dest.writeInt(episodes);
+        dest.writeStringList(contexts);
+        dest.writeParcelable(media, flags);
+    }
 
-        @Override
-        public Notification[] newArray(int size) {
-            return new Notification[size];
-        }
-    };
+    @Override
+    public int describeContents() {
+        return super.describeContents();
+    }
+
+    public FeedList getActivity() {
+        return activity;
+    }
 
     public UserBase getUser() {
         return user;
     }
 
-    public Comment getComment() {
-        return comment;
+    public int getEpisodes() {
+        return episodes;
     }
 
-    public MediaBase getSeries() {
-        return series;
+    public List<String> getContexts() {
+        return contexts;
     }
 
-    public Object getMeta_value() {
-        return meta_value;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        super.writeToParcel(parcel, i);
-        parcel.writeSerializable((Serializable) meta_value);
-        parcel.writeParcelable(user, i);
-        parcel.writeParcelable(comment, i);
-        parcel.writeParcelable(series, i);
+    public MediaBase getMedia() {
+        return media;
     }
 }

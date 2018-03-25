@@ -20,6 +20,7 @@ import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -275,7 +276,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(getPresenter() != null && isFilterable && ApplicationPref.isKeyFilter(key)) {
+        if(getPresenter() != null && isFilterable && GraphUtil.isKeyFilter(key)) {
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
         }

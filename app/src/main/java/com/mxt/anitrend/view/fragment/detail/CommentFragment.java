@@ -10,7 +10,7 @@ import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter;
-import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
+import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseComment;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
@@ -46,7 +46,7 @@ import java.util.List;
 
 public class CommentFragment extends FragmentBaseComment implements BaseConsumer.onRequestModelChange<FeedReply> {
 
-    private StatusFeedAdapter feedAdapter;
+    private FeedAdapter feedAdapter;
 
     public static CommentFragment newInstance(Bundle params) {
         CommentFragment fragment = new CommentFragment();
@@ -216,7 +216,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
         composerWidget.setModel(feedList, KeyUtils.MUT_SAVE_FEED_REPLY);
 
         if(feedAdapter == null) {
-            feedAdapter = new StatusFeedAdapter(Collections.singletonList(feedList), getContext());
+            feedAdapter = new FeedAdapter(Collections.singletonList(feedList), getContext());
             feedAdapter.setClickListener(new ItemClickListener<FeedList>() {
                 @Override
                 public void onItemClick(View target, FeedList data) {

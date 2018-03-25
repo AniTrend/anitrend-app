@@ -10,7 +10,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterStaffBinding;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.util.CompatUtil;
 
@@ -24,13 +23,8 @@ import butterknife.OnClick;
 
 public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
 
-    private List<StaffBase> favouriteStaff;
-
     public StaffAdapter(List<StaffBase> data, Context context) {
         super(data, context);
-        Favourite favourite = presenter.getFavourites();
-        if(favourite != null)
-            favouriteStaff = favourite.getStaff();
     }
 
     @Override
@@ -66,7 +60,7 @@ public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
         @Override
         public void onBindViewHolder(StaffBase model) {
             binding.setModel(model);
-            if(favouriteStaff != null && favouriteStaff.contains(model))
+            if(model.isFavourite())
                 binding.favouriteIndicator.setVisibility(View.VISIBLE);
             else
                 binding.favouriteIndicator.setVisibility(View.GONE);

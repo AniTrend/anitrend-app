@@ -134,4 +134,8 @@ public class GroupingUtil {
         }
         return entityMap;
     }
+
+    public static <T extends EntityGroup> List<EntityGroup> wrapInGroup(List<T> data) {
+        return new ArrayList<>(data);
+    }
 }

@@ -27,7 +27,6 @@ public class UserFeedFragment extends FeedFragment implements PublisherListener<
         return fragment;
     }
 
-
     /**
      * Override and set presenter, mColumnSize, and fetch argument/s
      *
@@ -38,7 +37,7 @@ public class UserFeedFragment extends FeedFragment implements PublisherListener<
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             queryContainer.putVariable(KeyUtils.arg_userId, getArguments().getLong(KeyUtils.arg_id))
-                    .putVariable(KeyUtils.arg_userName, getArguments().getLong(KeyUtils.arg_userName));
+                    .putVariable(KeyUtils.arg_userName, getArguments().getString(KeyUtils.arg_userName));
         }
         isMenuDisabled = true; isFeed = false;
     }

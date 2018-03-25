@@ -13,13 +13,14 @@ import android.widget.RelativeLayout;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
 /**
  * Created by max on 2018/01/20.
+ * CustomSeriesManageBase for managing mediaLists
  */
 
 public abstract class CustomSeriesManageBase extends RelativeLayout implements CustomView, View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -81,21 +82,22 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     }
 
     public Bundle getParam() {
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false);
-        queryContainer.setVariable(KeyUtils.arg_mediaId, model.getMediaId());
-        queryContainer.setVariable(KeyUtils.arg_listStatus, model.getStatus());
-        queryContainer.setVariable(KeyUtils.arg_listScore_raw, model.getScore());
-        queryContainer.setVariable(KeyUtils.arg_listNotes, model.getNotes());
-        queryContainer.setVariable(KeyUtils.arg_listPrivate, model.isHidden());
-        queryContainer.setVariable(KeyUtils.arg_listPriority, model.getPriority());
-        queryContainer.setVariable(KeyUtils.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
+        queryContainer.putVariable(KeyUtils.arg_mediaId, model.getMediaId());
+        queryContainer.putVariable(KeyUtils.arg_listStatus, model.getStatus());
+        queryContainer.putVariable(KeyUtils.arg_listScore_raw, model.getScore());
+        queryContainer.putVariable(KeyUtils.arg_listNotes, model.getNotes());
+        queryContainer.putVariable(KeyUtils.arg_listPrivate, model.isHidden());
+        queryContainer.putVariable(KeyUtils.arg_listPriority, model.getPriority());
+        queryContainer.putVariable(KeyUtils.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
 
-        queryContainer.setVariable(KeyUtils.arg_listAdvancedScore, model.getAdvancedScores());
-        queryContainer.setVariable(KeyUtils.arg_listCustom, model.getCustomLists());
+        // TODO: 2018/03/25 Check if custom lists are enabled and work some magic
+        queryContainer.putVariable(KeyUtils.arg_listAdvancedScore, model.getAdvancedScores());
+        queryContainer.putVariable(KeyUtils.arg_listCustom, model.getCustomLists());
 
-        queryContainer.setVariable(KeyUtils.arg_listRepeat, model.getRepeat());
-        queryContainer.setVariable(KeyUtils.arg_listProgress, model.getProgress());
-        queryContainer.setVariable(KeyUtils.arg_listProgressVolumes, model.getProgressVolumes());
+        queryContainer.putVariable(KeyUtils.arg_listRepeat, model.getRepeat());
+        queryContainer.putVariable(KeyUtils.arg_listProgress, model.getProgress());
+        queryContainer.putVariable(KeyUtils.arg_listProgressVolumes, model.getProgressVolumes());
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);

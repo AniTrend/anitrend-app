@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterCharacterBinding;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
@@ -29,13 +28,8 @@ import butterknife.OnClick;
 
 public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
 
-    private List<CharacterBase> favouriteCharacters;
-
     public GroupCharacterAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
-        Favourite favourite = presenter.getFavourites();
-        if(favourite != null)
-            favouriteCharacters = favourite.getCharacter();
     }
 
     @Override
@@ -88,7 +82,7 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
         public void onBindViewHolder(EntityGroup entityGroup) {
             CharacterBase model = (CharacterBase) entityGroup;
             binding.setModel(model);
-            if(favouriteCharacters != null && favouriteCharacters.contains(model))
+            if(model.isFavourite())
                 binding.favouriteIndicator.setVisibility(View.VISIBLE);
             else
                 binding.favouriteIndicator.setVisibility(View.GONE);

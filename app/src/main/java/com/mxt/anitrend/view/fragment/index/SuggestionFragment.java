@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.index.SeriesMediaAdapter;
+import com.mxt.anitrend.adapter.recycler.index.MediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -59,7 +59,7 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new SeriesMediaAdapter(model, getContext());
+            mAdapter = new MediaAdapter(model, getContext());
         injectAdapter();
     }
 

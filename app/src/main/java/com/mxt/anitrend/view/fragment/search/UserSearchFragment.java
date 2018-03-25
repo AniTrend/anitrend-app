@@ -3,27 +3,27 @@ package com.mxt.anitrend.view.fragment.search;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by max on 2017/12/20.
  */
 
-public class UserSearchFragment  extends FragmentBaseList<UserBase, List<UserBase>, BasePresenter> {
+public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContainer<UserBase>, BasePresenter> {
 
     private String searchQuery;
 
@@ -42,9 +42,9 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, List<UserBas
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_searchQuery);
+            searchQuery = getArguments().getString(KeyUtils.arg_search);
         setPresenter(new BasePresenter(getContext()));
-        mColumnSize = R.integer.single_list_x1; isPager = false;
+        mColumnSize = R.integer.single_list_x1; isPager = true;
         setViewModel(true);
     }
 
@@ -63,11 +63,11 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, List<UserBas
      */
     @Override
     public void makeRequest() {
-        if(TextUtils.isEmpty(searchQuery))
-            return;
-        Bundle bundle = getViewModel().getParams();
-        bundle.putString(KeyUtils.arg_searchQuery, searchQuery);
-        bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_search, searchQuery)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.USER_SEARCH_REQ, getContext());
     }
 
@@ -99,13 +99,25 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, List<UserBas
      */
     @Override
     public void onItemLongClick(View target, UserBase data) {
-        switch (target.getId()) {
-            case R.id.container:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
 
-                } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
-                break;
+    }
+
+    /**
+     * Called when the model state is changed.
+     *
+     * @param content The new data
+     */
+    @Override
+    public void onChanged(@Nullable PageContainer<UserBase> content) {
+        if(content != null) {
+            if(content.hasPageInfo())
+                pageInfo = content.getPageInfo();
+            if(!content.isEmpty())
+                onPostProcessed(content.getPageData());
+            else
+                onPostProcessed(Collections.emptyList());
         }
+        if(model == null)
+            onPostProcessed(null);
     }
 }

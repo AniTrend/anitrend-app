@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -66,5 +67,12 @@ public class TitleBase implements Parcelable {
 
     public List<String> getAlternative() {
         return alternative;
+    }
+
+    public String getFullName() {
+        String fullName = first;
+        if(!TextUtils.isEmpty(last))
+            fullName += " " + last;
+        return fullName;
     }
 }

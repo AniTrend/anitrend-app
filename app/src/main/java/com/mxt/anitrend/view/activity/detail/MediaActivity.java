@@ -74,17 +74,7 @@ public class MediaActivity extends ActivityBase<MediaBase, SeriesPresenter> impl
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mActionBar.setHomeAsUpIndicator(CompatUtil.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
-        if(mediaType != null) {
-            BaseStatePageAdapter baseStatePageAdapter = new AnimePageAdapter(getSupportFragmentManager(), getApplicationContext());
-            if (!Objects.equals(mediaType, KeyUtils.ANIME))
-                baseStatePageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
-            baseStatePageAdapter.setParams(getIntent().getExtras());
-            viewPager.setAdapter(baseStatePageAdapter);
-            viewPager.setOffscreenPageLimit(offScreenLimit + 4);
-            smartTabLayout.setViewPager(viewPager);
-            onActivityReady();
-        } else
-            NotifyUtil.createAlerter(this, R.string.text_error_request, R.string.text_unknown_error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
+        onActivityReady();
     }
 
     @Override
@@ -97,8 +87,6 @@ public class MediaActivity extends ActivityBase<MediaBase, SeriesPresenter> impl
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            if(model != null)
-                favouriteWidget.setModel(model);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -124,7 +112,16 @@ public class MediaActivity extends ActivityBase<MediaBase, SeriesPresenter> impl
      */
     @Override
     protected void onActivityReady() {
-
+        if(mediaType != null) {
+            BaseStatePageAdapter baseStatePageAdapter = new AnimePageAdapter(getSupportFragmentManager(), getApplicationContext());
+            if (!Objects.equals(mediaType, KeyUtils.ANIME))
+                baseStatePageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
+            baseStatePageAdapter.setParams(getIntent().getExtras());
+            viewPager.setAdapter(baseStatePageAdapter);
+            viewPager.setOffscreenPageLimit(offScreenLimit + 4);
+            smartTabLayout.setViewPager(viewPager);
+        } else
+            NotifyUtil.createAlerter(this, R.string.text_error_request, R.string.text_unknown_error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
     }
 
     @Override
@@ -138,12 +135,14 @@ public class MediaActivity extends ActivityBase<MediaBase, SeriesPresenter> impl
 
     @Override
     protected void updateUI() {
-        binding.setModel(model);
-        binding.setOnClickListener(this);
-        WideImageView.setImage(binding.seriesBanner, model.getCoverImage().getLarge());
-        if(favouriteWidget != null)
-            favouriteWidget.setModel(model);
-        showApplicationTips();
+        if(model != null) {
+            binding.setModel(model);
+            binding.setOnClickListener(this);
+            if (favouriteWidget != null)
+                favouriteWidget.setModel(model);
+            WideImageView.setImage(binding.seriesBanner, model.getCoverImage().getLarge());
+            showApplicationTips();
+        }
     }
 
     @Override

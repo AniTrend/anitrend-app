@@ -18,7 +18,7 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -67,9 +67,9 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     }
 
     private void setParameters(@KeyUtils.ReviewRating String ratingType) {
-        QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
-                .setVariable(KeyUtils.arg_id, model.getId())
-                .setVariable(KeyUtils.arg_rating, ratingType);
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, model.getId())
+                .putVariable(KeyUtils.arg_rating, ratingType);
         presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         presenter.requestData(KeyUtils.MUT_RATE_REVIEW, getContext(), this);
     }

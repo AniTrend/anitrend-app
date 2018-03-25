@@ -17,10 +17,11 @@ public class Version implements Parcelable {
 
     @Id(assignable = true)
     private long code;
-    private long last_checked;
-    private boolean db_migration;
+    private long lastChecked;
+    private boolean migration;
+    private String releaseNotes;
     private String version;
-    private String app_id;
+    private String appId;
 
     public Version() {
 
@@ -32,16 +33,22 @@ public class Version implements Parcelable {
     }
 
     protected Version(Parcel in) {
-        code = in.readInt();
+        code = in.readLong();
+        lastChecked = in.readLong();
+        migration = in.readByte() != 0;
+        releaseNotes = in.readString();
         version = in.readString();
-        app_id = in.readString();
+        appId = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(code);
+        dest.writeLong(lastChecked);
+        dest.writeByte((byte) (migration ? 1 : 0));
+        dest.writeString(releaseNotes);
         dest.writeString(version);
-        dest.writeString(app_id);
+        dest.writeString(appId);
     }
 
     @Override
@@ -65,43 +72,27 @@ public class Version implements Parcelable {
         return code;
     }
 
+    public long getLastChecked() {
+        return lastChecked;
+    }
+
+    public boolean isMigration() {
+        return migration;
+    }
+
+    public String getReleaseNotes() {
+        return releaseNotes;
+    }
+
     public String getVersion() {
         return version;
     }
 
-    public String getApp_id() {
-        return app_id;
+    public String getAppId() {
+        return appId;
     }
 
-    public boolean isNewerVersion() {
-        return code > BuildConfig.VERSION_CODE;
-    }
-
-    public void setCode(long code) {
-        this.code = code;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public void setApp_id(String app_id) {
-        this.app_id = app_id;
-    }
-
-    public long getLast_checked() {
-        return last_checked;
-    }
-
-    public void setLast_checked(long last_checked) {
-        this.last_checked = last_checked;
-    }
-
-    public boolean isDb_migration() {
-        return db_migration;
-    }
-
-    public void setDb_migration(boolean db_migration) {
-        this.db_migration = db_migration;
+    public void setLastChecked(long lastChecked) {
+        this.lastChecked = lastChecked;
     }
 }

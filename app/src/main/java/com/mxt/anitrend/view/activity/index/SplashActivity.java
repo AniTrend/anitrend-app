@@ -67,7 +67,8 @@ public class SplashActivity extends ActivityBase<Version, BasePresenter> {
     @Override
     protected void makeRequest() {
         Version version = getPresenter().getDatabase().getRemoteVersion();
-        if(version == null || DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_HOURS, version.getLast_checked(), 6))
+        // How frequent should the application check for updates on startup
+        if(version == null || DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_HOURS, version.getLastChecked(), 8))
             getViewModel().requestData(KeyUtils.UPDATE_CHECKER_REQ, getApplicationContext());
         else
             updateUI();
@@ -81,12 +82,8 @@ public class SplashActivity extends ActivityBase<Version, BasePresenter> {
     @Override
     public void onChanged(@Nullable Version model) {
         super.onChanged(model);
-        if(model != null) {
+        if(model != null)
             getPresenter().getDatabase().saveRemoteVersion(model);
-            AnalyticsUtil.logEvent(getPresenter().getApplicationPref(),
-                    getApplicationContext(), "application_version",
-                    model.getVersion());
-        }
         updateUI();
     }
 

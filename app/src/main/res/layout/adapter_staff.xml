@@ -45,7 +45,7 @@
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{model.fullName}"
+                    android:text="@{model.name.fullName}"
                     tools:text="Akira Toriyama"/>
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -53,8 +53,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:visibility="@{model.role != null? View.VISIBLE : View.GONE}"
-                    android:text="@{model.role}"
+                    android:visibility="@{model.language != null? View.VISIBLE : View.GONE}"
+                    android:text="@{model.language}"
                     tools:text="Director" />
 
             </LinearLayout>

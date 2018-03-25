@@ -90,7 +90,7 @@ public class WatchFragment extends FragmentChannelBase implements RetroCallback<
         if(externalLinks != null) {
             boolean feed = targetLink != null && targetLink.startsWith(BuildConfig.FEEDS_LINK);
             Bundle bundle = getViewModel().getParams();
-            bundle.putString(KeyUtils.arg_searchQuery, targetLink);
+            bundle.putString(KeyUtils.arg_search, targetLink);
             bundle.putBoolean(KeyUtils.arg_feed, feed);
             getViewModel().requestData(getRequestMode(feed), getContext());
         } else {

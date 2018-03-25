@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.index.StatusFeedAdapter;
+import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
@@ -78,7 +78,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new StatusFeedAdapter(model, getContext());
+            mAdapter = new FeedAdapter(model, getContext());
         injectAdapter();
         if(!TapTargetUtil.isActive(KeyUtils.KEY_POST_TYPE_TIP) && isFeed) {
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_POST_TYPE_TIP)) {

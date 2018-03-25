@@ -45,7 +45,7 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:padding="@dimen/md_margin"
-                                app:avatarUrl="@{model.avatar}"
+                                app:avatarUrl="@{model.avatar.large}"
                                 tools:src="@drawable/ic_player" />
 
                             <com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget

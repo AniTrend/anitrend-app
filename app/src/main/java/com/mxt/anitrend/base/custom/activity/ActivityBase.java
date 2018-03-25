@@ -59,8 +59,9 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     protected @Nullable @BindView(R.id.search_view) MaterialSearchView mSearchView;
 
+    private ViewModelBase<M> viewModel;
+
     protected BottomSheetBase mBottomSheet;
-    protected ViewModelBase<M> viewModel;
     protected FragmentBase mFragment;
     protected ActionBar mActionBar;
     protected IntentBundleUtil intentBundleUtil;
@@ -410,11 +411,11 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(query)) {
             Intent intent = new Intent(this, SearchActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(KeyUtils.arg_searchQuery, query);
+            intent.putExtra(KeyUtils.arg_search, query);
             CompatUtil.startRevealAnim(this, mSearchView, intent);
             Bundle bundle = new Bundle();
-            bundle.putString(KeyUtils.arg_searchQuery, query);
-            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtils.arg_searchQuery, bundle);
+            bundle.putString(KeyUtils.arg_search, query);
+            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtils.arg_search, bundle);
             return true;
         }
         NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();

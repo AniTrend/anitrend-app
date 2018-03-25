@@ -1,17 +1,16 @@
-package com.mxt.anitrend.view.fragment.search;
+package com.mxt.anitrend.view.fragment.favourite;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
@@ -22,45 +21,34 @@ import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.activity.detail.CharacterActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
- * Created by max on 2017/12/20.
+ * Created by max on 2018/03/25.
+ * CharacterFavouriteFragment
  */
 
-public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageContainer<CharacterBase>, BasePresenter> {
+public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<Favourite>, BasePresenter> {
 
-    private String searchQuery;
+    private long userId;
 
-    public static CharacterSearchFragment newInstance(Bundle args) {
-        CharacterSearchFragment fragment = new CharacterSearchFragment();
+    public static CharacterFavouriteFragment newInstance(Bundle params) {
+        Bundle args = new Bundle(params);
+        CharacterFavouriteFragment fragment = new CharacterFavouriteFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    /**
-     * Override and set presenter, mColumnSize, and fetch argument/s
-     *
-     * @param savedInstanceState
-     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_search);
+            userId = getArguments().getLong(KeyUtils.arg_id);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
     }
 
-    /**
-     * Is automatically called in the @onStart Method if overridden in list implementation
-     */
     @Override
     protected void updateUI() {
         if(mAdapter == null)
@@ -69,26 +57,15 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
         injectAdapter();
     }
 
-    /**
-     * All new or updated network requests should be handled in this method
-     */
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_search, searchQuery)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
+                .putVariable(KeyUtils.arg_id, userId)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.CHARACTER_SEARCH_REQ, getContext());
+        getViewModel().requestData(KeyUtils.USER_CHARACTER_FAVOURITES_REQ, getContext());
     }
 
-    /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
     @Override
     public void onItemClick(View target, EntityGroup data) {
         switch (target.getId()) {
@@ -100,30 +77,20 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
         }
     }
 
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
     @Override
     public void onItemLongClick(View target, EntityGroup data) {
 
     }
 
-    /**
-     * Called when the model state is changed.
-     *
-     * @param content The new data
-     */
     @Override
-    public void onChanged(@Nullable PageContainer<CharacterBase> content) {
+    public void onChanged(@Nullable ConnectionContainer<Favourite> content) {
         if(content != null) {
-            if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
-            if(!content.isEmpty())
-                onPostProcessed(GroupingUtil.wrapInGroup(content.getPageData()));
+            if(!content.isEmpty()) {
+                PageContainer<CharacterBase> pageContainer = content.getConnection().getCharacter();
+                if(pageContainer.hasPageInfo())
+                    pageInfo = pageContainer.getPageInfo();
+                onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.getPageData()));
+            }
             else
                 onPostProcessed(Collections.emptyList());
         }

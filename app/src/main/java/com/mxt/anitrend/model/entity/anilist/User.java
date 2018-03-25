@@ -14,6 +14,7 @@ import io.objectbox.annotation.Entity;
 
 /**
  * Created by Maxwell on 11/12/2016.
+ * User
  */
 @Entity
 public class User extends UserBase {

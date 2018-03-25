@@ -133,8 +133,6 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         binding.profileStatsWidget.setParams(getIntent().getExtras());
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
 
-        getPresenter().notifyAllListeners(model, false);
-
         if(getPresenter().isCurrentUser(model.getId())) {
             if (!TapTargetUtil.isActive(KeyUtils.KEY_NOTIFICATION_TIP)) {
                 if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_NOTIFICATION_TIP)) {

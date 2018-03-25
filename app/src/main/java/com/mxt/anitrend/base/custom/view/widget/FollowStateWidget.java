@@ -136,9 +136,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
         try {
             if(response.isSuccessful()) {
                 model.toggleFollow();
-                UserBase currentUser = presenter.getDatabase().getCurrentUser();
-                if(currentUser != null)
-                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.MUT_TOGGLE_FOLLOW, currentUser), false);
+                presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.MUT_TOGGLE_FOLLOW, model), false);
                 if(isAlive())
                     setControlText();
             } else

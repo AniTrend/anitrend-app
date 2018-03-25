@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -21,8 +22,13 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProfileAboutPanelBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
+import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity;
@@ -31,8 +37,6 @@ import com.mxt.anitrend.view.sheet.BottomSheetUsers;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -50,11 +54,13 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private long mLastSynced;
 
-    private List<UserBase> followers, following;
-    private Favourite favourites;
+    private QueryContainerBuilder queryContainer;
 
-    private WidgetPresenter<List<UserBase>> followersPresenter, followingPresenter;
-    private WidgetPresenter<Favourite> favouritePresenter;
+    private PageInfo followers, following;
+    private int favourites;
+
+    private WidgetPresenter<PageContainer<UserBase>> usersPresenter;
+    private WidgetPresenter<ConnectionContainer<Favourite>> favouritePresenter;
 
     private BottomSheetBase mBottomSheet;
     private FragmentManager fragmentManager;
@@ -80,6 +86,9 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     @Override
     public void onInit() {
         binding = WidgetProfileAboutPanelBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, userId)
+                .putVariable(KeyUtils.arg_page_limit, 1);
         binding.setOnClickListener(this);
     }
 
@@ -97,69 +106,85 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     }
 
     private void requestFollowers() {
-        followersPresenter = new WidgetPresenter<>(getContext());
-        followersPresenter.getParams().putLong(KeyUtils.arg_userId, userId);
-        followersPresenter.requestData(KeyUtils.USER_FOLLOWERS_REQ, getContext(), new RetroCallback<List<UserBase>>() {
+        usersPresenter = new WidgetPresenter<>(getContext());
+        usersPresenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        usersPresenter.requestData(KeyUtils.USER_FOLLOWERS_REQ, getContext(), new RetroCallback<PageContainer<UserBase>>() {
             @Override
-            public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
+            public void onResponse(@NonNull Call<PageContainer<UserBase>> call, @NonNull Response<PageContainer<UserBase>> response) {
                 if(isAlive()) {
-                    if (response.isSuccessful() && (followers = response.body()) != null)
-                        binding.userFollowersCount.setText(WidgetPresenter.valueFormatter(followers.size()));
+                    PageContainer<UserBase> pageContainer;
+                    if (response.isSuccessful() && (pageContainer = response.body()) != null)
+                        if(pageContainer.hasPageInfo()) {
+                            followers = pageContainer.getPageInfo();
+                            binding.userFollowersCount.setText(WidgetPresenter.valueFormatter(followers.getTotal()));
+                        }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<UserBase>> call, @NonNull Throwable throwable) {
-                if(isAlive())
+            public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
+                if(isAlive()) {
                     throwable.printStackTrace();
+                    Log.e(this.toString(), throwable.getMessage());
+                }
             }
         });
     }
 
     private void requestFollowing() {
-        followingPresenter = new WidgetPresenter<>(getContext());
-        followingPresenter.getParams().putLong(KeyUtils.arg_userId, userId);
-        followingPresenter.requestData(KeyUtils.USER_FOLLOWING_REQ, getContext(), new RetroCallback<List<UserBase>>() {
+        usersPresenter = new WidgetPresenter<>(getContext());
+        usersPresenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        usersPresenter.requestData(KeyUtils.USER_FOLLOWING_REQ, getContext(), new RetroCallback<PageContainer<UserBase>>() {
             @Override
-            public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
+            public void onResponse(@NonNull Call<PageContainer<UserBase>> call, @NonNull Response<PageContainer<UserBase>> response) {
                 if(isAlive()) {
-                    if(response.isSuccessful() && (following = response.body()) != null) {
-                        binding.userFollowingCount.setText(WidgetPresenter.valueFormatter(following.size()));
-                        if(followingPresenter.isCurrentUser(userId))
-                            followingPresenter.getDatabase().saveUsers(following);
+                    PageContainer<UserBase> pageContainer;
+                    if(response.isSuccessful() && (pageContainer = response.body()) != null) {
+                        if(pageContainer.hasPageInfo()) {
+                            following = pageContainer.getPageInfo();
+                            binding.userFollowingCount.setText(WidgetPresenter.valueFormatter(following.getTotal()));
+                        }
                     }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<UserBase>> call, @NonNull Throwable throwable) {
-                if(isAlive())
+            public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
+                if(isAlive()) {
                     throwable.printStackTrace();
+                    Log.e(this.toString(), throwable.getMessage());
+                }
             }
         });
     }
 
     private void requestFavourites() {
         favouritePresenter = new WidgetPresenter<>(getContext());
-        favouritePresenter.getParams().putLong(KeyUtils.arg_userId, userId);
-        favouritePresenter.requestData(KeyUtils.USER_FAVOURITES_REQ, getContext(), new RetroCallback<Favourite>() {
+        favouritePresenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        favouritePresenter.requestData(KeyUtils.USER_FAVOURITES_COUNT_REQ, getContext(), new RetroCallback<ConnectionContainer<Favourite>>() {
             @Override
-            public void onResponse(@NonNull Call<Favourite> call, @NonNull Response<Favourite> response) {
+            public void onResponse(@NonNull Call<ConnectionContainer<Favourite>> call, @NonNull Response<ConnectionContainer<Favourite>> response) {
                 if(isAlive()) {
-                    if(response.isSuccessful() && (favourites = response.body()) != null) {
-                        if(favouritePresenter.isCurrentUser(userId)) {
-                            favourites.setId(userId);
-                            favouritePresenter.getDatabase().saveFavourite(favourites);
+                    ConnectionContainer<Favourite> connectionContainer;
+                    if(response.isSuccessful() && (connectionContainer = response.body()) != null) {
+                        if(connectionContainer.getConnection() != null) {
+                            favourites += connectionContainer.getConnection().getAnime().getPageInfo().getTotal();
+                            favourites += connectionContainer.getConnection().getManga().getPageInfo().getTotal();
+                            favourites += connectionContainer.getConnection().getCharacter().getPageInfo().getTotal();
+                            favourites += connectionContainer.getConnection().getStaff().getPageInfo().getTotal();
+                            favourites += connectionContainer.getConnection().getStudio().getPageInfo().getTotal();
+                            binding.userFavouritesCount.setText(WidgetPresenter.valueFormatter(favourites));
                         }
-                        binding.userFavouritesCount.setText(WidgetPresenter.valueFormatter(favourites.getFavouritesCount()));
                     }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Favourite> call, @NonNull Throwable throwable) {
-                if(isAlive())
+            public void onFailure(@NonNull Call<ConnectionContainer<Favourite>> call, @NonNull Throwable throwable) {
+                if(isAlive()) {
                     throwable.printStackTrace();
+                    Log.e(this.toString(), throwable.getMessage());
+                }
             }
         });
     }
@@ -171,10 +196,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     public void onViewRecycled() {
         if(favouritePresenter != null)
             favouritePresenter.onDestroy();
-        if(followersPresenter != null)
-            followersPresenter.onDestroy();
-        if(followingPresenter != null)
-            followingPresenter.onDestroy();
+        if(usersPresenter != null)
+            usersPresenter.onDestroy();
         fragmentManager = null;
         mBottomSheet = null;
     }
@@ -183,35 +206,41 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.user_favourites_container:
-                if(favourites == null)
+                if(favourites < 1)
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else {
                     Intent intent = new Intent(getContext(), FavouriteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtils.arg_userId, userId);
+                    intent.putExtra(KeyUtils.arg_id, userId);
                     getContext().startActivity(intent);
                 }
                 break;
             case R.id.user_followers_container:
-                if(followers == null)
+                if(followers == null || followers.getTotal() < 1)
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
-                else if (fragmentManager != null && followers.size() > 0){
-                    mBottomSheet = new BottomSheetUsers.Builder()
-                            .setModel(followers)
+                else if (fragmentManager != null){
+                    /*mBottomSheet = new BottomSheetListUsers.Builder()
+                            .setModel(GraphUtil.getDefaultQuery(true)
+                                    .putVariable(KeyUtils.arg_id, userId),
+                                    KeyUtils.USER_FOLLOWERS_REQ)
                             .setTitle(R.string.title_bottom_sheet_followers)
                             .build();
-                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());
+                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());*/
+                    NotifyUtil.makeText(getContext(), R.string.TBA, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.user_following_container:
-                if(following == null)
+                if(following == null || following.getTotal() < 1)
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
-                else if (fragmentManager != null && following.size() > 0){
-                    mBottomSheet = new BottomSheetUsers.Builder()
-                            .setModel(following)
+                else if (fragmentManager != null){
+                    /*mBottomSheet = new BottomSheetListUsers.Builder()
+                            .setModel(GraphUtil.getDefaultQuery(true)
+                                    .putVariable(KeyUtils.arg_id, userId),
+                                    KeyUtils.USER_FOLLOWING_REQ)
                             .setTitle(R.string.title_bottom_sheet_following)
                             .build();
-                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());
+                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());*/
+                    NotifyUtil.makeText(getContext(), R.string.TBA, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -224,17 +253,14 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<UserBase> consumer) {
-        if(consumer.getRequestMode() == KeyUtils.ACTION_FOLLOW_TOGGLE_REQ) {
+        if(consumer.getRequestMode() == KeyUtils.MUT_TOGGLE_FOLLOW) {
             if(followers != null) {
-                if(followers.contains(consumer.getChangeModel()))
-                    followers.remove(consumer.getChangeModel());
-                else
-                    followers.add(consumer.getChangeModel());
+                int total = followers.getTotal();
+                followers.setTotal(!consumer.getChangeModel().isFollowing()? --total : ++total);
                 if(isAlive())
-                    binding.userFollowersCount.setText(WidgetPresenter.valueFormatter(followers.size()));
+                    binding.userFollowersCount.setText(WidgetPresenter.valueFormatter(followers.getTotal()));
             } else if(isAlive())
                 requestFollowers();
-
         }
     }
 

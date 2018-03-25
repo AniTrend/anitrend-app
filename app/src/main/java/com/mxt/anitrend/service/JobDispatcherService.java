@@ -7,15 +7,13 @@ import com.firebase.jobdispatcher.JobService;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.mxt.anitrend.base.custom.async.NotificationSyncTask;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.model.entity.anilist.Notification;
+import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotificationDispatcher;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 /**
  * Created by Maxwell on 1/22/2017.
@@ -25,7 +23,7 @@ import java.util.List;
  * Run all registered jobs for the current package:
  * adb shell dumpsys jobscheduler | grep com.mxt.anitrend
  */
-public class JobDispatcherService extends JobService implements BaseConsumer.onRequestModelChange<List<Notification>> {
+public class JobDispatcherService extends JobService implements BaseConsumer.onRequestModelChange<User> {
 
     private JobParameters job;
     private NotificationSyncTask notificationSyncTask;
@@ -72,9 +70,9 @@ public class JobDispatcherService extends JobService implements BaseConsumer.onR
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<List<Notification>> consumer) {
-        if(consumer.getRequestMode() == KeyUtils.USER_NOTIFICATION_REQ && consumer.getChangeModel() != null) {
-            NotificationDispatcher.createNotification(getApplicationContext(), consumer.getChangeModel());
+    public void onModelChanged(BaseConsumer<User> consumer) {
+        if(consumer.getRequestMode() == KeyUtils.USER_CURRENT_REQ && consumer.getChangeModel() != null) {
+            NotificationDispatcher.createNotification(getApplicationContext(), consumer.getChangeModel().getUnreadNotificationCount());
             jobFinished(job, false);
         } else
             jobFinished(job, true);

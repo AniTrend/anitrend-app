@@ -33,15 +33,15 @@ import butterknife.OnLongClick;
  * Media adapter
  */
 
-public class SeriesMediaAdapter extends RecyclerViewAdapter<MediaBase> {
+public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     private boolean isCompatType;
 
-    public SeriesMediaAdapter(List<MediaBase> data, Context context) {
+    public MediaAdapter(List<MediaBase> data, Context context) {
         super(data, context);
     }
 
-    public SeriesMediaAdapter(List<MediaBase> data, Context context, boolean isCompatType) {
+    public MediaAdapter(List<MediaBase> data, Context context, boolean isCompatType) {
         super(data, context);
         this.isCompatType = isCompatType;
     }

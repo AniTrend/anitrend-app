@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentUserAboutBinding;
 import com.mxt.anitrend.model.entity.anilist.User;
+import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.StatsRing;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -25,10 +25,8 @@ import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ import butterknife.OnClick;
  * about user fragment for the profile
  */
 
-public class UserAboutFragment extends FragmentBase<User, BasePresenter, User> {
+public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User> {
 
     private FragmentUserAboutBinding binding;
     private User model;
@@ -49,10 +47,8 @@ public class UserAboutFragment extends FragmentBase<User, BasePresenter, User> {
     private long userId;
     private String userName;
 
-    private QueryContainerBuilder queryContainer;
-
-    public static UserAboutFragment newInstance(Bundle args) {
-        UserAboutFragment fragment = new UserAboutFragment();
+    public static UserOverviewFragment newInstance(Bundle args) {
+        UserOverviewFragment fragment = new UserOverviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -121,7 +117,7 @@ public class UserAboutFragment extends FragmentBase<User, BasePresenter, User> {
      */
     @Override
     public void makeRequest() {
-        queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
                 .putVariable(KeyUtils.arg_userName, userName)
                 .putVariable(KeyUtils.arg_id, userId);
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
@@ -160,26 +156,20 @@ public class UserAboutFragment extends FragmentBase<User, BasePresenter, User> {
     }
 
     private List<StatsRing> generateStatsData() {
-        if(model.getStats() != null) {
-            HashMap<String, Integer> genreList = model.getStats().getFavourite_genres();
-            if(genreList != null && genreList.size() > 0) {
-                Integer maximum = Stream.of(genreList)
-                        .max((o1, o2) -> o1.getValue() > o2.getValue() ? 1:-1)
-                        .get().getValue();
+        List<StatsRing> userGenreStats = new ArrayList<>();
+        if(model.getStats() != null && !CompatUtil.isEmpty(model.getStats().getFavouredGenresOverview())) {
+            int highestValue = Stream.of(model.getStats().getFavouredGenresOverview())
+                    .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
+                    .get().getAmount();
 
-                List<Map.Entry<String, Integer>> mapEntry = Stream.of(genreList)
-                        .sorted(ComparatorProvider.getGenreValueComparator())
-                        .limit(5).toList();
-
-                List<StatsRing> ringList = new ArrayList<>(mapEntry.size());
-                for (Map.Entry<String, Integer> entry: mapEntry) {
-                    float percentage = (((float)entry.getValue()) / ((float)maximum)) * 100f;
-                    ringList.add(new StatsRing((int)percentage, entry.getKey(), String.valueOf(entry.getValue())));
-                }
-                return ringList;
-            }
+            userGenreStats = Stream.of(model.getStats().getFavouredGenresOverview())
+                    .map(genreStats -> {
+                        float percentage = (((float)genreStats.getAmount()) / ((float)highestValue)) * 100f;
+                        return new StatsRing((int)percentage, genreStats.getGenre(), String.valueOf(genreStats.getAmount()));
+                    }).limit(5).toList();
         }
-        return new ArrayList<>();
+
+        return userGenreStats;
     }
 
     private void showRingStats() {

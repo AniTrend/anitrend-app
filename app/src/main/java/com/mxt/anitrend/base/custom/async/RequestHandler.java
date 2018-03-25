@@ -54,7 +54,7 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
 
 
                 case EPISODE_FEED_REQ:
-                    return (Call<T>) WebFactory.createCrunchyService(param.getBoolean(arg_feed), context).getRSS(param.getString(arg_searchQuery));
+                    return (Call<T>) WebFactory.createCrunchyService(param.getBoolean(arg_feed), context).getRSS(param.getString(arg_search));
                 case EPISODE_LATEST_REQ:
                     return (Call<T>) WebFactory.createCrunchyService(param.getBoolean(arg_feed), context).getLatestFeed();
                 case EPISODE_POPULAR_REQ:
@@ -62,7 +62,7 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
 
 
                 case GIPHY_SEARCH_REQ:
-                    return (Call<T>) WebFactory.createGiphyService(context).findGif(BuildConfig.GIPHY_KEY, param.getString(arg_searchQuery),
+                    return (Call<T>) WebFactory.createGiphyService(context).findGif(BuildConfig.GIPHY_KEY, param.getString(arg_search),
                             PAGING_LIMIT, param.getInt(arg_page_offset), "PG", "en");
                 case GIPHY_TRENDING_REQ:
                     return (Call<T>) WebFactory.createGiphyService(context).getTrending(BuildConfig.GIPHY_KEY, PAGING_LIMIT, param.getInt(arg_page_offset), "PG");

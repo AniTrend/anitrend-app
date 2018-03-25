@@ -3,10 +3,13 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.util.KeyUtils;
 
 /**
  * Created by max on 2018/03/24.
+ * StatusDistribution for media and userStats
+ * @see UserStats
  */
 
 public class StatusDistribution implements Parcelable {

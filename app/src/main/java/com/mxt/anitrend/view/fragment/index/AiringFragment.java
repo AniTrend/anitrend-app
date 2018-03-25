@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.index.SeriesAiringAdapter;
+import com.mxt.anitrend.adapter.recycler.index.AiringAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
@@ -57,7 +57,7 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new SeriesAiringAdapter(model, getContext());
+            mAdapter = new AiringAdapter(model, getContext());
         injectAdapter();
     }
 

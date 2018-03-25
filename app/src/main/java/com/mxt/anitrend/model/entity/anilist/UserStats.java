@@ -3,35 +3,40 @@ package com.mxt.anitrend.model.entity.anilist;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashMap;
+import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
+import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
+
+import java.util.List;
 
 /**
  * Created by max on 11/15/2016.
+ * UserStats for user
+ * @see User
  */
 
 public class UserStats implements Parcelable {
 
     private int watchedTime;
     private int chaptersRead;
-    private HashMap<String, Integer> animeStatusDistribution;
-    private HashMap<String, Integer> mangaStatusDistribution;
-    private HashMap<String, Integer> favouredGenresOverview;
+    private List<StatusDistribution> animeStatusDistribution;
+    private List<StatusDistribution> mangaStatusDistribution;
+    private List<GenreStats> favouredGenresOverview;
 
     protected UserStats(Parcel in) {
         watchedTime = in.readInt();
         chaptersRead = in.readInt();
-        animeStatusDistribution = in.readHashMap(HashMap.class.getClassLoader());
-        mangaStatusDistribution = in.readHashMap(HashMap.class.getClassLoader());
-        favouredGenresOverview = in.readHashMap(HashMap.class.getClassLoader());
+        animeStatusDistribution = in.createTypedArrayList(StatusDistribution.CREATOR);
+        mangaStatusDistribution = in.createTypedArrayList(StatusDistribution.CREATOR);
+        favouredGenresOverview = in.createTypedArrayList(GenreStats.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(watchedTime);
         dest.writeInt(chaptersRead);
-        dest.writeMap(animeStatusDistribution);
-        dest.writeMap(mangaStatusDistribution);
-        dest.writeMap(favouredGenresOverview);
+        dest.writeTypedList(animeStatusDistribution);
+        dest.writeTypedList(mangaStatusDistribution);
+        dest.writeTypedList(favouredGenresOverview);
     }
 
     @Override
@@ -59,15 +64,15 @@ public class UserStats implements Parcelable {
         return chaptersRead;
     }
 
-    public HashMap<String, Integer> getAnimeStatusDistribution() {
+    public List<StatusDistribution> getAnimeStatusDistribution() {
         return animeStatusDistribution;
     }
 
-    public HashMap<String, Integer> getMangaStatusDistribution() {
+    public List<StatusDistribution> getMangaStatusDistribution() {
         return mangaStatusDistribution;
     }
 
-    public HashMap<String, Integer> getFavouredGenresOverview() {
+    public List<GenreStats> getFavouredGenresOverview() {
         return favouredGenresOverview;
     }
 }
