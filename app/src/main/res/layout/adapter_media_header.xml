@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -23,7 +24,7 @@
 
             <com.mxt.anitrend.base.custom.view.image.AspectImageView
                 android:id="@+id/series_image"
-                android:layout_width="@dimen/avatar_size"
+                android:layout_width="@dimen/avatar_size_lg"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
                 app:imageUrl="@{model.coverImage.large}"/>
@@ -35,7 +36,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_marginEnd="@dimen/lg_margin"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
@@ -46,24 +47,35 @@
                     tools:background="@color/colorStateBlue"/>
 
                 <android.support.v4.widget.Space
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/md_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
                     android:id="@+id/series_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="Gintama."/>
 
                 <android.support.v4.widget.Space
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/md_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{model.type}"
+                    android:text="@{CompatUtil.capitalizeWords(model.subGroupTitle)}"
+                    tools:text="Supporting" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@{CompatUtil.capitalizeWords(model.type)}"
                     tools:text="OVA" />
 
             </LinearLayout>

@@ -5,7 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
-        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.SeriesPresenter" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.MediaPresenter" />
     </data>
 
     <LinearLayout
@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{presenter.getSeriesStatus(model)}"
+                    android:text="@{presenter.getMediaStatus(model)}"
                     tools:text="Not Released" />
 
             </LinearLayout>
@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getSeriesSeason(model)}"
+                    android:text="@{presenter.getMediaSeason(model)}"
                     tools:text="2015 Fall" />
 
             </LinearLayout>
@@ -241,7 +241,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed-light"
-                android:text="@{String.format(@string/text_anime_score, model.average_score)}"
+                android:text="@{String.format(@string/text_anime_score, model.averageScore)}"
                 tools:text="85% Avg" />
         </LinearLayout>
 
@@ -296,7 +296,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    app:airingDate="@{model.airingSchedule}"
+                    app:airingDate="@{model.nextAiringEpisode}"
                     tools:text="EP 3 Airing In 2 days" />
             </LinearLayout>
 

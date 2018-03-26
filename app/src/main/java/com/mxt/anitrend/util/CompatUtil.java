@@ -470,7 +470,7 @@ public class CompatUtil {
     public static String capitalizeWords(String input) {
         if(!TextUtils.isEmpty(input)) {
             StringBuilder result = new StringBuilder(input.length());
-            String[] words = input.split(" ");
+            String[] words = input.split("_|\\s");
             int index = 0;
             for (String word: words) {
                 index++;

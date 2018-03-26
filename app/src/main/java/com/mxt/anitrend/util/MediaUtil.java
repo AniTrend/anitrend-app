@@ -1,7 +1,7 @@
 package com.mxt.anitrend.util;
 
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 
 import java.util.Objects;
 

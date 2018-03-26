@@ -5,7 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
-        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.SeriesPresenter" />
+        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.MediaPresenter" />
     </data>
 
     <LinearLayout
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="@{presenter.getSeriesFormat(model)}"
+                android:text="@{presenter.getMediaFormat(model)}"
                 tools:text="TV"/>
 
             <android.support.v4.widget.Space

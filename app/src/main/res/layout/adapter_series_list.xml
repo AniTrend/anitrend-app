@@ -68,7 +68,7 @@
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{model.score}"
+            android:text="@{model.scoreFormatted}"
             tools:text="8.5"/>
 
     </FrameLayout>

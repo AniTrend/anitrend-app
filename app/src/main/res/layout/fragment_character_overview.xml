@@ -38,7 +38,7 @@
                                 android:foreground="?selectableItemBackground"
                                 android:layout_width="@dimen/series_image_xs"
                                 android:layout_height="wrap_content"
-                                app:imageUrl="@{model.avatar}"
+                                app:imageUrl="@{model.image}"
                                 tools:src="@drawable/sample_img"/>
 
                             <android.support.v4.widget.Space
@@ -56,7 +56,7 @@
                                     android:maxLines="2"
                                     android:ellipsize="end"
                                     android:textStyle="bold"
-                                    android:text="@{model.fullName}"
+                                    android:text="@{model.name.fullName}"
                                     tools:text="Gintoki Sakata"/>
 
                                 <android.support.v4.widget.Space
@@ -81,7 +81,7 @@
                                 <android.support.v7.widget.AppCompatTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@{model.name_japanese}"
+                                    android:text="@{model.name.original}"
                                     android:fontFamily="sans-serif-light"
                                     android:maxLines="2"
                                     android:ellipsize="end"
@@ -119,7 +119,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                app:textHtml="@{model.name_alt}"
+                                app:textHtml="@{model.name.alternativeFormatted}"
                                 tools:text="Yorozuya, Mr. Odd Jobs, Shiroyasha, Gin, Gin-chan, Kintoki, Paako, Ginpachi-sensei" />
 
                             <android.support.v4.widget.Space
@@ -140,7 +140,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                app:textHtml="@{model.info}"
+                                app:textHtml="@{model.description}"
                                 tools:text="The Amanto, aliens from outer space, have invaded Earth and taken over feudal Japan."/>
 
                         </LinearLayout>

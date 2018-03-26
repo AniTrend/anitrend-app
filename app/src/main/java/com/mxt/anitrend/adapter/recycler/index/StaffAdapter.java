@@ -19,6 +19,7 @@ import butterknife.OnClick;
 
 /**
  * Created by max on 2017/12/20.
+ * StaffAdapter
  */
 
 public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {

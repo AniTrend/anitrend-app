@@ -14,7 +14,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -28,7 +28,7 @@ import java.util.Collections;
  * Multi purpose media browse fragment
  */
 
-public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, SeriesPresenter> {
+public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, MediaPresenter> {
 
     private QueryContainerBuilder queryContainer;
     private boolean isCompatType;
@@ -68,7 +68,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         }
         isPager = true; isFilterable = true;
         mColumnSize = R.integer.single_list_x1;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 

@@ -28,6 +28,10 @@ public class GroupTitleViewHolder extends RecyclerViewHolder<EntityGroup> {
     @Override
     public void onBindViewHolder(EntityGroup model) {
         binding.setModel((EntityHeader) model);
+        if (((EntityHeader) model).getSize() < 1)
+            binding.catalogHeaderCount.setVisibility(View.GONE);
+        else
+            binding.catalogHeaderCount.setVisibility(View.VISIBLE);
         binding.executePendingBindings();
     }
 

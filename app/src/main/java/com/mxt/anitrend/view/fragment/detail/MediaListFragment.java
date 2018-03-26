@@ -22,7 +22,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -37,7 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * series list fragment
  */
 
-public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, SeriesPresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
+public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, MediaPresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
     private String userName;
     private QueryContainerBuilder queryContainer;

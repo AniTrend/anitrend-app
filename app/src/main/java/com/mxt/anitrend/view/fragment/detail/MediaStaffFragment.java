@@ -8,12 +8,13 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
+import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
@@ -26,7 +27,7 @@ import java.util.Collections;
  * Created by max on 2018/01/18.
  */
 
-public class MediaStaffFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<String, StaffBase>>, SeriesPresenter> {
+public class MediaStaffFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<StaffEdge>>, MediaPresenter> {
 
     private @KeyUtils.MediaType String mediaType;
     private long mediaId;
@@ -49,7 +50,7 @@ public class MediaStaffFragment extends FragmentBaseList<EntityGroup, Connection
             mediaId = getArguments().getLong(KeyUtils.arg_id);
             mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         } mColumnSize = R.integer.grid_giphy_x3; isPager = true;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 
@@ -109,14 +110,14 @@ public class MediaStaffFragment extends FragmentBaseList<EntityGroup, Connection
     }
 
     @Override
-    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<String, StaffBase>> content) {
-        EdgeContainer<String, StaffBase> edgeContainer;
+    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<StaffEdge>> content) {
+        EdgeContainer<StaffEdge> edgeContainer;
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())
                     pageInfo = edgeContainer.getPageInfo();
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupItemsByKey(edgeContainer.getEdges(), model));
+                    onPostProcessed(GroupingUtil.groupStaffByRole(edgeContainer.getEdges(), model));
                 else
                     onPostProcessed(Collections.emptyList());
             }

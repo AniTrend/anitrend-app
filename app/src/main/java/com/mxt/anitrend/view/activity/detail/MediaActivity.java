@@ -21,7 +21,7 @@ import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.databinding.ActivitySeriesBinding;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -42,7 +42,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
  * Media activity
  */
 
-public class MediaActivity extends ActivityBase<MediaBase, SeriesPresenter> implements View.OnClickListener {
+public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> implements View.OnClickListener {
 
     private ActivitySeriesBinding binding;
     private MediaBase model;
@@ -59,7 +59,7 @@ public class MediaActivity extends ActivityBase<MediaBase, SeriesPresenter> impl
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_series);
-        setPresenter(new SeriesPresenter(getApplicationContext()));
+        setPresenter(new MediaPresenter(getApplicationContext()));
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         disableToolbarTitle();

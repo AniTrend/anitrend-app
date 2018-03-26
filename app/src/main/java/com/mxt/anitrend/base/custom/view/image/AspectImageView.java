@@ -81,9 +81,6 @@ public class AspectImageView extends android.support.v7.widget.AppCompatImageVie
 
     @BindingAdapter({"imageUrl"})
     public static void setImage(AspectImageView view, ImageBase imageBase) {
-        Glide.with(view.getContext()).load(imageBase.getLarge())
-                .transition(DrawableTransitionOptions.withCrossFade(350))
-                .apply(RequestOptions.centerCropTransform())
-                .into(view);
+        setImage(view, imageBase.getLarge());
     }
 }

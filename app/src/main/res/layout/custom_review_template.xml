@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Review" />
+        <import type="com.mxt.anitrend.util.DateUtil" />
     </data>
 
     <LinearLayout
@@ -38,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:textAlignment="viewEnd"
-                android:text="@{model.createdAt}"
+                android:text="@{DateUtil.convertDate(model.createdAt)}"
                 tools:text="Oct 28 2017" />
 
         </LinearLayout>

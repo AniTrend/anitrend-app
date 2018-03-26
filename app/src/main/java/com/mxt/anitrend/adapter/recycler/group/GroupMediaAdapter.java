@@ -29,10 +29,9 @@ import butterknife.OnLongClick;
  * Role Based Adapter Media Roles
  */
 
-public class GroupRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
+public class GroupMediaAdapter extends RecyclerViewAdapter<EntityGroup> {
 
-
-    public GroupRoleAdapter(List<EntityGroup> data, Context context) {
+    public GroupMediaAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
     }
 

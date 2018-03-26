@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.mxt.anitrend.util.DateUtil" />
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
+        <import type="com.mxt.anitrend.util.DateUtil" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -26,7 +27,7 @@
                 android:id="@+id/series_title_romanji"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{model.title_romaji}"
+                android:text="@{model.title.romaji}"
                 android:layout_margin="@dimen/md_margin"
                 android:layout_centerHorizontal="true"
                 android:textAlignment="center"
@@ -46,7 +47,7 @@
                 android:layout_width="@dimen/series_image_md"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/lg_margin"
-                app:imageUrl="@{model.avatar}"
+                app:imageUrl="@{model.coverImage}"
                 tools:src="@drawable/sample_img"/>
 
             <!--Anime Small Details-->
@@ -62,7 +63,7 @@
                     android:id="@+id/series_title_eng"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{model.title_english}"
+                    android:text="@{model.title.english}"
                     tools:text="Gintama. Porori-hen" />
 
                 <android.support.v4.widget.Space
@@ -79,8 +80,8 @@
                     android:layout_height="@dimen/sm_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:id="@+id/series_type"
-                    android:text="@{model.type}"
+                    android:id="@+id/series_format"
+                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,7 +126,7 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:airingDate="@{model.airingSchedule}"
+                    app:airingDate="@{model.nextAiringEpisode}"
                     tools:text="Ep 5: 2 days from now" />
 
             </LinearLayout>
@@ -151,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/SmallRating"
-                    app:averageScore="@{model.average_score}"
+                    app:averageScore="@{model.averageScore}"
                     tools:rating="1"/>
 
                 <com.mxt.anitrend.base.custom.view.text.RangeDateTextView

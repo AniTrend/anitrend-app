@@ -53,7 +53,7 @@
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%d%%",model.votes)}'
+                    android:text='@{String.format("%d%%", model.rank)}'
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                     android:textColor="?colorAccent"
                     tools:text="80%"/>

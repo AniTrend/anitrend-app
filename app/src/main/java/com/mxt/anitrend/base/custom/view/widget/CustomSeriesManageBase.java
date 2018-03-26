@@ -14,7 +14,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
@@ -25,7 +25,7 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public abstract class CustomSeriesManageBase extends RelativeLayout implements CustomView, View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    protected SeriesPresenter presenter;
+    protected MediaPresenter presenter;
 
     protected MediaList model;
 
@@ -55,7 +55,7 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
      */
     @Override
     public void onInit() {
-        presenter = new SeriesPresenter(getContext());
+        presenter = new MediaPresenter(getContext());
     }
 
     public void setModel(MediaBase model, boolean isNewEntry) {

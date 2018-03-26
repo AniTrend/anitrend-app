@@ -8,8 +8,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.fragment.detail.StaffOverviewFragment;
-import com.mxt.anitrend.view.fragment.group.MediaRolesFragment;
-import com.mxt.anitrend.view.fragment.group.SeriesStaffRoleFragment;
+import com.mxt.anitrend.view.fragment.group.MediaFormatFragment;
+import com.mxt.anitrend.view.fragment.group.MediaStaffRoleFragment;
 
 /**
  * Created by max on 2017/12/01.
@@ -33,11 +33,11 @@ public class StaffPageAdapter extends BaseStatePageAdapter {
             case 0:
                 return StaffOverviewFragment.newInstance(getParams());
             case 1:
-                return MediaRolesFragment.newInstance(getParams(), KeyUtils.ANIME, KeyUtils.STAFF_MEDIA_REQ);
+                return MediaFormatFragment.newInstance(getParams(), KeyUtils.MANGA, KeyUtils.STAFF_MEDIA_REQ);
             case 2:
-                return MediaRolesFragment.newInstance(getParams(), KeyUtils.MANGA, KeyUtils.STAFF_MEDIA_REQ);
+                return MediaFormatFragment.newInstance(getParams(), KeyUtils.MANGA, KeyUtils.STAFF_MEDIA_REQ);
             case 3:
-                return SeriesStaffRoleFragment.newInstance(getParams());
+                return MediaStaffRoleFragment.newInstance(getParams());
         }
         return null;
     }

@@ -24,14 +24,13 @@ import com.mxt.anitrend.adapter.recycler.detail.LinkAdapter;
 import com.mxt.anitrend.adapter.recycler.detail.RankAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentSeriesStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaRank;
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -46,7 +45,7 @@ import butterknife.ButterKnife;
  * Created by max on 2017/12/28.
  */
 
-public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Media> {
+public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Media> {
 
     private FragmentSeriesStatsBinding binding;
     private Media model;
@@ -71,7 +70,7 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
             mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 
@@ -162,7 +161,7 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
 
             configureScoreDistribution(model.getStats().getScoreDistribution());
 
-            BarDataSet barDataSet = new BarDataSet(getPresenter().getSeriesScoreDistribution(model.getStats().getScoreDistribution()), getString(R.string.title_score_distribution));
+            BarDataSet barDataSet = new BarDataSet(getPresenter().getMediaScoreDistribution(model.getStats().getScoreDistribution()), getString(R.string.title_score_distribution));
             barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 253);
             barDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
             BarData barData = new BarData(barDataSet);
@@ -179,7 +178,7 @@ public class MediaStatsFragment extends FragmentBase<Media, SeriesPresenter, Med
 
             configureSeriesStats();
 
-            List<PieEntry> pieEntries = getPresenter().getSeriesStats(model.getStats().getStatusDistribution());
+            List<PieEntry> pieEntries = getPresenter().getMediaStats(model.getStats().getStatusDistribution());
             PieDataSet pieDataSet = new PieDataSet(pieEntries, getString(R.string.title_series_stats));
             pieDataSet.setSliceSpace(3f);
             pieDataSet.setColors(Color.parseColor("#6fc1ea"), Color.parseColor("#48c76d"),

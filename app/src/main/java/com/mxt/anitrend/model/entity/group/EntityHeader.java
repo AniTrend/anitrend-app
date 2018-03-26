@@ -19,6 +19,10 @@ public class EntityHeader extends EntityGroup {
         setContentType(KeyUtils.RECYCLER_TYPE_HEADER);
     }
 
+    public EntityHeader(String title) {
+        this.title = title;
+    }
+
     public int getSize() {
         return size;
     }

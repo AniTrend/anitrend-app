@@ -30,7 +30,7 @@
                 android:layout_height="@dimen/avatar_size"
                 android:layout_margin="@dimen/xl_margin"
                 android:layout_rowSpan="2"
-                app:avatarUrl="@{model.image_url_med}"
+                app:avatarUrl="@{model.avatar}"
                 tools:src="@tools:sample/avatars" />
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView

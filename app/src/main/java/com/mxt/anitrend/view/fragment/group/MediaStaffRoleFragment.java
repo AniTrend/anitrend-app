@@ -7,16 +7,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
+import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
-import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
@@ -25,23 +24,19 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.Collections;
-import java.util.List;
 
 /**
- * Created by max on 2018/01/05.
+ * Created by max on 2018/01/30.
+ * MediaStaffRoleFragment
  */
 
-public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<String, MediaBase>>, SeriesPresenter> {
+public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
-    private @KeyUtils.MediaType String mediaType;
-    private long mediaId;
+    private long id;
 
-    public static SeriesRelationFragment newInstance(Bundle args) {
-        SeriesRelationFragment fragment = new SeriesRelationFragment();
+    public static MediaStaffRoleFragment newInstance(Bundle args) {
+        MediaStaffRoleFragment fragment = new MediaStaffRoleFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,23 +49,11 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, Connec
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
-            mediaId = getArguments().getLong(KeyUtils.arg_id);
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
-        } mColumnSize = R.integer.grid_giphy_x3;
-        setPresenter(new SeriesPresenter(getContext()));
+        if(getArguments() != null)
+            id = getArguments().getLong(KeyUtils.arg_id);
+        mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
-    }
-
-    /**
-     * Is automatically called in the @onStart Method if overridden in list implementation
-     */
-    @Override
-    protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new GroupSeriesAdapter(model, getContext());
-        setSwipeRefreshLayoutEnabled(false);
-        injectAdapter();
     }
 
     /**
@@ -78,11 +61,11 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, Connec
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, mediaId)
-                .putVariable(KeyUtils.arg_type, mediaType);
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_id, id)
+                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_RELATION_REQ, getContext());
+        getViewModel().requestData(KeyUtils.STAFF_ROLES_REQ, getContext());
     }
 
     /**
@@ -97,8 +80,8 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, Connec
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((MediaBase) data).getId());
-                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase) data).getType());
+                intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
+                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -117,7 +100,7 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, Connec
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel((MediaBase) data).build(getActivity());
+                            .setModel(((MediaBase)data)).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -125,15 +108,26 @@ public class SeriesRelationFragment extends FragmentBaseList<EntityGroup, Connec
         }
     }
 
+    /**
+     * Is automatically called in the @onStart Method if overridden in list implementation
+     */
     @Override
-    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<String, MediaBase>> content) {
-        EdgeContainer<String, MediaBase> edgeContainer;
+    protected void updateUI() {
+        if(mAdapter == null)
+            mAdapter = new GroupStaffRoleAdapter(model, getContext());
+        setSwipeRefreshLayoutEnabled(false);
+        injectAdapter();
+    }
+
+    @Override
+    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<MediaEdge>> content) {
+        EdgeContainer<MediaEdge> edgeContainer;
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())
                     pageInfo = edgeContainer.getPageInfo();
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupItemsByKey(edgeContainer.getEdges(), model));
+                    onPostProcessed(GroupingUtil.groupMediaByStaffRole(edgeContainer.getEdges(), model));
                 else
                     onPostProcessed(Collections.emptyList());
             }

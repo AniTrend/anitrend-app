@@ -7,14 +7,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.group.GroupRoleAdapter;
+import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
+import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import com.mxt.anitrend.model.entity.container.body.PageContainer;
+import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
@@ -26,22 +27,17 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import java.util.Collections;
 
 /**
- * Created by max on 2018/01/27.
- * Shared fragment between media for staff and character
+ * Created by max on 2018/01/05.
+ * MediaRelationFragment
  */
 
-public class MediaRolesFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<PageContainer<MediaBase>>, SeriesPresenter> {
+public class MediaRelationFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
-    private long id;
     private @KeyUtils.MediaType String mediaType;
+    private long mediaId;
 
-    private @KeyUtils.RequestType int requestType;
-
-    public static MediaRolesFragment newInstance(Bundle params, @KeyUtils.MediaType String mediaType, @KeyUtils.RequestType int requestType) {
-        Bundle args = new Bundle(params);
-        args.putString(KeyUtils.arg_mediaType, mediaType);
-        args.putInt(KeyUtils.arg_request_type, requestType);
-        MediaRolesFragment fragment = new MediaRolesFragment();
+    public static MediaRelationFragment newInstance(Bundle args) {
+        MediaRelationFragment fragment = new MediaRelationFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,13 +51,34 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            requestType = getArguments().getInt(KeyUtils.arg_request_type);
-            id = getArguments().getLong(KeyUtils.arg_id);
+            mediaId = getArguments().getLong(KeyUtils.arg_id);
             mediaType = getArguments().getString(KeyUtils.arg_mediaType);
-        }
-        mColumnSize = R.integer.grid_giphy_x3; isPager = true;
-        setPresenter(new SeriesPresenter(getContext()));
+        } mColumnSize = R.integer.grid_giphy_x3;
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
+    }
+
+    /**
+     * Is automatically called in the @onStart Method if overridden in list implementation
+     */
+    @Override
+    protected void updateUI() {
+        if(mAdapter == null)
+            mAdapter = new GroupSeriesAdapter(model, getContext());
+        setSwipeRefreshLayoutEnabled(false);
+        injectAdapter();
+    }
+
+    /**
+     * All new or updated network requests should be handled in this method
+     */
+    @Override
+    public void makeRequest() {
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtils.arg_id, mediaId)
+                .putVariable(KeyUtils.arg_type, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.MEDIA_RELATION_REQ, getContext());
     }
 
     /**
@@ -76,8 +93,8 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase)data).getType());
+                intent.putExtra(KeyUtils.arg_id, ((MediaBase) data).getId());
+                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase) data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -96,7 +113,7 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     seriesActionUtil = new SeriesActionUtil.Builder()
-                            .setModel(((MediaBase)data)).build(getActivity());
+                            .setModel((MediaBase) data).build(getActivity());
                     seriesActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -104,39 +121,15 @@ public class MediaRolesFragment extends FragmentBaseList<EntityGroup, Connection
         }
     }
 
-    /**
-     * Is automatically called in the @onStart Method if overridden in list implementation
-     */
     @Override
-    protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new GroupRoleAdapter(model, getContext());
-        setSwipeRefreshLayoutEnabled(false);
-        injectAdapter();
-    }
-
-    /**
-     * All new or updated network requests should be handled in this method
-     */
-    @Override
-    public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
-                .putVariable(KeyUtils.arg_id, id)
-                .putVariable(KeyUtils.arg_mediaType, mediaType)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(requestType, getContext());
-    }
-
-    @Override
-    public void onChanged(@Nullable ConnectionContainer<PageContainer<MediaBase>> content) {
-        PageContainer<MediaBase> pageContainer;
-        if (content != null && (pageContainer = content.getConnection()) != null) {
-            if(!pageContainer.isEmpty()) {
-                if (pageContainer.hasPageInfo())
-                    pageInfo = pageContainer.getPageInfo();
-                if (!pageContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupMediaByFormat(pageContainer.getPageData(), model));
+    public void onChanged(@Nullable ConnectionContainer<EdgeContainer<MediaEdge>> content) {
+        EdgeContainer<MediaEdge> edgeContainer;
+        if (content != null && (edgeContainer = content.getConnection()) != null) {
+            if(!edgeContainer.isEmpty()) {
+                if (edgeContainer.hasPageInfo())
+                    pageInfo = edgeContainer.getPageInfo();
+                if (!edgeContainer.isEmpty())
+                    onPostProcessed(GroupingUtil.groupMediaByRelationType(edgeContainer.getEdges()));
                 else
                     onPostProcessed(Collections.emptyList());
             }

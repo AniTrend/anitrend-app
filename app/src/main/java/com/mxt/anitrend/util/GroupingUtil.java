@@ -6,7 +6,9 @@ import android.text.TextUtils;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
+import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
@@ -15,7 +17,6 @@ import com.mxt.anitrend.model.entity.group.EntityHeader;
 import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,18 +36,18 @@ public class GroupingUtil {
      * which is the default sort type for the request @{@link KeyUtils#STAFF_MEDIA_REQ}
      * <br/>
      *
-     * @param modelItems The potential external model response which needs to be grouped
-     * @param entityGroups The current model item/s containing all data minus current mediaItems
+     * @param edges The potential external model response which needs to be grouped
+     * @param model The current model item/s containing all data minus current mediaItems
      */
-    public static List<EntityGroup> groupMediaByFormat(@NonNull List<MediaBase> modelItems, @Nullable List<EntityGroup> entityGroups) {
+    public static List<EntityGroup> groupMediaByFormat(@NonNull List<MediaBase> edges, @Nullable List<EntityGroup> model) {
         List<EntityGroup> entityMap = new ArrayList<>();
 
-        Map<String, List<MediaBase>> map = Stream.of(modelItems)
+        Map<String, List<MediaBase>> map = Stream.of(edges)
                 .filter(value -> !TextUtils.isEmpty(value.getFormat()))
                 .collect(Collectors.groupingBy(MediaBase::getFormat));
         for (Map.Entry<String, List<MediaBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
             EntityHeader entityHeader = new EntityHeader(entry.getKey(), entry.getValue().size());
-            if(entityGroups == null || !entityGroups.contains(entityHeader))
+            if(model == null || !model.contains(entityHeader))
                 entityMap.add(entityHeader);
             entityMap.addAll(entry.getValue());
         }
@@ -63,18 +64,18 @@ public class GroupingUtil {
      * which is the default sort type for the request @{@link KeyUtils#STAFF_MEDIA_REQ}
      * <br/>
      *
-     * @param modelItems The potential external model response which needs to be grouped
-     * @param entityGroups The current model item/s containing all data minus current mediaItems
+     * @param edges The potential external model response which needs to be grouped
+     * @param model The current model item/s containing all data minus current mediaItems
      */
-    public static List<EntityGroup> groupStaffByLanguage(@NonNull List<StaffBase> modelItems, @Nullable List<EntityGroup> entityGroups) {
+    public static List<EntityGroup> groupStaffByLanguage(@NonNull List<StaffBase> edges, @Nullable List<EntityGroup> model) {
         List<EntityGroup> entityMap = new ArrayList<>();
 
-        Map<String, List<StaffBase>> map = Stream.of(modelItems)
+        Map<String, List<StaffBase>> map = Stream.of(edges)
                 .filter(value -> !TextUtils.isEmpty(value.getLanguage()))
                 .collect(Collectors.groupingBy(StaffBase::getLanguage));
         for (Map.Entry<String, List<StaffBase>> entry: CompatUtil.getKeyFilteredMap(map)) {
             EntityHeader entityHeader = new EntityHeader(entry.getKey(), entry.getValue().size());
-            if(entityGroups == null || !entityGroups.contains(entityHeader))
+            if(model == null || !model.contains(entityHeader))
                 entityMap.add(entityHeader);
             entityMap.addAll(entry.getValue());
         }
@@ -83,7 +84,11 @@ public class GroupingUtil {
     }
 
     /**
-     * Groups edge container items the media/node and the character role
+     * Groups edge container items their media/node and the character role
+     * N.B. In this use case the main model is not used to check for existence
+     * of a given role because the voiceActors and characterRoles are grouped by media
+     * <br/>
+     *
      * @see CharacterActorsFragment restricted and should only be used by this
      * @see EdgeContainer
      * <br/>
@@ -101,6 +106,56 @@ public class GroupingUtil {
             }
             if(!CompatUtil.isEmpty(edge.getVoiceActors()))
                 entityMap.addAll(edge.getVoiceActors());
+        }
+        return entityMap;
+    }
+
+    public static List<EntityGroup> groupMediaByRelationType(List<MediaEdge> edges) {
+        List<EntityGroup> entityMap = new ArrayList<>();
+        for (MediaEdge edge: edges) {
+            EntityHeader entityHeader = new EntityHeader(edge.getRelationType());
+            if(!entityMap.contains(entityHeader))
+                entityMap.add(entityHeader);
+            else {
+                entityHeader.setSize(entityHeader.getSize() + 1);
+                entityMap.add(edge.getNode());
+            }
+        }
+        return entityMap;
+    }
+
+    public static List<EntityGroup> groupCharactersByRole(List<CharacterEdge> edges, List<EntityGroup> model) {
+        List<EntityGroup> entityMap = new ArrayList<>();
+        for (CharacterEdge edge: edges) {
+            EntityHeader entityHeader = new EntityHeader(edge.getRole());
+            if(model == null || !model.contains(entityHeader))
+                entityMap.add(entityHeader);
+            else
+                entityMap.add(edge.getNode());
+        }
+        return entityMap;
+    }
+
+    public static List<EntityGroup> groupStaffByRole(List<StaffEdge> edges, List<EntityGroup> model) {
+        List<EntityGroup> entityMap = new ArrayList<>();
+        for (StaffEdge edge: edges) {
+            EntityHeader entityHeader = new EntityHeader(edge.getRole());
+            if(model == null || !model.contains(entityHeader))
+                entityMap.add(entityHeader);
+            else
+                entityMap.add(edge.getNode());
+        }
+        return entityMap;
+    }
+
+    public static List<EntityGroup> groupMediaByStaffRole(List<MediaEdge> edges, List<EntityGroup> model) {
+        List<EntityGroup> entityMap = new ArrayList<>();
+        for (MediaEdge edge: edges) {
+            EntityHeader entityHeader = new EntityHeader(edge.getStaffRole());
+            if(model == null || !model.contains(entityHeader))
+                entityMap.add(entityHeader);
+            else
+                entityMap.add(edge.getNode());
         }
         return entityMap;
     }

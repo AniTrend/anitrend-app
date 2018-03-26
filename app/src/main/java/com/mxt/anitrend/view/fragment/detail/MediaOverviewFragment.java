@@ -22,7 +22,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -39,7 +39,7 @@ import butterknife.OnClick;
  * Created by max on 2017/12/31.
  */
 
-public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, Media> {
+public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, Media> {
 
     private FragmentSeriesOverviewBinding binding;
     private YoutubePlayerFragment youtubePlayerFragment;
@@ -65,7 +65,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, SeriesPresenter, 
             mediaType = getArguments().getString(KeyUtils.arg_mediaType);
         }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 

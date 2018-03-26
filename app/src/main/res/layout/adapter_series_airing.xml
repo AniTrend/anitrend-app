@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:src="@drawable/sample_img"
-            app:imageUrl="@{model.anime.avatar}"/>
+            app:imageUrl="@{model.media.coverImage}"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/lg_margin"
-            app:rating="@{model.anime.average_score}"/>
+            app:rating="@{model.media.averageScore}"/>
 
         <LinearLayout
             android:layout_gravity="bottom"
@@ -67,7 +67,7 @@
                 android:textAlignment="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:airingDate="@{model.anime.airingSchedule}"
+                app:airingDate="@{model.media.nextAiringEpisode}"
                 tools:text="EP 31: 4 days from now"/>
 
             <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget

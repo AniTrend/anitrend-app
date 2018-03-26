@@ -46,7 +46,7 @@
                 android:layout_width="@dimen/series_image_md"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/md_margin"
-                app:imageUrl="@{model.avatar}"
+                app:imageUrl="@{model.coverImage}"
                 tools:src="@drawable/sample_img"/>
 
             <!--Anime Small Details-->
@@ -79,7 +79,7 @@
                     android:layout_height="@dimen/sm_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:id="@+id/series_type"
+                    android:id="@+id/series_format"
                     android:text="@{model.type}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"

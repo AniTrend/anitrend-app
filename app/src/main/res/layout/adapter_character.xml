@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
-                app:imageUrl="@{model.avatar}"/>
+                app:imageUrl="@{model.image}"/>
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -45,17 +45,8 @@
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{model.fullName}"
+                    android:text="@{model.name.fullName}"
                     tools:text="Gintoki Something"/>
-
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/sm_margin"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:visibility="@{model.firstActor != null? View.VISIBLE : View.GONE}"
-                    android:text="@{model.firstActor}"
-                    tools:text="Some Actor Name" />
 
             </LinearLayout>
 

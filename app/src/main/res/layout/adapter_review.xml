@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
-            app:imageUrl="@{model.anime != null? model.anime.image_url_banner : model.manga.image_url_banner}"
+            app:imageUrl="@{model.media.bannerImage}"
             tools:scaleType="centerCrop"
             tools:layout_height="@dimen/wide_image_md"
             tools:src="@drawable/sample_banner" />
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:theme="@style/SmallRating"
-            app:averageScore="@{model.anime != null? model.anime.average_score : model.manga.average_score}"
+            app:averageScore="@{model.media.averageScore}"
             tools:rating="1" />
 
         <LinearLayout

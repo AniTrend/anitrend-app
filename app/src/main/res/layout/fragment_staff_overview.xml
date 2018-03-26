@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Staff" />
-        <import type="com.mxt.anitrend.util.DateUtil" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.base.StaffBase" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
     </data>
 
     <com.nguyenhoanglam.progresslayout.ProgressLayout
@@ -40,7 +40,7 @@
                             android:foreground="?selectableItemBackground"
                             android:layout_width="@dimen/series_image_xs"
                             android:layout_height="wrap_content"
-                            app:imageUrl="@{model.avatar}"
+                            app:imageUrl="@{model.image}"
                             tools:src="@drawable/sample_img"/>
 
                         <android.support.v4.widget.Space
@@ -58,7 +58,7 @@
                                 android:maxLines="2"
                                 android:ellipsize="end"
                                 android:textStyle="bold"
-                                android:text="@{model.getFullName}"
+                                android:text="@{model.name.fullName}"
                                 tools:text="Tomokazu Sugita"/>
 
                             <android.support.v4.widget.Space
@@ -83,29 +83,11 @@
                             <android.support.v7.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{model.language}"
+                                android:text="@{CompatUtil.capitalizeWords(model.language)}"
                                 android:fontFamily="sans-serif-light"
                                 android:maxLines="2"
                                 android:ellipsize="end"
                                 tools:text="Japanese" />
-
-                            <android.support.v4.widget.Space
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/lg_margin" />
-
-                            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title_date_of_birth"/>
-
-                            <android.support.v7.widget.AppCompatTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@{DateUtil.convertLongDate(model.dob)}"
-                                android:fontFamily="sans-serif-light"
-                                android:maxLines="2"
-                                android:ellipsize="end"
-                                tools:text="25 Jan 1985" />
 
                         </LinearLayout>
 
@@ -128,28 +110,6 @@
                         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/title_website"
-                            />
-
-                        <android.support.v4.widget.Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/md_margin" />
-
-                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-light"
-                            android:autoLink="web"
-                            android:text="@{model.website}"
-                            tools:text="https://www.web.com" />
-
-                        <android.support.v4.widget.Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/xl_margin" />
-
-                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:text="@string/title_summary"
                             />
 
@@ -161,7 +121,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
-                            app:textHtml="@{model.info}"
+                            app:textHtml="@{model.description}"
                             tools:text="The Amanto, aliens from outer space, have invaded Earth and taken over feudal Japan."/>
 
                     </LinearLayout>

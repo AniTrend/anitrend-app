@@ -75,7 +75,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     }
 
     public String getCreatedAt() {
-        return DateUtil.convertLongDate(createdAt);
+        return DateUtil.convertDate(createdAt);
     }
 
     public String getContext() {

@@ -12,8 +12,11 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentStaffOverviewBinding;
+import com.mxt.anitrend.model.entity.base.StaffBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
@@ -25,13 +28,16 @@ import butterknife.OnClick;
 
 /**
  * Created by max on 2018/01/30.
+ * StaffOverviewFragment
  */
 
-public class StaffOverviewFragment extends FragmentBase<Staff, BasePresenter, Staff> implements PublisherListener<Staff> {
+public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter, StaffBase> {
 
-    private Staff model;
+    private StaffBase model;
 
     private FragmentStaffOverviewBinding binding;
+
+    private long id;
 
     public static StaffOverviewFragment newInstance(Bundle args) {
         StaffOverviewFragment fragment = new StaffOverviewFragment();
@@ -42,6 +48,8 @@ public class StaffOverviewFragment extends FragmentBase<Staff, BasePresenter, St
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null)
+            id = getArguments().getLong(KeyUtils.arg_id);
     }
 
     @Nullable @Override
@@ -54,25 +62,30 @@ public class StaffOverviewFragment extends FragmentBase<Staff, BasePresenter, St
 
     @Override
     protected void updateUI() {
-        binding.setModel(model);
-        binding.stateLayout.showContent();
+        if(model != null) {
+            binding.setModel(model);
+            binding.stateLayout.showContent();
+        } else
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
+                    getString(R.string.layout_empty_response), getString(R.string.try_again), (view) -> makeRequest());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(model != null)
+            updateUI();
+        else
+            makeRequest();
     }
 
     @Override
     public void makeRequest() {
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtils.STAFF_OVERVIEW_REQ, getContext());
 
-    }
-
-    @Override
-    public void onChanged(@Nullable Staff model) {
-
-    }
-
-    @Override
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(Staff param) {
-        this.model = param;
-        updateUI();
     }
 
     /**
@@ -85,12 +98,19 @@ public class StaffOverviewFragment extends FragmentBase<Staff, BasePresenter, St
         switch (v.getId()) {
             case R.id.staff_img:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage_url_lge());
+                intent.putExtra(KeyUtils.arg_model, model.getImage().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             default:
                 super.onClick(v);
                 break;
         }
+    }
+
+    @Override
+    public void onChanged(@Nullable StaffBase model) {
+        if(model != null)
+            this.model = model;
+        updateUI();
     }
 }

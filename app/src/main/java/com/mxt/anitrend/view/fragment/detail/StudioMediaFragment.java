@@ -13,10 +13,9 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.SeriesActionUtil;
@@ -29,7 +28,7 @@ import java.util.Collections;
  * StudioMediaFragment
  */
 
-public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>, SeriesPresenter> {
+public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter> {
 
     private long id;
 
@@ -45,7 +44,7 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
         if(getArguments() != null)
             id = getArguments().getLong(KeyUtils.arg_id);
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 

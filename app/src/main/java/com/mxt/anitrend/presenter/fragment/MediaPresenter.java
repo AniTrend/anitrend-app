@@ -9,7 +9,6 @@ import android.view.View;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
@@ -21,20 +20,18 @@ import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by max on 2018/01/01.
  */
 
-public class SeriesPresenter extends CommonPresenter {
+public class MediaPresenter extends CommonPresenter {
 
-    public SeriesPresenter(Context context) {
+    public MediaPresenter(Context context) {
         super(context);
     }
 
@@ -56,7 +53,7 @@ public class SeriesPresenter extends CommonPresenter {
         return getContext().getString(R.string.TBA);
     }
 
-    public List<PieEntry> getSeriesStats(List<StatusDistribution> statusDistribution) {
+    public List<PieEntry> getMediaStats(List<StatusDistribution> statusDistribution) {
         int highestStatus = Stream.of(statusDistribution)
                 .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
                 .get().getAmount();
@@ -68,7 +65,7 @@ public class SeriesPresenter extends CommonPresenter {
         return entries;
     }
 
-    public List<BarEntry> getSeriesScoreDistribution(List<ScoreDistribution> scoreDistribution) {
+    public List<BarEntry> getMediaScoreDistribution(List<ScoreDistribution> scoreDistribution) {
         List<BarEntry> results = Stream.of(scoreDistribution)
                 .map(sc -> new BarEntry(sc.getAmount(), sc.getScore()))
                 .toList();
@@ -82,13 +79,13 @@ public class SeriesPresenter extends CommonPresenter {
         return getContext().getString(R.string.TBA);
     }
 
-    public String getSeriesSeason(Media media) {
+    public String getMediaSeason(Media media) {
         if(media != null && media.getStartDate() != null)
-            return DateUtil.getSeriesSeason(media.getStartDate());
+            return DateUtil.getMediaSeason(media.getStartDate());
         return getContext().getString(R.string.TBA);
     }
 
-    public String getSeriesStatus(Media media) {
+    public String getMediaStatus(Media media) {
         if(media != null && (!TextUtils.isEmpty(media.getStatus())))
             return CompatUtil.capitalizeWords(media.getStatus());
         return getContext().getString(R.string.TBA);
@@ -125,7 +122,7 @@ public class SeriesPresenter extends CommonPresenter {
         return genres;
     }
 
-    public String getSeriesFormat(Media media) {
+    public String getMediaFormat(Media media) {
         if(media != null && !TextUtils.isEmpty(media.getFormat()))
             return CompatUtil.capitalizeWords(media.getFormat());
         return getContext().getString(R.string.tba_placeholder);

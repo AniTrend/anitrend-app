@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
@@ -28,14 +28,13 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.activity.detail.StaffActivity;
 
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by max on 2018/03/23.
  * Character actors with their respective media
  */
 
-public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, SeriesPresenter> {
+public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
     private QueryContainerBuilder queryContainer;
 
@@ -53,7 +52,7 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
                     .putVariable(KeyUtils.arg_id, getArguments().getLong(KeyUtils.arg_id));
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
-        setPresenter(new SeriesPresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 

@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/lg_margin"
-            app:rating="@{model.average_score}"/>
+            app:rating="@{model.averageScore}"/>
 
     </android.support.v7.widget.CardView>
 

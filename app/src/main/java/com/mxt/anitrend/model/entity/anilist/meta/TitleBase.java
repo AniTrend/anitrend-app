@@ -69,6 +69,17 @@ public class TitleBase implements Parcelable {
         return alternative;
     }
 
+    public String getAlternativeFormatted() {
+        StringBuilder builder = new StringBuilder();
+        for (String alternate: alternative) {
+            if(TextUtils.isEmpty(builder))
+                builder.append(alternate);
+            else
+                builder.append(", ").append(alternate);
+        }
+        return builder.toString();
+    }
+
     public String getFullName() {
         String fullName = first;
         if(!TextUtils.isEmpty(last))

@@ -61,10 +61,6 @@ public class AvatarImageView extends AppCompatImageView implements CustomView {
 
     @BindingAdapter({"avatarUrl"})
     public static void setImage(AvatarImageView view, ImageBase imageBase) {
-        Glide.with(view.getContext()).load(imageBase.getLarge()).apply(RequestOptions.centerCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.avatar_placeholder))
-                .transition(DrawableTransitionOptions.withCrossFade(150))
-                .apply(RequestOptions.circleCropTransform())
-                .into(view);
+        setImage(view, imageBase.getLarge());
     }
 }

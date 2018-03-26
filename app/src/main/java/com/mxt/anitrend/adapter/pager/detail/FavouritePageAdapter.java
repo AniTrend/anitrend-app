@@ -14,7 +14,6 @@ import com.mxt.anitrend.view.fragment.favourite.StudioFavouriteFragment;
 
 /**
  * Created by max on 2017/12/20.
- * FavouritePageAdapter
  */
 
 public class FavouritePageAdapter extends BaseStatePageAdapter {

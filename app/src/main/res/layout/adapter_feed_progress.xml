@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.FeedList" />
+        <import type="com.mxt.anitrend.util.DateUtil" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -30,7 +31,7 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="@dimen/avatar_ripple_radius"
                     android:layout_height="@dimen/avatar_ripple_radius"
-                    app:avatarUrl="@{model.users.get(0).image_url_med}"
+                    app:avatarUrl="@{model.user.avatar}"
                     tools:src="@drawable/ic_player" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -40,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@{model.users.get(0).name}"
+                    android:text="@{model.user.name}"
                     tools:text="wax911" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -50,8 +51,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
-                    android:text="@{model.createdAt}"
-                    tools:text="Oct 28 2017" />
+                    android:text="@{DateUtil.getPrettyDateUnix(model.createdAt)}"
+                    tools:text="25 minutes ago" />
 
             </LinearLayout>
 
@@ -89,7 +90,7 @@
                         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{model.series.title_english}"
+                            android:text="@{model.media.title.english}"
                             tools:text="Aggressive Restuko" />
 
                         <android.support.v4.widget.Space
@@ -101,7 +102,7 @@
                             android:layout_height="wrap_content"
                             android:textIsSelectable="true"
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                            android:text="@{model.series.title_japanese}"
+                            android:text="@{model.media.title.original}"
                             tools:text="アグレッシブ烈子"
                             />
 
@@ -159,7 +160,7 @@
                     android:id="@+id/series_image"
                     android:layout_width="@dimen/series_image_xs"
                     android:layout_height="wrap_content"
-                    app:imageUrl="@{model.series.avatar}"
+                    app:imageUrl="@{model.media.coverImage}"
                     tools:src="@drawable/sample_img" />
 
             </LinearLayout>

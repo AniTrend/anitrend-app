@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,7 +44,7 @@ public class DateUtil {
         return seasons[month];
     }
 
-    public static String getSeriesSeason(FuzzyDate fuzzyDate){
+    public static String getMediaSeason(FuzzyDate fuzzyDate){
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd",Locale.getDefault());
         try {
             Date converted = format.parse(String.valueOf(fuzzyDate));
@@ -66,7 +65,7 @@ public class DateUtil {
      */
     public static int getMenuSelect(){
         String value = seasons[Calendar.getInstance().get(Calendar.MONTH)];
-        return CompatUtil.getListFromArray(KeyUtils.MediaSeasons).indexOf(value);
+        return CompatUtil.getListFromArray(KeyUtils.MediaSeason).indexOf(value);
     }
 
     /**
@@ -87,7 +86,7 @@ public class DateUtil {
      *
      * @return A time format of dd MMM yyyy
      */
-    public static @Nullable String convertLongDate(long value) {
+    public static @Nullable String convertDate(long value) {
         try {
             if(value != 0)
                 return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date(value*1000L));

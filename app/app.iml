@@ -111,6 +111,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.android.support:animated-vector-drawable-27.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support.test:exposed-instrumentation-api-publish-0.5" level="project" />
+    <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.10.0@jar" level="project" />
+    <orderEntry type="library" name="com.squareup.okio:okio:1.14.0@jar" level="project" />
     <orderEntry type="library" name="uk.co.samuelwall:material-tap-target-prompt-2.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="com.squareup:javawriter:2.1.1@jar" level="project" />
     <orderEntry type="library" name="io.objectbox:objectbox-java-api:1.4.4@jar" level="project" />
@@ -151,13 +153,13 @@
     <orderEntry type="library" name="com.jakewharton:disklrucache:2.0.2@jar" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-11.8.0" level="project" />
     <orderEntry type="library" name="com.github.wax911.android-emojify:emojifykeyboard-0.1.4.2" level="project" />
-    <orderEntry type="library" name="com.squareup.retrofit2:retrofit:2.3.0@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:runtime-1.1.0" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:common:1.1.0@jar" level="project" />
     <orderEntry type="library" name="org.simpleframework:simple-xml:2.7.1@jar" level="project" />
     <orderEntry type="library" name="com.firebase:firebase-jobdispatcher-0.8.5" level="project" />
     <orderEntry type="library" name="com.jakewharton:butterknife-8.8.1" level="project" />
     <orderEntry type="library" name="io.objectbox:objectbox-android-1.4.4" level="project" />
+    <orderEntry type="library" name="com.squareup.retrofit2:retrofit:2.4.0@jar" level="project" />
     <orderEntry type="library" name="io.fabric.sdk.android:fabric-1.4.1" level="project" />
     <orderEntry type="library" name="org.hamcrest:hamcrest-library:1.3@jar" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:crashlytics-core-2.4.1" level="project" />
@@ -167,7 +169,6 @@
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-license-11.8.0" level="project" />
     <orderEntry type="library" name="com.github.rahatarmanahmed:circularprogressview-2.5.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-license-11.8.0" level="project" />
-    <orderEntry type="library" name="com.squareup.retrofit2:converter-gson:2.3.0@jar" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-iid-11.8.0" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:disklrucache:4.6.1@jar" level="project" />
     <orderEntry type="library" name="com.android.databinding:library-1.3.1" level="project" />
@@ -176,6 +177,7 @@
     <orderEntry type="library" name="android.arch.lifecycle:livedata-1.1.0" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-solver:1.0.2@jar" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.0.2" level="project" />
+    <orderEntry type="library" name="com.squareup.retrofit2:converter-simplexml:2.4.0@jar" level="project" />
     <orderEntry type="library" name="com.github.wax911.android-emojify:emojify-0.1.4.2" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.2@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-vector-drawable-27.0.2" level="project" />
@@ -199,10 +201,9 @@
     <orderEntry type="library" name="android.arch.lifecycle:extensions-1.1.0" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-27.0.2" level="project" />
     <orderEntry type="library" name="com.android.databinding:adapters-1.3.1" level="project" />
-    <orderEntry type="library" name="com.squareup.okio:okio:1.13.0@jar" level="project" />
     <orderEntry type="library" name="com.annimon:stream:1.1.9@jar" level="project" />
-    <orderEntry type="library" name="com.squareup.retrofit2:converter-simplexml:2.3.0@jar" level="project" />
     <orderEntry type="library" name="org.ocpsoft.prettytime:prettytime:4.0.1.Final@jar" level="project" />
+    <orderEntry type="library" name="com.squareup.retrofit2:converter-gson:2.4.0@jar" level="project" />
     <orderEntry type="library" name="com.github.PhilJay:MPAndroidChart:v3.0.3@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:livedata-core-1.1.0" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:beta-1.2.7" level="project" />
@@ -210,7 +211,6 @@
     <orderEntry type="library" name="com.android.databinding:baseLibrary:3.0.1@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-utils-27.0.2" level="project" />
     <orderEntry type="library" name="org.greenrobot:eventbus:3.1.1@jar" level="project" />
-    <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.9.0@jar" level="project" />
     <orderEntry type="library" name="android.arch.core:runtime-1.1.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-tasks-license-11.8.0" level="project" />
   </component>

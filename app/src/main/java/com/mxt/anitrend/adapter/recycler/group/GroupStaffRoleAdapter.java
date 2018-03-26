@@ -11,8 +11,8 @@ import com.mxt.anitrend.adapter.recycler.shared.GroupTitleViewHolder;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
-import com.mxt.anitrend.databinding.AdapterSeriesStaffRoleBinding;
-import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.databinding.AdapterStaffBinding;
+import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtils;
@@ -20,7 +20,6 @@ import com.mxt.anitrend.util.KeyUtils;
 import java.util.List;
 
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 /**
  * Created by max on 2018/01/30.
@@ -37,7 +36,7 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
     public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtils.RecyclerViewType int viewType) {
         if (viewType == KeyUtils.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
-        return new StaffViewHolder(AdapterSeriesStaffRoleBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override
@@ -53,14 +52,14 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
 
     protected class StaffViewHolder extends RecyclerViewHolder<EntityGroup> {
 
-        private AdapterSeriesStaffRoleBinding binding;
+        private AdapterStaffBinding binding;
 
         /**
          * Default constructor which includes binding with butter knife
          *
          * @param binding
          */
-        StaffViewHolder(AdapterSeriesStaffRoleBinding binding) {
+        public StaffViewHolder(AdapterStaffBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -69,14 +68,15 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br/>
          *
-         * @param entityGroup Is the model at the current adapter position
+         * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(EntityGroup entityGroup) {
-            MediaBase model = (MediaBase) entityGroup;
-            binding.setModel(model);
-            binding.seriesTitle.setTitle(model);
-            binding.customRatingWidget.setFavourState(model.isFavourite());
+        public void onBindViewHolder(EntityGroup model) {
+            binding.setModel((StaffBase) model);
+            if(((StaffBase)model).isFavourite())
+                binding.favouriteIndicator.setVisibility(View.VISIBLE);
+            else
+                binding.favouriteIndicator.setVisibility(View.GONE);
             binding.executePendingBindings();
         }
 
@@ -89,8 +89,7 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
          */
         @Override
         public void onViewRecycled() {
-            Glide.with(getContext()).clear(binding.seriesImage);
-            Glide.with(getContext()).clear(binding.characterImg);
+            Glide.with(getContext()).clear(binding.staffImg);
             binding.unbind();
         }
 
@@ -108,12 +107,9 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
                 clickListener.onItemClick(v, data.get(index));
         }
 
-        @Override @OnLongClick(R.id.container)
+        @Override
         public boolean onLongClick(View view) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemLongClick(view, data.get(index));
-            return true;
+            return false;
         }
     }
 }

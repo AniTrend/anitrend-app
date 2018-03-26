@@ -9,7 +9,7 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.fragment.detail.CharacterOverviewFragment;
 import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment;
-import com.mxt.anitrend.view.fragment.group.MediaRolesFragment;
+import com.mxt.anitrend.view.fragment.group.MediaFormatFragment;
 
 /**
  * Created by max on 2017/12/01.
@@ -38,9 +38,9 @@ public class CharacterPageAdapter  extends BaseStatePageAdapter {
             case 0:
                 return CharacterOverviewFragment.newInstance(getParams());
             case 1:
-                return MediaRolesFragment.newInstance(getParams(), KeyUtils.ANIME, KeyUtils.CHARACTER_MEDIA_REQ);
+                return MediaFormatFragment.newInstance(getParams(), KeyUtils.ANIME, KeyUtils.CHARACTER_MEDIA_REQ);
             case 2:
-                return MediaRolesFragment.newInstance(getParams(), KeyUtils.MANGA, KeyUtils.CHARACTER_MEDIA_REQ);
+                return MediaFormatFragment.newInstance(getParams(), KeyUtils.MANGA, KeyUtils.CHARACTER_MEDIA_REQ);
             case 3:
                 return CharacterActorsFragment.newInstance(getParams());
         }

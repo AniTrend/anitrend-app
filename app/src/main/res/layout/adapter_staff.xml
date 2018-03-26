@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
-                app:imageUrl="@{model.avatar}"/>
+                app:imageUrl="@{model.image}"/>
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -55,7 +55,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:visibility="@{model.language != null? View.VISIBLE : View.GONE}"
                     android:text="@{model.language}"
-                    tools:text="Director" />
+                    tools:text="Japanese" />
 
             </LinearLayout>
 

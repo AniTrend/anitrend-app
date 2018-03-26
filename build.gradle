@@ -10,7 +10,7 @@ buildscript {
         'buildTools'    : '26.0.2',
         'butterKnife'   : '8.8.1',
         'glide'         : '4.6.1',
-        'retrofit'      : '2.3.0',
+        'retrofit'      : '2.4.0',
         'supportLibrary': '27.0.2',
         'firebase'      : '11.8.0',
         'objectBox'     : '1.4.4',

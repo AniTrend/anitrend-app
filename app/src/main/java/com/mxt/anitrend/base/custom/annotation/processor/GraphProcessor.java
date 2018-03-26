@@ -1,13 +1,22 @@
 package com.mxt.anitrend.base.custom.annotation.processor;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.util.Log;
-import java.io.*;
-import java.lang.annotation.Annotation;
-import java.util.*;
+
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+/**
+ * Created by max on 2018/03/12.
+ * GraphQL annotation processor
+ */
 public class GraphProcessor {
 
     private final Map<String, String> graphFiles;

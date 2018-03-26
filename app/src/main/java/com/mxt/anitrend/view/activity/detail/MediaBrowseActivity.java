@@ -11,7 +11,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.presenter.fragment.SeriesPresenter;
+import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.view.fragment.detail.MediaBrowseFragment;
@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * browse activity for studios, tags, genres etc.
  */
 
-public class MediaBrowseActivity extends ActivityBase<MediaBase, SeriesPresenter> {
+public class MediaBrowseActivity extends ActivityBase<MediaBase, MediaPresenter> {
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
 

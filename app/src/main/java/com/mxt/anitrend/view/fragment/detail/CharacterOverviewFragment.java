@@ -10,32 +10,30 @@ import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentCharacterOverviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Character;
-import com.mxt.anitrend.model.entity.container.request.QueryContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtils;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by max on 2018/01/30.
+ * CharacterOverviewFragment
  */
 
 public class CharacterOverviewFragment extends FragmentBase<Character, BasePresenter, Character> {
 
     private Character model;
-    private QueryContainer queryContainer;
 
     private FragmentCharacterOverviewBinding binding;
+
+    private long id;
 
     public static CharacterOverviewFragment newInstance(Bundle args) {
         CharacterOverviewFragment fragment = new CharacterOverviewFragment();
@@ -47,8 +45,7 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            queryContainer = GraphUtil.getDefaultQuery(false)
-                    .setVariable(KeyUtils.arg_id, getArguments().getInt(KeyUtils.arg_id));
+            id = getArguments().getLong(KeyUtils.arg_id);
     }
 
     @Nullable @Override
@@ -80,15 +77,10 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
 
     @Override
     public void makeRequest() {
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtils.arg_id, id);
         getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtils.CHARACTER_OVERVIEW_REQ, getContext());
-    }
-
-    @Override
-    public void onChanged(@Nullable Character model) {
-        if(model != null)
-            this.model = model;
-        updateUI();
     }
 
     /**
@@ -108,5 +100,12 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
                 super.onClick(v);
                 break;
         }
+    }
+
+    @Override
+    public void onChanged(@Nullable Character model) {
+        if(model != null)
+            this.model = model;
+        updateUI();
     }
 }

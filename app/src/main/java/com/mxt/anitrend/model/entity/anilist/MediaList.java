@@ -123,6 +123,10 @@ public class MediaList extends EntityGroup implements Parcelable {
         return score;
     }
 
+    public String getScoreFormatted() {
+        return String.valueOf(score);
+    }
+
     public int getProgress() {
         return progress;
     }

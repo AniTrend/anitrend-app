@@ -13,7 +13,6 @@ import com.mxt.anitrend.view.fragment.detail.MessageFeedFragment;
 
 /**
  * Created by max on 2018/03/24.
- * MessagePageAdapter
  */
 
 public class MessagePageAdapter extends BaseStatePageAdapter {

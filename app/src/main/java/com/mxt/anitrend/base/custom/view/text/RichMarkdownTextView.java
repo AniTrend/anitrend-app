@@ -18,6 +18,8 @@ import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.RichType;
 import com.zzhoujay.richtext.ig.DefaultImageGetter;
 
+import java.util.List;
+
 public class RichMarkdownTextView extends AppCompatTextView implements CustomView {
 
     public RichMarkdownTextView(Context context) {

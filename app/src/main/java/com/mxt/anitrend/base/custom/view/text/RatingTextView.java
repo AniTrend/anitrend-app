@@ -67,7 +67,7 @@ public class RatingTextView extends LinearLayout implements CustomView {
     }
 
     @BindingAdapter("rating")
-    public static void setAverageRating(RatingTextView view, double averageScore) {
+    public static void setAverageRating(RatingTextView view, int averageScore) {
         float rating = (float)averageScore * MAX / 100;
         view.setRating(rating);
     }

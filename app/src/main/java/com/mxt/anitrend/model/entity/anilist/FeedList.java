@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtils;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class FeedList implements Parcelable {
     private String status;
     @SerializedName(value = "progress", alternate = {"message"})
     private String value;
-    private String createdAt;
+    private long createdAt;
     private UserBase user;
     private MediaBase media;
     private UserBase messenger;
@@ -36,7 +37,7 @@ public class FeedList implements Parcelable {
         type = in.readString();
         status = in.readString();
         value = in.readString();
-        createdAt = in.readString();
+        createdAt = in.readLong();
         user = in.readParcelable(UserBase.class.getClassLoader());
         media = in.readParcelable(MediaBase.class.getClassLoader());
         messenger = in.readParcelable(UserBase.class.getClassLoader());
@@ -52,7 +53,7 @@ public class FeedList implements Parcelable {
         dest.writeString(type);
         dest.writeString(status);
         dest.writeString(value);
-        dest.writeString(createdAt);
+        dest.writeLong(createdAt);
         dest.writeParcelable(user, flags);
         dest.writeParcelable(media, flags);
         dest.writeParcelable(messenger, flags);
@@ -98,7 +99,7 @@ public class FeedList implements Parcelable {
         return value;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 

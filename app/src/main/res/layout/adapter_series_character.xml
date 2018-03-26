@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
         <import type="android.view.View" />
     </data>
 
@@ -33,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
-                app:imageUrl="@{model.avatar}"/>
+                app:imageUrl="@{model.coverImage}"/>
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -67,18 +68,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:layout_marginBottom="@dimen/md_margin"
-                    android:visibility="@{model.firstActorFullName != null ? View.VISIBLE : View.GONE}"
-                    android:text="@{model.firstActorFullName}"
-                    tools:text="Supporting" />
-
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:layout_marginBottom="@dimen/md_margin"
-                    android:visibility="@{model.role != null ? View.VISIBLE : View.GONE}"
-                    android:text="@{model.role}"
-                    tools:text="Supporting" />
+                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
+                    tools:text="TV" />
 
             </LinearLayout>
 
@@ -90,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/lg_margin"
-            app:rating="@{model.average_score}"/>
+            app:rating="@{model.averageScore}"/>
 
     </android.support.v7.widget.CardView>
 
