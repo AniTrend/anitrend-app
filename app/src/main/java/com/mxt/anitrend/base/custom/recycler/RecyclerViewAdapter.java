@@ -17,7 +17,7 @@ import com.mxt.anitrend.base.interfaces.event.RecyclerChangeListener;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ActionModeHelper;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,7 +234,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
 
     private boolean isFullSpanItem(int position) {
         int viewType = getItemViewType(position);
-        return viewType == KeyUtils.RECYCLER_TYPE_HEADER || viewType == KeyUtils.RECYCLER_TYPE_EMPTY || viewType == KeyUtils.RECYCLER_TYPE_LOADING;
+        return viewType == KeyUtil.RECYCLER_TYPE_HEADER || viewType == KeyUtil.RECYCLER_TYPE_EMPTY || viewType == KeyUtil.RECYCLER_TYPE_LOADING;
     }
 
     private void animateViewHolder(RecyclerViewHolder<T> holder, int position) {

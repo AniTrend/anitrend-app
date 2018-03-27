@@ -21,7 +21,7 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
@@ -56,10 +56,10 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         setSupportActionBar(toolbar);
         disableToolbarTitle();
         setViewModel(true);
-        if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
-        else if(getIntent().hasExtra(KeyUtils.arg_userName))
-            userName = getIntent().getStringExtra(KeyUtils.arg_userName);
+        if(getIntent().hasExtra(KeyUtil.arg_id))
+            id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
+        else if(getIntent().hasExtra(KeyUtil.arg_userName))
+            userName = getIntent().getStringExtra(KeyUtil.arg_userName);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                         startActivity(new Intent(ProfileActivity.this, MessageActivity.class));
                     else {
                         mBottomSheet = new BottomSheetComposer.Builder().setUserModel(model)
-                                .setRequestMode(KeyUtils.MUT_SAVE_MESSAGE_FEED)
+                                .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
                                 .setTitle(R.string.text_message_to)
                                 .build();
                         mBottomSheet.show(getSupportFragmentManager(), mBottomSheet.getTag());
@@ -134,29 +134,29 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
 
         if(getPresenter().isCurrentUser(model.getId())) {
-            if (!TapTargetUtil.isActive(KeyUtils.KEY_NOTIFICATION_TIP)) {
-                if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_NOTIFICATION_TIP)) {
+            if (!TapTargetUtil.isActive(KeyUtil.KEY_NOTIFICATION_TIP)) {
+                if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_NOTIFICATION_TIP)) {
                     TapTargetUtil.buildDefault(this, R.string.tip_notifications_title, R.string.tip_notifications_text, R.id.action_notification)
                             .setPromptStateChangeListener((prompt, state) -> {
                                 if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                    getPresenter().getApplicationPref().disableTipFor(KeyUtils.KEY_NOTIFICATION_TIP);
+                                    getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_NOTIFICATION_TIP);
                                 if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                    TapTargetUtil.setActive(KeyUtils.KEY_NOTIFICATION_TIP, true);
+                                    TapTargetUtil.setActive(KeyUtil.KEY_NOTIFICATION_TIP, true);
                             }).setFocalColour(CompatUtil.getColor(this, R.color.grey_600)).show();
-                    TapTargetUtil.setActive(KeyUtils.KEY_NOTIFICATION_TIP, false);
+                    TapTargetUtil.setActive(KeyUtil.KEY_NOTIFICATION_TIP, false);
                 }
             }
         } else {
-            if (!TapTargetUtil.isActive(KeyUtils.KEY_MESSAGE_TIP)) {
-                if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_MESSAGE_TIP)) {
+            if (!TapTargetUtil.isActive(KeyUtil.KEY_MESSAGE_TIP)) {
+                if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_MESSAGE_TIP)) {
                     TapTargetUtil.buildDefault(this, R.string.tip_compose_message_title, R.string.tip_compose_message_text, R.id.action_message)
                             .setPromptStateChangeListener((prompt, state) -> {
                                 if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                    getPresenter().getApplicationPref().disableTipFor(KeyUtils.KEY_MESSAGE_TIP);
+                                    getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_MESSAGE_TIP);
                                 if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                    TapTargetUtil.setActive(KeyUtils.KEY_MESSAGE_TIP, true);
+                                    TapTargetUtil.setActive(KeyUtil.KEY_MESSAGE_TIP, true);
                             }).setFocalColour(CompatUtil.getColor(this, R.color.grey_600)).show();
-                    TapTargetUtil.setActive(KeyUtils.KEY_MESSAGE_TIP, false);
+                    TapTargetUtil.setActive(KeyUtil.KEY_MESSAGE_TIP, false);
                 }
             }
         }
@@ -165,11 +165,11 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtils.arg_userId, id)
-            .putVariable(KeyUtils.arg_userName, userName);
+            .putVariable(KeyUtil.arg_userId, id)
+            .putVariable(KeyUtil.arg_userName, userName);
 
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.USER_BASE_REQ, getApplicationContext());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.USER_BASE_REQ, getApplicationContext());
     }
 
     /**
@@ -193,7 +193,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         switch (view.getId()) {
             case R.id.profile_banner:
                 Intent intent = new Intent(this, ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getBannerImage());
+                intent.putExtra(KeyUtil.arg_model, model.getBannerImage());
                 CompatUtil.startSharedImageTransition(this, view, intent, R.string.transition_image_preview);
                 break;
         }

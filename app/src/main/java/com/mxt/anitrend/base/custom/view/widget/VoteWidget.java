@@ -23,10 +23,9 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
-import java.security.Key;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -66,12 +65,12 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
         onInit();
     }
 
-    private void setParameters(@KeyUtils.ReviewRating String ratingType) {
+    private void setParameters(@KeyUtil.ReviewRating String ratingType) {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, model.getId())
-                .putVariable(KeyUtils.arg_rating, ratingType);
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        presenter.requestData(KeyUtils.MUT_RATE_REVIEW, getContext(), this);
+                .putVariable(KeyUtil.arg_id, model.getId())
+                .putVariable(KeyUtil.arg_rating, ratingType);
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        presenter.requestData(KeyUtil.MUT_RATE_REVIEW, getContext(), this);
     }
 
     @Override
@@ -81,14 +80,14 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 case R.id.widget_thumb_up_flipper:
                     if (binding.widgetThumbUpFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext();
-                        setParameters(Objects.equals(model.getUserRating(), KeyUtils.UP_VOTE) ? KeyUtils.NO_VOTE : KeyUtils.UP_VOTE);
+                        setParameters(Objects.equals(model.getUserRating(), KeyUtil.UP_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.UP_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.widget_thumb_down_flipper:
                     if (binding.widgetThumbDownFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext();
-                        setParameters(Objects.equals(model.getUserRating(), KeyUtils.DOWN_VOTE) ? KeyUtils.NO_VOTE : KeyUtils.DOWN_VOTE);
+                        setParameters(Objects.equals(model.getUserRating(), KeyUtil.DOWN_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.DOWN_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
@@ -133,11 +132,11 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
 
     public void setReviewStatus() {
         switch (model.getUserRating()) {
-            case KeyUtils.UP_VOTE:
+            case KeyUtil.UP_VOTE:
                 binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                         R.drawable.ic_thumb_up_grey_600_18dp, R.color.colorStateGreen), null, null, null);
                 break;
-            case KeyUtils.DOWN_VOTE:
+            case KeyUtil.DOWN_VOTE:
                 binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                     R.drawable.ic_thumb_down_grey_600_18dp, R.color.colorStateOrange), null, null, null);
                 break;

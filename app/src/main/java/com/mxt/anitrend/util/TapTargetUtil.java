@@ -5,12 +5,10 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.util.SparseArray;
 import android.view.View;
 
 import com.mxt.anitrend.R;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -53,11 +51,11 @@ public class TapTargetUtil {
                 .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
     }
 
-    public static boolean isActive(@KeyUtils.TapTargetType String key) {
+    public static boolean isActive(@KeyUtil.TapTargetType String key) {
         return activePrompts.containsKey(key);
     }
 
-    public static void setActive(@KeyUtils.TapTargetType String key, boolean remove) {
+    public static void setActive(@KeyUtil.TapTargetType String key, boolean remove) {
         if(!remove) activePrompts.put(key, null);
         else if(activePrompts.containsKey(key))
             activePrompts.remove(key);

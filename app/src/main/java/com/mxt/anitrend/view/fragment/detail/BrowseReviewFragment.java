@@ -13,9 +13,9 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.sheet.BottomReviewReader;
 
 /**
@@ -26,11 +26,11 @@ import com.mxt.anitrend.view.sheet.BottomReviewReader;
 
 public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer<Review>, BasePresenter> {
 
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
-    public static BrowseReviewFragment newInstance(@KeyUtils.MediaType String mediaType) {
+    public static BrowseReviewFragment newInstance(@KeyUtil.MediaType String mediaType) {
         Bundle args = new Bundle();
-        args.putString(KeyUtils.arg_mediaType, mediaType);
+        args.putString(KeyUtil.arg_mediaType, mediaType);
         BrowseReviewFragment fragment = new BrowseReviewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -46,7 +46,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         isPager = true; mColumnSize = R.integer.single_list_x1;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
@@ -68,10 +68,10 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtils.arg_mediaType, mediaType);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_REVIEWS_REQ, getContext());
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_mediaType, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_REVIEWS_REQ, getContext());
     }
 
     /**
@@ -108,9 +108,9 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
         switch (target.getId()) {
             case R.id.series_image:
             if(getPresenter().getApplicationPref().isAuthenticated()) {
-                seriesActionUtil = new SeriesActionUtil.Builder()
+                mediaActionUtil = new MediaActionUtil.Builder()
                         .setModel(data.getMedia()).build(getActivity());
-                seriesActionUtil.startSeriesAction();
+                mediaActionUtil.startSeriesAction();
             } else
                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;

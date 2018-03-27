@@ -15,7 +15,7 @@ import com.mxt.anitrend.service.JobDispatcherService;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.io.IOException;
 
@@ -72,7 +72,7 @@ public class NotificationSyncTask extends AsyncTask<Context, Void, User> {
 
     @Override
     protected void onPostExecute(@Nullable User user) {
-        presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.USER_CURRENT_REQ, user), false);
+        presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_CURRENT_REQ, user), false);
         if(presenter != null)
             presenter.onDestroy();
     }

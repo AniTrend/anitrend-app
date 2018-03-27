@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterCommentBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
@@ -65,11 +65,11 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
             binding.widgetStatus.setModel(model);
             binding.widgetMention.setVisibility(View.GONE);
 
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY_REPLY, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY_REPLY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
             if(presenter.isCurrentUser(model.getUser().getId())) {
-                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED_REPLY);
+                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED_REPLY);
 
                 binding.widgetMention.setVisibility(View.GONE);
                 binding.widgetEdit.setVisibility(View.VISIBLE);

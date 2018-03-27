@@ -13,7 +13,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding;
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -59,11 +59,11 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     @Override
     public int getItemViewType(int position) {
         FeedList model = data.get(position);
-        if(Objects.equals(model.getType(), KeyUtils.TEXT))
+        if(Objects.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
-        else if(Objects.equals(model.getType(), KeyUtils.MESSAGE))
+        else if(Objects.equals(model.getType(), KeyUtil.MESSAGE))
             return FEED_MESSAGE;
-        else if(Objects.equals(model.getType(), KeyUtils.MEDIA_LIST) && model.getLikes() == null)
+        else if(Objects.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
             return FEED_LIST;
 
         return FEED_PROGRESS;
@@ -97,11 +97,11 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
             binding.widgetComment.setReplyCount(model.getReplyCount());
             if(presenter.isCurrentUser(model.getUser())) {
-                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
+                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
             }
             else
@@ -173,13 +173,13 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
 
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
             binding.widgetComment.setReplyCount(model.getReplyCount());
 
             if(presenter.isCurrentUser(model.getUser())) {
-                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
+                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED);
 
                 binding.widgetEdit.setVisibility(View.VISIBLE);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
@@ -256,13 +256,13 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.setModel(model);
             binding.widgetStatus.setModel(model);
 
-            binding.widgetFavourite.setRequestParams(KeyUtils.ACTIVITY, model.getId());
+            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
 
             binding.widgetComment.setReplyCount(model.getReplyCount());
 
             if(presenter.isCurrentUser(model.getMessenger())) {
-                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
+                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED);
 
                 binding.widgetEdit.setVisibility(View.VISIBLE);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
@@ -336,7 +336,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.widgetFavourite.setVisibility(View.GONE);
             binding.widgetComment.setReplyCount(model.getReplyCount());
             if(presenter.isCurrentUser(model.getUser())) {
-                binding.widgetDelete.setModel(model, KeyUtils.MUT_DELETE_FEED);
+                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED);
                 binding.widgetDelete.setVisibility(View.VISIBLE);
             }
             else

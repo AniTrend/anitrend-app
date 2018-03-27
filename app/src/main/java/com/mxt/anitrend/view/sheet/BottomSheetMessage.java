@@ -10,7 +10,7 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDown;
 
 import butterknife.BindView;
@@ -90,7 +90,7 @@ public class BottomSheetMessage extends BottomSheetBase implements View.OnClickL
         }
 
         public BottomSheetBuilder setText(@StringRes int text) {
-            bundle.putInt(KeyUtils.arg_text, text);
+            bundle.putInt(KeyUtil.arg_text, text);
             return this;
         }
     }

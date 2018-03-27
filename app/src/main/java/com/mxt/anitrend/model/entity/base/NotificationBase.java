@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -20,7 +20,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     @Id(assignable = true)
     private long id;
     private boolean read;
-    private @KeyUtils.NotificationType String type;
+    private @KeyUtil.NotificationType String type;
     private long createdAt;
     private String context;
 
@@ -70,7 +70,7 @@ public class NotificationBase extends EntityGroup implements Parcelable {
         return read;
     }
 
-    public @KeyUtils.NotificationType String getType() {
+    public @KeyUtil.NotificationType String getType() {
         return type;
     }
 

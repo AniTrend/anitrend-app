@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.index.FeedFragment;
 
 /**
@@ -32,14 +32,14 @@ public class FeedPageAdapter extends BaseStatePageAdapter {
         {
             case 0:
                 return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtils.arg_type, KeyUtils.MEDIA_LIST));
+                        .putVariable(KeyUtil.arg_type, KeyUtil.MEDIA_LIST));
             case 1:
                 return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtils.arg_type, KeyUtils.TEXT));
+                        .putVariable(KeyUtil.arg_type, KeyUtil.TEXT));
             case 2:
                 return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtils.arg_isFollowing, false)
-                        .putVariable(KeyUtils.arg_isMixed, true));
+                        .putVariable(KeyUtil.arg_isFollowing, false)
+                        .putVariable(KeyUtil.arg_isMixed, true));
         }
         return null;
     }

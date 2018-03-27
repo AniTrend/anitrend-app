@@ -15,12 +15,12 @@ import com.mxt.anitrend.model.api.retro.anilist.SearchModel;
 import com.mxt.anitrend.model.api.retro.anilist.StaffModel;
 import com.mxt.anitrend.model.api.retro.anilist.StudioModel;
 import com.mxt.anitrend.model.api.retro.anilist.UserModel;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static com.mxt.anitrend.util.KeyUtils.*;
+import static com.mxt.anitrend.util.KeyUtil.*;
 
 /**
  * Created by max on 2017/09/16.
@@ -74,133 +74,133 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createRepositoryService().checkVersion();
 
 
-                case KeyUtils.MEDIA_BROWSE_REQ:
+                case KeyUtil.MEDIA_BROWSE_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaBrowse(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_LIST_BROWSE_REQ:
+                case KeyUtil.MEDIA_LIST_BROWSE_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaListBrowse(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_LIST_REQ:
+                case KeyUtil.MEDIA_LIST_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaList(param.getParcelable(arg_graph_params));
 
 
-                case KeyUtils.CHARACTER_ACTORS_REQ:
+                case KeyUtil.CHARACTER_ACTORS_REQ:
                     return (Call<T>) WebFactory.createService(CharacterModel.class, context).getCharacterActors(param.getParcelable(arg_graph_params));
-                case KeyUtils.CHARACTER_BASE_REQ:
+                case KeyUtil.CHARACTER_BASE_REQ:
                     return (Call<T>) WebFactory.createService(CharacterModel.class, context).getCharacterBase(param.getParcelable(arg_graph_params));
-                case KeyUtils.CHARACTER_MEDIA_REQ:
+                case KeyUtil.CHARACTER_MEDIA_REQ:
                     return (Call<T>) WebFactory.createService(CharacterModel.class, context).getCharacterMedia(param.getParcelable(arg_graph_params));
-                case KeyUtils.CHARACTER_OVERVIEW_REQ:
+                case KeyUtil.CHARACTER_OVERVIEW_REQ:
                     return (Call<T>) WebFactory.createService(CharacterModel.class, context).getCharacterOverview(param.getParcelable(arg_graph_params));
-                case KeyUtils.CHARACTER_SEARCH_REQ:
+                case KeyUtil.CHARACTER_SEARCH_REQ:
                     return (Call<T>) WebFactory.createService(SearchModel.class, context).getCharacterSearch(param.getParcelable(arg_graph_params));
 
 
-                case KeyUtils.FEED_LIST_REPLY_REQ:
+                case KeyUtil.FEED_LIST_REPLY_REQ:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).getFeedListReply(param.getParcelable(arg_graph_params));
-                case KeyUtils.FEED_LIST_REQ:
+                case KeyUtil.FEED_LIST_REQ:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).getFeedList(param.getParcelable(arg_graph_params));
-                case KeyUtils.FEED_MESSAGE_REQ:
+                case KeyUtil.FEED_MESSAGE_REQ:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).getFeedMessage(param.getParcelable(arg_graph_params));
 
 
-                case KeyUtils.MEDIA_BASE_REQ:
+                case KeyUtil.MEDIA_BASE_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaBase(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_CHARACTERS_REQ:
+                case KeyUtil.MEDIA_CHARACTERS_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaCharacters(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_EPISODES_REQ:
+                case KeyUtil.MEDIA_EPISODES_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaEpisodes(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_OVERVIEW_REQ:
+                case KeyUtil.MEDIA_OVERVIEW_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaOverview(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_RELATION_REQ:
+                case KeyUtil.MEDIA_RELATION_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaRelations(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_REVIEWS_REQ:
+                case KeyUtil.MEDIA_REVIEWS_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getReviewBrowse(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_SEARCH_REQ:
+                case KeyUtil.MEDIA_SEARCH_REQ:
                     return (Call<T>) WebFactory.createService(SearchModel.class, context).getMediaSearch(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_SOCIAL_REQ:
+                case KeyUtil.MEDIA_SOCIAL_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaSocial(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_STAFF_REQ:
+                case KeyUtil.MEDIA_STAFF_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaStaff(param.getParcelable(arg_graph_params));
-                case KeyUtils.MEDIA_STATS_REQ:
+                case KeyUtil.MEDIA_STATS_REQ:
                     return (Call<T>) WebFactory.createService(MediaModel.class, context).getMediaStats(param.getParcelable(arg_graph_params));
                 /*case KeyUtils.MEDIA_TRENDS_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaTrends(param.getParcelable(arg_graph_params));*/
 
 
-                case KeyUtils.MUT_DELETE_FEED_REPLY:
+                case KeyUtil.MUT_DELETE_FEED_REPLY:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).deleteActivityReply(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_DELETE_FEED:
+                case KeyUtil.MUT_DELETE_FEED:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).deleteActivity(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_DELETE_MEDIA_LIST:
+                case KeyUtil.MUT_DELETE_MEDIA_LIST:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).deleteMediaListEntry(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_DELETE_REVIEW:
+                case KeyUtil.MUT_DELETE_REVIEW:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).deleteReview(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_RATE_REVIEW:
+                case KeyUtil.MUT_RATE_REVIEW:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).rateReview(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_SAVE_FEED_REPLY:
+                case KeyUtil.MUT_SAVE_FEED_REPLY:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).saveActivityReply(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_SAVE_MEDIA_LIST:
+                case KeyUtil.MUT_SAVE_MEDIA_LIST:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).saveMediaListEntry(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_SAVE_MESSAGE_FEED:
+                case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).saveMessageActivity(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_SAVE_REVIEW:
+                case KeyUtil.MUT_SAVE_REVIEW:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).saveReview(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_SAVE_TEXT_FEED:
+                case KeyUtil.MUT_SAVE_TEXT_FEED:
                     return (Call<T>) WebFactory.createService(FeedModel.class, context).saveTextActivity(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_TOGGLE_FAVOURITE:
+                case KeyUtil.MUT_TOGGLE_FAVOURITE:
                     return (Call<T>) WebFactory.createService(BaseModel.class, context).toggleFavourite(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_TOGGLE_FOLLOW:
+                case KeyUtil.MUT_TOGGLE_FOLLOW:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).toggleFollow(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_TOGGLE_LIKE:
+                case KeyUtil.MUT_TOGGLE_LIKE:
                     return (Call<T>) WebFactory.createService(BaseModel.class, context).toggleLike(param.getParcelable(arg_graph_params));
-                case KeyUtils.MUT_UPDATE_MEDIA_LISTS:
+                case KeyUtil.MUT_UPDATE_MEDIA_LISTS:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).updateMediaListEntries(param.getParcelable(arg_graph_params));
 
 
-                case KeyUtils.STAFF_BASE_REQ:
+                case KeyUtil.STAFF_BASE_REQ:
                     return (Call<T>) WebFactory.createService(StaffModel.class, context).getStaffBase(param.getParcelable(arg_graph_params));
-                case KeyUtils.STAFF_MEDIA_REQ:
+                case KeyUtil.STAFF_MEDIA_REQ:
                     return (Call<T>) WebFactory.createService(StaffModel.class, context).getStaffMedia(param.getParcelable(arg_graph_params));
-                case KeyUtils.STAFF_OVERVIEW_REQ:
+                case KeyUtil.STAFF_OVERVIEW_REQ:
                     return (Call<T>) WebFactory.createService(StaffModel.class, context).getStaffOverview(param.getParcelable(arg_graph_params));
-                case KeyUtils.STAFF_ROLES_REQ:
+                case KeyUtil.STAFF_ROLES_REQ:
                     return (Call<T>) WebFactory.createService(StaffModel.class, context).getStaffRoles(param.getParcelable(arg_graph_params));
-                case KeyUtils.STAFF_SEARCH_REQ:
+                case KeyUtil.STAFF_SEARCH_REQ:
                     return (Call<T>) WebFactory.createService(SearchModel.class, context).getStaffSearch(param.getParcelable(arg_graph_params));
 
 
-                case KeyUtils.STUDIO_BASE_REQ:
+                case KeyUtil.STUDIO_BASE_REQ:
                     return (Call<T>) WebFactory.createService(StudioModel.class, context).getStudioBase(param.getParcelable(arg_graph_params));
-                case KeyUtils.STUDIO_MEDIA_REQ:
+                case KeyUtil.STUDIO_MEDIA_REQ:
                     return (Call<T>) WebFactory.createService(StudioModel.class, context).getStudioMedia(param.getParcelable(arg_graph_params));
-                case KeyUtils.STUDIO_SEARCH_REQ:
+                case KeyUtil.STUDIO_SEARCH_REQ:
                     return (Call<T>) WebFactory.createService(SearchModel.class, context).getStudioSearch(param.getParcelable(arg_graph_params));
 
 
-                case KeyUtils.USER_ANIME_FAVOURITES_REQ:
+                case KeyUtil.USER_ANIME_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getAnimeFavourites(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_BASE_REQ:
+                case KeyUtil.USER_BASE_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getUserBase(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_CHARACTER_FAVOURITES_REQ:
+                case KeyUtil.USER_CHARACTER_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getCharacterFavourites(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_CURRENT_REQ:
+                case KeyUtil.USER_CURRENT_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getCurrentUser(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_FAVOURITES_COUNT_REQ:
+                case KeyUtil.USER_FAVOURITES_COUNT_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getFavouritesCount(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_FOLLOWERS_REQ:
+                case KeyUtil.USER_FOLLOWERS_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getFollowers(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_FOLLOWING_REQ:
+                case KeyUtil.USER_FOLLOWING_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getFollowing(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_MANGA_FAVOURITES_REQ:
+                case KeyUtil.USER_MANGA_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getMangaFavourites(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_OVERVIEW_REQ:
+                case KeyUtil.USER_OVERVIEW_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getUserOverview(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_SEARCH_REQ:
+                case KeyUtil.USER_SEARCH_REQ:
                     return (Call<T>) WebFactory.createService(SearchModel.class, context).getUserSearch(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_STAFF_FAVOURITES_REQ:
+                case KeyUtil.USER_STAFF_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getStaffFavourites(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_STATS_REQ:
+                case KeyUtil.USER_STATS_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getUserStats(param.getParcelable(arg_graph_params));
-                case KeyUtils.USER_STUDIO_FAVOURITES_REQ:
+                case KeyUtil.USER_STUDIO_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getStudioFavourites(param.getParcelable(arg_graph_params));
             }
         }

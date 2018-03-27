@@ -3,7 +3,7 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2018/03/20.
@@ -12,7 +12,7 @@ import com.mxt.anitrend.util.KeyUtils;
 public class UserOptions implements Parcelable {
 
     private boolean displayAdultContent;
-    private @KeyUtils.UserLanguageTitle String titleLanguage;
+    private @KeyUtil.UserLanguageTitle String titleLanguage;
 
     protected UserOptions(Parcel in) {
         displayAdultContent = in.readByte() != 0;
@@ -46,7 +46,7 @@ public class UserOptions implements Parcelable {
         return displayAdultContent;
     }
 
-    public @KeyUtils.UserLanguageTitle String getTitleLanguage() {
+    public @KeyUtil.UserLanguageTitle String getTitleLanguage() {
         return titleLanguage;
     }
 }

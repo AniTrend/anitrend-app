@@ -7,14 +7,14 @@ buildscript {
         'minSdk'        : 17,
         'versionCode'   : 73,
         'versionName'   : '1.0.5',
-        'buildTools'    : '26.0.2',
+        'buildTools'    : '27.0.3',
         'butterKnife'   : '8.8.1',
         'glide'         : '4.6.1',
         'retrofit'      : '2.4.0',
-        'supportLibrary': '27.0.2',
-        'firebase'      : '11.8.0',
+        'supportLibrary': '27.1.0',
+        'firebase'      : '12.0.0',
         'objectBox'     : '1.4.4',
-        'architecture'  : '1.1.0',
+        'architecture'  : '1.1.1',
         'emojify'       : '0.1.4.2'
     ]
     repositories {
@@ -24,7 +24,7 @@ buildscript {
         maven { url "http://objectbox.net/beta-repo/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         // Google Play Services
         classpath 'com.google.gms:google-services:3.1.2'
         // Crash Analytics

@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +35,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
 
     protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
 
-    private @KeyUtils.RequestType int requestType;
+    private @KeyUtil.RequestType int requestType;
 
     private BottomSheetBase mBottomSheet;
 
@@ -58,9 +58,9 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            feedList = getArguments().getParcelable(KeyUtils.arg_model);
-            requestType = getArguments().getInt(KeyUtils.arg_request_type);
-            user = getArguments().getParcelable(KeyUtils.arg_user_model);
+            feedList = getArguments().getParcelable(KeyUtil.arg_model);
+            requestType = getArguments().getInt(KeyUtil.arg_request_type);
+            user = getArguments().getParcelable(KeyUtil.arg_user_model);
         }
     }
 
@@ -87,11 +87,11 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
         if(!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         switch (requestType) {
-            case KeyUtils.MUT_SAVE_TEXT_FEED:
+            case KeyUtil.MUT_SAVE_TEXT_FEED:
                 composerWidget.setModel(feedList);
                 composerWidget.setText(feedList.getValue());
                 break;
-            case KeyUtils.MUT_SAVE_MESSAGE_FEED:
+            case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                 toolbarTitle.setText(getString(mTitle, user.getName()));
                 if(feedList != null)
                     composerWidget.setText(feedList.getValue());
@@ -172,18 +172,18 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             return newInstance(bundle);
         }
 
-        public Builder setRequestMode(@KeyUtils.RequestType int requestType) {
-            bundle.putInt(KeyUtils.arg_request_type, requestType);
+        public Builder setRequestMode(@KeyUtil.RequestType int requestType) {
+            bundle.putInt(KeyUtil.arg_request_type, requestType);
             return this;
         }
 
         public Builder setUserActivity(FeedList feedList) {
-            bundle.putParcelable(KeyUtils.arg_model, feedList);
+            bundle.putParcelable(KeyUtil.arg_model, feedList);
             return this;
         }
 
         public Builder setUserModel(UserBase userModel) {
-            bundle.putParcelable(KeyUtils.arg_user_model, userModel);
+            bundle.putParcelable(KeyUtil.arg_user_model, userModel);
             return this;
         }
     }

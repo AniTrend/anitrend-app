@@ -6,7 +6,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaStats;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class Media extends MediaBase {
     private List<MediaTag> tags;
     private String trailer;
     private String hashtag;
-    private @KeyUtils.MediaSource String source;
+    private @KeyUtil.MediaSource String source;
     private List<ExternalLink> externalLinks;
     private ConnectionContainer<StudioBase> studios;
     private MediaStats stats;
@@ -99,7 +99,7 @@ public class Media extends MediaBase {
         return hashtag;
     }
 
-    public @KeyUtils.MediaSource String getSource() {
+    public @KeyUtil.MediaSource String getSource() {
         return source;
     }
 

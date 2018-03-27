@@ -107,32 +107,32 @@ public class ApplicationPref {
 
     public void saveSeasonYear(int year) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(KeyUtils.arg_seasonYear, year);
+        editor.putInt(KeyUtil.arg_seasonYear, year);
         editor.apply();
     }
 
     public int getSeasonYear() {
-        return sharedPreferences.getInt(KeyUtils.arg_seasonYear, DateUtil.getYear());
+        return sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear());
     }
 
 
-    public boolean shouldShowTipFor(@KeyUtils.TapTargetType String tipType) {
+    public boolean shouldShowTipFor(@KeyUtil.TapTargetType String tipType) {
         return sharedPreferences.getBoolean(tipType, true);
     }
 
-    public void disableTipFor(@KeyUtils.TapTargetType String tipType) {
+    public void disableTipFor(@KeyUtil.TapTargetType String tipType) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(tipType, false);
         editor.apply();
     }
 
-    public void saveOrder(@KeyUtils.SortOrderType String order) {
+    public void saveOrder(@KeyUtil.SortOrderType String order) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KeyUtils.arg_order, order);
+        editor.putString(KeyUtil.arg_order, order);
         editor.apply();
     }
 
-    public @KeyUtils.SortOrderType String getOrder() {
-        return sharedPreferences.getString(KeyUtils.arg_order, KeyUtils.DESC);
+    public @KeyUtil.SortOrderType String getOrder() {
+        return sharedPreferences.getString(KeyUtil.arg_order, KeyUtil.DESC);
     }
 }

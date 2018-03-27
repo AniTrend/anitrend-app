@@ -21,7 +21,7 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import okhttp3.ResponseBody;
@@ -37,7 +37,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
 
     private WidgetPresenter<ResponseBody> presenter;
     private WidgetToolbarFavouriteBinding binding;
-    private @KeyUtils.RequestType int requestType = KeyUtils.MUT_TOGGLE_FAVOURITE;
+    private @KeyUtil.RequestType int requestType = KeyUtil.MUT_TOGGLE_FAVOURITE;
 
     private StaffBase staffBase;
     private MediaBase mediaBase;
@@ -71,7 +71,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
         presenter = new WidgetPresenter<>(getContext());
         binding = WidgetToolbarFavouriteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
         queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_page_limit, KeyUtils.SINGLE_ITEM_LIMIT);
+                .putVariable(KeyUtil.arg_page_limit, KeyUtil.SINGLE_ITEM_LIMIT);
         binding.setOnClickEvent(this);
     }
 
@@ -93,32 +93,32 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     public void setModel(StaffBase staffBase) {
         this.staffBase = staffBase;
         setIconType();
-        queryContainer.putVariable(KeyUtils.arg_staffId, staffBase.getId());
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        queryContainer.putVariable(KeyUtil.arg_staffId, staffBase.getId());
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
     public void setModel(CharacterBase characterBase) {
         this.characterBase = characterBase;
         setIconType();
-        queryContainer.putVariable(KeyUtils.arg_characterId, characterBase.getId());
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        queryContainer.putVariable(KeyUtil.arg_characterId, characterBase.getId());
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
     public void setModel(StudioBase studioBase) {
         this.studioBase = studioBase;
         setIconType();
-        queryContainer.putVariable(KeyUtils.arg_studioId, studioBase.getId());
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        queryContainer.putVariable(KeyUtil.arg_studioId, studioBase.getId());
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
     public void setModel(MediaBase mediaBase) {
         this.mediaBase = mediaBase;
         setIconType();
-        queryContainer.putVariable(MediaUtil.isAnimeType(mediaBase) ? KeyUtils.arg_animeId : KeyUtils.arg_mangaId, mediaBase.getId());
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        queryContainer.putVariable(MediaUtil.isAnimeType(mediaBase) ? KeyUtil.arg_animeId : KeyUtil.arg_mangaId, mediaBase.getId());
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
@@ -145,13 +145,13 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private void setIconType() {
         boolean isFavourite, requiresTint = true;
         switch (requestType) {
-            case KeyUtils.CHARACTER_BASE_REQ:
+            case KeyUtil.CHARACTER_BASE_REQ:
                 isFavourite = characterBase.isFavourite();
                 break;
-            case KeyUtils.STAFF_BASE_REQ:
+            case KeyUtil.STAFF_BASE_REQ:
                 isFavourite = staffBase.isFavourite();
                 break;
-            case KeyUtils.STUDIO_BASE_REQ:
+            case KeyUtil.STUDIO_BASE_REQ:
                 isFavourite = studioBase.isFavourite();
                 break;
             default:

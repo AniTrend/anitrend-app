@@ -13,11 +13,11 @@ import java.util.Objects;
 public class MediaUtil {
 
     public static <T extends MediaBase> boolean isAnimeType(T series) {
-        return (series != null && Objects.equals(series.getType(), KeyUtils.ANIME));
+        return (series != null && Objects.equals(series.getType(), KeyUtil.ANIME));
     }
 
     public static <T extends MediaBase> boolean isMangaType(T series) {
-        return (series != null && Objects.equals(series.getType(), KeyUtils.MANGA));
+        return (series != null && Objects.equals(series.getType(), KeyUtil.MANGA));
     }
 
     public static boolean isIncrementLimitReached(MediaList model) {
@@ -30,7 +30,7 @@ public class MediaUtil {
 
     public static boolean isAllowedStatus(MediaList model) {
         MediaBase mediaBase = model.getMedia();
-        return !Objects.equals(mediaBase.getStatus(), KeyUtils.NOT_YET_RELEASED);
+        return !Objects.equals(mediaBase.getStatus(), KeyUtil.NOT_YET_RELEASED);
     }
 
     public static <T extends MediaBase> String getMediaTitle(T series) {

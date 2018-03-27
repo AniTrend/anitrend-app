@@ -1,6 +1,6 @@
 package com.mxt.anitrend.model.entity.group;
 
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ public class EntityHeader extends EntityGroup {
     public EntityHeader(String title, int size) {
         this.title = title;
         this.size = size;
-        setContentType(KeyUtils.RECYCLER_TYPE_HEADER);
+        setContentType(KeyUtil.RECYCLER_TYPE_HEADER);
     }
 
     public EntityHeader(String title) {

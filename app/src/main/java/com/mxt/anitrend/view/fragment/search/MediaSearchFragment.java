@@ -3,24 +3,21 @@ package com.mxt.anitrend.view.fragment.search;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -33,11 +30,11 @@ import java.util.Collections;
 public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, BasePresenter> {
 
     private String searchQuery;
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
-    public static MediaSearchFragment newInstance(Bundle bundle, @KeyUtils.MediaType String mediaType) {
+    public static MediaSearchFragment newInstance(Bundle bundle, @KeyUtil.MediaType String mediaType) {
         Bundle args = new Bundle(bundle);
-        args.putString(KeyUtils.arg_mediaType, mediaType);
+        args.putString(KeyUtil.arg_mediaType, mediaType);
         MediaSearchFragment fragment = new MediaSearchFragment();
         fragment.setArguments(args);
         return fragment;
@@ -52,8 +49,8 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            searchQuery = getArguments().getString(KeyUtils.arg_search);
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+            searchQuery = getArguments().getString(KeyUtil.arg_search);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
@@ -76,12 +73,12 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_search, searchQuery)
-                .putVariable(KeyUtils.arg_mediaType, mediaType)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_SEARCH_REQ, getContext());
+                .putVariable(KeyUtil.arg_search, searchQuery)
+                .putVariable(KeyUtil.arg_mediaType, mediaType)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_SEARCH_REQ, getContext());
     }
 
     /**
@@ -96,8 +93,8 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_mediaType, data.getType());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_mediaType, data.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -115,9 +112,9 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(data).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;

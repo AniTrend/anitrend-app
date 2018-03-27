@@ -3,28 +3,21 @@ package com.mxt.anitrend.view.fragment.search;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.StaffAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.StaffActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by max on 2017/12/20.
@@ -49,7 +42,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_search);
+            searchQuery = getArguments().getString(KeyUtil.arg_search);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
@@ -72,11 +65,11 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_search, searchQuery)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.STAFF_SEARCH_REQ, getContext());
+                .putVariable(KeyUtil.arg_search, searchQuery)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.STAFF_SEARCH_REQ, getContext());
     }
 
     /**
@@ -91,7 +84,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

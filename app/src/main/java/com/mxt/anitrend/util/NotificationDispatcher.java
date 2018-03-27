@@ -33,7 +33,7 @@ public final class NotificationDispatcher {
     }
 
     public static void createNotification(Context context, int notificationCount) {
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, KeyUtils.CHANNEL_ID)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, KeyUtil.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_new_releases)
                 .setSound(Uri.parse(getNotificationSound(context)))
                 .setAutoCancel(true)

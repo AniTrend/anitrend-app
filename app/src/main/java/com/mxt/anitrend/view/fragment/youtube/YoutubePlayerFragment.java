@@ -3,15 +3,12 @@ package com.mxt.anitrend.view.fragment.youtube;
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mxt.anitrend.BuildConfig;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/12/29.
@@ -26,7 +23,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
 
     public static YoutubePlayerFragment newInstance(String resourceId) {
         Bundle args = new Bundle();
-        args.putString(KeyUtils.arg_trailerId, resourceId);
+        args.putString(KeyUtil.arg_trailerId, resourceId);
         YoutubePlayerFragment fragment = new YoutubePlayerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -36,7 +33,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if(getArguments() != null)
-            streamLink = getArguments().getString(KeyUtils.arg_trailerId);
+            streamLink = getArguments().getString(KeyUtil.arg_trailerId);
     }
 
     @Override

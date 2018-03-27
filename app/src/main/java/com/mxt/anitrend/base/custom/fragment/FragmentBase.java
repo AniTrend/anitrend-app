@@ -20,9 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
@@ -30,21 +28,11 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
-import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.util.ActionModeHelper;
 import com.mxt.anitrend.util.AnalyticsUtil;
-import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
-import com.mxt.anitrend.view.sheet.BottomSheetComposer;
-import com.nguyenhoanglam.progresslayout.ProgressLayout;
+import com.mxt.anitrend.util.MediaActionUtil;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 import butterknife.Unbinder;
 
@@ -57,7 +45,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     private ActionModeHelper<M> actionMode;
     protected ViewModelBase<VM> viewModel;
     private CommonPresenter presenter;
-    protected SeriesActionUtil seriesActionUtil;
+    protected MediaActionUtil mediaActionUtil;
 
     protected Snackbar snackbar;
     protected BottomSheetBase mBottomSheet;
@@ -111,8 +99,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
             unbinder.unbind();
         if(presenter != null)
             presenter.onDestroy();
-        if(seriesActionUtil != null)
-            seriesActionUtil.onDestroy();
+        if(mediaActionUtil != null)
+            mediaActionUtil.onDestroy();
         actionMode = null;
     }
 
@@ -150,8 +138,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     @Override
     public void onPause() {
         super.onPause();
-        if(seriesActionUtil != null)
-            seriesActionUtil.onPause(null);
+        if(mediaActionUtil != null)
+            mediaActionUtil.onPause(null);
         if(presenter != null)
             presenter.onPause(this);
     }
@@ -165,8 +153,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     @Override
     public void onResume() {
         super.onResume();
-        if(seriesActionUtil != null)
-            seriesActionUtil.onResume(null);
+        if(mediaActionUtil != null)
+            mediaActionUtil.onResume(null);
         if(presenter != null)
             presenter.onResume(this);
     }

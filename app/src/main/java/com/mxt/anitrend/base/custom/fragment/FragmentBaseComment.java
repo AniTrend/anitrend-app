@@ -20,10 +20,9 @@ import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
-import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -153,8 +152,8 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KeyUtils.key_pagination, isPager);
-        outState.putInt(KeyUtils.key_columns, mColumnSize);
+        outState.putBoolean(KeyUtil.key_pagination, isPager);
+        outState.putInt(KeyUtil.key_columns, mColumnSize);
     }
 
     /**
@@ -172,8 +171,8 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            isPager = savedInstanceState.getBoolean(KeyUtils.key_pagination);
-            mColumnSize = savedInstanceState.getInt(KeyUtils.key_columns);
+            isPager = savedInstanceState.getBoolean(KeyUtil.key_pagination);
+            mColumnSize = savedInstanceState.getInt(KeyUtil.key_columns);
         }
     }
 

@@ -20,7 +20,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.EpisodeHelper;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +36,12 @@ import retrofit2.Response;
 public class WatchFragment extends FragmentChannelBase implements RetroCallback<ConnectionContainer<List<ExternalLink>>> {
 
     private long mediaId;
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
     public static Fragment newInstance(Bundle params, boolean popular) {
         Bundle args = new Bundle(params);
         WatchFragment fragment = new WatchFragment();
-        args.putBoolean(KeyUtils.arg_popular, popular);
+        args.putBoolean(KeyUtil.arg_popular, popular);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,8 +49,8 @@ public class WatchFragment extends FragmentChannelBase implements RetroCallback<
     public static Fragment newInstance(List<ExternalLink> externalLinks, boolean popular) {
         WatchFragment fragment = new WatchFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(KeyUtils.arg_list_model, (ArrayList<? extends Parcelable>) externalLinks);
-        args.putBoolean(KeyUtils.arg_popular, popular);
+        args.putParcelableArrayList(KeyUtil.arg_list_model, (ArrayList<? extends Parcelable>) externalLinks);
+        args.putBoolean(KeyUtil.arg_popular, popular);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +64,8 @@ public class WatchFragment extends FragmentChannelBase implements RetroCallback<
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mediaId = getArguments().getLong(KeyUtils.arg_id);
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+            mediaId = getArguments().getLong(KeyUtil.arg_id);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
@@ -90,23 +90,23 @@ public class WatchFragment extends FragmentChannelBase implements RetroCallback<
         if(externalLinks != null) {
             boolean feed = targetLink != null && targetLink.startsWith(BuildConfig.FEEDS_LINK);
             Bundle bundle = getViewModel().getParams();
-            bundle.putString(KeyUtils.arg_search, targetLink);
-            bundle.putBoolean(KeyUtils.arg_feed, feed);
+            bundle.putString(KeyUtil.arg_search, targetLink);
+            bundle.putBoolean(KeyUtil.arg_feed, feed);
             getViewModel().requestData(getRequestMode(feed), getContext());
         } else {
             QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                    .putVariable(KeyUtils.arg_id, mediaId)
-                    .putVariable(KeyUtils.arg_type, mediaType);
-            getPresenter().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-            getPresenter().requestData(KeyUtils.MEDIA_EPISODES_REQ, getContext(), this);
+                    .putVariable(KeyUtil.arg_id, mediaId)
+                    .putVariable(KeyUtil.arg_type, mediaType);
+            getPresenter().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+            getPresenter().requestData(KeyUtil.MEDIA_EPISODES_REQ, getContext(), this);
         }
     }
 
-    private @KeyUtils.RequestType
+    private @KeyUtil.RequestType
     int getRequestMode(boolean feed) {
         if(feed)
-            return isPopular? KeyUtils.EPISODE_POPULAR_REQ:KeyUtils.EPISODE_LATEST_REQ;
-        return KeyUtils.EPISODE_FEED_REQ;
+            return isPopular? KeyUtil.EPISODE_POPULAR_REQ: KeyUtil.EPISODE_LATEST_REQ;
+        return KeyUtil.EPISODE_FEED_REQ;
     }
 
     @Override

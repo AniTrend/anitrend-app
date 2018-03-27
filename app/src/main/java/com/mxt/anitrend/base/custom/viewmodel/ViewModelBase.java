@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import io.objectbox.android.ObjectBoxLiveData;
 import io.objectbox.query.Query;
@@ -75,7 +75,7 @@ public class ViewModelBase<T> extends ViewModel implements RetroCallback<T> {
      * <br/>
      * @param request_type the type of request to execute
      */
-    public void requestData(@KeyUtils.RequestType int request_type, Context context) {
+    public void requestData(@KeyUtil.RequestType int request_type, Context context) {
         mLoader = new RequestHandler<>(getParams(), this, request_type);
         mLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context);
     }

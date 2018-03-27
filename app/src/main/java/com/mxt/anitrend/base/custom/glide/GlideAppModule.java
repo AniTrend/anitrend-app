@@ -15,7 +15,7 @@ import com.bumptech.glide.module.AppGlideModule;
 import com.bumptech.glide.request.RequestOptions;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/06/10.
@@ -57,7 +57,7 @@ public class GlideAppModule extends AppGlideModule {
         // Setting default params for glide
         RequestOptions options = new RequestOptions()
                 .format(isLowRamDevice ? DecodeFormat.PREFER_RGB_565 : DecodeFormat.PREFER_ARGB_8888)
-                .timeout(KeyUtils.GLIDE_REQUEST_TIMEOUT)
+                .timeout(KeyUtil.GLIDE_REQUEST_TIMEOUT)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .error(CompatUtil.getDrawable(context, R.drawable.ic_broken_image_white_48dp, R.color.colorStateOrange));
 

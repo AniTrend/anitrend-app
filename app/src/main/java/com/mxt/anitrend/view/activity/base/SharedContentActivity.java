@@ -26,7 +26,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetEmoticon;
@@ -107,7 +107,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtils.PEEK_HEIGHT));
+        bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
         bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.post_share_types, R.layout.adapter_spinner_item);
@@ -166,7 +166,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         });
         binding.composerWidget.setItemClickListener(this);
         binding.composerWidget.setLifecycle(getLifecycle());
-        binding.composerWidget.setRequestMode(KeyUtils.ACTIVITY_CREATE_REQ);
+        binding.composerWidget.setRequestMode(KeyUtil.ACTIVITY_CREATE_REQ);
         updateUI();
     }
 
@@ -199,7 +199,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<FeedList> consumer) {
-        if(consumer.getRequestMode() == KeyUtils.ACTIVITY_CREATE_REQ) {
+        if(consumer.getRequestMode() == KeyUtil.ACTIVITY_CREATE_REQ) {
             NotifyUtil.makeText(this, R.string.text_compose_success, R.drawable.ic_insert_emoticon_white_24dp, Toast.LENGTH_SHORT).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
@@ -208,21 +208,21 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     @OnClick(R.id.sheet_share_post_type_approve)
     public void getItemSelected() {
         String text = sharedResource.getText().toString();
-        @KeyUtils.ShareType int position = sharedResourceType.getSelectedItemPosition();
+        @KeyUtil.ShareType int position = sharedResourceType.getSelectedItemPosition();
         switch (position) {
-            case KeyUtils.IMAGE_TYPE:
+            case KeyUtil.IMAGE_TYPE:
                 binding.composerWidget.setText(MarkDown.convertImage(text));
                 break;
-            case KeyUtils.LINK_TYPE:
+            case KeyUtil.LINK_TYPE:
                 binding.composerWidget.setText(MarkDown.convertLink(text));
                 break;
-            case KeyUtils.WEBM_TYPE:
+            case KeyUtil.WEBM_TYPE:
                 binding.composerWidget.setText(MarkDown.convertVideo(text));
                 break;
-            case KeyUtils.YOUTUBE_TYPE:
+            case KeyUtil.YOUTUBE_TYPE:
                 binding.composerWidget.setText(MarkDown.convertYoutube(text));
                 break;
-            case KeyUtils.PLAIN_TYPE:
+            case KeyUtil.PLAIN_TYPE:
                 binding.composerWidget.setText(text);
                 break;
         }

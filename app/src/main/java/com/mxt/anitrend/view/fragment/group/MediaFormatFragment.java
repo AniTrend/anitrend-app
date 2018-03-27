@@ -18,9 +18,9 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -33,14 +33,14 @@ import java.util.Collections;
 public class MediaFormatFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter> {
 
     private long id;
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
-    private @KeyUtils.RequestType int requestType;
+    private @KeyUtil.RequestType int requestType;
 
-    public static MediaFormatFragment newInstance(Bundle params, @KeyUtils.MediaType String mediaType, @KeyUtils.RequestType int requestType) {
+    public static MediaFormatFragment newInstance(Bundle params, @KeyUtil.MediaType String mediaType, @KeyUtil.RequestType int requestType) {
         Bundle args = new Bundle(params);
-        args.putString(KeyUtils.arg_mediaType, mediaType);
-        args.putInt(KeyUtils.arg_request_type, requestType);
+        args.putString(KeyUtil.arg_mediaType, mediaType);
+        args.putInt(KeyUtil.arg_request_type, requestType);
         MediaFormatFragment fragment = new MediaFormatFragment();
         fragment.setArguments(args);
         return fragment;
@@ -55,9 +55,9 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            requestType = getArguments().getInt(KeyUtils.arg_request_type);
-            id = getArguments().getLong(KeyUtils.arg_id);
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+            requestType = getArguments().getInt(KeyUtil.arg_request_type);
+            id = getArguments().getLong(KeyUtil.arg_id);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setPresenter(new MediaPresenter(getContext()));
@@ -76,8 +76,8 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase)data).getType());
+                intent.putExtra(KeyUtil.arg_id, ((MediaBase)data).getId());
+                intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -95,9 +95,9 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(((MediaBase)data)).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
@@ -121,10 +121,10 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_id, id)
-                .putVariable(KeyUtils.arg_mediaType, mediaType)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+                .putVariable(KeyUtil.arg_id, id)
+                .putVariable(KeyUtil.arg_mediaType, mediaType)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(requestType, getContext());
     }
 

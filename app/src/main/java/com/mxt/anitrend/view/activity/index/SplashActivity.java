@@ -9,10 +9,9 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.model.entity.base.Version;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.base.WelcomeActivity;
 
 import butterknife.BindView;
@@ -68,8 +67,8 @@ public class SplashActivity extends ActivityBase<Version, BasePresenter> {
     protected void makeRequest() {
         Version version = getPresenter().getDatabase().getRemoteVersion();
         // How frequent should the application check for updates on startup
-        if(version == null || DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_HOURS, version.getLastChecked(), 8))
-            getViewModel().requestData(KeyUtils.UPDATE_CHECKER_REQ, getApplicationContext());
+        if(version == null || DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_HOURS, version.getLastChecked(), 8))
+            getViewModel().requestData(KeyUtil.UPDATE_CHECKER_REQ, getApplicationContext());
         else
             updateUI();
     }

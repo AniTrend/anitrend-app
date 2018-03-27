@@ -24,9 +24,9 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -44,7 +44,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
 
     public static MediaListFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         MediaListFragment fragment = new MediaListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -59,8 +59,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            userName = getArguments().getString(KeyUtils.arg_userName);
-            queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
+            userName = getArguments().getString(KeyUtil.arg_userName);
+            queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = true;
         setPresenter(new BasePresenter(getContext()));
@@ -87,10 +87,10 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     public void makeRequest() {
-        queryContainer.putVariable(KeyUtils.arg_userName, userName)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
+        queryContainer.putVariable(KeyUtil.arg_userName, userName)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
     }
 
     /**
@@ -129,8 +129,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             case R.id.series_image:
                 MediaBase mediaBase = data.getMedia();
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_mediaType, mediaBase.getType());
+                intent.putExtra(KeyUtil.arg_id, data.getMediaId());
+                intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -148,9 +148,9 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(data).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
@@ -171,12 +171,12 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
             if (pairOptional.isPresent())
                 switch (consumer.getRequestMode()) {
-                    case KeyUtils.MUT_SAVE_MEDIA_LIST:
+                    case KeyUtil.MUT_SAVE_MEDIA_LIST:
                         pairIndex = pairOptional.get().getFirst();
                         model.set(pairIndex, consumer.getChangeModel());
                         mAdapter.onItemChanged(consumer.getChangeModel(),pairIndex);
                         break;
-                    case KeyUtils.MUT_DELETE_MEDIA_LIST:
+                    case KeyUtil.MUT_DELETE_MEDIA_LIST:
                         pairIndex = pairOptional.get().getFirst();
                         model.remove(pairIndex);
                         mAdapter.onItemRemoved(pairIndex);

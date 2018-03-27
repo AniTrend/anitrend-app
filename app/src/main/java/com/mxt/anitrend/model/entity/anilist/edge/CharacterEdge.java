@@ -4,7 +4,7 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.attribute.Edge;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
@@ -15,14 +15,14 @@ import java.util.List;
 
 public class CharacterEdge extends Edge<CharacterBase> {
 
-    private @KeyUtils.CharacterRole String role;
+    private @KeyUtil.CharacterRole String role;
     private List<StaffBase> voiceActors;
     private List<MediaBase> media;
 
     /**
      * The characters role in the media
      */
-    public @KeyUtils.CharacterRole String getRole() {
+    public @KeyUtil.CharacterRole String getRole() {
         return role;
     }
 

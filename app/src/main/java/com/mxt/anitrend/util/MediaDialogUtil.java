@@ -29,7 +29,7 @@ import retrofit2.Response;
  * dialog utils for series entities
  */
 
-final class SeriesDialogUtil extends DialogUtil {
+final class MediaDialogUtil extends DialogUtil {
 
     /**
      * General series managing template dialog builder which sets the text and icon based on the criteria,
@@ -144,7 +144,7 @@ final class SeriesDialogUtil extends DialogUtil {
         WidgetPresenter<MediaList> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
-        @KeyUtils.RequestType int requestType = KeyUtils.MUT_SAVE_MEDIA_LIST;
+        @KeyUtil.RequestType int requestType = KeyUtil.MUT_SAVE_MEDIA_LIST;
 
         presenter.requestData(requestType, context, new RetroCallback<MediaList>() {
             @Override
@@ -199,7 +199,7 @@ final class SeriesDialogUtil extends DialogUtil {
         WidgetPresenter<ResponseBody> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
-        @KeyUtils.RequestType int requestType = KeyUtils.MUT_DELETE_MEDIA_LIST;
+        @KeyUtil.RequestType int requestType = KeyUtil.MUT_DELETE_MEDIA_LIST;
 
         presenter.requestData(requestType, context, new RetroCallback<ResponseBody>() {
             @Override
@@ -238,8 +238,8 @@ final class SeriesDialogUtil extends DialogUtil {
      *
      * @param context from a fragment activity derived class
      */
-    private static CustomSeriesManageBase buildManagerType(Context context, @KeyUtils.MediaType String seriesType) {
-        if(Objects.equals(seriesType, KeyUtils.ANIME))
+    private static CustomSeriesManageBase buildManagerType(Context context, @KeyUtil.MediaType String seriesType) {
+        if(Objects.equals(seriesType, KeyUtil.ANIME))
             return new CustomSeriesAnimeManage(context);
         return new CustomSeriesMangaManage(context);
     }

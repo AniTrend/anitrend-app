@@ -20,7 +20,7 @@ import com.mxt.anitrend.model.entity.giphy.Gif;
 import com.mxt.anitrend.model.entity.giphy.Giphy;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity;
 
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
 
     private BottomSheetListBinding binding;
-    private @KeyUtils.RequestType
+    private @KeyUtil.RequestType
     int requestMode;
 
 
@@ -83,10 +83,10 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
         if(mAdapter == null)
             mAdapter = new GiphyAdapter(model, getActivity());
         injectAdapter();
-        if(presenter.getApplicationPref().shouldShowTipFor(KeyUtils.KEY_GIPHY_TIP)) {
+        if(presenter.getApplicationPref().shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
             NotifyUtil.createAlerter(getActivity(), R.string.title_new_feature, R.string.text_giphy_feature,
-                    R.drawable.ic_gif_white_24dp, R.color.colorStateBlue, KeyUtils.DURATION_LONG);
-            presenter.getApplicationPref().disableTipFor(KeyUtils.KEY_GIPHY_TIP);
+                    R.drawable.ic_gif_white_24dp, R.color.colorStateBlue, KeyUtil.DURATION_LONG);
+            presenter.getApplicationPref().disableTipFor(KeyUtil.KEY_GIPHY_TIP);
         }
     }
 
@@ -97,10 +97,10 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     public void makeRequest() {
         boolean hasQuery = !TextUtils.isEmpty(searchQuery);
         Bundle bundle = viewModel.getParams();
-        bundle.putInt(KeyUtils.arg_page_offset, presenter.getCurrentOffset());
-        requestMode = hasQuery? KeyUtils.GIPHY_SEARCH_REQ : KeyUtils.GIPHY_TRENDING_REQ;
+        bundle.putInt(KeyUtil.arg_page_offset, presenter.getCurrentOffset());
+        requestMode = hasQuery? KeyUtil.GIPHY_SEARCH_REQ : KeyUtil.GIPHY_TRENDING_REQ;
         if(hasQuery)
-            bundle.putString(KeyUtils.arg_search, searchQuery);
+            bundle.putString(KeyUtil.arg_search, searchQuery);
         viewModel.requestData(requestMode, getContext());
     }
 
@@ -127,10 +127,10 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     @Override
     public void onItemLongClick(View target, Giphy data) {
         if(getActivity() != null) {
-            String index = KeyUtils.GIPHY_LARGE_DOWN_SAMPLE;
+            String index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE;
             Gif giphySample = data.getImages().get(index);
             Intent intent = new Intent(getActivity(), GiphyPreviewActivity.class);
-            intent.putExtra(KeyUtils.arg_model, giphySample.getUrl());
+            intent.putExtra(KeyUtil.arg_model, giphySample.getUrl());
             getActivity().startActivity(intent);
         }
     }

@@ -46,7 +46,7 @@ import com.mxt.anitrend.service.DownloaderService;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
@@ -107,7 +107,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         if (savedInstanceState == null)
-            redirectShortcut = getIntent().getIntExtra(KeyUtils.arg_redirect, 0);
+            redirectShortcut = getIntent().getIntExtra(KeyUtil.arg_redirect, 0);
     }
 
     @Override
@@ -174,9 +174,9 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KeyUtils.arg_redirect, redirectShortcut);
-        outState.putInt(KeyUtils.key_navigation_selected, selectedItem);
-        outState.putInt(KeyUtils.key_navigation_title, selectedTitle);
+        outState.putInt(KeyUtil.arg_redirect, redirectShortcut);
+        outState.putInt(KeyUtil.key_navigation_selected, selectedItem);
+        outState.putInt(KeyUtil.key_navigation_title, selectedTitle);
         super.onSaveInstanceState(outState);
     }
 
@@ -184,9 +184,9 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if(savedInstanceState != null) {
-            redirectShortcut = savedInstanceState.getInt(KeyUtils.arg_redirect);
-            selectedItem = savedInstanceState.getInt(KeyUtils.key_navigation_selected);
-            selectedTitle = savedInstanceState.getInt(KeyUtils.key_navigation_title);
+            redirectShortcut = savedInstanceState.getInt(KeyUtil.arg_redirect);
+            selectedItem = savedInstanceState.getInt(KeyUtil.key_navigation_selected);
+            selectedTitle = savedInstanceState.getInt(KeyUtil.key_navigation_title);
         }
     }
 
@@ -271,16 +271,16 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
                 break;
             case R.id.nav_myanime:
                 intent = new Intent(this, MediaListActivity.class);
-                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.ANIME);
-                intent.putExtra(KeyUtils.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                intent.putExtra(KeyUtils.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
+                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
+                intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                intent.putExtra(KeyUtil.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
                 startActivity(intent);
                 break;
             case R.id.nav_mymanga:
                 intent = new Intent(this, MediaListActivity.class);
-                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.MANGA);
-                intent.putExtra(KeyUtils.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                intent.putExtra(KeyUtils.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
+                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
+                intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                intent.putExtra(KeyUtil.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
                 startActivity(intent);
                 break;
             case R.id.nav_hub:
@@ -414,9 +414,9 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
             mUserAvatar.setImageSrc(user.getAvatar().getLarge());
             HeaderImageView.setImage(mHeaderView, user.getBannerImage());
 
-            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_LOGIN_TIP)) {
+            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(MainActivity.this, user);
-                getPresenter().getApplicationPref().disableTipFor(KeyUtils.KEY_LOGIN_TIP);
+                getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_LOGIN_TIP);
                 mBottomSheet = new BottomSheetMessage.Builder()
                         .setText(R.string.login_message)
                         .setTitle(R.string.login_title)
@@ -456,7 +456,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
             case R.id.banner_clickable:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     Intent intent = new Intent(this, ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                    intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
                     CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
                 }
                 else
@@ -480,7 +480,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<UserBase> consumer) {
-        if(consumer.getRequestMode() == KeyUtils.USER_CURRENT_REQ)
+        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ)
             NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
     }

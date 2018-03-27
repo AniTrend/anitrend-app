@@ -14,9 +14,9 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.List;
@@ -69,12 +69,12 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
     @Override
     public void makeRequest() {
         Bundle bundle = getViewModel().setParams(ParamBuilderUtil.Builder()
-                .setSeries_type(KeyUtils.SeriesTypes[KeyUtils.ANIME])
+                .setSeries_type(KeyUtil.SeriesTypes[KeyUtil.ANIME])
                 .setSeries_show_type(getPresenter().getApplicationPref().getAnimeMediaType())
-                .addGenre(getPresenter().getFavouriteGenres())
+                .addGenre(getPresenter().getTopFavouriteGenres())
                 .build());
-        bundle.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().requestData(KeyUtils.BROWSE_FILTER_REQ, getContext());
+        bundle.putInt(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().requestData(KeyUtil.BROWSE_FILTER_REQ, getContext());
     }
 
     /**
@@ -100,8 +100,8 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_mediaType, data.getSeries_type());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_mediaType, data.getSeries_type());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -119,9 +119,9 @@ public class SuggestionFragment extends FragmentBaseList<Media, List<Media>, Bas
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(data).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;

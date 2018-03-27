@@ -31,7 +31,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.util.NotifyUtil;
 
@@ -54,7 +54,7 @@ import retrofit2.Response;
 public class ComposerWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<ResponseBody> {
 
     private WidgetComposerBinding binding;
-    private @KeyUtils.RequestType int requestType;
+    private @KeyUtil.RequestType int requestType;
     private WidgetPresenter<ResponseBody> presenter;
     private ItemClickListener<Object> itemClickListener;
 
@@ -122,19 +122,19 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         this.lifecycle = lifecycle;
     }
 
-    public void setModel(FeedList feedList, @KeyUtils.RequestType int requestType) {
+    public void setModel(FeedList feedList, @KeyUtil.RequestType int requestType) {
         this.feedList = feedList;
         this.requestType = requestType;
         // this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
     }
 
-    public void setModel(UserBase recipient, @KeyUtils.RequestType int requestType) {
+    public void setModel(UserBase recipient, @KeyUtil.RequestType int requestType) {
         this.recipient = recipient;
         this.requestType = requestType;
         // this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
     }
 
-    public void setModel(FeedReply feedReply, @KeyUtils.RequestType int requestType) {
+    public void setModel(FeedReply feedReply, @KeyUtil.RequestType int requestType) {
         this.feedReply = feedReply;
         this.requestType = requestType;
         // this.requestType = KeyUtils.MUT_SAVE_FEED_REPLY;
@@ -161,31 +161,31 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
             QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
 
             switch (requestType) {
-                case KeyUtils.MUT_SAVE_TEXT_FEED:
+                case KeyUtil.MUT_SAVE_TEXT_FEED:
                     if(feedList != null) {
                         feedList.setValue(binding.comment.getFormattedText());
-                        queryContainer.putVariable(KeyUtils.arg_id, feedList.getId());
+                        queryContainer.putVariable(KeyUtil.arg_id, feedList.getId());
                     }
-                    queryContainer.putVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtil.arg_text, binding.comment.getFormattedText());
                     break;
-                case KeyUtils.MUT_SAVE_FEED_REPLY:
+                case KeyUtil.MUT_SAVE_FEED_REPLY:
                     if(feedReply != null) {
                         feedReply.setText(binding.comment.getFormattedText());
-                        queryContainer.putVariable(KeyUtils.arg_activityId, feedReply.getId());
+                        queryContainer.putVariable(KeyUtil.arg_activityId, feedReply.getId());
                     }
-                    queryContainer.putVariable(KeyUtils.arg_text, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtil.arg_text, binding.comment.getFormattedText());
                     break;
-                case KeyUtils.MUT_SAVE_MESSAGE_FEED:
+                case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                     if(feedList != null) {
                         feedList.setValue(binding.comment.getFormattedText());
-                        queryContainer.putVariable(KeyUtils.arg_id, feedList.getId());
+                        queryContainer.putVariable(KeyUtil.arg_id, feedList.getId());
                     }
-                    queryContainer.putVariable(KeyUtils.arg_recipientId, recipient.getId());
-                    queryContainer.putVariable(KeyUtils.arg_message, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtil.arg_recipientId, recipient.getId());
+                    queryContainer.putVariable(KeyUtil.arg_message, binding.comment.getFormattedText());
                     break;
             }
 
-            presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+            presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
             presenter.requestData(requestType, getContext(), this);
         } else
             NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -228,15 +228,15 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
             if(response.isSuccessful()) {
                 binding.comment.getText().clear();
 
-                if (requestType == KeyUtils.MUT_SAVE_TEXT_FEED) {
+                if (requestType == KeyUtil.MUT_SAVE_TEXT_FEED) {
                     if(feedList != null)
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
                     presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
-                } else if (requestType == KeyUtils.MUT_SAVE_FEED_REPLY) {
+                } else if (requestType == KeyUtil.MUT_SAVE_FEED_REPLY) {
                     if(feedReply != null)
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
                     presenter.notifyAllListeners(new BaseConsumer<FeedReply>(requestType), false);
-                } else if (requestType == KeyUtils.MUT_SAVE_MESSAGE_FEED) {
+                } else if (requestType == KeyUtil.MUT_SAVE_MESSAGE_FEED) {
                     if(feedList != null)
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
                     presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
@@ -274,7 +274,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onGiphyClicked(Giphy giphy) {
-        String index = KeyUtils.GIPHY_LARGE_DOWN_SAMPLE;
+        String index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE;
         EditText editor = binding.comment;
         int start = editor.getSelectionStart();
         Gif gif = giphy.getImages().get(index);

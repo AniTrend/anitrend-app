@@ -14,22 +14,17 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.databinding.FragmentUserAboutBinding;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.StatsRing;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.ComparatorProvider;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -57,8 +52,8 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getLong(KeyUtils.arg_id);
-            userName = getArguments().getString(KeyUtils.arg_userName);
+            userId = getArguments().getLong(KeyUtil.arg_id);
+            userName = getArguments().getString(KeyUtil.arg_userName);
         }
         isMenuDisabled = true;
         setPresenter(new BasePresenter(getContext()));
@@ -118,10 +113,10 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_userName, userName)
-                .putVariable(KeyUtils.arg_id, userId);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.USER_OVERVIEW_REQ, getContext());
+                .putVariable(KeyUtil.arg_userName, userName)
+                .putVariable(KeyUtil.arg_id, userId);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.USER_OVERVIEW_REQ, getContext());
     }
 
     /**
@@ -190,7 +185,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
         switch (v.getId()) {
             case R.id.user_avatar:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getAvatar());
+                intent.putExtra(KeyUtil.arg_model, model.getAvatar());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             case R.id.user_stats_container:

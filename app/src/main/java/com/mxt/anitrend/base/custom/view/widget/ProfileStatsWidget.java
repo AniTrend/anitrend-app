@@ -25,7 +25,7 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 
 import java.util.HashMap;
@@ -108,10 +108,10 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
     public void setParams(Bundle bundle) {
         this.bundle = bundle;
-        queryContainer.putVariable(KeyUtils.arg_id, bundle.getLong(KeyUtils.arg_id))
-                .putVariable(KeyUtils.arg_userName, bundle.getString(KeyUtils.arg_userName));
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        presenter.requestData(KeyUtils.MUT_RATE_REVIEW, getContext(), this);
+        queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id))
+                .putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName));
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        presenter.requestData(KeyUtil.MUT_RATE_REVIEW, getContext(), this);
     }
 
     /**
@@ -139,7 +139,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.ANIME);
+                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
                 getContext().startActivity(intent);
                 break;
             case R.id.user_manga_total_container:
@@ -147,7 +147,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtils.arg_mediaType, KeyUtils.MANGA);
+                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
                 getContext().startActivity(intent);
                 break;
         }

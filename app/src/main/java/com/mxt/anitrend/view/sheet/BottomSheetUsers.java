@@ -20,7 +20,7 @@ import com.mxt.anitrend.databinding.BottomSheetListBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
             case R.id.container:
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
                 if(getActivity() != null)
                     getActivity().startActivity(intent);
                 break;
@@ -170,7 +170,7 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
         }
 
         public BottomSheetBuilder setModel(List<UserBase> model) {
-            bundle.putParcelableArrayList(KeyUtils.arg_list_model, (ArrayList<? extends Parcelable>) model);
+            bundle.putParcelableArrayList(KeyUtil.arg_list_model, (ArrayList<? extends Parcelable>) model);
             return this;
         }
     }

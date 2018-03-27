@@ -2,7 +2,7 @@ package com.mxt.anitrend.view.fragment.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.index.FeedFragment;
 
 /**
@@ -13,11 +13,11 @@ import com.mxt.anitrend.view.fragment.index.FeedFragment;
 public class MessageFeedFragment extends FeedFragment {
 
     private long userId;
-    private @KeyUtils.MessageType int messageType;
+    private @KeyUtil.MessageType int messageType;
 
-    public static MessageFeedFragment newInstance(Bundle params, @KeyUtils.MessageType int messageType) {
+    public static MessageFeedFragment newInstance(Bundle params, @KeyUtil.MessageType int messageType) {
         Bundle args = new Bundle(params);
-        args.putInt(KeyUtils.arg_message_type, messageType);
+        args.putInt(KeyUtil.arg_message_type, messageType);
         MessageFeedFragment fragment = new MessageFeedFragment();
         fragment.setArguments(args);
         return fragment;
@@ -27,17 +27,17 @@ public class MessageFeedFragment extends FeedFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            messageType = getArguments().getInt(KeyUtils.arg_message_type);
-            userId = getArguments().getLong(KeyUtils.arg_userId);
+            messageType = getArguments().getInt(KeyUtil.arg_message_type);
+            userId = getArguments().getLong(KeyUtil.arg_userId);
         }
         isMenuDisabled = true; isFeed = false;
     }
 
     @Override
     public void makeRequest() {
-        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .putVariable(messageType == KeyUtils.MESSAGE_TYPE_INBOX ? KeyUtils.arg_userId : KeyUtils.arg_messengerId, userId);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.FEED_MESSAGE_REQ, getContext());
+        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(messageType == KeyUtil.MESSAGE_TYPE_INBOX ? KeyUtil.arg_userId : KeyUtil.arg_messengerId, userId);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.FEED_MESSAGE_REQ, getContext());
     }
 }

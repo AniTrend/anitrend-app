@@ -12,7 +12,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/09/01.
@@ -48,7 +48,7 @@ public class AspectImageView extends android.support.v7.widget.AppCompatImageVie
         if((Width = MeasureSpec.getSize(widthMeasureSpec)) == 0)
             Width = (deviceDimens.x / spanSize) - defaultMargin;
 
-        int Height = (int) (Width * KeyUtils.AspectRatio);
+        int Height = (int) (Width * KeyUtil.AspectRatio);
         super.onMeasure(MeasureSpec.makeMeasureSpec(Width, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(Height, MeasureSpec.EXACTLY));
     }

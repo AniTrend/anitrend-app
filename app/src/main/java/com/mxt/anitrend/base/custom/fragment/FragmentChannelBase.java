@@ -29,7 +29,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.EpisodeHelper;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
@@ -89,8 +89,8 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            isPopular = getArguments().getBoolean(KeyUtils.arg_popular);
-            externalLinks = getArguments().getParcelableArrayList(KeyUtils.arg_list_model);
+            isPopular = getArguments().getBoolean(KeyUtil.arg_popular);
+            externalLinks = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
             if(externalLinks != null)
                 targetLink = EpisodeHelper.episodeSupport(externalLinks);
         }
@@ -154,8 +154,8 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KeyUtils.key_pagination, isPager);
-        outState.putInt(KeyUtils.key_columns, mColumnSize);
+        outState.putBoolean(KeyUtil.key_pagination, isPager);
+        outState.putInt(KeyUtil.key_columns, mColumnSize);
     }
 
     /**
@@ -173,8 +173,8 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            isPager = savedInstanceState.getBoolean(KeyUtils.key_pagination);
-            mColumnSize = savedInstanceState.getInt(KeyUtils.key_columns);
+            isPager = savedInstanceState.getBoolean(KeyUtil.key_pagination);
+            mColumnSize = savedInstanceState.getInt(KeyUtil.key_columns);
         }
     }
 
@@ -352,7 +352,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtils.arg_search, EpisodeHelper.getActualTile(data.getTitle()));
+                                            intent.putExtra(KeyUtil.arg_search, EpisodeHelper.getActualTile(data.getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;

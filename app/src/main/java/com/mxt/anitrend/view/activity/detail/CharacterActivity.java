@@ -16,7 +16,7 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
@@ -46,14 +46,14 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
         setSupportActionBar(toolbar);
         setPresenter(new BasePresenter(this));
         setViewModel(true);
-        if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
+        if(getIntent().hasExtra(KeyUtil.arg_id))
+            id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        getViewModel().getParams().putLong(KeyUtils.arg_id, id);
+        getViewModel().getParams().putLong(KeyUtil.arg_id, id);
         onActivityReady();
     }
 
@@ -102,9 +102,9 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     @Override
     protected void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, id);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.CHARACTER_BASE_REQ, getApplicationContext());
+                .putVariable(KeyUtil.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.CHARACTER_BASE_REQ, getApplicationContext());
     }
 
     /**

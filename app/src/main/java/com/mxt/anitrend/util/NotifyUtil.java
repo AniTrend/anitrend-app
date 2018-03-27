@@ -30,13 +30,13 @@ public class NotifyUtil {
      * Create an alert using the activity base
      */
     public static void createAlerter(FragmentActivity activity, String title, String text, @DrawableRes int icon,
-                              @ColorRes int backgroundColor, @KeyUtils.AlerterDuration long duration) {
+                              @ColorRes int backgroundColor, @KeyUtil.AlerterDuration long duration) {
         Alerter.create(activity).setTitle(title).setText(text)
                 .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
                 .setProgressColorInt(CompatUtil.getColor(activity, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(duration == 0 ? KeyUtils.DURATION_SHORT : duration)
+                .enableVibration(true).setDuration(duration == 0 ? KeyUtil.DURATION_SHORT : duration)
                 .enableProgress(duration != 0)
                 .show();
     }
@@ -45,13 +45,13 @@ public class NotifyUtil {
      * Create an alert using the activity base
      */
     public static void createAlerter(FragmentActivity activity, @StringRes int title, @StringRes int text, @DrawableRes int icon,
-                              @ColorRes int backgroundColor, @KeyUtils.AlerterDuration long duration) {
+                              @ColorRes int backgroundColor, @KeyUtil.AlerterDuration long duration) {
         Alerter.create(activity).setTitle(title).setText(text)
                 .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
                 .setProgressColorInt(CompatUtil.getColor(activity, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(duration == 0 ? KeyUtils.DURATION_SHORT : duration)
+                .enableVibration(true).setDuration(duration == 0 ? KeyUtil.DURATION_SHORT : duration)
                 .enableProgress(duration != 0)
                 .show();
     }
@@ -64,7 +64,7 @@ public class NotifyUtil {
                 .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(KeyUtils.DURATION_SHORT)
+                .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
                 .show();
     }
 
@@ -76,7 +76,7 @@ public class NotifyUtil {
                 .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(KeyUtils.DURATION_SHORT)
+                .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
                 .show();
     }
 
@@ -88,7 +88,7 @@ public class NotifyUtil {
                 .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(KeyUtils.DURATION_SHORT)
+                .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
                 .setOnClickListener(clickListener)
                 .show();
     }

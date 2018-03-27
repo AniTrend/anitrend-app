@@ -16,7 +16,7 @@ import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
@@ -33,8 +33,8 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
     }
 
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtils.RecyclerViewType int viewType) {
-        if (viewType == KeyUtils.RECYCLER_TYPE_HEADER)
+    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+        if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new CharacterViewHolder(AdapterCharacterBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
@@ -43,12 +43,12 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
     public void onViewAttachedToWindow(RecyclerViewHolder<EntityGroup> holder) {
         super.onViewAttachedToWindow(holder);
         StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-        if(getItemViewType(holder.getLayoutPosition()) == KeyUtils.RECYCLER_TYPE_HEADER)
+        if(getItemViewType(holder.getLayoutPosition()) == KeyUtil.RECYCLER_TYPE_HEADER)
             layoutParams.setFullSpan(true);
     }
 
     @Override
-    public @KeyUtils.RecyclerViewType
+    public @KeyUtil.RecyclerViewType
     int getItemViewType(int position) {
         return data.get(position).getContentType();
     }

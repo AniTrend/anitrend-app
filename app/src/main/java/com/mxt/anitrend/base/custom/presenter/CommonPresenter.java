@@ -102,24 +102,4 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
     public interface AbstractPresenter <S extends CommonPresenter> {
         S getPresenter();
     }
-
-    public boolean isCurrentUser(long userId) {
-        return getApplicationPref().isAuthenticated() && getDatabase().getCurrentUser() != null &&
-                userId != 0 && getDatabase().getCurrentUser().getId() == userId;
-    }
-
-    public boolean isCurrentUser(String userName) {
-        return getApplicationPref().isAuthenticated() && getDatabase().getCurrentUser() != null &&
-                userName != null && getDatabase().getCurrentUser().getName().equals(userName);
-    }
-
-    public boolean isCurrentUser(long userId, String userName) {
-        if (userName != null)
-            return isCurrentUser(userName);
-        return isCurrentUser(userId);
-    }
-
-    public boolean isCurrentUser(UserBase userBase) {
-        return userBase != null && isCurrentUser(userBase.getId());
-    }
 }

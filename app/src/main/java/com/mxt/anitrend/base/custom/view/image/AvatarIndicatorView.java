@@ -17,7 +17,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.activity.index.LoginActivity;
@@ -67,9 +67,9 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, Retr
 
     public void checkLastSyncTime() {
         if(presenter.getApplicationPref().isAuthenticated())
-            if(DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_MINUTES, mLastSynced, 2)) {
+            if(DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 2)) {
                 mLastSynced = System.currentTimeMillis();
-                presenter.requestData(KeyUtils.USER_NOTIFICATION_COUNT, getContext(), this);
+                presenter.requestData(KeyUtil.USER_NOTIFICATION_COUNT, getContext(), this);
             }
     }
 
@@ -109,7 +109,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, Retr
             if(response.isSuccessful() && (notificationCount = response.body()) != null) {
                 if(notificationCount > 0) {
                     showSetCounter();
-                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.USER_NOTIFICATION_COUNT, notificationCount), false);
+                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_NOTIFICATION_COUNT, notificationCount), false);
                 } else
                     hideSetCounter();
             } else
@@ -146,7 +146,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, Retr
                     intent = new Intent(getContext(), NotificationActivity.class);
                 } else {
                     intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_userName, presenter.getDatabase().getCurrentUser().getName());
+                    intent.putExtra(KeyUtil.arg_userName, presenter.getDatabase().getCurrentUser().getName());
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);

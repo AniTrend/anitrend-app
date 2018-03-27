@@ -12,7 +12,7 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import butterknife.BindView;
@@ -40,8 +40,8 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if(getIntent().hasExtra(KeyUtils.arg_model) && !TextUtils.isEmpty(getIntent().getStringExtra(KeyUtils.arg_model)))
-            Glide.with(this).load(getIntent().getStringExtra(KeyUtils.arg_model)).into(mImageView);
+        if(getIntent().hasExtra(KeyUtil.arg_model) && !TextUtils.isEmpty(getIntent().getStringExtra(KeyUtil.arg_model)))
+            Glide.with(this).load(getIntent().getStringExtra(KeyUtil.arg_model)).into(mImageView);
         else
             NotifyUtil.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
     }

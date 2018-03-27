@@ -8,7 +8,7 @@ import android.support.annotation.StringDef;
  * Key values to be used throughout the application
  */
 
-public interface KeyUtils {
+public interface KeyUtil {
 
     /** Default Values */
     float AspectRatio = 1.37f;

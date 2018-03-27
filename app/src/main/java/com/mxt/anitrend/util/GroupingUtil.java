@@ -29,11 +29,11 @@ public class GroupingUtil {
 
     /**
      * Groups media by the media format, assuming that the media has be sorted by format
-     * @see KeyUtils.MediaFormat
+     * @see KeyUtil.MediaFormat
      * <br/>
      *
-     * Only to be used when the sort type is @{@link KeyUtils.MediaSort#FORMAT}
-     * which is the default sort type for the request @{@link KeyUtils#STAFF_MEDIA_REQ}
+     * Only to be used when the sort type is @{@link KeyUtil.MediaSort#FORMAT}
+     * which is the default sort type for the request @{@link KeyUtil#STAFF_MEDIA_REQ}
      * <br/>
      *
      * @param edges The potential external model response which needs to be grouped
@@ -57,11 +57,11 @@ public class GroupingUtil {
 
     /**
      * Groups media by the media format, assuming that the media has be sorted by language
-     * @see KeyUtils.StaffSort
+     * @see KeyUtil.StaffSort
      * <br/>
      *
-     * Only to be used when the sort type is @{@link KeyUtils.StaffSort#LANGUAGE}
-     * which is the default sort type for the request @{@link KeyUtils#STAFF_MEDIA_REQ}
+     * Only to be used when the sort type is @{@link KeyUtil.StaffSort#LANGUAGE}
+     * which is the default sort type for the request @{@link KeyUtil#STAFF_MEDIA_REQ}
      * <br/>
      *
      * @param edges The potential external model response which needs to be grouped
@@ -101,7 +101,7 @@ public class GroupingUtil {
             if(edge.getNode() != null) {
                 if(!TextUtils.isEmpty(edge.getCharacterRole()))
                     edge.getNode().setSubGroupTitle(edge.getCharacterRole());
-                edge.getNode().setContentType(KeyUtils.RECYCLER_TYPE_HEADER);
+                edge.getNode().setContentType(KeyUtil.RECYCLER_TYPE_HEADER);
                 entityMap.add(edge.getNode());
             }
             if(!CompatUtil.isEmpty(edge.getVoiceActors()))

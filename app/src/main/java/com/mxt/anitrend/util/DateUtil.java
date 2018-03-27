@@ -3,6 +3,8 @@ package com.mxt.anitrend.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.IntStream;
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 
@@ -10,7 +12,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -26,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 public class DateUtil {
 
     private static final String seasons[] = {
-            KeyUtils.WINTER, KeyUtils.WINTER,
-            KeyUtils.SPRING, KeyUtils.SPRING, KeyUtils.SPRING,
-            KeyUtils.SUMMER, KeyUtils.SUMMER, KeyUtils.SUMMER,
-            KeyUtils.FALL, KeyUtils.FALL, KeyUtils.FALL,
-            KeyUtils.WINTER
+            KeyUtil.WINTER, KeyUtil.WINTER,
+            KeyUtil.SPRING, KeyUtil.SPRING, KeyUtil.SPRING,
+            KeyUtil.SUMMER, KeyUtil.SUMMER, KeyUtil.SUMMER,
+            KeyUtil.FALL, KeyUtil.FALL, KeyUtil.FALL,
+            KeyUtil.WINTER
     };
 
     /**
@@ -39,7 +40,7 @@ public class DateUtil {
      *
      * @return Season name
      */
-    public static String getSeason(){
+    public static @KeyUtil.MediaSeason String getCurrentSeason(){
         int month = Calendar.getInstance().get(Calendar.MONTH);
         return seasons[month];
     }
@@ -65,18 +66,19 @@ public class DateUtil {
      */
     public static int getMenuSelect(){
         String value = seasons[Calendar.getInstance().get(Calendar.MONTH)];
-        return CompatUtil.getListFromArray(KeyUtils.MediaSeason).indexOf(value);
+        return CompatUtil.getListFromArray(KeyUtil.MediaSeason).indexOf(value);
     }
 
     /**
-     * Gets the current year
+     * Gets the current year + delta, if the season for the year is winter later in the year
+     * then the result would be the current year plus the delta
      * <br/>
      *
-     * @return Year
+     * @return current year with a given delta
      */
-    public static int getYear(){
-        if(Calendar.getInstance().get(Calendar.MONTH) >= 11 && getSeason().equals(KeyUtils.WINTER))
-            return Calendar.getInstance().get(Calendar.YEAR)+ 1;
+    public static int getCurrentYear(int delta){
+        if(Calendar.getInstance().get(Calendar.MONTH) >= 11 && getCurrentSeason().equals(KeyUtil.WINTER))
+            return Calendar.getInstance().get(Calendar.YEAR) + delta;
         return Calendar.getInstance().get(Calendar.YEAR);
     }
 
@@ -181,15 +183,14 @@ public class DateUtil {
     }
 
     /**
-     * A loop to create year ranges list
-     * from the year 1995 to current year + 1
+     * Creates a range of years from the given begin year to the end delta
+     * @param start Starting year
+     * @param endDelta End difference plus or minus the current year
      */
-    public static List<Integer> getYearRanges() {
-        final int start = 1951; // default used to be 1995
-        List<Integer> years = new ArrayList<>((getYear()+1)-start);
-        for (int i = start; i <= getYear()+1; i++)
-            years.add(i);
-        return years;
+    public static List<Integer> getYearRanges(int start, int endDelta) {
+        List<Integer> yearRanges = IntStream.rangeClosed(start, getCurrentYear(0) + endDelta)
+                .boxed().collect(Collectors.toList());
+        return yearRanges;
     }
 
     /**
@@ -213,17 +214,17 @@ public class DateUtil {
      * @param epochTime time to compare against the current system clock
      * @param target unit to compare against
      */
-    public static boolean timeDifferenceSatisfied(@KeyUtils.TimeTargetType int conversionTarget, long epochTime, int target) {
+    public static boolean timeDifferenceSatisfied(@KeyUtil.TimeTargetType int conversionTarget, long epochTime, int target) {
         long currentTime = System.currentTimeMillis();
         TimeUnit defaultSystemUnit = TimeUnit.MILLISECONDS;
         switch (conversionTarget) {
-            case KeyUtils.TIME_UNIT_DAYS:
+            case KeyUtil.TIME_UNIT_DAYS:
                 return defaultSystemUnit.toDays(currentTime - epochTime) >= target;
-            case KeyUtils.TIME_UNIT_HOURS:
+            case KeyUtil.TIME_UNIT_HOURS:
                 return defaultSystemUnit.toHours(currentTime - epochTime) >= target;
-            case KeyUtils.TIME_UNIT_MINUTES:
+            case KeyUtil.TIME_UNIT_MINUTES:
                 return defaultSystemUnit.toMinutes(currentTime - epochTime) >= target;
-            case KeyUtils.TIME_UNITS_SECONDS:
+            case KeyUtil.TIME_UNITS_SECONDS:
                 return defaultSystemUnit.toSeconds(currentTime - epochTime) >= target;
         }
         return false;

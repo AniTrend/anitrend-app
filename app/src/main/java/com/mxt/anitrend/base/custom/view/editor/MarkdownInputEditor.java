@@ -15,19 +15,19 @@ import android.view.MenuItem;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import io.wax911.emojify.EmojiUtils;
 
-import static com.mxt.anitrend.util.KeyUtils.MD_BOLD;
-import static com.mxt.anitrend.util.KeyUtils.MD_BULLET;
-import static com.mxt.anitrend.util.KeyUtils.MD_CENTER_ALIGN;
-import static com.mxt.anitrend.util.KeyUtils.MD_CODE;
-import static com.mxt.anitrend.util.KeyUtils.MD_HEADING;
-import static com.mxt.anitrend.util.KeyUtils.MD_ITALIC;
-import static com.mxt.anitrend.util.KeyUtils.MD_NUMBER;
-import static com.mxt.anitrend.util.KeyUtils.MD_QUOTE;
-import static com.mxt.anitrend.util.KeyUtils.MD_STRIKE;
+import static com.mxt.anitrend.util.KeyUtil.MD_BOLD;
+import static com.mxt.anitrend.util.KeyUtil.MD_BULLET;
+import static com.mxt.anitrend.util.KeyUtil.MD_CENTER_ALIGN;
+import static com.mxt.anitrend.util.KeyUtil.MD_CODE;
+import static com.mxt.anitrend.util.KeyUtil.MD_HEADING;
+import static com.mxt.anitrend.util.KeyUtil.MD_ITALIC;
+import static com.mxt.anitrend.util.KeyUtil.MD_NUMBER;
+import static com.mxt.anitrend.util.KeyUtil.MD_QUOTE;
+import static com.mxt.anitrend.util.KeyUtil.MD_STRIKE;
 
 /**
  * Created by max on 2017/08/14.
@@ -58,7 +58,7 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
     public void onInit() {
         setVerticalScrollBarEnabled(true);
         setCustomSelectionActionModeCallback(this);
-        setMaxHeight(CompatUtil.dipToPx(KeyUtils.PEEK_HEIGHT));
+        setMaxHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
         setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
     }

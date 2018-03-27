@@ -1,6 +1,6 @@
 package com.mxt.anitrend.model.entity.group;
 
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2018/02/18.
@@ -9,15 +9,15 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public abstract class EntityGroup {
 
-    private @KeyUtils.RecyclerViewType int content_type;
+    private @KeyUtil.RecyclerViewType int content_type;
 
     private String subGroupTitle;
 
-    public @KeyUtils.RecyclerViewType int getContentType() {
+    public @KeyUtil.RecyclerViewType int getContentType() {
         return content_type;
     }
 
-    public void setContentType(@KeyUtils.RecyclerViewType int type) {
+    public void setContentType(@KeyUtil.RecyclerViewType int type) {
         this.content_type = type;
     }
 

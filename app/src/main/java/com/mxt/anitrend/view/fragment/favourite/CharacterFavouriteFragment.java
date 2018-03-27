@@ -18,7 +18,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.CharacterActivity;
 
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            userId = getArguments().getLong(KeyUtils.arg_id);
+            userId = getArguments().getLong(KeyUtil.arg_id);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
@@ -60,10 +60,10 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_id, userId)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.USER_CHARACTER_FAVOURITES_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, userId)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.USER_CHARACTER_FAVOURITES_REQ, getContext());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((CharacterBase)data).getId());
+                intent.putExtra(KeyUtil.arg_id, ((CharacterBase)data).getId());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

@@ -15,9 +15,8 @@ import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment;
-import com.mxt.anitrend.view.fragment.search.MediaSearchFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,14 +43,14 @@ public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
         setSupportActionBar(toolbar);
         setViewModel(true);
         setPresenter(new BasePresenter(this));
-        if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
+        if(getIntent().hasExtra(KeyUtil.arg_id))
+            id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        getViewModel().getParams().putLong(KeyUtils.arg_id, id);
+        getViewModel().getParams().putLong(KeyUtil.arg_id, id);
         onActivityReady();
     }
 
@@ -101,9 +100,9 @@ public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
     @Override
     protected void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, id);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.STUDIO_BASE_REQ, getApplicationContext());
+                .putVariable(KeyUtil.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.STUDIO_BASE_REQ, getApplicationContext());
     }
 
     /**

@@ -20,7 +20,7 @@ import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -58,7 +58,7 @@ public class WebFactory {
 
     public final static String API_AUTH_LINK =
             String.format("%s/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
-                    BuildConfig.API_AUTH_LINK, KeyUtils.AUTHENTICATION_CODE,
+                    BuildConfig.API_AUTH_LINK, KeyUtil.AUTHENTICATION_CODE,
                     BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI,
                     BuildConfig.RESPONSE_TYPE);
 
@@ -145,7 +145,7 @@ public class WebFactory {
     public static @Nullable WebToken requestCodeTokenSync(String code) {
         try {
             Call<WebToken> refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
-                        .create(AuthModel.class).getAuthRequest(KeyUtils.AUTHENTICATION_CODE,
+                        .create(AuthModel.class).getAuthRequest(KeyUtil.AUTHENTICATION_CODE,
                                 BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.REDIRECT_URI, code);
 
             Response<WebToken> response = refreshTokenCall.execute();

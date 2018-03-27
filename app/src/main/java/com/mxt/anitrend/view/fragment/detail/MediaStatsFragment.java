@@ -34,7 +34,7 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
     private LinkAdapter linkAdapter;
 
     private long mediaId;
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
     public static MediaStatsFragment newInstance(Bundle args) {
         MediaStatsFragment fragment = new MediaStatsFragment();
@@ -66,8 +66,8 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mediaId = getArguments().getLong(KeyUtils.arg_id);
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+            mediaId = getArguments().getLong(KeyUtil.arg_id);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
         setPresenter(new MediaPresenter(getContext()));
@@ -105,13 +105,13 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                 public void onItemClick(View target, MediaRank data) {
                     Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                     Bundle args = new Bundle();
-                    args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                            .putVariable(KeyUtils.arg_type, mediaType)
-                            .putVariable(KeyUtils.arg_season, data.getSeason())
-                            .putVariable(KeyUtils.arg_seasonYear, data.getYear())
-                            .putVariable(KeyUtils.arg_format, data.getFormat()));
-                    args.putString(KeyUtils.arg_activity_tag, data.getTypeHtmlPlainTitle());
-                    args.putBoolean(KeyUtils.arg_media_compact, true);
+                    args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                            .putVariable(KeyUtil.arg_type, mediaType)
+                            .putVariable(KeyUtil.arg_season, data.getSeason())
+                            .putVariable(KeyUtil.arg_seasonYear, data.getYear())
+                            .putVariable(KeyUtil.arg_format, data.getFormat()));
+                    args.putString(KeyUtil.arg_activity_tag, data.getTypeHtmlPlainTitle());
+                    args.putBoolean(KeyUtil.arg_media_compact, true);
                     intent.putExtras(args);
                     startActivity(intent);
                 }
@@ -150,10 +150,10 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, mediaId)
-                .putVariable(KeyUtils.arg_type, mediaType);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_STATS_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, mediaId)
+                .putVariable(KeyUtil.arg_type, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_STATS_REQ, getContext());
     }
 
     private void showScoreDistribution() {

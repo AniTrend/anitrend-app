@@ -14,7 +14,7 @@ import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +37,7 @@ public class TagGenreService extends IntentService {
     public final void initAnalytics() {
         FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getApplicationContext());
         analytics.setAnalyticsCollectionEnabled(true);
-        analytics.setMinimumSessionDuration(KeyUtils.DURATION_LONG);
+        analytics.setMinimumSessionDuration(KeyUtil.DURATION_LONG);
     }
 
 

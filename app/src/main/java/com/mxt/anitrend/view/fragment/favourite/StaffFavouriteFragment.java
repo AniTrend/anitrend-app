@@ -16,7 +16,7 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.StaffActivity;
 
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            userId = getArguments().getLong(KeyUtils.arg_id);
+            userId = getArguments().getLong(KeyUtil.arg_id);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
@@ -58,10 +58,10 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_id, userId)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.USER_STAFF_FAVOURITES_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, userId)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.USER_STAFF_FAVOURITES_REQ, getContext());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }

@@ -6,8 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by Max on 10/4/2016.
@@ -16,11 +15,11 @@ public class Review implements Parcelable {
 
     private long id;
     private String summary;
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
     private String body;
     private int rating;
     private int ratingAmount;
-    private @KeyUtils.ReviewRating String userRating;
+    private @KeyUtil.ReviewRating String userRating;
     private int score;
     @SerializedName("private")
     private boolean isPrivate;
@@ -84,7 +83,7 @@ public class Review implements Parcelable {
         return summary;
     }
 
-    public @KeyUtils.MediaType String getMediaType() {
+    public @KeyUtil.MediaType String getMediaType() {
         return mediaType;
     }
 
@@ -100,7 +99,7 @@ public class Review implements Parcelable {
         return ratingAmount;
     }
 
-    public @KeyUtils.ReviewRating String getUserRating() {
+    public @KeyUtil.ReviewRating String getUserRating() {
         return userRating;
     }
 

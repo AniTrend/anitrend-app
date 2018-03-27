@@ -15,7 +15,7 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 
 import java.util.Collections;
@@ -40,7 +40,7 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            userId = getArguments().getLong(KeyUtils.arg_id);
+            userId = getArguments().getLong(KeyUtil.arg_id);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_list_x2; isPager = true;
         setViewModel(true);
@@ -56,10 +56,10 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_id, userId)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.USER_STUDIO_FAVOURITES_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, userId)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.USER_STUDIO_FAVOURITES_REQ, getContext());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StudioActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
                 startActivity(intent);
                 break;
         }

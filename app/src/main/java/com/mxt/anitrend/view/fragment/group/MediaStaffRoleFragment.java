@@ -19,9 +19,9 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -50,7 +50,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            id = getArguments().getLong(KeyUtils.arg_id);
+            id = getArguments().getLong(KeyUtil.arg_id);
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
@@ -62,10 +62,10 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_id, id)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.STAFF_ROLES_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, id)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.STAFF_ROLES_REQ, getContext());
     }
 
     /**
@@ -80,8 +80,8 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, ((MediaBase)data).getId());
-                intent.putExtra(KeyUtils.arg_mediaType, ((MediaBase)data).getType());
+                intent.putExtra(KeyUtil.arg_id, ((MediaBase)data).getId());
+                intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase)data).getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -99,9 +99,9 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(((MediaBase)data)).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;

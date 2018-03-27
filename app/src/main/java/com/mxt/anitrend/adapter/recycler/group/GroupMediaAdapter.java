@@ -12,13 +12,11 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesCharacterBinding;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
@@ -36,14 +34,14 @@ public class GroupMediaAdapter extends RecyclerViewAdapter<EntityGroup> {
     }
 
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtils.RecyclerViewType int viewType) {
-        if (viewType == KeyUtils.RECYCLER_TYPE_HEADER)
+    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+        if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new SeriesCharacterViewHolder(AdapterSeriesCharacterBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override
-    public @KeyUtils.RecyclerViewType
+    public @KeyUtil.RecyclerViewType
     int getItemViewType(int position) {
         return data.get(position).getContentType();
     }

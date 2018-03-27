@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.MessageFeedFragment;
 
 /**
@@ -27,11 +27,11 @@ public class MessagePageAdapter extends BaseStatePageAdapter {
         Bundle args = new Bundle(getParams());
         switch (position) {
             case 0:
-                args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true));
-                return MessageFeedFragment.newInstance(getParams(), KeyUtils.MESSAGE_TYPE_INBOX);
+                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true));
+                return MessageFeedFragment.newInstance(getParams(), KeyUtil.MESSAGE_TYPE_INBOX);
             case 1:
-                args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true));
-                return MessageFeedFragment.newInstance(getParams(), KeyUtils.MESSAGE_TYPE_OUTBOX);
+                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true));
+                return MessageFeedFragment.newInstance(getParams(), KeyUtil.MESSAGE_TYPE_OUTBOX);
         }
         return null;
     }

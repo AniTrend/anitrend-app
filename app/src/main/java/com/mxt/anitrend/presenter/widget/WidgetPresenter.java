@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Locale;
 
@@ -29,7 +29,7 @@ public class WidgetPresenter<T> extends CommonPresenter {
      * <br/>
      * @param request_type the type of request to execute
      */
-    public void requestData(@KeyUtils.RequestType int request_type, Context context, RetroCallback<T> callback) {
+    public void requestData(@KeyUtil.RequestType int request_type, Context context, RetroCallback<T> callback) {
         mLoader = new RequestHandler<>(getParams(), callback, request_type);
         mLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context);
     }
@@ -58,15 +58,15 @@ public class WidgetPresenter<T> extends CommonPresenter {
         return "0";
     }
 
-    public @KeyUtils.LanguageType int getLanguagePreference() {
+    public @KeyUtil.LanguageType int getLanguagePreference() {
         switch (getDatabase().getCurrentUser().getTitle_language()) {
-            case KeyUtils.key_language_english:
-                return KeyUtils.LANGUAGE_ENGLISH;
-            case KeyUtils.key_language_romaji:
-                return KeyUtils.LANGUAGE_ROMAJI;
-            case KeyUtils.key_language_japanese:
-                return KeyUtils.LANGUAGE_JAPANESE;
+            case KeyUtil.key_language_english:
+                return KeyUtil.LANGUAGE_ENGLISH;
+            case KeyUtil.key_language_romaji:
+                return KeyUtil.LANGUAGE_ROMAJI;
+            case KeyUtil.key_language_japanese:
+                return KeyUtil.LANGUAGE_JAPANESE;
         }
-        return KeyUtils.LANGUAGE_ROMAJI;
+        return KeyUtil.LANGUAGE_ROMAJI;
     }
 }

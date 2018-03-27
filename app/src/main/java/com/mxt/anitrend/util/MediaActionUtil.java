@@ -17,8 +17,6 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
-import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -28,7 +26,7 @@ import retrofit2.Response;
  * for a given media
  */
 
-public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleListener {
+public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListener {
 
     private ProgressDialog progressDialog;
     private WidgetPresenter<MediaList> presenter;
@@ -40,7 +38,7 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
     private MediaList mediaList;
     private MediaBase mediaBase;
 
-    SeriesActionUtil(FragmentActivity context) {
+    MediaActionUtil(FragmentActivity context) {
         this.context = context;
         this.lifecycle = context.getLifecycle();
         presenter = new WidgetPresenter<>(context);
@@ -54,16 +52,16 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
 
     private void actionPicker() {
         if(media != null) {
-            presenter.getParams().putLong(KeyUtils.arg_mediaId, media.getId());
-            presenter.requestData(KeyUtils.MUT_SAVE_MEDIA_LIST, context, this);
+            presenter.getParams().putLong(KeyUtil.arg_mediaId, media.getId());
+            presenter.requestData(KeyUtil.MUT_SAVE_MEDIA_LIST, context, this);
         }
         else if (mediaBase != null) {
-            presenter.getParams().putLong(KeyUtils.arg_mediaId, mediaBase.getId());
-            presenter.requestData(KeyUtils.MUT_SAVE_MEDIA_LIST, context, this);
+            presenter.getParams().putLong(KeyUtil.arg_mediaId, mediaBase.getId());
+            presenter.requestData(KeyUtil.MUT_SAVE_MEDIA_LIST, context, this);
         }
         else {
-            presenter.getParams().putLong(KeyUtils.arg_id, mediaList.getMediaId());
-            presenter.requestData(KeyUtils.MUT_SAVE_MEDIA_LIST, context, this);
+            presenter.getParams().putLong(KeyUtil.arg_id, mediaList.getMediaId());
+            presenter.requestData(KeyUtil.MUT_SAVE_MEDIA_LIST, context, this);
         }
     }
 
@@ -87,11 +85,11 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
     private void showActionDialog() {
         try {
             if(media != null)
-                SeriesDialogUtil.createSeriesManage(context, media, isNewEntry(media.getId()), MediaUtil.getMediaListTitle(media, presenter.getLanguagePreference()));
+                MediaDialogUtil.createSeriesManage(context, media, isNewEntry(media.getId()), MediaUtil.getMediaListTitle(media, presenter.getLanguagePreference()));
             else if(mediaBase != null)
-                SeriesDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), MediaUtil.getMediaListTitle(mediaBase, presenter.getLanguagePreference()));
+                MediaDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), MediaUtil.getMediaListTitle(mediaBase, presenter.getLanguagePreference()));
             else
-                SeriesDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), MediaUtil.getMediaListTitle(mediaList, presenter.getLanguagePreference()));
+                MediaDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), MediaUtil.getMediaListTitle(mediaList, presenter.getLanguagePreference()));
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());
@@ -178,7 +176,7 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
         private Media series;
         private MediaList mediaList;
         private MediaBase mediaBase;
-        private SeriesActionUtil seriesActionUtil;
+        private MediaActionUtil mediaActionUtil;
 
         public Builder setModel(Media series) {
             this.series = series;
@@ -195,10 +193,10 @@ public class SeriesActionUtil implements RetroCallback<MediaList>, LifecycleList
             return this;
         }
 
-        public SeriesActionUtil build(FragmentActivity context) {
-            seriesActionUtil = new SeriesActionUtil(context);
-            seriesActionUtil.setModels(series, mediaList, mediaBase);
-            return seriesActionUtil;
+        public MediaActionUtil build(FragmentActivity context) {
+            mediaActionUtil = new MediaActionUtil(context);
+            mediaActionUtil.setModels(series, mediaList, mediaBase);
+            return mediaActionUtil;
         }
     }
 }

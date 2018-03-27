@@ -8,7 +8,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by Maxwell on 10/3/2016.
@@ -21,10 +21,10 @@ public class MediaBase extends EntityGroup implements Parcelable {
     private MediaTitle title;
     private ImageBase coverImage;
     private String bannerImage;
-    private @KeyUtils.MediaType String type;
-    private @KeyUtils.MediaFormat String format;
-    private @KeyUtils.MediaSeason String season;
-    private @KeyUtils.MediaStatus String status;
+    private @KeyUtil.MediaType String type;
+    private @KeyUtil.MediaFormat String format;
+    private @KeyUtil.MediaSeason String season;
+    private @KeyUtil.MediaStatus String status;
     private String siteUrl;
     private int meanScore;
     private int averageScore;
@@ -119,19 +119,19 @@ public class MediaBase extends EntityGroup implements Parcelable {
         return bannerImage;
     }
 
-    public @KeyUtils.MediaType String getType() {
+    public @KeyUtil.MediaType String getType() {
         return type;
     }
 
-    public @KeyUtils.MediaSeason String getSeason() {
+    public @KeyUtil.MediaSeason String getSeason() {
         return season;
     }
 
-    public @KeyUtils.MediaFormat String getFormat() {
+    public @KeyUtil.MediaFormat String getFormat() {
         return format;
     }
 
-    public @KeyUtils.MediaStatus String getStatus() {
+    public @KeyUtil.MediaStatus String getStatus() {
         return status;
     }
 

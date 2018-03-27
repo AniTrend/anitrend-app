@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.view.text.SeriesTitleView;
 import com.mxt.anitrend.databinding.BottomSheetReviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import butterknife.BindView;
@@ -46,7 +46,7 @@ public class BottomReviewReader extends BottomSheetBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            model = getArguments().getParcelable(KeyUtils.arg_model);
+            model = getArguments().getParcelable(KeyUtil.arg_model);
     }
 
     /**
@@ -82,7 +82,7 @@ public class BottomReviewReader extends BottomSheetBase {
         }
 
         public BottomSheetBuilder setReview(Review review) {
-            bundle.putParcelable(KeyUtils.arg_model, review);
+            bundle.putParcelable(KeyUtil.arg_model, review);
             return this;
         }
     }

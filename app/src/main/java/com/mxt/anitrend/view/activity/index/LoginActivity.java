@@ -25,7 +25,7 @@ import com.mxt.anitrend.service.AuthenticatorService;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.ShortcutHelper;
 
@@ -86,30 +86,30 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
         startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             Bundle SHORTCUT_MY_ANIME_BUNDLE = new Bundle();
-            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_mediaType, KeyUtils.ANIME);
-            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
+            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME);
+            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtil.arg_userName, model.getName());
 
             Bundle SHORTCUT_MY_MANGA_BUNDLE = new Bundle();
-            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_mediaType, KeyUtils.MANGA);
-            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
+            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtil.arg_mediaType, KeyUtil.MANGA);
+            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtil.arg_userName, model.getName());
 
             Bundle SHORTCUT_PROFILE_BUNDLE = new Bundle();
-            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtils.arg_userName, model.getName());
+            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtil.arg_userName, model.getName());
 
             ShortcutHelper.createShortcuts(LoginActivity.this,
                     new ShortcutHelper.ShortcutBuilder()
-                            .setShortcutType(KeyUtils.SHORTCUT_NOTIFICATION)
+                            .setShortcutType(KeyUtil.SHORTCUT_NOTIFICATION)
                             .build(),
                     new ShortcutHelper.ShortcutBuilder()
-                            .setShortcutType(KeyUtils.SHORTCUT_MY_ANIME)
+                            .setShortcutType(KeyUtil.SHORTCUT_MY_ANIME)
                             .setShortcutParams(SHORTCUT_MY_ANIME_BUNDLE)
                             .build(),
                     new ShortcutHelper.ShortcutBuilder()
-                            .setShortcutType(KeyUtils.SHORTCUT_MY_MANGA)
+                            .setShortcutType(KeyUtil.SHORTCUT_MY_MANGA)
                             .setShortcutParams(SHORTCUT_MY_MANGA_BUNDLE)
                             .build(),
                     new ShortcutHelper.ShortcutBuilder()
-                            .setShortcutType(KeyUtils.SHORTCUT_PROFILE)
+                            .setShortcutType(KeyUtil.SHORTCUT_PROFILE)
                             .setShortcutParams(SHORTCUT_PROFILE_BUNDLE)
                             .build());
         }
@@ -150,8 +150,8 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             WebTokenRequest.invalidateInstance(getApplicationContext());
             if(error == null) error = getString(R.string.text_error_auth_login);
             NotifyUtil.createAlerter(this, getString(R.string.login_error_title),
-                    error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtils.DURATION_LONG);
-            getPresenter().getParams().putString(KeyUtils.key_analytics_error, error);
+                    error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG);
+            getPresenter().getParams().putString(KeyUtil.key_analytics_error, error);
             FirebaseAnalytics.getInstance(this).logEvent(this.toString(), getPresenter().getParams());
             binding.widgetFlipper.showPrevious();
             Log.e(this.toString(), error);
@@ -164,7 +164,7 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             WebTokenRequest.invalidateInstance(getApplicationContext());
             if(message == null) message = getString(R.string.text_error_auth_login);
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request),
-                    message, R.drawable.ic_warning_white_18dp, R.color.colorStateOrange, KeyUtils.DURATION_LONG);
+                    message, R.drawable.ic_warning_white_18dp, R.color.colorStateOrange, KeyUtil.DURATION_LONG);
             binding.widgetFlipper.showPrevious();
             Log.w(this.toString(), message);
         }
@@ -184,19 +184,19 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE)
                     binding.widgetFlipper.showNext();
                 if (getPresenter().handleIntentCallback(messageBase)) {
-                    getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(false));
-                    getViewModel().requestData(KeyUtils.USER_CURRENT_REQ, getApplicationContext());
+                    getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false));
+                    getViewModel().requestData(KeyUtil.USER_CURRENT_REQ, getApplicationContext());
                 }
                 else {
                     // intent://com.mxt.anitrend?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.
                     if (!TextUtils.isEmpty(messageBase.getQueryParam("error")) && !TextUtils.isEmpty(messageBase.getQueryParam("error_description")))
                         NotifyUtil.createAlerter(this, messageBase.getQueryParam("error"),
                                 messageBase.getQueryParam("error_description"), R.drawable.ic_warning_white_18dp,
-                                R.color.colorStateOrange, KeyUtils.DURATION_LONG);
+                                R.color.colorStateOrange, KeyUtil.DURATION_LONG);
                     else
                         NotifyUtil.createAlerter(this, R.string.login_error_title,
                                 R.string.text_error_auth_login, R.drawable.ic_warning_white_18dp,
-                                R.color.colorStateRed, KeyUtils.DURATION_LONG);
+                                R.color.colorStateRed, KeyUtil.DURATION_LONG);
                     binding.widgetFlipper.showPrevious();
                 }
             }

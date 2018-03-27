@@ -12,7 +12,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.databinding.WidgetFollowStateBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
@@ -20,7 +19,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import retrofit2.Call;
@@ -108,9 +107,9 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
                     QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                            .putVariable(KeyUtils.arg_userId, model.getId());
-                    presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-                    presenter.requestData(KeyUtils.MUT_TOGGLE_FOLLOW, getContext(), this);
+                            .putVariable(KeyUtil.arg_userId, model.getId());
+                    presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+                    presenter.requestData(KeyUtil.MUT_TOGGLE_FOLLOW, getContext(), this);
                 }
                 else
                     NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -136,7 +135,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
         try {
             if(response.isSuccessful()) {
                 model.toggleFollow();
-                presenter.notifyAllListeners(new BaseConsumer<>(KeyUtils.MUT_TOGGLE_FOLLOW, model), false);
+                presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.MUT_TOGGLE_FOLLOW, model), false);
                 if(isAlive())
                     setControlText();
             } else

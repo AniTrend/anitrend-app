@@ -22,7 +22,7 @@ import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.model.entity.giphy.Giphy;
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            model = getArguments().getParcelableArrayList(KeyUtils.arg_list_model);
+            model = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
         setViewModel(true);
     }
 
@@ -95,11 +95,11 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KeyUtils.key_pagination, isPager);
-        outState.putInt(KeyUtils.key_columns, mColumnSize);
+        outState.putBoolean(KeyUtil.key_pagination, isPager);
+        outState.putInt(KeyUtil.key_columns, mColumnSize);
         if(presenter != null) {
-            outState.putInt(KeyUtils.arg_page, presenter.getCurrentPage());
-            outState.putInt(KeyUtils.arg_page_offset, presenter.getCurrentOffset());
+            outState.putInt(KeyUtil.arg_page, presenter.getCurrentPage());
+            outState.putInt(KeyUtil.arg_page_offset, presenter.getCurrentOffset());
         }
     }
 
@@ -118,11 +118,11 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            isPager = savedInstanceState.getBoolean(KeyUtils.key_pagination);
-            mColumnSize = savedInstanceState.getInt(KeyUtils.key_columns);
+            isPager = savedInstanceState.getBoolean(KeyUtil.key_pagination);
+            mColumnSize = savedInstanceState.getInt(KeyUtil.key_columns);
             if(presenter != null) {
-                presenter.setCurrentPage(savedInstanceState.getInt(KeyUtils.arg_page));
-                presenter.setCurrentOffset(savedInstanceState.getInt(KeyUtils.arg_page_offset));
+                presenter.setCurrentPage(savedInstanceState.getInt(KeyUtil.arg_page));
+                presenter.setCurrentOffset(savedInstanceState.getInt(KeyUtil.arg_page_offset));
             }
         }
     }

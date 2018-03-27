@@ -10,18 +10,14 @@ import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.databinding.FragmentStaffOverviewBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,7 +45,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            id = getArguments().getLong(KeyUtils.arg_id);
+            id = getArguments().getLong(KeyUtil.arg_id);
     }
 
     @Nullable @Override
@@ -82,9 +78,9 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, id);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.STAFF_OVERVIEW_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.STAFF_OVERVIEW_REQ, getContext());
 
     }
 
@@ -98,7 +94,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
         switch (v.getId()) {
             case R.id.staff_img:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage().getLarge());
+                intent.putExtra(KeyUtil.arg_model, model.getImage().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             default:

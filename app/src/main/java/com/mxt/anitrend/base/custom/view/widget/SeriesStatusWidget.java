@@ -12,12 +12,10 @@ import android.widget.FrameLayout;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
-import com.mxt.anitrend.util.MediaUtil;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/10/27.
@@ -67,15 +65,15 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     @BindingAdapter("seriesStatus")
     public static void setStatus(SeriesStatusWidget view, MediaBase model) {
         if(model != null) {
-            @KeyUtils.MediaStatus String mediaStatus = TextUtils.isEmpty(model.getStatus()) ? model.getStatus() : KeyUtils.NOT_YET_RELEASED;
+            @KeyUtil.MediaStatus String mediaStatus = TextUtils.isEmpty(model.getStatus()) ? model.getStatus() : KeyUtil.NOT_YET_RELEASED;
             switch (mediaStatus) {
-                case KeyUtils.RELEASING:
+                case KeyUtil.RELEASING:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
                     break;
-                case KeyUtils.FINISHED:
+                case KeyUtil.FINISHED:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
                     break;
-                case KeyUtils.NOT_YET_RELEASED:
+                case KeyUtil.NOT_YET_RELEASED:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
                     break;
                 default:

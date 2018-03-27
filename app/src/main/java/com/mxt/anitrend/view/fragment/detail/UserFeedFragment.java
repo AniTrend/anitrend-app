@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.index.FeedFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -21,7 +21,7 @@ public class UserFeedFragment extends FeedFragment implements PublisherListener<
 
     public static UserFeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
+        args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         UserFeedFragment fragment = new UserFeedFragment();
         fragment.setArguments(args);
         return fragment;
@@ -36,15 +36,15 @@ public class UserFeedFragment extends FeedFragment implements PublisherListener<
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            queryContainer.putVariable(KeyUtils.arg_userId, getArguments().getLong(KeyUtils.arg_id))
-                    .putVariable(KeyUtils.arg_userName, getArguments().getString(KeyUtils.arg_userName));
+            queryContainer.putVariable(KeyUtil.arg_userId, getArguments().getLong(KeyUtil.arg_id))
+                    .putVariable(KeyUtil.arg_userName, getArguments().getString(KeyUtil.arg_userName));
         }
         isMenuDisabled = true; isFeed = false;
     }
 
     @Override
     public void makeRequest() {
-        if (queryContainer.containsVariable(KeyUtils.arg_userId) || queryContainer.containsVariable(KeyUtils.arg_userName))
+        if (queryContainer.containsVariable(KeyUtil.arg_userId) || queryContainer.containsVariable(KeyUtil.arg_userName))
             super.makeRequest();
     }
 
@@ -56,7 +56,7 @@ public class UserFeedFragment extends FeedFragment implements PublisherListener<
      */
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onEventPublished(UserBase userBase) {
-        queryContainer.putVariable(KeyUtils.arg_userId, userBase.getId());
+        queryContainer.putVariable(KeyUtil.arg_userId, userBase.getId());
         if (model == null)
             onRefresh();
         else if (stateLayout.isLoading())

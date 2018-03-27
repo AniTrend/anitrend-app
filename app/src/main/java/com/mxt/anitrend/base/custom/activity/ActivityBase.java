@@ -35,9 +35,9 @@ import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 
@@ -65,7 +65,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     protected FragmentBase mFragment;
     protected ActionBar mActionBar;
     protected IntentBundleUtil intentBundleUtil;
-    protected SeriesActionUtil seriesActionUtil;
+    protected MediaActionUtil mediaActionUtil;
 
     protected long id;
 
@@ -255,8 +255,8 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @Override
     protected void onPause() {
         super.onPause();
-        if(seriesActionUtil != null)
-            seriesActionUtil.onPause(null);
+        if(mediaActionUtil != null)
+            mediaActionUtil.onPause(null);
         if(presenter != null)
             presenter.onPause(null);
     }
@@ -273,16 +273,16 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @Override
     protected void onResume() {
         super.onResume();
-        if(seriesActionUtil != null)
-            seriesActionUtil.onResume(null);
+        if(mediaActionUtil != null)
+            mediaActionUtil.onResume(null);
         if(presenter != null)
             presenter.onResume(null);
     }
 
     @Override
     protected void onDestroy() {
-        if(seriesActionUtil != null)
-            seriesActionUtil.onDestroy();
+        if(mediaActionUtil != null)
+            mediaActionUtil.onDestroy();
         if(presenter != null)
             presenter.onDestroy();
         super.onDestroy();
@@ -375,7 +375,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             AnalyticsUtil.reportException(TAG, error);
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request), error,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange,
-                    KeyUtils.DURATION_MEDIUM);
+                    KeyUtil.DURATION_MEDIUM);
         }
 
     }
@@ -387,7 +387,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if (isAlive()) {
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request), message,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateBlue,
-                    KeyUtils.DURATION_MEDIUM);
+                    KeyUtil.DURATION_MEDIUM);
         }
     }
 
@@ -411,11 +411,11 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(query)) {
             Intent intent = new Intent(this, SearchActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(KeyUtils.arg_search, query);
+            intent.putExtra(KeyUtil.arg_search, query);
             CompatUtil.startRevealAnim(this, mSearchView, intent);
             Bundle bundle = new Bundle();
-            bundle.putString(KeyUtils.arg_search, query);
-            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtils.arg_search, bundle);
+            bundle.putString(KeyUtil.arg_search, query);
+            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtil.arg_search, bundle);
             return true;
         }
         NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();

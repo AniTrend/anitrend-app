@@ -11,7 +11,7 @@ import com.mxt.anitrend.adapter.pager.detail.MessagePageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
@@ -44,7 +44,7 @@ public class MessageActivity extends ActivityBase<FeedList, BasePresenter> {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        getViewModel().getParams().putLong(KeyUtils.arg_userId, getPresenter().getDatabase().getCurrentUser().getId());
+        getViewModel().getParams().putLong(KeyUtil.arg_userId, getPresenter().getDatabase().getCurrentUser().getId());
         onActivityReady();
     }
 

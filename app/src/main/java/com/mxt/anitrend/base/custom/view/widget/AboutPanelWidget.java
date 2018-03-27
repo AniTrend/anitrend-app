@@ -29,10 +29,9 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity;
-import com.mxt.anitrend.view.sheet.BottomSheetUsers;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -87,15 +86,15 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     public void onInit() {
         binding = WidgetProfileAboutPanelBinding.inflate(LayoutInflater.from(getContext()), this, true);
         queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, userId)
-                .putVariable(KeyUtils.arg_page_limit, 1);
+                .putVariable(KeyUtil.arg_id, userId)
+                .putVariable(KeyUtil.arg_page_limit, 1);
         binding.setOnClickListener(this);
     }
 
     public void setUserId(long userId, Lifecycle lifecycle) {
         this.userId = userId; this.lifecycle = lifecycle;
 
-        if(DateUtil.timeDifferenceSatisfied(KeyUtils.TIME_UNIT_MINUTES, mLastSynced, 5)) {
+        if(DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 5)) {
             binding.userFavouritesCount.setText("..");
             binding.userFollowersCount.setText("..");
             binding.userFollowingCount.setText("..");
@@ -107,8 +106,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private void requestFollowers() {
         usersPresenter = new WidgetPresenter<>(getContext());
-        usersPresenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        usersPresenter.requestData(KeyUtils.USER_FOLLOWERS_REQ, getContext(), new RetroCallback<PageContainer<UserBase>>() {
+        usersPresenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        usersPresenter.requestData(KeyUtil.USER_FOLLOWERS_REQ, getContext(), new RetroCallback<PageContainer<UserBase>>() {
             @Override
             public void onResponse(@NonNull Call<PageContainer<UserBase>> call, @NonNull Response<PageContainer<UserBase>> response) {
                 if(isAlive()) {
@@ -133,8 +132,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private void requestFollowing() {
         usersPresenter = new WidgetPresenter<>(getContext());
-        usersPresenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        usersPresenter.requestData(KeyUtils.USER_FOLLOWING_REQ, getContext(), new RetroCallback<PageContainer<UserBase>>() {
+        usersPresenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        usersPresenter.requestData(KeyUtil.USER_FOLLOWING_REQ, getContext(), new RetroCallback<PageContainer<UserBase>>() {
             @Override
             public void onResponse(@NonNull Call<PageContainer<UserBase>> call, @NonNull Response<PageContainer<UserBase>> response) {
                 if(isAlive()) {
@@ -160,8 +159,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     private void requestFavourites() {
         favouritePresenter = new WidgetPresenter<>(getContext());
-        favouritePresenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        favouritePresenter.requestData(KeyUtils.USER_FAVOURITES_COUNT_REQ, getContext(), new RetroCallback<ConnectionContainer<Favourite>>() {
+        favouritePresenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        favouritePresenter.requestData(KeyUtil.USER_FAVOURITES_COUNT_REQ, getContext(), new RetroCallback<ConnectionContainer<Favourite>>() {
             @Override
             public void onResponse(@NonNull Call<ConnectionContainer<Favourite>> call, @NonNull Response<ConnectionContainer<Favourite>> response) {
                 if(isAlive()) {
@@ -211,7 +210,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 else {
                     Intent intent = new Intent(getContext(), FavouriteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtils.arg_id, userId);
+                    intent.putExtra(KeyUtil.arg_id, userId);
                     getContext().startActivity(intent);
                 }
                 break;
@@ -253,7 +252,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<UserBase> consumer) {
-        if(consumer.getRequestMode() == KeyUtils.MUT_TOGGLE_FOLLOW) {
+        if(consumer.getRequestMode() == KeyUtil.MUT_TOGGLE_FOLLOW) {
             if(followers != null) {
                 int total = followers.getTotal();
                 followers.setTotal(!consumer.getChangeModel().isFollowing()? --total : ++total);

@@ -10,7 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/10/30.
@@ -41,10 +41,10 @@ public class WideImageView extends AppCompatImageView implements CustomView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int Width = MeasureSpec.getSize(widthMeasureSpec),
-                Height = (int) ((MeasureSpec.getSize(heightMeasureSpec) - defaultMargin) * KeyUtils.WideAspectRatio);
+                Height = (int) ((MeasureSpec.getSize(heightMeasureSpec) - defaultMargin) * KeyUtil.WideAspectRatio);
 
         if(heightMeasureSpec == 0)
-            Height = (int) ((defaultDimens - defaultMargin) * KeyUtils.WideAspectRatio);
+            Height = (int) ((defaultDimens - defaultMargin) * KeyUtil.WideAspectRatio);
 
         super.onMeasure(MeasureSpec.makeMeasureSpec(Width, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(Height, MeasureSpec.EXACTLY));

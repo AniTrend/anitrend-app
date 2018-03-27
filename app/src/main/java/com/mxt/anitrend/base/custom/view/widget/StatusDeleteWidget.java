@@ -20,7 +20,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import okhttp3.ResponseBody;
@@ -31,7 +31,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
 
     private WidgetDeleteBinding binding;
     private WidgetPresenter<ResponseBody> presenter;
-    private @KeyUtils.RequestType int requestType;
+    private @KeyUtil.RequestType int requestType;
     private FeedList feedList;
     private FeedReply feedReply;
 
@@ -62,19 +62,19 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
         binding.setOnClickEvent(this);
     }
 
-    private void setParameters(long feedId, @KeyUtils.RequestType int requestType) {
+    private void setParameters(long feedId, @KeyUtil.RequestType int requestType) {
         this.requestType = requestType;
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, feedId);
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+                .putVariable(KeyUtil.arg_id, feedId);
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
     }
 
-    public void setModel(FeedList feedList, @KeyUtils.RequestType int requestType) {
+    public void setModel(FeedList feedList, @KeyUtil.RequestType int requestType) {
         setParameters(feedList.getId(), requestType);
         this.feedList = feedList;
     }
 
-    public void setModel(FeedReply feedReply, @KeyUtils.RequestType int requestType) {
+    public void setModel(FeedReply feedReply, @KeyUtil.RequestType int requestType) {
         setParameters(feedReply.getId(), requestType);
         this.feedReply = feedReply;
     }
@@ -124,9 +124,9 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
         try {
             if(response.isSuccessful()) {
                 resetFlipperState();
-                if(requestType == KeyUtils.MUT_DELETE_FEED)
+                if(requestType == KeyUtil.MUT_DELETE_FEED)
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
-                else if (requestType == KeyUtils.MUT_DELETE_FEED_REPLY)
+                else if (requestType == KeyUtil.MUT_DELETE_FEED_REPLY)
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
             } else
                 Log.e(this.toString(), ErrorUtil.getError(response));

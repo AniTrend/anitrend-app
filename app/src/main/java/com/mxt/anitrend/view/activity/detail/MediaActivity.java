@@ -24,9 +24,9 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -47,7 +47,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     private ActivitySeriesBinding binding;
     private MediaBase model;
 
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
     private FavouriteToolbarWidget favouriteWidget;
 
@@ -64,10 +64,10 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         setSupportActionBar(toolbar);
         disableToolbarTitle();
         setViewModel(true);
-        if(getIntent().hasExtra(KeyUtils.arg_id))
-            id = getIntent().getLongExtra(KeyUtils.arg_id, -1);
-        if(getIntent().hasExtra(KeyUtils.arg_mediaType))
-            mediaType = getIntent().getStringExtra(KeyUtils.arg_mediaType);
+        if(getIntent().hasExtra(KeyUtil.arg_id))
+            id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
+        if(getIntent().hasExtra(KeyUtil.arg_mediaType))
+            mediaType = getIntent().getStringExtra(KeyUtil.arg_mediaType);
     }
 
     @Override
@@ -96,9 +96,9 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         if(model != null) {
             switch (item.getItemId()) { 
                 case R.id.action_manage:
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(model).build(this);
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                     break;
             }
         } else
@@ -114,7 +114,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     protected void onActivityReady() {
         if(mediaType != null) {
             BaseStatePageAdapter baseStatePageAdapter = new AnimePageAdapter(getSupportFragmentManager(), getApplicationContext());
-            if (!Objects.equals(mediaType, KeyUtils.ANIME))
+            if (!Objects.equals(mediaType, KeyUtil.ANIME))
                 baseStatePageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
             baseStatePageAdapter.setParams(getIntent().getExtras());
             viewPager.setAdapter(baseStatePageAdapter);
@@ -148,11 +148,11 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     @Override
     protected void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_mediaType, mediaType)
-                .putVariable(KeyUtils.arg_id, id);
+                .putVariable(KeyUtil.arg_mediaType, mediaType)
+                .putVariable(KeyUtil.arg_id, id);
 
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_BASE_REQ, getApplicationContext());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_BASE_REQ, getApplicationContext());
     }
 
     /**
@@ -172,7 +172,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         switch (view.getId()) {
             case R.id.series_banner:
                 Intent intent = new Intent(this, ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getCoverImage());
+                intent.putExtra(KeyUtil.arg_model, model.getCoverImage());
                 CompatUtil.startSharedImageTransition(this, view, intent, R.string.transition_image_preview);
                 break;
         }
@@ -186,16 +186,16 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     }
 
     private void showApplicationTips() {
-        if (!TapTargetUtil.isActive(KeyUtils.KEY_DETAIL_TIP) && getPresenter().getApplicationPref().isAuthenticated()) {
-            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_DETAIL_TIP)) {
+        if (!TapTargetUtil.isActive(KeyUtil.KEY_DETAIL_TIP) && getPresenter().getApplicationPref().isAuthenticated()) {
+            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_DETAIL_TIP)) {
                 TapTargetUtil.buildDefault(this, R.string.tip_series_options_title, R.string.tip_series_options_message, R.id.action_manage)
                         .setPromptStateChangeListener((prompt, state) -> {
                             if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                getPresenter().getApplicationPref().disableTipFor(KeyUtils.KEY_DETAIL_TIP);
+                                getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_DETAIL_TIP);
                             if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                TapTargetUtil.setActive(KeyUtils.KEY_DETAIL_TIP, true);
+                                TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, true);
                         }).setFocalColour(CompatUtil.getColor(this, R.color.grey_600)).show();
-                TapTargetUtil.setActive(KeyUtils.KEY_DETAIL_TIP, false);
+                TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, false);
             }
         }
     }

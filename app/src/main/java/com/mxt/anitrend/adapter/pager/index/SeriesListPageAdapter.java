@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.MediaListFragment;
 
 /**
@@ -30,6 +30,6 @@ public class SeriesListPageAdapter extends BaseStatePageAdapter {
     @Override
     public Fragment getItem(int position) {
         return MediaListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                .putVariable(KeyUtils.arg_status, KeyUtils.MediaListStatus[position]));
+                .putVariable(KeyUtil.arg_status, KeyUtil.MediaListStatus[position]));
     }
 }

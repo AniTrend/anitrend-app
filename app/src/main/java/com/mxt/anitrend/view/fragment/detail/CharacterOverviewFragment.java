@@ -16,7 +16,7 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
 import butterknife.ButterKnife;
@@ -45,7 +45,7 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            id = getArguments().getLong(KeyUtils.arg_id);
+            id = getArguments().getLong(KeyUtil.arg_id);
     }
 
     @Nullable @Override
@@ -78,9 +78,9 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, id);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.CHARACTER_OVERVIEW_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, id);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.CHARACTER_OVERVIEW_REQ, getContext());
     }
 
     /**
@@ -93,7 +93,7 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
         switch (v.getId()) {
             case R.id.character_img:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getImage().getLarge());
+                intent.putExtra(KeyUtil.arg_model, model.getImage().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             default:

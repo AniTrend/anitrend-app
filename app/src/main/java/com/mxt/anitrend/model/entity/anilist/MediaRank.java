@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Locale;
 
@@ -16,10 +16,10 @@ public class MediaRank implements Parcelable {
 
     private int id;
     private int rank;
-    private @KeyUtils.MediaRankType String type;
-    private @KeyUtils.MediaFormat String format;
+    private @KeyUtil.MediaRankType String type;
+    private @KeyUtil.MediaFormat String format;
     private int year;
-    private @KeyUtils.MediaSeason String season;
+    private @KeyUtil.MediaSeason String season;
     private boolean allTime;
     private String context;
 
@@ -93,11 +93,11 @@ public class MediaRank implements Parcelable {
         return rank;
     }
 
-    public @NonNull @KeyUtils.MediaRankType String getType() {
+    public @NonNull @KeyUtil.MediaRankType String getType() {
         return type;
     }
 
-    public @NonNull @KeyUtils.MediaFormat String getFormat() {
+    public @NonNull @KeyUtil.MediaFormat String getFormat() {
         return format;
     }
 
@@ -105,7 +105,7 @@ public class MediaRank implements Parcelable {
         return year;
     }
 
-    public @KeyUtils.MediaSeason String getSeason() {
+    public @KeyUtil.MediaSeason String getSeason() {
         return season;
     }
 

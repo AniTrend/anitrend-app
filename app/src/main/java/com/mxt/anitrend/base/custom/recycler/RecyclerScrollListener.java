@@ -7,7 +7,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 
 /**
@@ -74,7 +74,7 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
             // End has been reached
             if(pageInfo != null && pageInfo.hasNextPage()) {
                 mCurrentPage++;
-                mCurrentOffset += KeyUtils.PAGING_LIMIT;
+                mCurrentOffset += KeyUtil.PAGING_LIMIT;
                 mLoadListener.onLoadMore();
                 mLoading = true;
             }

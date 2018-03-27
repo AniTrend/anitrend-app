@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
@@ -19,9 +18,9 @@ import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.CommentActivity;
 import com.mxt.anitrend.view.activity.detail.MessageActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
@@ -111,7 +110,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
      */
     @Override
     public void makeRequest() {
-        getViewModel().requestData(KeyUtils.USER_NOTIFICATION_REQ, getContext());
+        getViewModel().requestData(KeyUtil.USER_NOTIFICATION_REQ, getContext());
     }
 
     private void setReadItems(Notification data) {
@@ -132,54 +131,54 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
     public void onItemClick(View target, Notification data) {
         Intent intent;
         setReadItems(data);
-        if(target.getId() == R.id.notification_img && !Objects.equals(data.getType(), KeyUtils.AIRING)) {
+        if(target.getId() == R.id.notification_img && !Objects.equals(data.getType(), KeyUtil.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
-            intent.putExtra(KeyUtils.arg_userName, data.getUser().getName());
+            intent.putExtra(KeyUtil.arg_userName, data.getUser().getName());
             CompatUtil.startRevealAnim(getActivity(), target, intent);
         }
         else
             switch (data.getType()) {
-                case KeyUtils.ACTIVITY_MESSAGE:
+                case KeyUtil.ACTIVITY_MESSAGE:
                     intent = new Intent(getActivity(), MessageActivity.class);
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.FOLLOWING:
+                case KeyUtil.FOLLOWING:
                     intent = new Intent(getActivity(), ProfileActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getUser().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.THREAD_COMMENT_MENTION:
+                case KeyUtil.THREAD_COMMENT_MENTION:
                     DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
                     break;
-                case KeyUtils.THREAD_SUBSCRIBED:
+                case KeyUtil.THREAD_SUBSCRIBED:
                     DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
                     break;
-                case KeyUtils.THREAD_COMMENT_REPLY:
+                case KeyUtil.THREAD_COMMENT_REPLY:
                     DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
                     break;
-                case KeyUtils.AIRING:
+                case KeyUtil.AIRING:
                     intent = new Intent(getActivity(), MediaActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getMedia().getId());
-                    intent.putExtra(KeyUtils.arg_mediaType, data.getMedia().getType());
+                    intent.putExtra(KeyUtil.arg_id, data.getMedia().getId());
+                    intent.putExtra(KeyUtil.arg_mediaType, data.getMedia().getType());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.ACTIVITY_LIKE:
+                case KeyUtil.ACTIVITY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getActivity().getId());
-                    intent.putExtra(KeyUtils.arg_model, data.getActivity());
+                    intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtil.arg_model, data.getActivity());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.ACTIVITY_REPLY_LIKE:
+                case KeyUtil.ACTIVITY_REPLY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, data.getActivity().getId());
-                    intent.putExtra(KeyUtils.arg_model, data.getActivity());
+                    intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtil.arg_model, data.getActivity());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
-                case KeyUtils.THREAD_LIKE:
+                case KeyUtil.THREAD_LIKE:
                     DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
                     break;
-                case KeyUtils.THREAD_COMMENT_LIKE:
+                case KeyUtil.THREAD_COMMENT_LIKE:
                     DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
                     break;
             }
@@ -195,12 +194,12 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
      */
     @Override
     public void onItemLongClick(View target, Notification data) {
-        if(Objects.equals(data.getType(), KeyUtils.AIRING)) {
+        if(Objects.equals(data.getType(), KeyUtil.AIRING)) {
             setReadItems(data);
             if(getPresenter().getApplicationPref().isAuthenticated()) {
-                seriesActionUtil = new SeriesActionUtil.Builder()
+                mediaActionUtil = new MediaActionUtil.Builder()
                         .setModel(data.getMedia()).build(getActivity());
-                seriesActionUtil.startSeriesAction();
+                mediaActionUtil.startSeriesAction();
             } else
                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
         }

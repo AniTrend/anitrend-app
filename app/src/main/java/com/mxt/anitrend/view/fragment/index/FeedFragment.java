@@ -22,9 +22,9 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.activity.detail.CommentActivity;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
@@ -51,7 +51,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
 
     public static FeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainerBuilder) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtils.arg_graph_params, queryContainerBuilder);
+        args.putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder);
         FeedFragment fragment = new FeedFragment();
         fragment.setArguments(args);
         return fragment;
@@ -66,7 +66,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
+            queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
         isPager = true; isFeed = true; mColumnSize = R.integer.single_list_x1;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
@@ -80,16 +80,16 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
         if(mAdapter == null)
             mAdapter = new FeedAdapter(model, getContext());
         injectAdapter();
-        if(!TapTargetUtil.isActive(KeyUtils.KEY_POST_TYPE_TIP) && isFeed) {
-            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtils.KEY_POST_TYPE_TIP)) {
+        if(!TapTargetUtil.isActive(KeyUtil.KEY_POST_TYPE_TIP) && isFeed) {
+            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
                 TapTargetUtil.buildDefault(getActivity(), R.string.tip_status_post_title, R.string.tip_status_post_text, R.id.action_post)
                         .setPromptStateChangeListener((prompt, state) -> {
                             if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                getPresenter().getApplicationPref().disableTipFor(KeyUtils.KEY_POST_TYPE_TIP);
+                                getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_POST_TYPE_TIP);
                             if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                TapTargetUtil.setActive(KeyUtils.KEY_POST_TYPE_TIP, true);
+                                TapTargetUtil.setActive(KeyUtil.KEY_POST_TYPE_TIP, true);
                         }).show();
-                TapTargetUtil.setActive(KeyUtils.KEY_POST_TYPE_TIP, false);
+                TapTargetUtil.setActive(KeyUtil.KEY_POST_TYPE_TIP, false);
             }
         }
     }
@@ -99,9 +99,9 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
      */
     @Override
     public void makeRequest() {
-        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.FEED_LIST_REQ, getContext());
+        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.FEED_LIST_REQ, getContext());
     }
 
     /**
@@ -118,18 +118,18 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
             case R.id.series_image:
                 MediaBase series = data.getMedia();
                 intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, series.getId());
-                intent.putExtra(KeyUtils.arg_mediaType, series.getType());
+                intent.putExtra(KeyUtil.arg_id, series.getId());
+                intent.putExtra(KeyUtil.arg_mediaType, series.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_comment:
                 intent = new Intent(getActivity(), CommentActivity.class);
-                intent.putExtra(KeyUtils.arg_model, data);
+                intent.putExtra(KeyUtil.arg_model, data);
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_edit:
                 mBottomSheet = new BottomSheetComposer.Builder().setUserActivity(data)
-                        .setRequestMode(KeyUtils.MUT_SAVE_TEXT_FEED)
+                        .setRequestMode(KeyUtil.MUT_SAVE_TEXT_FEED)
                         .setTitle(R.string.edit_status_title)
                         .build();
                 showBottomSheet();
@@ -149,7 +149,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
                 if(data.getUser() != null) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtils.arg_id, data.getUser().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
@@ -168,9 +168,9 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(data.getMedia()).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
@@ -182,7 +182,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
         Optional<IntPair<FeedList>> pairOptional;
         int pairIndex;
         switch (consumer.getRequestMode()) {
-            case KeyUtils.MUT_SAVE_TEXT_FEED:
+            case KeyUtil.MUT_SAVE_TEXT_FEED:
                 if(consumer.getChangeModel() == null) {
                     swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
@@ -195,7 +195,7 @@ public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedL
                     }
                 }
                 break;
-            case KeyUtils.MUT_DELETE_FEED:
+            case KeyUtil.MUT_DELETE_FEED:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();

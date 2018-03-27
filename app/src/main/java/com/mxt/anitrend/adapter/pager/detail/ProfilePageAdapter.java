@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment;
 import com.mxt.anitrend.view.fragment.detail.UserFeedFragment;
 
@@ -34,10 +34,10 @@ public class ProfilePageAdapter extends BaseStatePageAdapter {
                 return UserOverviewFragment.newInstance(getParams());
             case 1:
                 return UserFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtils.arg_type, KeyUtils.MEDIA_LIST));
+                        .putVariable(KeyUtil.arg_type, KeyUtil.MEDIA_LIST));
             case 2:
                 return UserFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtils.arg_type, KeyUtils.TEXT));
+                        .putVariable(KeyUtil.arg_type, KeyUtil.TEXT));
         }
         return null;
     }

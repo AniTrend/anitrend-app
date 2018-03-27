@@ -16,9 +16,9 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -35,8 +35,8 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
     public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer, boolean isCompatType) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        args.putBoolean(KeyUtils.arg_media_compact, isCompatType);
+        args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        args.putBoolean(KeyUtil.arg_media_compact, isCompatType);
         MediaBrowseFragment fragment = new MediaBrowseFragment();
         fragment.setArguments(args);
         return fragment;
@@ -48,7 +48,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
     public static MediaBrowseFragment newInstance(Bundle params) {
         Bundle args = new Bundle(params);
-        args.putBoolean(KeyUtils.arg_media_compact, false);
+        args.putBoolean(KeyUtil.arg_media_compact, false);
         MediaBrowseFragment fragment = new MediaBrowseFragment();
         fragment.setArguments(args);
         return fragment;
@@ -63,8 +63,8 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            queryContainer = getArguments().getParcelable(KeyUtils.arg_graph_params);
-            isCompatType = getArguments().getBoolean(KeyUtils.arg_media_compact);
+            queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
+            isCompatType = getArguments().getBoolean(KeyUtil.arg_media_compact);
         }
         isPager = true; isFilterable = true;
         mColumnSize = R.integer.single_list_x1;
@@ -92,9 +92,9 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     @Override
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
-        queryContainer.putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        bundle.putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_BROWSE_REQ, getContext());
+        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
     }
 
     /**
@@ -109,8 +109,8 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
-                intent.putExtra(KeyUtils.arg_mediaType, data.getType());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_mediaType, data.getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -128,9 +128,9 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(data).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;

@@ -23,8 +23,8 @@ public class IntentBundleUtil {
 
     public IntentBundleUtil(Intent intent, FragmentActivity context) {
         if(intent != null) {
-            if(intent.hasExtra(KeyUtils.arg_shortcut_used) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                ShortcutHelper.reportShortcutUsage(context, intent.getIntExtra(KeyUtils.arg_shortcut_used, KeyUtils.SHORTCUT_SEARCH));
+            if(intent.hasExtra(KeyUtil.arg_shortcut_used) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+                ShortcutHelper.reportShortcutUsage(context, intent.getIntExtra(KeyUtil.arg_shortcut_used, KeyUtil.SHORTCUT_SEARCH));
             checkIntentData(intent, context);
         }
     }
@@ -49,43 +49,43 @@ public class IntentBundleUtil {
         String lastKey = deepLinkMatcher.group(groupLimit);
         String[] splitKeys;
         switch (type) {
-            case KeyUtils.DEEP_LINK_USER:
+            case KeyUtil.DEEP_LINK_USER:
                 if(TextUtils.isDigitsOnly(lastKey))
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
                 else
-                    intent.putExtra(KeyUtils.arg_userName, lastKey);
+                    intent.putExtra(KeyUtil.arg_userName, lastKey);
                 break;
-            case KeyUtils.DEEP_LINK_MANGA:
+            case KeyUtil.DEEP_LINK_MANGA:
                 if ((splitKeys = hasDepth(lastKey)) != null)
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtils.arg_mediaType, type);
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
+                intent.putExtra(KeyUtil.arg_mediaType, type);
                     break;
-            case KeyUtils.DEEP_LINK_ANIME:
+            case KeyUtil.DEEP_LINK_ANIME:
                 if ((splitKeys = hasDepth(lastKey)) != null)
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtils.arg_mediaType, type);
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
+                intent.putExtra(KeyUtil.arg_mediaType, type);
                     break;
-            case KeyUtils.DEEP_LINK_CHARACTER:
+            case KeyUtil.DEEP_LINK_CHARACTER:
                 if ((splitKeys = hasDepth(lastKey)) != null)
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
                 break;
-            case KeyUtils.DEEP_LINK_ACTOR:
+            case KeyUtil.DEEP_LINK_ACTOR:
                 if ((splitKeys = hasDepth(lastKey)) != null)
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
                 break;
-            case KeyUtils.DEEP_LINK_STAFF:
+            case KeyUtil.DEEP_LINK_STAFF:
                 if ((splitKeys = hasDepth(lastKey)) != null)
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(splitKeys[0]));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
-                    intent.putExtra(KeyUtils.arg_id, Long.valueOf(lastKey));
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
                 break;
         }
     }

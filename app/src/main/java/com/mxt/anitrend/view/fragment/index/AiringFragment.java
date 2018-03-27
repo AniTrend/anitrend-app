@@ -18,9 +18,9 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SeriesActionUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -67,9 +67,9 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage());
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_LIST_BROWSE_REQ, getContext());
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
     }
 
     /**
@@ -84,8 +84,8 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
         switch (target.getId()) {
             case R.id.series_image:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtils.arg_mediaType, data.getMedia().getType());
+                intent.putExtra(KeyUtil.arg_id, data.getMediaId());
+                intent.putExtra(KeyUtil.arg_mediaType, data.getMedia().getType());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
@@ -103,9 +103,9 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
         switch (target.getId()) {
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    seriesActionUtil = new SeriesActionUtil.Builder()
+                    mediaActionUtil = new MediaActionUtil.Builder()
                             .setModel(data).build(getActivity());
-                    seriesActionUtil.startSeriesAction();
+                    mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
@@ -116,14 +116,14 @@ public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<Me
     public void onModelChanged(BaseConsumer<MediaList> consumer) {
         Optional<IntPair<MediaList>> pairOptional;
         switch (consumer.getRequestMode()) {
-            case KeyUtils.MUT_SAVE_MEDIA_LIST:
+            case KeyUtil.MUT_SAVE_MEDIA_LIST:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     model.set(pairOptional.get().getFirst(), consumer.getChangeModel());
                     mAdapter.onItemChanged(consumer.getChangeModel(), pairOptional.get().getFirst());
                 }
                 break;
-            case KeyUtils.MUT_DELETE_MEDIA_LIST:
+            case KeyUtil.MUT_DELETE_MEDIA_LIST:
                 pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     int index = pairOptional.get().getFirst();

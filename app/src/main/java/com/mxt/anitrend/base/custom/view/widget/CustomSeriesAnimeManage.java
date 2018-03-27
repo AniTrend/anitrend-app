@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionAnimeBinding;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import java.util.Objects;
@@ -62,7 +62,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         model.setScore(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
-        model.setStatus(KeyUtils.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
+        model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
     }
 
     @Override
@@ -81,9 +81,9 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         binding.diaCurrentStatus.setAdapter(adapter);
 
         if(!TextUtils.isEmpty(model.getStatus()))
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.MediaListStatus).indexOf(model.getStatus()));
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtil.MediaListStatus).indexOf(model.getStatus()));
         else
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtils.MediaListStatus).indexOf(KeyUtils.PLANNING));
+            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
 
         binding.diaCurrentPrivacy.setChecked(model.isHidden());
         if(model.getScore() != 0)
@@ -109,16 +109,16 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        model.setStatus(KeyUtils.MediaListStatus[i]);
-        switch (KeyUtils.MediaListStatus[i]) {
-            case KeyUtils.CURRENT:
-                if (Objects.equals(getSeriesModel().getStatus(), KeyUtils.NOT_YET_RELEASED))
+        model.setStatus(KeyUtil.MediaListStatus[i]);
+        switch (KeyUtil.MediaListStatus[i]) {
+            case KeyUtil.CURRENT:
+                if (Objects.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
-            case KeyUtils.PLANNING:
+            case KeyUtil.PLANNING:
                 break;
-            case KeyUtils.COMPLETED:
-                if (!Objects.equals(getSeriesModel().getStatus(), KeyUtils.FINISHED))
+            case KeyUtil.COMPLETED:
+                if (!Objects.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getEpisodes();
@@ -127,7 +127,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
                 }
                 break;
             default:
-                if (Objects.equals(getSeriesModel().getStatus(), KeyUtils.NOT_YET_RELEASED))
+                if (Objects.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
         }

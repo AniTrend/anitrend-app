@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.view.fragment.detail.MediaBrowseFragment;
 
@@ -41,8 +41,8 @@ public class MediaBrowseActivity extends ActivityBase<MediaBase, MediaPresenter>
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if(getIntent().hasExtra(KeyUtils.arg_activity_tag)) {
-            Spanned activityTitle = MarkDown.convert(getIntent().getStringExtra(KeyUtils.arg_activity_tag));
+        if(getIntent().hasExtra(KeyUtil.arg_activity_tag)) {
+            Spanned activityTitle = MarkDown.convert(getIntent().getStringExtra(KeyUtil.arg_activity_tag));
             mActionBar.setTitle(activityTitle);
         }
         onActivityReady();

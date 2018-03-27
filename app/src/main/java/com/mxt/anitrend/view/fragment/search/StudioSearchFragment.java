@@ -13,7 +13,7 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            searchQuery = getArguments().getString(KeyUtils.arg_search);
+            searchQuery = getArguments().getString(KeyUtil.arg_search);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_list_x2;  isPager = true;
         setViewModel(true);
@@ -64,11 +64,11 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_search, searchQuery)
-                .putVariable(KeyUtils.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtils.arg_sort, KeyUtils.SEARCH_MATCH);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.STUDIO_SEARCH_REQ, getContext());
+                .putVariable(KeyUtil.arg_search, searchQuery)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.STUDIO_SEARCH_REQ, getContext());
     }
 
     /**
@@ -83,7 +83,7 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StudioActivity.class);
-                intent.putExtra(KeyUtils.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_id, data.getId());
                 startActivity(intent);
                 break;
         }

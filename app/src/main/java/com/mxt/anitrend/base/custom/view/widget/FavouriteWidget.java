@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
@@ -82,11 +82,11 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
         setIconType();
     }
 
-    public void setRequestParams(@KeyUtils.LikeType String likeType, long modelId) {
+    public void setRequestParams(@KeyUtil.LikeType String likeType, long modelId) {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtils.arg_id, modelId)
-                .putVariable(KeyUtils.arg_type, likeType);
-        presenter.getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
+                .putVariable(KeyUtil.arg_id, modelId)
+                .putVariable(KeyUtil.arg_type, likeType);
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
             case R.id.widget_flipper:
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    presenter.requestData(KeyUtils.MUT_TOGGLE_FAVOURITE, getContext(), this);
+                    presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
                 }
                 else
                     NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();

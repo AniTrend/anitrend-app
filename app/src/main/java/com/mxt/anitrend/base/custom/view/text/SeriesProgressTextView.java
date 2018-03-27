@@ -1,13 +1,12 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.Locale;
@@ -35,7 +34,7 @@ public class SeriesProgressTextView extends SingleLineTextView {
     public void setSeriesModel(MediaList mediaList, boolean isCurrentUser) {
         MediaBase model = mediaList.getMedia();
         if (MediaUtil.isAnimeType(model)) {
-            if(Objects.equals(model.getStatus(), KeyUtils.NOT_YET_RELEASED))
+            if(Objects.equals(model.getStatus(), KeyUtil.NOT_YET_RELEASED))
                 setText(R.string.TBA);
             else {
                 if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))
@@ -46,7 +45,7 @@ public class SeriesProgressTextView extends SingleLineTextView {
                             model.getEpisodes() < 1 ? "?" : model.getEpisodes()));
             }
         } else if (MediaUtil.isMangaType(model)) {
-            if(Objects.equals(model.getStatus(), KeyUtils.NOT_YET_RELEASED))
+            if(Objects.equals(model.getStatus(), KeyUtil.NOT_YET_RELEASED))
                 setText(R.string.TBA);
             else {
                 if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))

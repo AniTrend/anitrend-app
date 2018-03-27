@@ -15,12 +15,13 @@ import android.view.View;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
+import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,7 +33,7 @@ import butterknife.Unbinder;
  * Custom bottom sheet base implementation
  */
 
-public abstract class BottomSheetBase extends BottomSheetDialogFragment implements BottomSheetListener, ResponseCallback {
+public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment implements BottomSheetListener, ResponseCallback {
 
     public String TAG;
 
@@ -43,6 +44,7 @@ public abstract class BottomSheetBase extends BottomSheetDialogFragment implemen
     protected @BindView(R.id.toolbar_search) AppCompatImageView toolbarSearch;
     protected @BindView(R.id.search_view) MaterialSearchView searchView;
 
+    protected ViewModelBase<T> viewModel;
     protected BottomSheetChoice bottomSheetChoice;
 
     protected @StringRes int mTitle, mText, mPositive, mNegative;
@@ -86,10 +88,10 @@ public abstract class BottomSheetBase extends BottomSheetDialogFragment implemen
         TAG = this.toString();
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            mTitle = getArguments().getInt(KeyUtils.arg_title);
-            mText = getArguments().getInt(KeyUtils.arg_text);
-            mPositive = getArguments().getInt(KeyUtils.arg_positive_text);
-            mNegative = getArguments().getInt(KeyUtils.arg_negative_text);
+            mTitle = getArguments().getInt(KeyUtil.arg_title);
+            mText = getArguments().getInt(KeyUtil.arg_text);
+            mPositive = getArguments().getInt(KeyUtil.arg_positive_text);
+            mNegative = getArguments().getInt(KeyUtil.arg_negative_text);
         }
         presenter = new BasePresenter(getContext());
     }
@@ -157,7 +159,7 @@ public abstract class BottomSheetBase extends BottomSheetDialogFragment implemen
 
         if (coordinatorBehavior != null && coordinatorBehavior instanceof BottomSheetBehavior) {
             bottomSheetBehavior = (BottomSheetBehavior) coordinatorBehavior;
-            bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtils.PEEK_HEIGHT));
+            bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
             bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         }
     }
@@ -211,17 +213,17 @@ public abstract class BottomSheetBase extends BottomSheetDialogFragment implemen
         }
 
         public BottomSheetBuilder setTitle(@StringRes int title) {
-            bundle.putInt(KeyUtils.arg_title, title);
+            bundle.putInt(KeyUtil.arg_title, title);
             return this;
         }
 
         public BottomSheetBuilder setPositiveText(@StringRes int positiveText) {
-            bundle.putInt(KeyUtils.arg_positive_text, positiveText);
+            bundle.putInt(KeyUtil.arg_positive_text, positiveText);
             return this;
         }
 
         public BottomSheetBuilder setNegativeText(@StringRes int negativeText) {
-            bundle.putInt(KeyUtils.arg_negative_text, negativeText);
+            bundle.putInt(KeyUtil.arg_negative_text, negativeText);
             return this;
         }
     }

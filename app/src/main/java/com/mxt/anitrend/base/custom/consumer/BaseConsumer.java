@@ -1,6 +1,6 @@
 package com.mxt.anitrend.base.custom.consumer;
 
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/12/12.
@@ -10,11 +10,11 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public class BaseConsumer<T> {
 
-    private @KeyUtils.RequestType
+    private @KeyUtil.RequestType
     int requestMode;
     private T changeModel;
 
-    public BaseConsumer(@KeyUtils.RequestType int requestMode, T changeModel) {
+    public BaseConsumer(@KeyUtil.RequestType int requestMode, T changeModel) {
         this.requestMode = requestMode;
         this.changeModel = changeModel;
     }
@@ -23,7 +23,7 @@ public class BaseConsumer<T> {
         this.requestMode = requestMode;
     }
 
-    public @KeyUtils.RequestType
+    public @KeyUtil.RequestType
     int getRequestMode() {
         return requestMode;
     }

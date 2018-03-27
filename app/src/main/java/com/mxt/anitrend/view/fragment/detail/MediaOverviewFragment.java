@@ -26,7 +26,7 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
@@ -49,7 +49,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
     private TagAdapter tagAdapter;
 
     private long mediaId;
-    private @KeyUtils.MediaType String mediaType;
+    private @KeyUtil.MediaType String mediaType;
 
     public static MediaOverviewFragment newInstance(Bundle args) {
         MediaOverviewFragment fragment = new MediaOverviewFragment();
@@ -61,8 +61,8 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mediaId = getArguments().getLong(KeyUtils.arg_id);
-            mediaType = getArguments().getString(KeyUtils.arg_mediaType);
+            mediaId = getArguments().getLong(KeyUtil.arg_id);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
         setPresenter(new MediaPresenter(getContext()));
@@ -118,12 +118,12 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                         case R.id.container:
                             Bundle args = new Bundle();
                             Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                            args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                                    .putVariable(KeyUtils.arg_id, mediaId)
-                                    .putVariable(KeyUtils.arg_type, mediaType)
-                                    .putVariable(KeyUtils.arg_genres, data.getGenre()));
-                            args.putString(KeyUtils.arg_activity_tag, data.getGenre());
-                            args.putBoolean(KeyUtils.arg_media_compact, true);
+                            args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                                    .putVariable(KeyUtil.arg_id, mediaId)
+                                    .putVariable(KeyUtil.arg_type, mediaType)
+                                    .putVariable(KeyUtil.arg_genres, data.getGenre()));
+                            args.putString(KeyUtil.arg_activity_tag, data.getGenre());
+                            args.putBoolean(KeyUtil.arg_media_compact, true);
                             intent.putExtras(args);
                             startActivity(intent);
                             break;
@@ -151,12 +151,12 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                                             case POSITIVE:
                                                 Bundle args = new Bundle();
                                                 Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                                                args.putParcelable(KeyUtils.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                                                        .putVariable(KeyUtils.arg_id, mediaId)
-                                                        .putVariable(KeyUtils.arg_type, mediaType)
-                                                        .putVariable(KeyUtils.arg_tags, data.getName()));
-                                                args.putString(KeyUtils.arg_activity_tag, data.getName());
-                                                args.putBoolean(KeyUtils.arg_media_compact, true);
+                                                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                                                        .putVariable(KeyUtil.arg_id, mediaId)
+                                                        .putVariable(KeyUtil.arg_type, mediaType)
+                                                        .putVariable(KeyUtil.arg_tags, data.getName()));
+                                                args.putString(KeyUtil.arg_activity_tag, data.getName());
+                                                args.putBoolean(KeyUtil.arg_media_compact, true);
                                                 intent.putExtras(args);
                                                 startActivity(intent);
                                                 break;
@@ -183,10 +183,10 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtils.arg_id, mediaId)
-                .putVariable(KeyUtils.arg_type, mediaType);
-        getViewModel().getParams().putParcelable(KeyUtils.arg_graph_params, queryContainer);
-        getViewModel().requestData(KeyUtils.MEDIA_OVERVIEW_REQ, getContext());
+                .putVariable(KeyUtil.arg_id, mediaId)
+                .putVariable(KeyUtil.arg_type, mediaType);
+        getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_OVERVIEW_REQ, getContext());
     }
 
     /**
@@ -215,14 +215,14 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
         switch (v.getId()) {
             case R.id.series_image:
                 intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, model.getCoverImage().getLarge());
+                intent.putExtra(KeyUtil.arg_model, model.getCoverImage().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
             break;
             case R.id.anime_main_studio_container:
                 ConnectionContainer<StudioBase> connectionContainer;
                 if((connectionContainer =model.getStudios()) != null && !connectionContainer.isEmpty()) {
                     intent = new Intent(getActivity(), StudioActivity.class);
-                    intent.putExtra(KeyUtils.arg_id, connectionContainer.getConnection().getId());
+                    intent.putExtra(KeyUtil.arg_id, connectionContainer.getConnection().getId());
                     startActivity(intent);
                 }
                 break;

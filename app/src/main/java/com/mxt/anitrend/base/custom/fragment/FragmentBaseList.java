@@ -18,10 +18,9 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
-import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -146,11 +145,11 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KeyUtils.key_pagination, isPager);
-        outState.putInt(KeyUtils.key_columns, mColumnSize);
+        outState.putBoolean(KeyUtil.key_pagination, isPager);
+        outState.putInt(KeyUtil.key_columns, mColumnSize);
         if(getPresenter() != null) {
-            outState.putInt(KeyUtils.arg_page, getPresenter().getCurrentPage());
-            outState.putInt(KeyUtils.arg_page_offset, getPresenter().getCurrentOffset());
+            outState.putInt(KeyUtil.arg_page, getPresenter().getCurrentPage());
+            outState.putInt(KeyUtil.arg_page_offset, getPresenter().getCurrentOffset());
         }
     }
 
@@ -169,11 +168,11 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            isPager = savedInstanceState.getBoolean(KeyUtils.key_pagination);
-            mColumnSize = savedInstanceState.getInt(KeyUtils.key_columns);
+            isPager = savedInstanceState.getBoolean(KeyUtil.key_pagination);
+            mColumnSize = savedInstanceState.getInt(KeyUtil.key_columns);
             if(getPresenter() != null) {
-                getPresenter().setCurrentPage(savedInstanceState.getInt(KeyUtils.arg_page));
-                getPresenter().setCurrentOffset(savedInstanceState.getInt(KeyUtils.arg_page_offset));
+                getPresenter().setCurrentPage(savedInstanceState.getInt(KeyUtil.arg_page));
+                getPresenter().setCurrentOffset(savedInstanceState.getInt(KeyUtil.arg_page_offset));
             }
         }
     }

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment;
 import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment;
@@ -47,9 +47,9 @@ public class MangaPageAdapter extends BaseStatePageAdapter {
                 return MediaStaffFragment.newInstance(getParams());
             case 5:
                 return MediaFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtils.arg_mediaId, getParams().getLong(KeyUtils.arg_id))
-                        .putVariable(KeyUtils.arg_type, KeyUtils.MANGA_LIST)
-                        .putVariable(KeyUtils.arg_isFollowing, true));
+                        .putVariable(KeyUtil.arg_mediaId, getParams().getLong(KeyUtil.arg_id))
+                        .putVariable(KeyUtil.arg_type, KeyUtil.MANGA_LIST)
+                        .putVariable(KeyUtil.arg_isFollowing, true));
             case 6:
                 return ReviewFragment.newInstance(getParams());
         }

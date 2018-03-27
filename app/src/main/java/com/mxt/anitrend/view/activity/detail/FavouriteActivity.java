@@ -11,7 +11,6 @@ import com.mxt.anitrend.adapter.pager.detail.FavouritePageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.KeyUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;

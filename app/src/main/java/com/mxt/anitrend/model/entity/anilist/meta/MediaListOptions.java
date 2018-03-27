@@ -3,7 +3,7 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2018/03/22.
@@ -11,7 +11,7 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public class MediaListOptions implements Parcelable {
 
-    private @KeyUtils.ScoreFormat String scoreFormat;
+    private @KeyUtil.ScoreFormat String scoreFormat;
     private String rowOrder;
     private MediaListTypeOptions animeList;
     private MediaListTypeOptions mangaList;
@@ -48,7 +48,7 @@ public class MediaListOptions implements Parcelable {
         }
     };
 
-    public @KeyUtils.ScoreFormat String getScoreFormat() {
+    public @KeyUtil.ScoreFormat String getScoreFormat() {
         return scoreFormat;
     }
 

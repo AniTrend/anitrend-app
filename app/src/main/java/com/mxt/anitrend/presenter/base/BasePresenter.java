@@ -8,12 +8,14 @@ import android.support.v4.app.FragmentActivity;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
+import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.crunchy.MediaContent;
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.service.TagGenreService;
 import com.mxt.anitrend.util.ComparatorProvider;
+import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BasePresenter extends CommonPresenter {
 
-    private StringBuilder favouriteGenres;
+    private List<String> favouriteGenres;
 
     public BasePresenter(Context context) {
         super(context);
@@ -54,31 +56,39 @@ public class BasePresenter extends CommonPresenter {
         return "00:00";
     }
 
-    public String getFavouriteGenres() {
-        if(favouriteGenres == null) {
-            favouriteGenres = new StringBuilder();
+    public List<String> getTopFavouriteGenres() {
+        if(CompatUtil.isEmpty(favouriteGenres)) {
             UserStats userStats;
             if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
-                if (userStats.getFavourite_genres() != null && !userStats.getFavourite_genres().isEmpty()) {
-                    List<Map.Entry<String, Integer>> mStats = Stream.of(userStats.getFavourite_genres())
-                            .sorted(ComparatorProvider.getGenresComparator())
-                            .limit(3).toList();
-                    for (Map.Entry<String, Integer> entry : mStats) {
-                        if (favouriteGenres.length() < 1) favouriteGenres.append(entry.getKey());
-                        else favouriteGenres.append(",").append(entry.getKey());
-                    }
+                if (!CompatUtil.isEmpty(userStats.getFavouredGenresOverview())) {
+                    favouriteGenres = Stream.of(userStats.getFavouredGenresOverview())
+                            .sortBy(genreStat -> - genreStat.getAmount())
+                            .map(GenreStats::getGenre)
+                            .limit(4).toList();
+
                 }
             }
         }
-        return favouriteGenres.toString();
+        return favouriteGenres;
     }
 
-    public @Nullable Favourite getFavourites() {
-        if(getApplicationPref().isAuthenticated()) {
-            UserBase current = getDatabase().getCurrentUser();
-            if(current != null)
-                return getDatabase().getFavourite(current.getId());
-        }
-        return null;
+    public boolean isCurrentUser(long userId) {
+        return getApplicationPref().isAuthenticated() && getDatabase().getCurrentUser() != null &&
+                userId != 0 && getDatabase().getCurrentUser().getId() == userId;
+    }
+
+    public boolean isCurrentUser(String userName) {
+        return getApplicationPref().isAuthenticated() && getDatabase().getCurrentUser() != null &&
+                userName != null && getDatabase().getCurrentUser().getName().equals(userName);
+    }
+
+    public boolean isCurrentUser(long userId, String userName) {
+        if (userName != null)
+            return isCurrentUser(userName);
+        return isCurrentUser(userId);
+    }
+
+    public boolean isCurrentUser(UserBase userBase) {
+        return userBase != null && isCurrentUser(userBase.getId());
     }
 }

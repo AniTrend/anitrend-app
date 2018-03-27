@@ -21,7 +21,7 @@ import com.mxt.anitrend.databinding.WidgetStatusBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.LinearScaleHelper;
 import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
@@ -160,13 +160,13 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
         switch (contentTypes.get(CompatUtil.getIndexOf(contentLinks, data))) {
             case PatternMatcher.KEY_IMG:
                 intent = new Intent(getContext(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtils.arg_model, data);
+                intent.putExtra(KeyUtil.arg_model, data);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
             case PatternMatcher.KEY_WEB:
                 intent = new Intent(getContext(), VideoPlayerActivity.class);
-                intent.putExtra(KeyUtils.arg_model, data);
+                intent.putExtra(KeyUtil.arg_model, data);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;

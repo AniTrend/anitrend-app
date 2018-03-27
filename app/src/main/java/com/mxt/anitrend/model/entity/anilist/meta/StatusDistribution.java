@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mxt.anitrend.model.entity.anilist.UserStats;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2018/03/24.
@@ -14,7 +14,7 @@ import com.mxt.anitrend.util.KeyUtils;
 
 public class StatusDistribution implements Parcelable {
 
-    private @KeyUtils.MediaListStatus String status;
+    private @KeyUtil.MediaListStatus String status;
     private int amount;
 
     protected StatusDistribution(Parcel in) {

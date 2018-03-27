@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import butterknife.BindView;
@@ -35,8 +35,8 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         ButterKnife.bind(this);
-        if (getIntent().hasExtra(KeyUtils.arg_model)) {
-            contentLink = getIntent().getStringExtra(KeyUtils.arg_model);
+        if (getIntent().hasExtra(KeyUtil.arg_model)) {
+            contentLink = getIntent().getStringExtra(KeyUtil.arg_model);
             onActivityReady();
         } else {
             NotifyUtil.makeText(this, R.string.text_error_request, R.drawable.ic_warning_white_18dp, Toast.LENGTH_LONG).show();

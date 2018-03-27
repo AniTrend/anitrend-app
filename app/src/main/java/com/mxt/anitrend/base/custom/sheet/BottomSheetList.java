@@ -18,15 +18,14 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.List;
 
 import butterknife.BindView;
 
-public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetBase implements ItemClickListener<T>, Observer<List<T>>,
-        ResponseCallback, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
+public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetBase<List<T>> implements ItemClickListener<T>, Observer<List<T>>, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
     protected List<T> model;
 
@@ -35,7 +34,6 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
 
     protected RecyclerViewAdapter<T> mAdapter;
     protected StaggeredGridLayoutManager mLayoutManager;
-    protected ViewModelBase<List<T>> viewModel;
 
     protected int mColumnSize;
     protected boolean isPager, isLimit;
@@ -49,7 +47,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            model = getArguments().getParcelableArrayList(KeyUtils.arg_list_model);
+            model = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
         setViewModel(true);
     }
 

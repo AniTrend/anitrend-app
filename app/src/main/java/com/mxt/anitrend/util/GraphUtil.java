@@ -16,7 +16,7 @@ public class GraphUtil {
     public static QueryContainerBuilder getDefaultQuery(boolean includePaging) {
         QueryContainerBuilder queryContainer = new QueryContainerBuilder();
         if(includePaging)
-            queryContainer.putVariable(KeyUtils.arg_page_limit, KeyUtils.PAGING_LIMIT);
+            queryContainer.putVariable(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT);
         return queryContainer;
     }
 

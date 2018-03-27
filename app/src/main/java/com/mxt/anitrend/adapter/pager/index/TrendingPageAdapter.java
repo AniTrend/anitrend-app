@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2017/10/30.
@@ -28,9 +28,9 @@ public class TrendingPageAdapter extends BaseStatePageAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return AnimeFragment.newInstance(KeyUtils.BROWSE_ANIME_TRENDING_REQ);
+                return AnimeFragment.newInstance(KeyUtil.BROWSE_ANIME_TRENDING_REQ);
             case 1:
-                return AnimeFragment.newInstance(KeyUtils.BROWSE_ANIME_LATEST_REQ);
+                return AnimeFragment.newInstance(KeyUtil.BROWSE_ANIME_LATEST_REQ);
         }
         return null;
     }

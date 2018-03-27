@@ -15,7 +15,7 @@ import com.mxt.anitrend.databinding.AdapterStaffBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
@@ -33,14 +33,14 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
     }
 
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtils.RecyclerViewType int viewType) {
-        if (viewType == KeyUtils.RECYCLER_TYPE_HEADER)
+    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+        if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override
-    public @KeyUtils.RecyclerViewType
+    public @KeyUtil.RecyclerViewType
     int getItemViewType(int position) {
         return data.get(position).getContentType();
     }

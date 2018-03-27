@@ -4,17 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.data.converter.MediaBaseConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
-
-import io.objectbox.annotation.Convert;
-import io.objectbox.annotation.Transient;
 
 /**
  * Created by Maxwell on 1/12/2017.
@@ -24,7 +20,7 @@ public class MediaList extends EntityGroup implements Parcelable {
 
     private long id;
     private long mediaId;
-    private @KeyUtils.MediaListStatus String status;
+    private @KeyUtil.MediaListStatus String status;
     private float score;
     private int progress;
     private int progressVolumes;
@@ -115,7 +111,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         return mediaId;
     }
 
-    public @KeyUtils.MediaListStatus String getStatus() {
+    public @KeyUtil.MediaListStatus String getStatus() {
         return status;
     }
 
@@ -199,7 +195,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         this.media = media;
     }
 
-    public void setStatus(@KeyUtils.MediaListStatus String status) {
+    public void setStatus(@KeyUtil.MediaListStatus String status) {
         this.status = status;
     }
 

@@ -17,7 +17,7 @@ import com.mxt.anitrend.databinding.AdapterSeriesBinding;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,19 +47,19 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
     }
 
     @Override
-    public RecyclerViewHolder<MediaBase> onCreateViewHolder(ViewGroup parent, @KeyUtils.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<MediaBase> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if(isCompatType)
             return new MediaViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
-        if(viewType == KeyUtils.RECYCLER_TYPE_ANIME)
+        if(viewType == KeyUtil.RECYCLER_TYPE_ANIME)
             return new AnimeViewHolder(AdapterAnimeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         return new MangaViewHolder(AdapterMangaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
-    public @KeyUtils.RecyclerViewType int getItemViewType(int position) {
-        if(Objects.equals(data.get(position).getType(), KeyUtils.ANIME))
-            return KeyUtils.RECYCLER_TYPE_ANIME;
-        return KeyUtils.RECYCLER_TYPE_MANGA;
+    public @KeyUtil.RecyclerViewType int getItemViewType(int position) {
+        if(Objects.equals(data.get(position).getType(), KeyUtil.ANIME))
+            return KeyUtil.RECYCLER_TYPE_ANIME;
+        return KeyUtil.RECYCLER_TYPE_MANGA;
     }
 
     @Override

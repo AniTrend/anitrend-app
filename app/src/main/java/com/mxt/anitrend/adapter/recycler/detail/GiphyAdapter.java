@@ -15,7 +15,7 @@ import com.mxt.anitrend.databinding.AdapterGiphyBinding;
 import com.mxt.anitrend.model.entity.giphy.Gif;
 import com.mxt.anitrend.model.entity.giphy.Giphy;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtils;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,10 +68,10 @@ public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
         public void onBindViewHolder(Giphy model) {
             HashMap<String, Gif> giphy = model.getImages();
             Gif giphyImage;
-            if(giphy.containsKey(KeyUtils.GIPHY_PREVIEW))
-                giphyImage = giphy.get(KeyUtils.GIPHY_PREVIEW);
+            if(giphy.containsKey(KeyUtil.GIPHY_PREVIEW))
+                giphyImage = giphy.get(KeyUtil.GIPHY_PREVIEW);
             else
-                giphyImage = giphy.get(KeyUtils.GIPHY_ORIGINAL_ANIMATED);
+                giphyImage = giphy.get(KeyUtil.GIPHY_ORIGINAL_ANIMATED);
             Glide.with(getContext()).load(giphyImage.getUrl())
                     .transition(DrawableTransitionOptions.withCrossFade(250))
                     .apply(RequestOptions.centerCropTransform())
