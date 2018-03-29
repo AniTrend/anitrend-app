@@ -670,7 +670,7 @@
     <string name="menu_title_sorting">Sortierung</string>
     <string name="menu_title_order">Reihenfolge</string>
     <string name="menu_title_genres">Genres</string>
-    <string name="menu_title_types">Typen</string>
+    <string name="menu_title_formats">Typen</string>
     <string name="menu_title_year">Jahr</string>
     <string name="menu_title_status">Status</string>
 

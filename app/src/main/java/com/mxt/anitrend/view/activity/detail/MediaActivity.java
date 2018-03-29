@@ -80,7 +80,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean isAuth = getPresenter().getApplicationPref().isAuthenticated();
-        getMenuInflater().inflate(R.menu.series_menu, menu);
+        getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
         menu.findItem(R.id.action_manage).setVisible(isAuth);
 

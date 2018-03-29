@@ -669,7 +669,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="menu_title_sorting">Ordenar Por</string>
     <string name="menu_title_order">Orden</string>
     <string name="menu_title_genres">Géneros</string>
-    <string name="menu_title_types">Tipo</string>
+    <string name="menu_title_formats">Tipo</string>
     <string name="menu_title_year">Año</string>
     <string name="menu_title_status">Estado</string>
 

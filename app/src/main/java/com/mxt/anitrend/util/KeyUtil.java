@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.LongDef;
 import android.support.annotation.StringDef;
 
 /**
@@ -441,7 +442,7 @@ public interface KeyUtil {
     /** Alerter Durations */
     long DURATION_SHORT = 2000L, DURATION_MEDIUM = 3500L, DURATION_LONG = 6500L;
 
-    @IntDef({DURATION_SHORT, DURATION_MEDIUM, DURATION_LONG})
+    @LongDef({DURATION_SHORT, DURATION_MEDIUM, DURATION_LONG})
     @interface AlerterDuration {}
 
 

@@ -40,22 +40,8 @@
             <item
                 android:id="@+id/action_type"
                 android:icon="@drawable/ic_type_grey_600_24dp"
-                android:title="@string/menu_title_types"
-                app:showAsAction="ifRoom" >
-                <menu>
-                    <item
-                        android:id="@+id/action_type_anime"
-                        android:icon="@drawable/ic_movie_grey_600_24dp"
-                        android:title="@string/anime"
-                        app:showAsAction="ifRoom" />
-
-                    <item
-                        android:id="@+id/action_type_manga"
-                        android:icon="@drawable/ic_library_books_grey_600_24dp"
-                        android:title="@string/manga"
-                        app:showAsAction="ifRoom" />
-                </menu>
-            </item>
+                android:title="@string/menu_title_formats"
+                app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/action_year"
@@ -67,21 +53,7 @@
                 android:id="@+id/action_status"
                 android:icon="@drawable/ic_status_grey_600_24dp"
                 android:title="@string/menu_title_status"
-                app:showAsAction="ifRoom" >
-                <menu>
-                    <item
-                        android:id="@+id/action_status_anime"
-                        android:icon="@drawable/ic_movie_grey_600_24dp"
-                        android:title="@string/anime"
-                        app:showAsAction="ifRoom" />
-
-                    <item
-                        android:id="@+id/action_status_manga"
-                        android:icon="@drawable/ic_library_books_grey_600_24dp"
-                        android:title="@string/manga"
-                        app:showAsAction="ifRoom" />
-                </menu>
-            </item>
+                app:showAsAction="ifRoom" />
 
         </menu>
 
@@ -93,14 +65,6 @@
         android:visible="false"
         android:title="@string/drawer_title_share"
         android:icon="@drawable/ic_share_grey_600_24dp"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_mark_all"
-        android:orderInCategory="103"
-        android:visible="false"
-        android:title="@string/menu_title_mark_all_as_read"
-        android:icon="@drawable/ic_done_all_grey_600_24dp"
         app:showAsAction="ifRoom" />
 
 </menu>

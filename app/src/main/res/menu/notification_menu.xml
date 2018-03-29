@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_mark_all"
+        android:orderInCategory="103"
+        android:visible="false"
+        android:title="@string/menu_title_mark_all_as_read"
+        android:icon="@drawable/ic_done_all_grey_600_24dp"
+        app:showAsAction="ifRoom" />
+
+</menu>

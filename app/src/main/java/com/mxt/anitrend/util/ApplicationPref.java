@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 
 import com.mxt.anitrend.R;
@@ -18,11 +19,22 @@ public class ApplicationPref {
     private Context context;
 
     /** Base Application Values */
-    private final String KEY_FRESH_INSTALL = "KEY_FRESH_INSTALL";
-    private final String KEY_AUTHENTICATED = "KEY_AUTHENTICATED";
+    private final String _freshInstall = "_freshInstall";
+    private final String _isAuthenticated = "_isAuthenticated";
 
     /** Application Base Options */
-    private final String KEY_LIGHT_THEME = "KEY_LIGHT_THEME";
+    private final String _isLightTheme = "_isLightTheme";
+
+    /** Api Keys */
+    private final String _sortOrder = "_sortOrder";
+    private final String _mediaFormat = "_mediaFormat";
+    private final String _mediaSource = "_mediaSource";
+    private final String _airingSort = "_airingSort";
+    private final String _characterSort = "_characterSort";
+    private final String _mediaListSort = "_mediaListSort";
+    private final String _mediaSort = "_mediaSort";
+    private final String _reviewSort = "_reviewSort";
+    private final String _staffSort = "_staffSort";
 
     private SharedPreferences sharedPreferences;
 
@@ -36,23 +48,23 @@ public class ApplicationPref {
     }
 
     public boolean isAuthenticated() {
-        return sharedPreferences.getBoolean(KEY_AUTHENTICATED, false);
+        return sharedPreferences.getBoolean(_isAuthenticated, false);
     }
 
     public void setAuthenticated(boolean authenticated) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_AUTHENTICATED, authenticated);
+        editor.putBoolean(_isAuthenticated, authenticated);
         editor.apply();
     }
 
     public void toggleTheme() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(KEY_LIGHT_THEME, getTheme() == R.style.AppThemeLight ? R.style.AppThemeDark : R.style.AppThemeLight);
+        editor.putInt(_isLightTheme, getTheme() == R.style.AppThemeLight ? R.style.AppThemeDark : R.style.AppThemeLight);
         editor.apply();
     }
 
     public @StyleRes int getTheme() {
-        @StyleRes int style = sharedPreferences.getInt(KEY_LIGHT_THEME, R.style.AppThemeLight);
+        @StyleRes int style = sharedPreferences.getInt(_isLightTheme, R.style.AppThemeLight);
         return style;
     }
 
@@ -83,12 +95,12 @@ public class ApplicationPref {
     }
 
     public boolean isFreshInstall() {
-        return sharedPreferences.getBoolean(KEY_FRESH_INSTALL, true);
+        return sharedPreferences.getBoolean(_freshInstall, true);
     }
 
     public void setFreshInstall() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(KEY_FRESH_INSTALL, false);
+        editor.putBoolean(_freshInstall, false);
         editor.apply();
     }
 
@@ -112,7 +124,7 @@ public class ApplicationPref {
     }
 
     public int getSeasonYear() {
-        return sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear());
+        return sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear(0));
     }
 
 
@@ -126,13 +138,102 @@ public class ApplicationPref {
         editor.apply();
     }
 
-    public void saveOrder(@KeyUtil.SortOrderType String order) {
+
+    public @KeyUtil.SortOrderType String getSortOrder() {
+        return sharedPreferences.getString(_sortOrder, KeyUtil.DESC);
+    }
+
+    public void saveSortOrder(@KeyUtil.SortOrderType String sortOrder) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KeyUtil.arg_order, order);
+        editor.putString(_sortOrder, sortOrder);
         editor.apply();
     }
 
-    public @KeyUtil.SortOrderType String getOrder() {
-        return sharedPreferences.getString(KeyUtil.arg_order, KeyUtil.DESC);
+
+    public @Nullable @KeyUtil.MediaFormat String getMediaFormat() {
+        return sharedPreferences.getString(_mediaFormat, null);
+    }
+
+    public void setMediaFormat(@KeyUtil.MediaFormat String mediaFormat) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mediaFormat, mediaFormat);
+        editor.apply();
+    }
+
+
+    public @Nullable @KeyUtil.MediaSource String getMediaSource() {
+        return sharedPreferences.getString(_mediaSource, null);
+    }
+
+    public void setMediaSource(@KeyUtil.MediaSource String mediaSource) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mediaSource, mediaSource);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.AiringSort String getAiringSort() {
+        return sharedPreferences.getString(_airingSort, KeyUtil.EPISODE) + getSortOrder();
+    }
+
+    public void setAiringSort(@KeyUtil.AiringSort String airingSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_airingSort, airingSort);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.CharacterSort String getCharacterSort() {
+        return sharedPreferences.getString(_characterSort, KeyUtil.ROLE) + getSortOrder();
+    }
+
+    public void setCharacterSort(@KeyUtil.CharacterSort String characterSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_characterSort, characterSort);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.MediaListSort String getMediaListSort() {
+        return sharedPreferences.getString(_mediaListSort, KeyUtil.PROGRESS) + getSortOrder();
+    }
+
+    public void setMediaListSort(@KeyUtil.MediaListSort String mediaListSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mediaListSort, mediaListSort);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.MediaSort String getMediaSort() {
+        return sharedPreferences.getString(_mediaSort, KeyUtil.POPULARITY) + getSortOrder();
+    }
+
+    public void setMediaSort(@KeyUtil.MediaSort String mediaSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mediaSort, mediaSort);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.ReviewSort String getReviewSort() {
+        return sharedPreferences.getString(_reviewSort, KeyUtil.ID) + getSortOrder();
+    }
+
+    public void setReviewSort(@KeyUtil.ReviewSort String reviewSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_reviewSort, reviewSort);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.StaffSort String getStaffSort() {
+        return sharedPreferences.getString(_staffSort, KeyUtil.ROLE) + getSortOrder();
+    }
+
+    public void setStaffSort(@KeyUtil.StaffSort String staffSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_staffSort, staffSort);
+        editor.apply();
     }
 }

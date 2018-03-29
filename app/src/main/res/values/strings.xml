@@ -695,7 +695,7 @@
     <string name="menu_title_sorting">Sorting</string>
     <string name="menu_title_order">Order</string>
     <string name="menu_title_genres">Genres</string>
-    <string name="menu_title_types">Types</string>
+    <string name="menu_title_formats">Types</string>
     <string name="menu_title_year">Year</string>
     <string name="menu_title_status">Status</string>
 
@@ -964,6 +964,7 @@
     <string name="text_unable_to_load_next_page">Error loading more results!</string>
     <string name="menu_title_mark_all_as_read">Mark All As Read</string>
     <string name="title_score_distribution">Score Distribution</string>
+
     <string name="title_score">Score</string>
     <string name="title_watching">Watching</string>
     <string name="title_series_stats">Series Stats</string>
