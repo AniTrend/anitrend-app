@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment;
 
 /**
  * Created by Maxwell on 10/14/2016.
@@ -28,13 +30,21 @@ public class SeasonPageAdapter extends BaseStatePageAdapter {
         switch (position)
         {
             case 0:
-                return SeasonFragment.newInstance(KeyUtil.WINTER);
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                        .putVariable(KeyUtil.arg_season, KeyUtil.WINTER));
             case 1:
-                return SeasonFragment.newInstance(KeyUtil.SPRING);
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                        .putVariable(KeyUtil.arg_season, KeyUtil.SPRING));
             case 2:
-                return SeasonFragment.newInstance(KeyUtil.SUMMER);
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                        .putVariable(KeyUtil.arg_season, KeyUtil.SUMMER));
             case 3:
-                return SeasonFragment.newInstance(KeyUtil.FALL);
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                        .putVariable(KeyUtil.arg_season, KeyUtil.FALL));
         }
         return null;
     }

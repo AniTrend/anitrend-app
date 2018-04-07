@@ -18,6 +18,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
 import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.MediaUtil;
@@ -29,7 +30,7 @@ import java.util.List;
  * Created by max on 2018/01/01.
  */
 
-public class MediaPresenter extends CommonPresenter {
+public class MediaPresenter extends BasePresenter {
 
     public MediaPresenter(Context context) {
         super(context);

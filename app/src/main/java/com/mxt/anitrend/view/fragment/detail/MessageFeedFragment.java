@@ -3,14 +3,14 @@ package com.mxt.anitrend.view.fragment.detail;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.view.fragment.index.FeedFragment;
+import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
 /**
  * Created by max on 2018/03/24.
  * MessageFeedFragment
  */
 
-public class MessageFeedFragment extends FeedFragment {
+public class MessageFeedFragment extends FeedListFragment {
 
     private long userId;
     private @KeyUtil.MessageType int messageType;

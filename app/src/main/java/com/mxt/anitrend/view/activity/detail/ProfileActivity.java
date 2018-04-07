@@ -142,7 +142,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                                     getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_NOTIFICATION_TIP);
                                 if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
                                     TapTargetUtil.setActive(KeyUtil.KEY_NOTIFICATION_TIP, true);
-                            }).setFocalColour(CompatUtil.getColor(this, R.color.grey_600)).show();
+                            }).setFocalColour(CompatUtil.getColor(this, R.color.colorGrey600)).show();
                     TapTargetUtil.setActive(KeyUtil.KEY_NOTIFICATION_TIP, false);
                 }
             }
@@ -155,7 +155,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                                     getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_MESSAGE_TIP);
                                 if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
                                     TapTargetUtil.setActive(KeyUtil.KEY_MESSAGE_TIP, true);
-                            }).setFocalColour(CompatUtil.getColor(this, R.color.grey_600)).show();
+                            }).setFocalColour(CompatUtil.getColor(this, R.color.colorGrey600)).show();
                     TapTargetUtil.setActive(KeyUtil.KEY_MESSAGE_TIP, false);
                 }
             }

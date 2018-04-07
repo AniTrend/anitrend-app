@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/SmallRating"
-                    app:averageScore="@{model.averageScore}"
+                    app:averageScore="@{model.meanScore}"
                     tools:rating="1"/>
 
                 <com.mxt.anitrend.base.custom.view.text.RangeDateTextView

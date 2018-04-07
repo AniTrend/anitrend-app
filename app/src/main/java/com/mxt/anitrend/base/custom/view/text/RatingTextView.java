@@ -9,10 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+import com.mxt.anitrend.databinding.CustomRatingWidgetBinding;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.databinding.CustomRatingWidgetBinding;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.Locale;

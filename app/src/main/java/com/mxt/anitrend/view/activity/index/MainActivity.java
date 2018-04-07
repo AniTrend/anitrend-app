@@ -41,7 +41,7 @@ import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.Version;
-import com.mxt.anitrend.presenter.activity.MainPresenter;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.DownloaderService;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
@@ -71,7 +71,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Base main_menu activity to show case template
  */
 
-public class MainActivity extends ActivityBase<Void, MainPresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<UserBase>,
+public class MainActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<UserBase>,
         NavigationView.OnNavigationItemSelectedListener {
 
     protected @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -103,7 +103,7 @@ public class MainActivity extends ActivityBase<Void, MainPresenter> implements V
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        setPresenter(new MainPresenter(getApplicationContext()));
+        setPresenter(new BasePresenter(getApplicationContext()));
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         if (savedInstanceState == null)

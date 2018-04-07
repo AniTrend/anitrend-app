@@ -1,6 +1,6 @@
-query StaffRoles($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPULARITY, $seriesType: MediaType) {
+query StaffRoles($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPULARITY, $type: MediaType) {
   Staff(id: $id) {
-    staffMedia(page: $page, perPage: $perPage, type: $seriesType, sort: $sort) {
+    staffMedia(page: $page, perPage: $perPage, type: $type, sort: $sort) {
       pageInfo {
         ... on PageInfo {
           total

@@ -3,6 +3,7 @@ package com.mxt.anitrend.model.api.retro.anilist;
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.Review;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTrend;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
@@ -39,6 +40,12 @@ public interface BrowseModel {
     @GraphQuery("MediaList")
     @Headers("Content-Type: application/json")
     Call<MediaList> getMediaList(@Body QueryContainerBuilder request);
+
+
+    @POST("/")
+    @GraphQuery("MediaTrendBrowse")
+    @Headers("Content-Type: application/json")
+    Call<PageContainer<MediaTrend>> getTrendingBrowse(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("DeleteMediaListEntry")

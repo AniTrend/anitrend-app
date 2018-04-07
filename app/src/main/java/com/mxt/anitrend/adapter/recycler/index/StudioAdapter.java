@@ -10,7 +10,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterStudioBinding;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.util.CompatUtil;
 
@@ -24,13 +23,8 @@ import butterknife.OnClick;
 
 public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
 
-    private List<StudioBase> favouriteStudios;
-
     public StudioAdapter(List<StudioBase> data, Context context) {
         super(data, context);
-        Favourite favourite = presenter.getFavourites();
-        if(favourite != null)
-            favouriteStudios = favourite.getStudio();
     }
 
     @Override
@@ -65,8 +59,6 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
          */
         @Override
         public void onBindViewHolder(StudioBase model) {
-            if(favouriteStudios != null)
-                model.setFavourite(favouriteStudios.contains(model));
             binding.setModel(model);
             binding.executePendingBindings();
         }

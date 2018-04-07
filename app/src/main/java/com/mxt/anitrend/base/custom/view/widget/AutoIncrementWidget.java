@@ -1,6 +1,8 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +16,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -24,6 +25,7 @@ import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaUtil;
+import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -57,6 +59,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         onInit();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AutoIncrementWidget(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         onInit();

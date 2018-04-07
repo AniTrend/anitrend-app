@@ -8,8 +8,8 @@ import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
-import com.mxt.anitrend.view.fragment.index.AiringFragment;
-import com.mxt.anitrend.view.fragment.index.WatchFragment;
+import com.mxt.anitrend.view.fragment.list.AiringListFragment;
+import com.mxt.anitrend.view.fragment.list.WatchListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,11 @@ public class AiringPageAdapter extends BaseStatePageAdapter {
         switch (position)
         {
             case 0:
-                return AiringFragment.newInstance();
+                return AiringListFragment.newInstance();
             case 1:
                 List<ExternalLink> externalLinks = new ArrayList<>(1);
                 externalLinks.add(new ExternalLink(BuildConfig.FEEDS_LINK,null));
-                return WatchFragment.newInstance(externalLinks, false);
+                return WatchListFragment.newInstance(externalLinks, false);
         }
         return null;
     }

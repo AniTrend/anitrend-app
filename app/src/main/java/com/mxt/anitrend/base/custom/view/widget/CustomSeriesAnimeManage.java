@@ -112,13 +112,13 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         model.setStatus(KeyUtil.MediaListStatus[i]);
         switch (KeyUtil.MediaListStatus[i]) {
             case KeyUtil.CURRENT:
-                if (Objects.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
             case KeyUtil.PLANNING:
                 break;
             case KeyUtil.COMPLETED:
-                if (!Objects.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
+                if (!CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getEpisodes();
@@ -127,7 +127,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
                 }
                 break;
             default:
-                if (Objects.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
         }

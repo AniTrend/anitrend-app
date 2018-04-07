@@ -1,4 +1,4 @@
-package com.mxt.anitrend.view.fragment.index;
+package com.mxt.anitrend.view.fragment.list;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,10 +32,10 @@ import java.util.Collections;
  * Created by max on 2017/11/03.
  */
 
-public class AiringFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, BasePresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
+public class AiringListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, BasePresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
-    public static AiringFragment newInstance() {
-        return new AiringFragment();
+    public static AiringListFragment newInstance() {
+        return new AiringListFragment();
     }
 
     /**

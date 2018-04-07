@@ -7,7 +7,7 @@ import com.mxt.anitrend.base.interfaces.event.PublisherListener;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.view.fragment.index.FeedFragment;
+import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * user profile targeted feeds
  */
 
-public class UserFeedFragment extends FeedFragment implements PublisherListener<UserBase> {
+public class UserFeedFragment extends FeedListFragment implements PublisherListener<UserBase> {
 
     public static UserFeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);

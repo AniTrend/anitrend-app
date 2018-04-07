@@ -69,7 +69,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, Retr
         if(presenter.getApplicationPref().isAuthenticated())
             if(DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 2)) {
                 mLastSynced = System.currentTimeMillis();
-                presenter.requestData(KeyUtil.USER_NOTIFICATION_COUNT, getContext(), this);
+                presenter.requestData(KeyUtil.USER_CURRENT_REQ, getContext(), this);
             }
     }
 
@@ -109,7 +109,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, Retr
             if(response.isSuccessful() && (notificationCount = response.body()) != null) {
                 if(notificationCount > 0) {
                     showSetCounter();
-                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_NOTIFICATION_COUNT, notificationCount), false);
+                    presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_CURRENT_REQ, notificationCount), false);
                 } else
                     hideSetCounter();
             } else

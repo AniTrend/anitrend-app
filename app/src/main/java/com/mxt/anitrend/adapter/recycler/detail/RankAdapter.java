@@ -12,6 +12,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterRankingBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaRank;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
@@ -61,8 +62,8 @@ public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
         @Override
         public void onBindViewHolder(MediaRank model) {
             binding.setModel(model);
-            // app:srcCompat='@{model.ranking_type.equals("popular")? @drawable/ic_star_yellow_700_24dp : @drawable/ic_favorite_red_700_24dp}'
-            binding.rankingType.setImageDrawable(CompatUtil.getDrawable(getContext(), model.getRanking_type().equals("popular")? R.drawable.ic_star_yellow_700_24dp : R.drawable.ic_favorite_red_700_24dp ));
+            binding.rankingType.setImageDrawable(CompatUtil.getDrawable(getContext(), CompatUtil.equals(model.getType(), KeyUtil.RATED) ?
+                    R.drawable.ic_star_yellow_700_24dp : R.drawable.ic_favorite_red_700_24dp ));
             binding.executePendingBindings();
         }
 

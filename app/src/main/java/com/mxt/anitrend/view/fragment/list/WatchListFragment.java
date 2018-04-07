@@ -1,4 +1,4 @@
-package com.mxt.anitrend.view.fragment.index;
+package com.mxt.anitrend.view.fragment.list;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
@@ -30,24 +30,24 @@ import retrofit2.Response;
 
 /**
  * Created by max on 2017/11/03.
- * WatchFragment for anime types
+ * WatchListFragment for anime types
  */
 
-public class WatchFragment extends FragmentChannelBase implements RetroCallback<ConnectionContainer<List<ExternalLink>>> {
+public class WatchListFragment extends FragmentChannelBase implements RetroCallback<ConnectionContainer<List<ExternalLink>>> {
 
     private long mediaId;
     private @KeyUtil.MediaType String mediaType;
 
     public static Fragment newInstance(Bundle params, boolean popular) {
         Bundle args = new Bundle(params);
-        WatchFragment fragment = new WatchFragment();
+        WatchListFragment fragment = new WatchListFragment();
         args.putBoolean(KeyUtil.arg_popular, popular);
         fragment.setArguments(args);
         return fragment;
     }
 
     public static Fragment newInstance(List<ExternalLink> externalLinks, boolean popular) {
-        WatchFragment fragment = new WatchFragment();
+        WatchListFragment fragment = new WatchListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(KeyUtil.arg_list_model, (ArrayList<? extends Parcelable>) externalLinks);
         args.putBoolean(KeyUtil.arg_popular, popular);

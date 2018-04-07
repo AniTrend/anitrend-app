@@ -41,7 +41,7 @@ public class BasePresenter extends CommonPresenter {
     }
 
     public String getThumbnail(List<Thumbnail> thumbnails) {
-        if(thumbnails == null || thumbnails.size() < 1)
+        if(CompatUtil.isEmpty(thumbnails))
             return null;
         return thumbnails.get(0).getUrl();
     }

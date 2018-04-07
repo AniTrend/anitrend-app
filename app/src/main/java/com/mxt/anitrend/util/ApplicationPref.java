@@ -33,6 +33,7 @@ public class ApplicationPref {
     private final String _characterSort = "_characterSort";
     private final String _mediaListSort = "_mediaListSort";
     private final String _mediaSort = "_mediaSort";
+    private final String _mediaTrendSort = "_mediaTrendSort";
     private final String _reviewSort = "_reviewSort";
     private final String _staffSort = "_staffSort";
 
@@ -212,6 +213,17 @@ public class ApplicationPref {
     public void setMediaSort(@KeyUtil.MediaSort String mediaSort) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(_mediaSort, mediaSort);
+        editor.apply();
+    }
+
+
+    public @KeyUtil.MediaTrendSort String getMediaTrendSort() {
+        return sharedPreferences.getString(_mediaTrendSort, KeyUtil.TRENDING) + getSortOrder();
+    }
+
+    public void setMediaTrendSort(@KeyUtil.MediaTrendSort String _mediaTrendSort) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mediaTrendSort, _mediaTrendSort);
         editor.apply();
     }
 

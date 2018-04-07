@@ -1,4 +1,4 @@
-package com.mxt.anitrend.view.fragment.detail;
+package com.mxt.anitrend.view.fragment.list;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -77,8 +77,6 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             ((MediaListAdapter)mAdapter).setCurrentUser(userName);
         }
         if(model != null && model.size() > 0)
-            if(getPresenter().isCurrentUser(userName))
-                getPresenter().getDatabase().saveMediaLists(model);
         injectAdapter();
     }
 

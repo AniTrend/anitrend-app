@@ -487,4 +487,8 @@ public class CompatUtil {
     public static <T extends Collection> boolean isEmpty(T collection) {
         return collection == null || collection.isEmpty();
     }
+
+    public static boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
+    }
 }

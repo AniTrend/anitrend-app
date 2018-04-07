@@ -95,4 +95,8 @@ public class Version implements Parcelable {
     public void setLastChecked(long lastChecked) {
         this.lastChecked = lastChecked;
     }
+
+    public boolean isNewerVersion() {
+        return BuildConfig.VERSION_CODE > code;
+    }
 }

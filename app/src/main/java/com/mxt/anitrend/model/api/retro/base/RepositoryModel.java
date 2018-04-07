@@ -12,7 +12,7 @@ import retrofit2.http.Path;
  */
 public interface RepositoryModel {
 
-    String DOWNLOAD_LINK = "https://github.com/wax911/anitrend-resources/raw/master/builds/app-release.apk";
+    String DOWNLOAD_LINK = "https://github.com/wax911/anitrend-resources/raw/%s/builds/app-release.apk";
 
     @GET("/wax911/anitrend-resources/{branch}/builds/meta.json")
     Call<Version> checkVersion(@Path("branch") String branch);

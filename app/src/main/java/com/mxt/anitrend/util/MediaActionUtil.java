@@ -77,19 +77,20 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
     }
 
     private boolean isNewEntry(long mediaId) {
-        return presenter.getDatabase().getBoxStore(MediaList.class).query()
+        /*return presenter.getDatabase().getBoxStore(MediaList.class).query()
                 .equal(MediaList_.mediaId, mediaId)
-                .build().count() < 1;
+                .build().count() < 1;*/
+        return false;
     }
 
     private void showActionDialog() {
         try {
             if(media != null)
-                MediaDialogUtil.createSeriesManage(context, media, isNewEntry(media.getId()), MediaUtil.getMediaListTitle(media, presenter.getLanguagePreference()));
+                MediaDialogUtil.createSeriesManage(context, media, isNewEntry(media.getId()), MediaUtil.getMediaTitle(media));
             else if(mediaBase != null)
-                MediaDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), MediaUtil.getMediaListTitle(mediaBase, presenter.getLanguagePreference()));
+                MediaDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), MediaUtil.getMediaTitle(mediaBase));
             else
-                MediaDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), MediaUtil.getMediaListTitle(mediaList, presenter.getLanguagePreference()));
+                MediaDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), MediaUtil.getMediaListTitle(mediaList));
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());

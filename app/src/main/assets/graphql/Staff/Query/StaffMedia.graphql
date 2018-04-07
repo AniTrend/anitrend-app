@@ -1,75 +1,49 @@
-query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [CharacterSort] = ROLE) {
+query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORMAT, $type: MediaType) {
   Staff(id: $id) {
-    characters(page: $page, perPage: $perPage, sort: $sort) {
-      ... on CharacterConnection {
-        pageInfo {
-          ... on PageInfo {
-            total
-            perPage
-            currentPage
-            hasNextPage
-          }
+    staffMedia(page: $page, perPage: $perPage, type: $type, sort: $sort) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
         }
-        edges {
-          ... on CharacterEdge {
-            role
-            media {
-              ... on Media {
-                id
-                title {
-                  ... on MediaTitle {
-                    english
-                    romaji
-                    native
-                    userPreferred
-                  }
-                }
-                type
-                format
-                season
-                status
-                meanScore
-                averageScore
-                startDate {
-                  ... on FuzzyDate {
-                    day
-                    month
-                    year
-                  }
-                }
-                episodes
-                chapters
-                volumes
-                isAdult
-                isFavourite
-                nextAiringEpisode {
-                  ... on AiringSchedule {
-                    id
-                    airingAt
-                    timeUntilAiring
-                    episode
-                  }
-                }
-              }
+      }
+      nodes {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
             }
-            node {
-              ... on Character {
-                id
-                name {
-                  ... on CharacterName {
-                    first
-                    last
-                    native
-                  }
-                }
-                image {
-                  ... on CharacterImage {
-                    large
-                    medium
-                  }
-                }
-                isFavourite
-              }
+          }
+          type
+          format
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
             }
           }
         }

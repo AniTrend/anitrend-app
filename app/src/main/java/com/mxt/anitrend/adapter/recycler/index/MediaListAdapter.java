@@ -49,19 +49,10 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
                 } else {
                     data = new ArrayList<>();
                     for (MediaList model : clone) {
-                        if(model.getAnime() != null) {
-                            if (model.getAnime().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getAnime().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getAnime().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
-                                data.add(model);
-                            }
-                        }
-                        else if(model.getManga() != null) {
-                            if (model.getManga().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getManga().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getManga().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
-                                data.add(model);
-                            }
+                        if (model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter)) {
+                            data.add(model);
                         }
                     }
                 }

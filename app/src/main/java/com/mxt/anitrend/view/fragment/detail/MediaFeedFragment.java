@@ -5,13 +5,13 @@ import android.support.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.view.fragment.index.FeedFragment;
+import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
 /**
  * Created by max on 2018/03/24.
  */
 
-public class MediaFeedFragment extends FeedFragment {
+public class MediaFeedFragment extends FeedListFragment {
 
     public static MediaFeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);

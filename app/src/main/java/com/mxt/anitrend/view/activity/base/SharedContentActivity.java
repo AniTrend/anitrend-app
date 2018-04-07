@@ -166,7 +166,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         });
         binding.composerWidget.setItemClickListener(this);
         binding.composerWidget.setLifecycle(getLifecycle());
-        binding.composerWidget.setRequestMode(KeyUtil.ACTIVITY_CREATE_REQ);
+        binding.composerWidget.setRequestType(KeyUtil.MUT_SAVE_TEXT_FEED);
         updateUI();
     }
 
@@ -199,7 +199,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<FeedList> consumer) {
-        if(consumer.getRequestMode() == KeyUtil.ACTIVITY_CREATE_REQ) {
+        if(consumer.getRequestMode() == KeyUtil.MUT_SAVE_TEXT_FEED) {
             NotifyUtil.makeText(this, R.string.text_compose_success, R.drawable.ic_insert_emoticon_white_24dp, Toast.LENGTH_SHORT).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }

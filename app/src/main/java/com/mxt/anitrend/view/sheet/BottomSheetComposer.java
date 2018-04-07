@@ -88,14 +88,14 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             EventBus.getDefault().register(this);
         switch (requestType) {
             case KeyUtil.MUT_SAVE_TEXT_FEED:
-                composerWidget.setModel(feedList);
+                composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_TEXT_FEED);
                 composerWidget.setText(feedList.getValue());
                 break;
             case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                 toolbarTitle.setText(getString(mTitle, user.getName()));
                 if(feedList != null)
                     composerWidget.setText(feedList.getValue());
-                composerWidget.setModel(user);
+                composerWidget.setModel(user, KeyUtil.MUT_SAVE_MESSAGE_FEED);
                 break;
         }
         composerWidget.setItemClickListener(this);

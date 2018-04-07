@@ -12,13 +12,11 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,18 +32,9 @@ import butterknife.OnLongClick;
 public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
 
     private String currentUser;
-    private List<MediaBase> favouriteSeries;
 
     public GroupSeriesListAdapter(List<EntityGroup> data, Context context) {
         super(data, context);
-        Favourite favourite = presenter.getFavourites();
-        if(favourite != null) {
-            favouriteSeries = new ArrayList<>();
-            if(favourite.getAnime() != null)
-                favouriteSeries.addAll(favourite.getAnime());
-            if(favourite.getManga() != null)
-                favouriteSeries.addAll(favourite.getManga());
-        }
     }
 
     public void setCurrentUser(String currentUser) {
@@ -77,11 +66,11 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
                     data = new ArrayList<>();
                     for (EntityGroup model : clone) {
                         if(model instanceof MediaList) {
-                            MediaBase mediaBase = MediaUtil.getSeriesModel((MediaList) model);
+                            MediaBase mediaBase = ((MediaList) model).getMedia();
 
-                            if (mediaBase.getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    mediaBase.getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    mediaBase.getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter))
+                            if (mediaBase.getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                    mediaBase.getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter) ||
+                                    mediaBase.getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter))
                                 data.add(model);
                         }
                     }

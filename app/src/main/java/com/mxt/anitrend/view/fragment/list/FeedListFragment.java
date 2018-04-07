@@ -1,4 +1,4 @@
-package com.mxt.anitrend.view.fragment.index;
+package com.mxt.anitrend.view.fragment.list;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,14 +45,14 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
  * Home page feed base
  */
 
-public class FeedFragment extends FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter> implements BaseConsumer.onRequestModelChange<FeedList> {
+public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter> implements BaseConsumer.onRequestModelChange<FeedList> {
 
     protected QueryContainerBuilder queryContainer;
 
-    public static FeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainerBuilder) {
+    public static FeedListFragment newInstance(Bundle params, QueryContainerBuilder queryContainerBuilder) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder);
-        FeedFragment fragment = new FeedFragment();
+        FeedListFragment fragment = new FeedListFragment();
         fragment.setArguments(args);
         return fragment;
     }

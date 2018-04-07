@@ -22,7 +22,6 @@ import com.mxt.anitrend.util.KeyUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -57,7 +56,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     @Override
     public @KeyUtil.RecyclerViewType int getItemViewType(int position) {
-        if(Objects.equals(data.get(position).getType(), KeyUtil.ANIME))
+        if(CompatUtil.equals(data.get(position).getType(), KeyUtil.ANIME))
             return KeyUtil.RECYCLER_TYPE_ANIME;
         return KeyUtil.RECYCLER_TYPE_MANGA;
     }

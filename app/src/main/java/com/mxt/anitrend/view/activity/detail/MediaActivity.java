@@ -114,7 +114,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     protected void onActivityReady() {
         if(mediaType != null) {
             BaseStatePageAdapter baseStatePageAdapter = new AnimePageAdapter(getSupportFragmentManager(), getApplicationContext());
-            if (!Objects.equals(mediaType, KeyUtil.ANIME))
+            if (!CompatUtil.equals(mediaType, KeyUtil.ANIME))
                 baseStatePageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
             baseStatePageAdapter.setParams(getIntent().getExtras());
             viewPager.setAdapter(baseStatePageAdapter);
@@ -194,7 +194,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                                 getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_DETAIL_TIP);
                             if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
                                 TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, true);
-                        }).setFocalColour(CompatUtil.getColor(this, R.color.grey_600)).show();
+                        }).setFocalColour(CompatUtil.getColor(this, R.color.colorGrey600)).show();
                 TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, false);
             }
         }

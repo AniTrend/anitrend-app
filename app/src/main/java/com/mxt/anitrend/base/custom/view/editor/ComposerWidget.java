@@ -128,6 +128,10 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         // this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
     }
 
+    public void setRequestType(@KeyUtil.RequestType int requestType) {
+        this.requestType = requestType;
+    }
+
     public void setModel(UserBase recipient, @KeyUtil.RequestType int requestType) {
         this.recipient = recipient;
         this.requestType = requestType;

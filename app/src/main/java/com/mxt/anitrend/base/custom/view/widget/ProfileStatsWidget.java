@@ -18,19 +18,18 @@ import android.widget.FrameLayout;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
-
-import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -100,10 +99,10 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         binding.userMangaChaps.setText(getMangaChaptersCount(model.getChaptersRead()));
 
         if(model.getAnimeStatusDistribution() != null && !model.getAnimeStatusDistribution().isEmpty())
-            binding.userAnimeTotal.setText(getMapCount(model.getAnimeStatusDistribution()));
+            binding.userAnimeTotal.setText(getCount(model.getAnimeStatusDistribution()));
 
         if(model.getMangaStatusDistribution() != null && !model.getMangaStatusDistribution().isEmpty())
-            binding.userMangaTotal.setText(getMapCount(model.getMangaStatusDistribution()));
+            binding.userMangaTotal.setText(getCount(model.getMangaStatusDistribution()));
     }
 
     public void setParams(Bundle bundle) {
@@ -196,10 +195,10 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         return String.format(Locale.getDefault(), "%d", manga_chap);
     }
 
-    public String getMapCount(HashMap<String, Integer> map) {
+    public String getCount(List<?> listItems) {
         int totalCount = 0;
-        for (Map.Entry<String, Integer> entry : map.entrySet())
-            totalCount += entry.getValue();
+        if(!CompatUtil.isEmpty(listItems))
+            totalCount = listItems.size();
 
         if(totalCount > 1000)
             return String.format(Locale.getDefault(), "%d K", totalCount/1000);

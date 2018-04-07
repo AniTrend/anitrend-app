@@ -115,13 +115,13 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         model.setStatus(KeyUtil.MediaListStatus[i]);
         switch (KeyUtil.MediaListStatus[i]) {
             case KeyUtil.CURRENT:
-                if (Objects.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
                 break;
             case KeyUtil.PLANNING:
                 break;
             case KeyUtil.COMPLETED:
-                if (!Objects.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
+                if (!CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
                     NotifyUtil.makeText(getContext(), R.string.warning_manga_publishing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getChapters();
@@ -135,7 +135,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
                 }
                 break;
             default:
-                if (Objects.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
                 break;
         }

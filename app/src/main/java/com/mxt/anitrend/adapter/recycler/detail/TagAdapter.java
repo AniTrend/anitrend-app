@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.detail;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -28,6 +29,7 @@ public class TagAdapter extends RecyclerViewAdapter<MediaTag> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<MediaTag> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new TagViewHolder(AdapterTagBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));

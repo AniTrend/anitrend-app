@@ -11,12 +11,9 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.MediaUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
@@ -29,20 +26,11 @@ import butterknife.OnLongClick;
 public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
     private String currentUser;
-    private List<MediaBase> favouriteSeries;
 
     public AiringAdapter(List<MediaList> data, Context context) {
         super(data, context);
-        Favourite favourite = presenter.getFavourites();
         if(presenter.getApplicationPref().isAuthenticated())
             currentUser = presenter.getDatabase().getCurrentUser().getName();
-        if(favourite != null) {
-            favouriteSeries = new ArrayList<>();
-            if(favourite.getAnime() != null)
-                favouriteSeries.addAll(favourite.getAnime());
-            if(favourite.getManga() != null)
-                favouriteSeries.addAll(favourite.getManga());
-        }
     }
 
     @Override
@@ -114,7 +102,7 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.seriesEpisodes.setModel(model, currentUser);
-            binding.customRatingWidget.setFavourState(favouriteSeries != null && favouriteSeries.contains(MediaUtil.getSeriesModel(model)));
+            binding.customRatingWidget.setFavourState(model.getMedia().isFavourite());
             binding.executePendingBindings();
         }
 

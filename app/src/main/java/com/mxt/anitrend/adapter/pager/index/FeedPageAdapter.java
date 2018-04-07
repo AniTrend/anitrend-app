@@ -8,7 +8,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.view.fragment.index.FeedFragment;
+import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
 /**
  * Created by max on 2017/11/07.
@@ -31,13 +31,13 @@ public class FeedPageAdapter extends BaseStatePageAdapter {
         switch (position)
         {
             case 0:
-                return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return FeedListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_type, KeyUtil.MEDIA_LIST));
             case 1:
-                return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return FeedListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_type, KeyUtil.TEXT));
             case 2:
-                return FeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return FeedListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_isFollowing, false)
                         .putVariable(KeyUtil.arg_isMixed, true));
         }

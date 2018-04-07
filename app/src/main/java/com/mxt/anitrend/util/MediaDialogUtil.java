@@ -239,7 +239,7 @@ final class MediaDialogUtil extends DialogUtil {
      * @param context from a fragment activity derived class
      */
     private static CustomSeriesManageBase buildManagerType(Context context, @KeyUtil.MediaType String seriesType) {
-        if(Objects.equals(seriesType, KeyUtil.ANIME))
+        if(CompatUtil.equals(seriesType, KeyUtil.ANIME))
             return new CustomSeriesAnimeManage(context);
         return new CustomSeriesMangaManage(context);
     }

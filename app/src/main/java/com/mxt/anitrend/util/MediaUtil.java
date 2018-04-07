@@ -1,9 +1,12 @@
 package com.mxt.anitrend.util;
 
+import com.annimon.stream.Stream;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTrend;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 
-import java.util.Objects;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by max on 2018/02/23.
@@ -13,11 +16,11 @@ import java.util.Objects;
 public class MediaUtil {
 
     public static <T extends MediaBase> boolean isAnimeType(T series) {
-        return (series != null && Objects.equals(series.getType(), KeyUtil.ANIME));
+        return (series != null && CompatUtil.equals(series.getType(), KeyUtil.ANIME));
     }
 
     public static <T extends MediaBase> boolean isMangaType(T series) {
-        return (series != null && Objects.equals(series.getType(), KeyUtil.MANGA));
+        return (series != null && CompatUtil.equals(series.getType(), KeyUtil.MANGA));
     }
 
     public static boolean isIncrementLimitReached(MediaList model) {
@@ -30,7 +33,7 @@ public class MediaUtil {
 
     public static boolean isAllowedStatus(MediaList model) {
         MediaBase mediaBase = model.getMedia();
-        return !Objects.equals(mediaBase.getStatus(), KeyUtil.NOT_YET_RELEASED);
+        return !CompatUtil.equals(mediaBase.getStatus(), KeyUtil.NOT_YET_RELEASED);
     }
 
     public static <T extends MediaBase> String getMediaTitle(T series) {
@@ -39,5 +42,13 @@ public class MediaUtil {
 
     public static String getMediaListTitle(MediaList mediaList) {
         return getMediaTitle(mediaList.getMedia());
+    }
+
+    public static List<MediaBase> mapMediaTrend(List<MediaTrend> mediaTrends) {
+        if(mediaTrends != null)
+            return Stream.of(mediaTrends)
+                    .map(MediaTrend::getMedia)
+                    .toList();
+        return Collections.emptyList();
     }
 }

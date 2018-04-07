@@ -63,7 +63,11 @@
     <color name="colorBlueGrey100">#CFD8DC</color>
     <color name="colorBlueGrey200">#B0BEC5</color>
 
+    <color name="colorGrey600">#757575</color> <!-- 12% black -->
 
+    <color name="black_transparent_image">#46000000</color>
     <color name="divider">#1f000000</color> <!-- 12% black -->
+
+
 
 </resources>

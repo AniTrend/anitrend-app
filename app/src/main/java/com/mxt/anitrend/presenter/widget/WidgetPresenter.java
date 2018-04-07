@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Locale;
@@ -14,7 +15,7 @@ import java.util.Locale;
  * Created by max on 2017/10/31.
  */
 
-public class WidgetPresenter<T> extends CommonPresenter {
+public class WidgetPresenter<T> extends BasePresenter {
 
     private RequestHandler<T> mLoader;
 
@@ -56,17 +57,5 @@ public class WidgetPresenter<T> extends CommonPresenter {
             return size > 1000? String.format(Locale.getDefault(),"%.1f K", (float)size/1000): String.valueOf(size);
         }
         return "0";
-    }
-
-    public @KeyUtil.LanguageType int getLanguagePreference() {
-        switch (getDatabase().getCurrentUser().getTitle_language()) {
-            case KeyUtil.key_language_english:
-                return KeyUtil.LANGUAGE_ENGLISH;
-            case KeyUtil.key_language_romaji:
-                return KeyUtil.LANGUAGE_ROMAJI;
-            case KeyUtil.key_language_japanese:
-                return KeyUtil.LANGUAGE_JAPANESE;
-        }
-        return KeyUtil.LANGUAGE_ROMAJI;
     }
 }

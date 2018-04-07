@@ -16,17 +16,15 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -80,14 +78,14 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 case R.id.widget_thumb_up_flipper:
                     if (binding.widgetThumbUpFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext();
-                        setParameters(Objects.equals(model.getUserRating(), KeyUtil.UP_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.UP_VOTE);
+                        setParameters(CompatUtil.equals(model.getUserRating(), KeyUtil.UP_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.UP_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.widget_thumb_down_flipper:
                     if (binding.widgetThumbDownFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext();
-                        setParameters(Objects.equals(model.getUserRating(), KeyUtil.DOWN_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.DOWN_VOTE);
+                        setParameters(CompatUtil.equals(model.getUserRating(), KeyUtil.DOWN_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.DOWN_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;

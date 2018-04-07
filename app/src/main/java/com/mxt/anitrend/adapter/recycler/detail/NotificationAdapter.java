@@ -75,10 +75,11 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
          */
         @Override
         public void onBindViewHolder(Notification model) {
-            NotificationBase notification = presenter.getDatabase()
+            // TODO: 2018/04/07 check for database object generation
+            NotificationBase notification = null;/*presenter.getDatabase()
                     .getBoxStore(NotificationBase.class).query()
                     .equal(NotificationBase_.id, model.getId())
-                    .build().findFirst();
+                    .build().findFirst();*/
 
             if(notification != null)
                 binding.notificationIndicator.setVisibility(notification.isRead()? View.GONE:View.VISIBLE);
@@ -87,7 +88,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
 
             binding.notificationTime.setText(model.getCreatedAt());
 
-            if(!Objects.equals(model.getType(), KeyUtil.AIRING))
+            if(!CompatUtil.equals(model.getType(), KeyUtil.AIRING))
                 AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar().getLarge());
             else
                 AspectImageView.setImage(binding.notificationImg, model.getMedia().getCoverImage().getLarge());

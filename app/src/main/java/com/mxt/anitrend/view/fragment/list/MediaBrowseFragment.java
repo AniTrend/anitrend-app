@@ -1,10 +1,8 @@
-package com.mxt.anitrend.view.fragment.detail;
+package com.mxt.anitrend.view.fragment.list;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,7 +28,7 @@ import java.util.Collections;
 
 public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, MediaPresenter> {
 
-    private QueryContainerBuilder queryContainer;
+    protected QueryContainerBuilder queryContainer;
     private boolean isCompatType;
 
     public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer, boolean isCompatType) {
@@ -70,16 +68,6 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         mColumnSize = R.integer.single_list_x1;
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.findItem(R.id.action_share).setVisible(false);
-        menu.findItem(R.id.action_genre).setVisible(false);
-        menu.findItem(R.id.action_type).setVisible(false);
-        menu.findItem(R.id.action_year).setVisible(false);
-        menu.findItem(R.id.action_status).setVisible(false);
     }
 
     @Override

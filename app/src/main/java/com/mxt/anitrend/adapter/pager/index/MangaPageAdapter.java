@@ -6,7 +6,10 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment;
+import com.mxt.anitrend.view.fragment.list.MediaLatestList;
 
 /**
  * Created by max on 2017/10/30.
@@ -30,9 +33,12 @@ public class MangaPageAdapter extends BaseStatePageAdapter {
         switch (position)
         {
             case 0:
-                return MangaFragment.newInstance(KeyUtil.BROWSE_MANGA_REQ);
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.MANGA));
             case 1:
-                return MangaFragment.newInstance(KeyUtil.BROWSE_MANGA_LATEST_REQ);
+                return MediaLatestList.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                        .putVariable(KeyUtil.arg_sort, KeyUtil.ID + KeyUtil.DESC));
         }
         return null;
     }
