@@ -14,7 +14,7 @@ import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.base.VersionBase;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class DatabaseHelper implements BoxQuery {
         getBoxStore(AuthBase.class).removeAll();
         getBoxStore(User.class).removeAll();
         getBoxStore(UserBase.class).removeAll();
-        getBoxStore(Version.class).removeAll();
+        getBoxStore(VersionBase.class).removeAll();
         getBoxStore(MediaList.class).removeAll();
         getBoxStore(NotificationBase.class).removeAll();
         getBoxStore(Favourite.class).removeAll();
@@ -98,8 +98,8 @@ public class DatabaseHelper implements BoxQuery {
      * Get the application version on github
      */
     @Override
-    public Version getRemoteVersion() {
-        return getBoxStore(Version.class).query()
+    public VersionBase getRemoteVersion() {
+        return getBoxStore(VersionBase.class).query()
                 .build().findFirst();
     }
 
@@ -158,15 +158,15 @@ public class DatabaseHelper implements BoxQuery {
     /**
      * Save the application version on github
      *
-     * @param version
+     * @param versionBase
      */
     @Override
-    public void saveRemoteVersion(Version version) {
-        Box<Version> versionBox = getBoxStore(Version.class);
+    public void saveRemoteVersion(VersionBase versionBase) {
+        Box<VersionBase> versionBox = getBoxStore(VersionBase.class);
         if(versionBox.count() > 0)
             versionBox.removeAll();
-        version.setLastChecked(System.currentTimeMillis());
-        versionBox.put(version);
+        versionBase.setLastChecked(System.currentTimeMillis());
+        versionBox.put(versionBase);
     }
 
     /**

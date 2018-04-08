@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.detail;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
         this.contentTypes = contentTypes;
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<String> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new PreviewHolder(AdapterFeedSlideBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));

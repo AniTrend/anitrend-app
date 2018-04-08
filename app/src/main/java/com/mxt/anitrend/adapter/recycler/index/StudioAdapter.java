@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -27,6 +28,7 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<StudioBase> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new StudioViewHolder(AdapterStudioBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));

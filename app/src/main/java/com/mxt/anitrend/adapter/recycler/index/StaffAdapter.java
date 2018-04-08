@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -28,6 +29,7 @@ public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<StaffBase> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
         this.isCompatType = isCompatType;
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<MediaBase> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if(isCompatType)

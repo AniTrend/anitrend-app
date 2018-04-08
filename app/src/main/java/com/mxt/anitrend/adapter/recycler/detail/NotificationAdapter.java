@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.detail;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -34,6 +35,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<Notification> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new NotificationHolder(AdapterNotificationBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));

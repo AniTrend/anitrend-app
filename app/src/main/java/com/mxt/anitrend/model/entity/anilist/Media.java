@@ -25,7 +25,7 @@ public class Media extends MediaBase {
     private String hashtag;
     private @KeyUtil.MediaSource String source;
     private List<ExternalLink> externalLinks;
-    private ConnectionContainer<StudioBase> studios;
+    private ConnectionContainer<List<StudioBase>> studios;
     private MediaStats stats;
     private List<MediaRank> rankings;
 
@@ -107,7 +107,7 @@ public class Media extends MediaBase {
         return externalLinks;
     }
 
-    public ConnectionContainer<StudioBase> getStudios() {
+    public ConnectionContainer<List<StudioBase>> getStudios() {
         return studios;
     }
 

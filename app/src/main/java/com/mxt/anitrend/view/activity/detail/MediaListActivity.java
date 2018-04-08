@@ -13,10 +13,9 @@ import com.mxt.anitrend.adapter.pager.index.SeriesListPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +48,7 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(getIntent().getExtras() != null)
-            setTitle(Objects.equals(getIntent().getExtras().getString(KeyUtil.arg_mediaType), KeyUtil.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
+            setTitle(CompatUtil.equals(getIntent().getExtras().getString(KeyUtil.arg_mediaType), KeyUtil.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
         onActivityReady();
     }
 

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.group;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -41,6 +42,7 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
         this.currentUser = currentUser;
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)

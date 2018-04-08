@@ -1,13 +1,11 @@
 package com.mxt.anitrend.base.interfaces.dao;
 
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
-import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.base.VersionBase;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public interface BoxQuery {
     /**
      * Get the application version on github
      */
-    Version getRemoteVersion();
+    VersionBase getRemoteVersion();
 
     /**
      * Gets all saved tags
@@ -61,7 +59,7 @@ public interface BoxQuery {
     /**
      * Save the application version on github
      */
-    void saveRemoteVersion(Version version);
+    void saveRemoteVersion(VersionBase versionBase);
 
     /**
      * Saves all saved mediaTags

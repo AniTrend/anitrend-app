@@ -57,7 +57,7 @@ public class TapTargetUtil {
 
     public static void setActive(@KeyUtil.TapTargetType String key, boolean remove) {
         if(!remove) activePrompts.put(key, null);
-        else if(activePrompts.containsKey(key))
+        else if(isActive(key))
             activePrompts.remove(key);
     }
 }

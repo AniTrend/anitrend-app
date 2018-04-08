@@ -1,6 +1,6 @@
 package com.mxt.anitrend.model.api.retro.base;
 
-import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.base.VersionBase;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -15,9 +15,9 @@ public interface RepositoryModel {
     String DOWNLOAD_LINK = "https://github.com/wax911/anitrend-resources/raw/%s/builds/app-release.apk";
 
     @GET("/wax911/anitrend-resources/{branch}/builds/meta.json")
-    Call<Version> checkVersion(@Path("branch") String branch);
+    Call<VersionBase> checkVersion(@Path("branch") String branch);
 
     @GET("/wax911/anitrend-resources/master/builds/meta.json")
-    Call<Version> checkVersion();
+    Call<VersionBase> checkVersion();
 
 }

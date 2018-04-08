@@ -1,6 +1,8 @@
 package com.mxt.anitrend.model.entity.container.body;
 
 import com.google.gson.annotations.SerializedName;
+import com.mxt.anitrend.util.CompatUtil;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,6 @@ public class PageContainer<T> extends Container {
 
     @Override
     public boolean isEmpty() {
-        return pageData != null && pageData.isEmpty();
+        return CompatUtil.isEmpty(pageData);
     }
 }

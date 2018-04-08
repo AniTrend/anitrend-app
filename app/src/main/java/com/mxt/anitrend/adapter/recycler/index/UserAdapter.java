@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class UserAdapter extends RecyclerViewAdapter<UserBase> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<UserBase> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new UserViewHolder(AdapterUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));

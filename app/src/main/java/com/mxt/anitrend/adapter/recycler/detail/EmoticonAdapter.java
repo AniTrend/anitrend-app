@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.detail;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class EmoticonAdapter extends RecyclerViewAdapter<Emoji> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<Emoji> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new EmoticonViewHolder(CompatUtil.getLayoutInflater(parent.getContext()).inflate(R.layout.adapter_emoticon, parent, false));

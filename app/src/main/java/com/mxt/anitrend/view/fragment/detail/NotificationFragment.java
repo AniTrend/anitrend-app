@@ -131,7 +131,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
     public void onItemClick(View target, Notification data) {
         Intent intent;
         setReadItems(data);
-        if(target.getId() == R.id.notification_img && !Objects.equals(data.getType(), KeyUtil.AIRING)) {
+        if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
             intent.putExtra(KeyUtil.arg_userName, data.getUser().getName());
             CompatUtil.startRevealAnim(getActivity(), target, intent);
@@ -194,7 +194,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, List<No
      */
     @Override
     public void onItemLongClick(View target, Notification data) {
-        if(Objects.equals(data.getType(), KeyUtil.AIRING)) {
+        if(CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
             setReadItems(data);
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 mediaActionUtil = new MediaActionUtil.Builder()

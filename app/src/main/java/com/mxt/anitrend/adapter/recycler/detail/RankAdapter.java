@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.detail;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -29,6 +30,7 @@ public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<MediaRank> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new RankViewHolder(AdapterRankingBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));

@@ -40,7 +40,7 @@ import com.mxt.anitrend.base.custom.view.image.HeaderImageView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.base.Version;
+import com.mxt.anitrend.model.entity.base.VersionBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.DownloaderService;
 import com.mxt.anitrend.util.CompatUtil;
@@ -331,9 +331,9 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                                 .buildWithCallback(new BottomSheetChoice() {
                                     @Override
                                     public void onPositiveButton() {
-                                        Version version = getPresenter().getDatabase().getRemoteVersion();
-                                        if(version != null && version.isNewerVersion())
-                                            DownloaderService.downloadNewVersion(MainActivity.this, version);
+                                        VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
+                                        if(versionBase != null && versionBase.isNewerVersion())
+                                            DownloaderService.downloadNewVersion(MainActivity.this, versionBase);
                                         else
                                             NotifyUtil.createAlerter(MainActivity.this, getString(R.string.title_update_infodadat),
                                                     getString(R.string.app_no_date), R.drawable.ic_cloud_done_white_24dp, R.color.colorStateGreen);
@@ -374,7 +374,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
 
     @Override
     protected void updateUI() {
-        Version version = getPresenter().getDatabase().getRemoteVersion();
+        VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
         View HeaderContainer = mNavigationView.getHeaderView(0);
 
         mHeaderView = HeaderContainer.findViewById(R.id.drawer_banner);
@@ -393,10 +393,10 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         else
             mHeaderView.setImageResource(R.drawable.reg_bg);
 
-        if(version != null && version.isNewerVersion()) {
+        if(versionBase != null && versionBase.isNewerVersion()) {
             // If a new version of the application is available on GitHub
             TextView mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update).getActionView().findViewById(R.id.app_update_info);
-            mAppUpdateWidget.setText(getString(R.string.app_update, version.getVersion()));
+            mAppUpdateWidget.setText(getString(R.string.app_update, versionBase.getVersion()));
             mAppUpdateWidget.setVisibility(View.VISIBLE);
         }
         checkNewInstallation();

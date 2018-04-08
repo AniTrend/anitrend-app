@@ -1,5 +1,6 @@
 package com.mxt.anitrend.model.entity.group;
 
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class EntityHeader extends EntityGroup {
     @Override
     public boolean equals(Object o) {
         if(o instanceof EntityHeader)
-            return Objects.equals(((EntityHeader) o).getTitle(), title);
+            return CompatUtil.equals(((EntityHeader) o).getTitle(), title);
         return super.equals(o);
     }
 }

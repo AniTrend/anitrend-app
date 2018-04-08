@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class ReviewAdapter extends RecyclerViewAdapter<Review> {
         this.isMediaType = isMediaType;
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<Review> onCreateViewHolder(ViewGroup parent, int viewType) {
         if(!isMediaType)

@@ -1,13 +1,13 @@
 package com.mxt.anitrend.model.entity.container.body;
 
 import com.mxt.anitrend.model.entity.container.attribute.Edge;
+import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.List;
 
 /**
  * Edge Connection Container
  * T - Relation type
- * V - Data model
 */
 public class EdgeContainer<T extends Edge> extends Container {
 
@@ -19,6 +19,6 @@ public class EdgeContainer<T extends Edge> extends Container {
 
     @Override
     public boolean isEmpty() {
-        return edges != null && edges.isEmpty();
+        return CompatUtil.isEmpty(edges);
     }
 }

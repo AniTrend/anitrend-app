@@ -13,7 +13,7 @@ import io.objectbox.annotation.Id;
  * Version model from github
  */
 @Entity
-public class Version implements Parcelable {
+public class VersionBase implements Parcelable {
 
     @Id(assignable = true)
     private long code;
@@ -23,16 +23,16 @@ public class Version implements Parcelable {
     private String version;
     private String appId;
 
-    public Version() {
+    public VersionBase() {
 
     }
 
-    public Version(int code, String version) {
+    public VersionBase(int code, String version) {
         this.code = code;
         this.version = version;
     }
 
-    protected Version(Parcel in) {
+    protected VersionBase(Parcel in) {
         code = in.readLong();
         lastChecked = in.readLong();
         migration = in.readByte() != 0;
@@ -56,15 +56,15 @@ public class Version implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Version> CREATOR = new Creator<Version>() {
+    public static final Creator<VersionBase> CREATOR = new Creator<VersionBase>() {
         @Override
-        public Version createFromParcel(Parcel in) {
-            return new Version(in);
+        public VersionBase createFromParcel(Parcel in) {
+            return new VersionBase(in);
         }
 
         @Override
-        public Version[] newArray(int size) {
-            return new Version[size];
+        public VersionBase[] newArray(int size) {
+            return new VersionBase[size];
         }
     };
 

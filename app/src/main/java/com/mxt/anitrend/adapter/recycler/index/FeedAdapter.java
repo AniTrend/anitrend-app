@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding;
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
@@ -33,14 +35,17 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<FeedList> onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == FEED_STATUS)
-            return new StatusFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-        else if(viewType == FEED_MESSAGE)
-            return new MessageFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-        else if(viewType == FEED_LIST)
-            return new ListFeedViewHolder(AdapterFeedProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        switch (viewType) {
+            case FEED_STATUS:
+                return new StatusFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+            case FEED_MESSAGE:
+                return new MessageFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+            case FEED_LIST:
+                return new ListFeedViewHolder(AdapterFeedProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        }
         return new ProgressFeedViewHolder(AdapterFeedProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -59,11 +64,11 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     @Override
     public int getItemViewType(int position) {
         FeedList model = data.get(position);
-        if(Objects.equals(model.getType(), KeyUtil.TEXT))
+        if(CompatUtil.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
-        else if(Objects.equals(model.getType(), KeyUtil.MESSAGE))
+        else if(CompatUtil.equals(model.getType(), KeyUtil.MESSAGE))
             return FEED_MESSAGE;
-        else if(Objects.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
+        else if(CompatUtil.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
             return FEED_LIST;
 
         return FEED_PROGRESS;

@@ -39,7 +39,7 @@ public class GraphProcessor {
             String fileName = String.format("%s.graphql", graphQuery.value());
             if(graphFiles.containsKey(fileName))
                 return graphFiles.get(fileName);
-            Log.w(this.toString(), String.format("The request query %s could not be found!", graphQuery.value()));
+            Log.e(this.toString(), String.format("The request query %s could not be found!", graphQuery.value()));
         }
         return null;
     }

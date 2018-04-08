@@ -84,7 +84,6 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getTrendingBrowse(param.getParcelable(arg_graph_params));
 
 
-
                 case KeyUtil.CHARACTER_ACTORS_REQ:
                     return (Call<T>) WebFactory.createService(CharacterModel.class, context).getCharacterActors(param.getParcelable(arg_graph_params));
                 case KeyUtil.CHARACTER_BASE_REQ:
@@ -205,6 +204,8 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getUserStats(param.getParcelable(arg_graph_params));
                 case KeyUtil.USER_STUDIO_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getStudioFavourites(param.getParcelable(arg_graph_params));
+                case KeyUtil.USER_NOTIFICATION_REQ:
+                    break;
             }
         }
         return null;

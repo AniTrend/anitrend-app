@@ -42,7 +42,7 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
     private static final float FULL_ROTATION = 1080.0f;
     @Retention(RetentionPolicy.CLASS)
     @IntDef({LARGE, DEFAULT})
-    public @interface ProgressDrawableSize {}
+    @interface ProgressDrawableSize {}
     // Maps to ProgressBar.Large style
     static final int LARGE = 0;
     // Maps to ProgressBar default style

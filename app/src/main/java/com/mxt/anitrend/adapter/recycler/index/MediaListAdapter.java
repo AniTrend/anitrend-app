@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<MediaList> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new SeriesListViewHolder(AdapterSeriesListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));

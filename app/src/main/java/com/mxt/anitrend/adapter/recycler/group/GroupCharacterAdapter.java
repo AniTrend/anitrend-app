@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.recycler.group;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
         super(data, context);
     }
 
+    @NonNull
     @Override
     public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)

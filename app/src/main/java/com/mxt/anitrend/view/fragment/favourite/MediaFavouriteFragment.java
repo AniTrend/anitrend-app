@@ -23,7 +23,6 @@ import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
-import java.util.Objects;
 
 /**
  * Created by max on 2018/03/25.
@@ -71,7 +70,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
                 .putVariable(KeyUtil.arg_id, userId)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
-        getViewModel().requestData(Objects.equals(mediaType, KeyUtil.ANIME) ?
+        getViewModel().requestData(CompatUtil.equals(mediaType, KeyUtil.ANIME) ?
                 KeyUtil.USER_ANIME_FAVOURITES_REQ : KeyUtil.USER_MANGA_FAVOURITES_REQ, getContext());
     }
 
@@ -119,7 +118,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
     public void onChanged(@Nullable ConnectionContainer<Favourite> content) {
         if(content != null) {
             if(!content.isEmpty()) {
-                PageContainer<MediaBase> pageContainer = Objects.equals(mediaType, KeyUtil.ANIME) ?
+                PageContainer<MediaBase> pageContainer = CompatUtil.equals(mediaType, KeyUtil.ANIME) ?
                         content.getConnection().getAnime() : content.getConnection().getManga();
                 if(pageContainer.hasPageInfo())
                     pageInfo = pageContainer.getPageInfo();

@@ -34,7 +34,7 @@ import com.mxt.anitrend.base.custom.view.drawable.MaterialProgressDrawable;
  * This is a more powerful {@link android.support.v4.widget.SwipeRefreshLayout}, it can swipe
  * to refresh and load.
  *
- * @Author wangdaye MySplash
+ * @author wangdaye MySplash
  */
 
 public class CustomSwipeRefreshLayout extends ViewGroup implements NestedScrollingParent, NestedScrollingChild {

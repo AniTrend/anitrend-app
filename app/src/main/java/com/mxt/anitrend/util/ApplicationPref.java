@@ -221,9 +221,9 @@ public class ApplicationPref {
         return sharedPreferences.getString(_mediaTrendSort, KeyUtil.TRENDING) + getSortOrder();
     }
 
-    public void setMediaTrendSort(@KeyUtil.MediaTrendSort String _mediaTrendSort) {
+    public void setMediaTrendSort(@KeyUtil.MediaTrendSort String mediaTrendSort) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(_mediaTrendSort, _mediaTrendSort);
+        editor.putString(_mediaTrendSort, mediaTrendSort);
         editor.apply();
     }
 

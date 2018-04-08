@@ -44,9 +44,9 @@ public class MediaPresenter extends BasePresenter {
     }
 
     public String getMainStudio(Media media) {
-        if(media != null) {
-           Optional<StudioBase> result = Stream.of(media.getStudios())
-                   .map(ConnectionContainer::getConnection)
+        if(media != null && media.getStudios() != null && !media.getStudios().isEmpty()) {
+           ConnectionContainer<List<StudioBase>> studioContainer = media.getStudios();
+           Optional<StudioBase> result = Stream.of(studioContainer.getConnection())
                    .findFirst();
            if(result.isPresent())
                return result.get().getName();
