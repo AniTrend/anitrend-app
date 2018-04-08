@@ -74,9 +74,11 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+
+    /** Testing Libraries */
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     /** Architecture Components */
     implementation "android.arch.lifecycle:extensions:${versions.architecture}"
@@ -173,8 +175,6 @@ dependencies {
 
     /** About Library */
     implementation 'com.github.medyo:android-about-page:1.2.2'
-
-    testImplementation 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

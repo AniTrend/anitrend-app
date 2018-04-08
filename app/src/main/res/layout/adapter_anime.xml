@@ -102,7 +102,7 @@
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/series_episodes"
-                    android:text="@{String.valueOf(model.episodes)}"
+                    android:text="@{String.valueOf(safeUnbox(model.episodes))}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

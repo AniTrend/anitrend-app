@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -32,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
-                app:imageUrl="@{model.coverImage.large}"/>
+                app:imageUrl="@{model.coverImage}"/>
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -65,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{model.type}"
+                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
                     tools:text="OVA" />
 
             </LinearLayout>
@@ -78,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/lg_margin"
-            app:rating="@{model.averageScore}"/>
+            app:rating="@{model.meanScore}"/>
 
     </android.support.v7.widget.CardView>
 

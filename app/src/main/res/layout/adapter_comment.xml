@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.FeedReply" />
+        <import type="com.mxt.anitrend.util.DateUtil" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -50,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
-                    android:text="@{model.createdAt}"
+                    android:text="@{DateUtil.getPrettyDateUnix(model.createdAt)}"
                     tools:text="20 mintus ago" />
 
             </LinearLayout>

@@ -7,6 +7,7 @@
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
         <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.MediaPresenter" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
         <import type="android.view.View" />
     </data>
 
@@ -43,7 +44,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/genre_recycler"
-                    android:visibility="@{model.genres != null ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.isEmpty(model.genres) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -62,7 +63,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/tags_recycler"
-                    android:visibility="@{model.tags != null ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.isEmpty(model.tags) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

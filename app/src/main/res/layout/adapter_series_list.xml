@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             tools:text="Gintama."/>
 
-        <!-- Episode Increment View, With Color View AiringSchedulering Status -->
+        <!-- Episode Increment View, With Color View AiringScheduler Status -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_gravity="bottom|start"

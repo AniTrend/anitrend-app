@@ -16,6 +16,7 @@ import com.mxt.anitrend.databinding.AdapterNotificationBinding;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
@@ -88,7 +89,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
             else
                 binding.notificationIndicator.setVisibility(View.VISIBLE);
 
-            binding.notificationTime.setText(model.getCreatedAt());
+            binding.notificationTime.setText(DateUtil.convertDate(model.getCreatedAt()));
 
             if(!CompatUtil.equals(model.getType(), KeyUtil.AIRING))
                 AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar().getLarge());

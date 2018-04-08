@@ -3,8 +3,10 @@ package com.mxt.anitrend.model.entity.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mxt.anitrend.data.converter.ImageBaseConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Index;
@@ -19,6 +21,7 @@ public class UserBase implements Parcelable {
     private long id;
     @Index
     private String name;
+    @Convert(converter = ImageBaseConverter.class, dbType = String.class)
     private ImageBase avatar;
     private String bannerImage;
     private boolean isFollowing;
@@ -63,6 +66,10 @@ public class UserBase implements Parcelable {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -110,6 +110,10 @@ public class User extends UserBase {
         this.stats = stats;
     }
 
+    public MediaListOptions getMediaListOptions() {
+        return mediaListOptions;
+    }
+
     public UserOptions getOptions() {
         return options;
     }

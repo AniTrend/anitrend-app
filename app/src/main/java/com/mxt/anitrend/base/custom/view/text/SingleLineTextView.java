@@ -1,16 +1,11 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.databinding.BindingAdapter;
-import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.presenter.base.BasePresenter;
 
 /**
  * Created by max on 2017/06/24.

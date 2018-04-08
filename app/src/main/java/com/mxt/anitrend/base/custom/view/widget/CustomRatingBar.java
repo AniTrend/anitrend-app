@@ -49,8 +49,8 @@ public class CustomRatingBar extends AppCompatRatingBar implements CustomView {
     }
 
     @BindingAdapter("averageScore")
-    public static void setAverageScore(CustomRatingBar view, int averageScore) {
-        float rating = (float)averageScore * view.getMax() / 100;
+    public static void setAverageScore(CustomRatingBar view, int meanScore) {
+        float rating = (float)meanScore * view.getMax() / 100;
         view.setRating(rating);
     }
 }

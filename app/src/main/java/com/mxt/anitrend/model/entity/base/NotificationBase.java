@@ -66,6 +66,10 @@ public class NotificationBase extends EntityGroup implements Parcelable {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public boolean isRead() {
         return read;
     }
@@ -74,8 +78,8 @@ public class NotificationBase extends EntityGroup implements Parcelable {
         return type;
     }
 
-    public String getCreatedAt() {
-        return DateUtil.convertDate(createdAt);
+    public long getCreatedAt() {
+        return createdAt;
     }
 
     public String getContext() {

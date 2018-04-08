@@ -22,9 +22,9 @@ public class App extends Application {
     private BoxStore boxStore;
 
     private void setupBoxStore() {
-        boxStore = MyObjectBox.builder()
+        /*boxStore = MyObjectBox.builder()
                 .androidContext(App.this)
-                .build();
+                .build();*/
         if(BuildConfig.DEBUG)
             new AndroidObjectBrowser(boxStore).start(this);
     }

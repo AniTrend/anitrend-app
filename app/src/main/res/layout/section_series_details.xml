@@ -241,7 +241,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed-light"
-                android:text="@{String.format(@string/text_anime_score, model.averageScore)}"
+                android:text="@{presenter.getMediaScore(model)}"
                 tools:text="85% Avg" />
         </LinearLayout>
 

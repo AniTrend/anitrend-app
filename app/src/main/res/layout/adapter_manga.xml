@@ -5,6 +5,7 @@
 
     <data>
         <import type="com.mxt.anitrend.util.DateUtil" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
     </data>
 
@@ -80,7 +81,7 @@
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/series_format"
-                    android:text="@{model.type}"
+                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -101,7 +102,7 @@
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/series_chapters"
-                    android:text="@{String.valueOf(model.chapters)}"
+                    android:text="@{String.valueOf(safeUnbox(model.chapters))}"
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,7 +126,7 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(model.volumes)}"
+                    android:text="@{String.valueOf(safeUnbox(model.volumes))}"
                     tools:text="8" />
 
             </LinearLayout>
@@ -151,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/SmallRating"
-                    app:averageScore="@{model.averageScore}"
+                    app:averageScore="@{model.meanScore}"
                     tools:rating="1"/>
 
                 <com.mxt.anitrend.base.custom.view.text.RangeDateTextView

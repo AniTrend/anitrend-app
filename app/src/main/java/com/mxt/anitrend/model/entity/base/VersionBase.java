@@ -99,4 +99,24 @@ public class VersionBase implements Parcelable {
     public boolean isNewerVersion() {
         return BuildConfig.VERSION_CODE > code;
     }
+
+    public void setCode(long code) {
+        this.code = code;
+    }
+
+    public void setMigration(boolean migration) {
+        this.migration = migration;
+    }
+
+    public void setReleaseNotes(String releaseNotes) {
+        this.releaseNotes = releaseNotes;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 }

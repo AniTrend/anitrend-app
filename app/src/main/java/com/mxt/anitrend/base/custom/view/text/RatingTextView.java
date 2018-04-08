@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import com.mxt.anitrend.databinding.CustomRatingWidgetBinding;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
@@ -25,7 +24,7 @@ import java.util.Locale;
 public class RatingTextView extends LinearLayout implements CustomView {
 
     private static final int MAX = 5;
-    private CustomRatingWidgetBinding binding;
+    //private CustomRatingWidgetBinding binding;
 
     public RatingTextView(Context context) {
         super(context);
@@ -53,17 +52,17 @@ public class RatingTextView extends LinearLayout implements CustomView {
      */
     @Override
     public void onInit() {
-        binding = CustomRatingWidgetBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        //binding = CustomRatingWidgetBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
     }
 
     public void setFavourState(boolean isFavourite) {
         @ColorRes int colorTint = isFavourite ? R.color.colorStateYellow : R.color.white;
         Drawable drawable = CompatUtil.getDrawable(getContext(), R.drawable.ic_star_grey_600_24dp, colorTint);
-        binding.ratingFavourState.setImageDrawable(drawable);
+        //binding.ratingFavourState.setImageDrawable(drawable);
     }
 
     private void setRating(float value) {
-        binding.setRating(String.format(Locale.getDefault(),"%.2f", value));
+        //binding.setRating(String.format(Locale.getDefault(),"%.2f", value));
     }
 
     @BindingAdapter("rating")

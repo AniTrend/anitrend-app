@@ -219,10 +219,10 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
             break;
             case R.id.anime_main_studio_container:
-                ConnectionContainer<StudioBase> connectionContainer;
-                if((connectionContainer =model.getStudios()) != null && !connectionContainer.isEmpty()) {
+                StudioBase studioBase = getPresenter().getMainStudioObject(model);
+                if(studioBase != null) {
                     intent = new Intent(getActivity(), StudioActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, connectionContainer.getConnection().getId());
+                    intent.putExtra(KeyUtil.arg_id, studioBase.getId());
                     startActivity(intent);
                 }
                 break;

@@ -49,8 +49,8 @@ public class FeedReply implements Parcelable {
         return text;
     }
 
-    public String getCreatedAt() {
-        return DateUtil.getPrettyDateUnix(createdAt);
+    public long getCreatedAt() {
+        return createdAt;
     }
 
 

@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
@@ -81,6 +82,12 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
                     break;
             }
         }
+    }
+
+    /** Give the current airing status of the series */
+    @BindingAdapter("seriesStatus")
+    public static void setStatus(SeriesStatusWidget view, Media model) {
+        setStatus(view, (MediaBase) model);
     }
 
     /** Give the current airing status of the series */

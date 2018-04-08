@@ -16,6 +16,7 @@ import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
 import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -52,6 +53,17 @@ public class MediaPresenter extends BasePresenter {
                return result.get().getName();
         }
         return getContext().getString(R.string.TBA);
+    }
+
+    public StudioBase getMainStudioObject(Media media) {
+        if(media != null && media.getStudios() != null && !media.getStudios().isEmpty()) {
+           ConnectionContainer<List<StudioBase>> studioContainer = media.getStudios();
+           Optional<StudioBase> result = Stream.of(studioContainer.getConnection())
+                   .findFirst();
+           if(result.isPresent())
+               return result.get();
+        }
+        return null;
     }
 
     public List<PieEntry> getMediaStats(List<StatusDistribution> statusDistribution) {
@@ -123,9 +135,15 @@ public class MediaPresenter extends BasePresenter {
         return genres;
     }
 
-    public String getMediaFormat(Media media) {
+    public String getMediaFormat(MediaBase media) {
         if(media != null && !TextUtils.isEmpty(media.getFormat()))
             return CompatUtil.capitalizeWords(media.getFormat());
+        return getContext().getString(R.string.tba_placeholder);
+    }
+
+    public String getMediaScore(Media media) {
+        if(media != null)
+            return getContext().getString(R.string.text_anime_score, media.getMeanScore());
         return getContext().getString(R.string.tba_placeholder);
     }
 

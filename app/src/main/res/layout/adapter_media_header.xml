@@ -27,7 +27,7 @@
                 android:layout_width="@dimen/avatar_size_lg"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
-                app:imageUrl="@{model.coverImage.large}"/>
+                app:imageUrl="@{model.coverImage}"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="@dimen/md_margin"
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{CompatUtil.capitalizeWords(model.type)}"
+                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
                     tools:text="OVA" />
 
             </LinearLayout>
