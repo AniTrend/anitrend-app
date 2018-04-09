@@ -53,6 +53,12 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean = true
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
             type
             format
             season

@@ -111,12 +111,13 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContaine
     public void onChanged(@Nullable PageContainer<UserBase> content) {
         if(content != null) {
             if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
+                getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
                 onPostProcessed(content.getPageData());
             else
                 onPostProcessed(Collections.emptyList());
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

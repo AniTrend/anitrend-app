@@ -640,7 +640,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="title_favourites_list">Favoritos del usuario</string>
     <string name="text_anime_episodes">%d Episodios</string>
     <string name="text_anime_length">%d Minutos</string>
-    <string name="text_anime_score">%.1f %% Avg</string>
+    <string name="text_anime_score">%d%% Mean</string>
 
     <string name="text_message_to">Enviar mensaje a %s</string>
     <string name="title_bottom_sheet_favourites">Favoritos del usuario</string>

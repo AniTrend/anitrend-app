@@ -21,6 +21,12 @@ query StudioMedia($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort]
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
             type
             format
             season

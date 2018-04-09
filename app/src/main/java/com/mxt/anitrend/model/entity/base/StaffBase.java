@@ -2,7 +2,6 @@ package com.mxt.anitrend.model.entity.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.model.entity.anilist.meta.TitleBase;

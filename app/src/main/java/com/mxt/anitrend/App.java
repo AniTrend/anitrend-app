@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mxt.anitrend.base.custom.async.ThreadPool;
+import com.mxt.anitrend.model.entity.MyObjectBox;
 
 import io.fabric.sdk.android.Fabric;
 import io.objectbox.BoxStore;
@@ -22,9 +24,9 @@ public class App extends Application {
     private BoxStore boxStore;
 
     private void setupBoxStore() {
-        /*boxStore = MyObjectBox.builder()
+        boxStore = MyObjectBox.builder()
                 .androidContext(App.this)
-                .build();*/
+                .build();
         if(BuildConfig.DEBUG)
             new AndroidObjectBrowser(boxStore).start(this);
     }
@@ -37,7 +39,8 @@ public class App extends Application {
     }
 
     private void initApp() {
-        EmojiManager.initEmojiData(this);
+        ThreadPool.Builder.create()
+                .execute(() -> EmojiManager.initEmojiData(this));
         analytics = FirebaseAnalytics.getInstance(this);
         analytics.setAnalyticsCollectionEnabled(true);
         analytics.setMinimumSessionDuration(5000L);

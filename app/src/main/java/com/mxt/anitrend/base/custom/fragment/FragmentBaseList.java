@@ -46,7 +46,6 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
 
     protected String query;
-    protected PageInfo pageInfo;
 
     protected List<M> model;
     protected boolean isLimit;
@@ -180,7 +179,6 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     protected void addScrollLoadTrigger() {
         if(isPager)
             if (!recyclerView.hasOnScrollListener()) {
-                getPresenter().setPageInfo(pageInfo);
                 getPresenter().initListener(mLayoutManager, this);
                 recyclerView.addOnScrollListener(getPresenter());
             }
@@ -376,7 +374,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
                     model = content;
                 updateUI();
             } else {
-                if (isPager || (pageInfo != null && !pageInfo.hasNextPage()))
+                if (isPager || (getPresenter().getPageInfo() != null && !getPresenter().getPageInfo().hasNextPage()))
                     setLimitReached();
                 if (model == null || model.size() < 1)
                     showEmpty(getString(R.string.layout_empty_response));

@@ -9,12 +9,12 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment;
-import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment;
-import com.mxt.anitrend.view.fragment.detail.ReviewFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment;
-import com.mxt.anitrend.view.fragment.group.MediaRelationFragment;
-import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaStaffFragment;
+import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment;
+import com.mxt.anitrend.view.fragment.detail.ReviewFragment;
+import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment;
+import com.mxt.anitrend.view.fragment.group.MediaRelationFragment;
 import com.mxt.anitrend.view.fragment.list.WatchListFragment;
 
 /**

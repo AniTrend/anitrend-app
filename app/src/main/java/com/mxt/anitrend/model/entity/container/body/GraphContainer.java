@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.entity.container.body;
 
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
+
 import java.util.List;
 
 public class GraphContainer<T> {

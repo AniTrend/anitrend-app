@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
@@ -26,8 +27,8 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
+
 import java.util.List;
 import java.util.Locale;
 

@@ -46,6 +46,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             id = getArguments().getLong(KeyUtil.arg_id);
+        setViewModel(true);
     }
 
     @Nullable @Override

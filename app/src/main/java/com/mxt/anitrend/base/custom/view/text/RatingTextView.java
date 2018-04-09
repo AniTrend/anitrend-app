@@ -14,8 +14,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.CompatUtil;
 
-import java.util.Locale;
-
 /**
  * Created by max on 2018/01/27.
  * Special text base rating view

@@ -60,6 +60,12 @@ query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $t
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
             type
             format
             season

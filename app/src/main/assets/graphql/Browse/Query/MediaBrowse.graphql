@@ -19,6 +19,12 @@ query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: 
             userPreferred
           }
         }
+        coverImage {
+          ... on MediaCoverImage {
+            large
+            medium
+          }
+        }
         type
         format
         season

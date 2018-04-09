@@ -14,6 +14,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesBinding;
 import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -74,7 +75,7 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
          */
         @Override
         public void onBindViewHolder(EntityGroup entityGroup) {
-            Media model = (Media) entityGroup;
+            MediaBase model = (MediaBase) entityGroup;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.customRatingWidget.setFavourState(model.isFavourite());

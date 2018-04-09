@@ -112,7 +112,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     @Override
     public void onStart() {
         super.onStart();
-        if(!EventBus.getDefault().isRegistered(this))
+        if(!EventBus.getDefault().isRegistered(this) && EventBus.getDefault().hasSubscriberForEvent(this.getClass()))
             EventBus.getDefault().register(this);
         if(!isMenuDisabled)
             setHasOptionsMenu(true);
@@ -125,7 +125,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
      */
     @Override
     public void onStop() {
-        if(EventBus.getDefault().isRegistered(this))
+        if(EventBus.getDefault().isRegistered(this) && EventBus.getDefault().hasSubscriberForEvent(this.getClass()))
             EventBus.getDefault().unregister(this);
         super.onStop();
     }

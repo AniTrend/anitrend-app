@@ -14,11 +14,9 @@ import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-
-import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

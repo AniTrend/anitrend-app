@@ -41,6 +41,12 @@ mutation RateReview($id: Int, $rating: ReviewRating) {
               medium
             }
           }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
           bannerImage
           type
           format

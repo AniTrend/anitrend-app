@@ -7,10 +7,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by max on 2018/02/24.
@@ -51,7 +47,7 @@ public class ChartUtil {
             XAxis xAxis = chartBase.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setDrawGridLines(false);
-            xAxis.setGranularity(1f);
+            xAxis.setGranularity(1);
             if(dataModel.size() <= 10)
                 xAxis.setLabelCount(dataModel.size());
             xAxis.setValueFormatter(this);

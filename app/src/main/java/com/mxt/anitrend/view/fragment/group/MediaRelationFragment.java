@@ -20,8 +20,8 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -127,13 +127,14 @@ public class MediaRelationFragment extends FragmentBaseList<EntityGroup, Connect
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())
-                    pageInfo = edgeContainer.getPageInfo();
+                    getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
                     onPostProcessed(GroupingUtil.groupMediaByRelationType(edgeContainer.getEdges()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

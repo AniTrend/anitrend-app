@@ -61,11 +61,13 @@ query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isM
       meanScore
       averageScore
       studios(isMain: $isMain) {
-        nodes {
-          ... on Studio {
-            id
-            name
-            isFavourite
+        ... on StudioConnection {
+          nodes {
+            ... on Studio {
+              id
+              name
+              isFavourite
+            }
           }
         }
       }

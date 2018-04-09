@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.util.ActionModeHelper;
 
 import butterknife.ButterKnife;

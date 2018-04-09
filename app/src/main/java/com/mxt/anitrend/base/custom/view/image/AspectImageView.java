@@ -81,6 +81,7 @@ public class AspectImageView extends android.support.v7.widget.AppCompatImageVie
 
     @BindingAdapter({"imageUrl"})
     public static void setImage(AspectImageView view, ImageBase imageBase) {
-        setImage(view, imageBase.getLarge());
+        if(imageBase != null)
+            setImage(view, imageBase.getLarge());
     }
 }

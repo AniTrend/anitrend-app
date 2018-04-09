@@ -16,8 +16,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
-import java.util.Objects;
-
 /**
  * Created by max on 2018/01/03.
  */

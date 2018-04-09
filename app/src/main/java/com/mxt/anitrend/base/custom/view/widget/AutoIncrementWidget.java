@@ -16,6 +16,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -23,9 +24,8 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaUtil;
-import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
+import com.mxt.anitrend.util.NotifyUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;

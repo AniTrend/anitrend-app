@@ -18,8 +18,8 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -121,12 +121,13 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
                 PageContainer<MediaBase> pageContainer = CompatUtil.equals(mediaType, KeyUtil.ANIME) ?
                         content.getConnection().getAnime() : content.getConnection().getManga();
                 if(pageContainer.hasPageInfo())
-                    pageInfo = pageContainer.getPageInfo();
+                    getPresenter().setPageInfo(pageContainer.getPageInfo());
                 onPostProcessed(pageContainer.getPageData());
             }
             else
                 onPostProcessed(Collections.emptyList());
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

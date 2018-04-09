@@ -19,6 +19,12 @@ query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: M
             userPreferred
           }
         }
+        coverImage {
+          ... on MediaCoverImage {
+            large
+            medium
+          }
+        }
         type
         format
         season

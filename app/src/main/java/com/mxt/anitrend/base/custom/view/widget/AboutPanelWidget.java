@@ -19,6 +19,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.databinding.WidgetProfileAboutPanelBinding;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
@@ -31,7 +32,6 @@ import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity;
-import com.mxt.anitrend.databinding.WidgetProfileAboutPanelBinding;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

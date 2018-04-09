@@ -4,14 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.Locale;
-import java.util.Objects;
 
 /**
  * Created by max on 2017/10/29.

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
+import com.mxt.anitrend.base.custom.annotation.processor.GraphProcessor;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.model.api.converter.GraphConverter;
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor;
@@ -43,11 +44,10 @@ public class WebFactory {
             .enableComplexMapKeySerialization()
             .setLenient().create();
 
-    private final static OkHttpClient.Builder baseClient = new OkHttpClient.Builder();
-
-    private final static Retrofit.Builder anitrendBuilder = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(BuildConfig.API_LINK);
+    private final static OkHttpClient.Builder baseClient = new OkHttpClient.Builder()
+            .readTimeout(35, TimeUnit.SECONDS)
+            .connectTimeout(35, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true);
 
     private final static Retrofit.Builder crunchyBuilder = new Retrofit.Builder()
             .addConverterFactory(SimpleXmlConverterFactory.createNonStrict());
@@ -57,12 +57,12 @@ public class WebFactory {
             .baseUrl(BuildConfig.GIPHY_LINK);
 
     public final static String API_AUTH_LINK =
-            String.format("%s/authorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
+            String.format("%sauthorize?grant_type=%s&client_id=%s&redirect_uri=%s&response_type=%s",
                     BuildConfig.API_AUTH_LINK, KeyUtil.AUTHENTICATION_CODE,
                     BuildConfig.CLIENT_ID, BuildConfig.REDIRECT_URI,
                     BuildConfig.RESPONSE_TYPE);
 
-    private static Retrofit mRetrofit, mCrunchy, mGiphy;
+    private static Retrofit mRetrofit, mCrunchy, mGiphy, mAuth;
 
     /**
      * Generates retrofit service classes in a background thread
@@ -75,11 +75,13 @@ public class WebFactory {
      */
     public static <S> S createService(@NonNull Class<S> serviceClass, Context context) {
         WebTokenRequest.getToken(context);
+        GraphProcessor.getInstance(context);
         if(mRetrofit == null) {
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                     .readTimeout(35, TimeUnit.SECONDS)
                     .connectTimeout(35, TimeUnit.SECONDS)
-                    .addInterceptor(new AuthInterceptor(context));
+                    .addInterceptor(new AuthInterceptor(context))
+                    .retryOnConnectionFailure(true);
 
             if(BuildConfig.DEBUG) {
                 HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor()
@@ -87,8 +89,9 @@ public class WebFactory {
                 httpClient.addInterceptor(httpLoggingInterceptor);
             }
 
-            mRetrofit = anitrendBuilder.client(httpClient.build())
+            mRetrofit = new Retrofit.Builder().client(httpClient.build())
                     .addConverterFactory(GraphConverter.create(context))
+                    .baseUrl(BuildConfig.API_LINK)
                     .build();
         }
         return mRetrofit.create(serviceClass);
@@ -101,7 +104,8 @@ public class WebFactory {
                     .connectTimeout(45, TimeUnit.SECONDS)
                     .addInterceptor(new CacheInterceptor(context, true))
                     .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
-                    .cache(CompatUtil.cacheProvider(context));
+                    .cache(CompatUtil.cacheProvider(context))
+                    .retryOnConnectionFailure(true);
 
             if(BuildConfig.DEBUG) {
                 HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor()
@@ -121,7 +125,8 @@ public class WebFactory {
                     .connectTimeout(35, TimeUnit.SECONDS)
                     .addInterceptor(new CacheInterceptor(context, true))
                     .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
-                    .cache(CompatUtil.cacheProvider(context));
+                    .cache(CompatUtil.cacheProvider(context))
+                    .retryOnConnectionFailure(true);
 
             if(BuildConfig.DEBUG) {
                 HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor()
@@ -144,8 +149,12 @@ public class WebFactory {
      */
     public static @Nullable WebToken requestCodeTokenSync(String code) {
         try {
-            Call<WebToken> refreshTokenCall = anitrendBuilder.client(baseClient.build()).build()
-                        .create(AuthModel.class).getAuthRequest(KeyUtil.AUTHENTICATION_CODE,
+            if(mAuth == null)
+                mAuth = new Retrofit.Builder().client(baseClient.build())
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .baseUrl(BuildConfig.API_AUTH_LINK)
+                        .build();
+            Call<WebToken> refreshTokenCall = mAuth.create(AuthModel.class).getAuthRequest(KeyUtil.AUTHENTICATION_CODE,
                                 BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.REDIRECT_URI, code);
 
             Response<WebToken> response = refreshTokenCall.execute();

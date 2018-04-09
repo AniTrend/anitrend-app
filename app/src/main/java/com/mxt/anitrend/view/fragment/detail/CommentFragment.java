@@ -24,8 +24,8 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetEmoticon;
@@ -137,8 +137,8 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
             initExtraComponents();
         }
 
-        QueryContainerBuilder.QueryContainer queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_id, userActivityId).build();
+        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtil.arg_id, userActivityId);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.FEED_LIST_REPLY_REQ, getContext());
     }

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.api.retro.crunchy;
 
 import com.mxt.anitrend.model.entity.crunchy.Rss;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

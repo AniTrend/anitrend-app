@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAvatarIndicatorBinding;
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;

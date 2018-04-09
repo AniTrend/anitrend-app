@@ -14,9 +14,11 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.sheet.BottomReviewReader;
+
+import java.util.Collections;
 
 /**
  * Created by max on 2017/10/30.
@@ -120,10 +122,15 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     @Override
     public void onChanged(@Nullable PageContainer<Review> content) {
         if(content != null) {
-            if (content.hasPageInfo())
-                pageInfo = content.getPageInfo();
-            if (!content.isEmpty())
+            if(content.hasPageInfo())
+                getPresenter().setPageInfo(content.getPageInfo());
+            if(!content.isEmpty())
                 onPostProcessed(content.getPageData());
-        }
+            else
+                onPostProcessed(Collections.emptyList());
+        } else
+            onPostProcessed(Collections.emptyList());
+        if(model == null)
+            onPostProcessed(null);
     }
 }

@@ -8,13 +8,6 @@ query MediaStats($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
     }
     stats {
       ... on MediaStats {
-        airingProgression {
-          ... on AiringProgression{
-            episode
-            score
-            watching
-          }
-        }
         scoreDistribution {
           ... on ScoreDistribution {
             score

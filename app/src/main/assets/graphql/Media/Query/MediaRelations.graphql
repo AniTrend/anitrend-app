@@ -24,6 +24,12 @@ query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
                     userPreferred
                   }
                 }
+                coverImage {
+                  ... on MediaCoverImage {
+                    large
+                    medium
+                  }
+                }
                 type
                 format
                 season

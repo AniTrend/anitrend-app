@@ -8,8 +8,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment;
 import com.mxt.anitrend.view.fragment.detail.UserFeedFragment;
+import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment;
 
 /**
  * Created by max on 2017/11/16.

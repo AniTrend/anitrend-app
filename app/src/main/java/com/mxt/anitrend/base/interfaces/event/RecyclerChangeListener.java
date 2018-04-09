@@ -1,6 +1,7 @@
 package com.mxt.anitrend.base.interfaces.event;
 
 import android.support.annotation.NonNull;
+
 import java.util.List;
 
 /**

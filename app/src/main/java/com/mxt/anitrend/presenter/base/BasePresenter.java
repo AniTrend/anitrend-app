@@ -2,24 +2,20 @@ package com.mxt.anitrend.presenter.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
+import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.crunchy.MediaContent;
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail;
-import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.service.TagGenreService;
-import com.mxt.anitrend.util.ComparatorProvider;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**

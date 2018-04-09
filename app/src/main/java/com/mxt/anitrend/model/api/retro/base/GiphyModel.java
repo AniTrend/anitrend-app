@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.api.retro.base;
 
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

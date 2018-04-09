@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.util.DateUtil;
 
 import java.util.List;
 

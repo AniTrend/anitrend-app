@@ -16,7 +16,6 @@ import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
-import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;

@@ -55,6 +55,12 @@ query MediaCollection($userId: Int, $userName: String, $type: MediaType, $forceS
                       userPreferred
                     }
                   }
+                  coverImage {
+                    ... on MediaCoverImage {
+                      large
+                      medium
+                    }
+                  }
                   type
                   format
                   season

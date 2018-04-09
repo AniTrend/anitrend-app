@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.api.interceptor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.io.IOException;

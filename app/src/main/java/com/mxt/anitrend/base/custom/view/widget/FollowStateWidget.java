@@ -117,10 +117,6 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
         }
     }
 
-    private boolean isAlive() {
-        return getContext() != null && binding != null;
-    }
-
     /**
      * Invoked for a received HTTP response.
      * <p>
@@ -136,10 +132,11 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
             if(response.isSuccessful()) {
                 model.toggleFollow();
                 presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.MUT_TOGGLE_FOLLOW, model), false);
-                if(isAlive())
-                    setControlText();
-            } else
+                setControlText();
+            } else {
                 Log.e(this.toString(), ErrorUtil.getError(response));
+                setControlText();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -155,10 +152,8 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
     @Override
     public void onFailure(@NonNull Call<UserBase> call, @NonNull Throwable throwable) {
         try {
-            if (isAlive()) {
-                throwable.printStackTrace();
-                setControlText();
-            }
+            throwable.printStackTrace();
+            setControlText();
         } catch (Exception e) {
             e.printStackTrace();
         }

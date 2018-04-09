@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.group.GroupMediaAdapter;
+import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
@@ -20,8 +22,8 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.GroupingUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -114,7 +116,8 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new GroupStaffRoleAdapter(model, getContext());
+            mAdapter = new GroupSeriesAdapter(model, getContext());
+            //mAdapter = new GroupStaffRoleAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -125,13 +128,14 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())
-                    pageInfo = edgeContainer.getPageInfo();
+                    getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
                     onPostProcessed(GroupingUtil.groupMediaByStaffRole(edgeContainer.getEdges(), model));
                 else
                     onPostProcessed(Collections.emptyList());
             }
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

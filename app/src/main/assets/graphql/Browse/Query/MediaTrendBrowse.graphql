@@ -27,6 +27,12 @@ query TrendingBrowse($page: Int, $perPage: Int, $sort: [MediaTrendSort]) {
               userPreferred
             }
           }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
           type
           format
           season

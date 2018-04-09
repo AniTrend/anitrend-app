@@ -24,8 +24,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 
-import com.mxt.anitrend.base.custom.view.image.CircleImageView;
 import com.mxt.anitrend.base.custom.view.drawable.MaterialProgressDrawable;
+import com.mxt.anitrend.base.custom.view.image.CircleImageView;
 
 /**
  * Created by max on 2017/12/05.

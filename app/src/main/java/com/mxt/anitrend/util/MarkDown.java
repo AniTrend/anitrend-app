@@ -8,8 +8,6 @@ import android.text.Spanned;
 
 import com.github.rjeschke.txtmark.Processor;
 
-import java.util.regex.Matcher;
-
 /**
  * Created by max on 2017/03/26.
  * Moved markdown processor to global location

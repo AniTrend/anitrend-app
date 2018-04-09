@@ -36,8 +36,8 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 

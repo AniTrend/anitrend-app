@@ -77,6 +77,12 @@ query FeedListReply($id: Int, $asHtml: Boolean = false) {
               userPreferred
             }
           }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
           type
           status
           startDate {

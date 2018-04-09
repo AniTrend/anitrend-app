@@ -24,6 +24,7 @@ public class ApplicationPref {
 
     /** Application Base Options */
     private final String _isLightTheme = "_isLightTheme";
+    private final String _channel = "_channel";
 
     /** Api Keys */
     private final String _sortOrder = "_sortOrder";
@@ -246,6 +247,16 @@ public class ApplicationPref {
     public void setStaffSort(@KeyUtil.StaffSort String staffSort) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(_staffSort, staffSort);
+        editor.apply();
+    }
+
+    public @KeyUtil.Channel String getChannel() {
+        return sharedPreferences.getString(_channel, KeyUtil.STABLE);
+    }
+
+    public void setChannel(@KeyUtil.Channel String channel) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_channel, channel);
         editor.apply();
     }
 }

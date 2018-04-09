@@ -30,7 +30,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/lg_margin">
 
-                    <include layout="@layout/section_series_info" app:model="@{model}" />
+                    <include layout="@layout/section_series_info" app:model="@{model}"
+                        app:presenter="@{presenter}" />
 
                 </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
@@ -75,7 +76,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/lg_margin">
 
-                    <include layout="@layout/section_series_description" app:model="@{model}" />
+                    <include layout="@layout/section_series_description" app:model="@{model}"
+                        app:presenter="@{presenter}"/>
 
                 </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 

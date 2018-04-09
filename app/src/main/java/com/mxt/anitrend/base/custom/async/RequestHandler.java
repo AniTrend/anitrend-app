@@ -20,7 +20,21 @@ import com.mxt.anitrend.util.KeyUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static com.mxt.anitrend.util.KeyUtil.*;
+import static com.mxt.anitrend.util.KeyUtil.EPISODE_FEED_REQ;
+import static com.mxt.anitrend.util.KeyUtil.EPISODE_LATEST_REQ;
+import static com.mxt.anitrend.util.KeyUtil.EPISODE_POPULAR_REQ;
+import static com.mxt.anitrend.util.KeyUtil.GENRE_COLLECTION_REQ;
+import static com.mxt.anitrend.util.KeyUtil.GIPHY_SEARCH_REQ;
+import static com.mxt.anitrend.util.KeyUtil.GIPHY_TRENDING_REQ;
+import static com.mxt.anitrend.util.KeyUtil.MEDIA_TAG_REQ;
+import static com.mxt.anitrend.util.KeyUtil.PAGING_LIMIT;
+import static com.mxt.anitrend.util.KeyUtil.RequestType;
+import static com.mxt.anitrend.util.KeyUtil.UPDATE_CHECKER_REQ;
+import static com.mxt.anitrend.util.KeyUtil.arg_branch_name;
+import static com.mxt.anitrend.util.KeyUtil.arg_feed;
+import static com.mxt.anitrend.util.KeyUtil.arg_graph_params;
+import static com.mxt.anitrend.util.KeyUtil.arg_page_offset;
+import static com.mxt.anitrend.util.KeyUtil.arg_search;
 
 /**
  * Created by max on 2017/09/16.

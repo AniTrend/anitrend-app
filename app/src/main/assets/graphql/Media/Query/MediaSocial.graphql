@@ -53,6 +53,12 @@ query MediaSocial($mediaId: Int!, $isFollowing: Boolean = true, $page: Int, $per
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
             type
             format
             season

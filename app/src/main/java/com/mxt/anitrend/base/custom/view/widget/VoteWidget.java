@@ -16,10 +16,10 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -180,8 +180,10 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 this.model.setRatingAmount(model.getRatingAmount());
                 this.model.setUserRating(model.getUserRating());
                 setReviewStatus();
-            } else
+            } else {
                 Log.e(this.toString(), ErrorUtil.getError(response));
+                resetFlipperState();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.entity.giphy;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import java.util.HashMap;
 
 /**

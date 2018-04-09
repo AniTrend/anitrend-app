@@ -115,13 +115,14 @@ public class MediaStaffFragment extends FragmentBaseList<EntityGroup, Connection
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())
-                    pageInfo = edgeContainer.getPageInfo();
+                    getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
                     onPostProcessed(GroupingUtil.groupStaffByRole(edgeContainer.getEdges(), model));
                 else
                     onPostProcessed(Collections.emptyList());
             }
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

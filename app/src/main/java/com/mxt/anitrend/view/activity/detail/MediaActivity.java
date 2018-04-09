@@ -25,13 +25,11 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -140,7 +138,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             binding.setOnClickListener(this);
             if (favouriteWidget != null)
                 favouriteWidget.setModel(model);
-            WideImageView.setImage(binding.seriesBanner, model.getCoverImage().getLarge());
+            WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
             showApplicationTips();
         }
     }
@@ -172,7 +170,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         switch (view.getId()) {
             case R.id.series_banner:
                 Intent intent = new Intent(this, ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getCoverImage());
+                intent.putExtra(KeyUtil.arg_model, model.getBannerImage());
                 CompatUtil.startSharedImageTransition(this, view, intent, R.string.transition_image_preview);
                 break;
         }

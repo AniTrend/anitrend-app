@@ -11,12 +11,24 @@ public class ThreadPool {
 
     private ExecutorService executorService;
 
-    public ThreadPool createThreadPool() {
+    private ThreadPool() {
+
+    }
+
+    private void createThreadPool() {
         executorService = Executors.newCachedThreadPool();
-        return this;
     }
 
     public void execute(Runnable runnable) {
         executorService.execute(runnable);
+    }
+
+    public static class Builder {
+
+        public static ThreadPool create() {
+            ThreadPool threadPool = new ThreadPool();
+            threadPool.createThreadPool();
+            return threadPool;
+        }
     }
 }

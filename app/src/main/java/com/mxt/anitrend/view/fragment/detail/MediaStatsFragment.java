@@ -122,7 +122,6 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                 }
             });
         }
-        binding.rankingRecycler.setAdapter(rankAdapter);
 
         if(linkAdapter == null) {
             linkAdapter = new LinkAdapter(model.getExternalLinks(), getContext());
@@ -140,7 +139,12 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                 }
             });
         }
-        binding.linksRecycler.setAdapter(linkAdapter);  binding.stateLayout.showContent();
+
+        binding.linksRecycler.setAdapter(linkAdapter);
+
+        binding.rankingRecycler.setAdapter(rankAdapter);
+
+        binding.stateLayout.showContent();
         showStatusDistribution(); showScoreDistribution();
     }
 
@@ -162,7 +166,8 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             configureScoreDistribution(model.getStats().getScoreDistribution());
 
             BarDataSet barDataSet = new BarDataSet(getPresenter().getMediaScoreDistribution(model.getStats().getScoreDistribution()), getString(R.string.title_score_distribution));
-            barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 253);
+            if (getContext() != null)
+                barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 253);
             barDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
             BarData barData = new BarData(barDataSet);
             barData.setBarWidth(0.9f);
@@ -185,7 +190,8 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                     Color.parseColor("#f7464a"), Color.parseColor("#46bfbd"), Color.parseColor("#fba640"));
 
             PieData pieData = new PieData(pieDataSet);
-            pieData.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
+            if (getContext() != null)
+                pieData.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
             pieData.setValueTextSize(10f);
             pieData.setValueFormatter(new PercentFormatter());
             binding.seriesStats.setData(pieData);
@@ -222,10 +228,6 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                 .setDataModel(mapKeys)
                 .setChartBase(binding.seriesScoreDist)
                 .build();
-
-        new ChartUtil.StepYAxisFormatter()
-                .setChartBase(binding.seriesScoreDist)
-                .build();
     }
 
     private void configureSeriesStats() {
@@ -237,8 +239,7 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
         binding.seriesStats.setTransparentCircleRadius(61f);
 
         binding.seriesStats.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        binding.seriesStats.setRotationEnabled(true);
+        binding.seriesStats.setRotationEnabled(false);
         binding.seriesStats.setHighlightPerTapEnabled(true);
 
         Legend l = binding.seriesStats.getLegend();

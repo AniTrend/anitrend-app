@@ -52,6 +52,12 @@ mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $
               userPreferred
             }
           }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
           type
           format
           season

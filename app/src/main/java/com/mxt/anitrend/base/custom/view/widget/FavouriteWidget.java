@@ -15,10 +15,10 @@ import com.mxt.anitrend.databinding.WidgetFavouriteBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import java.util.List;
@@ -95,7 +95,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
             case R.id.widget_flipper:
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
+                    presenter.requestData(KeyUtil.MUT_TOGGLE_LIKE, getContext(), this);
                 }
                 else
                     NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -132,8 +132,10 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
                 else
                     model.add(presenter.getDatabase().getCurrentUser());
                 setIconType();
-            } else
+            } else {
                 Log.e(this.toString(), ErrorUtil.getError(response));
+                resetFlipperState();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

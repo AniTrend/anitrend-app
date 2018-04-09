@@ -4,11 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import com.mxt.anitrend.util.KeyUtil;
 
 public class MediaLatestList extends MediaBrowseFragment {
 
     public static MediaLatestList newInstance(Bundle params, QueryContainerBuilder queryContainer) {
-        return (MediaLatestList) newInstance(params, queryContainer, false);
+        Bundle args = new Bundle(params);
+        args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        args.putBoolean(KeyUtil.arg_media_compact, false);
+        MediaLatestList fragment = new MediaLatestList();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

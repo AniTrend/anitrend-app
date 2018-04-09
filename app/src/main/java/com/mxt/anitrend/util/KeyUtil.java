@@ -443,6 +443,19 @@ public interface KeyUtil {
 
 
 
+    // ------------------------------------------------------------------------------------
+    // Edge Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String STABLE = "master", BETA = "develop";
+
+    @StringDef({STABLE, BETA})
+    @interface Channel {}
+
+    // ------------------------------------------------------------------------------------
+
+
+
     /** Alerter Durations */
     long DURATION_SHORT = 2000L, DURATION_MEDIUM = 3500L, DURATION_LONG = 6500L;
 

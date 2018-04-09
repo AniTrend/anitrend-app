@@ -2,10 +2,12 @@ package com.mxt.anitrend.view.activity.base;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
@@ -15,6 +17,7 @@ import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.ramotion.paperonboarding.PaperOnboardingFragment;
 import com.ramotion.paperonboarding.PaperOnboardingPage;
 import com.ramotion.paperonboarding.listeners.PaperOnboardingOnRightOutListener;
+
 import java.util.ArrayList;
 
 /**
@@ -52,9 +55,8 @@ public class WelcomeActivity extends ActivityBase<Void, BasePresenter> implement
         PaperOnboardingFragment mFragment = PaperOnboardingFragment.newInstance(getIntroductionPages());
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, mFragment, mFragment.getTag());
+        fragmentTransaction.replace(R.id.fragment_container, mFragment, mFragment.getTag());
         fragmentTransaction.commit();
-
         mFragment.setOnRightOutListener(this);
     }
 
@@ -64,19 +66,30 @@ public class WelcomeActivity extends ActivityBase<Void, BasePresenter> implement
     }
 
     private ArrayList<PaperOnboardingPage> getIntroductionPages() {
-        ArrayList<PaperOnboardingPage> introductionPages = new ArrayList<>(CompatUtil.getListFromArray(
+        return new ArrayList<>(CompatUtil.getListFromArray(
                 new PaperOnboardingPage(getString(R.string.app_intro_colors_title), getString(R.string.app_intro_colors_text),
-                        Color.parseColor("#678FB4"), R.drawable.ic_format_paint_grey_600_24dp, R.drawable.ic_format_paint_grey_600_24dp),
+                        Color.parseColor("#678FB4"), R.drawable.ic_format_paint_white_24dp, R.drawable.ic_format_paint_white_24dp),
                 new PaperOnboardingPage(getString(R.string.app_intro_content_title), getString(R.string.app_intro_content_text),
-                        Color.parseColor("#65B0B4"), R.drawable.ic_bubble_chart_grey_600_24dp, R.drawable.ic_bubble_chart_grey_600_24dp),
+                        Color.parseColor("#65B0B4"), R.drawable.ic_bubble_chart_white_24dp, R.drawable.ic_bubble_chart_white_24dp),
                 new PaperOnboardingPage(getString(R.string.app_intro_search_title), getString(R.string.app_intro_search_text),
-                        Color.parseColor("#9B90BC"), R.drawable.ic_search_grey_600_24dp, R.drawable.ic_search_grey_600_24dp)
+                        Color.parseColor("#9B90BC"), R.drawable.ic_search_white_24dp, R.drawable.ic_search_white_24dp)
         ));
-        return introductionPages;
     }
 
     @Override
     public void onRightOut() {
         CompatUtil.startRevealAnim(this, getWindow().getDecorView(), new Intent(WelcomeActivity.this, MainActivity.class), true);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (hasFocus)
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 }

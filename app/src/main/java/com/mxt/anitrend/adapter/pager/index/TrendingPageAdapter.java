@@ -8,7 +8,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment;
 import com.mxt.anitrend.view.fragment.list.MediaLatestList;
 import com.mxt.anitrend.view.fragment.list.MediaTrendListFragment;
 

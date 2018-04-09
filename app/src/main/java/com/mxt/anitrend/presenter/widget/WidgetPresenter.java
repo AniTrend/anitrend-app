@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.mxt.anitrend.base.custom.async.RequestHandler;
-import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;

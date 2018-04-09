@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import io.objectbox.annotation.Entity;

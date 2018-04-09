@@ -17,8 +17,8 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -111,13 +111,14 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
         if (content != null && (pageContainer = content.getConnection()) != null) {
             if(!pageContainer.isEmpty()) {
                 if (pageContainer.hasPageInfo())
-                    pageInfo = pageContainer.getPageInfo();
+                    getPresenter().setPageInfo(pageContainer.getPageInfo());
                 if (!pageContainer.isEmpty())
                     onPostProcessed(pageContainer.getPageData());
                 else
                     onPostProcessed(Collections.emptyList());
             }
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

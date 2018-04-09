@@ -121,10 +121,11 @@ public class MediaTrendListFragment extends FragmentBaseList<MediaBase, PageCont
     public void onChanged(@Nullable PageContainer<MediaTrend> content) {
         if(content != null) {
             if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
+                getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
                 onPostProcessed(MediaUtil.mapMediaTrend(content.getPageData()));
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(Collections.emptyList());
     }

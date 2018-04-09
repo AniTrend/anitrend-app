@@ -13,8 +13,8 @@ import android.widget.FrameLayout;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
@@ -66,7 +66,7 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     @BindingAdapter("seriesStatus")
     public static void setStatus(SeriesStatusWidget view, MediaBase model) {
         if(model != null) {
-            @KeyUtil.MediaStatus String mediaStatus = TextUtils.isEmpty(model.getStatus()) ? model.getStatus() : KeyUtil.NOT_YET_RELEASED;
+            @KeyUtil.MediaStatus String mediaStatus = !TextUtils.isEmpty(model.getStatus()) ? model.getStatus() : KeyUtil.NOT_YET_RELEASED;
             switch (mediaStatus) {
                 case KeyUtil.RELEASING:
                     view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
@@ -87,7 +87,8 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     /** Give the current airing status of the series */
     @BindingAdapter("seriesStatus")
     public static void setStatus(SeriesStatusWidget view, Media model) {
-        setStatus(view, (MediaBase) model);
+        if(model != null)
+            setStatus(view, (MediaBase) model);
     }
 
     /** Give the current airing status of the series */

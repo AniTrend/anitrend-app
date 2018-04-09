@@ -44,6 +44,12 @@ query CharacterActors($id: Int!, $page: Int, $perPage: Int, $sort: [StaffSort] =
                     userPreferred
                   }
                 }
+                coverImage {
+                  ... on MediaCoverImage {
+                    large
+                    medium
+                  }
+                }
                 type
                 format
                 season

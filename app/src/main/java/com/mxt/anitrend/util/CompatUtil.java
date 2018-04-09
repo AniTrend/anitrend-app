@@ -42,9 +42,9 @@ import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.Cache;
 import top.wefor.circularanim.CircularAnim;
@@ -53,6 +53,7 @@ import top.wefor.circularanim.CircularAnim;
  * Created by max on 2017/09/16.
  * Utility class that contains helpful functions
  */
+@SuppressWarnings("unused")
 public class CompatUtil {
 
     private static final int CACHE_LIMIT = 1024 * 1024 * 250;
@@ -113,7 +114,7 @@ public class CompatUtil {
      * @see Drawable
      */
     public static Drawable getTintedDrawable(Context context, @DrawableRes int resource) {
-        Drawable drawable = DrawableCompat.wrap(AppCompatResources.getDrawable(context, resource)).mutate();
+        Drawable drawable = DrawableCompat.wrap(Objects.requireNonNull(AppCompatResources.getDrawable(context, resource))).mutate();
         DrawableCompat.setTint(drawable, getColorFromAttr(context, R.attr.titleColor));
         return drawable;
     }
@@ -135,7 +136,7 @@ public class CompatUtil {
      * @see Drawable
      */
     public static Drawable getDrawable(Context context, @DrawableRes int resource, @ColorRes int tint) {
-        Drawable drawable = DrawableCompat.wrap(AppCompatResources.getDrawable(context, resource)).mutate();
+        Drawable drawable = DrawableCompat.wrap(Objects.requireNonNull(AppCompatResources.getDrawable(context, resource))).mutate();
         if(tint != 0)
             DrawableCompat.setTint(drawable, getColor(context, tint));
         return drawable;
@@ -158,7 +159,7 @@ public class CompatUtil {
      * @see Drawable
      */
     public static Drawable getDrawableTintAttr(Context context, @DrawableRes int resource, @AttrRes int attribute) {
-        Drawable drawable = DrawableCompat.wrap(AppCompatResources.getDrawable(context, resource)).mutate();
+        Drawable drawable = DrawableCompat.wrap(Objects.requireNonNull(AppCompatResources.getDrawable(context, resource))).mutate();
         DrawableCompat.setTint(drawable, getColorFromAttr(context, attribute));
         return drawable;
     }
@@ -316,13 +317,11 @@ public class CompatUtil {
      * https://gist.github.com/hamakn/8939eb68a920a6d7a498
      * */
     public static int getActionBarHeight(FragmentActivity fragmentActivity) {
-        int actionBarHeight = 0;
         final TypedArray styledAttributes = fragmentActivity.getTheme().obtainStyledAttributes(
                 new int[] { android.R.attr.actionBarSize }
         );
-        actionBarHeight = (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
-        return actionBarHeight;
+        return (int) styledAttributes.getDimension(0, 0);
     }
 
 
@@ -331,7 +330,7 @@ public class CompatUtil {
      * @author hamakn
      * https://gist.github.com/hamakn/8939eb68a920a6d7a498
      * */
-    public static int getNavigationBarHeight(Resources resources) {
+    private static int getNavigationBarHeight(Resources resources) {
         int navigationBarHeight = 0;
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0)
@@ -469,14 +468,19 @@ public class CompatUtil {
      */
     public static String capitalizeWords(String input) {
         if(!TextUtils.isEmpty(input)) {
+            List<String> exceptions = getListFromArray(KeyUtil.TV, KeyUtil.ONA, KeyUtil.OVA);
+            if(exceptions.contains(input))
+                return input;
             StringBuilder result = new StringBuilder(input.length());
             String[] words = input.split("_|\\s");
             int index = 0;
-            for (String word: words) {
+            for (String word : words) {
                 index++;
-                char starting = Character.toUpperCase(word.charAt(0));
-                result.append(starting).append(word.substring(1));
-                if(index != word.length() -1)
+                if (!TextUtils.isEmpty(word)) {
+                    char starting = Character.toUpperCase(word.charAt(0));
+                    result.append(starting).append(word.substring(1).toLowerCase());
+                }
+                if (index != word.length() - 1)
                     result.append(" ");
             }
             return result.toString();

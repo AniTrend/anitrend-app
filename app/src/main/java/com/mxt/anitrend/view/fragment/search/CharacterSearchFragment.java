@@ -113,12 +113,13 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
     public void onChanged(@Nullable PageContainer<CharacterBase> content) {
         if(content != null) {
             if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
+                getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
                 onPostProcessed(GroupingUtil.wrapInGroup(content.getPageData()));
             else
                 onPostProcessed(Collections.emptyList());
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

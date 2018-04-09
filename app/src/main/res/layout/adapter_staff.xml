@@ -5,6 +5,7 @@
 
     <data>
         <variable name="model"  type="com.mxt.anitrend.model.entity.base.StaffBase" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
         <import type="android.text.TextUtils" />
         <import type="android.view.View" />
     </data>
@@ -54,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:visibility="@{model.language != null? View.VISIBLE : View.GONE}"
-                    android:text="@{model.language}"
+                    android:text="@{CompatUtil.capitalizeWords(model.language)}"
                     tools:text="Japanese" />
 
             </LinearLayout>

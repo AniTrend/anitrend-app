@@ -27,6 +27,7 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
     private int mCurrentPage = 1;
     private int mCurrentOffset = 0;
     private RecyclerLoadListener mLoadListener;
+
     private PageInfo pageInfo;
 
     private GridLayoutManager mGridLayoutManager;
@@ -40,10 +41,6 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
     public void initListener(StaggeredGridLayoutManager staggeredGridLayoutManager, RecyclerLoadListener mLoadListener) {
         mStaggeredGridLayoutManager = staggeredGridLayoutManager;
         this.mLoadListener = mLoadListener;
-    }
-
-    public void setPageInfo(@Nullable PageInfo pageInfo) {
-        this.pageInfo = pageInfo;
     }
 
     @Override
@@ -71,8 +68,7 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
         }
         int mVisibleThreshold = 3; //minimum allowed threshold before next page reload request
         if (!mLoading && (mTotalItemCount - mVisibleItemCount) <= (mFirstVisibleItem + mVisibleThreshold)) {
-            // End has been reached
-            if(pageInfo != null && pageInfo.hasNextPage()) {
+            if(pageInfo == null || pageInfo.hasNextPage()) {
                 mCurrentPage++;
                 mCurrentOffset += KeyUtil.PAGING_LIMIT;
                 mLoadListener.onLoadMore();
@@ -111,5 +107,13 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
 
     public void setCurrentOffset(int mCurrentOffset) {
         this.mCurrentOffset = mCurrentOffset;
+    }
+
+    public void setPageInfo(@Nullable PageInfo pageInfo) {
+        this.pageInfo = pageInfo;
+    }
+
+    public @Nullable PageInfo getPageInfo() {
+        return pageInfo;
     }
 }

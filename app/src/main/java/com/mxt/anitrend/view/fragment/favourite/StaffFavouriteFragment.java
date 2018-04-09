@@ -86,12 +86,13 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
             if(!content.isEmpty()) {
                 PageContainer<StaffBase> pageContainer = content.getConnection().getStaff();
                 if(pageContainer.hasPageInfo())
-                    pageInfo = pageContainer.getPageInfo();
+                    getPresenter().setPageInfo(pageContainer.getPageInfo());
                 onPostProcessed(pageContainer.getPageData());
             }
             else
                 onPostProcessed(Collections.emptyList());
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

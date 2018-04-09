@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.annimon.stream.Stream;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.mxt.anitrend.base.custom.async.RequestHandler;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.api.retro.anilist.BaseModel;
 import com.mxt.anitrend.model.entity.anilist.Genre;

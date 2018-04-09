@@ -21,6 +21,12 @@ query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = 
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
             type
             format
             season

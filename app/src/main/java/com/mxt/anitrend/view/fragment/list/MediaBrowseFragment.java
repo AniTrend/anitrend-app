@@ -15,8 +15,8 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -129,11 +129,14 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     public void onChanged(@Nullable PageContainer<MediaBase> content) {
         if(content != null) {
             if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
+                getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
                 onPostProcessed(content.getPageData());
-        }
-        if(model == null)
+            else
+                onPostProcessed(Collections.emptyList());
+        } else
             onPostProcessed(Collections.emptyList());
+        if(model == null)
+            onPostProcessed(null);
     }
 }

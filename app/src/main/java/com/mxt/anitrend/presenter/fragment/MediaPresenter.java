@@ -8,10 +8,10 @@ import android.view.View;
 
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
+import com.annimon.stream.function.IndexedFunction;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
@@ -71,19 +71,18 @@ public class MediaPresenter extends BasePresenter {
                 .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
                 .get().getAmount();
 
-        List<PieEntry> entries = Stream.of(statusDistribution)
-                .map(st -> new PieEntry((((st.getAmount()) / (highestStatus)) * 100), CompatUtil.capitalizeWords(st.getStatus())))
+        return Stream.of(statusDistribution)
+                .map(st -> new PieEntry(
+                        (((st.getAmount()) / (highestStatus)) * 100),
+                        CompatUtil.capitalizeWords(st.getStatus())))
                 .toList();
-
-        return entries;
     }
 
     public List<BarEntry> getMediaScoreDistribution(List<ScoreDistribution> scoreDistribution) {
-        List<BarEntry> results = Stream.of(scoreDistribution)
-                .map(sc -> new BarEntry(sc.getAmount(), sc.getScore()))
+        return Stream.of(scoreDistribution)
+                .mapIndexed(0, 1, (index, sc) ->
+                        new BarEntry(index, sc.getScore()))
                 .toList();
-
-        return results;
     }
 
     public String getEpisodeDuration(Media media) {

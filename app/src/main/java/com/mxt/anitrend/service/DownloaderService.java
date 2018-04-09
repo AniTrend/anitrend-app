@@ -9,6 +9,7 @@ import android.webkit.MimeTypeMap;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.model.api.retro.base.RepositoryModel;
 import com.mxt.anitrend.model.entity.base.VersionBase;
+import com.mxt.anitrend.util.ApplicationPref;
 
 import java.util.Locale;
 
@@ -20,8 +21,10 @@ public class DownloaderService {
      * @see RepositoryModel#DOWNLOAD_LINK
      */
     public static void downloadNewVersion(Context context, VersionBase versionBase) {
+        ApplicationPref applicationPref = new ApplicationPref(context);
+        String downloadLink = String.format(RepositoryModel.DOWNLOAD_LINK, applicationPref.getChannel());
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RepositoryModel.DOWNLOAD_LINK));
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadLink));
         request.setTitle(String.format(Locale.getDefault(), "AniTrend V%s RC%d.apk", versionBase.getVersion(), versionBase.getCode()));
         request.allowScanningByMediaScanner();
         String ext = MimeTypeMap.getFileExtensionFromUrl(RepositoryModel.DOWNLOAD_LINK);

@@ -10,6 +10,7 @@ import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
 import com.mxt.anitrend.model.entity.container.body.DataContainer;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
+import com.mxt.anitrend.model.entity.container.request.QueryContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.lang.annotation.Annotation;
@@ -36,7 +37,7 @@ public final class GraphConverter extends Converter.Factory {
     }
 
     private GraphConverter(Context context) {
-        graphProcessor = new GraphProcessor(context);
+        this.graphProcessor = GraphProcessor.getInstance(context);
     }
 
     @Override
@@ -47,10 +48,8 @@ public final class GraphConverter extends Converter.Factory {
     }
 
     @Override
-    public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
-        if(type instanceof QueryContainerBuilder)
-            return new GraphRequestConverter(methodAnnotations);
-        return super.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit);
+    public Converter<QueryContainerBuilder, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
+        return new GraphRequestConverter(methodAnnotations);
     }
 
     /**
@@ -104,7 +103,7 @@ public final class GraphConverter extends Converter.Factory {
 
         @Override
         public RequestBody convert(@NonNull QueryContainerBuilder containerBuilder) {
-            QueryContainerBuilder.QueryContainer queryContainer = containerBuilder
+            QueryContainer queryContainer = containerBuilder
                     .setQuery(graphProcessor.getQuery(methodAnnotations))
                     .build();
             String queryJson = WebFactory.gson.toJson(queryContainer);

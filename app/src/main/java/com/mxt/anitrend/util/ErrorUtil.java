@@ -2,17 +2,17 @@ package com.mxt.anitrend.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.internal.LinkedTreeMap;
+import com.annimon.stream.Stream;
 import com.google.gson.reflect.TypeToken;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
+import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -36,18 +36,25 @@ public class ErrorUtil {
         try {
             if(response != null) {
                 ResponseBody responseBody = response.errorBody();
-                String message;
-                if (responseBody != null && !(message = responseBody.string()).isEmpty()) {
-                    Log.e(TAG, message);
-                    Type tokenType = new TypeToken<GraphError>(){}.getType();
-                    GraphError graphError = WebFactory.gson.fromJson(message, tokenType);
-                    return graphError.toString();
-                }
+                String message, error;
+                if (responseBody != null && !TextUtils.isEmpty(message = responseBody.string()))
+                    if(!TextUtils.isEmpty(error = getGraphQLError(message)))
+                        return error;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             return "Unexpected error encountered";
         }
-        return "No error information found!";
+        return "Unable to provide information regarding error!";
+    }
+
+    private static String getGraphQLError(String errorJson) {
+        Log.e(TAG, errorJson);
+        Type tokenType = new TypeToken<GraphContainer<Object>>(){}.getType();
+        GraphContainer<Object> graphContainer = WebFactory.gson.fromJson(errorJson, tokenType);
+        List<GraphError> errors = graphContainer.getErrors();
+        if (!CompatUtil.isEmpty(errors))
+            return errors.get(0).toString();
+        return null;
     }
 }

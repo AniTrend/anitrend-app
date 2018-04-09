@@ -5,7 +5,6 @@ import android.databinding.BindingAdapter;
 import android.support.annotation.StringRes;
 import android.support.v4.text.util.LinkifyCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
@@ -17,8 +16,6 @@ import com.mxt.anitrend.util.PatternMatcher;
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.RichType;
 import com.zzhoujay.richtext.ig.DefaultImageGetter;
-
-import java.util.List;
 
 public class RichMarkdownTextView extends AppCompatTextView implements CustomView {
 

@@ -46,6 +46,7 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             id = getArguments().getLong(KeyUtil.arg_id);
+        setViewModel(true);
     }
 
     @Nullable @Override

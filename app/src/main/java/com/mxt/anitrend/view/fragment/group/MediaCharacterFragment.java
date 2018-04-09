@@ -115,13 +115,14 @@ public class MediaCharacterFragment extends FragmentBaseList<EntityGroup, Connec
         if (content != null && (edgeContainer = content.getConnection()) != null) {
             if(!edgeContainer.isEmpty()) {
                 if (edgeContainer.hasPageInfo())
-                    pageInfo = edgeContainer.getPageInfo();
+                    getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
                     onPostProcessed(GroupingUtil.groupCharactersByRole(edgeContainer.getEdges(), model));
                 else
                     onPostProcessed(Collections.emptyList());
             }
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

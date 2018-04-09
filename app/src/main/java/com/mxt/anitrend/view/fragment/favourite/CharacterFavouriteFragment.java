@@ -88,12 +88,13 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
             if(!content.isEmpty()) {
                 PageContainer<CharacterBase> pageContainer = content.getConnection().getCharacter();
                 if(pageContainer.hasPageInfo())
-                    pageInfo = pageContainer.getPageInfo();
+                    getPresenter().setPageInfo(pageContainer.getPageInfo());
                 onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.getPageData()));
             }
             else
                 onPostProcessed(Collections.emptyList());
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

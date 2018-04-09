@@ -21,6 +21,12 @@ query AnimeFavourites($id: Int, $userName: String, $page: Int, $perPage: Int) {
                 userPreferred
               }
             }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+              }
+            }
             type
             format
             season

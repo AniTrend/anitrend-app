@@ -23,10 +23,6 @@ public class GraphError {
 
     @Override
     public String toString() {
-        return "GraphError{" +
-                "message='" + message + '\'' +
-                ", status=" + status +
-                ", locations=" + locations +
-                '}';
+        return "message='" + message + '\'' + ", status=" + status + ", locations=" + locations;
     }
 }

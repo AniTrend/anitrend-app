@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.fragment.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 

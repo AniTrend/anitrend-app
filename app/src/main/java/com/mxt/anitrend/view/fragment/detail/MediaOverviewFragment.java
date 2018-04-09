@@ -20,7 +20,6 @@ import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.StudioBase;
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;

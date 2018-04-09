@@ -84,12 +84,13 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
             if(!content.isEmpty()) {
                 PageContainer<StudioBase> pageContainer = content.getConnection().getStudio();
                 if(pageContainer.hasPageInfo())
-                    pageInfo = pageContainer.getPageInfo();
+                    getPresenter().setPageInfo(pageContainer.getPageInfo());
                 onPostProcessed(pageContainer.getPageData());
             }
             else
                 onPostProcessed(Collections.emptyList());
-        }
+        } else
+            onPostProcessed(Collections.emptyList());
         if(model == null)
             onPostProcessed(null);
     }

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
 
 /**
  * Created by max on 2017/11/13.

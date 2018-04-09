@@ -51,7 +51,11 @@ public class DateUtil {
             Date converted = format.parse(String.valueOf(fuzzyDate));
             Calendar calendar = new GregorianCalendar(Locale.getDefault());
             calendar.setTime(converted);
-            return String.format(Locale.getDefault(),"%s %d", seasons[calendar.get(Calendar.MONTH)], calendar.get(Calendar.YEAR));
+
+            return String.format(Locale.getDefault(),"%s %d",
+                    CompatUtil.capitalizeWords(seasons[calendar.get(Calendar.MONTH)]),
+                    calendar.get(Calendar.YEAR));
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

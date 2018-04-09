@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.List;
 

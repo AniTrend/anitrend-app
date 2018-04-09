@@ -51,6 +51,12 @@ mutation UpdateMediaListEntries($ids: [Int], $scoreFormat: ScoreFormat = POINT_1
               userPreferred
             }
           }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
           type
           format
           season

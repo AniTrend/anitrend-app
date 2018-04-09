@@ -1,7 +1,6 @@
 package com.mxt.anitrend.util;
 
 import android.support.annotation.Nullable;
-import android.text.SpannableStringBuilder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

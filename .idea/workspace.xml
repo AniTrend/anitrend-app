@@ -28,62 +28,57 @@
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
-  </component>
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStatsFragment.java" line="47" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e886c41-2ca4-4f09-a790-00ea2865c607" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_espresso_espresso_core_3_0_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_espresso_espresso_idling_resource_3_0_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_rules_1_0_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_runner_1_0_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_sf_kxml_kxml2_2_3_0_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/ImageBaseConverter.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_espresso_espresso_core_2_2_2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_espresso_espresso_idling_resource_2_2_2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_exposed_instrumentation_api_publish_0_5.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_rules_0_5.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_test_runner_0_5.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__javax_annotation_javax_annotation_api_1_2_jar.xml" afterPath="" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/app/objectbox-models/default.json" afterPath="$PROJECT_DIR$/app/objectbox-models/default.json" />
-      <change beforePath="$PROJECT_DIR$/app/objectbox-models/default.json.bak" afterPath="$PROJECT_DIR$/app/objectbox-models/default.json.bak" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/App.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/App.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/NotificationAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/NotificationAdapter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SingleLineTextView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SingleLineTextView.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomRatingBar.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomRatingBar.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/presenter/CommonPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/presenter/CommonPresenter.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FollowStateWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FollowStateWidget.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/SeriesStatusWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/SeriesStatusWidget.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedReply.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedReply.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaTag.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaTag.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/ConnectionContainer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/ConnectionContainer.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityGroup.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityGroup.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_anime.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_anime.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_comment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_comment.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_manga.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_manga.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_media_header.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_media_header.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_airing.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_airing.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_character.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_character.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_list.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_list.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_review.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_review.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_notification.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_review_template.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_review_template.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ChartUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ChartUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ErrorUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ErrorUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStaffFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStaffFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStatsFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStatsFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffOverviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffOverviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/CharacterFavouriteFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/CharacterFavouriteFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StaffFavouriteFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StaffFavouriteFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StudioFavouriteFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StudioFavouriteFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaCharacterFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaCharacterFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaTrendListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaTrendListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/WatchListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/WatchListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/CharacterSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/CharacterSearchFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StaffSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StaffSearchFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StudioSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StudioSearchFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/UserSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/UserSearchFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_staff.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_staff.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_overview.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_overview.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/section_series_description.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/section_series_description.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/section_series_details.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/section_series_details.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/section_series_info.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/section_series_info.xml" />
     </list>
     <ignored path="Anitrend.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -126,7 +121,113 @@
     <favorites_list name="Anitrend" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="ErrorUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ErrorUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="54" column="18" lean-forward="false" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GraphError.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StaffOverviewFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffOverviewFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="168">
+              <caret line="35" column="20" lean-forward="false" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupStaffRoleAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="386">
+              <caret line="56" column="22" lean-forward="false" selection-start-line="56" selection-start-column="22" selection-end-line="56" selection-end-column="22" />
+              <folding>
+                <element signature="e#1108#1109#0" expanded="true" />
+                <element signature="e#1144#1145#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MediaStaffRoleFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="363">
+              <caret line="118" column="46" lean-forward="false" selection-start-line="118" selection-start-column="46" selection-end-line="118" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GraphConverter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphConverter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PatternMatcher.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/PatternMatcher.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+              <folding>
+                <element signature="e#1546#1547#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RichMarkdownTextView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="404">
+              <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StatusContentWidget.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/StatusContentWidget.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="185">
+              <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupingUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="465">
+              <caret line="209" column="0" lean-forward="false" selection-start-line="209" selection-start-column="0" selection-end-line="209" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -138,13 +239,12 @@
         <option value="resourceFile" />
         <option value="layoutResourceFile" />
         <option value="Class" />
+        <option value="Singleton" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>staff_page</find>
-      <find>setLimitReached</find>
       <find>isLi</find>
       <find>isLimit</find>
       <find>isFeed</find>
@@ -173,9 +273,10 @@
       <find>runner</find>
       <find>model</find>
       <find>BindingAdapter</find>
+      <find>TV</find>
+      <find>model != null</find>
     </findStrings>
     <replaceStrings>
-      <replace>NOTIFICATION_</replace>
       <replace>KeyUtils.NOTIFICATION_</replace>
       <replace>binding.notificationSubject</replace>
       <replace>binding.notificationContent</replace>
@@ -205,6 +306,7 @@
       <replace>implementation</replace>
       <replace>CompatUtils</replace>
       <replace>CompatUtil</replace>
+      <replace>!CompatUtil.isEmpty(model)</replace>
     </replaceStrings>
   </component>
   <component name="GenerateSignedApkSettings">
@@ -2491,57 +2593,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_character_overview.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/custom_review_template.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_tag.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_staff.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_review.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_list.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_character.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_series_airing.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_ranking.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_media_header.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_series.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_manga.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedReply.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_comment.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_anime.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/App.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/SeriesStatusWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FollowStateWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/EpisodeAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/MediaAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/GenreAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/LinkAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/ReviewAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/TagAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/ImagePreviewAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/CommentAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/RankAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/GiphyAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupMediaAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesListAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupCharacterAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupActorAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingFooterViewHolder.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingViewHolder.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/GroupTitleViewHolder.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/GroupMediaViewHolder.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/ImageBaseConverter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CharacterOverviewFragment.java" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/gradle.properties" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/presenter/CommonPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/WatchListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/ConnectionContainer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ChartUtil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/SeriesStatusWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStatsFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java" />
-        <option value="$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/model/entity/anilist/UserCursor.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaTag.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/NotificationAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_series_overview.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/section_series_info.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityGroup.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaCharacterFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_staff.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StaffFavouriteFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaTrendListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/CharacterSearchFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StaffSearchFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StudioFavouriteFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/UserSearchFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StudioSearchFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/CharacterFavouriteFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStaffFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ErrorUtil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FollowStateWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffOverviewFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java" />
       </list>
     </option>
   </component>
@@ -2565,8 +2667,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
@@ -2588,7 +2690,37 @@
             </path>
             <path>
               <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
-              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="base" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="base" type="462c0819:PsiDirectoryNode" />
+              <item name="custom" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="base" type="462c0819:PsiDirectoryNode" />
+              <item name="custom" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="base" type="462c0819:PsiDirectoryNode" />
+              <item name="custom" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="widget" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -2600,7 +2732,7 @@
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="SearchEverywhereHistoryKey" value="NotificationBa&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.NotificationBase&#10;User&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java&#10;MediaTa&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.MediaTag&#10;Version&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.VersionBase&#10;section_series_in&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_info.xml&#10;MediaRank&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.MediaRank&#10;Compat&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java&#10;Media&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java&#10;adapter_stu&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/adapter_studio.xml&#10;MediaB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaBrowseActivity.java&#10;BasePre&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/presenter/base/BasePresenter.java&#10;ApplicationP&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/ApplicationPref.java&#10;KeyU&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java&#10;PageCo&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.container.body.PageContainer&#10;Applicat&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ApplicationPref&#10;NotifyUtils&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/NotifyUtil.java&#10;Notifi&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.Notification&#10;FragmentBaseList&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java&#10;Splash&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.index.SplashActivity&#10;DateU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.DateUtil&#10;Profile&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.ProfileActivity&#10;CommonPre&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.presenter.CommonPresenter&#10;BottomSheetLis&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.sheet.BottomSheetList&#10;FragmentB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java&#10;Noti&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/NotifyUtil.java&#10;FragmentBaseL&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.fragment.FragmentBaseList&#10;BaseC&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.consumer.BaseConsumer&#10;RecyclerViewAd&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter&#10;RecyclerViewH&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder&#10;Entit&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.group.EntityGroup&#10;CompatU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.CompatUtil&#10;Asp&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.image.AspectImageView&#10;userB&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.UserBase&#10;UserOv&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.detail.UserOverviewFragment&#10;CharacterOve&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CharacterOverviewFragment.java&#10;CharacterActo&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java&#10;Chara&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/CharacterModel.java&#10;CharacterMode&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/CharacterModel.java&#10;StaffMod&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/StaffModel.java&#10;Staff&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/StaffPageAdapter.java&#10;CharacterPage&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/CharacterPageAdapter.java&#10;StaffAd&#9;PSI&#9;JAVA://com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter&#10;Gr&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/GroupTitleViewHolder.java&#10;CharacterAda&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/CharacterPageAdapter.java&#10;SeriesPre&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/presenter/fragment/SeriesPresenter.java&#10;MediaU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.MediaUtil&#10;Character&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.CharacterActivity&#10;CharacterMo&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/CharacterModel.java&#10;EntityG&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.group.EntityGroup&#10;StaffMo&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.retro.anilist.StaffModel" />
+    <property name="SearchEverywhereHistoryKey" value="Studio&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.StudioActivity&#10;Err&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ErrorUtil&#10;Recy&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java&#10;Key&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java&#10;adapter_&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/adapter_anime.xml&#10;MediaAc&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java&#10;FragmentS&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/fragment_series_stats.xml&#10;Comp&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java&#10;Ke&#9;PSI&#9;JAVA://com.mxt.anitrend.util.KeyUtil&#10;TextUt&#9;PSI&#9;JAVA://android.text.TextUtils&#10;FragmentLi&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java&#10;Scrool&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java&#10;WebF&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java&#10;Page&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.container.attribute.PageInfo&#10;EntityHea&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java&#10;section_ser&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_info.xml&#10;section_&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_details.xml&#10;Series&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_info.xml&#10;MediaP&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java&#10;Welcom&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/base/WelcomeActivity.java&#10;Downlo&#9;PSI&#9;JAVA://com.mxt.anitrend.service.DownloaderService&#10;Downloa&#9;PSI&#9;JAVA://com.mxt.anitrend.service.DownloaderService&#10;Main&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.index.MainActivity&#10;VersionB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java&#10;Episo&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.crunchy.Episode&#10;Query&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder.QueryContainer&#10;Web&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java&#10;Error&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ErrorUtil&#10;NotificationBa&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.NotificationBase&#10;User&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java&#10;MediaTa&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.MediaTag&#10;Version&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.VersionBase&#10;section_series_in&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_info.xml&#10;MediaRank&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.MediaRank&#10;Compat&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java&#10;Media&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java&#10;adapter_stu&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/adapter_studio.xml&#10;MediaB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaBrowseActivity.java&#10;BasePre&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/presenter/base/BasePresenter.java&#10;ApplicationP&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/ApplicationPref.java&#10;KeyU&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java&#10;PageCo&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.container.body.PageContainer&#10;Applicat&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ApplicationPref&#10;NotifyUtils&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/NotifyUtil.java&#10;Notifi&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.Notification&#10;FragmentBaseList&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java&#10;Splash&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.index.SplashActivity&#10;DateU&#9;PSI&#9;JAVA://com.mxt.anitrend.util.DateUtil&#10;Profile&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.ProfileActivity&#10;CommonPre&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.presenter.CommonPresenter" />
     <property name="device.picker.selection" value="Nexus_5X_API_26" />
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
     <property name="DEBUGGABLE_PROCESS" value="com.mxt.anitrend" />
@@ -2620,7 +2752,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="last.edited.regexp" value="Sample asdf Text" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1523204319365" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1523312789481" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -2629,19 +2761,15 @@
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.mxt.anitrend.model.entity.base" />
       <recent name="com.mxt.anitrend.model.entity.anilist" />
       <recent name="com.mxt.anitrend.base.custom" />
       <recent name="com.mxt.anitrend.view.activity.index" />
       <recent name="com.mxt.anitrend.view.activity.base" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/main/assets/graphql" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.mxt.anitrend.base.custom.async" />
@@ -2650,8 +2778,12 @@
       <recent name="com.mxt.anitrend.base.custom.recycler" />
       <recent name="com.mxt.anitrend.base.interfaces.event" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/assets/graphql" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -3155,28 +3287,28 @@
   <component name="ToolWindowManager">
     <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <layout>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.5416216" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5416216" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21024546" sideWeight="0.5059459" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32540542" sideWeight="0.5149413" order="14" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36972973" sideWeight="0.5154749" order="14" side_tool="true" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30843115" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32864866" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36972973" sideWeight="0.48826042" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36864865" sideWeight="0.48452508" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20437567" sideWeight="0.49405405" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31675676" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31675676" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39783785" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39783785" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21024546" sideWeight="0.50378376" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -3235,475 +3367,464 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="558" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ErrorUtil.java</url>
+          <line>36</line>
+          <properties />
+          <option name="timeStamp" value="655" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="658" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/BrandImageView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="33" column="13" lean-forward="false" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        <state relative-caret-position="295">
+          <caret line="21" column="23" lean-forward="false" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
+          <folding>
+            <element signature="e#474#475#0" expanded="false" />
+            <element signature="e#504#505#0" expanded="false" />
+            <element signature="e#660#661#0" expanded="false" />
+            <element signature="e#716#717#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.annimon/stream/1.1.9/190c9826e6f6dd69caa23f7c44a163996675f10b/stream-1.1.9-sources.jar!/com/annimon/stream/function/FunctionalInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="11" column="18" lean-forward="false" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AvatarIndicatorView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/MediaEdge.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1681">
-          <caret line="33" column="13" lean-forward="false" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        <state relative-caret-position="394">
+          <caret line="45" column="18" lean-forward="false" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="18" />
+          <folding>
+            <element signature="e#1145#1146#0" expanded="false" />
+            <element signature="e#1177#1178#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/StaffEdge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" column="18" lean-forward="false" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+          <folding>
+            <element signature="e#412#413#0" expanded="false" />
+            <element signature="e#439#440#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="453" column="49" lean-forward="false" selection-start-line="453" selection-start-column="49" selection-end-line="453" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AvatarImageView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-321">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AspectImageView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-593">
-          <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        <state relative-caret-position="414">
+          <caret line="108" column="32" lean-forward="false" selection-start-line="108" selection-start-column="32" selection-end-line="108" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AppCompatTintImageView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-49">
-          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        <state relative-caret-position="403">
+          <caret line="115" column="21" lean-forward="false" selection-start-line="115" selection-start-column="21" selection-end-line="115" selection-end-column="21" />
+          <folding>
+            <element signature="e#4185#4186#0" expanded="false" />
+            <element signature="e#4216#4217#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaCharacterFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="117" column="75" lean-forward="false" selection-start-line="117" selection-start-column="75" selection-end-line="117" selection-end-column="75" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/editor/MarkdownInputEditor.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/AnimePageAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2701">
-          <caret line="36" column="13" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
+        <state relative-caret-position="533">
+          <caret line="47" column="51" lean-forward="true" selection-start-line="47" selection-start-column="51" selection-end-line="47" selection-end-column="51" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/drawable/MaterialProgressDrawable.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="36" column="13" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
+        <state relative-caret-position="284">
+          <caret line="376" column="90" lean-forward="false" selection-start-line="376" selection-start-column="90" selection-end-line="376" selection-end-column="90" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/container/CustomSwipeRefreshLayout.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/CharacterActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="728">
+          <caret line="116" column="14" lean-forward="false" selection-start-line="116" selection-start-column="14" selection-end-line="116" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/activity/ActivityBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="365" column="16" lean-forward="false" selection-start-line="365" selection-start-column="16" selection-end-line="365" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/adapter_staff.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="57" column="49" lean-forward="false" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="49" />
+          <folding>
+            <element signature="e#705#723#0" expanded="false" />
+            <element signature="e#929#947#0" expanded="false" />
+            <element signature="e#977#995#0" expanded="false" />
+            <element signature="e#1023#1047#0" expanded="false" />
+            <element signature="e#1633#1651#0" expanded="false" />
+            <element signature="e#2223#2241#0" expanded="false" />
+            <element signature="e#2914#2932#0" expanded="false" />
+            <element signature="e#2967#2985#0" expanded="false" />
+            <element signature="e#3020#3038#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StaffSearchFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="119" column="53" lean-forward="false" selection-start-line="119" selection-start-column="53" selection-end-line="119" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/CharacterSearchFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="113" column="8" lean-forward="true" selection-start-line="113" selection-start-column="8" selection-end-line="123" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="123" column="20" lean-forward="false" selection-start-line="123" selection-start-column="20" selection-end-line="123" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StaffFavouriteFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="88" column="20" lean-forward="false" selection-start-line="88" selection-start-column="20" selection-end-line="88" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="140" column="16" lean-forward="false" selection-start-line="140" selection-start-column="16" selection-end-line="140" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaTrendListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="123" column="16" lean-forward="false" selection-start-line="123" selection-start-column="16" selection-end-line="123" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
-          <caret line="39" column="13" lean-forward="false" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+          <caret line="217" column="16" lean-forward="false" selection-start-line="217" selection-start-column="16" selection-end-line="217" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/container/CardViewBase.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        <state relative-caret-position="299">
+          <caret line="136" column="20" lean-forward="false" selection-start-line="136" selection-start-column="20" selection-end-line="136" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/editor/ComposerWidget.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="53" column="13" lean-forward="false" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="13" />
+        <state relative-caret-position="299">
+          <caret line="113" column="20" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/EpisodeAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="35" column="128" lean-forward="false" selection-start-line="35" selection-start-column="128" selection-end-line="36" selection-end-column="20" />
+        <state relative-caret-position="325">
+          <caret line="123" column="8" lean-forward="true" selection-start-line="123" selection-start-column="8" selection-end-line="133" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="150" column="54" lean-forward="false" selection-start-line="150" selection-start-column="54" selection-end-line="150" selection-end-column="54" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="method#onItemLongClick#0;class#CharacterActorsFragment#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/MediaAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1141">
-          <caret line="89" column="2" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="278" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+        <state relative-caret-position="282">
+          <caret line="129" column="8" lean-forward="false" selection-start-line="129" selection-start-column="8" selection-end-line="139" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/GenreAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/UserSearchFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="444">
-          <caret line="101" column="7" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="101" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/LinkAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="64" lean-forward="false" selection-start-line="11" selection-start-column="64" selection-end-line="11" selection-end-column="64" />
+          <caret line="121" column="34" lean-forward="false" selection-start-line="121" selection-start-column="34" selection-end-line="121" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="80" column="2" lean-forward="false" selection-start-line="80" selection-start-column="0" selection-end-line="386" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/ReviewAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="51" column="2" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="182" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/TagAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="64" lean-forward="false" selection-start-line="11" selection-start-column="64" selection-end-line="11" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/ImagePreviewAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/StudioSearchFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="444">
-          <caret line="45" column="6" lean-forward="false" selection-start-line="45" selection-start-column="4" selection-end-line="130" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/CommentAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="43" column="6" lean-forward="false" selection-start-line="43" selection-start-column="4" selection-end-line="120" selection-end-column="7" />
+          <caret line="120" column="34" lean-forward="false" selection-start-line="120" selection-start-column="34" selection-end-line="120" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/RankAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="43" column="6" lean-forward="false" selection-start-line="43" selection-start-column="4" selection-end-line="104" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+        <state relative-caret-position="291">
+          <caret line="132" column="16" lean-forward="false" selection-start-line="132" selection-start-column="16" selection-end-line="132" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/GiphyAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStaffFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="117" column="75" lean-forward="false" selection-start-line="117" selection-start-column="75" selection-end-line="117" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="135" column="9" lean-forward="false" selection-start-line="135" selection-start-column="9" selection-end-line="136" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="546">
+          <caret line="199" column="34" lean-forward="false" selection-start-line="199" selection-start-column="34" selection-end-line="199" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/CharacterFavouriteFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="89" column="47" lean-forward="false" selection-start-line="89" selection-start-column="47" selection-end-line="90" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="145" column="8" lean-forward="false" selection-start-line="145" selection-start-column="8" selection-end-line="155" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/StudioFavouriteFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="86" column="20" lean-forward="false" selection-start-line="86" selection-start-column="20" selection-end-line="86" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ErrorUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="54" column="18" lean-forward="false" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FollowStateWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1468">
+          <caret line="154" column="12" lean-forward="false" selection-start-line="154" selection-start-column="12" selection-end-line="155" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2028">
+          <caret line="183" column="69" lean-forward="false" selection-start-line="183" selection-start-column="69" selection-end-line="183" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
-          <caret line="47" column="6" lean-forward="false" selection-start-line="47" selection-start-column="4" selection-end-line="119" selection-end-column="7" />
+          <caret line="97" column="65" lean-forward="false" selection-start-line="97" selection-start-column="65" selection-end-line="97" selection-end-column="65" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupMediaAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/GraphError.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="40" column="20" lean-forward="false" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+        <state relative-caret-position="51">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesListAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/StudioActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="91" column="6" lean-forward="false" selection-start-line="91" selection-start-column="4" selection-end-line="155" selection-end-column="7" />
+        <state relative-caret-position="272">
+          <caret line="44" column="46" lean-forward="true" selection-start-line="44" selection-start-column="46" selection-end-line="46" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StaffOverviewFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="35" column="20" lean-forward="false" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/body/GraphContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="e#334#335#0" expanded="false" />
+            <element signature="e#363#364#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="53" column="6" lean-forward="false" selection-start-line="53" selection-start-column="4" selection-end-line="114" selection-end-column="7" />
+        <state relative-caret-position="386">
+          <caret line="56" column="22" lean-forward="false" selection-start-line="56" selection-start-column="22" selection-end-line="56" selection-end-column="22" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="e#1108#1109#0" expanded="true" />
+            <element signature="e#1144#1145#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupMediaAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="39" column="20" lean-forward="false" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
+        <state relative-caret-position="-334">
+          <caret line="32" column="11" lean-forward="false" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="e#1099#1100#0" expanded="false" />
+            <element signature="e#1135#1136#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupCharacterAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GroupingUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="56" column="13" lean-forward="false" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
+        <state relative-caret-position="465">
+          <caret line="209" column="0" lean-forward="false" selection-start-line="209" selection-start-column="0" selection-end-line="209" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="118" column="46" lean-forward="false" selection-start-line="118" selection-start-column="46" selection-end-line="118" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/PatternMatcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="e#1546#1547#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupActorAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="60" column="6" lean-forward="false" selection-start-line="60" selection-start-column="4" selection-end-line="121" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingFooterViewHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="34" column="10" lean-forward="false" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingViewHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="34" column="10" lean-forward="false" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/GroupMediaViewHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="79" column="70" lean-forward="false" selection-start-line="79" selection-start-column="70" selection-end-line="79" selection-end-column="70" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/GroupTitleViewHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="39" column="10" lean-forward="false" selection-start-line="39" selection-start-column="10" selection-end-line="39" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="64" column="10" lean-forward="false" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/FuzzyDateConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="15" column="68" lean-forward="true" selection-start-line="15" selection-start-column="68" selection-end-line="18" selection-end-column="72" />
+        <state relative-caret-position="404">
+          <caret line="79" column="0" lean-forward="false" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/MediaBaseConverter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/StatusContentWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="22" column="68" lean-forward="true" selection-start-line="22" selection-start-column="68" selection-end-line="25" selection-end-column="54" />
+        <state relative-caret-position="185">
+          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/MediaListOptionsConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStatsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="26" column="35" lean-forward="false" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="57" column="41" lean-forward="false" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/model/entity/anilist/MediaTagCursor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="67" column="14" lean-forward="false" selection-start-line="67" selection-start-column="14" selection-end-line="67" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/model/entity/base/VersionBaseCursor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="65" column="14" lean-forward="false" selection-start-line="65" selection-start-column="14" selection-end-line="65" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaTag.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="93" column="0" lean-forward="false" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
-          <folding>
-            <element signature="e#2219#2220#0" expanded="false" />
-            <element signature="e#2247#2248#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
-          <folding>
-            <element signature="e#2289#2290#0" expanded="false" />
-            <element signature="e#2321#2322#0" expanded="false" />
-            <element signature="e#2372#2373#0" expanded="false" />
-            <element signature="e#2414#2415#0" expanded="false" />
-            <element signature="e#2470#2471#0" expanded="false" />
-            <element signature="e#2518#2519#0" expanded="false" />
-            <element signature="e#2564#2565#0" expanded="false" />
-            <element signature="e#2602#2603#0" expanded="false" />
-            <element signature="e#2644#2645#0" expanded="false" />
-            <element signature="e#2678#2679#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="17" column="47" lean-forward="true" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/model/entity/anilist/UserCursor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="81" column="50" lean-forward="false" selection-start-line="81" selection-start-column="50" selection-end-line="81" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/model/entity/base/NotificationBaseCursor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="62" column="14" lean-forward="false" selection-start-line="62" selection-start-column="14" selection-end-line="62" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/ImageBaseConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="13" column="61" lean-forward="false" selection-start-line="13" selection-start-column="61" selection-end-line="13" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/NotificationAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1088">
-          <caret line="91" column="87" lean-forward="false" selection-start-line="91" selection-start-column="87" selection-end-line="91" selection-end-column="87" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding>
-            <element signature="e#1764#1765#0" expanded="false" />
-            <element signature="e#1792#1793#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="68" column="32" lean-forward="false" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
-          <folding>
-            <element signature="e#1769#1770#0" expanded="false" />
-            <element signature="e#1945#1946#0" expanded="false" />
-            <element signature="e#1977#1978#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/meta/MediaListOptions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/meta/ImageBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="112" column="51" lean-forward="false" selection-start-line="112" selection-start-column="51" selection-end-line="112" selection-end-column="51" />
-          <folding>
-            <element signature="e#3537#3538#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>

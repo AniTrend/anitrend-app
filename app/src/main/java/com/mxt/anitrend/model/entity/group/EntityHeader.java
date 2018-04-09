@@ -3,8 +3,6 @@ package com.mxt.anitrend.model.entity.group;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import java.util.Objects;
-
 /**
  * Created by max on 2018/02/18.
  */
@@ -17,11 +15,11 @@ public class EntityHeader extends EntityGroup {
     public EntityHeader(String title, int size) {
         this.title = title;
         this.size = size;
-        setContentType(KeyUtil.RECYCLER_TYPE_HEADER);
+        this.setContentType(KeyUtil.RECYCLER_TYPE_HEADER);
     }
 
     public EntityHeader(String title) {
-        this.title = title;
+        this(title, 0);
     }
 
     public int getSize() {
@@ -33,7 +31,7 @@ public class EntityHeader extends EntityGroup {
     }
 
     public String getTitle() {
-        return title;
+        return CompatUtil.capitalizeWords(title);
     }
 
     public void setTitle(String title) {
@@ -43,7 +41,7 @@ public class EntityHeader extends EntityGroup {
     @Override
     public boolean equals(Object o) {
         if(o instanceof EntityHeader)
-            return CompatUtil.equals(((EntityHeader) o).getTitle(), title);
+            return CompatUtil.equals(((EntityHeader) o).title, title);
         return super.equals(o);
     }
 }

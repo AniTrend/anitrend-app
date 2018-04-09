@@ -102,8 +102,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
         }
     }
 
-    private @KeyUtil.RequestType
-    int getRequestMode(boolean feed) {
+    private @KeyUtil.RequestType int getRequestMode(boolean feed) {
         if(feed)
             return isPopular? KeyUtil.EPISODE_POPULAR_REQ: KeyUtil.EPISODE_LATEST_REQ;
         return KeyUtil.EPISODE_FEED_REQ;

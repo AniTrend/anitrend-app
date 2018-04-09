@@ -23,6 +23,12 @@ query StaffRoles($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPU
                   userPreferred
                 }
               }
+              coverImage {
+                ... on MediaCoverImage {
+                  large
+                  medium
+                }
+              }
               type
               format
               season

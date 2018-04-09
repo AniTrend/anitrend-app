@@ -25,12 +25,14 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Collections;
 
 /**
  * Created by max on 2017/12/18.
@@ -187,9 +189,14 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     public void onChanged(@Nullable PageContainer<MediaList> content) {
         if(content != null) {
             if(content.hasPageInfo())
-                pageInfo = content.getPageInfo();
+                getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
                 onPostProcessed(content.getPageData());
-        }
+            else
+                onPostProcessed(Collections.emptyList());
+        } else
+            onPostProcessed(Collections.emptyList());
+        if(model == null)
+            onPostProcessed(null);
     }
 }
