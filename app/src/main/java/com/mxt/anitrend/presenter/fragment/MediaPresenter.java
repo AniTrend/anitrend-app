@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
-import com.annimon.stream.function.IndexedFunction;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mxt.anitrend.R;
@@ -38,9 +37,9 @@ public class MediaPresenter extends BasePresenter {
     }
 
     public Spanned getHashTag(Media media) {
-        if(media != null && !TextUtils.isEmpty(media.getHashtag()))
+        if(media != null && !TextUtils.isEmpty(media.getHashTag()))
             return Html.fromHtml(String.format("<a href=\"https://twitter.com/search?q=%%23%s&src=typd\">%s</a>",
-                    media.getHashtag().replace("#", ""), media.getHashtag()));
+                    media.getHashTag().replace("#", ""), media.getHashTag()));
         return Html.fromHtml(getContext().getString(R.string.TBA));
     }
 
@@ -94,6 +93,12 @@ public class MediaPresenter extends BasePresenter {
     public String getMediaSeason(Media media) {
         if(media != null && media.getStartDate() != null)
             return DateUtil.getMediaSeason(media.getStartDate());
+        return getContext().getString(R.string.TBA);
+    }
+
+    public String getMediaSource(Media media) {
+        if(media != null && !TextUtils.isEmpty(media.getSource()))
+            return CompatUtil.capitalizeWords(media.getSource());
         return getContext().getString(R.string.TBA);
     }
 

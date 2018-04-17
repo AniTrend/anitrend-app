@@ -17,7 +17,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;

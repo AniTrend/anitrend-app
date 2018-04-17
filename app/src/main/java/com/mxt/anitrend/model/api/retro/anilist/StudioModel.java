@@ -4,6 +4,7 @@ import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
+import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
@@ -22,10 +23,10 @@ public interface StudioModel {
     @POST("/")
     @GraphQuery("StudioBase")
     @Headers("Content-Type: application/json")
-    Call<StudioBase> getStudioBase(@Body QueryContainerBuilder request);
+    Call<GraphContainer<StudioBase>> getStudioBase(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("StudioMedia")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<PageContainer<MediaBase>>> getStudioMedia(@Body QueryContainerBuilder request);
+    Call<GraphContainer<ConnectionContainer<PageContainer<MediaBase>>>> getStudioMedia(@Body QueryContainerBuilder request);
 }

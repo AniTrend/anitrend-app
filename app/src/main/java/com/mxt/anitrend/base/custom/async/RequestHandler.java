@@ -94,8 +94,6 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaListBrowse(param.getParcelable(arg_graph_params));
                 case KeyUtil.MEDIA_LIST_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaList(param.getParcelable(arg_graph_params));
-                case KeyUtil.MEDIA_TREND_REQ:
-                    return (Call<T>) WebFactory.createService(BrowseModel.class, context).getTrendingBrowse(param.getParcelable(arg_graph_params));
 
 
                 case KeyUtil.CHARACTER_ACTORS_REQ:

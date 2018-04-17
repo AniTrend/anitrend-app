@@ -15,6 +15,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.ActivityCompat;
@@ -214,8 +215,8 @@ public class CompatUtil {
      * @param target The view from the calling activity with transition name
      * @param data Intent with bundle and or activity to start
      */
-    public static void startSharedImageTransition(FragmentActivity base, View target, Intent data, @StringRes int transitionName) {
-        ViewCompat.setTransitionName(target, base.getString(transitionName));
+    public static void startSharedImageTransition(@Nullable FragmentActivity base, View target, Intent data, @StringRes int transitionName) {
+        ViewCompat.setTransitionName(target, Objects.requireNonNull(base).getString(transitionName));
         ActivityOptionsCompat transition = ActivityOptionsCompat.makeSceneTransitionAnimation(base, target, ViewCompat.getTransitionName(target));
         base.startActivity(data, transition.toBundle());
     }

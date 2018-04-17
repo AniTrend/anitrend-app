@@ -11,6 +11,7 @@ import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.api.retro.anilist.BaseModel;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
+import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -40,6 +41,41 @@ public class TagGenreService extends IntentService {
         analytics.setMinimumSessionDuration(KeyUtil.DURATION_LONG);
     }
 
+    private void fetchAllMediaTags(BaseModel baseModel, BasePresenter basePresenter) throws IOException {
+        if(basePresenter.getDatabase().getBoxStore(MediaTag.class).count() < 1) {
+            Response<GraphContainer<List<MediaTag>>> graphContainerResponse = baseModel
+                    .getTags(GraphUtil.getDefaultQuery(false))
+                    .execute();
+
+            GraphContainer<List<MediaTag>> graphContainer;
+            if (graphContainerResponse.isSuccessful() && (graphContainer = graphContainerResponse.body()) != null)
+                if(!graphContainer.isEmpty() && !graphContainer.getData().isEmpty())
+                    basePresenter.getDatabase().saveMediaTags(graphContainer.getData().getResult());
+                else
+                    Log.e(ServiceName, ErrorUtil.getError(graphContainerResponse));
+        }
+    }
+
+    private void fetchAllMediaGenres(BaseModel baseModel, BasePresenter basePresenter) throws IOException {
+        if(basePresenter.getDatabase().getBoxStore(Genre.class).count() < 1) {
+            Response<GraphContainer<List<String>>> graphContainerResponse = baseModel
+                    .getGenres(GraphUtil.getDefaultQuery(false))
+                    .execute();
+
+            GraphContainer<List<String>> graphContainer;
+            if (graphContainerResponse.isSuccessful() && (graphContainer = graphContainerResponse.body()) != null) {
+                if(!graphContainer.isEmpty() && !graphContainer.getData().isEmpty()) {
+                    List<Genre> genreList = Stream.of(graphContainer.getData().getResult())
+                            .map(Genre::new)
+                            .toList();
+                    basePresenter.getDatabase()
+                            .saveGenreCollection(genreList);
+                }
+            }
+            else
+                Log.e(ServiceName, ErrorUtil.getError(graphContainerResponse));
+        }
+    }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
@@ -47,23 +83,8 @@ public class TagGenreService extends IntentService {
             initAnalytics();
             BasePresenter basePresenter = new BasePresenter(getApplicationContext());
             BaseModel baseModel = WebFactory.createService(BaseModel.class, getApplicationContext());
-            if(basePresenter.getDatabase().getBoxStore(MediaTag.class).count() < 1) {
-                Response<List<MediaTag>> tagsResponse = baseModel.getTags(GraphUtil.getDefaultQuery(false)).execute();
-                if (tagsResponse.isSuccessful() && tagsResponse.body() != null)
-                    basePresenter.getDatabase().saveMediaTags(tagsResponse.body());
-                else
-                    Log.e(ServiceName, ErrorUtil.getError(tagsResponse));
-            }
-            if(basePresenter.getDatabase().getBoxStore(Genre.class).count() < 1) {
-                Response<List<String>> genreResponse = baseModel.getGenres(GraphUtil.getDefaultQuery(false)).execute();
-                List<String> genres;
-                if (genreResponse.isSuccessful() && (genres = genreResponse.body()) != null) {
-                    List<Genre> genreList = Stream.of(genres).map(Genre::new).toList();
-                    basePresenter.getDatabase().saveGenreCollection(genreList);
-                }
-                else
-                    Log.e(ServiceName, ErrorUtil.getError(genreResponse));
-            }
+            fetchAllMediaGenres(baseModel, basePresenter);
+            fetchAllMediaTags(baseModel, basePresenter);
         } catch (IOException e) {
             e.printStackTrace();
         }

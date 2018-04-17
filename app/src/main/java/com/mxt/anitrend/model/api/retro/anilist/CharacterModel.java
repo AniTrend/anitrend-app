@@ -6,6 +6,7 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
+import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
@@ -24,20 +25,20 @@ public interface CharacterModel {
     @POST("/")
     @GraphQuery("CharacterBase")
     @Headers("Content-Type: application/json")
-    Call<CharacterBase> getCharacterBase(@Body QueryContainerBuilder request);
+    Call<GraphContainer<CharacterBase>>getCharacterBase(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterOverview")
     @Headers("Content-Type: application/json")
-    Call<Character> getCharacterOverview(@Body QueryContainerBuilder request);
+    Call<GraphContainer<Character>> getCharacterOverview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterMedia")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<PageContainer<MediaBase>>> getCharacterMedia(@Body QueryContainerBuilder request);
+    Call<GraphContainer<ConnectionContainer<PageContainer<MediaBase>>>> getCharacterMedia(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterActors")
     @Headers("Content-Type: application/json")
-    Call<ConnectionContainer<EdgeContainer<MediaEdge>>> getCharacterActors(@Body QueryContainerBuilder request);
+    Call<GraphContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> getCharacterActors(@Body QueryContainerBuilder request);
 }

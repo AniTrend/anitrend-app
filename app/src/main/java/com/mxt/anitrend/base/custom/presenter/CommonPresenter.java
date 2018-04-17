@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.data.DatabaseHelper;
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.util.ApplicationPref;
 
 import org.greenrobot.eventbus.EventBus;

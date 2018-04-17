@@ -9,17 +9,17 @@ import android.os.Parcelable;
 
 public class MediaTrailer implements Parcelable {
 
-    private long id;
+    private String id;
     private String site;
 
     protected MediaTrailer(Parcel in) {
-        id = in.readLong();
+        id = in.readString();
         site = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
+        dest.writeString(id);
         dest.writeString(site);
     }
 
@@ -40,7 +40,7 @@ public class MediaTrailer implements Parcelable {
         }
     };
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

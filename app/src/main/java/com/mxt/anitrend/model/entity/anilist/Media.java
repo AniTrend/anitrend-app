@@ -3,6 +3,7 @@ package com.mxt.anitrend.model.entity.anilist;
 import android.os.Parcel;
 
 import com.mxt.anitrend.model.entity.anilist.meta.MediaStats;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
@@ -21,7 +22,7 @@ public class Media extends MediaBase {
     private List<String> synonyms;
     private List<String> genres;
     private List<MediaTag> tags;
-    private String trailer;
+    private MediaTrailer trailer;
     private String hashtag;
     private @KeyUtil.MediaSource String source;
     private List<ExternalLink> externalLinks;
@@ -35,7 +36,7 @@ public class Media extends MediaBase {
         synonyms = in.createStringArrayList();
         genres = in.createStringArrayList();
         tags = in.createTypedArrayList(MediaTag.CREATOR);
-        trailer = in.readString();
+        trailer = in.readParcelable(MediaTrailer.class.getClassLoader());
         hashtag = in.readString();
         source = in.readString();
         externalLinks = in.createTypedArrayList(ExternalLink.CREATOR);
@@ -50,7 +51,7 @@ public class Media extends MediaBase {
         dest.writeStringList(synonyms);
         dest.writeStringList(genres);
         dest.writeTypedList(tags);
-        dest.writeString(trailer);
+        dest.writeParcelable(trailer, flags);
         dest.writeString(hashtag);
         dest.writeString(source);
         dest.writeTypedList(externalLinks);
@@ -91,11 +92,11 @@ public class Media extends MediaBase {
         return tags;
     }
 
-    public String getTrailer() {
+    public MediaTrailer getTrailer() {
         return trailer;
     }
 
-    public String getHashtag() {
+    public String getHashTag() {
         return hashtag;
     }
 

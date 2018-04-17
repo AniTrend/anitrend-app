@@ -51,4 +51,12 @@ public class MediaUtil {
                     .toList();
         return Collections.emptyList();
     }
+
+    public static List<MediaList> getAiringMedia(List<MediaList> mediaLists) {
+        if(mediaLists != null)
+            return Stream.of(mediaLists)
+                    .filter(media -> CompatUtil.equals(media.getMedia().getStatus(), KeyUtil.RELEASING))
+                    .toList();
+        return Collections.emptyList();
+    }
 }

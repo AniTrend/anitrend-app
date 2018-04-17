@@ -20,6 +20,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
@@ -67,7 +68,10 @@ public class AiringListFragment extends FragmentBaseList<MediaList, PageContaine
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+                .putVariable(KeyUtil.arg_type, KeyUtil.ANIME)
+                .putVariable(KeyUtil.arg_status, KeyUtil.CURRENT)
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
     }
@@ -140,7 +144,7 @@ public class AiringListFragment extends FragmentBaseList<MediaList, PageContaine
             if(content.hasPageInfo())
                 getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
-                onPostProcessed(content.getPageData());
+                onPostProcessed(MediaUtil.getAiringMedia(content.getPageData()));
             else
                 onPostProcessed(Collections.emptyList());
         } else

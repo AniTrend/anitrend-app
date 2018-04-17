@@ -80,7 +80,10 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     @Override
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
-        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaSort())
+                .putVariable(KeyUtil.arg_order, getPresenter().getApplicationPref().getSortOrder())
+                .putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
     }

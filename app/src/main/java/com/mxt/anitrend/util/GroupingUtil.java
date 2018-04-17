@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.annimon.stream.function.FunctionalInterface;
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge;

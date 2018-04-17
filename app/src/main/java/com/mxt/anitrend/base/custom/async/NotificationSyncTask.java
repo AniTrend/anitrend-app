@@ -10,6 +10,7 @@ import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.api.retro.anilist.UserModel;
 import com.mxt.anitrend.model.entity.anilist.User;
+import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.JobDispatcherService;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -39,10 +40,14 @@ public class NotificationSyncTask extends AsyncTask<Context, Void, User> {
      */
     private void checkNotificationCount(UserModel userModel) {
         try {
-            Response<User> response = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false)).execute();
-            if(response.isSuccessful() && (user = response.body()) != null) {
-                DatabaseHelper databaseHelper = presenter.getDatabase();
-                databaseHelper.saveCurrentUser(user);
+            Response<GraphContainer<User>> response = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false)).execute();
+            GraphContainer<User> container;
+            if(response.isSuccessful() && (container = response.body()) != null) {
+                if(!container.isEmpty() && !container.getData().isEmpty()) {
+                    user = container.getData().getResult();
+                    DatabaseHelper databaseHelper = presenter.getDatabase();
+                    databaseHelper.saveCurrentUser(user);
+                }
             }
             else
                 Log.e(TAG, ErrorUtil.getError(response));

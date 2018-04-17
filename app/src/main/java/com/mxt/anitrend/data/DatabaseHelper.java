@@ -5,9 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.mxt.anitrend.App;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
-import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Genre;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
@@ -60,9 +58,7 @@ public class DatabaseHelper implements BoxQuery {
         getBoxStore(User.class).removeAll();
         getBoxStore(UserBase.class).removeAll();
         getBoxStore(VersionBase.class).removeAll();
-        getBoxStore(MediaList.class).removeAll();
         getBoxStore(NotificationBase.class).removeAll();
-        getBoxStore(Favourite.class).removeAll();
     }
 
     /**

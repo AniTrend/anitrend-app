@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.annimon.stream.Stream;
 import com.google.gson.reflect.TypeToken;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;

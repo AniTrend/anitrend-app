@@ -2,12 +2,12 @@ package com.mxt.anitrend.view.fragment.youtube;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mxt.anitrend.BuildConfig;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer;
 import com.mxt.anitrend.util.KeyUtil;
 
 /**
@@ -17,13 +17,13 @@ import com.mxt.anitrend.util.KeyUtil;
 
 public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implements YouTubePlayer.OnInitializedListener {
 
-    private String streamLink;
+    private MediaTrailer mediaTrailer;
 
     private YouTubePlayer youTubePlayer;
 
-    public static YoutubePlayerFragment newInstance(String resourceId) {
+    public static YoutubePlayerFragment newInstance(MediaTrailer mediaTrailer) {
         Bundle args = new Bundle();
-        args.putString(KeyUtil.arg_trailerId, resourceId);
+        args.putParcelable(KeyUtil.arg_media_trailer, mediaTrailer);
         YoutubePlayerFragment fragment = new YoutubePlayerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -33,13 +33,13 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if(getArguments() != null)
-            streamLink = getArguments().getString(KeyUtil.arg_trailerId);
+            mediaTrailer = getArguments().getParcelable(KeyUtil.arg_media_trailer);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(isAlive() && !TextUtils.isEmpty(streamLink))
+        if(isAlive())
             initialize(BuildConfig.API_KEY, this);
     }
 
@@ -55,7 +55,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
         if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             this.youTubePlayer = youTubePlayer;
             if (!wasRestored)
-                this.youTubePlayer.cueVideo(streamLink);
+                this.youTubePlayer.cueVideo(mediaTrailer.getId());
         }
     }
 

@@ -21,7 +21,7 @@ public class GraphProcessor {
 
     private static GraphProcessor ourInstance;
     private final static Object lock = new Object();
-    private final static String defaultDirectory = "graphql";
+    private final static String defaultExtension = ".graphql", defaultDirectory = "graphql";
 
     public static GraphProcessor getInstance(Context context) {
         if(ourInstance == null)
@@ -56,7 +56,7 @@ public class GraphProcessor {
             }
 
         if(graphFiles != null && graphQuery != null) {
-            String fileName = String.format("%s.graphql", graphQuery.value());
+            String fileName = String.format("%s%s", graphQuery.value(), defaultExtension);
             if(graphFiles.containsKey(fileName))
                 return graphFiles.get(fileName);
             Log.e(this.toString(), String.format("The request query %s could not be found!", graphQuery.value()));
@@ -75,7 +75,7 @@ public class GraphProcessor {
             if (paths.length > 0) {
                 for (String item : paths) {
                     String absolute = path + "/" + item;
-                    if (!item.endsWith(".graphql"))
+                    if (!item.endsWith(defaultExtension))
                         initialize(absolute, context);
                     else
                         graphFiles.put(item, getFileContents(context.getAssets().open(absolute)));

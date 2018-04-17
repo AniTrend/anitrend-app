@@ -4,7 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.base.custom.annotation.processor.GraphProcessor;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
@@ -28,22 +29,26 @@ import retrofit2.Retrofit;
  * Body for GraphQL requests and responses
  */
 
-public final class GraphConverter extends Converter.Factory {
+public final class GraphQLConverter extends Converter.Factory {
 
     private GraphProcessor graphProcessor;
 
-    public static GraphConverter create(Context context) {
-        return new GraphConverter(context);
+    private final Gson gson = new GsonBuilder()
+            .enableComplexMapKeySerialization()
+            .serializeNulls()
+            .setLenient()
+            .create();
+
+    public static GraphQLConverter create(Context context) {
+        return new GraphQLConverter(context);
     }
 
-    private GraphConverter(Context context) {
+    private GraphQLConverter(Context context) {
         this.graphProcessor = GraphProcessor.getInstance(context);
     }
 
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-        if(type instanceof ResponseBody)
-            return super.responseBodyConverter(type, annotations, retrofit);
+    public Converter<ResponseBody, GraphContainer<?>> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
         return new GraphResponseConverter<>(type);
     }
 
@@ -65,22 +70,16 @@ public final class GraphConverter extends Converter.Factory {
 
         @Override
         public T convert(@NonNull ResponseBody responseBody) {
-            GraphContainer<DataContainer<T>> container;
             T targetResult = null;
             try {
-                container = WebFactory.gson.fromJson(responseBody.string(), new TypeToken<GraphContainer<DataContainer<T>>>(){}.getType());
-                if(container != null) {
-                    if(container.isSuccess()) {
-                        DataContainer<T> dataContainer = container.getData();
-                        if (dataContainer.getResult() != null && !dataContainer.isEmpty()) {
-                            String response = WebFactory.gson.toJson(dataContainer.getResult());
-                            targetResult = WebFactory.gson.fromJson(response, type);
-                        }
-                    } else {
-                        List<GraphError> graphErrors = container.getErrors();
-                        for (GraphError error: graphErrors)
-                            Log.e(this.toString(), error.toString());
-                    }
+                GraphContainer<T> container = gson.fromJson(responseBody.string(), type);
+                if(!container.isEmpty() && !container.getData().isEmpty()) {
+                    DataContainer<T> dataContainer = container.getData();
+                    targetResult = dataContainer.getResult();
+                } else {
+                    List<GraphError> graphErrors = container.getErrors();
+                    for (GraphError error: graphErrors)
+                        Log.e(this.toString(), error.toString());
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

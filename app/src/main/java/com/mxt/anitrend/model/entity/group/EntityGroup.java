@@ -1,9 +1,5 @@
 package com.mxt.anitrend.model.entity.group;
 
-import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.base.NotificationBase;
-import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.util.KeyUtil;
 
 /**

@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.base.custom.annotation.processor.GraphProcessor;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
-import com.mxt.anitrend.model.api.converter.GraphConverter;
+import com.mxt.anitrend.model.api.converter.GraphQLConverter;
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor;
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor;
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor;
@@ -90,7 +90,7 @@ public class WebFactory {
             }
 
             mRetrofit = new Retrofit.Builder().client(httpClient.build())
-                    .addConverterFactory(GraphConverter.create(context))
+                    .addConverterFactory(GraphQLConverter.create(context))
                     .baseUrl(BuildConfig.API_LINK)
                     .build();
         }
