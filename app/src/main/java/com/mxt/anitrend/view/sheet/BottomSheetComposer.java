@@ -89,12 +89,12 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
         switch (requestType) {
             case KeyUtil.MUT_SAVE_TEXT_FEED:
                 composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_TEXT_FEED);
-                composerWidget.setText(feedList.getValue());
+                composerWidget.setText(feedList.getText());
                 break;
             case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                 toolbarTitle.setText(getString(mTitle, user.getName()));
                 if(feedList != null)
-                    composerWidget.setText(feedList.getValue());
+                    composerWidget.setText(feedList.getText());
                 composerWidget.setModel(user, KeyUtil.MUT_SAVE_MESSAGE_FEED);
                 break;
         }

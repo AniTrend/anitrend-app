@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Character" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaCharacter" />
     </data>
 
     <com.nguyenhoanglam.progresslayout.ProgressLayout

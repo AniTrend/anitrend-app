@@ -3,6 +3,7 @@ package com.mxt.anitrend.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,19 +37,21 @@ final class MediaDialogUtil extends DialogUtil {
      *
      * @param context from a fragment activity derived class
      * @param model non-null series model object off or on the users list
-     * @param isNewEntry represents the existence or absence of a series entity in the users list
+     * @param userMediaList the mediaList item for the current user
      * @param title series title based on user preferences
      */
-    static void createSeriesManage(Context context, @NonNull Media model, boolean isNewEntry, String title) {
+    static void createSeriesManage(Context context, @NonNull Media model, @Nullable MediaList userMediaList, String title) {
         CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getType());
-        seriesManageBase.setModel(model, isNewEntry);
+        seriesManageBase.setModel(model, userMediaList);
+
+        boolean isNewEntry = userMediaList == null;
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
         materialBuilder.customView(seriesManageBase, true);
         materialBuilder.onAny((dialog, which) -> {
             switch (which) {
                 case POSITIVE:
-                    onDialogPositive(context, seriesManageBase, dialog, isNewEntry);
+                    onDialogPositive(context, seriesManageBase, dialog);
                     break;
                 case NEUTRAL:
                     dialog.dismiss();
@@ -68,19 +71,21 @@ final class MediaDialogUtil extends DialogUtil {
      *
      * @param context from a fragment activity derived class
      * @param model non-null series model object off or on the users list
-     * @param isNewEntry represents the existence or absence of a series entity in the users list
+     * @param userMediaList the mediaList item for the current user
      * @param title series title based on user preferences
      */
-    static void createSeriesManage(Context context, @NonNull MediaBase model, boolean isNewEntry, String title) {
+    static void createSeriesManage(Context context, @NonNull MediaBase model, @Nullable MediaList userMediaList, String title) {
         CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getType());
-        seriesManageBase.setModel(model, isNewEntry);
+        seriesManageBase.setModel(model, userMediaList);
+
+        boolean isNewEntry = userMediaList == null;
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
         materialBuilder.customView(seriesManageBase, true);
         materialBuilder.onAny((dialog, which) -> {
             switch (which) {
                 case POSITIVE:
-                    onDialogPositive(context, seriesManageBase, dialog, isNewEntry);
+                    onDialogPositive(context, seriesManageBase, dialog);
                     break;
                 case NEUTRAL:
                     dialog.dismiss();
@@ -100,19 +105,21 @@ final class MediaDialogUtil extends DialogUtil {
      *
      * @param context from a fragment activity derived class
      * @param model non-null series model object off or on the users list
-     * @param isNewEntry represents the existence or absence of a series entity in the users list
+     * @param userMediaList the mediaList item for the current user
      * @param title series title based on user preferences
      */
-    static void createSeriesManage(Context context, @NonNull MediaList model, boolean isNewEntry, String title) {
+    static void createSeriesManage(Context context, @NonNull MediaList model, @Nullable MediaList userMediaList, String title) {
         CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getMedia().getType());
-        seriesManageBase.setModel(model, isNewEntry);
+        seriesManageBase.setModel(model, userMediaList);
+
+        boolean isNewEntry = userMediaList == null;
 
         MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
         materialBuilder.customView(seriesManageBase, true);
         materialBuilder.onAny((dialog, which) -> {
             switch (which) {
                 case POSITIVE:
-                    onDialogPositive(context, seriesManageBase, dialog, isNewEntry);
+                    onDialogPositive(context, seriesManageBase, dialog);
                     break;
                 case NEUTRAL:
                     dialog.dismiss();
@@ -131,7 +138,7 @@ final class MediaDialogUtil extends DialogUtil {
      *
      * @param context from a fragment activity derived class
      */
-    private static void onDialogPositive(Context context, CustomSeriesManageBase seriesManageBase, MaterialDialog dialog, boolean isNewEntry) {
+    private static void onDialogPositive(Context context, CustomSeriesManageBase seriesManageBase, MaterialDialog dialog) {
         dialog.dismiss();
 
         ProgressDialog progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request);
@@ -151,9 +158,6 @@ final class MediaDialogUtil extends DialogUtil {
                     MediaList responseBody;
                     progressDialog.dismiss();
                     if(response.isSuccessful() && (responseBody = response.body()) != null) {
-                        if(seriesManageBase.getModel().getMedia() != null)
-                            responseBody.setMedia(seriesManageBase.getModel().getMedia());
-                        presenter.getDatabase().getBoxStore(MediaList.class).put(responseBody);
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, responseBody), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
@@ -205,7 +209,6 @@ final class MediaDialogUtil extends DialogUtil {
                 try {
                     progressDialog.dismiss();
                     if(response.isSuccessful()) {
-                        presenter.getDatabase().getBoxStore(MediaList.class).remove(seriesManageBase.getModel());
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, seriesManageBase.getModel()), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {

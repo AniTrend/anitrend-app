@@ -104,7 +104,11 @@ public class WebTokenRequest {
      * existing token instance for persistence
      */
     private static void createNewTokenReference(@NonNull WebToken webToken) {
-        token = new WebToken(webToken.getAccess_token(), webToken.getToken_type(), webToken.getExpires_in(), webToken.getExpires(), webToken.getRefresh_token());
+        try {
+            token = webToken.clone();
+        } catch (CloneNotSupportedException e) {
+            Log.e("createNewTokenReference", e.getMessage());
+        }
     }
 
     private static class AuthenticationCodeAsync extends AsyncTask<String, Void, WebToken> {

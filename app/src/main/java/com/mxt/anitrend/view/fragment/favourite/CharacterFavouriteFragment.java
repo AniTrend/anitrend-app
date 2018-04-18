@@ -86,7 +86,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
     public void onChanged(@Nullable ConnectionContainer<Favourite> content) {
         if(content != null) {
             if(!content.isEmpty()) {
-                PageContainer<CharacterBase> pageContainer = content.getConnection().getCharacter();
+                PageContainer<CharacterBase> pageContainer = content.getConnection().getCharacters();
                 if(pageContainer.hasPageInfo())
                     getPresenter().setPageInfo(pageContainer.getPageInfo());
                 onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.getPageData()));

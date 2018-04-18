@@ -2,6 +2,7 @@ package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +35,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
 
     private WidgetPresenter<List<UserBase>> presenter;
     private WidgetFavouriteBinding binding;
-    private List<UserBase> model;
+    private @Nullable List<UserBase> model;
 
     public FavouriteWidget(Context context) {
         super(context);
@@ -78,7 +79,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     }
 
     public void setModel(List<UserBase> model) {
-         this.model = model;
+        this.model = model;
         setIconType();
     }
 
@@ -104,13 +105,13 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     }
 
     private void setIconType() {
-        if(model.contains(presenter.getDatabase().getCurrentUser()))
+        if(!CompatUtil.isEmpty(model) && model.contains(presenter.getDatabase().getCurrentUser()))
             binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                     R.drawable.ic_favorite_grey_600_18dp, R.color.colorStateRed), null, null, null);
         else
             binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                     R.drawable.ic_favorite_grey_600_18dp), null, null, null);
-        binding.widgetLike.setText(WidgetPresenter.convertToText(model.size()));
+        binding.widgetLike.setText(WidgetPresenter.convertToText(CompatUtil.sizeOf(model)));
         resetFlipperState();
     }
 
@@ -127,7 +128,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
         try {
             if(response.isSuccessful()) {
-                if(model.contains(presenter.getDatabase().getCurrentUser()))
+                if(!CompatUtil.isEmpty(model) && model.contains(presenter.getDatabase().getCurrentUser()))
                     model.remove(presenter.getDatabase().getCurrentUser());
                 else
                     model.add(presenter.getDatabase().getCurrentUser());

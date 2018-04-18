@@ -81,9 +81,10 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
 
     @Override
     protected void updateUI() {
+        // TODO: 2018/04/26 Disabled in the mean time while we decide if there is any need for this service
+        // startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if(getPresenter().getApplicationPref().isNotificationEnabled())
             JobSchedulerUtil.scheduleJob(getApplicationContext());
-        startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             Bundle SHORTCUT_MY_ANIME_BUNDLE = new Bundle();
             SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME);

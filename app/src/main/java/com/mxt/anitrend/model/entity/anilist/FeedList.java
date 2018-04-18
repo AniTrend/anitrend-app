@@ -19,8 +19,8 @@ public class FeedList implements Parcelable {
     private int replyCount;
     private @KeyUtil.FeedType String type;
     private String status;
-    @SerializedName(value = "progress", alternate = {"message"})
-    private String value;
+    @SerializedName(value = "text", alternate = {"message", "progress"})
+    private String text;
     private long createdAt;
     private UserBase user;
     private MediaBase media;
@@ -35,7 +35,7 @@ public class FeedList implements Parcelable {
         replyCount = in.readInt();
         type = in.readString();
         status = in.readString();
-        value = in.readString();
+        text = in.readString();
         createdAt = in.readLong();
         user = in.readParcelable(UserBase.class.getClassLoader());
         media = in.readParcelable(MediaBase.class.getClassLoader());
@@ -51,7 +51,7 @@ public class FeedList implements Parcelable {
         dest.writeInt(replyCount);
         dest.writeString(type);
         dest.writeString(status);
-        dest.writeString(value);
+        dest.writeString(text);
         dest.writeLong(createdAt);
         dest.writeParcelable(user, flags);
         dest.writeParcelable(media, flags);
@@ -94,8 +94,8 @@ public class FeedList implements Parcelable {
         return status;
     }
 
-    public String getValue() {
-        return value;
+    public String getText() {
+        return text;
     }
 
     public long getCreatedAt() {
@@ -126,8 +126,8 @@ public class FeedList implements Parcelable {
         return replies;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setText(String value) {
+        this.text = value;
     }
 
     @Override

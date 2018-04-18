@@ -20,6 +20,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
+import java.util.Locale;
 
 /**
  * Created by max on 2018/02/03.
@@ -81,9 +82,13 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
         queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaSort())
-                .putVariable(KeyUtil.arg_order, getPresenter().getApplicationPref().getSortOrder())
-                .putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+                .putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaSort());
+        if(CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
+            queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
+                    "%d%%",getPresenter().getApplicationPref().getSeasonYear()));
+        else
+            queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
     }

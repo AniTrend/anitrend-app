@@ -8,15 +8,20 @@ import com.mxt.anitrend.util.KeyUtil;
 /**
  * Created by max on 2017/11/04.
  * Suggestions adapter
- * // TODO: 2018/04/07 Hide genres from filter list
  */
-
+// TODO: 2018/04/07 Hide genres from filter list
 public class SuggestionListFragment extends MediaBrowseFragment {
 
-    public static SuggestionListFragment newInstance(Bundle bundle) {
-        return (SuggestionListFragment) newInstance(bundle, GraphUtil.getDefaultQuery(true)
-                .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME).putVariable(KeyUtil.arg_onList, false),
-                false);
+    public static SuggestionListFragment newInstance(Bundle params) {
+        Bundle args = new Bundle(params);
+        args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                .putVariable(KeyUtil.arg_onList, false));
+
+        args.putBoolean(KeyUtil.arg_media_compact, false);
+        SuggestionListFragment fragment = new SuggestionListFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

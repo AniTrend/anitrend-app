@@ -58,18 +58,24 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         presenter = new MediaPresenter(getContext());
     }
 
-    public void setModel(MediaBase model, boolean isNewEntry) {
-        if(isNewEntry) {
+    public void setModel(MediaBase model, MediaList userMediaList) {
+        if(userMediaList != null)
+            this.model = userMediaList;
+        else {
             this.model = new MediaList();
+            this.model.setMediaId(model.getId());
             this.model.setMedia(model);
         }
         bindFields();
         populateFields();
     }
 
-    public void setModel(MediaList model, boolean isNewEntry) {
-        if(isNewEntry) {
+    public void setModel(MediaList model, MediaList userMediaList) {
+        if(userMediaList != null)
+            this.model = userMediaList;
+        else {
             this.model = new MediaList();
+            this.model.setMediaId(model.getId());
             this.model.setMedia(model.getMedia());
         }
         bindFields();

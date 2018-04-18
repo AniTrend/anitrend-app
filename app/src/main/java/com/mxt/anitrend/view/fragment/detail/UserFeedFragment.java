@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * user profile targeted feeds
  */
 
-public class UserFeedFragment extends FeedListFragment implements PublisherListener<UserBase> {
+public class UserFeedFragment extends FeedListFragment {
 
     public static UserFeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
@@ -35,10 +35,9 @@ public class UserFeedFragment extends FeedListFragment implements PublisherListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
+        if(getArguments() != null)
             queryContainer.putVariable(KeyUtil.arg_userId, getArguments().getLong(KeyUtil.arg_id))
                     .putVariable(KeyUtil.arg_userName, getArguments().getString(KeyUtil.arg_userName));
-        }
         isMenuDisabled = true; isFeed = false;
     }
 
@@ -48,18 +47,4 @@ public class UserFeedFragment extends FeedListFragment implements PublisherListe
             super.makeRequest();
     }
 
-    /**
-     * Responds to published events, be sure to add subscribe annotation
-     *
-     * @param userBase passed event
-     * @see Subscribe
-     */
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEventPublished(UserBase userBase) {
-        queryContainer.putVariable(KeyUtil.arg_userId, userBase.getId());
-        if (model == null)
-            onRefresh();
-        else if (stateLayout.isLoading())
-            updateUI();
-    }
 }

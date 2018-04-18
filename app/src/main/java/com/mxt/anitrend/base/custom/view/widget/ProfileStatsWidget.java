@@ -111,7 +111,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id))
                 .putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName));
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
-        presenter.requestData(KeyUtil.MUT_RATE_REVIEW, getContext(), this);
+        presenter.requestData(KeyUtil.USER_STATS_REQ, getContext(), this);
     }
 
     /**
@@ -180,6 +180,8 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     }
 
     public String getAnimeTime(int animeTime) {
+        if(animeTime < 1)
+            return placeHolder;
         float item_time = animeTime / 60;
         if(item_time > 60) {
             item_time /= 24;
@@ -191,6 +193,8 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     }
 
     public String getMangaChaptersCount(long manga_chap) {
+        if(manga_chap < 1)
+            return placeHolder;
         if(manga_chap > 1000)
             return String.format(Locale.getDefault(), "%.1f K", (float)manga_chap/1000);
         return String.format(Locale.getDefault(), "%d", manga_chap);

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.databinding.FragmentCharacterOverviewBinding;
-import com.mxt.anitrend.model.entity.anilist.Character;
+import com.mxt.anitrend.model.entity.anilist.MediaCharacter;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -27,9 +27,9 @@ import butterknife.OnClick;
  * CharacterOverviewFragment
  */
 
-public class CharacterOverviewFragment extends FragmentBase<Character, BasePresenter, Character> {
+public class CharacterOverviewFragment extends FragmentBase<MediaCharacter, BasePresenter, MediaCharacter> {
 
-    private Character model;
+    private MediaCharacter model;
 
     private FragmentCharacterOverviewBinding binding;
 
@@ -104,7 +104,7 @@ public class CharacterOverviewFragment extends FragmentBase<Character, BasePrese
     }
 
     @Override
-    public void onChanged(@Nullable Character model) {
+    public void onChanged(@Nullable MediaCharacter model) {
         if(model != null)
             this.model = model;
         updateUI();

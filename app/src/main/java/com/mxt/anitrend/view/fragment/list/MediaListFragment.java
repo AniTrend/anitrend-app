@@ -65,7 +65,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = true;
-        setPresenter(new BasePresenter(getContext()));
+        setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 
@@ -78,8 +78,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             mAdapter = new MediaListAdapter(model, getContext());
             ((MediaListAdapter)mAdapter).setCurrentUser(userName);
         }
-        if(model != null && model.size() > 0)
-        injectAdapter();
+        if (!CompatUtil.isEmpty(model))
+            injectAdapter();
     }
 
     /**

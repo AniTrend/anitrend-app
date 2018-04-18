@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,8 +75,8 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
     }
 
     public void setModel(FeedList model) {
-        binding.widgetStatusText.setMarkDownText(model.getValue());
-        findMediaAttachments(model.getValue());
+        binding.widgetStatusText.setMarkDownText(model.getText());
+        findMediaAttachments(model.getText());
     }
 
     public void setModel(FeedReply model) {
@@ -99,25 +100,27 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
             linearScaleHelper.onViewRecycled();
     }
 
-    private void findMediaAttachments(String value) {
-        Matcher matcher = PatternMatcher.findMedia(value);
-        contentLinks = new ArrayList<>();
-        contentTypes = new ArrayList<>();
-        while (matcher.find()) {
-            int gc = matcher.groupCount();
-            String tag = matcher.group(gc - 1);
-            String media = matcher.group(gc);
-            contentTypes.add(tag);
-            if (tag.equals(PatternMatcher.KEY_YOU))
-                contentLinks.add(PatternMatcher.buildYoutube(media.replace("(", "").replace(")", "")));
-            else
-                contentLinks.add(media.replace("(", "").replace(")", ""));
+    private void findMediaAttachments(@Nullable String value) {
+        if(!TextUtils.isEmpty(value)) {
+            Matcher matcher = PatternMatcher.findMedia(value);
+            contentLinks = new ArrayList<>();
+            contentTypes = new ArrayList<>();
+            while (matcher.find()) {
+                int gc = matcher.groupCount();
+                String tag = matcher.group(gc - 1);
+                String media = matcher.group(gc);
+                contentTypes.add(tag);
+                if (tag.equals(PatternMatcher.KEY_YOU))
+                    contentLinks.add(PatternMatcher.buildYoutube(media.replace("(", "").replace(")", "")));
+                else
+                    contentLinks.add(media.replace("(", "").replace(")", ""));
+            }
         }
         constructAdditionalViews();
     }
 
     private void constructAdditionalViews() {
-        if(contentLinks.size() > 0) {
+        if(!CompatUtil.isEmpty(contentLinks)) {
             RecyclerViewAdapter<String> previewAdapter = new ImagePreviewAdapter(contentLinks, contentTypes,  getContext());
             previewAdapter.setClickListener(this);
             binding.widgetStatusRecycler.setAdapter(previewAdapter);
@@ -137,9 +140,8 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
                 linearScaleHelper.attachToRecyclerView(binding.widgetStatusRecycler);
             }
             binding.widgetSlideHolder.setVisibility(VISIBLE);
-        } else {
+        } else
             binding.widgetSlideHolder.setVisibility(GONE);
-        }
     }
 
     @Override

@@ -4,18 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mxt.anitrend.data.converter.FuzzyDateConverter;
+import com.mxt.anitrend.data.converter.ListConverter;
+import com.mxt.anitrend.data.converter.MediaBaseConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
 
+import io.objectbox.annotation.Convert;
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Index;
+
 /**
  * Created by Maxwell on 1/12/2017.
  */
-
 public class MediaList extends EntityGroup implements Parcelable {
 
     private long id;
@@ -37,7 +43,6 @@ public class MediaList extends EntityGroup implements Parcelable {
     private long updatedAt;
     private long createdAt;
     private MediaBase media;
-    private UserBase user;
 
     public MediaList() {
 
@@ -61,7 +66,6 @@ public class MediaList extends EntityGroup implements Parcelable {
         updatedAt = in.readLong();
         createdAt = in.readLong();
         media = in.readParcelable(MediaBase.class.getClassLoader());
-        user = in.readParcelable(UserBase.class.getClassLoader());
     }
 
     @Override
@@ -83,7 +87,6 @@ public class MediaList extends EntityGroup implements Parcelable {
         dest.writeLong(updatedAt);
         dest.writeLong(createdAt);
         dest.writeParcelable(media, flags);
-        dest.writeParcelable(user, flags);
     }
 
     @Override
@@ -177,10 +180,6 @@ public class MediaList extends EntityGroup implements Parcelable {
 
     public MediaBase getMedia() {
         return media;
-    }
-
-    public UserBase getUser() {
-        return user;
     }
 
     public void setId(long id) {

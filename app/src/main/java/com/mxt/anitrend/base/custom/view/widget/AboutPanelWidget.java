@@ -64,6 +64,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     private BottomSheetBase mBottomSheet;
     private FragmentManager fragmentManager;
 
+    private final String placeHolder = "..";
+
     public AboutPanelWidget(@NonNull Context context) {
         super(context);
         onInit();
@@ -85,19 +87,19 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     @Override
     public void onInit() {
         binding = WidgetProfileAboutPanelBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_id, userId)
-                .putVariable(KeyUtil.arg_page_limit, 1);
         binding.setOnClickListener(this);
     }
 
     public void setUserId(long userId, Lifecycle lifecycle) {
         this.userId = userId; this.lifecycle = lifecycle;
+        queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtil.arg_id, userId)
+                .putVariable(KeyUtil.arg_page_limit, 1);
 
         if(DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 5)) {
-            binding.userFavouritesCount.setText("..");
-            binding.userFollowersCount.setText("..");
-            binding.userFollowingCount.setText("..");
+            binding.userFavouritesCount.setText(placeHolder);
+            binding.userFollowersCount.setText(placeHolder);
+            binding.userFollowingCount.setText(placeHolder);
 
             mLastSynced = System.currentTimeMillis();
             requestFavourites(); requestFollowers(); requestFollowing();
@@ -166,12 +168,23 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 if(isAlive()) {
                     ConnectionContainer<Favourite> connectionContainer;
                     if(response.isSuccessful() && (connectionContainer = response.body()) != null) {
-                        if(connectionContainer.getConnection() != null) {
-                            favourites += connectionContainer.getConnection().getAnime().getPageInfo().getTotal();
-                            favourites += connectionContainer.getConnection().getManga().getPageInfo().getTotal();
-                            favourites += connectionContainer.getConnection().getCharacter().getPageInfo().getTotal();
-                            favourites += connectionContainer.getConnection().getStaff().getPageInfo().getTotal();
-                            favourites += connectionContainer.getConnection().getStudio().getPageInfo().getTotal();
+                        Favourite favouriteConnection = connectionContainer.getConnection();
+                        if(favouriteConnection != null) {
+                            if(favouriteConnection.getAnime() != null && favouriteConnection.getAnime().hasPageInfo())
+                                favourites += favouriteConnection.getAnime().getPageInfo().getTotal();
+
+                            if(favouriteConnection.getManga() != null && favouriteConnection.getManga().hasPageInfo())
+                                favourites += favouriteConnection.getManga().getPageInfo().getTotal();
+
+                            if(favouriteConnection.getCharacters() != null && favouriteConnection.getCharacters().hasPageInfo())
+                                favourites += favouriteConnection.getCharacters().getPageInfo().getTotal();
+
+                            if(favouriteConnection.getStaff() != null && favouriteConnection.getStaff().hasPageInfo())
+                                favourites += favouriteConnection.getStaff().getPageInfo().getTotal();
+
+                            if(favouriteConnection.getStudios() != null && favouriteConnection.getStudios().hasPageInfo())
+                                favourites += favouriteConnection.getStudios().getPageInfo().getTotal();
+
                             binding.userFavouritesCount.setText(WidgetPresenter.valueFormatter(favourites));
                         }
                     }

@@ -1,6 +1,8 @@
 package com.mxt.anitrend.util;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,11 +40,11 @@ public class PatternMatcher {
     /**
      * finds images and youtube videos
      */
-    public static Matcher findMedia(String param) {
+    public static Matcher findMedia(@NonNull String param) {
         return pattern.matcher(param);
     }
 
-    public static Matcher findImages(String param) {
+    private static @NonNull Matcher findImages(@NonNull String param) {
         return Pattern.compile("(img).*?(\\([^)]+\\))").matcher(param);
     }
 
@@ -55,13 +57,15 @@ public class PatternMatcher {
      * @see String#trim()
      * */
     @Deprecated
-    public static String removeTrailingWhiteSpaces(String param) {
+    public static String removeTrailingWhiteSpaces(@NonNull String param) {
+        if(TextUtils.isEmpty(param))
+            return null;
         return Pattern.compile(PATTERN_TRAILING_SPACES).matcher(param).replaceAll("");
     }
 
-    static String findUserTags(String text) {
-        if(text == null)
-            return null;
+    static @NonNull String findUserTags(String text) {
+        if(TextUtils.isEmpty(text))
+            return "<b>No content available</b>";
         Matcher matcher = Pattern.compile(PATTERN_USER_TAGS).matcher(text);
         while (matcher.find()) {
             String match = matcher.group();
@@ -128,14 +132,16 @@ public class PatternMatcher {
         return String.format(VID_THUMB, temp);
     }
 
-    public static String removeTags(String value) {
+    public static String removeTags(@Nullable String value) {
+        if(TextUtils.isEmpty(value))
+            return null;
         return findImages(findMedia(value).replaceAll("")).replaceAll("")
                 .replaceAll("!~", "").replaceAll("~!", "")
                 .replaceAll("~", "");
     }
 
-    public static String convertToStandardMarkdown(String value) {
-        if(value != null) {
+    public static String convertToStandardMarkdown(@Nullable String value) {
+        if(!TextUtils.isEmpty(value)) {
             Matcher matcher = findImages(value);
             String TAG = "![image]";
             while (matcher.find()) {
@@ -145,6 +151,6 @@ public class PatternMatcher {
             }
             return value.replaceAll("!~", "").replaceAll("~!", "").replaceAll("~", "");
         } else
-            return "N/A";
+            return "<b>No content available</b>";
     }
 }

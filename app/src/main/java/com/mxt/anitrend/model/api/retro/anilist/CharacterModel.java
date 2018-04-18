@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist;
 
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
+import com.mxt.anitrend.model.entity.anilist.MediaCharacter;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
@@ -30,7 +31,7 @@ public interface CharacterModel {
     @POST("/")
     @GraphQuery("CharacterOverview")
     @Headers("Content-Type: application/json")
-    Call<GraphContainer<Character>> getCharacterOverview(@Body QueryContainerBuilder request);
+    Call<GraphContainer<MediaCharacter>> getCharacterOverview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CharacterMedia")

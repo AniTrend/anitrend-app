@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.entity.container.request;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -54,6 +55,12 @@ public class QueryContainerBuilder implements Parcelable {
     public QueryContainerBuilder putVariable(String key, Object value) {
         queryContainer.putVariable(key, value);
         return this;
+    }
+
+    public @Nullable Object getVariable(String key) {
+        if(containsVariable(key))
+            return queryContainer.variables.get(key);
+        return null;
     }
 
     public boolean containsVariable(String key) {

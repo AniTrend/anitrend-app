@@ -4,15 +4,22 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.api.retro.anilist.UserModel;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.KeyUtil;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -25,29 +32,31 @@ public class AuthenticatorService extends IntentService {
         super(ServiceName);
     }
 
+    public void requestUserProfile() {
+        final WidgetPresenter<User> widgetPresenter = new WidgetPresenter<>(getApplicationContext());
+        widgetPresenter.getParams().putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false));
+        widgetPresenter.requestData(KeyUtil.USER_CURRENT_REQ, getApplicationContext(), new RetroCallback<User>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                User user;
+                if(response.isSuccessful() && (user = response.body()) != null) {
+                    widgetPresenter.getDatabase().saveCurrentUser(user);
+                    widgetPresenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_CURRENT_REQ, user), false);
+                }
+                else
+                    Log.e(ServiceName, ErrorUtil.getError(response));
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable throwable) {
+                Log.e(ServiceName, throwable.getMessage());
+                throwable.printStackTrace();
+            }
+        });
+    }
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        BasePresenter basePresenter = new BasePresenter(getApplicationContext());
-        if(basePresenter.getApplicationPref().isAuthenticated()) {
-            if(basePresenter.getDatabase().getCurrentUser() == null)
-                WebFactory.createService(UserModel.class, getApplicationContext())
-                        .getCurrentUser(GraphUtil.getDefaultQuery(false)).enqueue(new RetroCallback<GraphContainer<User>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<GraphContainer<User>> call, @NonNull Response<GraphContainer<User>> response) {
-                        GraphContainer<User> graphContainer;
-                        if(response.isSuccessful() && (graphContainer = response.body()) != null)
-                            if(!graphContainer.isEmpty() && !graphContainer.getData().isEmpty())
-                                basePresenter.getDatabase()
-                                        .saveCurrentUser(graphContainer.getData().getResult());
-                        else
-                            ErrorUtil.getError(response);
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<GraphContainer<User>> call, @NonNull Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                });
-        }
+        requestUserProfile();
     }
 }

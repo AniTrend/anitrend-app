@@ -1,6 +1,7 @@
 package com.mxt.anitrend.base.interfaces.dao;
 
 import com.mxt.anitrend.model.entity.anilist.Genre;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;

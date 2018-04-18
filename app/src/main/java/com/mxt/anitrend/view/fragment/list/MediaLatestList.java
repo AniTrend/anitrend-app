@@ -22,4 +22,12 @@ public class MediaLatestList extends MediaBrowseFragment {
         super.onCreate(savedInstanceState);
         isFilterable = false;
     }
+
+    @Override
+    public void makeRequest() {
+        Bundle bundle = getViewModel().getParams();
+        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+        bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
+        getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
+    }
 }

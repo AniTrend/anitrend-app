@@ -217,7 +217,6 @@ public class ApplicationPref {
         editor.apply();
     }
 
-
     public @KeyUtil.MediaTrendSort String getMediaTrendSort() {
         return sharedPreferences.getString(_mediaTrendSort, KeyUtil.TRENDING) + getSortOrder();
     }

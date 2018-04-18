@@ -85,7 +85,7 @@ public class WebFactory {
 
             if(BuildConfig.DEBUG) {
                 HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor()
-                        .setLevel(HttpLoggingInterceptor.Level.BODY);
+                        .setLevel(HttpLoggingInterceptor.Level.HEADERS);
                 httpClient.addInterceptor(httpLoggingInterceptor);
             }
 

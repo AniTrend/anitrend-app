@@ -49,8 +49,8 @@ public class ErrorUtil {
 
     private static String getGraphQLError(String errorJson) {
         Log.e(TAG, errorJson);
-        Type tokenType = new TypeToken<GraphContainer<Object>>(){}.getType();
-        GraphContainer<Object> graphContainer = WebFactory.gson.fromJson(errorJson, tokenType);
+        Type tokenType = new TypeToken<GraphContainer<?>>(){}.getType();
+        GraphContainer<?> graphContainer = WebFactory.gson.fromJson(errorJson, tokenType);
         List<GraphError> errors = graphContainer.getErrors();
         if (!CompatUtil.isEmpty(errors))
             return errors.get(0).toString();

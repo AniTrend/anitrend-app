@@ -72,7 +72,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Base main_menu activity to show case template
  */
 
-public class MainActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<UserBase>,
+public class MainActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<User>,
         NavigationView.OnNavigationItemSelectedListener {
 
     protected @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -412,7 +412,6 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         User user;
         if((user = getPresenter().getDatabase().getCurrentUser()) != null) {
             mUserName.setText(user.getName());
-            mUserAvatar.setImageSrc(user.getAvatar().getLarge());
             HeaderImageView.setImage(mHeaderView, user.getBannerImage());
 
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
@@ -480,10 +479,12 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<UserBase> consumer) {
-        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ)
+    public void onModelChanged(BaseConsumer<User> consumer) {
+        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ) {
             NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
+            mUserAvatar.showSetCounter(consumer);
+        }
     }
 }
 

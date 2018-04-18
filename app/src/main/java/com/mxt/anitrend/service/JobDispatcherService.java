@@ -40,7 +40,7 @@ public class JobDispatcherService extends JobService implements BaseConsumer.onR
     public boolean onStartJob(JobParameters job) {
         this.job = job;
         notificationSyncTask = new NotificationSyncTask();
-        notificationSyncTask.execute(getApplicationContext());
+        notificationSyncTask.InitializeWith(getApplicationContext());
         return true;
     }
 
@@ -64,7 +64,7 @@ public class JobDispatcherService extends JobService implements BaseConsumer.onR
     @Override
     public boolean onStopJob(JobParameters job) {
         if(notificationSyncTask != null)
-            notificationSyncTask.cancel(true);
+            notificationSyncTask.onDestroy();
         Log.i("onStopJob", "JobDispatcher engine has decided to interrupt the execution of a running job");
         return true;
     }

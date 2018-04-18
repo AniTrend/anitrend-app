@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,7 +15,9 @@ import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
 import retrofit2.Call;
@@ -31,6 +34,7 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
     private ProgressDialog progressDialog;
     private WidgetPresenter<MediaList> presenter;
     private FragmentActivity context;
+    private User user;
 
     private Lifecycle lifecycle;
 
@@ -41,7 +45,8 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
     MediaActionUtil(FragmentActivity context) {
         this.context = context;
         this.lifecycle = context.getLifecycle();
-        presenter = new WidgetPresenter<>(context);
+        this.presenter = new WidgetPresenter<>(context);
+        this.user = presenter.getDatabase().getCurrentUser();
     }
 
     private void setModels(Media media, MediaList mediaList, MediaBase mediaBase) {
@@ -51,18 +56,18 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
     }
 
     private void actionPicker() {
-        if(media != null) {
-            presenter.getParams().putLong(KeyUtil.arg_mediaId, media.getId());
-            presenter.requestData(KeyUtil.MUT_SAVE_MEDIA_LIST, context, this);
-        }
-        else if (mediaBase != null) {
-            presenter.getParams().putLong(KeyUtil.arg_mediaId, mediaBase.getId());
-            presenter.requestData(KeyUtil.MUT_SAVE_MEDIA_LIST, context, this);
-        }
-        else {
-            presenter.getParams().putLong(KeyUtil.arg_id, mediaList.getMediaId());
-            presenter.requestData(KeyUtil.MUT_SAVE_MEDIA_LIST, context, this);
-        }
+        QueryContainerBuilder queryContainerBuilder = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtil.arg_userName, user.getName());
+
+        if(media != null)
+            queryContainerBuilder.putVariable(KeyUtil.arg_mediaId, media.getId());
+        else if (mediaBase != null)
+            queryContainerBuilder.putVariable(KeyUtil.arg_mediaId, mediaBase.getId());
+        else
+            queryContainerBuilder.putVariable(KeyUtil.arg_mediaId, mediaList.getMediaId());
+
+        presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder);
+        presenter.requestData(KeyUtil.MEDIA_LIST_REQ, context, this);
     }
 
     private void dismissProgress() {
@@ -76,21 +81,14 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
         actionPicker();
     }
 
-    private boolean isNewEntry(long mediaId) {
-        /*return presenter.getDatabase().getBoxStore(MediaList.class).query()
-                .equal(MediaList_.mediaId, mediaId)
-                .build().count() < 1;*/
-        return false;
-    }
-
-    private void showActionDialog() {
+    private void showActionDialog(@Nullable MediaList mediaListItem) {
         try {
             if(media != null)
-                MediaDialogUtil.createSeriesManage(context, media, isNewEntry(media.getId()), MediaUtil.getMediaTitle(media));
+                MediaDialogUtil.createSeriesManage(context, media, mediaListItem, MediaUtil.getMediaTitle(media));
             else if(mediaBase != null)
-                MediaDialogUtil.createSeriesManage(context, mediaBase, isNewEntry(mediaBase.getId()), MediaUtil.getMediaTitle(mediaBase));
+                MediaDialogUtil.createSeriesManage(context, mediaBase, mediaListItem, MediaUtil.getMediaTitle(mediaBase));
             else
-                MediaDialogUtil.createSeriesManage(context, mediaList, isNewEntry(mediaList.getMediaId()), MediaUtil.getMediaListTitle(mediaList));
+                MediaDialogUtil.createSeriesManage(context, mediaList, mediaListItem, MediaUtil.getMediaListTitle(mediaList));
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());
@@ -109,14 +107,17 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
     @Override
     public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-            MediaList seriesStatus;
-            if(response.isSuccessful() && (seriesStatus = response.body()) != null) {
-                if(!TextUtils.isEmpty(seriesStatus.getStatus()))
-                    presenter.getDatabase().getBoxStore(MediaList.class).put(seriesStatus);
-                showActionDialog();
+            MediaList mediaListItem;
+            if(response.isSuccessful() && (mediaListItem = response.body()) != null) {
+                showActionDialog(mediaListItem);
             } else {
-                Log.e(this.toString(), ErrorUtil.getError(response));
-                NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
+                // response code 404 represents the absence of a media list in the current users list
+                if(response.code() == 404)
+                    showActionDialog(null);
+                else {
+                    Log.e(this.toString(), ErrorUtil.getError(response));
+                    NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
+                }
             }
             dismissProgress();
         }

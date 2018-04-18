@@ -24,6 +24,7 @@ import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -69,12 +70,13 @@ public class MediaPresenter extends BasePresenter {
         int highestStatus = Stream.of(statusDistribution)
                 .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
                 .get().getAmount();
-
-        return Stream.of(statusDistribution)
-                .map(st -> new PieEntry(
-                        (((st.getAmount()) / (highestStatus)) * 100),
-                        CompatUtil.capitalizeWords(st.getStatus())))
-                .toList();
+        if(highestStatus > 0)
+            return Stream.of(statusDistribution)
+                    .map(st -> new PieEntry(
+                            (((st.getAmount()) / (highestStatus)) * 100),
+                            CompatUtil.capitalizeWords(st.getStatus())))
+                    .toList();
+        return Collections.emptyList();
     }
 
     public List<BarEntry> getMediaScoreDistribution(List<ScoreDistribution> scoreDistribution) {
@@ -91,7 +93,7 @@ public class MediaPresenter extends BasePresenter {
     }
 
     public String getMediaSeason(Media media) {
-        if(media != null && media.getStartDate() != null)
+        if(media != null && media.getStartDate() != null && media.getStartDate().isValidDate())
             return DateUtil.getMediaSeason(media.getStartDate());
         return getContext().getString(R.string.TBA);
     }

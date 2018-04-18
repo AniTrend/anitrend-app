@@ -1,10 +1,13 @@
 package com.mxt.anitrend.util;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 
 import com.github.rjeschke.txtmark.Processor;
 
@@ -14,7 +17,7 @@ import com.github.rjeschke.txtmark.Processor;
  */
 public final class MarkDown {
 
-    private static SpannableStringBuilder fromMD(String content) {
+    private static SpannableStringBuilder fromMD(@NonNull String content) {
         Spanned htmlConverted;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             htmlConverted = Html.fromHtml(Processor.process(content),
@@ -24,9 +27,9 @@ public final class MarkDown {
         return (SpannableStringBuilder) htmlConverted;
     }
 
-    public static Spanned convert(String input) {
+    public static Spanned convert(@Nullable String input) {
         SpannableStringBuilder result;
-        if(input == null)
+        if(TextUtils.isEmpty(input))
             result = fromMD("<b>No content available</b>");
         else
             result = fromMD(PatternMatcher.findUserTags(input));

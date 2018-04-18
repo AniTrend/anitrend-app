@@ -47,10 +47,10 @@ public class FeedHeadlineTextView extends AppCompatTextView implements CustomVie
 
     @BindingAdapter("feedHeadline")
     public static void setHeadline(FeedHeadlineTextView headline, FeedList model) {
-        if (TextUtils.isEmpty(model.getValue()))
+        if (TextUtils.isEmpty(model.getText()))
             headline.setText(String.format(Locale.getDefault(), "%s: %s", model.getStatus(), model.getMedia().getTitle().getRomaji()));
         else
-            headline.setText(String.format(Locale.getDefault(), "%s %s of: %s", model.getStatus(), model.getValue(), model.getMedia().getTitle().getRomaji()));
+            headline.setText(String.format(Locale.getDefault(), "%s %s of: %s", model.getStatus(), model.getText(), model.getMedia().getTitle().getRomaji()));
     }
 
     /**

@@ -82,7 +82,7 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
     public void onChanged(@Nullable ConnectionContainer<Favourite> content) {
         if(content != null) {
             if(!content.isEmpty()) {
-                PageContainer<StudioBase> pageContainer = content.getConnection().getStudio();
+                PageContainer<StudioBase> pageContainer = content.getConnection().getStudios();
                 if(pageContainer.hasPageInfo())
                     getPresenter().setPageInfo(pageContainer.getPageInfo());
                 onPostProcessed(pageContainer.getPageData());

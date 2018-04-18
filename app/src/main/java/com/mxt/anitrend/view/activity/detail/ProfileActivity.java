@@ -165,7 +165,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_userId, id)
+            .putVariable(KeyUtil.arg_id, id)
             .putVariable(KeyUtil.arg_userName, userName);
 
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);

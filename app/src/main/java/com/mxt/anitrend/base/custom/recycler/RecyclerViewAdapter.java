@@ -110,23 +110,23 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     }
 
     @Override
-    public abstract RecyclerViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType);
+    public abstract RecyclerViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
     @Override
-    public void onViewAttachedToWindow(RecyclerViewHolder<T> holder) {
+    public void onViewAttachedToWindow(@NonNull RecyclerViewHolder<T> holder) {
         super.onViewAttachedToWindow(holder);
         if(holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams)
             setLayoutSpanSize((StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams(), holder.getLayoutPosition());
     }
 
     @Override
-    public void onViewDetachedFromWindow(RecyclerViewHolder<T> holder) {
+    public void onViewDetachedFromWindow(@NonNull RecyclerViewHolder<T> holder) {
         super.onViewDetachedFromWindow(holder);
         holder.itemView.clearAnimation();
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if(layoutManager instanceof GridLayoutManager)
@@ -140,7 +140,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
      * default implemation is already done for you
      */
     @Override
-    public void onBindViewHolder(RecyclerViewHolder<T> holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder<T> holder, int position) {
         if(getItemCount() != 0) {
             animateViewHolder(holder, position);
             T model = data.get(position);
@@ -157,7 +157,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
      * default implemation is already done for you
      */
     @Override
-    public void onViewRecycled(RecyclerViewHolder<T> holder) {
+    public void onViewRecycled(@NonNull RecyclerViewHolder<T> holder) {
         holder.onViewRecycled();
     }
 

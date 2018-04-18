@@ -14,13 +14,9 @@ public class Favourite {
 
     private PageContainer<MediaBase> anime;
     private PageContainer<MediaBase> manga;
-    private PageContainer<CharacterBase> character;
+    private PageContainer<CharacterBase> characters;
     private PageContainer<StaffBase> staff;
-    private PageContainer<StudioBase> studio;
-
-    public Favourite() {
-
-    }
+    private PageContainer<StudioBase> studios;
 
     public PageContainer<MediaBase> getAnime() {
         return anime;
@@ -30,15 +26,15 @@ public class Favourite {
         return manga;
     }
 
-    public PageContainer<CharacterBase> getCharacter() {
-        return character;
+    public PageContainer<CharacterBase> getCharacters() {
+        return characters;
     }
 
     public PageContainer<StaffBase> getStaff() {
         return staff;
     }
 
-    public PageContainer<StudioBase> getStudio() {
-        return studio;
+    public PageContainer<StudioBase> getStudios() {
+        return studios;
     }
 }

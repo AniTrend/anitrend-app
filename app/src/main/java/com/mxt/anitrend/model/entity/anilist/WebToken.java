@@ -19,14 +19,13 @@ import io.objectbox.annotation.Id;
  */
 
 @Entity
-public class WebToken implements Parcelable {
+public class WebToken implements Parcelable, Cloneable {
 
     @Id
     private long id;
     private String access_token;
     private String token_type;
     private long expires_in;
-    private long expires;
     private String refresh_token;
 
     public WebToken() {
@@ -37,7 +36,6 @@ public class WebToken implements Parcelable {
         this.access_token = access_token;
         this.token_type = token_type;
         this.expires_in = expires_in;
-        this.expires = expires;
         this.refresh_token = refresh_token;
     }
 
@@ -46,7 +44,6 @@ public class WebToken implements Parcelable {
         access_token = in.readString();
         token_type = in.readString();
         expires_in = in.readLong();
-        expires = in.readLong();
         refresh_token = in.readString();
     }
 
@@ -56,7 +53,6 @@ public class WebToken implements Parcelable {
         dest.writeString(access_token);
         dest.writeString(token_type);
         dest.writeLong(expires_in);
-        dest.writeLong(expires);
         dest.writeString(refresh_token);
     }
 
@@ -81,26 +77,6 @@ public class WebToken implements Parcelable {
         this.id = id;
     }
 
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
-    }
-
-    public void setToken_type(String token_type) {
-        this.token_type = token_type;
-    }
-
-    public void setExpires_in(long expires_in) {
-        this.expires_in = expires_in;
-    }
-
-    public void setExpires(long expires) {
-        this.expires = expires;
-    }
-
-    public void setRefresh_token(String refresh_token) {
-        this.refresh_token = refresh_token;
-    }
-
     public long getId() {
         return id;
     }
@@ -118,7 +94,7 @@ public class WebToken implements Parcelable {
     }
 
     public long getExpires() {
-        return expires;
+        return (System.currentTimeMillis() - 8000L) + expires_in;
     }
 
     public String getRefresh_token() {
@@ -136,8 +112,13 @@ public class WebToken implements Parcelable {
                 " access_token: " +access_token +
                 " token_type: " +token_type +
                 " expires_in: " +expires_in +
-                " expires: " +expires +
                 " refresh_token: " +refresh_token +
                 "}";
+    }
+
+    @Override
+    public WebToken clone() throws CloneNotSupportedException {
+        super.clone();
+        return this;
     }
 }

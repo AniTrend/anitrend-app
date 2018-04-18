@@ -57,6 +57,7 @@ public class GraphProcessor {
 
         if(graphFiles != null && graphQuery != null) {
             String fileName = String.format("%s%s", graphQuery.value(), defaultExtension);
+            Log.d("GraphProcessor", fileName);
             if(graphFiles.containsKey(fileName))
                 return graphFiles.get(fileName);
             Log.e(this.toString(), String.format("The request query %s could not be found!", graphQuery.value()));

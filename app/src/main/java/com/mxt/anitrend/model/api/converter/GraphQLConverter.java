@@ -71,18 +71,19 @@ public final class GraphQLConverter extends Converter.Factory {
         @Override
         public T convert(@NonNull ResponseBody responseBody) {
             T targetResult = null;
+            String jsonResponse = null;
             try {
-                GraphContainer<T> container = gson.fromJson(responseBody.string(), type);
+                jsonResponse = responseBody.string();
+                GraphContainer<T> container = gson.fromJson(jsonResponse, type);
                 if(!container.isEmpty() && !container.getData().isEmpty()) {
                     DataContainer<T> dataContainer = container.getData();
                     targetResult = dataContainer.getResult();
-                } else {
-                    List<GraphError> graphErrors = container.getErrors();
-                    for (GraphError error: graphErrors)
+                } else
+                    for (GraphError error: container.getErrors())
                         Log.e(this.toString(), error.toString());
-                }
             } catch (Exception ex) {
                 ex.printStackTrace();
+                Log.e("GraphQLConverter", jsonResponse);
             } finally {
                 responseBody.close();
             }
@@ -106,6 +107,7 @@ public final class GraphQLConverter extends Converter.Factory {
                     .setQuery(graphProcessor.getQuery(methodAnnotations))
                     .build();
             String queryJson = WebFactory.gson.toJson(queryContainer);
+            Log.d("GraphRequestConverter", queryJson);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);
         }
     }
