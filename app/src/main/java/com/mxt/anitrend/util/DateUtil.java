@@ -70,7 +70,7 @@ public class DateUtil {
      */
     public static int getMenuSelect(){
         String value = seasons[Calendar.getInstance().get(Calendar.MONTH)];
-        return CompatUtil.getListFromArray(KeyUtil.MediaSeason).indexOf(value);
+        return CompatUtil.constructListFrom(KeyUtil.MediaSeason).indexOf(value);
     }
 
     /**

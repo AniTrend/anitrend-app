@@ -17,13 +17,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClickListener="@{onClickEvent}"
-        tools:background="@color/colorTransparent">
+        android:background="@color/colorStateOrange">
 
         <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
             android:id="@+id/series_progress_increment"
             android:textColor="@color/white"
-            android:textStyle="bold"
             android:padding="@dimen/lg_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="32/? +"/>

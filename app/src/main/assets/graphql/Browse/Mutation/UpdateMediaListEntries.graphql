@@ -27,64 +27,6 @@ mutation UpdateMediaListEntries($ids: [Int], $scoreFormat: ScoreFormat = POINT_1
           day
         }
       }
-      user {
-        ... on User {
-          id
-          name
-          avatar {
-            ... on UserAvatar {
-              large
-              medium
-            }
-          }
-          isFollowing
-        }
-      }
-      media {
-        ... on Media {
-          id
-          title {
-            ... on MediaTitle {
-              english
-              romaji
-              native
-              userPreferred
-            }
-          }
-          coverImage {
-            ... on MediaCoverImage {
-              large
-              medium
-            }
-          }
-          type
-          format
-          season
-          status
-          meanScore
-          averageScore
-          startDate {
-            ... on FuzzyDate {
-              day
-              month
-              year
-            }
-          }
-          episodes
-          chapters
-          volumes
-          isAdult
-          isFavourite
-          nextAiringEpisode {
-            ... on AiringSchedule {
-              id
-              airingAt
-              timeUntilAiring
-              episode
-            }
-          }
-        }
-      }
     }
   }
 }

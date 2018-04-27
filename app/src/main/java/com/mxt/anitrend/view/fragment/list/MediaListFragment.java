@@ -43,6 +43,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
 
     private String userName;
     private QueryContainerBuilder queryContainer;
+    private @KeyUtil.MediaType String mediaType;
 
     public static MediaListFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
@@ -63,6 +64,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         if(getArguments() != null) {
             userName = getArguments().getString(KeyUtil.arg_userName);
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
+            mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = true;
         setPresenter(new MediaPresenter(getContext()));
@@ -88,6 +90,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @Override
     public void makeRequest() {
         queryContainer.putVariable(KeyUtil.arg_userName, userName)
+                .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
@@ -149,7 +152,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
-                            .setModel(data).build(getActivity());
+                            .setId(data.getMediaId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

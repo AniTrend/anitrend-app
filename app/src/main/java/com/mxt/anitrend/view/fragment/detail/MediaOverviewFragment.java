@@ -117,7 +117,6 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                             Bundle args = new Bundle();
                             Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                             args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                                    .putVariable(KeyUtil.arg_id, mediaId)
                                     .putVariable(KeyUtil.arg_type, mediaType)
                                     .putVariable(KeyUtil.arg_genres, data.getGenre()));
                             args.putString(KeyUtil.arg_activity_tag, data.getGenre());
@@ -150,7 +149,6 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                                                 Bundle args = new Bundle();
                                                 Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                                                 args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                                                        .putVariable(KeyUtil.arg_id, mediaId)
                                                         .putVariable(KeyUtil.arg_type, mediaType)
                                                         .putVariable(KeyUtil.arg_tags, data.getName()));
                                                 args.putString(KeyUtil.arg_activity_tag, data.getName());

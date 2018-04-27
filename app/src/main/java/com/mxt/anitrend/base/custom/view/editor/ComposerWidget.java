@@ -175,9 +175,10 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
                 case KeyUtil.MUT_SAVE_FEED_REPLY:
                     if(feedReply != null) {
                         feedReply.setText(binding.comment.getFormattedText());
-                        queryContainer.putVariable(KeyUtil.arg_activityId, feedReply.getId());
+                        queryContainer.putVariable(KeyUtil.arg_id, feedReply.getId());
                     }
-                    queryContainer.putVariable(KeyUtil.arg_text, binding.comment.getFormattedText());
+                    queryContainer.putVariable(KeyUtil.arg_activityId, feedList.getId())
+                            .putVariable(KeyUtil.arg_text, binding.comment.getFormattedText());
                     break;
                 case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                     if(feedList != null) {

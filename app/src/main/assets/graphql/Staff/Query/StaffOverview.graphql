@@ -1,4 +1,4 @@
-query StaffOverview($id: Int!, $asHtml: Boolean = true) {
+query StaffOverview($id: Int!, $asHtml: Boolean = false) {
   Staff(id: $id) {
     ... on Staff {
       id

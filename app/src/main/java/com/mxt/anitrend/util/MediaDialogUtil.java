@@ -16,6 +16,7 @@ import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
@@ -36,85 +37,15 @@ final class MediaDialogUtil extends DialogUtil {
      * <br/>
      *
      * @param context from a fragment activity derived class
-     * @param model non-null series model object off or on the users list
-     * @param userMediaList the mediaList item for the current user
-     * @param title series title based on user preferences
+     * @param mediaBase non-null series model object off or on the users list
      */
-    static void createSeriesManage(Context context, @NonNull Media model, @Nullable MediaList userMediaList, String title) {
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getType());
-        seriesManageBase.setModel(model, userMediaList);
+    static void createSeriesManage(Context context, @NonNull MediaBase mediaBase) {
+        CustomSeriesManageBase seriesManageBase = buildManagerType(context, mediaBase.getType());
+        seriesManageBase.setModel(mediaBase);
 
-        boolean isNewEntry = userMediaList == null;
+        boolean isNewEntry = mediaBase.getMediaListEntry() == null;
 
-        MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
-        materialBuilder.customView(seriesManageBase, true);
-        materialBuilder.onAny((dialog, which) -> {
-            switch (which) {
-                case POSITIVE:
-                    onDialogPositive(context, seriesManageBase, dialog);
-                    break;
-                case NEUTRAL:
-                    dialog.dismiss();
-                    break;
-                case NEGATIVE:
-                    onDialogNegative(context, seriesManageBase, dialog);
-                    break;
-            }
-        });
-        materialBuilder.show();
-    }
-
-    /**
-     * General series managing template dialog builder which sets the text and icon based on the criteria,
-     * new or old series entries.
-     * <br/>
-     *
-     * @param context from a fragment activity derived class
-     * @param model non-null series model object off or on the users list
-     * @param userMediaList the mediaList item for the current user
-     * @param title series title based on user preferences
-     */
-    static void createSeriesManage(Context context, @NonNull MediaBase model, @Nullable MediaList userMediaList, String title) {
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getType());
-        seriesManageBase.setModel(model, userMediaList);
-
-        boolean isNewEntry = userMediaList == null;
-
-        MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
-        materialBuilder.customView(seriesManageBase, true);
-        materialBuilder.onAny((dialog, which) -> {
-            switch (which) {
-                case POSITIVE:
-                    onDialogPositive(context, seriesManageBase, dialog);
-                    break;
-                case NEUTRAL:
-                    dialog.dismiss();
-                    break;
-                case NEGATIVE:
-                    onDialogNegative(context, seriesManageBase, dialog);
-                    break;
-            }
-        });
-        materialBuilder.show();
-    }
-
-    /**
-     * General series managing template dialog builder which sets the text and icon based on the criteria,
-     * new or old series entries.
-     * <br/>
-     *
-     * @param context from a fragment activity derived class
-     * @param model non-null series model object off or on the users list
-     * @param userMediaList the mediaList item for the current user
-     * @param title series title based on user preferences
-     */
-    static void createSeriesManage(Context context, @NonNull MediaList model, @Nullable MediaList userMediaList, String title) {
-        CustomSeriesManageBase seriesManageBase = buildManagerType(context, model.getMedia().getType());
-        seriesManageBase.setModel(model, userMediaList);
-
-        boolean isNewEntry = userMediaList == null;
-
-        MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, title);
+        MaterialDialog.Builder materialBuilder = createSeriesManageDialog(context, isNewEntry, MediaUtil.getMediaTitle(mediaBase));
         materialBuilder.customView(seriesManageBase, true);
         materialBuilder.onAny((dialog, which) -> {
             switch (which) {
@@ -198,19 +129,22 @@ final class MediaDialogUtil extends DialogUtil {
 
         seriesManageBase.persistChanges();
 
-        WidgetPresenter<ResponseBody> presenter = new WidgetPresenter<>(context);
+        WidgetPresenter<DeleteState> presenter = new WidgetPresenter<>(context);
         presenter.setParams(seriesManageBase.getParam());
 
         @KeyUtil.RequestType int requestType = KeyUtil.MUT_DELETE_MEDIA_LIST;
 
-        presenter.requestData(requestType, context, new RetroCallback<ResponseBody>() {
+        presenter.requestData(requestType, context, new RetroCallback<DeleteState>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<DeleteState> call, @NonNull Response<DeleteState> response) {
                 try {
                     progressDialog.dismiss();
-                    if(response.isSuccessful()) {
-                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, seriesManageBase.getModel()), false);
-                        NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                    DeleteState deleteState;
+                    if(response.isSuccessful() && (deleteState = response.body()) != null) {
+                        if(deleteState.isDeleted()) {
+                            presenter.notifyAllListeners(new BaseConsumer<>(requestType, seriesManageBase.getModel()), false);
+                            NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Log.e(this.toString(), ErrorUtil.getError(response));
                         NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
@@ -221,7 +155,7 @@ final class MediaDialogUtil extends DialogUtil {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+            public void onFailure(@NonNull Call<DeleteState> call, @NonNull Throwable throwable) {
                 throwable.printStackTrace();
                 try {
                     progressDialog.dismiss();

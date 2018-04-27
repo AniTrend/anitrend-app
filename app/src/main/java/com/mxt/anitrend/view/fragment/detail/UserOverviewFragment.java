@@ -52,8 +52,10 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getLong(KeyUtil.arg_id);
-            userName = getArguments().getString(KeyUtil.arg_userName);
+            if (getArguments().containsKey(KeyUtil.arg_id))
+                userId = getArguments().getLong(KeyUtil.arg_id);
+            else
+                userName = getArguments().getString(KeyUtil.arg_userName);
         }
         isMenuDisabled = true;
         setPresenter(new BasePresenter(getContext()));
@@ -113,8 +115,9 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_userName, userName)
-                .putVariable(KeyUtil.arg_id, userId);
+                .putVariable(KeyUtil.arg_userName, userName);
+        if(userId > 0)
+            queryContainer.putVariable(KeyUtil.arg_id, userId);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.USER_OVERVIEW_REQ, getContext());
     }
@@ -185,7 +188,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
         switch (v.getId()) {
             case R.id.user_avatar:
                 Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getAvatar());
+                intent.putExtra(KeyUtil.arg_model, model.getAvatar().getLarge());
                 CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
                 break;
             case R.id.user_stats_container:

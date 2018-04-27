@@ -25,7 +25,7 @@ public class NetworkCacheInterceptor implements Interceptor {
 
     // re-write response header to force use of cache
     private CacheControl cacheControl = new CacheControl.Builder()
-            .maxAge(6, TimeUnit.HOURS)
+            .maxAge(4, TimeUnit.HOURS)
             .build();
 
     public NetworkCacheInterceptor(Context mContext) {

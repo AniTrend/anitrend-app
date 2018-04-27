@@ -27,7 +27,7 @@ public class MediaList extends EntityGroup implements Parcelable {
     private long id;
     private long mediaId;
     private @KeyUtil.MediaListStatus String status;
-    private float score;
+    private int score;
     private int progress;
     private int progressVolumes;
     private int repeat;
@@ -52,7 +52,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         id = in.readLong();
         mediaId = in.readLong();
         status = in.readString();
-        score = in.readFloat();
+        score = in.readInt();
         progress = in.readInt();
         progressVolumes = in.readInt();
         repeat = in.readInt();
@@ -73,7 +73,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         dest.writeLong(id);
         dest.writeLong(mediaId);
         dest.writeString(status);
-        dest.writeFloat(score);
+        dest.writeInt(score);
         dest.writeInt(progress);
         dest.writeInt(progressVolumes);
         dest.writeInt(repeat);
@@ -118,7 +118,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         return status;
     }
 
-    public float getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -198,7 +198,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         this.status = status;
     }
 
-    public void setScore(float score) {
+    public void setScore(int score) {
         this.score = score;
     }
 

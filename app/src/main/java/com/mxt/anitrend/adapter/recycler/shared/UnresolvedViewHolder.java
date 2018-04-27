@@ -3,23 +3,18 @@ package com.mxt.anitrend.adapter.recycler.shared;
 import android.view.View;
 
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.databinding.CustomRecyclerLoadingFooterBinding;
+import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding;
 
-/**
- * Created by max on 2018/03/25.
- * LoadingFooterViewHolder
- */
+public class UnresolvedViewHolder<T> extends RecyclerViewHolder<T> {
 
-public class LoadingFooterViewHolder<T> extends RecyclerViewHolder<T> {
-
-    private CustomRecyclerLoadingFooterBinding binding;
+    private CustomRecyclerUnresolvedBinding binding;
 
     /**
      * Default constructor which includes binding with butter knife
      *
      * @param binding
      */
-    public LoadingFooterViewHolder(CustomRecyclerLoadingFooterBinding binding) {
+    public UnresolvedViewHolder(CustomRecyclerUnresolvedBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
     }

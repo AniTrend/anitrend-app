@@ -27,19 +27,6 @@ query MediaList($id: Int, $mediaId: Int, $userName: String, $type: MediaType, $s
           day
         }
       }
-      user {
-        ... on User {
-          id
-          name
-          avatar {
-            ... on UserAvatar {
-              large
-              medium
-            }
-          }
-          isFollowing
-        }
-      }
       media {
         ... on Media {
           id

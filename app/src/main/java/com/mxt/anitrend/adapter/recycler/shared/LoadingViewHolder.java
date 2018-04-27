@@ -10,7 +10,7 @@ import com.mxt.anitrend.databinding.CustomRecyclerLoadingBinding;
  * LoadingViewHolder
  */
 
-public class LoadingViewHolder extends RecyclerViewHolder<String> {
+public class LoadingViewHolder<T> extends RecyclerViewHolder<T> {
 
     private CustomRecyclerLoadingBinding binding;
 
@@ -26,7 +26,7 @@ public class LoadingViewHolder extends RecyclerViewHolder<String> {
 
 
     @Override
-    public void onBindViewHolder(String model) {
+    public void onBindViewHolder(T model) {
         binding.executePendingBindings();
     }
 

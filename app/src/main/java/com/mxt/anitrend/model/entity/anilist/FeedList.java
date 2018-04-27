@@ -42,7 +42,6 @@ public class FeedList implements Parcelable {
         messenger = in.readParcelable(UserBase.class.getClassLoader());
         recipient = in.readParcelable(UserBase.class.getClassLoader());
         likes = in.createTypedArrayList(UserBase.CREATOR);
-        replies = in.createTypedArrayList(FeedReply.CREATOR);
     }
 
     @Override
@@ -58,7 +57,6 @@ public class FeedList implements Parcelable {
         dest.writeParcelable(messenger, flags);
         dest.writeParcelable(recipient, flags);
         dest.writeTypedList(likes);
-        dest.writeTypedList(replies);
     }
 
     @Override

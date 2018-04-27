@@ -1,8 +1,10 @@
 package com.mxt.anitrend.util;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -33,6 +35,30 @@ public final class MarkDown {
             result = fromMD("<b>No content available</b>");
         else
             result = fromMD(PatternMatcher.findUserTags(input));
+
+        if(result.length() > 0)
+            while (result.charAt(result.length() - 1) == '\n')
+                result = result.delete(result.length() - 1, result.length());
+
+        return result;
+    }
+
+/*    private static SpannableStringBuilder fromMD(@NonNull String content, Context context, AppCompatTextView source) {
+        Spanned htmlConverted;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            htmlConverted = Html.fromHtml(Processor.process(content), Html.FROM_HTML_MODE_LEGACY, GlideImageGetter.create(context, source), HtmlTagHandler.create());
+        else
+            htmlConverted = Html.fromHtml(Processor.process(content), GlideImageGetter.create(context, source), HtmlTagHandler.create());
+        return (SpannableStringBuilder) htmlConverted;
+    }*/
+
+    public static Spanned convert(@Nullable String input, Context context, AppCompatTextView source) {
+        SpannableStringBuilder result;
+        if(TextUtils.isEmpty(input))
+            result = fromMD("<b>No content available</b>");
+        else
+            result = fromMD(PatternMatcher.findUserTags(input));
+            // result = fromMD(PatternMatcher.findUserTags(input), context, source);
 
         if(result.length() > 0)
             while (result.charAt(result.length() - 1) == '\n')

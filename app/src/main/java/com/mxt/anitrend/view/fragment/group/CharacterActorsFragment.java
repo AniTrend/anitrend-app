@@ -93,7 +93,7 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
                         case R.id.container:
                             if(getPresenter().getApplicationPref().isAuthenticated()) {
                                 mediaActionUtil = new MediaActionUtil.Builder()
-                                        .setModel((MediaBase) data).build(getActivity());
+                                        .setId(((MediaBase) data).getId()).build(getActivity());
                                 mediaActionUtil.startSeriesAction();
                             } else
                                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

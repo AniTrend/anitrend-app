@@ -5,6 +5,8 @@ import android.databinding.BindingAdapter;
 import android.support.annotation.StringRes;
 import android.support.v4.text.util.LinkifyCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
@@ -54,18 +56,22 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
 
     @BindingAdapter("markDown")
     public static void markDown(RichMarkdownTextView richMarkdownTextView, String markdown) {
-        richMarkdownTextView.setText(MarkDown.convert(PatternMatcher.removeTags(markdown)), TextView.BufferType.SPANNABLE);
+        String strippedText = PatternMatcher.removeTags(markdown);
+        Spanned markdownSpan = MarkDown.convert(strippedText, richMarkdownTextView.getContext(), richMarkdownTextView);
+        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 
     @BindingAdapter("textHtml")
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, String html) {
-        richMarkdownTextView.setText(MarkDown.convert(html), TextView.BufferType.SPANNABLE);
+        Spanned markdownSpan = MarkDown.convert(html, richMarkdownTextView.getContext(), richMarkdownTextView);
+        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 
     @BindingAdapter("textHtml")
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, @StringRes int resId) {
         String text = richMarkdownTextView.getContext().getString(resId);
-        richMarkdownTextView.setText(MarkDown.convert(text), TextView.BufferType.SPANNABLE);
+        Spanned markdownSpan = MarkDown.convert(text, richMarkdownTextView.getContext(), richMarkdownTextView);
+        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 
     @BindingAdapter("richMarkDown")
@@ -77,6 +83,8 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
     }
 
     public void setMarkDownText(String markDownText) {
-        setText(MarkDown.convert(PatternMatcher.removeTags(markDownText)), TextView.BufferType.SPANNABLE);
+        String strippedText = PatternMatcher.removeTags(markDownText);
+        Spanned markdownSpan = MarkDown.convert(strippedText, getContext(), this);
+        setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 }

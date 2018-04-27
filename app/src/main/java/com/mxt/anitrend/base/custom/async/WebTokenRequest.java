@@ -90,10 +90,10 @@ public class WebTokenRequest {
     public static synchronized boolean getToken(Context context, String code) throws ExecutionException, InterruptedException {
         WebToken authenticatedToken = new AuthenticationCodeAsync().execute(code).get();
         if(authenticatedToken != null) {
+            createNewTokenReference(authenticatedToken);
             DatabaseHelper databaseHelper = new DatabaseHelper(context);
             databaseHelper.saveWebToken(authenticatedToken);
             databaseHelper.saveAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
-            createNewTokenReference(authenticatedToken);
             return true;
         }
         return false;
@@ -105,6 +105,7 @@ public class WebTokenRequest {
      */
     private static void createNewTokenReference(@NonNull WebToken webToken) {
         try {
+            webToken.calculateExpires();
             token = webToken.clone();
         } catch (CloneNotSupportedException e) {
             Log.e("createNewTokenReference", e.getMessage());

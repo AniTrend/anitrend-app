@@ -15,11 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
+import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -108,8 +110,10 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
     public void setParams(Bundle bundle) {
         this.bundle = bundle;
-        queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id))
-                .putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName));
+        if(bundle.containsKey(KeyUtil.arg_id))
+            queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id));
+        else
+            queryContainer.putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName));
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         presenter.requestData(KeyUtil.USER_STATS_REQ, getContext(), this);
     }
@@ -136,7 +140,6 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                 break;
             case R.id.user_anime_total_container:
                 intent = new Intent(getContext(), MediaListActivity.class);
-
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
@@ -144,7 +147,6 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                 break;
             case R.id.user_manga_total_container:
                 intent = new Intent(getContext(), MediaListActivity.class);
-
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
@@ -200,10 +202,12 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         return String.format(Locale.getDefault(), "%d", manga_chap);
     }
 
-    public String getCount(List<?> listItems) {
+    public String getCount(List<StatusDistribution> statusDistributions) {
         int totalCount = 0;
-        if(!CompatUtil.isEmpty(listItems))
-            totalCount = listItems.size();
+        if(!CompatUtil.isEmpty(statusDistributions))
+            totalCount = Stream.of(statusDistributions)
+                    .mapToInt(StatusDistribution::getAmount)
+                    .sum();
 
         if(totalCount > 1000)
             return String.format(Locale.getDefault(), "%d K", totalCount/1000);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,7 +59,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         setViewModel(true);
         if(getIntent().hasExtra(KeyUtil.arg_id))
             id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
-        else if(getIntent().hasExtra(KeyUtil.arg_userName))
+        if(getIntent().hasExtra(KeyUtil.arg_userName))
             userName = getIntent().getStringExtra(KeyUtil.arg_userName);
     }
 
@@ -165,8 +166,9 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, id)
-            .putVariable(KeyUtil.arg_userName, userName);
+                .putVariable(KeyUtil.arg_userName, userName);
+        if(id > 0)
+            queryContainer.putVariable(KeyUtil.arg_id, id);
 
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.USER_BASE_REQ, getApplicationContext());

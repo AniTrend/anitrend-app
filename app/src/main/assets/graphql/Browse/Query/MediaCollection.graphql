@@ -31,19 +31,6 @@ query MediaCollection($userId: Int, $userName: String, $type: MediaType, $forceS
                   day
                 }
               }
-              user {
-                ... on User {
-                  id
-                  name
-                  avatar {
-                    ... on UserAvatar {
-                      large
-                      medium
-                    }
-                  }
-                  isFollowing
-                }
-              }
               media {
                 ... on Media {
                   id

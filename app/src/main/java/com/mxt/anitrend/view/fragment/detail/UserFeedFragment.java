@@ -19,6 +19,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class UserFeedFragment extends FeedListFragment {
 
+    private long userId;
+    private String userName;
+
     public static UserFeedFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -36,13 +39,23 @@ public class UserFeedFragment extends FeedListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            queryContainer.putVariable(KeyUtil.arg_userId, getArguments().getLong(KeyUtil.arg_id))
-                    .putVariable(KeyUtil.arg_userName, getArguments().getString(KeyUtil.arg_userName));
+            if (getArguments().containsKey(KeyUtil.arg_id))
+                userId = getArguments().getLong(KeyUtil.arg_id);
+            else
+                userName = getArguments().getString(KeyUtil.arg_userName);
         isMenuDisabled = true; isFeed = false;
     }
 
     @Override
     public void makeRequest() {
+        if(getPresenter().getApplicationPref().isAuthenticated() && getPresenter().isCurrentUser(userId, userName))
+            userId = getPresenter().getDatabase().getCurrentUser().getId();
+
+        if (userId > 0)
+            queryContainer.putVariable(KeyUtil.arg_userId, userId);
+        else
+            queryContainer.putVariable(KeyUtil.arg_userName, userName);
+
         if (queryContainer.containsVariable(KeyUtil.arg_userId) || queryContainer.containsVariable(KeyUtil.arg_userName))
             super.makeRequest();
     }

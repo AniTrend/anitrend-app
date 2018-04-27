@@ -21,7 +21,7 @@ import okhttp3.Response;
 public class CacheInterceptor implements Interceptor {
 
     private CacheControl cacheControl = new CacheControl
-            .Builder().maxStale(45, TimeUnit.MINUTES).build();
+            .Builder().maxStale(3, TimeUnit.HOURS).build();
 
     private Context mContext;
     private boolean forceCache;

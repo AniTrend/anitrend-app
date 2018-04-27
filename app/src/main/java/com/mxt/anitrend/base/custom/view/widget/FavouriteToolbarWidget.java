@@ -147,22 +147,18 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     }
 
     private void setIconType() {
-        boolean isFavourite, requiresTint = true;
-        switch (requestType) {
-            case KeyUtil.CHARACTER_BASE_REQ:
-                isFavourite = characterBase.isFavourite();
-                break;
-            case KeyUtil.STAFF_BASE_REQ:
-                isFavourite = staffBase.isFavourite();
-                break;
-            case KeyUtil.STUDIO_BASE_REQ:
-                isFavourite = studioBase.isFavourite();
-                break;
-            default:
-                isFavourite = mediaBase.isFavourite();
-                requiresTint = false;
-                break;
+        boolean isFavourite = false, requiresTint = true;
+
+        if(mediaBase != null) {
+            isFavourite = mediaBase.isFavourite();
+            requiresTint = false;
         }
+        else if (studioBase != null)
+            isFavourite = studioBase.isFavourite();
+        else if (staffBase != null)
+            isFavourite = staffBase.isFavourite();
+        else if (characterBase != null)
+            isFavourite = characterBase.isFavourite();
 
         if(isFavourite)
             binding.widgetLike.setImageDrawable(requiresTint ? CompatUtil.getTintedDrawable(getContext(),

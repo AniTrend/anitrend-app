@@ -2,7 +2,9 @@ package com.mxt.anitrend.model.entity.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
@@ -36,7 +38,8 @@ public class MediaBase extends EntityGroup implements Parcelable {
     private int volumes;
     private boolean isAdult;
     private boolean isFavourite;
-    private AiringSchedule nextAiringEpisode;
+    private @Nullable AiringSchedule nextAiringEpisode;
+    private @Nullable MediaList mediaListEntry;
 
 
     protected MediaBase(Parcel in) {
@@ -60,6 +63,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
         isAdult = in.readByte() != 0;
         isFavourite = in.readByte() != 0;
         nextAiringEpisode = in.readParcelable(AiringSchedule.class.getClassLoader());
+        mediaListEntry = in.readParcelable(MediaList.class.getClassLoader());
     }
 
     @Override
@@ -84,6 +88,7 @@ public class MediaBase extends EntityGroup implements Parcelable {
         dest.writeByte((byte) (isAdult ? 1 : 0));
         dest.writeByte((byte) (isFavourite ? 1 : 0));
         dest.writeParcelable(nextAiringEpisode, flags);
+        dest.writeParcelable(mediaListEntry, flags);
     }
 
     @Override
@@ -171,8 +176,12 @@ public class MediaBase extends EntityGroup implements Parcelable {
         return isFavourite;
     }
 
-    public AiringSchedule getNextAiringEpisode() {
+    public @Nullable AiringSchedule getNextAiringEpisode() {
         return nextAiringEpisode;
+    }
+
+    public @Nullable MediaList getMediaListEntry() {
+        return mediaListEntry;
     }
 
     public int getMeanScore() {

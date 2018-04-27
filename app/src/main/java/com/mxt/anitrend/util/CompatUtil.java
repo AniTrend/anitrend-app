@@ -357,7 +357,7 @@ public class CompatUtil {
      */
     public static List<String> getStringList(Context context, @ArrayRes int arrayRes) {
         String[] array = context.getResources().getStringArray(arrayRes);
-        return getListFromArray(array);
+        return constructListFrom(array);
     }
 
     /**
@@ -365,7 +365,7 @@ public class CompatUtil {
      * @return list of the array
      */
     @SafeVarargs
-    public static <T> List<T> getListFromArray(T... array) {
+    public static <T> List<T> constructListFrom(T... array) {
         return Arrays.asList(array);
     }
 
@@ -469,20 +469,22 @@ public class CompatUtil {
      */
     public static String capitalizeWords(String input) {
         if(!TextUtils.isEmpty(input)) {
-            List<String> exceptions = getListFromArray(KeyUtil.TV, KeyUtil.ONA, KeyUtil.OVA);
-            if(exceptions.contains(input))
-                return input;
+            List<String> exceptions = constructListFrom(KeyUtil.TV, KeyUtil.ONA, KeyUtil.OVA);
             StringBuilder result = new StringBuilder(input.length());
             String[] words = input.split("_|\\s");
             int index = 0;
             for (String word : words) {
-                index++;
                 if (!TextUtils.isEmpty(word)) {
-                    char starting = Character.toUpperCase(word.charAt(0));
-                    result.append(starting).append(word.substring(1).toLowerCase());
+                    if(exceptions.contains(word))
+                        result.append(word);
+                    else {
+                        char starting = Character.toUpperCase(word.charAt(0));
+                        result.append(starting).append(word.substring(1).toLowerCase());
+                    }
                 }
                 if (index != word.length() - 1)
                     result.append(" ");
+                index++;
             }
             return result.toString();
         }

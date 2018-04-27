@@ -32,16 +32,80 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e886c41-2ca4-4f09-a790-00ea2865c607" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaWithList.graphql" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/UnresolvedViewHolder.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GlideImageGetter.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/HtmlTagHandler.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_unresolved.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/app/objectbox-models/default.json" afterPath="$PROJECT_DIR$/app/objectbox-models/default.json" />
       <change beforePath="$PROJECT_DIR$/app/objectbox-models/default.json.bak" afterPath="$PROJECT_DIR$/app/objectbox-models/default.json.bak" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/dao/BoxQuery.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/dao/BoxQuery.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Mutation/SaveMediaListEntry.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Mutation/SaveMediaListEntry.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Mutation/UpdateMediaListEntries.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Mutation/UpdateMediaListEntries.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaCollection.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaCollection.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaList.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaList.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaListBrowse.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaListBrowse.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/ReviewBrowse.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/ReviewBrowse.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Character/Query/CharacterOverview.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Character/Query/CharacterOverview.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Media/Query/MediaOverview.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Media/Query/MediaOverview.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/graphql/Staff/Query/StaffOverview.graphql" afterPath="$PROJECT_DIR$/app/src/main/assets/graphql/Staff/Query/StaffOverview.graphql" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/StaffPageAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/StaffPageAdapter.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingFooterViewHolder.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingFooterViewHolder.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingViewHolder.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingViewHolder.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/RequestHandler.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/RequestHandler.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesAnimeManage.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesAnimeManage.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesMangaManage.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesMangaManage.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/adapter/ConverterAdapterFactory.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/adapter/JsonAdapterFactory.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/CacheInterceptor.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/CacheInterceptor.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/NetworkCacheInterceptor.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/NetworkCacheInterceptor.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/BrowseModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/BrowseModel.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedList.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/WebToken.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/WebToken.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/DateUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/DateUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MarkDown.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MarkDown.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/base/WelcomeActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/base/WelcomeActivity.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CommentFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CommentFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/UserOverviewFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/UserOverviewFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-ar/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-ar/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-it/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-it/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <ignored path="Anitrend.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -85,102 +149,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GraphProcessor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/processor/GraphProcessor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SuggestionListFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/SuggestionListFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="10" column="3" lean-forward="false" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MediaActionUtil.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="113" column="101" lean-forward="false" selection-start-line="113" selection-start-column="101" selection-end-line="113" selection-end-column="101" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="GraphQLConverter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphQLConverter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+            <state relative-caret-position="151">
+              <caret line="75" column="24" lean-forward="false" selection-start-line="75" selection-start-column="24" selection-end-line="75" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MediaDialogUtil.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1566">
-              <caret line="159" column="93" lean-forward="false" selection-start-line="159" selection-start-column="93" selection-end-line="159" selection-end-column="93" />
-              <folding>
-                <element signature="e#5786#5818#0" expanded="true" />
-                <element signature="e#6693#6739#0" expanded="true" />
-                <element signature="e#6968#7014#0" expanded="true" />
-                <element signature="e#7564#7610#0" expanded="true" />
-                <element signature="e#8252#8284#0" expanded="true" />
-                <element signature="e#9100#9146#0" expanded="true" />
-                <element signature="e#9375#9421#0" expanded="true" />
-                <element signature="e#9905#9951#0" expanded="true" />
-                <element signature="e#11111#11136#0" expanded="true" />
-                <element signature="e#11139#11165#0" expanded="true" />
-                <element signature="e#11218#11230#0" expanded="true" />
-                <element signature="e#11232#11247#0" expanded="true" />
-                <element signature="e#11278#11293#0" expanded="true" />
-                <element signature="e#11397#11412#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WebFactory.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="697">
-              <caret line="87" column="72" lean-forward="false" selection-start-line="87" selection-start-column="72" selection-end-line="87" selection-end-column="72" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FeedAdapter.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FeedAdapter.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+            <state relative-caret-position="527">
+              <caret line="57" column="64" lean-forward="false" selection-start-line="57" selection-start-column="64" selection-end-line="57" selection-end-column="64" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CustomSeriesManageBase.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="66" column="39" lean-forward="false" selection-start-line="66" selection-start-column="39" selection-end-line="66" selection-end-column="39" />
-              <folding>
-                <element signature="e#2634#2635#0" expanded="true" />
-                <element signature="e#2662#2663#0" expanded="true" />
-                <element signature="e#4450#4451#0" expanded="true" />
-                <element signature="e#4489#4490#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -195,16 +179,14 @@
         <option value="JUnit4 Test Class" />
         <option value="Interface" />
         <option value="resourceFile" />
-        <option value="layoutResourceFile" />
         <option value="Singleton" />
+        <option value="layoutResourceFile" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isLi</find>
-      <find>isLimit</find>
       <find>isFeed</find>
       <find>id == 0</find>
       <find>bundle</find>
@@ -233,6 +215,8 @@
       <find>BindingAdapter</find>
       <find>TV</find>
       <find>model != null</find>
+      <find>ReviewV</find>
+      <find>0</find>
     </findStrings>
     <replaceStrings>
       <replace>KeyUtils.NOTIFICATION_</replace>
@@ -2051,15 +2035,15 @@
                       <ExternalModuleBuildClasspathPojo>
                         <option name="entries">
                           <list>
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.1/d0752c46bc1c728ce5294c31838fe5ae4bd36f2f/gradle-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.1/47b7b5cc3c2f8514d71c4d77aa32fb17b25fab56/gradle-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.2/79231e42158f711cbe81eb766d7c3578e38557a4/gradle-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.2/1608fa49add4d13366db7844998c6e59711f7e2a/gradle-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/a9d34c567b0c1f327f48aead2c1e171f39aad939/google-services-3.1.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/1fc9eb41c1937a7364345d13349682db7785546e/google-services-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.fabric.tools/gradle/1.25.1/d090f5b0e22035e2ce468ac22cc1d51943a151de/gradle-1.25.1.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.5.0/3e96bd0a31ec70b7143a6de47665005c78d96ea6/objectbox-gradle-plugin-1.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.5.0/2c9e95f06999fbff3ee4327c2516dfb252c2da6c/objectbox-gradle-plugin-1.5.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.1/fefc85578f816ce0e50d58852491febb3b4d907a/gradle-core-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.1/250777904e400a9c3adbe08b9c287125e10cdeec/gradle-core-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.2/36e59348ddd26cbed10061dd4760e8ee030b88e4/gradle-core-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.2/ccab33656c1baa6514d88f4d9356db19d0e9823b/gradle-core-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/bundletool/0.1.0-alpha01/f7c303e37818223bd98566fcbea29aa0964c4d06/bundletool-0.1.0-alpha01.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.5.0/86f1b7084b71485cfd1b63709d6dfad4ae3153bd/objectbox-code-modifier-1.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.5.0/6e3de4b4200b8af531f191229655598cf18288b7/objectbox-code-modifier-1.5.0.jar" />
@@ -2071,18 +2055,18 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.5.0/425e239186b76658d8109c4942e11b83991adb2d/objectbox-java-1.5.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.5.0/59eb1ed7cecdfd5dd161ef20c9d1cfac42e58d1a/objectbox-java-api-1.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.5.0/44dea12079e5bac6cf54189705e772341345bc79/objectbox-java-api-1.5.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.1/292e81b2d957e1284f253b2bcbaa618097401e14/builder-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.1/4c0680e6e92557fe9c57f6150606c8f2080f14a9/builder-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.1/f24e7129690d021ca4fab67761ca658a046ccc58/lint-gradle-api-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.1/8201b10c8d03c2319dfc14afe5668c64ae05d5bf/lint-gradle-api-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.1/9335db2800c1f50d54278aff3f7d86d919f94bc7/gradle-api-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.1/2d1a2b6775a3a3c9d7ca3488ca9479f5b05e4e96/gradle-api-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.1/ef0cde812479980133ce962160c270be7cb470a/compilerCommon-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.1/df51ad123c405f0dbd6cbc8774de92ca68afd922/compilerCommon-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.2/84b5fe203cd814a6a48fac7902c7b0bf0d455451/builder-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.2/133b1f665104f0ebf01f71b61e4794385d7b5f1b/builder-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.2/2e0f2d982094f220ddc62f94180ee5187c9c0cdf/lint-gradle-api-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.2/8c54aedfe9da66e64402de04883cee083c127a3b/lint-gradle-api-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.2/7239d441f5d79f12ff8f6066703e86ddd16a29cf/gradle-api-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.2/427e25639a55911cadcf70657c9b2ded2ad6af2b/gradle-api-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.2/a77b04ed519b3ac7c0e8946ee7e0eb156808f661/compilerCommon-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.2/be65c11ded4242932046f23ecfa5c7ccb0e98f46/compilerCommon-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jre8/1.2.0/3d425bfaaa7f8b1affb652c4257aa57e6597e163/kotlin-stdlib-jre8-1.2.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jre8/1.2.0/505f55b9619bbc5f5e26c77427dd24a6a441eef1/kotlin-stdlib-jre8-1.2.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/e4075c49e16e086140fe40eea56b2de7516874ee/transform-api-2.0.0-deprecated-use-gradle-api-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/85bee1acea9e27152b920746c68133b30b11431/transform-api-2.0.0-deprecated-use-gradle-api.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/f18536c1fe08673c69e869be170759616a9df16/transform-api-2.0.0-deprecated-use-gradle-api-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/47f6c56527c42425742fa9b56ffd3fd80763fe03/transform-api-2.0.0-deprecated-use-gradle-api.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.1/81e81bd6c20b965f88d0462e2559f8759fc6c26d/asm-5.1-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.1/5ef31c4fe953b1fd00b8a88fa1d6820e8785bb45/asm-5.1.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/5.1/81e81bd6c20b965f88d0462e2559f8759fc6c26d/asm-analysis-5.1-sources.jar" />
@@ -2118,28 +2102,28 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.8.0/c0a904119659fd9cd667e6e37fbcb6bab790edf4/flatbuffers-java-1.8.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/b19b5927c2c25b6c70f093767041e641ae0b1b35/jsr305-3.0.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.1/ad827ef6f11a7f8a2549799deaf32b8da7e2be28/builder-model-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.1/ce6c9f8342caa5428b9640c7d2f2dc8161dda674/builder-model-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.1/29102e4884231b867959e49fe22d66dc48bd22cd/builder-test-api-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.1/f38fa7cf59ebb790f2ee82b4158b32563823e5c7/builder-test-api-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.1/67cd1c256e95aed4540a291b87baa6abce3ece07/sdklib-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.1/58465680a6f5d9a07cf38b8c4c7d2bb8d6e2219c/sdklib-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.1/2f31fd18edc824704577675e10cd0832faee1592/sdk-common-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.1/ea7b2e3f17491e0c05945431127334d79d3b35f9/sdk-common-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.1/431ca8004656cf35f44f43d1090ffdf4e9bccaf0/common-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.1/ba975dcf04fd201684cbf7acd8692e5b7a537f9d/common-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.1/e0be4034c9895b0b17a61a1c3aef5fa2b8127325/manifest-merger-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.1/3d36a633e8e562b0624e67304ca531d8264ee051/manifest-merger-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.1/c13b24ba911f8a7f2d913b88c7c9108ac956dc29/ddmlib-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.1/38e701b19a843e05de66e355a850cbbf001dfc6a/ddmlib-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.1/48154e336f8210582a7a2a025dbe2b926ab7adb4/protos-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.1/d58f5724467d21a4c9dd0faf235d038dc1002433/protos-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.1/69dc870008d90fbf0941f01a17c723261e2d3b24/shared-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.1/edf64ba5b27118f57f227471a838706c3879cf60/shared-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.1/dbe6da41615986b02aa944522cd60de815b0ada5/tracker-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.1/d209e62c9b06c1580443a275171f6d00089eef6d/tracker-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.1/2ec8eb7634213cef5497b67a1526cf74daaf2280/apksig-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.1/241a5428079e16535cf17a3b8db4b0c8c175cd4f/apksig-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.2/e74f8c12d313fb638cd3e199ea13a544870636d5/builder-model-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.2/4504b655fa8fe72302020ca9a2387f3f23fbfb57/builder-model-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.2/57f0b608e34a9493508d21f6a07cf34989901602/builder-test-api-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.2/ffb00b786822df6538377a90df9f2d11c022efc3/builder-test-api-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.2/eeb14343985046cf8c8504a06327db5a50e740ea/sdklib-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.2/94697a9dff499b64b6e101bedb89a89825150af/sdklib-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.2/569e3d1db94b053b15c81f7662ff8cecc4df785/sdk-common-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.2/2cf773af3fb0e1bbd56a80fc6903a9d2a40a248/sdk-common-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.2/fb215315bdbd152415f1fab7358015da3928d7ff/common-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.2/c31bbd68c51ed0ef3b8d7cdd5615acf762473887/common-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.2/58ada075a3be42ac5afe8a752a3fdebfcfdaae2b/manifest-merger-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.2/79f398427650c76f0c66c89f10e4886a1fe68c26/manifest-merger-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.2/8753f005a819994ebc56c3e567168c1fea745cc3/ddmlib-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.2/1d423e621fb5c89fed13e41d0ed026cf5d8d7e7b/ddmlib-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.2/2791dabd9906f673a77b755ca2f4950fd5248729/protos-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.2/ba53bcde9703b2bf9871128952dce844c5d743fa/protos-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.2/eb4223fe1e164a7c37cd1448f3d89fdc016901de/shared-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.2/bc21fe64fdaa64e59672e7d546d373f430e7557c/shared-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.2/37aae3a59f7220f45f85336f7374d5eaf37e5f7/tracker-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.2/2d2260da92e50ac072f89d60a596d03aab3a8757/tracker-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.2/93d9b522f74c2096cbaf84b088526f205d6b4a89/apksig-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.2/5af360dd30015a9a47c8ab0af0e6b05f64760edc/apksig-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/1b2a0925ff06220c0261b6fd468183cd9e9a9a47/javawriter-2.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/81241ff7078ef14f42ea2a8995fa09c096256e6b/javawriter-2.5.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.56/118b4633c59394749b2b2f278138beb31c930663/bcpkix-jdk15on-1.56-sources.jar" />
@@ -2152,8 +2136,8 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/7.2.0/5ad3a2bb04143f70aa0765fc29fc29571a7d6b34/fastutil-7.2.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1/19c6d8dee6803c520d855ff7e8a8c3d97f1271ec/json-simple-1.1-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1/5e303a03d04e6788dddfa3655272580ae0fc13bb/json-simple-1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.1/9770e8abf197c4d9784e4ed5ba804a86f21abaa3/baseLibrary-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.1/7c7f261e9f8dfb50d888223b13ba32d7622e7fec/baseLibrary-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.2/83a5696fb290f745f291d24d3b794beb267e124b/baseLibrary-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.2/1b6a1add6a577708b62737dc31c479549f77750d/baseLibrary-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.5.3/e836b2a7348320a86c3bbd91a032486798e6ab98/antlr4-4.5.3-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.5.3/f35db7e4b2446e4174ba6a73db7bd6b3e6bb5da1/antlr4-4.5.3.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/f2d8698c46d1167ff24b06a840a87d91a02db891/commons-io-2.4-sources.jar" />
@@ -2164,20 +2148,20 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/javapoet/1.8.0/e858dc62ef484048540d27d36f3ec2177a3fa9b1/javapoet-1.8.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/bbb63ca253b483da8ee53a50374593923e3de2e2/gson-2.7-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.1/550a3cf31d78e78925d2d99f8d3b3d0653f5db21/annotations-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.1/e91b00c2fa7d3139a485d53e0e382432da677a8b/annotations-26.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.2/7bc3fd2df32838e5b9b59804cc4c139bb89d26a5/annotations-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.2/4f4e0ee71b9ccaa4a70cc86e40fb84ada2ed99a3/annotations-26.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.3.3/6c73d839fa1603c38b067bc04d7950e05aef3d22/proguard-base-5.3.3-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.3.3/988b6b0636ce343d4962b3b37f6319dcc6e99a61/proguard-base-5.3.3.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.11.0/46bdbd0e079883accbf581986e7f8f0d999a2637/okio-1.11.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.11.0/840897fcd7223a8143f1d9b6f69714e7be34fd50/okio-1.11.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.freemarker/freemarker/2.3.26-incubating/415b1c5a2006eb79a5b0c28f95f0c3f92b236440/freemarker-2.3.26-incubating-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.freemarker/freemarker/2.3.26-incubating/713237e013f725b72f4f9ec931a49c14b1805359/freemarker-2.3.26-incubating.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.1/34035b244742ac13bee199b834b4b3843c6fdc5/layoutlib-api-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.1/7a76d33307781fffb3046301c3c375a1344a339a/layoutlib-api-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.1/7a82c56d6a1f88fe8871e04cac73a8321e170387/dvlib-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.1/1b0a07bae1a3726b981a2c0c8110c815ef772237/dvlib-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.1/cafc7710af40b1a3eba1f2e938fed2b2229f59f3/repository-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.1/9bfbf1f0b7b2d581bf057c54e0d4de4ee21e102e/repository-26.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.2/63d02e9088ee06e7b37f7314c145b5db7f39812e/layoutlib-api-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.2/3697abf628d30042c1082ea846454dfd1e8da3e/layoutlib-api-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.2/2a9e859006c73fc73b7642cd6560b6daac0b183f/dvlib-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.2/eb39925fee6e726468fc10344ec988c086301ed7/dvlib-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.2/ee0b2246a08385bd55f034c90ba0998b6d3a4213/repository-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.2/c8209ccb8ee0e5e3f293fd71d2a827f440ab811c/repository-26.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.12/1fdd1a2fed15cdf08780ed564279c0ddbff46419/commons-compress-1.12-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.12/84caa68576e345eb5e7ae61a0e5a9229eb100d7b/commons-compress-1.12.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.2.6/b4e00fa279b1d45af3cb6daebcc1fee3f5402392/httpclient-4.2.6-sources.jar" />
@@ -2229,15 +2213,15 @@
                       <ExternalModuleBuildClasspathPojo>
                         <option name="entries">
                           <list>
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.1/d0752c46bc1c728ce5294c31838fe5ae4bd36f2f/gradle-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.1/47b7b5cc3c2f8514d71c4d77aa32fb17b25fab56/gradle-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.2/79231e42158f711cbe81eb766d7c3578e38557a4/gradle-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle/3.1.2/1608fa49add4d13366db7844998c6e59711f7e2a/gradle-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/a9d34c567b0c1f327f48aead2c1e171f39aad939/google-services-3.1.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.gms/google-services/3.1.2/1fc9eb41c1937a7364345d13349682db7785546e/google-services-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.fabric.tools/gradle/1.25.1/d090f5b0e22035e2ce468ac22cc1d51943a151de/gradle-1.25.1.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.5.0/3e96bd0a31ec70b7143a6de47665005c78d96ea6/objectbox-gradle-plugin-1.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-gradle-plugin/1.5.0/2c9e95f06999fbff3ee4327c2516dfb252c2da6c/objectbox-gradle-plugin-1.5.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.1/fefc85578f816ce0e50d58852491febb3b4d907a/gradle-core-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.1/250777904e400a9c3adbe08b9c287125e10cdeec/gradle-core-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.2/36e59348ddd26cbed10061dd4760e8ee030b88e4/gradle-core-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-core/3.1.2/ccab33656c1baa6514d88f4d9356db19d0e9823b/gradle-core-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/bundletool/0.1.0-alpha01/f7c303e37818223bd98566fcbea29aa0964c4d06/bundletool-0.1.0-alpha01.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.5.0/86f1b7084b71485cfd1b63709d6dfad4ae3153bd/objectbox-code-modifier-1.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-code-modifier/1.5.0/6e3de4b4200b8af531f191229655598cf18288b7/objectbox-code-modifier-1.5.0.jar" />
@@ -2249,18 +2233,18 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java/1.5.0/425e239186b76658d8109c4942e11b83991adb2d/objectbox-java-1.5.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.5.0/59eb1ed7cecdfd5dd161ef20c9d1cfac42e58d1a/objectbox-java-api-1.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.objectbox/objectbox-java-api/1.5.0/44dea12079e5bac6cf54189705e772341345bc79/objectbox-java-api-1.5.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.1/292e81b2d957e1284f253b2bcbaa618097401e14/builder-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.1/4c0680e6e92557fe9c57f6150606c8f2080f14a9/builder-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.1/f24e7129690d021ca4fab67761ca658a046ccc58/lint-gradle-api-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.1/8201b10c8d03c2319dfc14afe5668c64ae05d5bf/lint-gradle-api-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.1/9335db2800c1f50d54278aff3f7d86d919f94bc7/gradle-api-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.1/2d1a2b6775a3a3c9d7ca3488ca9479f5b05e4e96/gradle-api-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.1/ef0cde812479980133ce962160c270be7cb470a/compilerCommon-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.1/df51ad123c405f0dbd6cbc8774de92ca68afd922/compilerCommon-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.2/84b5fe203cd814a6a48fac7902c7b0bf0d455451/builder-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder/3.1.2/133b1f665104f0ebf01f71b61e4794385d7b5f1b/builder-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.2/2e0f2d982094f220ddc62f94180ee5187c9c0cdf/lint-gradle-api-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.lint/lint-gradle-api/26.1.2/8c54aedfe9da66e64402de04883cee083c127a3b/lint-gradle-api-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.2/7239d441f5d79f12ff8f6066703e86ddd16a29cf/gradle-api-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/gradle-api/3.1.2/427e25639a55911cadcf70657c9b2ded2ad6af2b/gradle-api-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.2/a77b04ed519b3ac7c0e8946ee7e0eb156808f661/compilerCommon-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/compilerCommon/3.1.2/be65c11ded4242932046f23ecfa5c7ccb0e98f46/compilerCommon-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jre8/1.2.0/3d425bfaaa7f8b1affb652c4257aa57e6597e163/kotlin-stdlib-jre8-1.2.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jre8/1.2.0/505f55b9619bbc5f5e26c77427dd24a6a441eef1/kotlin-stdlib-jre8-1.2.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/e4075c49e16e086140fe40eea56b2de7516874ee/transform-api-2.0.0-deprecated-use-gradle-api-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/85bee1acea9e27152b920746c68133b30b11431/transform-api-2.0.0-deprecated-use-gradle-api.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/f18536c1fe08673c69e869be170759616a9df16/transform-api-2.0.0-deprecated-use-gradle-api-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/transform-api/2.0.0-deprecated-use-gradle-api/47f6c56527c42425742fa9b56ffd3fd80763fe03/transform-api-2.0.0-deprecated-use-gradle-api.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.1/81e81bd6c20b965f88d0462e2559f8759fc6c26d/asm-5.1-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.1/5ef31c4fe953b1fd00b8a88fa1d6820e8785bb45/asm-5.1.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/5.1/81e81bd6c20b965f88d0462e2559f8759fc6c26d/asm-analysis-5.1-sources.jar" />
@@ -2296,28 +2280,28 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.flatbuffers/flatbuffers-java/1.8.0/c0a904119659fd9cd667e6e37fbcb6bab790edf4/flatbuffers-java-1.8.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/b19b5927c2c25b6c70f093767041e641ae0b1b35/jsr305-3.0.2-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.1/ad827ef6f11a7f8a2549799deaf32b8da7e2be28/builder-model-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.1/ce6c9f8342caa5428b9640c7d2f2dc8161dda674/builder-model-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.1/29102e4884231b867959e49fe22d66dc48bd22cd/builder-test-api-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.1/f38fa7cf59ebb790f2ee82b4158b32563823e5c7/builder-test-api-3.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.1/67cd1c256e95aed4540a291b87baa6abce3ece07/sdklib-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.1/58465680a6f5d9a07cf38b8c4c7d2bb8d6e2219c/sdklib-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.1/2f31fd18edc824704577675e10cd0832faee1592/sdk-common-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.1/ea7b2e3f17491e0c05945431127334d79d3b35f9/sdk-common-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.1/431ca8004656cf35f44f43d1090ffdf4e9bccaf0/common-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.1/ba975dcf04fd201684cbf7acd8692e5b7a537f9d/common-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.1/e0be4034c9895b0b17a61a1c3aef5fa2b8127325/manifest-merger-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.1/3d36a633e8e562b0624e67304ca531d8264ee051/manifest-merger-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.1/c13b24ba911f8a7f2d913b88c7c9108ac956dc29/ddmlib-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.1/38e701b19a843e05de66e355a850cbbf001dfc6a/ddmlib-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.1/48154e336f8210582a7a2a025dbe2b926ab7adb4/protos-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.1/d58f5724467d21a4c9dd0faf235d038dc1002433/protos-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.1/69dc870008d90fbf0941f01a17c723261e2d3b24/shared-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.1/edf64ba5b27118f57f227471a838706c3879cf60/shared-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.1/dbe6da41615986b02aa944522cd60de815b0ada5/tracker-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.1/d209e62c9b06c1580443a275171f6d00089eef6d/tracker-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.1/2ec8eb7634213cef5497b67a1526cf74daaf2280/apksig-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.1/241a5428079e16535cf17a3b8db4b0c8c175cd4f/apksig-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.2/e74f8c12d313fb638cd3e199ea13a544870636d5/builder-model-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-model/3.1.2/4504b655fa8fe72302020ca9a2387f3f23fbfb57/builder-model-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.2/57f0b608e34a9493508d21f6a07cf34989901602/builder-test-api-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/3.1.2/ffb00b786822df6538377a90df9f2d11c022efc3/builder-test-api-3.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.2/eeb14343985046cf8c8504a06327db5a50e740ea/sdklib-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdklib/26.1.2/94697a9dff499b64b6e101bedb89a89825150af/sdklib-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.2/569e3d1db94b053b15c81f7662ff8cecc4df785/sdk-common-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/sdk-common/26.1.2/2cf773af3fb0e1bbd56a80fc6903a9d2a40a248/sdk-common-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.2/fb215315bdbd152415f1fab7358015da3928d7ff/common-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/common/26.1.2/c31bbd68c51ed0ef3b8d7cdd5615acf762473887/common-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.2/58ada075a3be42ac5afe8a752a3fdebfcfdaae2b/manifest-merger-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/26.1.2/79f398427650c76f0c66c89f10e4886a1fe68c26/manifest-merger-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.2/8753f005a819994ebc56c3e567168c1fea745cc3/ddmlib-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/26.1.2/1d423e621fb5c89fed13e41d0ed026cf5d8d7e7b/ddmlib-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.2/2791dabd9906f673a77b755ca2f4950fd5248729/protos-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/protos/26.1.2/ba53bcde9703b2bf9871128952dce844c5d743fa/protos-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.2/eb4223fe1e164a7c37cd1448f3d89fdc016901de/shared-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/shared/26.1.2/bc21fe64fdaa64e59672e7d546d373f430e7557c/shared-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.2/37aae3a59f7220f45f85336f7374d5eaf37e5f7/tracker-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.analytics-library/tracker/26.1.2/2d2260da92e50ac072f89d60a596d03aab3a8757/tracker-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.2/93d9b522f74c2096cbaf84b088526f205d6b4a89/apksig-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.build/apksig/3.1.2/5af360dd30015a9a47c8ab0af0e6b05f64760edc/apksig-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/1b2a0925ff06220c0261b6fd468183cd9e9a9a47/javawriter-2.5.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/81241ff7078ef14f42ea2a8995fa09c096256e6b/javawriter-2.5.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.56/118b4633c59394749b2b2f278138beb31c930663/bcpkix-jdk15on-1.56-sources.jar" />
@@ -2330,8 +2314,8 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/7.2.0/5ad3a2bb04143f70aa0765fc29fc29571a7d6b34/fastutil-7.2.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1/19c6d8dee6803c520d855ff7e8a8c3d97f1271ec/json-simple-1.1-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1/5e303a03d04e6788dddfa3655272580ae0fc13bb/json-simple-1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.1/9770e8abf197c4d9784e4ed5ba804a86f21abaa3/baseLibrary-3.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.1/7c7f261e9f8dfb50d888223b13ba32d7622e7fec/baseLibrary-3.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.2/83a5696fb290f745f291d24d3b794beb267e124b/baseLibrary-3.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/3.1.2/1b6a1add6a577708b62737dc31c479549f77750d/baseLibrary-3.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.5.3/e836b2a7348320a86c3bbd91a032486798e6ab98/antlr4-4.5.3-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.5.3/f35db7e4b2446e4174ba6a73db7bd6b3e6bb5da1/antlr4-4.5.3.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/f2d8698c46d1167ff24b06a840a87d91a02db891/commons-io-2.4-sources.jar" />
@@ -2342,20 +2326,20 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/javapoet/1.8.0/e858dc62ef484048540d27d36f3ec2177a3fa9b1/javapoet-1.8.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/bbb63ca253b483da8ee53a50374593923e3de2e2/gson-2.7-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.1/550a3cf31d78e78925d2d99f8d3b3d0653f5db21/annotations-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.1/e91b00c2fa7d3139a485d53e0e382432da677a8b/annotations-26.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.2/7bc3fd2df32838e5b9b59804cc4c139bb89d26a5/annotations-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/annotations/26.1.2/4f4e0ee71b9ccaa4a70cc86e40fb84ada2ed99a3/annotations-26.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.3.3/6c73d839fa1603c38b067bc04d7950e05aef3d22/proguard-base-5.3.3-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.3.3/988b6b0636ce343d4962b3b37f6319dcc6e99a61/proguard-base-5.3.3.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.11.0/46bdbd0e079883accbf581986e7f8f0d999a2637/okio-1.11.0-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.11.0/840897fcd7223a8143f1d9b6f69714e7be34fd50/okio-1.11.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.freemarker/freemarker/2.3.26-incubating/415b1c5a2006eb79a5b0c28f95f0c3f92b236440/freemarker-2.3.26-incubating-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.freemarker/freemarker/2.3.26-incubating/713237e013f725b72f4f9ec931a49c14b1805359/freemarker-2.3.26-incubating.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.1/34035b244742ac13bee199b834b4b3843c6fdc5/layoutlib-api-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.1/7a76d33307781fffb3046301c3c375a1344a339a/layoutlib-api-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.1/7a82c56d6a1f88fe8871e04cac73a8321e170387/dvlib-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.1/1b0a07bae1a3726b981a2c0c8110c815ef772237/dvlib-26.1.1.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.1/cafc7710af40b1a3eba1f2e938fed2b2229f59f3/repository-26.1.1-sources.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.1/9bfbf1f0b7b2d581bf057c54e0d4de4ee21e102e/repository-26.1.1.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.2/63d02e9088ee06e7b37f7314c145b5db7f39812e/layoutlib-api-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/26.1.2/3697abf628d30042c1082ea846454dfd1e8da3e/layoutlib-api-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.2/2a9e859006c73fc73b7642cd6560b6daac0b183f/dvlib-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/dvlib/26.1.2/eb39925fee6e726468fc10344ec988c086301ed7/dvlib-26.1.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.2/ee0b2246a08385bd55f034c90ba0998b6d3a4213/repository-26.1.2-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.tools/repository/26.1.2/c8209ccb8ee0e5e3f293fd71d2a827f440ab811c/repository-26.1.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.12/1fdd1a2fed15cdf08780ed564279c0ddbff46419/commons-compress-1.12-sources.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.12/84caa68576e345eb5e7ae61a0e5a9229eb100d7b/commons-compress-1.12.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.2.6/b4e00fa279b1d45af3cb6daebcc1fee3f5402392/httpclient-4.2.6-sources.jar" />
@@ -2571,57 +2555,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/ProfileStatsWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/Favourite.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AboutPanelWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/editor/ComposerWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/StatusContentWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/FeedHeadlineTextView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/sheet/BottomSheetComposer.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/UserFeedFragment.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerViewAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/WebToken.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/service/TagGenreService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/processor/GraphProcessor.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/NotificationSyncTask.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/service/JobDispatcherService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AvatarIndicatorView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/SuggestionListFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphQLConverter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaLatestList.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ApplicationPref.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MangaBrowseFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/FragmentConfiguration.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ConfigurationUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/SeasonPageAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/MangaPageAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/request/QueryContainerBuilder.java" />
+        <option value="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/MediaWithList.graphql" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/anilist/BrowseModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaBrowseActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/StringListConverter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/ListConverter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/UserBaseConvertar.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/service/AuthenticatorService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/LoginActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/RequestHandler.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedList.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/dao/BoxQuery.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/CharacterActorsFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/FeedListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/CommentFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaRelationFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaFormatFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/favourite/MediaFavouriteFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/StudioMediaFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/ReviewFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/NotificationFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/ReviewAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/assets/graphql/Browse/Query/ReviewBrowse.graphql" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_review.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/StaffPageAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/CacheInterceptor.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/NetworkCacheInterceptor.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/FeedHeadlineTextView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphQLConverter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingFooterViewHolder.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingViewHolder.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/FeedPageAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_unresolved.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/UnresolvedViewHolder.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/WebToken.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/HtmlTagHandler.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/StatusContentWidget.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GlideImageGetter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MarkDown.java" />
       </list>
     </option>
   </component>
@@ -2668,39 +2652,50 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="adapter" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
+              <item name="adapter" type="462c0819:PsiDirectoryNode" />
+              <item name="recycler" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
-              <item name="converter" type="462c0819:PsiDirectoryNode" />
+              <item name="adapter" type="462c0819:PsiDirectoryNode" />
+              <item name="recycler" type="462c0819:PsiDirectoryNode" />
+              <item name="shared" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="anitrend" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="anitrend-app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="ProjectPane" />
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="SearchEverywhereHistoryKey" value="Web&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.retro.WebFactory&#10;MediaLis&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java&#10;CommentWid&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.widget.CommentWidget&#10;FeedList&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.FeedList&#10;Authen&#9;PSI&#9;JAVA://com.mxt.anitrend.service.AuthenticatorService&#10;FragmentBa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java&#10;MediaBase&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.MediaBase&#10;MediaAct&#9;PSI&#9;JAVA://com.mxt.anitrend.util.MediaActionUtil&#10;Media&#9;PSI&#9;JAVA://com.mxt.anitrend.util.MediaActionUtil&#10;Notific&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/async/NotificationSyncTask.java&#10;MainA&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java&#10;Airi&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.list.AiringListFragment&#10;Login&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/index/LoginActivity.java&#10;CompatUt&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java&#10;activity_pro&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/activity_profile.xml&#10;Profile&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/ProfileActivity.java&#10;Mark&#9;PSI&#9;JAVA://com.mxt.anitrend.util.MarkDown&#10;Markdo&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java&#10;ProfileActivity&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/ProfileActivity.java&#10;CharacterOver&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/fragment_character_overview.xml&#10;Character&#9;FILE&#9;file:///home/max/Android/Sdk/sources/android-27/java/lang/Character.java&#10;You&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/fragment/youtube/YoutubePlayerFragment.java&#10;MediaP&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java&#10;Airing&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/fragment/list/AiringListFragment.java&#10;Studio&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.detail.StudioActivity&#10;Err&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ErrorUtil&#10;Recy&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java&#10;Key&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java&#10;adapter_&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/adapter_anime.xml&#10;MediaAc&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java&#10;FragmentS&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/fragment_series_stats.xml&#10;Comp&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java&#10;Ke&#9;PSI&#9;JAVA://com.mxt.anitrend.util.KeyUtil&#10;TextUt&#9;PSI&#9;JAVA://android.text.TextUtils&#10;FragmentLi&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java&#10;Scrool&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerScrollListener.java&#10;WebF&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java&#10;Page&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.container.attribute.PageInfo&#10;EntityHea&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/group/EntityHeader.java&#10;section_ser&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_info.xml&#10;section_&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_details.xml&#10;Series&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/section_series_info.xml&#10;Welcom&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/base/WelcomeActivity.java&#10;Downlo&#9;PSI&#9;JAVA://com.mxt.anitrend.service.DownloaderService&#10;Downloa&#9;PSI&#9;JAVA://com.mxt.anitrend.service.DownloaderService&#10;Main&#9;PSI&#9;JAVA://com.mxt.anitrend.view.activity.index.MainActivity&#10;VersionB&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.java&#10;Episo&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.crunchy.Episode&#10;Query&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder.QueryContainer&#10;Error&#9;PSI&#9;JAVA://com.mxt.anitrend.util.ErrorUtil" />
+    <property name="SearchEverywhereHistoryKey" value="CustomRatingWidget&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/custom_rating_widget.xml&#10;Mark&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/MarkDown.java&#10;Wid&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/view/image/WideImageView.java&#10;Auth&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/interceptor/AuthInterceptor.java&#10;Token&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java&#10;Wide&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.image.WideImageView&#10;Avat&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.image.AvatarImageView&#10;Stat&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.widget.StatusContentWidget&#10;Feed&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/pager/index/FeedPageAdapter.java&#10;custom_recycler&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/custom_recycler_loading.xml&#10;GraphQ&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphQLConverter.java&#10;FeedPa&#9;PSI&#9;JAVA://com.mxt.anitrend.adapter.pager.index.FeedPageAdapter&#10;widget_auto&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/widget_auto_incrementer.xml&#10;Vote&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.widget.VoteWidget&#10;Netw&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor&#10;WebFac&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.retro.WebFactory&#10;BrowseReview&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/fragment/detail/BrowseReviewFragment.java&#10;adapter_review&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/adapter_review.xml&#10;Media&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.Media&#10;Compa&#9;PSI&#9;JAVA://com.mxt.anitrend.util.CompatUtil&#10;AuthIn&#9;PSI&#9;JAVA://com.mxt.anitrend.model.api.interceptor.AuthInterceptor&#10;Profile&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/ProfilePageAdapter.java&#10;MediaOverviewFragment&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment&#10;Overview&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/build/generated/source/apt/debug/com/mxt/anitrend/view/fragment/detail/MediaOverviewFragment_ViewBinding.java&#10;MediaAc&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaActivity.java&#10;ProfileActivity&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/detail/ProfileActivity.java&#10;Composer&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/view/editor/ComposerWidget.java&#10;AutoIncrementWidget&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget&#10;DeleteWi&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget&#10;ProfileA&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/ProfilePageAdapter.java&#10;UserStat&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.UserStats&#10;KeyU&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java&#10;Web&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java&#10;Avatar&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView&#10;Avata&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.image.AvatarImageView&#10;MediaLis&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java&#10;CommentWid&#9;PSI&#9;JAVA://com.mxt.anitrend.base.custom.view.widget.CommentWidget&#10;FeedList&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.anilist.FeedList&#10;Authen&#9;PSI&#9;JAVA://com.mxt.anitrend.service.AuthenticatorService&#10;FragmentBa&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java&#10;MediaBase&#9;PSI&#9;JAVA://com.mxt.anitrend.model.entity.base.MediaBase&#10;MediaAct&#9;PSI&#9;JAVA://com.mxt.anitrend.util.MediaActionUtil&#10;Notific&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/async/NotificationSyncTask.java&#10;MainA&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/index/MainActivity.java&#10;Airi&#9;PSI&#9;JAVA://com.mxt.anitrend.view.fragment.list.AiringListFragment&#10;Login&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/view/activity/index/LoginActivity.java&#10;CompatUt&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java&#10;activity_pro&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/activity_profile.xml&#10;Markdo&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java&#10;CharacterOver&#9;FILE&#9;file:///home/max/Documents/GitHub/anitrend-app/app/src/main/res/layout/fragment_character_overview.xml" />
     <property name="device.picker.selection" value="Nexus_5X_API_26" />
     <property name="DEBUGGABLE_DEVICE" value="Nexus_5X_API_26 [emulator-5554]" />
     <property name="DEBUGGABLE_PROCESS" value="com.mxt.anitrend" />
@@ -2708,7 +2703,7 @@
     <property name="DEBUGGER_ID" value="Auto" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../elide-example-blog-kotlin" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Videos" />
     <property name="ScreenshotViewer.SavePath" value="$PROJECT_DIR$/../anitrend-resources/screenshots/Pixel" />
     <property name="VectorAssetImportPath" value="$USER_HOME$/Downloads" />
     <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/app" />
@@ -2720,7 +2715,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="last.edited.regexp" value="Sample asdf Text" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1524770272853" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1524950042566" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -3262,6 +3257,7 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21024546" sideWeight="0.5059459" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36972973" sideWeight="0.5154749" order="14" side_tool="true" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30843115" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32864866" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -3291,7 +3287,6 @@
       <window_info id="StringPreview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="2020" y="511" width="894" height="477" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30843115" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
     </layout>
@@ -3376,477 +3371,470 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/ProfileStatsWidget.java</url>
-          <line>110</line>
-          <properties />
-          <option name="timeStamp" value="669" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java</url>
-          <line>57</line>
-          <properties />
-          <option name="timeStamp" value="673" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java</url>
-          <line>110</line>
-          <properties />
-          <option name="timeStamp" value="681" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java</url>
-          <line>78</line>
-          <properties />
-          <option name="timeStamp" value="686" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java</url>
-          <line>44</line>
-          <properties />
-          <option name="timeStamp" value="687" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java</url>
-          <line>112</line>
-          <properties />
-          <option name="timeStamp" value="688" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java</url>
-          <line>85</line>
-          <properties />
-          <option name="timeStamp" value="689" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java</url>
-          <line>59</line>
-          <properties />
-          <option name="timeStamp" value="690" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java</url>
-          <line>90</line>
-          <properties />
-          <option name="timeStamp" value="691" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesAnimeManage.java</url>
-          <line>80</line>
-          <properties />
-          <option name="timeStamp" value="692" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="697" />
+      <option name="time" value="744" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/UserFeedFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesAnimeManage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="80" column="34" lean-forward="false" selection-start-line="80" selection-start-column="34" selection-end-line="80" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="81" column="28" lean-forward="false" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/SuggestionListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="10" column="3" lean-forward="false" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/annotation/processor/GraphProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ApplicationPref.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-410">
-          <caret line="210" column="79" lean-forward="false" selection-start-line="210" selection-start-column="79" selection-end-line="210" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MangaBrowseFragment.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaLatestList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="10" column="34" lean-forward="false" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/ReviewPageAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/group/MediaStaffRoleFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/HubPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/FeedPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/AiringPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/TrendingPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="36" column="47" lean-forward="false" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/SeriesListPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/search/MediaSearchFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/SearchPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="36" column="33" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/ConfigurationUtil.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/SeasonPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="34" column="72" lean-forward="false" selection-start-line="34" selection-start-column="72" selection-end-line="34" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/container/request/QueryContainerBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
-          <caret line="59" column="20" lean-forward="false" selection-start-line="59" selection-start-column="20" selection-end-line="59" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/KeyUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="77" column="28" lean-forward="false" selection-start-line="77" selection-start-column="11" selection-end-line="77" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/MangaPageAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="37" column="58" lean-forward="false" selection-start-line="37" selection-start-column="45" selection-end-line="37" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/detail/MediaBrowseActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="61" column="75" lean-forward="false" selection-start-line="61" selection-start-column="75" selection-end-line="61" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="48" column="46" lean-forward="false" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBaseList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="39" column="86" lean-forward="false" selection-start-line="39" selection-start-column="86" selection-end-line="39" selection-end-column="86" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/meta/FuzzyDate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="59" column="19" lean-forward="false" selection-start-line="59" selection-start-column="19" selection-end-line="59" selection-end-column="19" />
-          <folding>
-            <element signature="e#1187#1188#0" expanded="false" />
-            <element signature="e#1245#1246#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/databinding/AdapterAnimeBinding.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="162" column="43" lean-forward="false" selection-start-line="162" selection-start-column="43" selection-end-line="162" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/DateUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="47" column="29" lean-forward="true" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/fragment/MediaPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="92" column="5" lean-forward="false" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/ListConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="28" column="34" lean-forward="true" selection-start-line="28" selection-start-column="34" selection-end-line="28" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/FuzzyDateConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="23" column="8" lean-forward="false" selection-start-line="23" selection-start-column="8" selection-end-line="25" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/converter/UserBaseConvertar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/model/entity/anilist/MediaListCursor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="96" column="31" lean-forward="false" selection-start-line="96" selection-start-column="31" selection-end-line="96" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/NotificationSyncTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="66" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/activity/index/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="83" column="108" lean-forward="false" selection-start-line="83" selection-start-column="108" selection-end-line="83" selection-end-column="108" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/service/AuthenticatorService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="26" column="19" lean-forward="false" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
-          <folding>
-            <element signature="e#2358#2359#0" expanded="false" />
-            <element signature="e#2394#2395#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/list/MediaBrowseFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3">
-          <caret line="59" column="7" lean-forward="false" selection-start-line="59" selection-start-column="7" selection-end-line="59" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="38" column="47" lean-forward="false" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/FeedList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="21" column="33" lean-forward="false" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="113" column="101" lean-forward="false" selection-start-line="113" selection-start-column="101" selection-end-line="113" selection-end-column="101" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphQLConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+          <caret line="34" column="22" lean-forward="false" selection-start-line="34" selection-start-column="22" selection-end-line="34" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesManageBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="66" column="39" lean-forward="false" selection-start-line="66" selection-start-column="39" selection-end-line="66" selection-end-column="39" />
+        <state relative-caret-position="748">
+          <caret line="62" column="55" lean-forward="false" selection-start-line="62" selection-start-column="55" selection-end-line="62" selection-end-column="55" />
           <folding>
-            <element signature="e#2634#2635#0" expanded="true" />
-            <element signature="e#2662#2663#0" expanded="true" />
-            <element signature="e#4450#4451#0" expanded="true" />
-            <element signature="e#4489#4490#0" expanded="true" />
+            <element signature="e#2339#2340#0" expanded="false" />
+            <element signature="e#2367#2368#0" expanded="false" />
+            <element signature="e#4256#4257#0" expanded="false" />
+            <element signature="e#4295#4296#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="677">
-          <caret line="495" column="51" lean-forward="false" selection-start-line="495" selection-start-column="51" selection-end-line="495" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/FavouriteWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1836">
-          <caret line="133" column="26" lean-forward="true" selection-start-line="133" selection-start-column="26" selection-end-line="133" selection-end-column="26" />
-          <folding>
-            <element signature="e#3443#3468#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CommentWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="25" column="30" lean-forward="true" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/interfaces/dao/BoxQuery.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="42" column="37" lean-forward="false" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/data/DatabaseHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1983">
-          <caret line="27" column="44" lean-forward="false" selection-start-line="27" selection-start-column="44" selection-end-line="27" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="22" column="35" lean-forward="true" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+        <state relative-caret-position="340">
+          <caret line="130" column="5" lean-forward="false" selection-start-line="130" selection-start-column="5" selection-end-line="130" selection-end-column="5" />
+          <folding>
+            <element signature="e#5041#5042#0" expanded="false" />
+            <element signature="e#5075#5076#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/CustomSeriesAnimeManage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="59" column="17" lean-forward="false" selection-start-line="59" selection-start-column="17" selection-end-line="59" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaDialogUtil.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MediaActionUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1566">
-          <caret line="159" column="93" lean-forward="false" selection-start-line="159" selection-start-column="93" selection-end-line="159" selection-end-column="93" />
+        <state relative-caret-position="512">
+          <caret line="154" column="26" lean-forward="false" selection-start-line="154" selection-start-column="26" selection-end-line="154" selection-end-column="26" />
           <folding>
-            <element signature="e#5786#5818#0" expanded="true" />
-            <element signature="e#6693#6739#0" expanded="true" />
-            <element signature="e#6968#7014#0" expanded="true" />
-            <element signature="e#7564#7610#0" expanded="true" />
-            <element signature="e#8252#8284#0" expanded="true" />
-            <element signature="e#9100#9146#0" expanded="true" />
-            <element signature="e#9375#9421#0" expanded="true" />
-            <element signature="e#9905#9951#0" expanded="true" />
-            <element signature="e#11111#11136#0" expanded="true" />
-            <element signature="e#11139#11165#0" expanded="true" />
-            <element signature="e#11218#11230#0" expanded="true" />
-            <element signature="e#11232#11247#0" expanded="true" />
-            <element signature="e#11278#11293#0" expanded="true" />
-            <element signature="e#11397#11412#0" expanded="true" />
+            <element signature="e#1582#1583#0" expanded="false" />
+            <element signature="e#1620#1621#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupStaffRoleAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="27" column="3" lean-forward="true" selection-start-line="27" selection-start-column="3" selection-end-line="27" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStaffFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-929">
+          <caret line="29" column="134" lean-forward="true" selection-start-line="29" selection-start-column="134" selection-end-line="29" selection-end-column="134" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/detail/StaffPageAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="35" column="81" lean-forward="false" selection-start-line="35" selection-start-column="81" selection-end-line="35" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/presenter/activity/LoginPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/changelog.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/adapter/JsonAdapterFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/adapter/ConverterAdapterFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="152" column="13" lean-forward="false" selection-start-line="152" selection-start-column="13" selection-end-line="152" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/logging-interceptor/3.9.1/ac8b447cea008461c601875c377c6b430081bda8/logging-interceptor-3.9.1-sources.jar!/okhttp3/logging/HttpLoggingInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="44" column="41" lean-forward="false" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/CacheInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="23" column="49" lean-forward="false" selection-start-line="23" selection-start-column="49" selection-end-line="23" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/NetworkCacheInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="27" column="38" lean-forward="true" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/retro/WebFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="87" column="72" lean-forward="false" selection-start-line="87" selection-start-column="72" selection-end-line="87" selection-end-column="72" />
+        <state relative-caret-position="108">
+          <caret line="56" column="58" lean-forward="false" selection-start-line="56" selection-start-column="58" selection-end-line="56" selection-end-column="58" />
+          <folding>
+            <element signature="method#createHttpClient#0;class#WebFactory#0" expanded="false" />
+            <element signature="method#createService#0;class#WebFactory#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/adapter_anime.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/CompatUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="139" column="124" lean-forward="true" selection-start-line="139" selection-start-column="124" selection-end-line="139" selection-end-column="124" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/FeedHeadlineTextView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="584">
+          <caret line="52" column="158" lean-forward="false" selection-start-line="52" selection-start-column="158" selection-end-line="52" selection-end-column="158" />
+          <folding>
+            <element signature="e#1153#1216#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/VoteWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="147" column="9" lean-forward="false" selection-start-line="147" selection-start-column="9" selection-end-line="147" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/widget_auto_incrementer.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="e#1013#1031#0" expanded="false" />
+            <element signature="e#1335#1353#0" expanded="false" />
+            <element signature="e#1388#1406#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/AutoIncrementWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="44" column="31" lean-forward="false" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/SeriesProgressTextView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="33" column="16" lean-forward="false" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/adapter_series_airing.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="11" lean-forward="false" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+          <folding>
+            <element signature="e#1714#1732#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingFooterViewHolder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="233">
+          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/converter/GraphQLConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="75" column="24" lean-forward="false" selection-start-line="75" selection-start-column="24" selection-end-line="75" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_loading.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="37" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/custom_recycler_unresolved.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="52" lean-forward="true" selection-start-line="24" selection-start-column="52" selection-end-line="24" selection-end-column="52" />
+          <folding>
+            <element signature="e#200#224#0" expanded="false" />
+            <element signature="e#422#445#0" expanded="false" />
+            <element signature="e#480#503#0" expanded="false" />
+            <element signature="e#544#562#0" expanded="false" />
+            <element signature="e#718#740#0" expanded="false" />
+            <element signature="e#1045#1076#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/LoadingViewHolder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="8" column="32" lean-forward="true" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/shared/UnresolvedViewHolder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="63" lean-forward="false" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/pager/index/FeedPageAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="33" column="86" lean-forward="false" selection-start-line="33" selection-start-column="86" selection-end-line="33" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/AvatarImageView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="54" column="8" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="58" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/entity/anilist/WebToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="103" column="32" lean-forward="false" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="32" />
+          <folding>
+            <element signature="e#2207#2208#0" expanded="false" />
+            <element signature="e#2237#2238#0" expanded="false" />
+            <element signature="e#2453#2454#0" expanded="false" />
+            <element signature="e#2528#2529#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/async/WebTokenRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/model/api/interceptor/AuthInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/image/WideImageView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-289">
+          <caret line="43" column="41" lean-forward="false" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RichMarkdownTextView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="482">
+          <caret line="73" column="49" lean-forward="false" selection-start-line="73" selection-start-column="49" selection-end-line="73" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/HtmlTagHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="21" column="8" lean-forward="false" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/avatar_placeholder.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/empty_icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/GlideImageGetter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="50" column="61" lean-forward="false" selection-start-line="50" selection-start-column="61" selection-end-line="50" selection-end-column="61" />
+          <folding>
+            <element signature="e#1529#1825#0" expanded="false" />
+            <element signature="e#1824#1825#0" expanded="false" />
+            <element signature="class#DrawablePlaceHolder#0;class#GlideImageGetter#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/util/MarkDown.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="58" column="12" lean-forward="true" selection-start-line="58" selection-start-column="12" selection-end-line="58" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/widget/StatusContentWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="106" column="45" lean-forward="false" selection-start-line="106" selection-start-column="45" selection-end-line="106" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/custom_rating_widget.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="45" lean-forward="false" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/mxt/anitrend/databinding/CustomRatingWidgetBinding.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="7" column="23" lean-forward="true" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/AiringAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="452">
+          <caret line="105" column="39" lean-forward="false" selection-start-line="105" selection-start-column="39" selection-end-line="105" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupMediaAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="80" column="39" lean-forward="false" selection-start-line="80" selection-start-column="39" selection-end-line="80" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/group/GroupSeriesAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="79" column="39" lean-forward="false" selection-start-line="79" selection-start-column="39" selection-end-line="79" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/MediaAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="452">
+          <caret line="242" column="39" lean-forward="false" selection-start-line="242" selection-start-column="39" selection-end-line="242" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/base/custom/view/text/RatingTextView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mxt/anitrend/adapter/recycler/index/FeedAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="57" column="64" lean-forward="false" selection-start-line="57" selection-start-column="64" selection-end-line="57" selection-end-column="64" />
           <folding />
         </state>
       </provider>

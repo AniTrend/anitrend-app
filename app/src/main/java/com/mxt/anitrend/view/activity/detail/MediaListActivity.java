@@ -34,6 +34,8 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
 
     private SeriesListPageAdapter pageAdapter;
 
+    private @KeyUtil.MediaType String mediaType;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +44,15 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setViewModel(true);
+        if(getIntent().getExtras() != null)
+            mediaType = getIntent().getExtras().getString(KeyUtil.arg_mediaType);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(getIntent().getExtras() != null)
-            setTitle(CompatUtil.equals(getIntent().getExtras().getString(KeyUtil.arg_mediaType), KeyUtil.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
+            setTitle(CompatUtil.equals(mediaType, KeyUtil.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
         onActivityReady();
     }
 

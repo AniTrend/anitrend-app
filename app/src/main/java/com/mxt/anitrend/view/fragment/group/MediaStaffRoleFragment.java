@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
 import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
@@ -100,7 +101,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
-                            .setModel(((MediaBase)data)).build(getActivity());
+                            .setId(((MediaBase)data).getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -114,8 +115,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<EntityGroup, Connec
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new GroupStaffRoleAdapter(model, getContext());
-            //mAdapter = new GroupSeriesAdapter(model, getContext());
+            mAdapter = new GroupSeriesAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }

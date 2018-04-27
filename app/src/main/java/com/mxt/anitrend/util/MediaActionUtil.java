@@ -29,45 +29,34 @@ import retrofit2.Response;
  * for a given media
  */
 
-public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListener {
+public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListener {
 
     private ProgressDialog progressDialog;
-    private WidgetPresenter<MediaList> presenter;
+    private WidgetPresenter<MediaBase> presenter;
     private FragmentActivity context;
-    private User user;
 
     private Lifecycle lifecycle;
 
-    private Media media;
-    private MediaList mediaList;
-    private MediaBase mediaBase;
+    private long mediaId;
 
     MediaActionUtil(FragmentActivity context) {
         this.context = context;
         this.lifecycle = context.getLifecycle();
         this.presenter = new WidgetPresenter<>(context);
-        this.user = presenter.getDatabase().getCurrentUser();
     }
 
-    private void setModels(Media media, MediaList mediaList, MediaBase mediaBase) {
-        this.media = media;
-        this.mediaList = mediaList;
-        this.mediaBase = mediaBase;
+    private void setMediaId(long mediaId) {
+        this.mediaId = mediaId;
     }
 
     private void actionPicker() {
+        // No need to add the parameter onList otherwise we'd have to handle an error code 404,
+        // Instead we'd rather check if the the media has a non null mediaList item
         QueryContainerBuilder queryContainerBuilder = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_userName, user.getName());
-
-        if(media != null)
-            queryContainerBuilder.putVariable(KeyUtil.arg_mediaId, media.getId());
-        else if (mediaBase != null)
-            queryContainerBuilder.putVariable(KeyUtil.arg_mediaId, mediaBase.getId());
-        else
-            queryContainerBuilder.putVariable(KeyUtil.arg_mediaId, mediaList.getMediaId());
+                .putVariable(KeyUtil.arg_id, mediaId);
 
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder);
-        presenter.requestData(KeyUtil.MEDIA_LIST_REQ, context, this);
+        presenter.requestData(KeyUtil.MEDIA_WITH_LIST_REQ, context, this);
     }
 
     private void dismissProgress() {
@@ -81,14 +70,9 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
         actionPicker();
     }
 
-    private void showActionDialog(@Nullable MediaList mediaListItem) {
+    private void showActionDialog(@NonNull MediaBase mediaBase) {
         try {
-            if(media != null)
-                MediaDialogUtil.createSeriesManage(context, media, mediaListItem, MediaUtil.getMediaTitle(media));
-            else if(mediaBase != null)
-                MediaDialogUtil.createSeriesManage(context, mediaBase, mediaListItem, MediaUtil.getMediaTitle(mediaBase));
-            else
-                MediaDialogUtil.createSeriesManage(context, mediaList, mediaListItem, MediaUtil.getMediaListTitle(mediaList));
+            MediaDialogUtil.createSeriesManage(context, mediaBase);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(this.toString(), e.getLocalizedMessage());
@@ -105,19 +89,14 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
      * @param response the response from the network
      */
     @Override
-    public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
+    public void onResponse(@NonNull Call<MediaBase> call, @NonNull Response<MediaBase> response) {
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-            MediaList mediaListItem;
-            if(response.isSuccessful() && (mediaListItem = response.body()) != null) {
-                showActionDialog(mediaListItem);
+            MediaBase mediaBase;
+            if(response.isSuccessful() && (mediaBase = response.body()) != null) {
+                showActionDialog(mediaBase);
             } else {
-                // response code 404 represents the absence of a media list in the current users list
-                if(response.code() == 404)
-                    showActionDialog(null);
-                else {
-                    Log.e(this.toString(), ErrorUtil.getError(response));
-                    NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
-                }
+                Log.e(this.toString(), ErrorUtil.getError(response));
+                NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
             dismissProgress();
         }
@@ -131,7 +110,7 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
      * @param throwable contains information about the error
      */
     @Override
-    public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<MediaBase> call, @NonNull Throwable throwable) {
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress();
             throwable.printStackTrace();
@@ -175,29 +154,17 @@ public class MediaActionUtil implements RetroCallback<MediaList>, LifecycleListe
 
     public static class Builder {
 
-        private Media series;
-        private MediaList mediaList;
-        private MediaBase mediaBase;
+        private long mediaId;
         private MediaActionUtil mediaActionUtil;
 
-        public Builder setModel(Media series) {
-            this.series = series;
-            return this;
-        }
-
-        public Builder setModel(MediaList mediaList) {
-            this.mediaList = mediaList;
-            return this;
-        }
-
-        public Builder setModel(MediaBase mediaBase) {
-            this.mediaBase = mediaBase;
+        public Builder setId(long mediaId) {
+            this.mediaId = mediaId;
             return this;
         }
 
         public MediaActionUtil build(FragmentActivity context) {
             mediaActionUtil = new MediaActionUtil(context);
-            mediaActionUtil.setModels(series, mediaList, mediaBase);
+            mediaActionUtil.setMediaId(mediaId);
             return mediaActionUtil;
         }
     }

@@ -2,6 +2,7 @@ package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,13 @@ import android.widget.Filter;
 
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
+import com.mxt.anitrend.databinding.AdapterFeedMessageBinding;
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding;
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding;
+import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -29,19 +33,27 @@ import butterknife.OnLongClick;
 public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
 
     private final int FEED_STATUS = 10, FEED_MESSAGE = 11, FEED_LIST = 20, FEED_PROGRESS = 21;
+    private @KeyUtil.MessageType int messageType;
 
     public FeedAdapter(List<FeedList> data, Context context) {
         super(data, context);
     }
 
-    @NonNull
-    @Override
-    public RecyclerViewHolder<FeedList> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FeedAdapter(List<FeedList> data, Context context, @KeyUtil.MessageType int messageType) {
+        super(data, context);
+        this.messageType = messageType;
+    }
+
+    @NonNull @Override
+    public RecyclerViewHolder<FeedList> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType < FEED_STATUS)
+            return new UnresolvedViewHolder<>(CustomRecyclerUnresolvedBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+
         switch (viewType) {
             case FEED_STATUS:
                 return new StatusFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
             case FEED_MESSAGE:
-                return new MessageFeedViewHolder(AdapterFeedStatusBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+                return new MessageFeedViewHolder(AdapterFeedMessageBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
             case FEED_LIST:
                 return new ListFeedViewHolder(AdapterFeedProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
@@ -63,13 +75,14 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     @Override
     public int getItemViewType(int position) {
         FeedList model = data.get(position);
+        if(TextUtils.isEmpty(model.getType()))
+            return -1;
         if(CompatUtil.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
         else if(CompatUtil.equals(model.getType(), KeyUtil.MESSAGE))
             return FEED_MESSAGE;
         else if(CompatUtil.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
             return FEED_LIST;
-
         return FEED_PROGRESS;
     }
 
@@ -237,14 +250,14 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     
     protected class MessageFeedViewHolder extends RecyclerViewHolder<FeedList> {
 
-        private AdapterFeedStatusBinding binding;
+        private AdapterFeedMessageBinding binding;
 
         /**
          * Default constructor which includes binding with butter knife
          *
          * @param binding
          */
-        public MessageFeedViewHolder(AdapterFeedStatusBinding binding) {
+        public MessageFeedViewHolder(AdapterFeedMessageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -258,6 +271,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
+            binding.setType(messageType);
             binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
@@ -287,7 +301,8 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
          */
         @Override
         public void onViewRecycled() {
-            Glide.with(getContext()).clear(binding.userAvatar);
+            Glide.with(getContext()).clear(binding.messengerAvatar);
+            Glide.with(getContext()).clear(binding.recipientAvatar);
             binding.widgetStatus.onViewRecycled();
             binding.widgetDelete.onViewRecycled();
             binding.unbind();
@@ -300,7 +315,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick({R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_comment})
+        @Override @OnClick({R.id.widget_edit, R.id.widget_users, R.id.messenger_avatar, R.id.recipient_avatar,  R.id.widget_comment})
         public void onClick(View v) {
             int index;
             if((index = getAdapterPosition()) > -1)

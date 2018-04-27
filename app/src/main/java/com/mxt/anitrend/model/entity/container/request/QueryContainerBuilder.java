@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Map;
 
@@ -69,7 +71,7 @@ public class QueryContainerBuilder implements Parcelable {
 
     public QueryContainer build() {
         queryContainer.variables = Stream.of(queryContainer.variables)
-                .filter(value -> value.getValue() != null || value.getValue() != ((Integer)(-1)))
+                .filter(value -> value.getValue() != null)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return queryContainer;
     }

@@ -66,7 +66,7 @@ public class WelcomeActivity extends ActivityBase<Void, BasePresenter> implement
     }
 
     private ArrayList<PaperOnboardingPage> getIntroductionPages() {
-        return new ArrayList<>(CompatUtil.getListFromArray(
+        return new ArrayList<>(CompatUtil.constructListFrom(
                 new PaperOnboardingPage(getString(R.string.app_intro_colors_title), getString(R.string.app_intro_colors_text),
                         Color.parseColor("#678FB4"), R.drawable.ic_format_paint_white_24dp, R.drawable.ic_format_paint_white_24dp),
                 new PaperOnboardingPage(getString(R.string.app_intro_content_title), getString(R.string.app_intro_content_text),

@@ -108,7 +108,7 @@ public class AiringListFragment extends FragmentBaseList<MediaList, PageContaine
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
-                            .setModel(data).build(getActivity());
+                            .setId(data.getMediaId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

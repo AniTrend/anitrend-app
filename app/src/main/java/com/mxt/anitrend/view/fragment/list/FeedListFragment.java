@@ -169,7 +169,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
-                            .setModel(data.getMedia()).build(getActivity());
+                            .setId(data.getMedia().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

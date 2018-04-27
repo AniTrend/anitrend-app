@@ -95,7 +95,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             switch (item.getItemId()) { 
                 case R.id.action_manage:
                     mediaActionUtil = new MediaActionUtil.Builder()
-                            .setModel(model).build(this);
+                            .setId(model.getId()).build(this);
                     mediaActionUtil.startSeriesAction();
                     break;
             }

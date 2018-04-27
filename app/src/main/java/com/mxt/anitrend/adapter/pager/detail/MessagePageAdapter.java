@@ -24,13 +24,10 @@ public class MessagePageAdapter extends BaseStatePageAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Bundle args = new Bundle(getParams());
         switch (position) {
             case 0:
-                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true));
                 return MessageFeedFragment.newInstance(getParams(), KeyUtil.MESSAGE_TYPE_INBOX);
             case 1:
-                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true));
                 return MessageFeedFragment.newInstance(getParams(), KeyUtil.MESSAGE_TYPE_OUTBOX);
         }
         return null;

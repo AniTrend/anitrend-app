@@ -120,7 +120,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
                 model = mediaList;
 
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
-                presenter.getDatabase().getBoxStore(MediaList.class).put(model); resetFlipperState();
+                resetFlipperState();
                 if(isModelCategoryChanged) {
                     NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, model), false);
@@ -156,6 +156,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
 
     private Bundle getParam() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
+        queryContainer.putVariable(KeyUtil.arg_id, model.getId());
         queryContainer.putVariable(KeyUtil.arg_mediaId, model.getMediaId());
         queryContainer.putVariable(KeyUtil.arg_listStatus, model.getStatus());
         queryContainer.putVariable(KeyUtil.arg_listScore_raw, model.getScore());

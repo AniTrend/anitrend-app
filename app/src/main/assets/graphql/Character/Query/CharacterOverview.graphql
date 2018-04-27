@@ -1,4 +1,4 @@
-query CharacterOverview($id: Int!) {
+query CharacterOverview($id: Int!, $asHtml: Boolean = false) {
   Character(id: $id) {
     ... on Character {
       id
@@ -10,7 +10,7 @@ query CharacterOverview($id: Int!) {
           alternative
         }
       }
-      description(asHtml: true)
+      description(asHtml: $asHtml)
       image {
         ... on CharacterImage {
           large

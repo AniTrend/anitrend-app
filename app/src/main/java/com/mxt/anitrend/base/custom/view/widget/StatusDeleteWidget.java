@@ -15,6 +15,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetDeleteBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
+import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -27,10 +28,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StatusDeleteWidget extends FrameLayout implements CustomView, RetroCallback<ResponseBody>, View.OnClickListener {
+public class StatusDeleteWidget extends FrameLayout implements CustomView, RetroCallback<DeleteState>, View.OnClickListener {
 
     private WidgetDeleteBinding binding;
-    private WidgetPresenter<ResponseBody> presenter;
+    private WidgetPresenter<DeleteState> presenter;
     private @KeyUtil.RequestType int requestType;
     private FeedList feedList;
     private FeedReply feedReply;
@@ -120,9 +121,10 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
      * @param response the response from the network
      */
     @Override
-    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+    public void onResponse(@NonNull Call<DeleteState> call, @NonNull Response<DeleteState> response) {
         try {
-            if(response.isSuccessful()) {
+            DeleteState deleteState;
+            if(response.isSuccessful() && (deleteState = response.body()) != null) {
                 resetFlipperState();
                 if(requestType == KeyUtil.MUT_DELETE_FEED)
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
@@ -143,7 +145,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
      * @param throwable contains information about the error
      */
     @Override
-    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<DeleteState> call, @NonNull Throwable throwable) {
         try {
             Log.e(toString(), throwable.getLocalizedMessage());
             throwable.printStackTrace();

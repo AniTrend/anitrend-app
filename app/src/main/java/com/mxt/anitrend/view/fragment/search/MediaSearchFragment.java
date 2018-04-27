@@ -113,7 +113,7 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
-                            .setModel(data).build(getActivity());
+                            .setId(data.getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
                     NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

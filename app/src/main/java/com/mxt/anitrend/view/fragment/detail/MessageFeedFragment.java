@@ -1,9 +1,17 @@
 package com.mxt.anitrend.view.fragment.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
+import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
 /**
@@ -35,10 +43,44 @@ public class MessageFeedFragment extends FeedListFragment {
     }
 
     @Override
+    protected void updateUI() {
+        if(mAdapter == null)
+            mAdapter = new FeedAdapter(model, getContext(), messageType);
+        super.updateUI();
+    }
+
+    @Override
     public void makeRequest() {
+        queryContainer = GraphUtil.getDefaultQuery(true);
         queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(messageType == KeyUtil.MESSAGE_TYPE_INBOX ? KeyUtil.arg_userId : KeyUtil.arg_messengerId, userId);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.FEED_MESSAGE_REQ, getContext());
+    }
+
+    @Override
+    public void onItemClick(View target, FeedList data) {
+        Intent intent;
+        switch (target.getId()) {
+            case R.id.messenger_avatar:
+                if (data.getMessenger() != null) {
+                    intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(KeyUtil.arg_id, data.getMessenger().getId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                }
+                break;
+            case R.id.recipient_avatar:
+                if (data.getRecipient() != null) {
+                    intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(KeyUtil.arg_id, data.getRecipient().getId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                }
+                break;
+            default:
+                super.onItemClick(target, data);
+                break;
+        }
     }
 }

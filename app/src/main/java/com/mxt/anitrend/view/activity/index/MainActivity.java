@@ -412,8 +412,8 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         User user;
         if((user = getPresenter().getDatabase().getCurrentUser()) != null) {
             mUserName.setText(user.getName());
+            mUserAvatar.onInit();
             HeaderImageView.setImage(mHeaderView, user.getBannerImage());
-
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(MainActivity.this, user);
                 getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_LOGIN_TIP);

@@ -33,7 +33,7 @@ public class StaffPageAdapter extends BaseStatePageAdapter {
             case 0:
                 return StaffOverviewFragment.newInstance(getParams());
             case 1:
-                return MediaFormatFragment.newInstance(getParams(), KeyUtil.MANGA, KeyUtil.STAFF_MEDIA_REQ);
+                return MediaFormatFragment.newInstance(getParams(), KeyUtil.ANIME, KeyUtil.STAFF_MEDIA_REQ);
             case 2:
                 return MediaFormatFragment.newInstance(getParams(), KeyUtil.MANGA, KeyUtil.STAFF_MEDIA_REQ);
             case 3:

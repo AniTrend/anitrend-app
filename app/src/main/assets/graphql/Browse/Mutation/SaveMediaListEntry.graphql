@@ -1,5 +1,5 @@
-mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $priority: Int, $private: Boolean = false, $hiddenFromStatusLists: Boolean = false, $customLists: [String], $advancedScores: [Float], $notes: String, $scoreFormat: ScoreFormat = POINT_100) {
-  SaveMediaListEntry(id: $id, mediaId: $mediaId, status: $status, scoreRaw: $scoreRaw, progress: $progress, progressVolumes: $progressVolumes, repeat: $repeat, priority: $priority, private: $private, hiddenFromStatusLists: $hiddenFromStatusLists, customLists: $customLists, advancedScores: $advancedScores, notes: $notes) {
+mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $scoreRaw: Int, $progress: Int, $progressVolumes: Int, $repeat: Int, $priority: Int, $private: Boolean = false, $hiddenFromStatusLists: Boolean = false, $customLists: [String], $advancedScores: [Float], $notes: String, $scoreFormat: ScoreFormat = POINT_100, $startedAt: FuzzyDateInput, $completedAt: FuzzyDateInput) {
+  SaveMediaListEntry(id: $id, mediaId: $mediaId, status: $status, scoreRaw: $scoreRaw, progress: $progress, progressVolumes: $progressVolumes, repeat: $repeat, priority: $priority, private: $private, hiddenFromStatusLists: $hiddenFromStatusLists, customLists: $customLists, advancedScores: $advancedScores, notes: $notes, startedAt: $startedAt, completedAt: $completedAt) {
     ... on MediaList {
       id
       mediaId
@@ -11,7 +11,6 @@ mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $
       priority
       private
       hiddenFromStatusLists
-      advancedScores
       customLists(asArray: true)
       notes
       startedAt {
@@ -26,64 +25,6 @@ mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $
           year
           month
           day
-        }
-      }
-      user {
-        ... on User {
-          id
-          name
-          avatar {
-            ... on UserAvatar {
-              large
-              medium
-            }
-          }
-          isFollowing
-        }
-      }
-      media {
-        ... on Media {
-          id
-          title {
-            ... on MediaTitle {
-              english
-              romaji
-              native
-              userPreferred
-            }
-          }
-          coverImage {
-            ... on MediaCoverImage {
-              large
-              medium
-            }
-          }
-          type
-          format
-          season
-          status
-          meanScore
-          averageScore
-          startDate {
-            ... on FuzzyDate {
-              day
-              month
-              year
-            }
-          }
-          episodes
-          chapters
-          volumes
-          isAdult
-          isFavourite
-          nextAiringEpisode {
-            ... on AiringSchedule {
-              id
-              airingAt
-              timeUntilAiring
-              episode
-            }
-          }
         }
       }
     }

@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.fragment.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -9,13 +10,16 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Review;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.sheet.BottomReviewReader;
 
 import java.util.Collections;
@@ -87,6 +91,11 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     public void onItemClick(View target, Review data) {
         switch (target.getId()) {
             case R.id.series_image:
+                MediaBase mediaBase = data.getMedia();
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
+                intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
+                intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.review_read_more:
                 mBottomSheet = new BottomReviewReader.Builder()
@@ -111,7 +120,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
             case R.id.series_image:
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 mediaActionUtil = new MediaActionUtil.Builder()
-                        .setModel(data.getMedia()).build(getActivity());
+                        .setId(data.getMedia().getId()).build(getActivity());
                 mediaActionUtil.startSeriesAction();
             } else
                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();

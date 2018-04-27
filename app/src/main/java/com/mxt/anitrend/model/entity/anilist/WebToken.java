@@ -26,23 +26,18 @@ public class WebToken implements Parcelable, Cloneable {
     private String access_token;
     private String token_type;
     private long expires_in;
+    private long expires;
     private String refresh_token;
 
     public WebToken() {
 
     }
 
-    public WebToken(String access_token, String token_type, long expires_in, long expires, String refresh_token) {
-        this.access_token = access_token;
-        this.token_type = token_type;
-        this.expires_in = expires_in;
-        this.refresh_token = refresh_token;
-    }
-
     protected WebToken(Parcel in) {
         id = in.readLong();
         access_token = in.readString();
         token_type = in.readString();
+        expires = in.readLong();
         expires_in = in.readLong();
         refresh_token = in.readString();
     }
@@ -52,6 +47,7 @@ public class WebToken implements Parcelable, Cloneable {
         dest.writeLong(id);
         dest.writeString(access_token);
         dest.writeString(token_type);
+        dest.writeLong(expires);
         dest.writeLong(expires_in);
         dest.writeString(refresh_token);
     }
@@ -94,7 +90,7 @@ public class WebToken implements Parcelable, Cloneable {
     }
 
     public long getExpires() {
-        return (System.currentTimeMillis() - 8000L) + expires_in;
+        return expires;
     }
 
     public String getRefresh_token() {
@@ -103,6 +99,10 @@ public class WebToken implements Parcelable, Cloneable {
 
     public String getHeader() {
         return String.format("%s %s",token_type,access_token);
+    }
+
+    public void calculateExpires() {
+        expires = (System.currentTimeMillis() - 8000L) + expires_in;
     }
 
     @Override

@@ -79,9 +79,9 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         binding.diaCurrentStatus.setAdapter(adapter);
 
         if(!TextUtils.isEmpty(model.getStatus()))
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtil.MediaListStatus).indexOf(model.getStatus()));
+            binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));
         else
-            binding.diaCurrentStatus.setSelection(CompatUtil.getListFromArray(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
+            binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
 
         binding.diaCurrentPrivacy.setChecked(model.isHidden());
         if(model.getScore() != 0)

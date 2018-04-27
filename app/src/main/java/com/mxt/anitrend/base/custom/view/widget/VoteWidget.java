@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetVoteBinding;
@@ -128,31 +130,36 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
         setReviewStatus();
     }
 
+    public void applyColorStyleTo(SingleLineTextView singleLineTextView, @DrawableRes int drawableItem) {
+        if(colorStyle != 0) {
+            singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                    drawableItem, colorStyle), null, null, null);
+            singleLineTextView.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
+        } else {
+            singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                    drawableItem, R.color.colorGrey600), null, null, null);
+        }
+    }
+
     public void setReviewStatus() {
+        if(colorStyle != 0) {
+            binding.widgetThumbUp.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
+            binding.widgetThumbDown.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
+        }
         switch (model.getUserRating()) {
             case KeyUtil.UP_VOTE:
                 binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                         R.drawable.ic_thumb_up_grey_600_18dp, R.color.colorStateGreen), null, null, null);
+                applyColorStyleTo(binding.widgetThumbDown, R.drawable.ic_thumb_down_grey_600_18dp);
                 break;
             case KeyUtil.DOWN_VOTE:
                 binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                     R.drawable.ic_thumb_down_grey_600_18dp, R.color.colorStateOrange), null, null, null);
+                applyColorStyleTo(binding.widgetThumbUp, R.drawable.ic_thumb_up_grey_600_18dp);
                 break;
             default:
-                if(colorStyle != 0) {
-                    binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
-                            R.drawable.ic_thumb_up_grey_600_18dp, colorStyle), null, null, null);
-                    binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
-                            R.drawable.ic_thumb_down_grey_600_18dp, colorStyle), null, null, null);
-
-                    binding.widgetThumbUp.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
-                    binding.widgetThumbDown.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
-                } else {
-                    binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
-                            R.drawable.ic_thumb_up_grey_600_18dp), null, null, null);
-                    binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
-                            R.drawable.ic_thumb_down_grey_600_18dp), null, null, null);
-                }
+                applyColorStyleTo(binding.widgetThumbUp, R.drawable.ic_thumb_up_grey_600_18dp);
+                applyColorStyleTo(binding.widgetThumbDown, R.drawable.ic_thumb_down_grey_600_18dp);
                 break;
         }
 

@@ -58,37 +58,28 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         presenter = new MediaPresenter(getContext());
     }
 
-    public void setModel(MediaBase model, MediaList userMediaList) {
-        if(userMediaList != null)
-            this.model = userMediaList;
+    public void setModel(MediaBase mediaBase) {
+        if(mediaBase.getMediaListEntry() != null) {
+            this.model = mediaBase.getMediaListEntry();
+            this.model.setMedia(mediaBase);
+        }
         else {
             this.model = new MediaList();
-            this.model.setMediaId(model.getId());
-            this.model.setMedia(model);
+            this.model.setMediaId(mediaBase.getId());
+            this.model.setMedia(mediaBase);
         }
         bindFields();
         populateFields();
     }
 
-    public void setModel(MediaList model, MediaList userMediaList) {
-        if(userMediaList != null)
-            this.model = userMediaList;
-        else {
-            this.model = new MediaList();
-            this.model.setMediaId(model.getId());
-            this.model.setMedia(model.getMedia());
-        }
-        bindFields();
-        populateFields();
-    }
-
-    public @NonNull
-    MediaList getModel() {
+    public @NonNull MediaList getModel() {
         return model;
     }
 
     public Bundle getParam() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
+        if(model.getId() > 0)
+            queryContainer.putVariable(KeyUtil.arg_id, model.getId());
         queryContainer.putVariable(KeyUtil.arg_mediaId, model.getMediaId());
         queryContainer.putVariable(KeyUtil.arg_listStatus, model.getStatus());
         queryContainer.putVariable(KeyUtil.arg_listScore_raw, model.getScore());

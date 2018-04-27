@@ -3,6 +3,7 @@ package com.mxt.anitrend.model.api.retro.anilist;
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
+import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
@@ -52,10 +53,10 @@ public interface FeedModel {
     @POST("/")
     @GraphQuery("DeleteActivity")
     @Headers("Content-Type: application/json")
-    Call<GraphContainer<Boolean>> deleteActivity(@Body QueryContainerBuilder request);
+    Call<GraphContainer<DeleteState>> deleteActivity(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("DeleteActivityReply")
     @Headers("Content-Type: application/json")
-    Call<GraphContainer<Boolean>> deleteActivityReply(@Body QueryContainerBuilder request);
+    Call<GraphContainer<DeleteState>> deleteActivityReply(@Body QueryContainerBuilder request);
 }

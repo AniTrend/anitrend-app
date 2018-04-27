@@ -1,4 +1,4 @@
-query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isMain: Boolean = true, $asHtml: Boolean = true) {
+query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isMain: Boolean = true, $asHtml: Boolean = false) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     ... on Media {
       id

@@ -15,10 +15,10 @@
         <com.mxt.anitrend.base.custom.view.image.WideImageView
             android:id="@+id/series_image"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
             app:imageUrl="@{model.media.bannerImage}"
             tools:scaleType="centerCrop"
             tools:layout_height="@dimen/wide_image_md"
@@ -90,6 +90,5 @@
             android:textStyle="bold"
             android:text="@string/text_read_more" />
 
-    </FrameLayout
-        >
+    </FrameLayout>
 </layout>

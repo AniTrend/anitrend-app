@@ -1,4 +1,4 @@
-query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort] = CREATED_AT_DESC) {
+query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort] = CREATED_AT_DESC, $asHtml: Boolean = false) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -13,7 +13,7 @@ query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $
         id
         summary
         mediaType
-        body(asHtml: true)
+        body(asHtml: $asHtml)
         rating
         ratingAmount
         userRating

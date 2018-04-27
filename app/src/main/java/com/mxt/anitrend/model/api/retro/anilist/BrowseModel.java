@@ -3,6 +3,7 @@ package com.mxt.anitrend.model.api.retro.anilist;
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.Review;
+import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
@@ -42,14 +43,19 @@ public interface BrowseModel {
     Call<GraphContainer<MediaList>> getMediaList(@Body QueryContainerBuilder request);
 
     @POST("/")
+    @GraphQuery("MediaWithList")
+    @Headers("Content-Type: application/json")
+    Call<GraphContainer<MediaBase>> getMediaWithList(@Body QueryContainerBuilder request);
+
+    @POST("/")
     @GraphQuery("DeleteMediaListEntry")
     @Headers("Content-Type: application/json")
-    Call<GraphContainer<Boolean>> deleteMediaListEntry(@Body QueryContainerBuilder request);
+    Call<GraphContainer<DeleteState>> deleteMediaListEntry(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("DeleteReview")
     @Headers("Content-Type: application/json")
-    Call<GraphContainer<Boolean>> deleteReview(@Body QueryContainerBuilder request);
+    Call<GraphContainer<DeleteState>> deleteReview(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("SaveMediaListEntry")

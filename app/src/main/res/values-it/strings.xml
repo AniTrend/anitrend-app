@@ -937,5 +937,6 @@
     <string name="title_score">Score</string>
     <string name="title_watching">Watching</string>
     <string name="title_series_stats">Series Stats</string>
+    <string name="error_unresolved_type">Unable to resolve content</string>
 
 </resources>
