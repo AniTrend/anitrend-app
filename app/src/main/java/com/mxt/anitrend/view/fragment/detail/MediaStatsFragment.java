@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,12 @@ import com.annimon.stream.Stream;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.LinkAdapter;
 import com.mxt.anitrend.adapter.recycler.detail.RankAdapter;
@@ -35,6 +38,7 @@ import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 
 import java.util.List;
@@ -111,7 +115,9 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                             .putVariable(KeyUtil.arg_seasonYear, data.getYear())
                             .putVariable(KeyUtil.arg_format, data.getFormat()));
                     args.putString(KeyUtil.arg_activity_tag, data.getTypeHtmlPlainTitle());
-                    args.putBoolean(KeyUtil.arg_media_compact, true);
+                    args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
+                            .setCompactType(true)
+                            .setFilterDisabled(true));
                     intent.putExtras(args);
                     startActivity(intent);
                 }
@@ -140,11 +146,9 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             });
         }
 
-        binding.linksRecycler.setAdapter(linkAdapter);
-
-        binding.rankingRecycler.setAdapter(rankAdapter);
-
         binding.stateLayout.showContent();
+        binding.linksRecycler.setAdapter(linkAdapter);
+        binding.rankingRecycler.setAdapter(rankAdapter);
         showStatusDistribution(); showScoreDistribution();
     }
 
@@ -163,39 +167,53 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
     private void showScoreDistribution() {
         if(model.getStats() != null && model.getStats().getScoreDistribution() != null) {
 
+            List<BarEntry> barEntries = getPresenter().getMediaScoreDistribution(model.getStats().getScoreDistribution());
+
+            BarDataSet barDataSet = new BarDataSet(barEntries, getString(R.string.title_score_distribution));
+
             configureScoreDistribution(model.getStats().getScoreDistribution());
 
-            BarDataSet barDataSet = new BarDataSet(getPresenter().getMediaScoreDistribution(model.getStats().getScoreDistribution()), getString(R.string.title_score_distribution));
             if (getContext() != null)
-                barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 253);
+                barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 200);
+
             barDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
             BarData barData = new BarData(barDataSet);
-            barData.setBarWidth(0.9f);
+            barData.setBarWidth(0.6f);
 
             binding.seriesScoreDist.setData(barData);
+            binding.seriesScoreDist.disableScroll();
             binding.seriesScoreDist.setFitBars(true);
+            binding.seriesScoreDist.setPinchZoom(false);
+            binding.seriesScoreDist.setDoubleTapToZoomEnabled(false);
             binding.seriesScoreDist.invalidate();
         }
     }
 
     private void showStatusDistribution() {
         if(model.getStats() != null && model.getStats().getStatusDistribution() != null) {
-
             configureSeriesStats();
 
             List<PieEntry> pieEntries = getPresenter().getMediaStats(model.getStats().getStatusDistribution());
             PieDataSet pieDataSet = new PieDataSet(pieEntries, getString(R.string.title_series_stats));
             pieDataSet.setSliceSpace(3f);
-            pieDataSet.setColors(Color.parseColor("#6fc1ea"), Color.parseColor("#48c76d"),
-                    Color.parseColor("#f7464a"), Color.parseColor("#46bfbd"), Color.parseColor("#fba640"));
+
+            // Set legend and section colors with a moderate ~ 20% transparency
+            pieDataSet.setColors(Color.parseColor("#c26fc1ea"),
+                    Color.parseColor("#c248c76d"),
+                    Color.parseColor("#c2f7464a"),
+                    Color.parseColor("#c29256f3"),
+                    Color.parseColor("#c2fba640"));
 
             PieData pieData = new PieData(pieDataSet);
             if (getContext() != null)
                 pieData.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
-            pieData.setValueTextSize(10f);
+
+            pieData.setValueTextSize(9f);
             pieData.setValueFormatter(new PercentFormatter());
+
+            binding.seriesStats.getLegend().setTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
+            binding.seriesStats.setHoleColor(CompatUtil.getColorFromAttr(getContext(), R.attr.color));
             binding.seriesStats.setData(pieData);
-            binding.seriesStats.highlightValues(null);
             binding.seriesStats.invalidate();
         }
     }
@@ -215,19 +233,22 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                     getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 
-    private void configureScoreDistribution(List<ScoreDistribution> scoreDistribution) {
+    private void configureScoreDistribution(List<ScoreDistribution> scoreDistributions) {
         binding.seriesScoreDist.getDescription().setEnabled(false);
         binding.seriesScoreDist.setDrawGridBackground(false);
         binding.seriesScoreDist.setDrawBarShadow(false);
 
-        List<Integer> mapKeys = Stream.of(scoreDistribution)
-                .map(ScoreDistribution::getAmount)
-                .toList();
 
         new ChartUtil.StepXAxisFormatter<Integer>()
-                .setDataModel(mapKeys)
+                .setDataModel(Stream.of(scoreDistributions)
+                        .map(ScoreDistribution::getScore)
+                        .toList())
                 .setChartBase(binding.seriesScoreDist)
-                .build();
+                .build(getContext());
+
+        new ChartUtil.StepYAxisFormatter()
+                .setChartBase(binding.seriesScoreDist)
+                .build(getContext());
     }
 
     private void configureSeriesStats() {

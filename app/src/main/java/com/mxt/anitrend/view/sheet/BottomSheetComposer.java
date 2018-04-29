@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
-import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -41,7 +40,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
 
     private FeedList feedList;
 
-    private User user;
+    private UserBase user;
 
     public static BottomSheetComposer newInstance(Bundle bundle) {
         BottomSheetComposer fragment = new BottomSheetComposer();
@@ -88,13 +87,18 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
             EventBus.getDefault().register(this);
         switch (requestType) {
             case KeyUtil.MUT_SAVE_TEXT_FEED:
-                composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_TEXT_FEED);
-                composerWidget.setText(feedList.getText());
+                if(feedList != null) {
+                    composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_TEXT_FEED);
+                    composerWidget.setText(feedList.getText());
+                } else
+                    composerWidget.setRequestType(KeyUtil.MUT_SAVE_TEXT_FEED);
                 break;
             case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                 toolbarTitle.setText(getString(mTitle, user.getName()));
-                if(feedList != null)
+                if(feedList != null) {
                     composerWidget.setText(feedList.getText());
+                    composerWidget.setModel(feedList);
+                }
                 composerWidget.setModel(user, KeyUtil.MUT_SAVE_MESSAGE_FEED);
                 break;
         }

@@ -319,10 +319,11 @@
     <string name="title_activity_reply">Reply Composer</string>
 
     <string name="notification_default">Undefined Activity</string>
-    <string name="notification_series">New EP</string>
+    <string name="notification_series">New Episode Aired</string>
     <string name="notification_user_follow_activity">New Follower</string>
     <string name="notification_user_like_forum">Forum Like</string>
     <string name="notification_user_like_activity">Activity Like</string>
+    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_comment_forum">Comment on Forum</string>
     <string name="notification_user_reply_forum">Reply on Forum</string>
     <string name="notification_user_reply_activity">Comment on Activity</string>

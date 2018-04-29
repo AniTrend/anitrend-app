@@ -174,5 +174,88 @@ query FeedListReply($id: Int, $asHtml: Boolean = false) {
         }
       }
     }
+    ... on MessageActivity {
+      ... on MessageActivity {
+        id
+        message(asHtml: $asHtml)
+        createdAt
+        type
+        messenger {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        recipient {
+          ... on User {
+            ... on User {
+              id
+              name
+              avatar {
+                ... on UserAvatar {
+                  large
+                  medium
+                }
+              }
+              isFollowing
+            }
+          }
+        }
+        replyCount
+        likes {
+          ... on User {
+            id
+            name
+            avatar {
+              ... on UserAvatar {
+                large
+                medium
+              }
+            }
+            isFollowing
+          }
+        }
+        replies {
+          ... on ActivityReply {
+            id
+            text
+            createdAt
+            user {
+              ... on User {
+                id
+                name
+                avatar {
+                  ... on UserAvatar {
+                    large
+                    medium
+                  }
+                }
+                isFollowing
+              }
+            }
+            likes {
+              ... on User {
+                id
+                name
+                avatar {
+                  ... on UserAvatar {
+                    large
+                    medium
+                  }
+                }
+                isFollowing
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

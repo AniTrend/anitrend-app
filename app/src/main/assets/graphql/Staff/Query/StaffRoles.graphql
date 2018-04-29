@@ -42,6 +42,13 @@ query StaffRoles($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPU
                   year
                 }
               }
+              endDate {
+                ... on FuzzyDate {
+                  day
+                  month
+                  year
+                }
+              }
               episodes
               chapters
               volumes

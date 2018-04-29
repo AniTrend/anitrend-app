@@ -34,8 +34,7 @@ import butterknife.ButterKnife;
 public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
 
     private BottomSheetListBinding binding;
-    private @KeyUtil.RequestType
-    int requestMode;
+    private @KeyUtil.RequestType int requestType;
 
 
     public static BottomSheetGiphy newInstance(Bundle bundle) {
@@ -98,10 +97,10 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
         boolean hasQuery = !TextUtils.isEmpty(searchQuery);
         Bundle bundle = viewModel.getParams();
         bundle.putInt(KeyUtil.arg_page_offset, presenter.getCurrentOffset());
-        requestMode = hasQuery? KeyUtil.GIPHY_SEARCH_REQ : KeyUtil.GIPHY_TRENDING_REQ;
+        requestType = hasQuery? KeyUtil.GIPHY_SEARCH_REQ : KeyUtil.GIPHY_TRENDING_REQ;
         if(hasQuery)
             bundle.putString(KeyUtil.arg_search, searchQuery);
-        viewModel.requestData(requestMode, getContext());
+        viewModel.requestData(requestType, getContext());
     }
 
     /**

@@ -40,6 +40,13 @@ query MangaFavourites($id: Int, $userName: String, $page: Int, $perPage: Int) {
                 year
               }
             }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
             episodes
             chapters
             volumes

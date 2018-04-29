@@ -1,4 +1,4 @@
-query UserNotification($page: Int, $perPage: Int, $type: NotificationType, $resetNotificationCount: Boolean = false) {
+query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typeIn: [NotificationType], $resetNotificationCount: Boolean = false) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query UserNotification($page: Int, $perPage: Int, $type: NotificationType, $rese
         hasNextPage
       }
     }
-    notifications(type: $type, resetNotificationCount: $resetNotificationCount) {
+    notifications(type: $type, type_in: $typeIn, resetNotificationCount: $resetNotificationCount) {
       ... on AiringNotification {
         id
         type
@@ -133,6 +133,12 @@ fragment mediaBase on Media {
         userPreferred
       }
     }
+    coverImage {
+      ... on MediaCoverImage {
+        large
+        medium
+      }
+    }
     type
     format
     season
@@ -140,6 +146,13 @@ fragment mediaBase on Media {
     meanScore
     averageScore
     startDate {
+      ... on FuzzyDate {
+        day
+        month
+        year
+      }
+    }
+    endDate {
       ... on FuzzyDate {
         day
         month
@@ -198,39 +211,6 @@ fragment feedList on ActivityUnion {
       }
     }
     replyCount
-    replies {
-      ... on ActivityReply {
-        id
-        text
-        createdAt
-        user {
-          ... on User {
-            id
-            name
-            avatar {
-              ... on UserAvatar {
-                large
-                medium
-              }
-            }
-            isFollowing
-          }
-        }
-        likes {
-          ... on User {
-            id
-            name
-            avatar {
-              ... on UserAvatar {
-                large
-                medium
-              }
-            }
-            isFollowing
-          }
-        }
-      }
-    }
     likes {
       ... on User {
         id
@@ -245,39 +225,7 @@ fragment feedList on ActivityUnion {
       }
     }
     media {
-      ... on Media {
-        id
-        title {
-          ... on MediaTitle {
-            english
-            romaji
-            native
-            userPreferred
-          }
-        }
-        type
-        status
-        startDate {
-          ... on FuzzyDate {
-            day
-            month
-            year
-          }
-        }
-        episodes
-        chapters
-        volumes
-        isAdult
-        isFavourite
-        nextAiringEpisode {
-          ... on AiringSchedule {
-            id
-            airingAt
-            timeUntilAiring
-            episode
-          }
-        }
-      }
+      ...mediaBase
     }
   }
   ... on TextActivity {
@@ -310,39 +258,6 @@ fragment feedList on ActivityUnion {
           }
         }
         isFollowing
-      }
-    }
-    replies {
-      ... on ActivityReply {
-        id
-        text
-        createdAt
-        user {
-          ... on User {
-            id
-            name
-            avatar {
-              ... on UserAvatar {
-                large
-                medium
-              }
-            }
-            isFollowing
-          }
-        }
-        likes {
-          ... on User {
-            id
-            name
-            avatar {
-              ... on UserAvatar {
-                large
-                medium
-              }
-            }
-            isFollowing
-          }
-        }
       }
     }
   }

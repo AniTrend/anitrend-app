@@ -315,6 +315,7 @@
     <string name="notification_user_follow_activity">متابع جديد</string>
     <string name="notification_user_like_forum">اعجاب المجتمع</string>
     <string name="notification_user_like_activity">اعجاب النشاط</string>
+    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_comment_forum">تعليق على المجتمع</string>
     <string name="notification_user_reply_forum">رد على المجتمع</string>
     <string name="notification_user_reply_activity">علق على نشاط</string>

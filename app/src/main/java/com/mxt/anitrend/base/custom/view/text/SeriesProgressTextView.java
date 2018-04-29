@@ -56,5 +56,6 @@ public class SeriesProgressTextView extends SingleLineTextView {
                             model.getChapters() < 1 ? "?" : model.getChapters()));
             }
         }
+        invalidate();
     }
 }

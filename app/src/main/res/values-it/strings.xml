@@ -309,9 +309,10 @@
     <string name="title_activity_reply">Rispondi</string>
 
     <string name="notification_default">Attività non definita</string>
-    <string name="notification_series">Nuovo EP</string>
+    <string name="notification_series">Nuovo Episode</string>
     <string name="notification_user_follow_activity">Nuovo Follower</string>
     <string name="notification_user_like_forum">Forum Like</string>
+    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_like_activity">Like su Attività</string>
     <string name="notification_user_comment_forum">Commento su Forum</string>
     <string name="notification_user_reply_forum">Risposta su Forum</string>

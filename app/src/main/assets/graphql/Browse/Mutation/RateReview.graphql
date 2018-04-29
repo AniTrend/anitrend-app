@@ -1,10 +1,10 @@
-mutation RateReview($id: Int, $rating: ReviewRating) {
+mutation RateReview($id: Int, $rating: ReviewRating, $asHtml: Boolean = false) {
   RateReview(reviewId: $id, rating: $rating) {
     ... on Review {
       id
       summary
       mediaType
-      body(asHtml: true)
+      body(asHtml: $asHtml)
       rating
       ratingAmount
       userRating

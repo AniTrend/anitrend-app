@@ -14,7 +14,7 @@ public class PageContainer<T> extends Container {
     @SerializedName(value = "media", alternate = { "nodes",
             "mediaTrends", "reviews", "mediaList",
             "activities", "activityReplies",
-            "users", "followers", "following",
+            "users", "followers", "following", "notifications",
             "anime", "manga", "characters", "staff", "studios"
     })
     private List<T> pageData;

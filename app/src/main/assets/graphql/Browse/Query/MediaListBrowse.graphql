@@ -1,4 +1,4 @@
-query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort], $scoreFormat: ScoreFormat = POINT_100) {
+query MediaListBrowse($id: Int, $userId: Int, $userName: String, $page: Int, $perPage: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort], $scoreFormat: ScoreFormat = POINT_100) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $t
         hasNextPage
       }
     }
-    mediaList(id: $id, userName: $userName, sort: $sort, type: $type, status: $status) {
+    mediaList(id: $id, userId: $userId, userName: $userName, sort: $sort, type: $type, status: $status) {
       ... on MediaList {
         id
         mediaId
@@ -20,6 +20,7 @@ query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $t
         priority
         private
         hiddenFromStatusLists
+        advancedScores
         customLists(asArray: true)
         notes
         startedAt {
@@ -60,6 +61,13 @@ query MediaListBrowse($id: Int, $userName: String, $page: Int, $perPage: Int, $t
             meanScore
             averageScore
             startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            endDate {
               ... on FuzzyDate {
                 day
                 month

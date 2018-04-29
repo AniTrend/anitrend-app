@@ -11,18 +11,21 @@ import com.mxt.anitrend.util.KeyUtil;
 
 public class UserOptions implements Parcelable {
 
-    private boolean displayAdultContent;
     private @KeyUtil.UserLanguageTitle String titleLanguage;
+    private boolean displayAdultContent;
+    private String profileColor;
 
     protected UserOptions(Parcel in) {
         displayAdultContent = in.readByte() != 0;
         titleLanguage = in.readString();
+        profileColor = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (displayAdultContent ? 1 : 0));
         dest.writeString(titleLanguage);
+        dest.writeString(profileColor);
     }
 
     @Override
@@ -42,11 +45,15 @@ public class UserOptions implements Parcelable {
         }
     };
 
+    public @KeyUtil.UserLanguageTitle String getTitleLanguage() {
+        return titleLanguage;
+    }
+
     public boolean isDisplayAdultContent() {
         return displayAdultContent;
     }
 
-    public @KeyUtil.UserLanguageTitle String getTitleLanguage() {
-        return titleLanguage;
+    public String getProfileColor() {
+        return profileColor;
     }
 }

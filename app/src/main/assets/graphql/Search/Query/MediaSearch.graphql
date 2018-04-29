@@ -38,6 +38,13 @@ query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: M
             year
           }
         }
+        endDate {
+          ... on FuzzyDate {
+            day
+            month
+            year
+          }
+        }
         episodes
         chapters
         volumes

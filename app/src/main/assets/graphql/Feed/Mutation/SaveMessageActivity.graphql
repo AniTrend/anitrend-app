@@ -1,50 +1,11 @@
-mutation SaveMessageActivity($id: Int, $message: String, $recipientId: Int, $asHtml: Boolean = true) {
+mutation SaveMessageActivity($id: Int, $message: String, $recipientId: Int, $asHtml: Boolean = false) {
   SaveMessageActivity(id: $id, message: $message, recipientId: $recipientId) {
     ... on MessageActivity {
       id
       message(asHtml: $asHtml)
       createdAt
       type
-      messenger {
-        ... on User {
-          id
-          name
-          avatar {
-            ... on UserAvatar {
-              large
-              medium
-            }
-          }
-          isFollowing
-        }
-      }
-      recipient {
-        ... on User {
-          id
-          name
-          avatar {
-            ... on UserAvatar {
-              large
-              medium
-            }
-          }
-          isFollowing
-        }
-      }
       replyCount
-      likes {
-        ... on User {
-          id
-          name
-          avatar {
-            ... on UserAvatar {
-              large
-              medium
-            }
-          }
-          isFollowing
-        }
-      }
     }
   }
 }

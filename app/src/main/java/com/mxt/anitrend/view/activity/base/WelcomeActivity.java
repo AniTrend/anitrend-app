@@ -67,12 +67,16 @@ public class WelcomeActivity extends ActivityBase<Void, BasePresenter> implement
 
     private ArrayList<PaperOnboardingPage> getIntroductionPages() {
         return new ArrayList<>(CompatUtil.constructListFrom(
+                new PaperOnboardingPage(getString(R.string.app_greeting), getString(R.string.app_provider),
+                        Color.parseColor("#c26fc1ea"), R.mipmap.ic_launcher, R.drawable.ic_fiber_new_white_24dp),
                 new PaperOnboardingPage(getString(R.string.app_intro_colors_title), getString(R.string.app_intro_colors_text),
-                        Color.parseColor("#678FB4"), R.drawable.ic_format_paint_white_24dp, R.drawable.ic_format_paint_white_24dp),
+                        Color.parseColor("#c248c76d"), R.drawable.ic_format_paint_white_24dp, R.drawable.ic_format_paint_white_24dp),
                 new PaperOnboardingPage(getString(R.string.app_intro_content_title), getString(R.string.app_intro_content_text),
-                        Color.parseColor("#65B0B4"), R.drawable.ic_bubble_chart_white_24dp, R.drawable.ic_bubble_chart_white_24dp),
+                        Color.parseColor("#c2f7464a"), R.drawable.ic_bubble_chart_white_24dp, R.drawable.ic_bubble_chart_white_24dp),
                 new PaperOnboardingPage(getString(R.string.app_intro_search_title), getString(R.string.app_intro_search_text),
-                        Color.parseColor("#9B90BC"), R.drawable.ic_search_white_24dp, R.drawable.ic_search_white_24dp)
+                        Color.parseColor("#c29256f3"), R.drawable.ic_search_white_24dp, R.drawable.ic_search_white_24dp),
+                new PaperOnboardingPage(getString(R.string.app_intro_videos_title), getString(R.string.app_intro_videos_text),
+                        Color.parseColor("#c2fba640"), R.drawable.ic_slow_motion_video_white_24dp, R.drawable.ic_slow_motion_video_white_24dp)
         ));
     }
 

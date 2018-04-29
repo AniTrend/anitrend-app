@@ -39,7 +39,6 @@ import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView;
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.VersionBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.DownloaderService;
@@ -52,7 +51,6 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
-import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetMessage;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -202,8 +200,6 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     @Override
     protected void onPause() {
         super.onPause();
-        if(EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
         mDrawerLayout.removeDrawerListener(mDrawerToggle);
     }
 
@@ -462,12 +458,6 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                 else
                     onNavigate(R.id.nav_sign_in);
                 break;
-            default:
-                User current = getPresenter().getDatabase().getCurrentUser();
-                current.setUnreadNotificationCount(0);
-                getPresenter().getDatabase().saveCurrentUser(current);
-                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
-                break;
         }
     }
 
@@ -483,7 +473,6 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ) {
             NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
-            mUserAvatar.showSetCounter(consumer);
         }
     }
 }

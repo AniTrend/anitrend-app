@@ -25,6 +25,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
@@ -120,7 +121,9 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                                     .putVariable(KeyUtil.arg_type, mediaType)
                                     .putVariable(KeyUtil.arg_genres, data.getGenre()));
                             args.putString(KeyUtil.arg_activity_tag, data.getGenre());
-                            args.putBoolean(KeyUtil.arg_media_compact, true);
+                            args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
+                                    .setCompactType(true)
+                                    .setFilterDisabled(true));
                             intent.putExtras(args);
                             startActivity(intent);
                             break;
@@ -152,7 +155,9 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                                                         .putVariable(KeyUtil.arg_type, mediaType)
                                                         .putVariable(KeyUtil.arg_tags, data.getName()));
                                                 args.putString(KeyUtil.arg_activity_tag, data.getName());
-                                                args.putBoolean(KeyUtil.arg_media_compact, true);
+                                                args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
+                                                        .setCompactType(true)
+                                                        .setFilterDisabled(true));
                                                 intent.putExtras(args);
                                                 startActivity(intent);
                                                 break;

@@ -40,6 +40,13 @@ query StudioMedia($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort]
                 year
               }
             }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
             episodes
             chapters
             volumes

@@ -263,7 +263,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    app:airingDate="@{model.nextAiringEpisode}"
+                    app:airingDate="@{model}"
                     tools:text="EP 3 Airing In 2 days" />
             </LinearLayout>
 

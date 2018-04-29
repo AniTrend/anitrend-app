@@ -2,9 +2,12 @@ package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
+import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 
 import javax.annotation.Nullable;
@@ -37,12 +40,15 @@ public class AiringTextView extends SingleLineTextView {
     }
 
     @BindingAdapter("airingDate")
-    public static void setAiring(AiringTextView view, @Nullable AiringSchedule airingSchedule) {
-        if(airingSchedule != null) {
-            view.setText(DateUtil.getNextEpDate(airingSchedule));
+    public static void setAiring(AiringTextView view, @Nullable MediaBase mediaBase) {
+        if(mediaBase != null) {
+            if (mediaBase.getNextAiringEpisode() != null)
+                view.setText(DateUtil.getNextEpDate(mediaBase.getNextAiringEpisode()));
+            else
+                view.setText(CompatUtil.capitalizeWords(mediaBase.getStatus()));
             view.setVisibility(VISIBLE);
-        }
-        else
+        } else {
             view.setVisibility(GONE);
+        }
     }
 }

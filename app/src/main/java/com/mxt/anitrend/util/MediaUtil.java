@@ -7,6 +7,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by max on 2018/02/23.
@@ -58,5 +59,13 @@ public class MediaUtil {
                     .filter(media -> CompatUtil.equals(media.getMedia().getStatus(), KeyUtil.RELEASING))
                     .toList();
         return Collections.emptyList();
+    }
+
+    public static String getFormattedCount(int amount) {
+        if(amount >= 1000)
+            return String.format(Locale.getDefault(), "%.1f K", (float)amount/1000);
+        else if (amount < 1)
+            return "?";
+        return String.format(Locale.getDefault(),"%d", amount);
     }
 }

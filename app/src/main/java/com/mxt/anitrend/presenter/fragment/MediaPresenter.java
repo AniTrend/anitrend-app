@@ -26,6 +26,7 @@ import com.mxt.anitrend.util.MediaUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by max on 2018/01/01.
@@ -70,11 +71,14 @@ public class MediaPresenter extends BasePresenter {
         int highestStatus = Stream.of(statusDistribution)
                 .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
                 .get().getAmount();
+
         if(highestStatus > 0)
             return Stream.of(statusDistribution)
                     .map(st -> new PieEntry(
-                            (((st.getAmount()) / (highestStatus)) * 100),
-                            CompatUtil.capitalizeWords(st.getStatus())))
+                            (float) ((st.getAmount()*100) / highestStatus),
+                            String.format(Locale.getDefault(), "%s: %s",
+                            CompatUtil.capitalizeWords(st.getStatus()), MediaUtil.getFormattedCount(st.getAmount()))))
+                    .sorted((p1, p2) -> p1.getLabel().compareTo(p2.getLabel()))
                     .toList();
         return Collections.emptyList();
     }
@@ -82,7 +86,7 @@ public class MediaPresenter extends BasePresenter {
     public List<BarEntry> getMediaScoreDistribution(List<ScoreDistribution> scoreDistribution) {
         return Stream.of(scoreDistribution)
                 .mapIndexed(0, 1, (index, sc) ->
-                        new BarEntry(index, sc.getScore()))
+                        new BarEntry(index, sc.getAmount()))
                 .toList();
     }
 

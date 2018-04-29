@@ -49,6 +49,7 @@ public class AiringListFragment extends FragmentBaseList<MediaList, PageContaine
         super.onCreate(savedInstanceState);
         setPresenter(new BasePresenter(getContext()));
         isPager = true; mColumnSize = R.integer.grid_list_x2;
+        hasSubscriber = true;
         setViewModel(true);
     }
 

@@ -313,6 +313,7 @@
     <string name="notification_default">Activité non Identifiée</string>
     <string name="notification_series">Nouvel Épisode</string>
     <string name="notification_user_follow_activity">Nouvel Abonné</string>
+    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_like_forum">"J\'aime" sur le Forum</string>
     <string name="notification_user_like_activity">"J\'aime" sur une Activité</string>
     <string name="notification_user_comment_forum">Commentaire sur le Forum</string>

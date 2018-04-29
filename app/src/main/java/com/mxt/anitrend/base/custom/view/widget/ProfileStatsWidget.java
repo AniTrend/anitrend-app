@@ -209,8 +209,8 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     .mapToInt(StatusDistribution::getAmount)
                     .sum();
 
-        if(totalCount > 1000)
-            return String.format(Locale.getDefault(), "%d K", totalCount/1000);
+        if(totalCount >= 1000)
+            return String.format(Locale.getDefault(), "%.1f K", (float)totalCount/1000);
         return String.format(Locale.getDefault(),"%d", totalCount);
     }
 }

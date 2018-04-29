@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClickListener="@{onClickEvent}"
-        android:background="@color/colorStateOrange">
+        android:background="@color/black_transparent">
 
         <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
             android:id="@+id/series_progress_increment"

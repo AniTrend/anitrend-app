@@ -112,7 +112,7 @@ public class PatternMatcher {
     }
 
     public static String createImageStandard(String link) {
-        return String.format("%s(%s)", KEY_IMG, link) ;
+        return String.format("%s250(%s)", KEY_IMG, link) ;
     }
 
     /**

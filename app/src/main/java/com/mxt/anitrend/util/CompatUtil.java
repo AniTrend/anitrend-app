@@ -420,7 +420,7 @@ public class CompatUtil {
      * @see IntPair
      */
     public static <T> Optional<IntPair<T>> findIndexOf(Collection<T> collection, T target) {
-        if(collection != null && target != null)
+        if(!isEmpty(collection) && target != null)
             return Stream.of(collection)
                     .findIndexed((index, value) -> value != null &&  value.equals(target));
         return Optional.empty();

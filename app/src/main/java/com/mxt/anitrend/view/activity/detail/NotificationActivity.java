@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by max on 2017/10/25.
  */
 
-public class NotificationActivity extends ActivityBase<List<Notification>, BasePresenter> {
+public class NotificationActivity extends ActivityBase<Void, BasePresenter> {
 
     protected @BindView(R.id.toolbar)
     Toolbar toolbar;

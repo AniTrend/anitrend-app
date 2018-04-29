@@ -35,7 +35,7 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<MediaList> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaList> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new AiringViewHolder(AdapterSeriesAiringBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -103,7 +103,6 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.seriesEpisodes.setModel(model, currentUser);
-            binding.customRatingWidget.setFavourState(model.getMedia().isFavourite());
             binding.executePendingBindings();
         }
 

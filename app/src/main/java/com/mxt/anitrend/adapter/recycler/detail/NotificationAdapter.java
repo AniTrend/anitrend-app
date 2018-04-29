@@ -15,6 +15,8 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView;
 import com.mxt.anitrend.databinding.AdapterNotificationBinding;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
+import com.mxt.anitrend.model.entity.base.NotificationHistory;
+import com.mxt.anitrend.model.entity.base.NotificationHistory_;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import io.objectbox.Box;
 
 /**
  * Created by max on 2017/12/06.
@@ -31,13 +34,18 @@ import butterknife.OnLongClick;
 
 public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
 
+    private long userId;
+    private Box<NotificationHistory> historyBox;
+
     public NotificationAdapter(List<Notification> data, Context context) {
         super(data, context);
+        userId = presenter.getDatabase().getCurrentUser().getId();
+        historyBox = presenter.getDatabase().getBoxStore(NotificationHistory.class);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<Notification> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<Notification> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new NotificationHolder(AdapterNotificationBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
@@ -77,18 +85,16 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
          */
         @Override
         public void onBindViewHolder(Notification model) {
-            // TODO: 2018/04/07 check for database object generation
-            NotificationBase notification = null;/*presenter.getDatabase()
-                    .getBoxStore(NotificationBase.class).query()
-                    .equal(NotificationBase_.id, model.getId())
-                    .build().findFirst();*/
+            NotificationHistory notificationHistory = historyBox.query()
+                    .equal(NotificationHistory_.id, userId)
+                    .build().findFirst();
 
-            if(notification != null)
-                binding.notificationIndicator.setVisibility(notification.isRead()? View.GONE:View.VISIBLE);
+            if(notificationHistory != null)
+                binding.notificationIndicator.setVisibility(notificationHistory.isNew(model.getId())? View.GONE:View.VISIBLE);
             else
                 binding.notificationIndicator.setVisibility(View.VISIBLE);
 
-            binding.notificationTime.setText(DateUtil.convertDate(model.getCreatedAt()));
+            binding.notificationTime.setText(DateUtil.getPrettyDateUnix(model.getCreatedAt()));
 
             if(!CompatUtil.equals(model.getType(), KeyUtil.AIRING))
                 AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar().getLarge());
@@ -125,7 +131,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
                     binding.notificationSubject.setText(R.string.notification_series);
                     binding.notificationHeader.setText(model.getMedia().getTitle().getUserPreferred());
                     binding.notificationContent.setText(context.getString(R.string.notification_episode,
-                            String.valueOf(model.getEpisodes()), model.getMedia().getTitle().getUserPreferred()));
+                            String.valueOf(model.getEpisode()), model.getMedia().getTitle().getUserPreferred()));
                     break;
                 case KeyUtil.ACTIVITY_LIKE:
                     binding.notificationSubject.setText(R.string.notification_user_like_activity);
@@ -133,7 +139,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
                     binding.notificationContent.setText(model.getContext());
                     break;
                 case KeyUtil.ACTIVITY_REPLY_LIKE:
-                    binding.notificationSubject.setText(R.string.notification_user_like_forum);
+                    binding.notificationSubject.setText(R.string.notification_user_like_reply);
                     binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(model.getContext());
                     break;

@@ -1,10 +1,13 @@
 package com.mxt.anitrend.util;
 
+import android.content.Context;
+
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.mxt.anitrend.R;
 
 import java.util.List;
 
@@ -40,16 +43,19 @@ public class ChartUtil {
          */
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return String.valueOf(dataModel.get((int) value));
+            int index = (int) value;
+            K model = dataModel.get(index);
+            return String.valueOf(model);
         }
 
-        public void build() {
+        public void build(Context context) {
             XAxis xAxis = chartBase.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setDrawGridLines(false);
             xAxis.setGranularity(1);
             if(dataModel.size() <= 10)
                 xAxis.setLabelCount(dataModel.size());
+            xAxis.setTextColor(CompatUtil.getColorFromAttr(context, R.attr.titleColor));
             xAxis.setValueFormatter(this);
         }
     }
@@ -74,18 +80,24 @@ public class ChartUtil {
          */
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return String.valueOf(value);
+            int formatted = (int) value;
+            return String.valueOf(formatted);
         }
 
-        public void build() {
-            YAxis[] yAxes = new YAxis[] { chartBase.getAxisLeft(), chartBase.getAxisRight() };
-            for (YAxis yAxis: yAxes) {
-                yAxis.setLabelCount(5, false);
-                yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-                yAxis.setSpaceTop(15f);
-                yAxis.setAxisMinimum(0f);
-                yAxis.setValueFormatter(this);
-            }
+        public void build(Context context) {
+            chartBase.getLegend().setTextColor(CompatUtil.getColorFromAttr(context, R.attr.titleColor));
+
+            YAxis leftAxis = chartBase.getAxisLeft();
+            leftAxis.setLabelCount(5, false);
+            leftAxis.setSpaceTop(15f);
+            leftAxis.setAxisMinimum(0f);
+            leftAxis.disableGridDashedLine();
+            leftAxis.disableAxisLineDashedLine();
+            leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+            leftAxis.setTextColor(CompatUtil.getColorFromAttr(context, R.attr.titleColor));
+            leftAxis.setValueFormatter(this);
+
+            chartBase.getAxisRight().setEnabled(false);
         }
     }
 }

@@ -35,7 +35,7 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new SeriesViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
@@ -77,7 +77,6 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
             MediaBase model = (MediaBase) entityGroup;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
-            binding.customRatingWidget.setFavourState(model.isFavourite());
             binding.executePendingBindings();
         }
 

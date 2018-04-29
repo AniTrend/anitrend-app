@@ -39,6 +39,13 @@ query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORM
               year
             }
           }
+          endDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
           episodes
           chapters
           volumes

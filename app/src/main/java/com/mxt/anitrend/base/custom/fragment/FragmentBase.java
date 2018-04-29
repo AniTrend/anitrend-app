@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
@@ -39,7 +40,7 @@ import butterknife.Unbinder;
 public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fragment implements View.OnClickListener, ActionModeListener,
         SharedPreferences.OnSharedPreferenceChangeListener, CommonPresenter.AbstractPresenter<P>, Observer<VM>, ResponseCallback, ItemClickListener<M> {
 
-    protected boolean isFilterable, isPager, isMenuDisabled, isFeed;
+    protected boolean isFilterable, isPager, isMenuDisabled, isFeed, hasSubscriber;
 
     private @MenuRes int inflateMenu;
     private ActionModeHelper<M> actionMode;
@@ -112,7 +113,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     @Override
     public void onStart() {
         super.onStart();
-        if(!EventBus.getDefault().isRegistered(this) && EventBus.getDefault().hasSubscriberForEvent(this.getClass()))
+        if(!EventBus.getDefault().isRegistered(this) && hasSubscriber)
             EventBus.getDefault().register(this);
         if(!isMenuDisabled)
             setHasOptionsMenu(true);
@@ -125,7 +126,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
      */
     @Override
     public void onStop() {
-        if(EventBus.getDefault().isRegistered(this) && EventBus.getDefault().hasSubscriberForEvent(this.getClass()))
+        if(EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
         super.onStop();
     }

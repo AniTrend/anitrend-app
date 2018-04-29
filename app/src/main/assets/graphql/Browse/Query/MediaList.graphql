@@ -11,6 +11,7 @@ query MediaList($id: Int, $mediaId: Int, $userName: String, $type: MediaType, $s
       priority
       private
       hiddenFromStatusLists
+      advancedScores
       customLists(asArray: true)
       notes
       startedAt {
@@ -51,6 +52,13 @@ query MediaList($id: Int, $mediaId: Int, $userName: String, $type: MediaType, $s
           meanScore
           averageScore
           startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          endDate {
             ... on FuzzyDate {
               day
               month

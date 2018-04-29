@@ -17,9 +17,14 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.activity.index.LoginActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by max on 2017/11/30.
@@ -27,7 +32,7 @@ import com.mxt.anitrend.view.activity.index.LoginActivity;
  * current notification count.
  */
 
-public class AvatarIndicatorView extends FrameLayout implements CustomView, View.OnClickListener {
+public class AvatarIndicatorView extends FrameLayout implements CustomView, View.OnClickListener, BaseConsumer.onRequestModelChange<User> {
 
     private WidgetAvatarIndicatorBinding binding;
     private BasePresenter presenter;
@@ -59,11 +64,18 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
 
     private void checkLastSyncTime() {
         if(presenter.getApplicationPref().isAuthenticated()) {
-            if (currentUser == null)
-                currentUser = presenter.getDatabase().getCurrentUser();
+            if ((currentUser = presenter.getDatabase().getCurrentUser()) != null) {
+                if (currentUser.getUnreadNotificationCount() < 1)
+                    hideNotificationCountWidget();
+                else
+                    showNotificationWidget();
+            } else {
+                hideNotificationCountWidget();
+            }
             if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 2))
                 mLastSynced = System.currentTimeMillis();
             AvatarImageView.setImage(binding.userAvatar, currentUser.getAvatar());
+
         }
     }
 
@@ -73,11 +85,17 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
             presenter.onDestroy();
     }
 
-    public void showSetCounter(BaseConsumer<User> consumer) {
-        presenter.getDatabase().saveCurrentUser(consumer.getChangeModel());
+    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onModelChanged(BaseConsumer<User> consumer) {
+        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ) {
+            presenter.getDatabase().saveCurrentUser(consumer.getChangeModel());
+            checkLastSyncTime();
+        }
+    }
+
+    private void showNotificationWidget() {
         binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
         binding.container.setVisibility(VISIBLE);
-        checkLastSyncTime();
     }
 
     private void hideNotificationCountWidget() {
@@ -110,5 +128,19 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if(EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+        super.onDetachedFromWindow();
     }
 }

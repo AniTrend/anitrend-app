@@ -5,34 +5,99 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaList" />
+        <import type="com.mxt.anitrend.util.CompatUtil" />
     </data>
 
-    <FrameLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         android:layout_margin="@dimen/lg_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="false"
+        app:cardBackgroundColor="?cardColor"
+        app:cardElevation="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/sm_margin"
         tools:layout_width="@dimen/series_image_lg">
 
-        <com.mxt.anitrend.base.custom.view.image.AspectImageView
-            android:id="@+id/series_image"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackground"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:src="@drawable/sample_img"
-            app:imageUrl="@{model.media.coverImage}"/>
+            android:layout_gravity="bottom"
+            android:orientation="vertical" >
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black_transparent_image"/>
+            <FrameLayout
+                android:adjustViewBounds="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
 
-        <com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
-            android:id="@+id/series_episodes"
-            android:layout_gravity="top|end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+                <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                    android:id="@+id/series_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:src="@drawable/sample_img"
+                    app:imageUrl="@{model.media.coverImage}" />
+
+                <com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
+                    android:id="@+id/series_episodes"
+                    android:layout_gravity="top|end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorTransparent"/>
+
+            </FrameLayout>
+
+            <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+                android:id="@+id/series_status"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sm_margin"
+                app:seriesStatus="@{model}"
+                tools:background="@color/colorStateOrange"/>
+
+            <LinearLayout
+                android:padding="@dimen/lg_margin"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.text.AiringTextView
+                    android:id="@+id/series_airing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:airingDate="@{model.media}"
+                    tools:text="EP 31: 4 days from now"/>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
+                    android:id="@+id/series_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    tools:text="Gintama."/>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/md_margin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@{CompatUtil.capitalizeWords(model.media.format)}"
+                    android:textColor="@color/white"
+                    android:background="?colorAccent"
+                    tools:text="OVA" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <com.mxt.anitrend.base.custom.view.text.RatingTextView
             android:id="@+id/custom_rating_widget"
@@ -40,45 +105,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/lg_margin"
-            app:rating="@{model.media.meanScore}"/>
+            app:rating="@{model.media}"/>
 
-        <LinearLayout
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
-                android:id="@+id/series_title"
-                android:textIsSelectable="true"
-                android:textColor="@color/white"
-                android:layout_gravity="top|start"
-                android:padding="@dimen/md_margin"
-                android:textAlignment="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="Gintama."/>
-
-            <com.mxt.anitrend.base.custom.view.text.AiringTextView
-                android:id="@+id/series_airing"
-                android:padding="@dimen/md_margin"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:airingDate="@{model.media.nextAiringEpisode}"
-                tools:text="EP 31: 4 days from now"/>
-
-            <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
-                android:id="@+id/series_status"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/sm_margin"
-                app:airingStatus="@{model}"
-                tools:background="@color/colorStateOrange"/>
-
-        </LinearLayout>
-
-    </FrameLayout>
+    </android.support.v7.widget.CardView>
 
 </layout>

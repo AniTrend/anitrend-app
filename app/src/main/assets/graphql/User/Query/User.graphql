@@ -1,5 +1,5 @@
-query CurrentUser($asHtml: Boolean = false) {
-  Viewer {
+query User($userId: Int, $username: String, $asHtml: Boolean = false) {
+  User(id: $userId, name: $username) {
     ... on User {
       id
       name

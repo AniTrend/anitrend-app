@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.CustomRatingWidgetBinding;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.Locale;
@@ -56,7 +57,7 @@ public class RatingTextView extends LinearLayout implements CustomView {
         binding = CustomRatingWidgetBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
     }
 
-    public void setFavourState(boolean isFavourite) {
+    private void setFavourState(boolean isFavourite) {
         @ColorRes int colorTint = isFavourite ? R.color.colorStateYellow : R.color.white;
         Drawable drawable = CompatUtil.getDrawable(getContext(), R.drawable.ic_star_grey_600_24dp, colorTint);
         binding.ratingFavourState.setImageDrawable(drawable);
@@ -67,9 +68,10 @@ public class RatingTextView extends LinearLayout implements CustomView {
     }
 
     @BindingAdapter("rating")
-    public static void setAverageRating(RatingTextView view, int averageScore) {
-        float rating = (float)averageScore * MAX / 100;
+    public static void setAverageRating(RatingTextView view, MediaBase mediaBase) {
+        float rating = (float) mediaBase.getMeanScore() * MAX / 100;
         view.setRating(rating);
+        view.setFavourState(mediaBase.isFavourite());
     }
 
     /**

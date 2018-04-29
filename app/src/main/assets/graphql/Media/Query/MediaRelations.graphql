@@ -43,6 +43,13 @@ query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
                     year
                   }
                 }
+                endDate {
+                  ... on FuzzyDate {
+                    day
+                    month
+                    year
+                  }
+                }
                 episodes
                 chapters
                 volumes

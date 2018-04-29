@@ -310,6 +310,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="notification_default">Actividad Indefinida</string>
     <string name="notification_series">Nuevo episodio de</string>
     <string name="notification_user_follow_activity">Nuevo seguidor</string>
+    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_like_forum">Le gusta tu actividad en el foro</string>
     <string name="notification_user_like_activity">Le gustó tú actividad</string>
     <string name="notification_user_comment_forum">Comentó en el foro</string>

@@ -27,6 +27,58 @@ mutation SaveMediaListEntry($id: Int, $mediaId: Int, $status: MediaListStatus, $
           day
         }
       }
+      media {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          coverImage {
+            ... on MediaCoverImage {
+              large
+              medium
+            }
+          }
+          type
+          format
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          endDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+        }
+      }
     }
   }
 }

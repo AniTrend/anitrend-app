@@ -64,6 +64,13 @@ query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $
                 year
               }
             }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
             episodes
             chapters
             volumes

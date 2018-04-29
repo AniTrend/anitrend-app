@@ -8,6 +8,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.base.custom.async.ThreadPool;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 
+import org.greenrobot.eventbus.EventBus;
+
 import io.fabric.sdk.android.Fabric;
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
@@ -39,6 +41,11 @@ public class App extends Application {
     }
 
     private void initApp() {
+        EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
+                .sendNoSubscriberEvent(BuildConfig.DEBUG)
+                .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
+                .throwSubscriberException(BuildConfig.DEBUG)
+                .installDefaultEventBus();
         ThreadPool.Builder.create()
                 .execute(() -> EmojiManager.initEmojiData(this));
         analytics = FirebaseAnalytics.getInstance(this);

@@ -72,6 +72,13 @@ query MediaSocial($mediaId: Int!, $isFollowing: Boolean = true, $page: Int, $per
                 year
               }
             }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
             episodes
             chapters
             volumes

@@ -40,6 +40,13 @@ query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = 
                 year
               }
             }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
             episodes
             chapters
             volumes

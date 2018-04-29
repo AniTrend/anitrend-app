@@ -38,6 +38,13 @@ query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: 
             year
           }
         }
+        endDate {
+          ... on FuzzyDate {
+            day
+            month
+            year
+          }
+        }
         episodes
         chapters
         volumes

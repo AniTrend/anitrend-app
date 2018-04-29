@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,6 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -41,6 +41,7 @@ import java.util.Collections;
 
 public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, MediaPresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
 
+    private long userId;
     private String userName;
     private QueryContainerBuilder queryContainer;
     private @KeyUtil.MediaType String mediaType;
@@ -62,11 +63,13 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
+            userId = getArguments().getLong(KeyUtil.arg_id);
             userName = getArguments().getString(KeyUtil.arg_userName);
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = true;
+        hasSubscriber = true;
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -89,9 +92,14 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     public void makeRequest() {
-        queryContainer.putVariable(KeyUtil.arg_userName, userName)
-                .putVariable(KeyUtil.arg_mediaType, mediaType)
+        if (userId != 0)
+            queryContainer.putVariable(KeyUtil.arg_userId, userId);
+        else
+            queryContainer.putVariable(KeyUtil.arg_userName, userName);
+
+        queryContainer.putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
     }
@@ -170,14 +178,19 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<MediaList> consumer) {
         int pairIndex;
-        if(getPresenter().isCurrentUser(userName)) {
+        if(getPresenter().isCurrentUser(userId, userName)) {
             Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
             if (pairOptional.isPresent())
                 switch (consumer.getRequestMode()) {
                     case KeyUtil.MUT_SAVE_MEDIA_LIST:
                         pairIndex = pairOptional.get().getFirst();
-                        model.set(pairIndex, consumer.getChangeModel());
-                        mAdapter.onItemChanged(consumer.getChangeModel(),pairIndex);
+                        if(queryContainer == null || CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_status), consumer.getChangeModel().getStatus())) {
+                            model.set(pairIndex, consumer.getChangeModel());
+                            mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
+                        } else {
+                            model.remove(pairIndex);
+                            mAdapter.onItemRemoved(pairIndex);
+                        }
                         break;
                     case KeyUtil.MUT_DELETE_MEDIA_LIST:
                         pairIndex = pairOptional.get().getFirst();

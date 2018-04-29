@@ -66,9 +66,9 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
             if (getArguments().containsKey(KeyUtil.arg_model))
                 feedList = getArguments().getParcelable(KeyUtil.arg_model);
             if (getArguments().containsKey(KeyUtil.arg_id))
-                userActivityId = getArguments().getInt(KeyUtil.arg_id);
+                userActivityId = getArguments().getLong(KeyUtil.arg_id);
         }
-        mColumnSize = R.integer.single_list_x1;
+        mColumnSize = R.integer.single_list_x1; hasSubscriber = true;
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
     }
@@ -292,6 +292,9 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                     pairIndex = pairOptional.get().getFirst();
                     model.remove(pairIndex);
                     mAdapter.onItemRemoved(pairIndex);
+                    NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                    if(getActivity() != null)
+                        getActivity().finish();
                 }
                 break;
         }

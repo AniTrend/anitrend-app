@@ -111,7 +111,7 @@ public interface KeyUtil {
     String arg_shortcut_used = "arg_shortcut_used";
     String arg_deep_link_type = "arg_deep_link_type";
 
-    String arg_media_compact = "arg_media_compact";
+    String arg_media_util = "arg_media_util";
 
     String arg_positive_text = "arg_positive_text";
     String arg_negative_text = "arg_negative_text";

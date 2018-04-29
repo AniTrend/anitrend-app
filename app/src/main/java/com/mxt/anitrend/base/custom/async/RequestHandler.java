@@ -219,7 +219,7 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                 case KeyUtil.USER_STUDIO_FAVOURITES_REQ:
                     return (Call<T>) WebFactory.createService(UserModel.class, context).getStudioFavourites(param.getParcelable(arg_graph_params));
                 case KeyUtil.USER_NOTIFICATION_REQ:
-                    break;
+                    return (Call<T>) WebFactory.createService(UserModel.class, context).getUserNotifications(param.getParcelable(arg_graph_params));
             }
         }
         return null;

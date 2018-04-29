@@ -40,6 +40,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     private @KeyUtil.RequestType int requestType = KeyUtil.MUT_SAVE_MEDIA_LIST;
     private WidgetPresenter<MediaList> presenter;
     private WidgetAutoIncrementerBinding binding;
+    private @KeyUtil.MediaListStatus String status;
     private MediaList model;
 
     private String currentUser;
@@ -93,7 +94,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     }
 
     public void setModel(MediaList model, String currentUser) {
-        this.model = model; this.currentUser = currentUser;
+        this.model = model; this.currentUser = currentUser; this.status = model.getStatus();
         binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
     }
 
@@ -115,9 +116,8 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         try {
             MediaList mediaList;
             if(response.isSuccessful() && (mediaList = response.body()) != null) {
-                boolean isModelCategoryChanged = !mediaList.getStatus().equals(model.getStatus());
-
-                model = mediaList;
+                boolean isModelCategoryChanged = !CompatUtil.equals(mediaList.getStatus(), status);
+                model = mediaList.clone();
 
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
                 resetFlipperState();

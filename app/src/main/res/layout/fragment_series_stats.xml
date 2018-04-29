@@ -26,7 +26,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/links_recycler"
-                    android:visibility="@{CompatUtil.isEmpty(model.externalLinks) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.isEmpty(model.externalLinks) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -59,7 +59,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/ranking_recycler"
-                    android:visibility="@{CompatUtil.isEmpty(model.rankings) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.isEmpty(model.rankings) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

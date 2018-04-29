@@ -22,7 +22,7 @@ public class Notification extends NotificationBase {
     private UserBase user;
 
     // airing notification
-    private int episodes;
+    private int episode;
     private List<String> contexts;
     private MediaBase media;
 
@@ -30,7 +30,7 @@ public class Notification extends NotificationBase {
         super(in);
         activity = in.readParcelable(FeedList.class.getClassLoader());
         user = in.readParcelable(UserBase.class.getClassLoader());
-        episodes = in.readInt();
+        episode = in.readInt();
         contexts = in.createStringArrayList();
         media = in.readParcelable(MediaBase.class.getClassLoader());
     }
@@ -40,7 +40,7 @@ public class Notification extends NotificationBase {
         super.writeToParcel(dest, flags);
         dest.writeParcelable(activity, flags);
         dest.writeParcelable(user, flags);
-        dest.writeInt(episodes);
+        dest.writeInt(episode);
         dest.writeStringList(contexts);
         dest.writeParcelable(media, flags);
     }
@@ -58,8 +58,8 @@ public class Notification extends NotificationBase {
         return user;
     }
 
-    public int getEpisodes() {
-        return episodes;
+    public int getEpisode() {
+        return episode;
     }
 
     public List<String> getContexts() {

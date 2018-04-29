@@ -13,12 +13,9 @@ import io.objectbox.annotation.Id;
  * Created by max on 2018/02/24.
  * Notification base meta data class
  */
-@Entity
 public class NotificationBase extends EntityGroup implements Parcelable {
 
-    @Id(assignable = true)
     private long id;
-    private boolean read;
     private @KeyUtil.NotificationType String type;
     private long createdAt;
     private String context;
@@ -29,7 +26,6 @@ public class NotificationBase extends EntityGroup implements Parcelable {
 
     protected NotificationBase(Parcel in) {
         id = in.readLong();
-        read = in.readByte() != 0;
         type = in.readString();
         createdAt = in.readLong();
         context = in.readString();
@@ -38,7 +34,6 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
-        dest.writeByte((byte) (read ? 1 : 0));
         dest.writeString(type);
         dest.writeLong(createdAt);
         dest.writeString(context);
@@ -69,10 +64,6 @@ public class NotificationBase extends EntityGroup implements Parcelable {
         this.id = id;
     }
 
-    public boolean isRead() {
-        return read;
-    }
-
     public @KeyUtil.NotificationType String getType() {
         return type;
     }
@@ -83,10 +74,6 @@ public class NotificationBase extends EntityGroup implements Parcelable {
 
     public String getContext() {
         return context;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
     }
 
     @Override

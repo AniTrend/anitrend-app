@@ -61,6 +61,13 @@ query MediaCollection($userId: Int, $userName: String, $type: MediaType, $forceS
                       year
                     }
                   }
+                  endDate {
+                    ... on FuzzyDate {
+                      day
+                      month
+                      year
+                    }
+                  }
                   episodes
                   chapters
                   volumes

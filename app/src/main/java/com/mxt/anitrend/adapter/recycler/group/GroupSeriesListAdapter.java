@@ -44,7 +44,7 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new SeriesListViewHolder(AdapterSeriesListBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));

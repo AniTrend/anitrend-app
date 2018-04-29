@@ -12,6 +12,7 @@ import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
+import com.mxt.anitrend.model.entity.base.NotificationHistory;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.base.VersionBase;
 
@@ -59,7 +60,7 @@ public class DatabaseHelper implements BoxQuery {
         getBoxStore(User.class).removeAll();
         getBoxStore(UserBase.class).removeAll();
         getBoxStore(VersionBase.class).removeAll();
-        getBoxStore(NotificationBase.class).removeAll();
+        getBoxStore(NotificationHistory.class).removeAll();
     }
 
     /**

@@ -29,6 +29,13 @@ query MediaWithList($id: Int, $type: MediaType, $onList: Boolean, $scoreFormat: 
           year
         }
       }
+      endDate {
+        ... on FuzzyDate {
+          day
+          month
+          year
+        }
+      }
       episodes
       chapters
       volumes
@@ -54,6 +61,7 @@ query MediaWithList($id: Int, $type: MediaType, $onList: Boolean, $scoreFormat: 
           priority
           private
           hiddenFromStatusLists
+          advancedScores
           customLists(asArray: true)
           notes
           startedAt {

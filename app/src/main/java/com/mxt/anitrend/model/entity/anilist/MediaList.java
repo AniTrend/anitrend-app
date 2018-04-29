@@ -4,25 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.data.converter.FuzzyDateConverter;
-import com.mxt.anitrend.data.converter.ListConverter;
-import com.mxt.anitrend.data.converter.MediaBaseConverter;
+import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
-
-import io.objectbox.annotation.Convert;
-import io.objectbox.annotation.Entity;
-import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Index;
+import java.util.Map;
 
 /**
  * Created by Maxwell on 1/12/2017.
  */
-public class MediaList extends EntityGroup implements Parcelable {
+public class MediaList extends EntityGroup implements Parcelable, Cloneable {
 
     private long id;
     private long mediaId;
@@ -36,8 +30,8 @@ public class MediaList extends EntityGroup implements Parcelable {
     @SerializedName("private")
     private boolean hidden;
     private boolean hiddenFromStatusLists;
-    private List<Float> advancedScores;
-    private List<String> customLists;
+    private Map<String, Float> advancedScores;
+    private List<CustomList> customLists;
     private FuzzyDate startedAt;
     private FuzzyDate completedAt;
     private long updatedAt;
@@ -60,7 +54,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         notes = in.readString();
         hidden = in.readByte() != 0;
         hiddenFromStatusLists = in.readByte() != 0;
-        customLists = in.createStringArrayList();
+        customLists = in.createTypedArrayList(CustomList.CREATOR);
         startedAt = in.readParcelable(FuzzyDate.class.getClassLoader());
         completedAt = in.readParcelable(FuzzyDate.class.getClassLoader());
         updatedAt = in.readLong();
@@ -81,7 +75,7 @@ public class MediaList extends EntityGroup implements Parcelable {
         dest.writeString(notes);
         dest.writeByte((byte) (hidden ? 1 : 0));
         dest.writeByte((byte) (hiddenFromStatusLists ? 1 : 0));
-        dest.writeStringList(customLists);
+        dest.writeTypedList(customLists);
         dest.writeParcelable(startedAt, flags);
         dest.writeParcelable(completedAt, flags);
         dest.writeLong(updatedAt);
@@ -154,12 +148,12 @@ public class MediaList extends EntityGroup implements Parcelable {
         return hiddenFromStatusLists;
     }
 
-    public List<String> getCustomLists() {
-        return customLists;
+    public Map<String, Float> getAdvancedScores() {
+        return advancedScores;
     }
 
-    public List<Float> getAdvancedScores() {
-        return advancedScores;
+    public List<CustomList> getCustomLists() {
+        return customLists;
     }
 
     public FuzzyDate getStartedAt() {
@@ -230,11 +224,11 @@ public class MediaList extends EntityGroup implements Parcelable {
         this.hiddenFromStatusLists = hiddenFromStatusLists;
     }
 
-    public void setAdvancedScores(List<Float> advancedScores) {
+    public void setAdvancedScores(Map<String, Float> advancedScores) {
         this.advancedScores = advancedScores;
     }
 
-    public void setCustomLists(List<String> customLists) {
+    public void setCustomLists(List<CustomList> customLists) {
         this.customLists = customLists;
     }
 
@@ -245,5 +239,11 @@ public class MediaList extends EntityGroup implements Parcelable {
         else if (obj instanceof MediaBase)
             return ((MediaBase)obj).getId() == mediaId;
         return super.equals(obj);
+    }
+
+    @Override
+    public MediaList clone() throws CloneNotSupportedException {
+        super.clone();
+        return this;
     }
 }

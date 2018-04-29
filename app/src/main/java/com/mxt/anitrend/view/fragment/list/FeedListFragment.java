@@ -68,8 +68,23 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
         if(getArguments() != null)
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
         isPager = true; isFeed = true; mColumnSize = R.integer.single_list_x1;
+        hasSubscriber = true;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_post:
+                mBottomSheet = new BottomSheetComposer.Builder()
+                        .setRequestMode(KeyUtil.MUT_SAVE_TEXT_FEED)
+                        .setTitle(R.string.menu_title_new_activity_post)
+                        .build();
+                showBottomSheet();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -189,6 +204,19 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                 } else {
                     pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
                     if(pairOptional.isPresent()) {
+                        pairIndex = pairOptional.get().getFirst();
+                        model.set(pairIndex, consumer.getChangeModel());
+                        mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
+                    }
+                }
+                break;
+            case KeyUtil.MUT_SAVE_MESSAGE_FEED:
+                if(consumer.getChangeModel() == null) {
+                    swipeRefreshLayout.setRefreshing(true);
+                    onRefresh();
+                } else {
+                    pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                    if (pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
                         model.set(pairIndex, consumer.getChangeModel());
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);

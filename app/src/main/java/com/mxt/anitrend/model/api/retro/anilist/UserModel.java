@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.api.retro.anilist;
 
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.Favourite;
+import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.model.entity.base.UserBase;
@@ -21,6 +22,11 @@ import retrofit2.http.POST;
  */
 
 public interface UserModel {
+
+    @POST("/")
+    @GraphQuery("UserNotifications")
+    @Headers("Content-Type: application/json")
+    Call<GraphContainer<PageContainer<Notification>>> getUserNotifications(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("CurrentUser")

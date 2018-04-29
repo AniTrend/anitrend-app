@@ -122,19 +122,30 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         this.lifecycle = lifecycle;
     }
 
+    public void setRequestType(@KeyUtil.RequestType int requestType) {
+        this.requestType = requestType;
+    }
+
     public void setModel(FeedList feedList, @KeyUtil.RequestType int requestType) {
         this.feedList = feedList;
         this.requestType = requestType;
         // this.requestType = KeyUtils.MUT_SAVE_TEXT_FEED;
     }
 
-    public void setRequestType(@KeyUtil.RequestType int requestType) {
-        this.requestType = requestType;
-    }
-
+    /**
+     * Sending a new message to an existing user
+     */
     public void setModel(UserBase recipient, @KeyUtil.RequestType int requestType) {
         this.recipient = recipient;
         this.requestType = requestType;
+        // this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
+    }
+
+    /**
+     * Editing a previously sent message to a user, we need to add teh feedId inorder to edit it
+     */
+    public void setModel(FeedList feedList) {
+        this.feedList = feedList;
         // this.requestType = KeyUtils.MUT_SAVE_MESSAGE_FEED;
     }
 
@@ -226,25 +237,32 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
      * @param call     the origination requesting object
      * @param response the response from the network
      */
+    @SuppressLint("SwitchIntDef")
     @Override
     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
         if(lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             resetFlipperState();
             if(response.isSuccessful()) {
                 binding.comment.getText().clear();
-
-                if (requestType == KeyUtil.MUT_SAVE_TEXT_FEED) {
-                    if(feedList != null)
-                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
-                    presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
-                } else if (requestType == KeyUtil.MUT_SAVE_FEED_REPLY) {
-                    if(feedReply != null)
-                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
-                    presenter.notifyAllListeners(new BaseConsumer<FeedReply>(requestType), false);
-                } else if (requestType == KeyUtil.MUT_SAVE_MESSAGE_FEED) {
-                    if(feedList != null)
-                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
-                    presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
+                switch (requestType) {
+                    case KeyUtil.MUT_SAVE_TEXT_FEED:
+                        if(feedList != null)
+                            presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
+                        else
+                            presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
+                        break;
+                    case KeyUtil.MUT_SAVE_FEED_REPLY:
+                        if(feedReply != null)
+                            presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
+                        else
+                            presenter.notifyAllListeners(new BaseConsumer<FeedReply>(requestType), false);
+                        break;
+                    case KeyUtil.MUT_SAVE_MESSAGE_FEED:
+                        if(feedList != null)
+                            presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
+                        else
+                            presenter.notifyAllListeners(new BaseConsumer<FeedList>(requestType), false);
+                        break;
                 }
             }
             else

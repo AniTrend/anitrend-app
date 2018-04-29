@@ -1,9 +1,13 @@
 package com.mxt.anitrend.view.fragment.list;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MediaBrowseUtil;
 
 /**
  * Created by max on 2017/11/04.
@@ -17,8 +21,6 @@ public class SuggestionListFragment extends MediaBrowseFragment {
         args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
                 .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                 .putVariable(KeyUtil.arg_onList, false));
-
-        args.putBoolean(KeyUtil.arg_media_compact, false);
         SuggestionListFragment fragment = new SuggestionListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -31,5 +33,11 @@ public class SuggestionListFragment extends MediaBrowseFragment {
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_genre).setVisible(false);
     }
 }

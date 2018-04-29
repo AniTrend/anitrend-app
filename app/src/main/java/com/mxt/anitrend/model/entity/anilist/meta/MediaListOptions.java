@@ -13,12 +13,15 @@ public class MediaListOptions implements Parcelable {
 
     private @KeyUtil.ScoreFormat String scoreFormat;
     private String rowOrder;
+    private boolean useLegacyLists;
     private MediaListTypeOptions animeList;
     private MediaListTypeOptions mangaList;
+
 
     protected MediaListOptions(Parcel in) {
         scoreFormat = in.readString();
         rowOrder = in.readString();
+        useLegacyLists = in.readByte() != 0;
         animeList = in.readParcelable(MediaListTypeOptions.class.getClassLoader());
         mangaList = in.readParcelable(MediaListTypeOptions.class.getClassLoader());
     }
@@ -27,6 +30,7 @@ public class MediaListOptions implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(scoreFormat);
         dest.writeString(rowOrder);
+        dest.writeByte((byte) (useLegacyLists ? 1 : 0));
         dest.writeParcelable(animeList, flags);
         dest.writeParcelable(mangaList, flags);
     }
@@ -54,6 +58,10 @@ public class MediaListOptions implements Parcelable {
 
     public String getRowOrder() {
         return rowOrder;
+    }
+
+    public boolean isUseLegacyLists() {
+        return useLegacyLists;
     }
 
     public MediaListTypeOptions getAnimeList() {

@@ -37,10 +37,6 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     private boolean isCompatType;
 
-    public MediaAdapter(List<MediaBase> data, Context context) {
-        super(data, context);
-    }
-
     public MediaAdapter(List<MediaBase> data, Context context, boolean isCompatType) {
         super(data, context);
         this.isCompatType = isCompatType;
@@ -48,7 +44,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<MediaBase> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<MediaBase> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if(isCompatType)
             return new MediaViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         if(viewType == KeyUtil.RECYCLER_TYPE_ANIME)
@@ -114,6 +110,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
         @Override
         public void onBindViewHolder(MediaBase model) {
             binding.setModel(model);
+            binding.seriesTitle.setTitle(model);
             binding.executePendingBindings();
         }
 
@@ -177,6 +174,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
         @Override
         public void onBindViewHolder(MediaBase model) {
             binding.setModel(model);
+            binding.seriesTitle.setTitle(model);
             binding.executePendingBindings();
         }
 
@@ -240,7 +238,6 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
         public void onBindViewHolder(MediaBase model) {
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
-            binding.customRatingWidget.setFavourState(model.isFavourite());
             binding.executePendingBindings();
         }
 

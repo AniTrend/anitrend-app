@@ -16,6 +16,7 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
@@ -30,24 +31,18 @@ import java.util.Locale;
 public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContainer<MediaBase>, MediaPresenter> {
 
     protected QueryContainerBuilder queryContainer;
-    private boolean isCompatType;
+    private MediaBrowseUtil mediaBrowseUtil;
 
-    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer, boolean isCompatType) {
+    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
-        args.putBoolean(KeyUtil.arg_media_compact, isCompatType);
         MediaBrowseFragment fragment = new MediaBrowseFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static MediaBrowseFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
-        return newInstance(params, queryContainer, false);
-    }
-
     public static MediaBrowseFragment newInstance(Bundle params) {
         Bundle args = new Bundle(params);
-        args.putBoolean(KeyUtil.arg_media_compact, false);
         MediaBrowseFragment fragment = new MediaBrowseFragment();
         fragment.setArguments(args);
         return fragment;
@@ -63,10 +58,13 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
-            isCompatType = getArguments().getBoolean(KeyUtil.arg_media_compact);
+            mediaBrowseUtil = getArguments().getParcelable(KeyUtil.arg_media_util);
         }
-        isPager = true; isFilterable = true;
-        mColumnSize = R.integer.single_list_x1;
+        if(mediaBrowseUtil == null)
+            mediaBrowseUtil = new MediaBrowseUtil();
+
+        isPager = true; isFilterable = !mediaBrowseUtil.isFilterDisabled();
+        mColumnSize = mediaBrowseUtil.isCompactType() ? R.integer.grid_giphy_x3 : R.integer.grid_list_x2;
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -74,7 +72,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     @Override
     protected void updateUI() {
         if(mAdapter == null)
-            mAdapter = new MediaAdapter(model, getContext(), isCompatType);
+            mAdapter = new MediaAdapter(model, getContext(), mediaBrowseUtil.isCompactType());
         injectAdapter();
     }
 
@@ -83,11 +81,14 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         Bundle bundle = getViewModel().getParams();
         queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaSort());
-        if(CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
-            queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
-                    "%d%%",getPresenter().getApplicationPref().getSeasonYear()));
-        else
-            queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+
+        if(isFilterable) {
+            if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
+                queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
+                        "%d%%", getPresenter().getApplicationPref().getSeasonYear()));
+            else
+                queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+        }
 
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
