@@ -65,6 +65,8 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
+            if(model != null)
+                favouriteWidget.setModel(model);
         }
         return true;
     }

@@ -491,6 +491,16 @@ public class CompatUtil {
         return "";
     }
 
+    /**
+     * Get a list from a given array of strings
+     * @return list of capitalized strings
+     */
+    public static List<String> capitalizeWords(String... strings) {
+        return Stream.of(strings)
+                .map(CompatUtil::capitalizeWords)
+                .toList();
+    }
+
     public static <T extends Collection> boolean isEmpty(@Nullable T collection) {
         return collection == null || collection.isEmpty();
     }

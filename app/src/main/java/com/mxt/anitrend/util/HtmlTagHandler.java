@@ -2,6 +2,7 @@ package com.mxt.anitrend.util;
 
 import android.text.Editable;
 import android.text.Html;
+
 import org.xml.sax.XMLReader;
 
 /**

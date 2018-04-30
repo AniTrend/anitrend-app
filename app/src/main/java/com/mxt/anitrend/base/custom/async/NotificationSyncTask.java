@@ -3,7 +3,6 @@ package com.mxt.anitrend.base.custom.async;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;

@@ -16,7 +16,6 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;

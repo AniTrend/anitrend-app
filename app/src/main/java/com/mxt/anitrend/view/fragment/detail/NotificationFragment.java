@@ -9,13 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.annimon.stream.IntPair;
-import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
+import com.mxt.anitrend.base.custom.async.ThreadPool;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
+import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.Notification;
+import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.NotificationHistory;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
@@ -32,6 +33,7 @@ import com.mxt.anitrend.view.activity.detail.MessageActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by max on 2017/12/06.
@@ -70,6 +72,10 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
             mAdapter = new NotificationAdapter(model, getContext());
         injectAdapter();
 
+        User currentUser = getPresenter().getDatabase().getCurrentUser();
+        currentUser.setUnreadNotificationCount(0);
+        getPresenter().getDatabase().saveCurrentUser(currentUser);
+
         //Testing notifications by forcing the notification dispatcher
         /*for (int i = 0; i < 3; i++)
             NotificationDispatcher.createNotification(getContext(), new ArrayList<>(model.subList(i, i + 1)));*/
@@ -87,8 +93,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         switch (item.getItemId()) {
             case R.id.action_mark_all:
                 if(model != null) {
-                    markAllNotificationsAsRead();
-                    mAdapter.notifyDataSetChanged();
+                    ThreadPool.Builder.create().execute(this::markAllNotificationsAsRead);
                 } else
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT);
                 return true;
@@ -125,25 +130,9 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtil.arg_resetNotificationCount, false);
+                .putVariable(KeyUtil.arg_resetNotificationCount, true);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.USER_NOTIFICATION_REQ, getContext());
-    }
-
-    private void setReadItems(Notification data) {
-        Optional<IntPair<Notification>> pairOptional = CompatUtil.findIndexOf(model, data);
-        if(pairOptional.isPresent()) {
-            NotificationHistory notificationHistory = new NotificationHistory();
-            notificationHistory.setId(getPresenter().getDatabase().getCurrentUser().getId());
-            notificationHistory.setLastReadId(data.getId());
-
-            getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
-                    .put(notificationHistory);
-
-            int pairIndex = pairOptional.get().getFirst();
-            mAdapter.onItemChanged(data, pairIndex);
-        }
-
     }
 
     /**
@@ -156,10 +145,10 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     @Override
     public void onItemClick(View target, Notification data) {
         Intent intent;
-        setReadItems(data);
+        ThreadPool.Builder.create().execute(() -> setItemAsRead(data));
         if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
-            intent.putExtra(KeyUtil.arg_userName, data.getUser().getName());
+            intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
             CompatUtil.startRevealAnim(getActivity(), target, intent);
         }
         else
@@ -194,6 +183,11 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                     intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
+                case KeyUtil.ACTIVITY_REPLY:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
                 case KeyUtil.ACTIVITY_REPLY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
@@ -219,7 +213,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     @Override
     public void onItemLongClick(View target, Notification data) {
         if(CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
-            setReadItems(data);
+            ThreadPool.Builder.create().execute(() -> setItemAsRead(data));
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 mediaActionUtil = new MediaActionUtil.Builder()
                         .setId(data.getMedia().getId()).build(getActivity());
@@ -229,15 +223,33 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         }
     }
 
-    private void markAllNotificationsAsRead() {
-        Optional<Notification> notificationOptional = Stream.of(model).findFirst();
-        if(notificationOptional.isPresent()) {
-            NotificationHistory notificationHistory = new NotificationHistory();
-            notificationHistory.setId(getPresenter().getDatabase().getCurrentUser().getId());
-            notificationHistory.setLastReadId(notificationOptional.get().getId());
+    /**
+     * Ran on a background thread to assure we don't skip frames
+     * @see ThreadPool
+     */
+    private void setItemAsRead(Notification data) {
+        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
+                .put(new NotificationHistory(data.getId()));
+    }
 
-            getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
-                    .put(notificationHistory);
-        }
+    /**
+     * Ran on a background thread to assure we don't skip frames
+     * @see ThreadPool
+     */
+    private void markAllNotificationsAsRead() {
+        DatabaseHelper databaseHelper = getPresenter().getDatabase();
+
+        List<NotificationHistory> notificationHistories = Stream.of(model)
+                .map(notification -> new NotificationHistory(notification.getId()))
+                .toList();
+
+        databaseHelper.getBoxStore(NotificationHistory.class)
+                .put(notificationHistories);
+
+        if (getActivity() != null)
+            getActivity().runOnUiThread(() -> {
+                if(mAdapter != null)
+                    mAdapter.notifyDataSetChanged();
+            });
     }
 }

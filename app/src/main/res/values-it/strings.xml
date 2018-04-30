@@ -184,27 +184,9 @@
     </string>
 
     <!--Do not Translate, native anilist strings-->
-    <string-array name="series_sort_types">
-        <item>Title</item>
-        <item>Score</item>
-        <item>Popularity</item>
-        <item>Start Date</item>
-        <item>End Date</item>
-    </string-array>
-
-    <!--Do not Translate, native anilist strings-->
     <string-array name="order_by_types">
         <item>Ascending</item>
         <item>Descending</item>
-    </string-array>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="series_status_types">
-        <item>All Listings</item>
-        <item>Ended</item>
-        <item>Ongoing</item>
-        <item>Upcoming</item>
-        <item>Cancelled</item>
     </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
@@ -363,6 +345,21 @@
         <item>7</item>
         <item>8</item>
     </string-array>
+
+    <!-- Settings for update channel to use -->
+    <string name="pref_title_update_channel">Update Channel</string>
+
+    <string-array name="pref_titles_channel_entries">
+        <item>Stable</item>
+        <item>Beta (Experimental)</item>
+    </string-array>
+
+    <!-- Do Not Translate This -->
+    <string-array name="pref_values_channel_entries">
+        <item>master</item>
+        <item>develop</item>
+    </string-array>
+
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifiche</string>
@@ -818,6 +815,14 @@
     <string name="anime_time_days">%.1f Days</string>
     <string name="anime_time_years">%.1f Years</string>
 
+    <string-array name="media_status">
+        <item>All</item>
+        <item>Finished</item>
+        <item>Releasing</item>
+        <item>Not Yet Released</item>
+        <item>Canceled</item>
+    </string-array>
+
     <string-array name="media_formats">
         <item>All</item>
         <item>TV</item>
@@ -830,16 +835,6 @@
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
-    </string-array>
-
-    <string-array name="media_sources">
-        <item>All</item>
-        <item>Original</item>
-        <item>Manga</item>
-        <item>Light Novel</item>
-        <item>Visual Novel</item>
-        <item>Video Game</item>
-        <item>Other</item>
     </string-array>
 
     <string-array name="reviews_title">
@@ -935,9 +930,12 @@
     <string name="text_unable_to_load_next_page">Error loading more results!</string>
     <string name="menu_title_mark_all_as_read">Mark All As Read</string>
     <string name="title_score_distribution">Score Distribution</string>
+
     <string name="title_score">Score</string>
     <string name="title_watching">Watching</string>
     <string name="title_series_stats">Series Stats</string>
     <string name="error_unresolved_type">Unable to resolve content</string>
 
+    <string name="menu_title_tags">Tags</string>
+    <string name="app_filter_tags">Series Tags?</string>
 </resources>

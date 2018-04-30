@@ -1,17 +1,17 @@
 package com.mxt.anitrend.view.fragment.list;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
@@ -23,7 +23,9 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
+import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -74,6 +76,40 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         setViewModel(true);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_genre).setVisible(false);
+        menu.findItem(R.id.action_tag).setVisible(false);
+        menu.findItem(R.id.action_type).setVisible(false);
+        menu.findItem(R.id.action_year).setVisible(false);
+        menu.findItem(R.id.action_status).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (getContext() != null)
+            switch (item.getItemId()) {
+                case R.id.action_sort:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.MediaListSortType,
+                            getPresenter().getApplicationPref().getMediaListSort()), CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().setMediaListSort(KeyUtil.MediaListSortType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+                case R.id.action_order:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+            }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
@@ -92,39 +128,19 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     public void makeRequest() {
+        ApplicationPref pref = getPresenter().getApplicationPref();
+
         if (userId != 0)
             queryContainer.putVariable(KeyUtil.arg_userId, userId);
         else
             queryContainer.putVariable(KeyUtil.arg_userName, userName);
 
         queryContainer.putVariable(KeyUtil.arg_mediaType, mediaType)
-                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_sort, pref.getMediaListSort() + pref.getSortOrder());
 
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
-    }
-
-    /**
-     * Initialize the contents of the Fragment host's standard options menu.  You
-     * should place your menu items in to <var>menu</var>.  For this method
-     * to be called, you must have first called {@link #setHasOptionsMenu}.  See
-     * {@link Activity#onCreateOptionsMenu(Menu) Activity.onCreateOptionsMenu}
-     * for more information.
-     *
-     * @param menu     The options menu in which you place your items.
-     * @param inflater menu inflater
-     * @see #setHasOptionsMenu
-     * @see #onPrepareOptionsMenu
-     * @see #onOptionsItemSelected
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.findItem(R.id.action_share).setVisible(false);
-        menu.findItem(R.id.action_genre).setVisible(false);
-        menu.findItem(R.id.action_type).setVisible(false);
-        menu.findItem(R.id.action_year).setVisible(false);
-        menu.findItem(R.id.action_status).setVisible(false);
     }
 
     /**

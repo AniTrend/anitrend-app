@@ -168,7 +168,7 @@ dependencies {
     implementation 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
 
     /** On-boarding Experience */
-    implementation 'com.ramotion.paperonboarding:paper-onboarding:1.1.1'
+    implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
 
     /** Charts */
     implementation'com.github.PhilJay:MPAndroidChart:v3.0.3'

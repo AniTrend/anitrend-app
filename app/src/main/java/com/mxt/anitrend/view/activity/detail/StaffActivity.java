@@ -64,6 +64,8 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
+            if(model != null)
+                favouriteWidget.setModel(model);
         }
         return true;
     }

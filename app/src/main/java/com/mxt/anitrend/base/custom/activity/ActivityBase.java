@@ -26,13 +26,11 @@ import android.widget.Toolbar;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.App;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
-import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
@@ -44,8 +42,6 @@ import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -421,9 +417,6 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(KeyUtil.arg_search, query);
             CompatUtil.startRevealAnim(this, mSearchView, intent);
-            Bundle bundle = new Bundle();
-            bundle.putString(KeyUtil.arg_search, query);
-            AnalyticsUtil.logEvent(getApplicationContext(), KeyUtil.arg_search, bundle);
             return true;
         }
         NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();

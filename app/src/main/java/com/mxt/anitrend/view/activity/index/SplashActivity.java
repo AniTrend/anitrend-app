@@ -67,8 +67,10 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
     protected void makeRequest() {
         VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
         // How frequent should the application check for updates on startup
-        if(versionBase == null || DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_HOURS, versionBase.getLastChecked(), 8))
+        if(versionBase == null || DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_HOURS, versionBase.getLastChecked(), 4)) {
+            getViewModel().getParams().putString(KeyUtil.arg_branch_name, getPresenter().getApplicationPref().getUpdateChannel());
             getViewModel().requestData(KeyUtil.UPDATE_CHECKER_REQ, getApplicationContext());
+        }
         else
             updateUI();
     }

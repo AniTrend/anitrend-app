@@ -14,7 +14,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.base.custom.view.image.AspectImageView;
 import com.mxt.anitrend.databinding.AdapterNotificationBinding;
 import com.mxt.anitrend.model.entity.anilist.Notification;
-import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.NotificationHistory;
 import com.mxt.anitrend.model.entity.base.NotificationHistory_;
 import com.mxt.anitrend.util.CompatUtil;
@@ -34,12 +33,10 @@ import io.objectbox.Box;
 
 public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
 
-    private long userId;
     private Box<NotificationHistory> historyBox;
 
     public NotificationAdapter(List<Notification> data, Context context) {
         super(data, context);
-        userId = presenter.getDatabase().getCurrentUser().getId();
         historyBox = presenter.getDatabase().getBoxStore(NotificationHistory.class);
     }
 
@@ -86,11 +83,11 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
         @Override
         public void onBindViewHolder(Notification model) {
             NotificationHistory notificationHistory = historyBox.query()
-                    .equal(NotificationHistory_.id, userId)
+                    .equal(NotificationHistory_.id, model.getId())
                     .build().findFirst();
 
             if(notificationHistory != null)
-                binding.notificationIndicator.setVisibility(notificationHistory.isNew(model.getId())? View.GONE:View.VISIBLE);
+                binding.notificationIndicator.setVisibility(View.GONE);
             else
                 binding.notificationIndicator.setVisibility(View.VISIBLE);
 
@@ -135,6 +132,11 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
                     break;
                 case KeyUtil.ACTIVITY_LIKE:
                     binding.notificationSubject.setText(R.string.notification_user_like_activity);
+                    binding.notificationHeader.setText(model.getUser().getName());
+                    binding.notificationContent.setText(model.getContext());
+                    break;
+                case KeyUtil.ACTIVITY_REPLY:
+                    binding.notificationSubject.setText(R.string.notification_user_reply_activity);
                     binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(model.getContext());
                     break;

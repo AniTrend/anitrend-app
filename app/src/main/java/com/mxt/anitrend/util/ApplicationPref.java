@@ -24,10 +24,11 @@ public class ApplicationPref {
 
     /** Application Base Options */
     private final String _isLightTheme = "_isLightTheme";
-    private final String _channel = "_channel";
+    private final String _updateChannel = "_updateChannel";
 
     /** Api Keys */
     private final String _sortOrder = "_sortOrder";
+    private final String _mediaStatus = "_mediaStatus";
     private final String _mediaFormat = "_mediaFormat";
     private final String _mediaSource = "_mediaSource";
     private final String _airingSort = "_airingSort";
@@ -152,6 +153,17 @@ public class ApplicationPref {
     }
 
 
+    public @Nullable @KeyUtil.MediaStatus String getMediaStatus() {
+        return sharedPreferences.getString(_mediaStatus, null);
+    }
+
+    public void setMediaStatus(@KeyUtil.MediaStatus String mediaStatus) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mediaStatus, mediaStatus);
+        editor.apply();
+    }
+
+
     public @Nullable @KeyUtil.MediaFormat String getMediaFormat() {
         return sharedPreferences.getString(_mediaFormat, null);
     }
@@ -175,7 +187,7 @@ public class ApplicationPref {
 
 
     public @KeyUtil.AiringSort String getAiringSort() {
-        return sharedPreferences.getString(_airingSort, KeyUtil.EPISODE) + getSortOrder();
+        return sharedPreferences.getString(_airingSort, KeyUtil.EPISODE);
     }
 
     public void setAiringSort(@KeyUtil.AiringSort String airingSort) {
@@ -186,7 +198,7 @@ public class ApplicationPref {
 
 
     public @KeyUtil.CharacterSort String getCharacterSort() {
-        return sharedPreferences.getString(_characterSort, KeyUtil.ROLE) + getSortOrder();
+        return sharedPreferences.getString(_characterSort, KeyUtil.ROLE);
     }
 
     public void setCharacterSort(@KeyUtil.CharacterSort String characterSort) {
@@ -197,7 +209,7 @@ public class ApplicationPref {
 
 
     public @KeyUtil.MediaListSort String getMediaListSort() {
-        return sharedPreferences.getString(_mediaListSort, KeyUtil.PROGRESS) + getSortOrder();
+        return sharedPreferences.getString(_mediaListSort, KeyUtil.PROGRESS);
     }
 
     public void setMediaListSort(@KeyUtil.MediaListSort String mediaListSort) {
@@ -208,7 +220,7 @@ public class ApplicationPref {
 
 
     public @KeyUtil.MediaSort String getMediaSort() {
-        return sharedPreferences.getString(_mediaSort, KeyUtil.POPULARITY) + getSortOrder();
+        return sharedPreferences.getString(_mediaSort, KeyUtil.POPULARITY);
     }
 
     public void setMediaSort(@KeyUtil.MediaSort String mediaSort) {
@@ -218,7 +230,7 @@ public class ApplicationPref {
     }
 
     public @KeyUtil.MediaTrendSort String getMediaTrendSort() {
-        return sharedPreferences.getString(_mediaTrendSort, KeyUtil.TRENDING) + getSortOrder();
+        return sharedPreferences.getString(_mediaTrendSort, KeyUtil.TRENDING);
     }
 
     public void setMediaTrendSort(@KeyUtil.MediaTrendSort String mediaTrendSort) {
@@ -229,7 +241,7 @@ public class ApplicationPref {
 
 
     public @KeyUtil.ReviewSort String getReviewSort() {
-        return sharedPreferences.getString(_reviewSort, KeyUtil.ID) + getSortOrder();
+        return sharedPreferences.getString(_reviewSort, KeyUtil.ID);
     }
 
     public void setReviewSort(@KeyUtil.ReviewSort String reviewSort) {
@@ -240,7 +252,7 @@ public class ApplicationPref {
 
 
     public @KeyUtil.StaffSort String getStaffSort() {
-        return sharedPreferences.getString(_staffSort, KeyUtil.ROLE) + getSortOrder();
+        return sharedPreferences.getString(_staffSort, KeyUtil.ROLE);
     }
 
     public void setStaffSort(@KeyUtil.StaffSort String staffSort) {
@@ -249,13 +261,13 @@ public class ApplicationPref {
         editor.apply();
     }
 
-    public @KeyUtil.Channel String getChannel() {
-        return sharedPreferences.getString(_channel, KeyUtil.STABLE);
+    public @KeyUtil.Channel String getUpdateChannel() {
+        return sharedPreferences.getString(_updateChannel, KeyUtil.STABLE);
     }
 
-    public void setChannel(@KeyUtil.Channel String channel) {
+    public void setUpdateChannel(@KeyUtil.Channel String channel) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(_channel, channel);
+        editor.putString(_updateChannel, channel);
         editor.apply();
     }
 }

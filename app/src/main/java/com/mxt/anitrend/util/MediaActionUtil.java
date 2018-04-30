@@ -4,18 +4,13 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;

@@ -3,9 +3,13 @@ package com.mxt.anitrend.view.fragment.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -14,7 +18,9 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
@@ -27,7 +33,6 @@ import java.util.Collections;
 /**
  * Created by max on 2017/10/30.
  * Media review browse
- * // TODO: 2018/03/23 Add review sorting
  */
 
 public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer<Review>, BasePresenter> {
@@ -53,13 +58,47 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
-        isPager = true; mColumnSize = R.integer.single_list_x1;
+        isPager = true; mColumnSize = R.integer.single_list_x1; isFilterable = true;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_genre).setVisible(false);
+        menu.findItem(R.id.action_tag).setVisible(false);
+        menu.findItem(R.id.action_type).setVisible(false);
+        menu.findItem(R.id.action_year).setVisible(false);
+        menu.findItem(R.id.action_status).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (getContext() != null)
+            switch (item.getItemId()) {
+                case R.id.action_sort:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.ReviewSortType,
+                            getPresenter().getApplicationPref().getReviewSort()), CompatUtil.capitalizeWords(KeyUtil.ReviewSortType),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().setReviewSort(KeyUtil.ReviewSortType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+                case R.id.action_order:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+            }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
-     * Is automatically called in the @onStart Method if overriden in list implementation
+     * Is automatically called in the @onStart Method if overridden in list implementation
      */
     @Override
     protected void updateUI() {
@@ -73,9 +112,12 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
      */
     @Override
     public void makeRequest() {
+        ApplicationPref pref = getPresenter().getApplicationPref();
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
+                .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtil.arg_mediaType, mediaType);
+                .putVariable(KeyUtil.arg_sort, pref.getReviewSort() + pref.getSortOrder());
+
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_REVIEWS_REQ, getContext());
     }

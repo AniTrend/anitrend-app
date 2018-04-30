@@ -3,14 +3,9 @@ package com.mxt.anitrend.view.fragment.detail;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.mxt.anitrend.base.interfaces.event.PublisherListener;
-import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.list.FeedListFragment;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by max on 2017/11/26.

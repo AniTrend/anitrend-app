@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Map;
 

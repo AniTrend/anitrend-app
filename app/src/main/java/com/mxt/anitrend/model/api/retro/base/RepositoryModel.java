@@ -16,8 +16,4 @@ public interface RepositoryModel {
 
     @GET("/wax911/anitrend-resources/{branch}/builds/meta.json")
     Call<VersionBase> checkVersion(@Path("branch") String branch);
-
-    @GET("/wax911/anitrend-resources/master/builds/meta.json")
-    Call<VersionBase> checkVersion();
-
 }

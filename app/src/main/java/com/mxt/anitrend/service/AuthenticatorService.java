@@ -8,18 +8,11 @@ import android.util.Log;
 
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.model.api.retro.WebFactory;
-import com.mxt.anitrend.model.api.retro.anilist.UserModel;
-import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.container.body.GraphContainer;
-import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;

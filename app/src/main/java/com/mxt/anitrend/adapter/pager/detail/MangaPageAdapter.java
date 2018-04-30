@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
+import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment;
@@ -22,9 +23,17 @@ import com.mxt.anitrend.view.fragment.group.MediaRelationFragment;
 
 public class MangaPageAdapter extends BaseStatePageAdapter {
 
+    private boolean isAuthenticated;
+
     public MangaPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
         setPagerTitles(R.array.manga_page_titles);
+        isAuthenticated = new ApplicationPref(context).isAuthenticated();
+    }
+
+    @Override
+    public int getCount() {
+        return isAuthenticated ? super.getCount() : super.getCount() - 2;
     }
 
     /**

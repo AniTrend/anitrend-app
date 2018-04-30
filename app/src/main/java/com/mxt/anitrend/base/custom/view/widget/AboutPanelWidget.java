@@ -32,6 +32,7 @@ import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity;
+import com.mxt.anitrend.view.sheet.BottomSheetListUsers;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -231,28 +232,24 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 if(followers == null || followers.getTotal() < 1)
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else if (fragmentManager != null){
-                    /*mBottomSheet = new BottomSheetListUsers.Builder()
-                            .setModel(GraphUtil.getDefaultQuery(true)
-                                    .putVariable(KeyUtils.arg_id, userId),
-                                    KeyUtils.USER_FOLLOWERS_REQ)
+                    mBottomSheet = new BottomSheetListUsers.Builder().setUserId(userId)
+                            .setModelCount(followers.getTotal())
+                            .setRequestType(KeyUtil.USER_FOLLOWERS_REQ)
                             .setTitle(R.string.title_bottom_sheet_followers)
                             .build();
-                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());*/
-                    NotifyUtil.makeText(getContext(), R.string.TBA, Toast.LENGTH_SHORT).show();
+                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());
                 }
                 break;
             case R.id.user_following_container:
                 if(following == null || following.getTotal() < 1)
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else if (fragmentManager != null){
-                    /*mBottomSheet = new BottomSheetListUsers.Builder()
-                            .setModel(GraphUtil.getDefaultQuery(true)
-                                    .putVariable(KeyUtils.arg_id, userId),
-                                    KeyUtils.USER_FOLLOWING_REQ)
+                    mBottomSheet = new BottomSheetListUsers.Builder().setUserId(userId)
+                            .setModelCount(following.getTotal())
+                            .setRequestType(KeyUtil.USER_FOLLOWING_REQ)
                             .setTitle(R.string.title_bottom_sheet_following)
                             .build();
-                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());*/
-                    NotifyUtil.makeText(getContext(), R.string.TBA, Toast.LENGTH_SHORT).show();
+                    mBottomSheet.show(fragmentManager, mBottomSheet.getTag());
                 }
                 break;
         }

@@ -2,10 +2,8 @@ package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;

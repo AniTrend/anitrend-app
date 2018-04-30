@@ -83,9 +83,7 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
 
 
                 case UPDATE_CHECKER_REQ:
-                    if (param.containsKey(arg_branch_name))
-                        return (Call<T>) WebFactory.createRepositoryService().checkVersion(param.getString(arg_branch_name));
-                    return (Call<T>) WebFactory.createRepositoryService().checkVersion();
+                    return (Call<T>) WebFactory.createRepositoryService().checkVersion(param.getString(arg_branch_name));
 
 
                 case KeyUtil.MEDIA_BROWSE_REQ:

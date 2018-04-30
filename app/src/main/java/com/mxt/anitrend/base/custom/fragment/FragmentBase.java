@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;

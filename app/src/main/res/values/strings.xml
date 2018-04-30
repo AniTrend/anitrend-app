@@ -192,27 +192,9 @@
     </string>
 
     <!--Do not Translate, native anilist strings-->
-    <string-array name="series_sort_types">
-        <item>Title</item>
-        <item>Score</item>
-        <item>Popularity</item>
-        <item>Start Date</item>
-        <item>End Date</item>
-    </string-array>
-
-    <!--Do not Translate, native anilist strings-->
     <string-array name="order_by_types">
         <item>Ascending</item>
         <item>Descending</item>
-    </string-array>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="series_status_types">
-        <item>All Listings</item>
-        <item>Ended</item>
-        <item>Ongoing</item>
-        <item>Upcoming</item>
-        <item>Cancelled</item>
     </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
@@ -291,13 +273,13 @@
     <string name="tip_messages_title">Messages</string>
     <string name="tip_messages_text">View all your messages sent to you and the ones you sent. \n\nTap Here To Dismiss</string>
     <string name="tip_status_post_title">Create Status Post</string>
-    <string name="tip_status_post_text">Post a status messageBase for everyone to see. \n\nTap Here To Dismiss</string>
+    <string name="tip_status_post_text">Post a status message for everyone to see. \n\nTap Here To Dismiss</string>
     <string name="tip_notifications_title">Notifications</string>
     <string name="tip_notifications_text">Access all the notifications from one place. \n\nTap Here To Dismiss</string>
     <string name="tip_more_actions_title">More Actions</string>
     <string name="tip_more_actions_text">Tap here for more options such as viewing likes. \n\nTap Here To Dismiss</string>
     <string name="tip_compose_message_title">Compose Message</string>
-    <string name="tip_compose_message_text">Send a messageBase to this current user. \n\nTap Here To Dismiss</string>
+    <string name="tip_compose_message_text">Send a message to this current user. \n\nTap Here To Dismiss</string>
 
     <!--Media attachments on the reply activity-->
     <string name="attach_media">Insert Media</string>
@@ -383,15 +365,29 @@
         <item>8</item>
     </string-array>
 
+    <string name="pref_title_update_channel">Update Channel</string>
+
+    <string-array name="pref_titles_channel_entries">
+        <item>Stable</item>
+        <item>Beta (Experimental)</item>
+    </string-array>
+
+    <!-- Do Not Translate This -->
+    <string-array name="pref_values_channel_entries">
+        <item>master</item>
+        <item>develop</item>
+    </string-array>
+
     <!--Do not translate anything that is starts with pref_key-->
     <string name="pref_key_startup_page" translatable="false">general_startup_page</string>
+    <string name="pref_key_update_channel" translatable="false">_updateChannel</string>
 
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_header_notifications_summary">Configure how notifications are handled</string>
 
-    <string name="pref_title_new_message_notifications">New messageBase notifications</string>
+    <string name="pref_title_new_message_notifications">New message notifications</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
     <string name="pref_title_ringtone">Notification Ringtone</string>
@@ -669,7 +665,7 @@
     <string name="text_anime_length">%d Minutes</string>
     <string name="text_anime_score">%d%% Mean</string>
 
-    <string name="text_message_to">Send a messageBase to %s</string>
+    <string name="text_message_to">Send a message to %s</string>
     <string name="title_bottom_sheet_favourites">User Favourites</string>
     <string name="warning_anime_is_airing">Anime is still airing!</string>
     <string name="warning_anime_not_airing">Anime hasn\'t aired yet!</string>
@@ -848,6 +844,14 @@
     <string name="anime_time_days">%.1f Days</string>
     <string name="anime_time_years">%.1f Years</string>
 
+    <string-array name="media_status">
+        <item>All</item>
+        <item>Finished</item>
+        <item>Releasing</item>
+        <item>Not Yet Released</item>
+        <item>Canceled</item>
+    </string-array>
+
     <string-array name="media_formats">
         <item>All</item>
         <item>TV</item>
@@ -860,16 +864,6 @@
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
-    </string-array>
-
-    <string-array name="media_sources">
-        <item>All</item>
-        <item>Original</item>
-        <item>Manga</item>
-        <item>Light Novel</item>
-        <item>Visual Novel</item>
-        <item>Video Game</item>
-        <item>Other</item>
     </string-array>
 
     <string-array name="reviews_title">
@@ -971,4 +965,6 @@
     <string name="title_series_stats">Series Stats</string>
     <string name="error_unresolved_type">Unable to resolve content</string>
 
+    <string name="menu_title_tags">Tags</string>
+    <string name="app_filter_tags">Series Tags?</string>
 </resources>

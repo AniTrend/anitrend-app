@@ -8,11 +8,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.view.fragment.detail.NotificationFragment;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

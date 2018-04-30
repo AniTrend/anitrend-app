@@ -5,8 +5,6 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
-        <import type="com.mxt.anitrend.util.CompatUtil" />
-        <import type="com.mxt.anitrend.util.MediaUtil" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -72,15 +70,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/md_margin" />
 
-                <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                <com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/md_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
-                    android:textColor="@color/white"
-                    android:background="?colorAccent"
-                    tools:text="TV" />
+                    app:media="@{model}"
+                    tools:text="2015 - TV" />
 
             </LinearLayout>
 

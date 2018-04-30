@@ -1,6 +1,6 @@
-query StudioMedia($id: Int!, $page: Int, $perPage: Int, $seriesSort: [MediaSort] = POPULARITY) {
+query StudioMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPULARITY) {
   Studio(id: $id) {
-    media(page: $page, perPage: $perPage, sort: $seriesSort) {
+    media(page: $page, perPage: $perPage, sort: $sort) {
       ... on MediaConnection {
         pageInfo {
           ... on PageInfo {

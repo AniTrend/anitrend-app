@@ -33,6 +33,6 @@ public class GraphUtil {
      * TODO: 2018/03/25  Add preference keys that should trigger a refresh, such as sorting and ordering
      */
     public static boolean isKeyFilter(String preferenceKey) {
-        return false;
+        return true;
     }
 }

@@ -60,7 +60,7 @@ public class BasePresenter extends CommonPresenter {
                     favouriteGenres = Stream.of(userStats.getFavouredGenresOverview())
                             .sortBy(genreStat -> - genreStat.getAmount())
                             .map(GenreStats::getGenre)
-                            .limit(4).toList();
+                            .limit(3).toList();
 
                 }
             }

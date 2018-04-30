@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;

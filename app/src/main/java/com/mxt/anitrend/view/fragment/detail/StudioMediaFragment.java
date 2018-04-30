@@ -3,9 +3,13 @@ package com.mxt.anitrend.view.fragment.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -14,7 +18,9 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
+import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
@@ -44,8 +50,43 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
         if(getArguments() != null)
             id = getArguments().getLong(KeyUtil.arg_id);
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        isFilterable = true;
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_genre).setVisible(false);
+        menu.findItem(R.id.action_tag).setVisible(false);
+        menu.findItem(R.id.action_type).setVisible(false);
+        menu.findItem(R.id.action_year).setVisible(false);
+        menu.findItem(R.id.action_status).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(getContext() != null)
+            switch (item.getItemId()) {
+                case R.id.action_sort:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.MediaSortType,
+                            getPresenter().getApplicationPref().getMediaSort()), CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().setMediaSort(KeyUtil.MediaSortType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+                case R.id.action_order:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+            }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -58,9 +99,11 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
 
     @Override
     public void makeRequest() {
+        ApplicationPref pref = getPresenter().getApplicationPref();
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, id)
-                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.STUDIO_MEDIA_REQ, getContext());
     }

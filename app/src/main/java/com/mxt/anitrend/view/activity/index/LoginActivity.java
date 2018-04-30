@@ -21,7 +21,6 @@ import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.MessageBase;
 import com.mxt.anitrend.presenter.activity.LoginPresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.service.AuthenticatorService;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;

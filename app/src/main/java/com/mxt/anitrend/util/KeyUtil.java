@@ -250,7 +250,7 @@ public interface KeyUtil {
     // ------------------------------------------------------------------------------------
 
     String ID = "ID", MEDIA_ID = "MEDIA_ID", SCORE = "SCORE", STATUS = "STATUS", SEARCH_MATCH = "SEARCH_MATCH", ROLE = "ROLE", LANGUAGE = "LANGUAGE",
-            DATE = "DATE", POPULARITY = "POPULARITY", TRENDING = "TRENDING", EPISODE = "TRENDING";
+            DATE = "DATE", POPULARITY = "POPULARITY", TRENDING = "TRENDING", EPISODE = "EPISODE";
 
 
     String ASC = "", DESC = "_DESC";
@@ -342,7 +342,7 @@ public interface KeyUtil {
 
 
     String[] MediaSeason = {WINTER, SPRING, SUMMER, FALL};
-    String[] MediaStatus = {FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED};
+    String[] MediaStatus = {null, FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED};
     String[] MediaSource = {null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER};
     String[] MediaFormat = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT};
     String[] MediaRankType = {RATED, POPULAR};
@@ -444,10 +444,10 @@ public interface KeyUtil {
 
 
     // ------------------------------------------------------------------------------------
-    // Edge Type Attributes
+    // Update Channels
     // ------------------------------------------------------------------------------------
 
-    String STABLE = "master", BETA = "develop";
+    String STABLE = "", BETA = "develop";
 
     @StringDef({STABLE, BETA})
     @interface Channel {}

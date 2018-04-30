@@ -209,6 +209,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_startup_page)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_update_channel)));
         }
 
         @Override

@@ -21,12 +21,6 @@ public final class AnalyticsUtil {
             .logEvent(key, params);
     }
 
-    public static void logEvent(ApplicationPref applicationPref, Context context, @NonNull String key, @NonNull String params) {
-        if (applicationPref.isAuthenticated() && context != null)
-            ((App) context.getApplicationContext()).getAnalytics()
-                    .setUserProperty(key, params);
-    }
-
     public static void logCurrentScreen(FragmentActivity fragmentActivity, @NonNull String tag) {
         if(fragmentActivity != null)
             ((App) fragmentActivity.getApplicationContext()).getAnalytics()

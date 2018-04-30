@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import com.mxt.anitrend.model.entity.group.EntityGroup;
 import com.mxt.anitrend.util.KeyUtil;
 
-import io.objectbox.annotation.Entity;
-import io.objectbox.annotation.Id;
-
 /**
  * Created by max on 2018/02/24.
  * Notification base meta data class

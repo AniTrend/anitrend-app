@@ -38,6 +38,12 @@
                 app:showAsAction="ifRoom" />
 
             <item
+                android:id="@+id/action_tag"
+                android:icon="@drawable/ic_tag_grey_600_24dp"
+                android:title="@string/menu_title_tags"
+                app:showAsAction="ifRoom" />
+
+            <item
                 android:id="@+id/action_type"
                 android:icon="@drawable/ic_type_grey_600_24dp"
                 android:title="@string/menu_title_formats"

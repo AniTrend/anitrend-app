@@ -3,7 +3,6 @@ package com.mxt.anitrend.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,13 +13,11 @@ import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
-import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 

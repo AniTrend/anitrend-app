@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter;
-import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;

@@ -11,13 +11,11 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAvatarIndicatorBinding;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.NotificationActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.activity.index.LoginActivity;
@@ -64,18 +62,12 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
 
     private void checkLastSyncTime() {
         if(presenter.getApplicationPref().isAuthenticated()) {
-            if ((currentUser = presenter.getDatabase().getCurrentUser()) != null) {
-                if (currentUser.getUnreadNotificationCount() < 1)
-                    hideNotificationCountWidget();
-                else
-                    showNotificationWidget();
-            } else {
+            currentUser = presenter.getDatabase().getCurrentUser();
+            if (currentUser.getUnreadNotificationCount() > 0)
+                showNotificationWidget();
+            else
                 hideNotificationCountWidget();
-            }
-            if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 2))
-                mLastSynced = System.currentTimeMillis();
             AvatarImageView.setImage(binding.userAvatar, currentUser.getAvatar());
-
         }
     }
 
@@ -89,23 +81,24 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     public void onModelChanged(BaseConsumer<User> consumer) {
         if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ) {
             presenter.getDatabase().saveCurrentUser(consumer.getChangeModel());
+            if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 15))
+                mLastSynced = System.currentTimeMillis();
             checkLastSyncTime();
         }
     }
 
     private void showNotificationWidget() {
         binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
+        binding.notificationCount.setVisibility(VISIBLE);
         binding.container.setVisibility(VISIBLE);
+        invalidate();
     }
 
     private void hideNotificationCountWidget() {
         binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
+        binding.notificationCount.setVisibility(GONE);
         binding.container.setVisibility(GONE);
-    }
-
-    private void resetCounter() {
-        currentUser.setUnreadNotificationCount(0);
-        hideNotificationCountWidget();
+        invalidate();
     }
 
     @Override
@@ -113,10 +106,9 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
         if(presenter.getApplicationPref().isAuthenticated()) {
             if (view.getId() == R.id.user_avatar) {
                 Intent intent;
-                if (currentUser.getUnreadNotificationCount() > 0) {
-                    resetCounter();
+                if (currentUser.getUnreadNotificationCount() > 0)
                     intent = new Intent(getContext(), NotificationActivity.class);
-                } else {
+                else {
                     intent = new Intent(getContext(), ProfileActivity.class);
                     intent.putExtra(KeyUtil.arg_userName, currentUser.getName());
                 }

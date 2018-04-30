@@ -22,7 +22,7 @@ public class DownloaderService {
      */
     public static void downloadNewVersion(Context context, VersionBase versionBase) {
         ApplicationPref applicationPref = new ApplicationPref(context);
-        String downloadLink = String.format(RepositoryModel.DOWNLOAD_LINK, applicationPref.getChannel());
+        String downloadLink = String.format(RepositoryModel.DOWNLOAD_LINK, applicationPref.getUpdateChannel());
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadLink));
         request.setTitle(String.format(Locale.getDefault(), "AniTrend V%s RC%d.apk", versionBase.getVersion(), versionBase.getCode()));

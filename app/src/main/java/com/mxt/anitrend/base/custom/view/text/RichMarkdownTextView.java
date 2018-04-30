@@ -5,7 +5,6 @@ import android.databinding.BindingAdapter;
 import android.support.annotation.StringRes;
 import android.support.v4.text.util.LinkifyCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;

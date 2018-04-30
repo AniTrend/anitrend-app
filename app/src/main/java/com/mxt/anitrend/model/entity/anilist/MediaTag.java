@@ -19,6 +19,7 @@ public class MediaTag implements Parcelable {
     private boolean isGeneralSpoiler;
     private boolean isMediaSpoiler;
     private boolean isAdult;
+    private boolean isSelected;
 
     public MediaTag() {
 
@@ -33,6 +34,7 @@ public class MediaTag implements Parcelable {
         isGeneralSpoiler = in.readByte() != 0;
         isMediaSpoiler = in.readByte() != 0;
         isAdult = in.readByte() != 0;
+        isSelected = in.readByte() != 0;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class MediaTag implements Parcelable {
         dest.writeByte((byte) (isGeneralSpoiler ? 1 : 0));
         dest.writeByte((byte) (isMediaSpoiler ? 1 : 0));
         dest.writeByte((byte) (isAdult ? 1 : 0));
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 
     @Override
@@ -94,6 +97,10 @@ public class MediaTag implements Parcelable {
 
     public boolean isAdult() {
         return isAdult;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 
     public void setId(long id) {

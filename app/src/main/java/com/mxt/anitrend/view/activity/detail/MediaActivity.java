@@ -81,10 +81,13 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
         menu.findItem(R.id.action_manage).setVisible(isAuth);
+        menu.findItem(R.id.action_share).setVisible(false);
 
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
+            if(model != null)
+                favouriteWidget.setModel(model);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -97,6 +100,10 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(model.getId()).build(this);
                     mediaActionUtil.startSeriesAction();
+                    break;
+                case R.id.action_share_compact:
+                    break;
+                case R.id.action_share_full:
                     break;
             }
         } else

@@ -3,9 +3,13 @@ package com.mxt.anitrend.view.fragment.list;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.mxt.anitrend.R;
@@ -16,7 +20,9 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
@@ -49,8 +55,42 @@ public class AiringListFragment extends FragmentBaseList<MediaList, PageContaine
         super.onCreate(savedInstanceState);
         setPresenter(new BasePresenter(getContext()));
         isPager = true; mColumnSize = R.integer.grid_list_x2;
-        hasSubscriber = true;
+        hasSubscriber = true; isFilterable = true;
         setViewModel(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_genre).setVisible(false);
+        menu.findItem(R.id.action_tag).setVisible(false);
+        menu.findItem(R.id.action_type).setVisible(false);
+        menu.findItem(R.id.action_year).setVisible(false);
+        menu.findItem(R.id.action_status).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (getContext() != null)
+            switch (item.getItemId()) {
+                case R.id.action_sort:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.MediaListSortType,
+                            getPresenter().getApplicationPref().getMediaListSort()), CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().setMediaListSort(KeyUtil.MediaListSortType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+                case R.id.action_order:
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                            (dialog, which) -> {
+                                if(which == DialogAction.POSITIVE)
+                                    getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
+                            });
+                    return true;
+            }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -68,11 +108,16 @@ public class AiringListFragment extends FragmentBaseList<MediaList, PageContaine
      */
     @Override
     public void makeRequest() {
+       ApplicationPref pref = getPresenter().getApplicationPref();
+
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_type, KeyUtil.ANIME)
                 .putVariable(KeyUtil.arg_status, KeyUtil.CURRENT)
+                .putVariable(KeyUtil.arg_sort, pref.getMediaListSort() + pref.getSortOrder())
+                .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_BROWSE_REQ, getContext());
     }

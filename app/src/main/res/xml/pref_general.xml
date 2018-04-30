@@ -9,4 +9,11 @@
         android:key="@string/pref_key_startup_page"
         android:title="@string/pref_title_startup_page" />
 
+    <ListPreference
+        android:defaultValue="master"
+        android:entries="@array/pref_titles_channel_entries"
+        android:entryValues="@array/pref_values_channel_entries"
+        android:key="@string/pref_key_update_channel"
+        android:title="@string/pref_title_update_channel" />
+
 </PreferenceScreen>
