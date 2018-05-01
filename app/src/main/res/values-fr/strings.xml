@@ -912,7 +912,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Main Studio</string>
 
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register">Create Account</a>]]></string>
+    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register/">Create Account</a>]]></string>
 
     <string name="title_select_all">Select All</string>
 
@@ -945,4 +945,6 @@
 
     <string name="menu_title_tags">Tags</string>
     <string name="app_filter_tags">Series Tags?</string>
+
+    <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
 </resources>

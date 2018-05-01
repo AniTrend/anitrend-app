@@ -34,9 +34,18 @@
                 android:textStyle="bold"
                 android:text="@string/anitrend_sign_in" />
 
+            <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="?colorAccent"
+                android:text="@string/anitrend_sign_in_browser"/>
+
             <android.support.v4.widget.Space
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/xl_margin" />
+                android:layout_height="@dimen/lg_margin" />
 
             <ViewFlipper
                 android:id="@+id/widget_flipper"
@@ -60,10 +69,11 @@
                     app:cardUseCompatPadding="true"
                     app:contentPadding="@dimen/lg_margin">
 
-                    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/sm_margin"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:text="@string/sign_into_anilist"/>
 
                 </android.support.v7.widget.CardView>
@@ -88,9 +98,10 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textAlignment="center"
+                android:textStyle="italic"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:padding="@dimen/md_margin"
-                app:textHtml="@{@string/create_new_account}"
+                app:basicHtml="@{@string/create_new_account}"
                 tools:text="@string/create_account"/>
 
         </LinearLayout>

@@ -33,9 +33,6 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
-        message {
-          ...feedMessage
-        }
         user {
           ...userBase
         }
@@ -45,9 +42,7 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
-        activity {
-          ...feedList
-        }
+        activityId
         user {
           ...userBase
         }
@@ -57,9 +52,7 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
-        activity {
-          ...feedList
-        }
+        activityId
         user {
           ...userBase
         }
@@ -69,9 +62,7 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
-        activity {
-          ...feedList
-        }
+        activityId
         user {
           ...userBase
         }
@@ -81,9 +72,7 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
-        activity {
-          ...feedList
-        }
+        activityId
         user {
           ...userBase
         }
@@ -93,30 +82,45 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
+        user {
+          ...userBase
+        }
       }
       ... on ThreadCommentReplyNotification {
         id
         type
         createdAt
         context
+        user {
+          ...userBase
+        }
       }
       ... on ThreadCommentSubscribedNotification {
         id
         type
         createdAt
         context
+        user {
+          ...userBase
+        }
       }
       ... on ThreadCommentLikeNotification {
         id
         type
         createdAt
         context
+        user {
+          ...userBase
+        }
       }
       ... on ThreadLikeNotification {
         id
         type
         createdAt
         context
+        user {
+          ...userBase
+        }
       }
     }
   }
@@ -187,127 +191,5 @@ fragment userBase on User {
     }
     bannerImage
     isFollowing
-  }
-}
-
-fragment feedList on ActivityUnion {
-  ... on ListActivity {
-    id
-    status
-    progress
-    createdAt
-    type
-    user {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
-    replyCount
-    likes {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
-    media {
-      ...mediaBase
-    }
-  }
-  ... on TextActivity {
-    id
-    text(asHtml: false)
-    createdAt
-    type
-    user {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
-    replyCount
-    likes {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
-  }
-}
-
-fragment feedMessage on MessageActivity {
-  ... on MessageActivity {
-    id
-    message(asHtml: false)
-    createdAt
-    type
-    messenger {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
-    recipient {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
-    replyCount
-    likes {
-      ... on User {
-        id
-        name
-        avatar {
-          ... on UserAvatar {
-            large
-            medium
-          }
-        }
-        isFollowing
-      }
-    }
   }
 }

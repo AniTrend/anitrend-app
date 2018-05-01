@@ -17,10 +17,6 @@ public class NotificationBase extends EntityGroup implements Parcelable {
     private long createdAt;
     private String context;
 
-    public NotificationBase() {
-        // empty constructor required by object box
-    }
-
     protected NotificationBase(Parcel in) {
         id = in.readLong();
         type = in.readString();
@@ -55,10 +51,6 @@ public class NotificationBase extends EntityGroup implements Parcelable {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public @KeyUtil.NotificationType String getType() {

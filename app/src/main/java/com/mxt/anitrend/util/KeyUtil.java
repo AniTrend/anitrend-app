@@ -447,7 +447,7 @@ public interface KeyUtil {
     // Update Channels
     // ------------------------------------------------------------------------------------
 
-    String STABLE = "", BETA = "develop";
+    String STABLE = "master", BETA = "develop";
 
     @StringDef({STABLE, BETA})
     @interface Channel {}

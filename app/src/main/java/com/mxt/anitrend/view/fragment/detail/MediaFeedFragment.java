@@ -9,6 +9,7 @@ import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
 /**
  * Created by max on 2018/03/24.
+ * Media feed list fragment for media types, both anime and manga
  */
 
 public class MediaFeedFragment extends FeedListFragment {

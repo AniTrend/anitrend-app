@@ -180,17 +180,17 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                     break;
                 case KeyUtil.ACTIVITY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_REPLY:
                     intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_REPLY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivity().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.THREAD_LIKE:

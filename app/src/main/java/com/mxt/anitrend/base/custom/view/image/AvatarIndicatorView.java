@@ -63,11 +63,15 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     private void checkLastSyncTime() {
         if(presenter.getApplicationPref().isAuthenticated()) {
             currentUser = presenter.getDatabase().getCurrentUser();
-            if (currentUser.getUnreadNotificationCount() > 0)
+            if (currentUser.getUnreadNotificationCount() > 0) {
+                binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
                 showNotificationWidget();
-            else
+            }
+            else {
                 hideNotificationCountWidget();
+            }
             AvatarImageView.setImage(binding.userAvatar, currentUser.getAvatar());
+            invalidate();
         }
     }
 
@@ -88,17 +92,13 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     }
 
     private void showNotificationWidget() {
-        binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
         binding.notificationCount.setVisibility(VISIBLE);
         binding.container.setVisibility(VISIBLE);
-        invalidate();
     }
 
     private void hideNotificationCountWidget() {
-        binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
         binding.notificationCount.setVisibility(GONE);
         binding.container.setVisibility(GONE);
-        invalidate();
     }
 
     @Override
@@ -106,8 +106,10 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
         if(presenter.getApplicationPref().isAuthenticated()) {
             if (view.getId() == R.id.user_avatar) {
                 Intent intent;
-                if (currentUser.getUnreadNotificationCount() > 0)
+                if (currentUser.getUnreadNotificationCount() > 0) {
                     intent = new Intent(getContext(), NotificationActivity.class);
+                    hideNotificationCountWidget();
+                }
                 else {
                     intent = new Intent(getContext(), ProfileActivity.class);
                     intent.putExtra(KeyUtil.arg_userName, currentUser.getName());

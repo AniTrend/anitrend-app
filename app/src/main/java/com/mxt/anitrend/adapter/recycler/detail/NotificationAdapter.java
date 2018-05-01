@@ -110,12 +110,12 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
                     binding.notificationContent.setText(model.getContext());
                     break;
                 case KeyUtil.THREAD_COMMENT_MENTION:
-                    binding.notificationSubject.setText(R.string.notification_user_activity_mention);
+                    binding.notificationSubject.setText(R.string.notification_user_comment_forum);
                     binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(model.getContext());
                     break;
                 case KeyUtil.THREAD_SUBSCRIBED:
-                    binding.notificationSubject.setText(R.string.notification_default);
+                    binding.notificationSubject.setText(R.string.notification_user_comment_forum);
                     binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(model.getContext());
                     break;

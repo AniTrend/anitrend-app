@@ -470,10 +470,9 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<User> consumer) {
-        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ) {
+        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ && consumer.getChangeModel() != null && consumer.getChangeModel().getUnreadNotificationCount() > 0)
             NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
-        }
     }
 }
 

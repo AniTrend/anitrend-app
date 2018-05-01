@@ -15,8 +15,8 @@ import java.util.List;
 
 public class Notification extends NotificationBase {
 
-    // activity notifications
-    private FeedList activity;
+    // activity id
+    private long activityId;
 
     // following or activity notification
     private UserBase user;
@@ -28,7 +28,7 @@ public class Notification extends NotificationBase {
 
     protected Notification(Parcel in) {
         super(in);
-        activity = in.readParcelable(FeedList.class.getClassLoader());
+        activityId = in.readLong();
         user = in.readParcelable(UserBase.class.getClassLoader());
         episode = in.readInt();
         contexts = in.createStringArrayList();
@@ -38,7 +38,7 @@ public class Notification extends NotificationBase {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeParcelable(activity, flags);
+        dest.writeLong(activityId);
         dest.writeParcelable(user, flags);
         dest.writeInt(episode);
         dest.writeStringList(contexts);
@@ -50,9 +50,6 @@ public class Notification extends NotificationBase {
         return super.describeContents();
     }
 
-    public FeedList getActivity() {
-        return activity;
-    }
 
     public UserBase getUser() {
         return user;
@@ -68,5 +65,9 @@ public class Notification extends NotificationBase {
 
     public MediaBase getMedia() {
         return media;
+    }
+
+    public long getActivityId() {
+        return activityId;
     }
 }

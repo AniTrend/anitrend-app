@@ -5,6 +5,7 @@ import android.databinding.BindingAdapter;
 import android.support.annotation.StringRes;
 import android.support.v4.text.util.LinkifyCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -64,6 +65,12 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, String html) {
         Spanned markdownSpan = MarkDown.convert(html, richMarkdownTextView.getContext(), richMarkdownTextView);
         richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
+    }
+
+    @BindingAdapter("basicHtml")
+    public static void basicText(RichMarkdownTextView richMarkdownTextView, String html) {
+        Spanned htmlSpan = Html.fromHtml(html);
+        richMarkdownTextView.setText(htmlSpan);
     }
 
     @BindingAdapter("textHtml")

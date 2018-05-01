@@ -62,8 +62,6 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
         onRefresh();
     };
 
-    private BottomSheetListBinding binding;
-
     public static BottomSheetListUsers newInstance(Bundle bundle) {
         BottomSheetListUsers fragment = new BottomSheetListUsers();
         fragment.setArguments(bundle);
@@ -93,7 +91,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        binding = BottomSheetListBinding.inflate(CompatUtil.getLayoutInflater(getActivity()));
+        BottomSheetListBinding binding = BottomSheetListBinding.inflate(CompatUtil.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
         unbinder = ButterKnife.bind(this, dialog);
         createBottomSheetBehavior(binding.getRoot());

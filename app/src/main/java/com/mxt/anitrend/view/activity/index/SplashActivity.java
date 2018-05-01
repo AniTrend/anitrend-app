@@ -71,8 +71,9 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
             getViewModel().getParams().putString(KeyUtil.arg_branch_name, getPresenter().getApplicationPref().getUpdateChannel());
             getViewModel().requestData(KeyUtil.UPDATE_CHECKER_REQ, getApplicationContext());
         }
-        else
+        else {
             updateUI();
+        }
     }
 
     /**
