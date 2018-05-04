@@ -245,6 +245,18 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                             intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
+                        case R.id.recipient_avatar:
+                            intent = new Intent(getActivity(), ProfileActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra(KeyUtil.arg_id, data.getRecipient().getId());
+                            CompatUtil.startRevealAnim(getActivity(), target, intent);
+                            break;
+                        case R.id.messenger_avatar:
+                            intent = new Intent(getActivity(), ProfileActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra(KeyUtil.arg_id, data.getMessenger().getId());
+                            CompatUtil.startRevealAnim(getActivity(), target, intent);
+                            break;
                     }
                 }
 

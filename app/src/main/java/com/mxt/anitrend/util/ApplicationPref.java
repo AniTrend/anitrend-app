@@ -23,8 +23,8 @@ public class ApplicationPref {
     private final String _isAuthenticated = "_isAuthenticated";
 
     /** Application Base Options */
-    private final String _isLightTheme = "_isLightTheme";
-    private final String _updateChannel = "_updateChannel";
+    public static final String _isLightTheme = "_isLightTheme";
+    public static final String _updateChannel = "_updateChannel";
 
     /** Api Keys */
     private final String _sortOrder = "_sortOrder";

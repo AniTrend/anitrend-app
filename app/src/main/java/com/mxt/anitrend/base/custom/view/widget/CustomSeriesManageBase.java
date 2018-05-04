@@ -10,13 +10,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
+import com.annimon.stream.Stream;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+
+import java.util.List;
 
 /**
  * Created by max on 2018/01/20.
@@ -76,35 +81,12 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         return model;
     }
 
-    public Bundle getParam() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
-        if(model.getId() > 0)
-            queryContainer.putVariable(KeyUtil.arg_id, model.getId());
-        queryContainer.putVariable(KeyUtil.arg_mediaId, model.getMediaId());
-        queryContainer.putVariable(KeyUtil.arg_listStatus, model.getStatus());
-        queryContainer.putVariable(KeyUtil.arg_listScore_raw, model.getScore());
-        queryContainer.putVariable(KeyUtil.arg_listNotes, model.getNotes());
-        queryContainer.putVariable(KeyUtil.arg_listPrivate, model.isHidden());
-        queryContainer.putVariable(KeyUtil.arg_listPriority, model.getPriority());
-        queryContainer.putVariable(KeyUtil.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
-
-        // TODO: 2018/03/25 Check if custom lists are enabled and work some magic
-        queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.getAdvancedScores());
-        queryContainer.putVariable(KeyUtil.arg_listCustom, model.getCustomLists());
-
-        queryContainer.putVariable(KeyUtil.arg_listRepeat, model.getRepeat());
-        queryContainer.putVariable(KeyUtil.arg_listProgress, model.getProgress());
-        queryContainer.putVariable(KeyUtil.arg_listProgressVolumes, model.getProgressVolumes());
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
-        return bundle;
-    }
-
     /**
-     * save current views states into the model
+     * Saves the current views states into the model
+     * and returns a bundle of the params
+     * @see com.mxt.anitrend.util.MediaListUtil
      */
-    public abstract void persistChanges();
+    public abstract Bundle persistChanges();
 
     protected abstract void populateFields();
 

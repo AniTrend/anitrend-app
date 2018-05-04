@@ -48,6 +48,13 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         this.isLowRamDevice = CompatUtil.isLowRamDevice(this.context);
     }
 
+    @Override
+    public long getItemId(int position) {
+        if(!hasStableIds())
+            return super.getItemId(position);
+        return data.get(position).hashCode();
+    }
+
     private void setupDataStore(List<T> data) {
         if(data != null) {
             this.data = new ArrayList<>(data);
@@ -109,8 +116,9 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         notifyItemRemoved(position);
     }
 
+
     @Override
-    public abstract RecyclerViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
+    public abstract @NonNull RecyclerViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
     @Override
     public void onViewAttachedToWindow(@NonNull RecyclerViewHolder<T> holder) {
@@ -174,8 +182,8 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     }
 
     public void clearItems() {
-        //data = new ArrayList<>();
-        //clone = new ArrayList<>();
+        // data = new ArrayList<>();
+        // clone = new ArrayList<>();
         // notifyDataSetChanged();
     }
 
@@ -215,7 +223,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
      *
      * @see BaseAnimation
      */
-    public BaseAnimation getCustomAnimation() {
+    private BaseAnimation getCustomAnimation() {
         if(customAnimation == null)
             customAnimation = new SlideInAnimation();
         return customAnimation;

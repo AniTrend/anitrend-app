@@ -123,7 +123,8 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                             args.putString(KeyUtil.arg_activity_tag, data.getGenre());
                             args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
                                     .setCompactType(true)
-                                    .setFilterDisabled(true));
+                                    .setBasicFilter(true)
+                                    .setFilterDisabled(false));
                             intent.putExtras(args);
                             startActivity(intent);
                             break;
@@ -157,7 +158,8 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                                                 args.putString(KeyUtil.arg_activity_tag, data.getName());
                                                 args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
                                                         .setCompactType(true)
-                                                        .setFilterDisabled(true));
+                                                        .setBasicFilter(true)
+                                                        .setFilterDisabled(false));
                                                 intent.putExtras(args);
                                                 startActivity(intent);
                                                 break;

@@ -29,10 +29,10 @@ public class GraphUtil {
 
 
     /**
-     * Used to check if the newly applied preference key is a filter type that must refresh the application
-     * TODO: 2018/03/25  Add preference keys that should trigger a refresh, such as sorting and ordering
+     * Used to check if the newly applied preference key is a should trigger an application refresh
      */
     public static boolean isKeyFilter(String preferenceKey) {
-        return true;
+        return !CompatUtil.equals(preferenceKey, ApplicationPref._isLightTheme) &&
+               !CompatUtil.equals(preferenceKey, ApplicationPref._updateChannel);
     }
 }

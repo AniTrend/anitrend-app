@@ -85,6 +85,7 @@ public abstract class RecyclerScrollListener extends RecyclerView.OnScrollListen
         mPreviousTotal = 0;
         mCurrentPage = 1;
         mCurrentOffset = 0;
+        pageInfo = null;
     }
 
     /**

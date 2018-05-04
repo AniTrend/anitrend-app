@@ -268,12 +268,11 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
      */
     @Override
     public void onRefresh() {
-        if(swipeRefreshLayout.isRefreshing() || !stateLayout.isContent()) {
-            if (mAdapter != null)
-                mAdapter.clearItems();
+        isLimit = false; model = null;
+        if (mAdapter != null)
+            mAdapter.clearItems();
+        if(getPresenter() != null)
             getPresenter().onRefreshPage();
-            model = null;
-        }
         makeRequest();
     }
 

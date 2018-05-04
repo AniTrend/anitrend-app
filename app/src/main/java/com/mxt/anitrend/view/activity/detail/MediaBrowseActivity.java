@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by max on 2018/01/27.
- * browse activity for studios, tags, genres etc.
+ * browse activity for rankings, tags and genres.
  */
 
 public class MediaBrowseActivity extends ActivityBase<MediaBase, MediaPresenter> {

@@ -37,7 +37,7 @@ public class IntentBundleUtil {
         return intent.getData();
     }
 
-    private @Nullable  String[] hasDepth(String key) {
+    private @Nullable String[] hasDepth(String key) {
         if(key.contains("/"))
             return key.split("/");
         return null;
@@ -60,14 +60,14 @@ public class IntentBundleUtil {
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtil.arg_mediaType, type);
+                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
                     break;
             case KeyUtil.DEEP_LINK_ANIME:
                 if ((splitKeys = hasDepth(lastKey)) != null)
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
                 else
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
-                intent.putExtra(KeyUtil.arg_mediaType, type);
+                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
                     break;
             case KeyUtil.DEEP_LINK_CHARACTER:
                 if ((splitKeys = hasDepth(lastKey)) != null)

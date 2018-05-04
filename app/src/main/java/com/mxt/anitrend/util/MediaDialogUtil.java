@@ -2,6 +2,7 @@ package com.mxt.anitrend.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -72,10 +73,9 @@ final class MediaDialogUtil extends DialogUtil {
         ProgressDialog progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request);
         progressDialog.show();
 
-        seriesManageBase.persistChanges();
-
         WidgetPresenter<MediaList> presenter = new WidgetPresenter<>(context);
-        presenter.setParams(seriesManageBase.getParam());
+        Bundle params = seriesManageBase.persistChanges();
+        presenter.setParams(params);
 
         @KeyUtil.RequestType int requestType = KeyUtil.MUT_SAVE_MEDIA_LIST;
 
@@ -127,7 +127,8 @@ final class MediaDialogUtil extends DialogUtil {
         seriesManageBase.persistChanges();
 
         WidgetPresenter<DeleteState> presenter = new WidgetPresenter<>(context);
-        presenter.setParams(seriesManageBase.getParam());
+        Bundle params = seriesManageBase.persistChanges();
+        presenter.setParams(params);
 
         @KeyUtil.RequestType int requestType = KeyUtil.MUT_DELETE_MEDIA_LIST;
 

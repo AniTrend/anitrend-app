@@ -33,6 +33,7 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
+		activityId
         user {
           ...userBase
         }

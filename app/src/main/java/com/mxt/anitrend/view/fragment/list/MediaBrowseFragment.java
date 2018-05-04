@@ -82,6 +82,11 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        if(mediaBrowseUtil.isBasicFilter()) {
+            menu.findItem(R.id.action_type).setVisible(false);
+            menu.findItem(R.id.action_year).setVisible(false);
+            menu.findItem(R.id.action_status).setVisible(false);
+        }
         menu.findItem(R.id.action_genre).setVisible(false);
         menu.findItem(R.id.action_tag).setVisible(false);
     }
@@ -165,17 +170,18 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                 .putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaSort());
 
         if(isFilterable) {
-            if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
-                queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
-                        "%d%%", getPresenter().getApplicationPref().getSeasonYear()));
-            else
-                queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+            if(!mediaBrowseUtil.isBasicFilter()) {
+                if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
+                    queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
+                            "%d%%", getPresenter().getApplicationPref().getSeasonYear()));
+                else
+                    queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
 
-            queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder())
-                    .putVariable(KeyUtil.arg_status, pref.getMediaStatus())
-                    .putVariable(KeyUtil.arg_format, pref.getMediaFormat());
+                queryContainer.putVariable(KeyUtil.arg_status, pref.getMediaStatus())
+                        .putVariable(KeyUtil.arg_format, pref.getMediaFormat());
+            }
+            queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder());
         }
-
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
     }

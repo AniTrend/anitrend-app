@@ -36,7 +36,7 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<MediaList> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaList> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new SeriesListViewHolder(AdapterSeriesListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 

@@ -283,20 +283,11 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      */
     @Override
     public void onRefresh() {
-        // previous configuration
-        /*model = null;
-        if(mAdapter != null)
+        isLimit = false; model = null;
+        if (mAdapter != null)
             mAdapter.clearItems();
-        if (isPager && getPresenter() != null)
+        if(getPresenter() != null)
             getPresenter().onRefreshPage();
-        makeRequest(); */
-        if(swipeRefreshLayout.isRefreshing() || !stateLayout.isContent()) {
-            if (mAdapter != null)
-                mAdapter.clearItems();
-            getPresenter().onRefreshPage();
-            isLimit = false;
-            model = null;
-        }
         makeRequest();
     }
 

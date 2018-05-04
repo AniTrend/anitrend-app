@@ -38,7 +38,7 @@ import java.util.Collections;
 
 /**
  * Created by max on 2017/12/18.
- * series list fragment
+ * media list fragment
  */
 
 public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer<MediaList>, MediaPresenter> implements BaseConsumer.onRequestModelChange<MediaList> {
@@ -183,12 +183,6 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 break;
         }
     }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        onRefresh();
-    }
-
 
     @SuppressLint("SwitchIntDef")
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)

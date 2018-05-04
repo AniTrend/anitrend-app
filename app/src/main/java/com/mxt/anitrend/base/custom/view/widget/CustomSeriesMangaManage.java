@@ -2,6 +2,7 @@ package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -14,6 +15,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionMangaBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 /**
@@ -51,10 +53,12 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
     }
 
     /**
-     * save current views states into the model
+     * Saves the current views states into the model
+     * and returns a bundle of the params
+     * @see com.mxt.anitrend.util.MediaListUtil
      */
     @Override
-    public void persistChanges() {
+    public Bundle persistChanges() {
         model.setProgress(!TextUtils.isEmpty(binding.diaCurrentChapters.getText())? Integer.valueOf(binding.diaCurrentChapters.getText().toString()): 0);
         model.setRepeat(!TextUtils.isEmpty(binding.diaCurrentReread.getText()) ? Integer.valueOf(binding.diaCurrentReread.getText().toString()): 0);
         model.setProgressVolumes(!TextUtils.isEmpty(binding.diaCurrentVolumes.getText()) ? Integer.valueOf(binding.diaCurrentVolumes.getText().toString()): 0);
@@ -62,6 +66,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
+        return MediaListUtil.getMediaListParams(model);
     }
 
     @Override

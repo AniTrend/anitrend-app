@@ -154,12 +154,18 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         else
             switch (data.getType()) {
                 case KeyUtil.ACTIVITY_MESSAGE:
-                    intent = new Intent(getActivity(), MessageActivity.class);
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.FOLLOWING:
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.ACTIVITY_MENTION:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.THREAD_COMMENT_MENTION:
