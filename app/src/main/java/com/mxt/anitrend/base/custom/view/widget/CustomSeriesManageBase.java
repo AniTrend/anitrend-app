@@ -10,18 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
-import com.annimon.stream.Stream;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
-import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
-import com.mxt.anitrend.util.KeyUtil;
-
-import java.util.List;
 
 /**
  * Created by max on 2018/01/20.

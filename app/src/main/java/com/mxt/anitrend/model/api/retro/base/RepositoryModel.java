@@ -14,6 +14,6 @@ public interface RepositoryModel {
 
     String DOWNLOAD_LINK = "https://github.com/AniTrend/anitrend-app/releases/download/%s/app-release.apk";
 
-    @GET("/AniTrend/anitrend-app/tree/{branch}/app/.meta/version.json")
+    @GET("/AniTrend/anitrend-app/raw/{branch}/app/.meta/version.json")
     Call<VersionBase> checkVersion(@Path("branch") String branch);
 }

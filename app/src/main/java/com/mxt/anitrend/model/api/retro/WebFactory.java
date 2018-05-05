@@ -127,7 +127,7 @@ public class WebFactory {
 
     public static RepositoryModel createRepositoryService() {
         return new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson))
-                .client(createHttpClient(null, HttpLoggingInterceptor.Level.NONE).build())
+                .client(createHttpClient(null, HttpLoggingInterceptor.Level.BODY).build())
                 .baseUrl(BuildConfig.APP_REPO).build().create(RepositoryModel.class);
     }
 

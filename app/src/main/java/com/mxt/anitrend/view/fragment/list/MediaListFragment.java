@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.fragment.list;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
