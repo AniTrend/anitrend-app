@@ -23,6 +23,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.data.DatabaseHelper;
+import com.mxt.anitrend.model.entity.base.VersionBase;
+import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
 
 import java.util.List;
@@ -42,8 +46,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_key_sync_frequency)) || key.equals(getString(R.string.pref_key_new_message_notifications)))
+        if (CompatUtil.equals(key, getString(R.string.pref_key_sync_frequency)) || CompatUtil.equals(key, getString(R.string.pref_key_new_message_notifications)))
             JobSchedulerUtil.scheduleJob(getApplicationContext());
+        else if (CompatUtil.equals(key, ApplicationPref._updateChannel)) {
+            DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+            databaseHelper.getBoxStore(VersionBase.class).removeAll();
+        }
     }
 
     /**

@@ -12,8 +12,8 @@ import retrofit2.http.Path;
  */
 public interface RepositoryModel {
 
-    String DOWNLOAD_LINK = "https://github.com/AniTrend/anitrend-resources/raw/%s/builds/app-release.apk";
+    String DOWNLOAD_LINK = "https://github.com/AniTrend/anitrend-app/releases/download/%s/app-release.apk";
 
-    @GET("/AniTrend/anitrend-resources/{branch}/builds/meta.json")
+    @GET("/AniTrend/anitrend-app/tree/{branch}/app/.meta/version.json")
     Call<VersionBase> checkVersion(@Path("branch") String branch);
 }
