@@ -1,4 +1,4 @@
-# AniTrend v1.0.7 &nbsp; [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/AniTrend/anitrend-app/blob/master/LICENSE)
+# AniTrend v1.0.9 &nbsp; [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/AniTrend/anitrend-app/blob/master/LICENSE)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/30a8f983c55541cbb504671ecc32786c)](https://www.codacy.com/app/wax911/anitrend-app?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wax911/anitrend-app&amp;utm_campaign=Badge_Grade) &nbsp; [![Build Status](https://travis-ci.org/AniTrend/anitrend-app.svg?branch=master)](https://travis-ci.org/AniTrend/anitrend-app) &nbsp; [![Waffle.io - Columns and their card count](https://badge.waffle.io/AniTrend/anitrend-app.svg?columns=all)](https://waffle.io/AniTrend/anitrend-app)
 
 Discover anime or manga with AniTrend which is a free [AniList](https://anilist.co) android client written in java.(AniTrend does not offer streaming capabilities, but official website links such as Hulu, Chrunchyroll, Netflix will be provided if available)
@@ -7,11 +7,13 @@ Big shout out to all the testers, translators and donators on the [AniTrend Disc
 
 ###### Feel free to donate the weeb cause with [Patreon](https://www.patreon.com/wax911) or [PayPal](https://www.paypal.me/mmax9)
 
-# Known Issues
+# __The AniTrend Road Map (What's Next?)__
+- AniTrend projects can be found [here](https://github.com/AniTrend/anitrend-app/projects) which will contain a brief description of what a given version number will focus on e.t.c
+- Milestones for each project can also be found [here](https://github.com/AniTrend/anitrend-app/milestones), these are more detailed and show the actual task required to satisfy the project
 
-- Chrome based browsers are recommended when signing into AniTrend, other browsers may work but require one or two steps.
-- Unresolved content on status feeds (results in an empty object appearing the response)
-- Duplicated anime & manga entities on staff roles pages
+## Known Issues
+
+- Find all issues, feature requests, bugs and project road map [here](https://waffle.io/AniTrend/anitrend-app)
 
 # Screenshots
 
