@@ -7,24 +7,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/notification_indicator"
-            android:layout_gravity="end"
-            android:layout_margin="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_notification_dot"/>
-
-        <com.mxt.anitrend.base.custom.view.container.CardViewBase
+        <com.mxt.anitrend.base.custom.view.container.NotificationCardView
             android:clickable="true"
             android:focusable="true"
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lg_margin"
+            android:layout_margin="@dimen/md_margin"
             android:foreground="?selectableItemBackground">
 
+            <FrameLayout
+                android:orientation="horizontal"
+                android:id="@+id/notification_indicator"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_notification_border" />
+
             <LinearLayout
+                android:padding="16dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -85,7 +86,7 @@
 
             </LinearLayout>
 
-        </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+        </com.mxt.anitrend.base.custom.view.container.NotificationCardView>
 
     </FrameLayout>
 

@@ -43,7 +43,7 @@ public class CardViewBase extends CardView implements CustomView {
      */
     @Override
     public void onInit() {
-        setRadius(getResources().getDimensionPixelSize(R.dimen.xs_margin));
+        setRadius(getResources().getDimensionPixelSize(R.dimen.sm_margin));
         setUseCompatPadding(true);
         setPreventCornerOverlap(false);
         int contentPadding = getResources().getDimensionPixelSize(R.dimen.xl_margin);
