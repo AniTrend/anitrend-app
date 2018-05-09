@@ -13,7 +13,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/md_margin"
+            android:layout_margin="@dimen/lg_margin"
             android:foreground="?selectableItemBackground">
 
             <FrameLayout

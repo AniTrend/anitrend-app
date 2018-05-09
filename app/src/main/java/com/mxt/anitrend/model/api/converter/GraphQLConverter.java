@@ -105,7 +105,7 @@ public final class GraphQLConverter extends Converter.Factory {
             QueryContainer queryContainer = containerBuilder
                     .setQuery(graphProcessor.getQuery(methodAnnotations))
                     .build();
-            String queryJson = WebFactory.gson.toJson(queryContainer);
+            String queryJson = gson.toJson(queryContainer);
             Log.d("GraphRequestConverter", queryJson);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);
         }
