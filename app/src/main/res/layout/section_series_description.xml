@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:text="@{model.title.original}"
+            android:textIsSelectable="true"
             tools:text="銀魂" />
 
         <android.support.v4.widget.Space
@@ -60,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
+            android:textIsSelectable="true"
             app:textHtml="@{model.description}"
             tools:text="The Amanto, aliens from outer space, have invaded Earth and taken over feudal Japan."/>
 

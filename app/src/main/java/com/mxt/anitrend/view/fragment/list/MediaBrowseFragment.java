@@ -73,7 +73,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         if(mediaBrowseUtil == null)
             mediaBrowseUtil = new MediaBrowseUtil();
 
-        isPager = true; isFilterable = !mediaBrowseUtil.isFilterDisabled();
+        isPager = true; isFilterable = mediaBrowseUtil.isFilterEnabled();
         mColumnSize = mediaBrowseUtil.isCompactType() ? R.integer.grid_giphy_x3 : R.integer.grid_list_x2;
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
@@ -166,8 +166,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
     public void makeRequest() {
         Bundle bundle = getViewModel().getParams();
         ApplicationPref pref = getPresenter().getApplicationPref();
-        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
-                .putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaSort());
+        queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
 
         if(isFilterable) {
             if(!mediaBrowseUtil.isBasicFilter()) {

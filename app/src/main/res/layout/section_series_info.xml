@@ -39,6 +39,7 @@
                 android:ellipsize="end"
                 android:textStyle="bold"
                 android:text="@{model.title.romaji}"
+                android:textIsSelectable="true"
                 tools:text="Gintama, Gin Tama, Silver Soul, Yorinuki Gintama-san"/>
 
             <android.support.v4.widget.Space
@@ -65,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{model.title.english}"
                 android:fontFamily="sans-serif-light"
+                android:textIsSelectable="true"
                 android:maxLines="2"
                 android:ellipsize="end"
                 tools:text="Gintama" />
@@ -83,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:text="@{presenter.getMediaFormat(model)}"
+                android:textIsSelectable="true"
                 tools:text="TV"/>
 
             <android.support.v4.widget.Space
@@ -94,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                android:textIsSelectable="true"
                 app:startDate="@{model.startDate}"
                 tools:text="Started: 2017/09/30"/>
 
@@ -106,6 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                android:textIsSelectable="true"
                 app:endDate="@{model.endDate}"
                 tools:text="Ended: 2017/10/30"/>
 

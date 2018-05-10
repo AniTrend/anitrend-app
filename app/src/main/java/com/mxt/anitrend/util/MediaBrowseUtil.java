@@ -12,7 +12,7 @@ import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 public class MediaBrowseUtil implements Parcelable {
 
     private boolean compactType;
-    private boolean filterDisabled;
+    private boolean filterEnabled;
     private boolean basicFilter;
 
     public MediaBrowseUtil() {
@@ -21,14 +21,14 @@ public class MediaBrowseUtil implements Parcelable {
 
     protected MediaBrowseUtil(Parcel in) {
         compactType = in.readByte() != 0;
-        filterDisabled = in.readByte() != 0;
+        filterEnabled = in.readByte() != 0;
         basicFilter = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (compactType ? 1 : 0));
-        dest.writeByte((byte) (filterDisabled ? 1 : 0));
+        dest.writeByte((byte) (filterEnabled ? 1 : 0));
         dest.writeByte((byte) (basicFilter ? 1 : 0));
     }
 
@@ -54,8 +54,8 @@ public class MediaBrowseUtil implements Parcelable {
         return this;
     }
 
-    public MediaBrowseUtil setFilterDisabled(boolean filterDisabled) {
-        this.filterDisabled = filterDisabled;
+    public MediaBrowseUtil setFilterEnabled(boolean filterEnabled) {
+        this.filterEnabled = filterEnabled;
         return this;
     }
 
@@ -68,8 +68,8 @@ public class MediaBrowseUtil implements Parcelable {
         return compactType;
     }
 
-    public boolean isFilterDisabled() {
-        return filterDisabled;
+    public boolean isFilterEnabled() {
+        return filterEnabled;
     }
 
     public boolean isBasicFilter() {

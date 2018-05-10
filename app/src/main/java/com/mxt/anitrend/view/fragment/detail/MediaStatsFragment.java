@@ -37,9 +37,11 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaBrowseUtil;
+import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 
@@ -107,15 +109,35 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                 public void onItemClick(View target, MediaRank data) {
                     Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                     Bundle args = new Bundle();
-                    args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                    QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
                             .putVariable(KeyUtil.arg_type, mediaType)
-                            .putVariable(KeyUtil.arg_season, data.getSeason())
-                            .putVariable(KeyUtil.arg_seasonYear, data.getYear())
-                            .putVariable(KeyUtil.arg_format, data.getFormat()));
-                    args.putString(KeyUtil.arg_activity_tag, data.getTypeHtmlPlainTitle());
+                            .putVariable(KeyUtil.arg_format, data.getFormat());
+
+                    if(MediaUtil.isAnimeType(model))
+                        queryContainer.putVariable(KeyUtil.arg_season, data.getSeason());
+
+                    if(!data.isAllTime()) {
+                        if (MediaUtil.isAnimeType(model))
+                            queryContainer.putVariable(KeyUtil.arg_seasonYear, data.getYear());
+                        else
+                            queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
+                                    "%d%%", data.getYear()));
+                    }
+
+                    switch (data.getType()) {
+                        case KeyUtil.RATED:
+                            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.SCORE + KeyUtil.DESC);
+                            break;
+                        case KeyUtil.POPULAR:
+                            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.POPULARITY + KeyUtil.DESC);
+                            break;
+                    }
+
+                    args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
                     args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
                             .setCompactType(true)
-                            .setFilterDisabled(true));
+                            .setFilterEnabled(false));
+                    args.putString(KeyUtil.arg_activity_tag, data.getTypeHtmlPlainTitle());
                     intent.putExtras(args);
                     startActivity(intent);
                 }

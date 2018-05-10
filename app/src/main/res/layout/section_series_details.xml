@@ -35,6 +35,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getMediaSeason(model)}"
+                    android:textIsSelectable="true"
                     tools:text="2015 Fall" />
 
             </LinearLayout>
@@ -55,6 +56,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getMediaSource(model)}"
+                    android:textIsSelectable="true"
                     tools:text="Manga" />
             </LinearLayout>
 
@@ -88,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getChapterCount(model)}"
+                    android:textIsSelectable="true"
                     tools:text="12 Chapters" />
             </LinearLayout>
 
@@ -107,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getVolumeCount(model)}"
+                    android:textIsSelectable="true"
                     tools:text="24 Volumes" />
             </LinearLayout>
 
@@ -140,6 +144,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getEpisodeCount(model)}"
+                    android:textIsSelectable="true"
                     tools:text="12 Episodes" />
             </LinearLayout>
 
@@ -159,6 +164,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getEpisodeDuration(model)}"
+                    android:textIsSelectable="true"
                     tools:text="24 Minutes" />
             </LinearLayout>
 
@@ -190,6 +196,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getHashTag(model)}"
+                    android:textIsSelectable="true"
                     tools:text="#onepunchman" />
             </LinearLayout>
 
@@ -209,6 +216,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed-light"
                 android:text="@{presenter.getMediaScore(model)}"
+                android:textIsSelectable="true"
                 tools:text="85% Mean" />
         </LinearLayout>
 
@@ -243,6 +251,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:text="@{presenter.getMainStudio(model)}"
+                    android:textIsSelectable="true"
                     android:textColor="?colorAccent"
                     tools:text="MADHOUSE" />
 
@@ -263,6 +272,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
+                    android:textIsSelectable="true"
                     app:airingDate="@{model}"
                     tools:text="EP 3 Airing In 2 days" />
             </LinearLayout>
@@ -295,6 +305,7 @@
                     android:fontFamily="sans-serif-condensed-light"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:text="@{presenter.getMediaStatus(model)}"
+                    android:textIsSelectable="true"
                     tools:text="Not Released" />
 
             </LinearLayout>
