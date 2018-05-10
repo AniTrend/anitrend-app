@@ -15,19 +15,25 @@ public class ThreadPool {
 
     }
 
-    private void createThreadPool() {
-        executorService = Executors.newCachedThreadPool();
+    public ExecutorService getExecutorService() {
+        if(executorService == null)
+            executorService = Executors.newCachedThreadPool();
+        return executorService;
     }
 
     public void execute(Runnable runnable) {
-        executorService.execute(runnable);
+        getExecutorService().execute(runnable);
     }
 
     public static class Builder {
 
-        public static ThreadPool create() {
-            ThreadPool threadPool = new ThreadPool();
-            threadPool.createThreadPool();
+        private ThreadPool threadPool;
+
+        public Builder() {
+            this.threadPool = new ThreadPool();
+        }
+
+        public ThreadPool build() {
             return threadPool;
         }
     }

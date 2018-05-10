@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.pager.index.SeriesListPageAdapter;
+import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -32,7 +32,7 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
-    private SeriesListPageAdapter pageAdapter;
+    private MediaListPageAdapter pageAdapter;
 
     private @KeyUtil.MediaType String mediaType;
 
@@ -76,7 +76,7 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        pageAdapter = new SeriesListPageAdapter(getSupportFragmentManager(), getApplicationContext());
+        pageAdapter = new MediaListPageAdapter(getSupportFragmentManager(), getApplicationContext());
         pageAdapter.setParams(bundle);
         updateUI();
     }

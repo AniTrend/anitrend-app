@@ -92,7 +92,8 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         switch (item.getItemId()) {
             case R.id.action_mark_all:
                 if(model != null) {
-                    ThreadPool.Builder.create().execute(this::markAllNotificationsAsRead);
+                    new ThreadPool.Builder()
+                            .build().execute(this::markAllNotificationsAsRead);
                 } else
                     NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT);
                 return true;
@@ -144,7 +145,8 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     @Override
     public void onItemClick(View target, Notification data) {
         Intent intent;
-        ThreadPool.Builder.create().execute(() -> setItemAsRead(data));
+        new ThreadPool.Builder().build()
+                .execute(() -> setItemAsRead(data));
         if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
             intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
@@ -218,7 +220,8 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     @Override
     public void onItemLongClick(View target, Notification data) {
         if(CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
-            ThreadPool.Builder.create().execute(() -> setItemAsRead(data));
+            new ThreadPool.Builder().build()
+                    .execute(() -> setItemAsRead(data));
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 mediaActionUtil = new MediaActionUtil.Builder()
                         .setId(data.getMedia().getId()).build(getActivity());

@@ -19,6 +19,10 @@ public class MediaBrowseUtil implements Parcelable {
 
     }
 
+    public MediaBrowseUtil(boolean filterEnabled) {
+        this.filterEnabled = filterEnabled;
+    }
+
     protected MediaBrowseUtil(Parcel in) {
         compactType = in.readByte() != 0;
         filterEnabled = in.readByte() != 0;

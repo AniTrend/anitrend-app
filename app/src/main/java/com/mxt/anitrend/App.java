@@ -46,7 +46,7 @@ public class App extends Application {
                 .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .installDefaultEventBus();
-        ThreadPool.Builder.create()
+        new ThreadPool.Builder().build()
                 .execute(() -> EmojiManager.initEmojiData(this));
         analytics = FirebaseAnalytics.getInstance(this);
         analytics.setAnalyticsCollectionEnabled(true);

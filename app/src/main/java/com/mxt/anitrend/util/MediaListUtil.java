@@ -1,6 +1,5 @@
 package com.mxt.anitrend.util;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -44,5 +43,9 @@ public class MediaListUtil {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         return bundle;
+    }
+
+    public static boolean isTitleSort(@KeyUtil.MediaListSort String mediaSort) {
+        return CompatUtil.equals(mediaSort, KeyUtil.TITLE);
     }
 }

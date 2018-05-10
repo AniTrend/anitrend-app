@@ -2,9 +2,12 @@ package com.mxt.anitrend.model.api.retro.anilist;
 
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.container.body.DataContainer;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
@@ -21,6 +24,11 @@ import retrofit2.http.POST;
  */
 
 public interface BrowseModel {
+
+    @POST("/")
+    @GraphQuery("MediaListCollection")
+    @Headers("Content-Type: application/json")
+    Call<GraphContainer<PageContainer<MediaListCollection>>> getMediaListCollection(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("MediaBrowse")

@@ -86,6 +86,11 @@ public interface KeyUtil {
     String arg_tags = "tags";
     String arg_tagsExlcude = "tagsExclude";
 
+    /** Media Collection Keys */
+    String arg_forceSingleCompletedList = "forceSingleCompletedList";
+    String arg_scoreFormat = "scoreFormat";
+    String arg_statusIn = "statusIn";
+
     /** Review Keys */
     String arg_rating = "rating";
 
@@ -141,7 +146,7 @@ public interface KeyUtil {
     EPISODE_LATEST_REQ = 3, EPISODE_POPULAR_REQ = 4, EPISODE_FEED_REQ = 5, UPDATE_CHECKER_REQ = 6, GIPHY_TRENDING_REQ = 7, GIPHY_SEARCH_REQ = 8,
 
     // Browse Model Requests
-    MEDIA_BROWSE_REQ = 10, MEDIA_LIST_BROWSE_REQ = 11, MEDIA_LIST_REQ = 12, MEDIA_WITH_LIST_REQ = 67, MEDIA_REVIEWS_REQ = 13,
+    MEDIA_LIST_COLLECTION_REQ = 68, MEDIA_BROWSE_REQ = 10, MEDIA_LIST_BROWSE_REQ = 11, MEDIA_LIST_REQ = 12, MEDIA_WITH_LIST_REQ = 67, MEDIA_REVIEWS_REQ = 13,
 
     // Character Model Requests
     CHARACTER_BASE_REQ = 14, CHARACTER_OVERVIEW_REQ = 15, CHARACTER_MEDIA_REQ = 16, CHARACTER_ACTORS_REQ =17,
@@ -176,7 +181,7 @@ public interface KeyUtil {
 
             EPISODE_LATEST_REQ, EPISODE_POPULAR_REQ, EPISODE_FEED_REQ, UPDATE_CHECKER_REQ, GIPHY_TRENDING_REQ, GIPHY_SEARCH_REQ,
 
-            MEDIA_BROWSE_REQ, MEDIA_LIST_BROWSE_REQ, MEDIA_LIST_REQ, MEDIA_WITH_LIST_REQ, MEDIA_REVIEWS_REQ,
+            MEDIA_LIST_COLLECTION_REQ, MEDIA_BROWSE_REQ, MEDIA_LIST_BROWSE_REQ, MEDIA_LIST_REQ, MEDIA_WITH_LIST_REQ, MEDIA_REVIEWS_REQ,
 
             CHARACTER_BASE_REQ, CHARACTER_OVERVIEW_REQ, CHARACTER_MEDIA_REQ, CHARACTER_ACTORS_REQ,
 
@@ -267,9 +272,9 @@ public interface KeyUtil {
     @interface MediaTrendSort {}
 
 
-    String PROGRESS = "PROGRESS",PROGRESS_VOLUMES = "PROGRESS_VOLUMES", REPEAT = "REPEAT", PRIORITY = "PRIORITY", STARTED_ON = "STARTED_ON",
+    String TITLE = "TITLE", PROGRESS = "PROGRESS",PROGRESS_VOLUMES = "PROGRESS_VOLUMES", REPEAT = "REPEAT", PRIORITY = "PRIORITY", STARTED_ON = "STARTED_ON",
             FINISHED_ON = "FINISHED_ON", ADDED_TIME = "ADDED_TIME", UPDATED_TIME = "UPDATED_TIME";
-    @StringDef({MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME})
+    @StringDef({TITLE, MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME})
     @interface MediaListSort {}
 
 
@@ -293,12 +298,12 @@ public interface KeyUtil {
 
     String[] SortOrderType = {ASC, DESC};
     String[] MediaSortType = {ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING, EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES};
-    String[] MediaTrendSortType = {ID, MEDIA_ID, DATE, SCORE, POPULARITY, TRENDING, EPISODE};
-    String[] MediaListSortType = {MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME};
+    // String[] MediaTrendSortType = {ID, MEDIA_ID, DATE, SCORE, POPULARITY, TRENDING, EPISODE};
+    String[] MediaListSortType = {TITLE ,MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME};
     String[] ReviewSortType = {ID, SCORE, RATING, CREATED_AT, UPDATED_AT};
-    String[] AiringSortType = {ID, MEDIA_ID, TIME, EPISODE};
-    String[] CharacterSortType = {ID, ROLE, SEARCH_MATCH};
-    String[] StaffSortType = {ID, ROLE, LANGUAGE, SEARCH_MATCH};
+    // String[] AiringSortType = {ID, MEDIA_ID, TIME, EPISODE};
+    // String[] CharacterSortType = {ID, ROLE, SEARCH_MATCH};
+    // String[] StaffSortType = {ID, ROLE, LANGUAGE, SEARCH_MATCH};
 
     // ------------------------------------------------------------------------------------
 

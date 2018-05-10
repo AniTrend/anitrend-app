@@ -71,7 +71,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
             mediaBrowseUtil = getArguments().getParcelable(KeyUtil.arg_media_util);
         }
         if(mediaBrowseUtil == null)
-            mediaBrowseUtil = new MediaBrowseUtil();
+            mediaBrowseUtil = new MediaBrowseUtil(true);
 
         isPager = true; isFilterable = mediaBrowseUtil.isFilterEnabled();
         mColumnSize = mediaBrowseUtil.isCompactType() ? R.integer.grid_giphy_x3 : R.integer.grid_list_x2;

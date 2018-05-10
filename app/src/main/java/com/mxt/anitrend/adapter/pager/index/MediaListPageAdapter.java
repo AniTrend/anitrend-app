@@ -15,9 +15,9 @@ import com.mxt.anitrend.view.fragment.list.MediaListFragment;
  * users list page adapter
  */
 
-public class SeriesListPageAdapter extends BaseStatePageAdapter {
+public class MediaListPageAdapter extends BaseStatePageAdapter {
 
-    public SeriesListPageAdapter(FragmentManager fragmentManager, Context context) {
+    public MediaListPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
         setPagerTitles(R.array.media_list_status);
     }
@@ -29,7 +29,7 @@ public class SeriesListPageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        return MediaListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
-                .putVariable(KeyUtil.arg_status, KeyUtil.MediaListStatus[position]));
+        return MediaListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtil.arg_statusIn, KeyUtil.MediaListStatus[position]));
     }
 }

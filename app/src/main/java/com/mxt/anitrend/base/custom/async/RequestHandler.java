@@ -86,6 +86,8 @@ public class RequestHandler<T> extends AsyncTask<Context,Void,Call<T>> {
                     return (Call<T>) WebFactory.createRepositoryService().checkVersion(param.getString(arg_branch_name));
 
 
+                case KeyUtil.MEDIA_LIST_COLLECTION_REQ:
+                    return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaListCollection(param.getParcelable(arg_graph_params));
                 case KeyUtil.MEDIA_BROWSE_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaBrowse(param.getParcelable(arg_graph_params));
                 case KeyUtil.MEDIA_LIST_BROWSE_REQ:

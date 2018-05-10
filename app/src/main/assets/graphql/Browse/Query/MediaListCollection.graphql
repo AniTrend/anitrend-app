@@ -1,5 +1,5 @@
-query MediaCollection($userId: Int, $userName: String, $type: MediaType, $forceSingleCompletedList: Boolean, $sort: [MediaListSort], $scoreFormat: ScoreFormat) {
-  MediaListCollection(userId: $userId, userName: $userName, type: $type, forceSingleCompletedList: $forceSingleCompletedList, sort: $sort) {
+query MediaListCollection($userId: Int, $userName: String, $type: MediaType, $forceSingleCompletedList: Boolean, $sort: [MediaListSort], $statusIn: [MediaListStatus], $scoreFormat: ScoreFormat = POINT_100) {
+  MediaListCollection(userId: $userId, userName: $userName, type: $type, forceSingleCompletedList: $forceSingleCompletedList, sort: $sort, status_in: $statusIn) {
     ... on MediaListCollection {
       lists {
         ... on MediaListGroup {
@@ -15,6 +15,7 @@ query MediaCollection($userId: Int, $userName: String, $type: MediaType, $forceS
               priority
               private
               hiddenFromStatusLists
+              advancedScores
               customLists(asArray: true)
               notes
               startedAt {
