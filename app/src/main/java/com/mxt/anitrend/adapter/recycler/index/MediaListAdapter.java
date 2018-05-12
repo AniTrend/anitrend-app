@@ -13,6 +13,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +49,13 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
                 String filter = constraint.toString();
                 if(filter.isEmpty()) {
                     data = clone;
-                } else {
+                } else if(!CompatUtil.isEmpty(clone)) {
                     data = new ArrayList<>();
                     for (MediaList model : clone) {
-                        if (model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter)) {
+                        if (model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
+                                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
+                                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())||
+                                model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())) {
                             data.add(model);
                         }
                     }
@@ -65,8 +67,10 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<MediaList>) results.values);
-                notifyDataSetChanged();
+                if(results.values != null) {
+                    data = new ArrayList<>((List<MediaList>) results.values);
+                    notifyDataSetChanged();
+                }
             }
         };
     }

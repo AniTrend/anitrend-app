@@ -237,8 +237,10 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                         mAdapter.onItemRemoved(pairIndex);
                         break;
                 }
-            } else if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
-                onRefresh();
+            } else if(consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST || consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST) {
+                if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
+                    onRefresh();
+            }
         }
     }
 

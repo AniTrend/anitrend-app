@@ -54,6 +54,7 @@ query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int, $a
             isFollowing
           }
         }
+		siteUrl
       }
     }
   }

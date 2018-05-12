@@ -107,6 +107,7 @@ query FeedListReply($id: Int, $asHtml: Boolean = false) {
           }
         }
       }
+      siteUrl
     }
     ... on TextActivity {
       id
@@ -173,28 +174,72 @@ query FeedListReply($id: Int, $asHtml: Boolean = false) {
           }
         }
       }
+      siteUrl
     }
     ... on MessageActivity {
-      ... on MessageActivity {
-        id
-        message(asHtml: $asHtml)
-        createdAt
-        type
-        messenger {
-          ... on User {
-            id
-            name
-            avatar {
-              ... on UserAvatar {
-                large
-                medium
-              }
+      id
+      message(asHtml: $asHtml)
+      createdAt
+      type
+      messenger {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
             }
-            isFollowing
           }
+          isFollowing
         }
-        recipient {
-          ... on User {
+      }
+      recipient {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+      replyCount
+      likes {
+        ... on User {
+          id
+          name
+          avatar {
+            ... on UserAvatar {
+              large
+              medium
+            }
+          }
+          isFollowing
+        }
+      }
+      replies {
+        ... on ActivityReply {
+          id
+          text
+          createdAt
+          user {
+            ... on User {
+              id
+              name
+              avatar {
+                ... on UserAvatar {
+                  large
+                  medium
+                }
+              }
+              isFollowing
+            }
+          }
+          likes {
             ... on User {
               id
               name
@@ -208,54 +253,8 @@ query FeedListReply($id: Int, $asHtml: Boolean = false) {
             }
           }
         }
-        replyCount
-        likes {
-          ... on User {
-            id
-            name
-            avatar {
-              ... on UserAvatar {
-                large
-                medium
-              }
-            }
-            isFollowing
-          }
-        }
-        replies {
-          ... on ActivityReply {
-            id
-            text
-            createdAt
-            user {
-              ... on User {
-                id
-                name
-                avatar {
-                  ... on UserAvatar {
-                    large
-                    medium
-                  }
-                }
-                isFollowing
-              }
-            }
-            likes {
-              ... on User {
-                id
-                name
-                avatar {
-                  ... on UserAvatar {
-                    large
-                    medium
-                  }
-                }
-                isFollowing
-              }
-            }
-          }
-        }
       }
+      siteUrl
     }
   }
 }

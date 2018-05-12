@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.async;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -61,7 +62,8 @@ public class NotificationSyncTask implements RetroCallback<User>, LifecycleListe
 
     @Override
     public void onFailure(@NonNull Call<User> call, @NonNull Throwable throwable) {
-        Log.e(TAG, throwable.getMessage());
+        if (!TextUtils.isEmpty(throwable.getMessage()))
+            Log.e(TAG, throwable.getMessage());
         throwable.printStackTrace();
     }
 

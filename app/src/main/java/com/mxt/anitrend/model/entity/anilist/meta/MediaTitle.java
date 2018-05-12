@@ -50,15 +50,15 @@ public class MediaTitle implements Parcelable {
     }
 
     public String getRomaji() {
-        return romaji;
+        return romaji != null ? romaji : userPreferred;
     }
 
     public String getEnglish() {
-        return english;
+        return english != null ? english : userPreferred;
     }
 
     public String getOriginal() {
-        return original;
+        return original != null ? original : userPreferred;
     }
 
     public String getUserPreferred() {
