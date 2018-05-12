@@ -3,16 +3,24 @@ package com.mxt.anitrend.presenter.base;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.annimon.stream.Stream;
+import com.mxt.anitrend.R;
+import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
+import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
+import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.crunchy.MediaContent;
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail;
 import com.mxt.anitrend.service.TagGenreService;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.view.activity.index.SplashActivity;
 
 import java.util.List;
 import java.util.Locale;
@@ -86,5 +94,15 @@ public class BasePresenter extends CommonPresenter {
 
     public boolean isCurrentUser(UserBase userBase) {
         return userBase != null && isCurrentUser(userBase.getId());
+    }
+
+    public void checkValidAuth() {
+        if(getApplicationPref().isAuthenticated()) {
+            DatabaseHelper databaseHelper = getDatabase();
+            if(databaseHelper.getCurrentUser() == null) {
+                Log.e("checkValidAuth", "Last attempt to authenticate failed, refreshing session!");
+                WebTokenRequest.invalidateInstance(getContext());
+            }
+        }
     }
 }

@@ -80,7 +80,6 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
 
     @Override
     protected void updateUI() {
-        // TODO: 2018/04/26 Disabled in the mean time while we decide if there is any need for this service
         // startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if(getPresenter().getApplicationPref().isNotificationEnabled())
             JobSchedulerUtil.scheduleJob(getApplicationContext());
@@ -139,7 +138,10 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
                 } else NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.container:
-                finish();
+                if(binding.widgetFlipper.getDisplayedChild() != WidgetPresenter.CONTENT_STATE)
+                    finish();
+                else
+                    NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

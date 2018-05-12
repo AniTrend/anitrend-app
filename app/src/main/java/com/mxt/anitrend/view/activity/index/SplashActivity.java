@@ -50,6 +50,7 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
     @Override
     protected void onActivityReady() {
         getPresenter().checkGenresAndTags(this);
+        getPresenter().checkValidAuth();
         makeRequest();
     }
 
