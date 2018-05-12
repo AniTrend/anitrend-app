@@ -11,4 +11,11 @@
         app:actionViewClass="com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_share"
+        android:orderInCategory="101"
+        android:title="@string/series_share"
+        android:icon="@drawable/ic_share_grey_600_24dp"
+        app:showAsAction="ifRoom"/>
+
 </menu>

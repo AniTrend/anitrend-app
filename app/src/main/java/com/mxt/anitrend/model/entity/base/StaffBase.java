@@ -18,6 +18,7 @@ public class StaffBase extends EntityGroup implements Parcelable {
     private boolean isFavourite;
     private String description;
     private String language;
+    private String siteUrl;
 
     protected StaffBase(Parcel in) {
         id = in.readLong();
@@ -26,6 +27,7 @@ public class StaffBase extends EntityGroup implements Parcelable {
         isFavourite = in.readByte() != 0;
         description = in.readString();
         language = in.readString();
+        siteUrl = in.readString();
     }
 
     @Override
@@ -36,6 +38,7 @@ public class StaffBase extends EntityGroup implements Parcelable {
         dest.writeByte((byte) (isFavourite ? 1 : 0));
         dest.writeString(description);
         dest.writeString(language);
+        dest.writeString(siteUrl);
     }
 
     @Override
@@ -81,6 +84,10 @@ public class StaffBase extends EntityGroup implements Parcelable {
 
     public void toggleFavourite() {
         isFavourite = !isFavourite;
+    }
+
+    public String getSiteUrl() {
+        return siteUrl;
     }
 
     @Override

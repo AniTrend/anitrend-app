@@ -28,6 +28,7 @@ public class FeedList implements Parcelable {
     private UserBase recipient;
     private List<UserBase> likes;
     private List<FeedReply> replies;
+    private String siteUrl;
 
 
     protected FeedList(Parcel in) {
@@ -42,6 +43,7 @@ public class FeedList implements Parcelable {
         messenger = in.readParcelable(UserBase.class.getClassLoader());
         recipient = in.readParcelable(UserBase.class.getClassLoader());
         likes = in.createTypedArrayList(UserBase.CREATOR);
+        siteUrl = in.readString();
     }
 
     @Override
@@ -57,6 +59,7 @@ public class FeedList implements Parcelable {
         dest.writeParcelable(messenger, flags);
         dest.writeParcelable(recipient, flags);
         dest.writeTypedList(likes);
+        dest.writeString(siteUrl);
     }
 
     @Override
@@ -126,6 +129,10 @@ public class FeedList implements Parcelable {
 
     public void setText(String value) {
         this.text = value;
+    }
+
+    public String getSiteUrl() {
+        return siteUrl;
     }
 
     @Override

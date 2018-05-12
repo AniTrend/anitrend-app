@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,6 +32,8 @@ import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
@@ -48,6 +51,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     private @KeyUtil.MediaType String mediaType;
 
     private FavouriteToolbarWidget favouriteWidget;
+    private MenuItem manageMenuItem;
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
     protected @BindView(R.id.page_container) ViewPager viewPager;
@@ -80,14 +84,15 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         boolean isAuth = getPresenter().getApplicationPref().isAuthenticated();
         getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
-        menu.findItem(R.id.action_manage).setVisible(isAuth);
-        menu.findItem(R.id.action_share).setVisible(false);
+
+        manageMenuItem = menu.findItem(R.id.action_manage);
+        manageMenuItem.setVisible(isAuth);
+        setManageMenuItemIcon();
 
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            if(model != null)
-                favouriteWidget.setModel(model);
+            setFavouriteWidgetMenuItemIcon();
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -101,9 +106,13 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                             .setId(model.getId()).build(this);
                     mediaActionUtil.startSeriesAction();
                     break;
-                case R.id.action_share_compact:
-                    break;
-                case R.id.action_share_full:
+                case R.id.action_share:
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
+                            "%s - %s", model.getTitle().getUserPreferred(), model.getSiteUrl()));
+                    intent.setType("text/plain");
+                    startActivity(intent);
                     break;
             }
         } else
@@ -143,9 +152,9 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         if(model != null) {
             binding.setModel(model);
             binding.setOnClickListener(this);
-            if (favouriteWidget != null)
-                favouriteWidget.setModel(model);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
+            setFavouriteWidgetMenuItemIcon();
+            setManageMenuItemIcon();
             showApplicationTips();
         }
     }
@@ -203,5 +212,15 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                 TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, false);
             }
         }
+    }
+
+    private void setManageMenuItemIcon() {
+        if(model != null && model.getMediaListEntry() != null && manageMenuItem != null)
+            manageMenuItem.setIcon(CompatUtil.getDrawable(this, R.drawable.ic_mode_edit_white_24dp));
+    }
+
+    private void setFavouriteWidgetMenuItemIcon() {
+        if(model != null && favouriteWidget != null)
+            favouriteWidget.setModel(model);
     }
 }

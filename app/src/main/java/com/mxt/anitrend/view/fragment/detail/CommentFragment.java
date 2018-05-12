@@ -3,11 +3,15 @@ package com.mxt.anitrend.view.fragment.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
+import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter;
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
@@ -38,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by max on 2017/11/16.
@@ -69,8 +74,32 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                 userActivityId = getArguments().getLong(KeyUtil.arg_id);
         }
         mColumnSize = R.integer.single_list_x1; hasSubscriber = true;
+        setInflateMenu(R.menu.custom_menu);
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_favourite).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(feedList != null) {
+            switch (item.getItemId()) {
+                case R.id.action_share:
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, feedList.getSiteUrl());
+                    intent.setType("text/plain");
+                    startActivity(intent);
+                    break;
+            }
+        } else
+            NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -7,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
@@ -17,7 +19,11 @@ import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +74,24 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
                 favouriteWidget.setModel(model);
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(model != null) {
+            switch (item.getItemId()) {
+                case R.id.action_share:
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
+                            "%s - %s", model.getName().getFullName(), model.getSiteUrl()));
+                    intent.setType("text/plain");
+                    startActivity(intent);
+                    break;
+            }
+        } else
+            NotifyUtil.makeText(getApplicationContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
     }
 
     /**
