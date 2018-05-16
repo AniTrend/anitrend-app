@@ -451,7 +451,7 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Controlla di essere in possesso dell\'ultima versione. In caso contrario una nuova versione verrà scaricata da <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
+        Controlla di essere in possesso dell\'ultima versione. In caso contrario una nuova versione verrà scaricata da <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
         <br/><br/>
         <b>N.B.</b> Se avete scaricato questa app dal <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
         allora non c\'è bisogno di usare questa funzione. Vuoi comunque procedere a controllare &amp; l\'aggiornamento dell\'ultimissima versione?

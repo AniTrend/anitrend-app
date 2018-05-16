@@ -452,7 +452,7 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Überprüft, ob du die neueste Version der App installiert hast. Falls nicht, wird sie von der <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b> heruntergeladen.<br/><br/>
+        Überprüft, ob du die neueste Version der App installiert hast. Falls nicht, wird sie von der <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b> heruntergeladen.<br/><br/>
         Falls du diese App aus dem <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b> geladen hast
         dann benötigst du diese Funktion nicht, deine App wird automatisch aktualisiert. Möchtest du trotzdem nach neuen Updates suchen und sie installieren?
         ]]>

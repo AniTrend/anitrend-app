@@ -43,8 +43,7 @@
                     android:id="@+id/series_episodes"
                     android:layout_gravity="top|end"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorTransparent"/>
+                    android:layout_height="wrap_content"/>
 
             </FrameLayout>
 
@@ -52,7 +51,7 @@
                 android:id="@+id/series_status"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/sm_margin"
-                app:seriesStatus="@{model}"
+                app:airingStatus="@{model}"
                 tools:background="@color/colorStateOrange"/>
 
             <LinearLayout

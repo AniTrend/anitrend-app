@@ -451,7 +451,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="drawer_update_text">
         <![CDATA[
-        Comprueba si tienes la última versión. De haber una actualización disponible se descargará del <b><a href="https://github.com/wax911/AniTrend"> repositorio de AniTrend </a></b>.
+        Comprueba si tienes la última versión. De haber una actualización disponible se descargará del <b><a href="https://github.com/AniTrend/anitrend-app/releases"> repositorio de AniTrend </a></b>.
         <br/><br/>
         <b>N.B.</b> Si descargaste la aplicación en <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
        se actualizará cuando esté disponible en la tienda. ¿Aún deseas comprobar si tienes la última versión?

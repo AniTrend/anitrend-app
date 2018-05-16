@@ -456,7 +456,7 @@
     <string name="drawer_update_text">
         <![CDATA[
         Vérifie si vous avez la dernière version d\'AniTrend. Si ce n\'est pas le cas, une version plus récente sera
-        téléchargée depuis <b><a href="https://github.com/wax911/AniTrend">le dépôt d\'AniTrend</a></b>.
+        téléchargée depuis <b><a href="https://github.com/AniTrend/anitrend-app/releases">le dépôt d\'AniTrend</a></b>.
         <br/><br/>
         <b>N.B.</b> Si vous avez téléchargé l\'application depuis <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">le Play Store</a></b>,
         vous n\'avez pas besoin d\'utiliser cette fonctionnalité (l\'application se met à jour d\'elle-même grâce au Play Store). Souhaitez-vous continuer ?

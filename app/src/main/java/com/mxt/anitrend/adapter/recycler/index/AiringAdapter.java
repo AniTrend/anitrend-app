@@ -13,8 +13,11 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.util.CompatUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -41,27 +44,21 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
     @Override
     public Filter getFilter() {
-        /*return new Filter() {
+        return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String filter = constraint.toString();
                 if(filter.isEmpty()) {
                     data = clone;
-                } else {
+                } else if(!CompatUtil.isEmpty(clone)) {
                     data = new ArrayList<>();
                     for (MediaList model : clone) {
-                        if(model.getAnime() != null)
-                            if(model.getAnime().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getAnime().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    model.getAnime().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
-                                data.add(model);
-                            }
-                            else if(model.getManga() != null)
-                                if(model.getManga().getTitle_english().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                        model.getManga().getTitle_japanese().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                        model.getManga().getTitle_romaji().toLowerCase(Locale.getDefault()).contains(filter)) {
-                                    data.add(model);
-                                }
+                        if (model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
+                                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
+                                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())||
+                                model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())) {
+                            data.add(model);
+                        }
                     }
                 }
                 FilterResults results = new FilterResults();
@@ -71,11 +68,12 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<MediaList>) results.values);
-                notifyDataSetChanged();
+                if(results.values != null) {
+                    data = new ArrayList<>((List<MediaList>) results.values);
+                    notifyDataSetChanged();
+                }
             }
-        };*/
-        return null;
+        };
     }
 
     protected class AiringViewHolder extends RecyclerViewHolder<MediaList> {

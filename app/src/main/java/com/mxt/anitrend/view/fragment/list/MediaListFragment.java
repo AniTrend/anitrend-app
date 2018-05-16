@@ -216,29 +216,29 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @SuppressLint("SwitchIntDef")
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<MediaList> consumer) {
-        int pairIndex;
-        if(getPresenter().isCurrentUser(userId, userName)) {
-            Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
-            if (pairOptional.isPresent()) {
-                switch (consumer.getRequestMode()) {
-                    case KeyUtil.MUT_SAVE_MEDIA_LIST:
-                        pairIndex = pairOptional.get().getFirst();
-                        if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus())) {
-                            model.set(pairIndex, consumer.getChangeModel());
-                            mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
-                        } else {
+        if(consumer.getRequestMode() == KeyUtil.MUT_SAVE_MEDIA_LIST || consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST) {
+            int pairIndex;
+            if (getPresenter().isCurrentUser(userId, userName)) {
+                Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                if (pairOptional.isPresent()) {
+                    switch (consumer.getRequestMode()) {
+                        case KeyUtil.MUT_SAVE_MEDIA_LIST:
+                            pairIndex = pairOptional.get().getFirst();
+                            if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus())) {
+                                model.set(pairIndex, consumer.getChangeModel());
+                                mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
+                            } else {
+                                model.remove(pairIndex);
+                                mAdapter.onItemRemoved(pairIndex);
+                            }
+                            break;
+                        case KeyUtil.MUT_DELETE_MEDIA_LIST:
+                            pairIndex = pairOptional.get().getFirst();
                             model.remove(pairIndex);
                             mAdapter.onItemRemoved(pairIndex);
-                        }
-                        break;
-                    case KeyUtil.MUT_DELETE_MEDIA_LIST:
-                        pairIndex = pairOptional.get().getFirst();
-                        model.remove(pairIndex);
-                        mAdapter.onItemRemoved(pairIndex);
-                        break;
-                }
-            } else if(consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST || consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST) {
-                if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
+                            break;
+                    }
+                } else if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
                     onRefresh();
             }
         }

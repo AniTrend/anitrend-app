@@ -116,7 +116,6 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
             if(response.isSuccessful() && (mediaList = response.body()) != null) {
                 boolean isModelCategoryChanged = !CompatUtil.equals(mediaList.getStatus(), status);
                 model = mediaList.clone();
-
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
                 resetFlipperState();
                 if(isModelCategoryChanged) {

@@ -454,7 +454,7 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        تأكد من امتلاكك احدث نسخة. ان لم تكن سيتم تحميل النسخة الجديدة من <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
+        تأكد من امتلاكك احدث نسخة. ان لم تكن سيتم تحميل النسخة الجديدة من <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
         <br/><br/>
         <b>ملاحظة:</b> إذا قمت بتحميل التطبيق من <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Googlr Play</a></b>
         فليس هناك داعٍ لإستخدام هذه الخاصية. هل ترغب في المتابعة والتحديث الى أحدث نسخة؟

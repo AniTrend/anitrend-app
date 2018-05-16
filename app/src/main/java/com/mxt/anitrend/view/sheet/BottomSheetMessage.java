@@ -54,7 +54,7 @@ public class BottomSheetMessage extends BottomSheetBase implements View.OnClickL
     @Override
     public void onStart() {
         super.onStart();
-        bottom_text.setText(MarkDown.convert(getString(mText)));
+        RichMarkdownTextView.basicText(bottom_text, getString(mText));
         if(mPositive != 0)
             bottom_positive.setText(mPositive);
         else
