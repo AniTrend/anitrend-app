@@ -16,7 +16,7 @@ buildscript {
         'firebase'      : '15.0.2',
         'objectBox'     : '1.5.0',
         'architecture'  : '1.1.1',
-        'emojify'       : '0.1.4.2',
+        'emojify'       : '0.1.7',
         'kotlin'        : '1.2.31'
     ]
     repositories {

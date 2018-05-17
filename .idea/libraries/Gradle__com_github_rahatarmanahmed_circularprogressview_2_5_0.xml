@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.rahatarmanahmed:circularprogressview-2.5.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/circularprogressview-2.5.0.aar/cfe0bc0e84def1a9dbd3571d7aa7bc36/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/circularprogressview-2.5.0.aar/cfe0bc0e84def1a9dbd3571d7aa7bc36/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/circularprogressview-2.5.0.aar/dad3607156e5ff2df848e039d34441d5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/circularprogressview-2.5.0.aar/dad3607156e5ff2df848e039d34441d5/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

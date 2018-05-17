@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.zzhoujay.richtext:richtext-3.0.5">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/richtext-3.0.5.aar/8290d07e8b1da41895b430690a308cad/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/richtext-3.0.5.aar/8290d07e8b1da41895b430690a308cad/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/richtext-3.0.5.aar/91b327ad6296fc8de80cf473d7c1a84a/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/richtext-3.0.5.aar/91b327ad6296fc8de80cf473d7c1a84a/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
