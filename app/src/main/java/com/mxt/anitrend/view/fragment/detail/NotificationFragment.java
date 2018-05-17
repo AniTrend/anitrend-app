@@ -145,8 +145,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     @Override
     public void onItemClick(View target, Notification data) {
         Intent intent;
-        new ThreadPool.Builder().build()
-                .execute(() -> setItemAsRead(data));
+        setItemAsRead(data);
         if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
             intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
@@ -220,8 +219,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     @Override
     public void onItemLongClick(View target, Notification data) {
         if(CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
-            new ThreadPool.Builder().build()
-                    .execute(() -> setItemAsRead(data));
+            setItemAsRead(data);
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 mediaActionUtil = new MediaActionUtil.Builder()
                         .setId(data.getMedia().getId()).build(getActivity());
@@ -235,9 +233,21 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
      * Ran on a background thread to assure we don't skip frames
      * @see ThreadPool
      */
-    private void setItemAsRead(Notification data) {
-        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
-                .put(new NotificationHistory(data.getId()));
+    private void setItemAsRead(final Notification data) {
+        new ThreadPool.Builder().build()
+                .execute(() -> {
+                    List<NotificationHistory> dismissibleNotifications = Stream.of(model)
+                            .filter(item -> item.getActivityId() == data.getActivityId())
+                            .map(item -> new NotificationHistory(item.getId()))
+                            .toList();
+
+                    if(!CompatUtil.isEmpty(dismissibleNotifications))
+                        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
+                                .put(dismissibleNotifications);
+                    else
+                        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
+                                .put(new NotificationHistory(data.getId()));
+                });
     }
 
     /**
