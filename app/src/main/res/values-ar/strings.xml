@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_manage">Manage</string>
-    <string name="nav_header_customization">Customization</string>
+    <string name="nav_header_discover">الاستكشاف</string>
+    <string name="nav_header_manage">التحكم</string>
+    <string name="nav_header_customization">التخصيص</string>
 
-    <string name="nav_header_support">Support</string>
-    <string name="nav_contact">Contact</string>
-    <string name="nav_about">About</string>
+    <string name="nav_header_support">الدعم</string>
+    <string name="nav_contact">التواصل</string>
+    <string name="nav_about">حول</string>
 
-    <string name="action_search">Search</string>
+    <string name="action_search">بحث</string>
     <string name="action_filter">@string/drawer_title_filter</string>
-    <string name="action_help">Help</string>
+    <string name="action_help">مساعدة</string>
 
-    <string name="action_mode_selected">Selected: %d</string>
+    <string name="action_mode_selected">حُدد: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="navigation_drawer_open">فُتحَ درج التنقل</string>
+    <string name="navigation_drawer_close">غُلقَ درج التنقل</string>
 
 
-    <string name="nav_home">Home</string>
-    <string name="nav_history">History</string>
+    <string name="nav_home">الصفحة الرئيسية</string>
+    <string name="nav_history">التاريخ</string>
 
     <!--
         Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
@@ -800,13 +800,13 @@
     <string name="title_update_infodadat">حالة التحديث!</string>
 
     <!-- Sliding dialog that helps you select content type -->
-    <string name="sheet_share_hint">Information to share</string>
-    <string name="sheet_share_title">Format your status post to share</string>
-    <string name="sheet_share_body">Please select the type of content you are trying to share.</string>
+    <string name="sheet_share_hint">معلومات لمشاركتها</string>
+    <string name="sheet_share_title">إعادة ضبط منشورات حالتك لمشاركتها</string>
+    <string name="sheet_share_body">حدد نوع المحتوى الذي تريد مشاركته.</string>
 
     <!--Only replace the first item the others are already provided in this file-->
     <string-array name="post_share_types">
-        <item>Insert Plain Text</item>
+        <item>ادراج نص عادي</item>
         <item>@string/attach_link_title</item>
         <item>@string/attach_image_title</item>
         <item>@string/attach_youtube_title</item>
@@ -814,30 +814,30 @@
     </string-array>
 
     <!--These are the anime time labels in your profile-->
-    <string name="anime_time_hours">%.1f Hours</string>
-    <string name="anime_time_days">%.1f Days</string>
-    <string name="anime_time_years">%.1f Years</string>
+    <string name="anime_time_hours">%.1f ساعة</string>
+    <string name="anime_time_days">%.1f يوم</string>
+    <string name="anime_time_years">%.1f سنة</string>
 
     <string-array name="media_status">
-        <item>All</item>
-        <item>Finished</item>
-        <item>Releasing</item>
-        <item>Not Yet Released</item>
-        <item>Canceled</item>
+        <item>الكل</item>
+        <item>منتهية</item>
+        <item>معروضة</item>
+        <item>لم تعرض بعد</item>
+        <item>ملغاة</item>
     </string-array>
 
     <string-array name="media_formats">
-        <item>All</item>
-        <item>TV</item>
-        <item>TV Short</item>
-        <item>Movie</item>
-        <item>Special</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Music</item>
-        <item>Manga</item>
-        <item>Novel</item>
-        <item>One Shot</item>
+        <item>الكل</item>
+        <item>تلفزيوني</item>
+        <item>تلفزيوني قصير</item>
+        <item>فيلم</item>
+        <item>حلقات خاصة</item>
+        <item>اوفا</item>
+        <item>اونا</item>
+        <item>موسيقى</item>
+        <item>مانغا</item>
+        <item>رواية</item>
+        <item>ون شوت</item>
     </string-array>
 
     <string-array name="reviews_title">
@@ -846,101 +846,101 @@
     </string-array>
 
     <string-array name="media_list_status">
-        <item>Current</item>
-        <item>Planning</item>
-        <item>Completed</item>
-        <item>Dropped</item>
-        <item>Paused</item>
-        <item>Repeating</item>
+        <item>تُشاهده</item>
+        <item>تُخطط لذلك</item>
+        <item>أكملت مشاهدته</item>
+        <item>سئمت منه</item>
+        <item>استراحة مؤقتة</item>
+        <item>أعدت مشاهدته</item>
     </string-array>
 
     <string-array name="messages_page_titles">
-        <item>Inbox</item>
-        <item>Outbox</item>
+        <item>صندوق الوارد</item>
+        <item>صندوق الصادر</item>
     </string-array>
 
-    <string name="series_type">Series Type:</string>
-    <string name="series_episodes">Episodes:</string>
-    <string name="series_next_ep">Next Episode:</string>
-    <string name="series_chapters">Chapters:</string>
-    <string name="series_volumes">Volumes:</string>
-    <string name="logged_in_as">Logged in as</string>
+    <string name="series_type">نوع السلسلة:</string>
+    <string name="series_episodes">الحلقات:</string>
+    <string name="series_next_ep">الحلقة القادمة:</string>
+    <string name="series_chapters">الفصول:</string>
+    <string name="series_volumes">المجلدات:</string>
+    <string name="logged_in_as">تم تسجيل الدخول كـ</string>
 
-    <string name="sign_into_anilist">Sign Into AniList</string>
+    <string name="sign_into_anilist">سجّل الدخول إلى AniList</string>
 
-    <string name="anitrend_sign_in">AniTrend Sign-In</string>
-    <string name="please_sing_in">Please Sing In</string>
+    <string name="anitrend_sign_in">AniTrend سجّل الدخول إلى</string>
+    <string name="please_sing_in">سجّل الدخول من فضلك</string>
 
-    <string name="action_donate">Donate</string>
+    <string name="action_donate">ادعمنا</string>
 
-    <string name="dialog_title_increment_chapters">Increment Chapters</string>
+    <string name="dialog_title_increment_chapters">زيادة الفصول</string>
 
-    <string name="title_activity_staff">Staff</string>
-    <string name="title_activity_character">Character</string>
-    <string name="title_activity_series">Series</string>
+    <string name="title_activity_staff">طاقم</string>
+    <string name="title_activity_character">شخصية</string>
+    <string name="title_activity_series">سلسلة</string>
 
-    <string name="More">More</string>
+    <string name="More">المزيد</string>
 
-    <string name="title_bottom_sheet_giphy">Powered By Giphy</string>
+    <string name="title_bottom_sheet_giphy">يعمل بواسطة Giphy</string>
 
-    <string name="title_bookmark">Bookmark</string>
+    <string name="title_bookmark">الإشارات المرجعية</string>
 
-    <string name="series_share_complete">Detailed</string>
-    <string name="series_share_summary">Summary</string>
+    <string name="series_share_complete">مفصلة</string>
+    <string name="series_share_summary">ملخص</string>
 
-    <string name="text_giphy_feature">Spice up your posts. Just simply tap to select and long press to preview.</string>
+    <string name="text_giphy_feature">اضغط مرة للتحديد واستمر بالضغط المعاينة.</string>
 
-    <string name="text_manga_volumes">%d Volumes</string>
-    <string name="text_manga_chapters">%d Chapters</string>
+    <string name="text_manga_volumes">%d مجلد</string>
+    <string name="text_manga_chapters">%d فصل</string>
 
-    <string name="title_series_status">Series Status</string>
-    <string name="title_series_season">Series Season</string>
-    <string name="title_series_score">Series Score</string>
-    <string name="title_series_origin">Series Origin</string>
+    <string name="title_series_status">الحالة</string>
+    <string name="title_series_season">عُرض في موسم</string>
+    <string name="title_series_score">تقييم السلسلة</string>
+    <string name="title_series_origin">اصل السلسلة:</string>
 
-    <string name="title_total_chapters">Total Chapters</string>
-    <string name="title_total_volumes">Total Volumes</string>
+    <string name="title_total_chapters">مجموع الفصول</string>
+    <string name="title_total_volumes">مجموع المجلدات</string>
 
-    <string name="title_total_episodes">Total Episodes</string>
-    <string name="title_episode_duration">Episode Duration</string>
-    <string name="title_next_episode">Next Episode</string>
+    <string name="title_total_episodes">مجموع الحلقات</string>
+    <string name="title_episode_duration">توزيع الحلقات</string>
+    <string name="title_next_episode">الحلقة القادمة</string>
 
-    <string name="title_hash_tag">Hash Tag</string>
-    <string name="title_main_studio">Main Studio</string>
+    <string name="title_hash_tag">الهاشتاغ</string>
+    <string name="title_main_studio">الاستديو المنتج</string>
 
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register/">Create Account</a>]]></string>
+    <string name="create_new_account"><![CDATA[أليس لديك حساب؟ <a href="https://anilist.co/register/">تسجيل</a>]]></string>
 
-    <string name="title_select_all">Select All</string>
+    <string name="title_select_all">تحديد الكل</string>
 
-    <string name="title_relation">Relations</string>
+    <string name="title_relation">علاقات</string>
 
-    <string name="title_social">Social</string>
+    <string name="title_social">اجتماعي</string>
 
-    <string name="title_website">Website</string>
-    <string name="title_summary">Summary</string>
+    <string name="title_website">الموقع الإلكتروني</string>
+    <string name="title_summary">ملخص</string>
 
-    <string name="title_date_of_birth">Date Of Birth:</string>
-    <string name="title_language">Language:</string>
+    <string name="title_date_of_birth">تاريخ الميلاد:</string>
+    <string name="title_language">اللغة:</string>
 
-    <string name="title_series_japanese_name">Japanese Title</string>
-    <string name="title_series_description">Series Description</string>
+    <string name="title_series_japanese_name">العنوان الياباني</string>
+    <string name="title_series_description">القصة</string>
 
-    <string name="title_series_english_name">Series English Name:</string>
-    <string name="title_series_type">Series Type:</string>
-    <string name="title_native_name">Native Name:</string>
+    <string name="title_series_english_name">عنوان السلسلة بالإنجليزية:</string>
+    <string name="title_series_type">نوع السلسلة:</string>
+    <string name="title_native_name">العنوان الأصلي:</string>
 
-    <string name="title_alternative_names">Alternative Names</string>
-    <string name="text_unable_to_load_next_page">Error loading more results!</string>
-    <string name="menu_title_mark_all_as_read">Mark All As Read</string>
-    <string name="title_score_distribution">Score Distribution</string>
+    <string name="title_alternative_names">عناوين بديلة</string>
+    <string name="text_unable_to_load_next_page">خطأ في تحميل المزيد من النتائج!</string>
+    <string name="menu_title_mark_all_as_read">أشر عليها بأنها قُرأت</string>
+    <string name="title_score_distribution">توزيع التقييم</string>
 
-    <string name="title_score">Score</string>
-    <string name="title_watching">Watching</string>
-    <string name="title_series_stats">Series Stats</string>
-    <string name="error_unresolved_type">Unable to resolve content</string>
+    <string name="title_score">التقييم</string>
+    <string name="title_watching">مشاهدة</string>
+    <string name="title_series_stats">إحصائيات السلسلة</string>
+    <string name="error_unresolved_type">غير قادر على تحليل المحتوى</string>
 
-    <string name="menu_title_tags">Tags</string>
-    <string name="app_filter_tags">Series Tags?</string>
+    <string name="menu_title_tags">الوسوم</string>
+    <string name="app_filter_tags">وسوم السلسلة؟</string>
 
-    <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+    <string name="anitrend_sign_in_browser">يُنصح بأستخدام Google Chrome</string>
 </resources>
