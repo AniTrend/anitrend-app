@@ -59,9 +59,9 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
      */
     @Override
     public Bundle persistChanges() {
-        model.setProgress(!TextUtils.isEmpty(binding.diaCurrentProgress.getText())? Integer.valueOf(binding.diaCurrentProgress.getText().toString()): 0);
-        model.setRepeat(!TextUtils.isEmpty(binding.diaCurrentRewatch.getText()) ? Integer.valueOf(binding.diaCurrentRewatch.getText().toString()): 0);
-        model.setScore(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
+        model.setProgress(binding.diaCurrentProgress.getProgressCurrent());
+        model.setRepeat(binding.diaCurrentRewatch.getProgressCurrent());
+        model.setScore(binding.diaCurrentScore.getProgressCurrent());
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
@@ -89,15 +89,15 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
 
         binding.diaCurrentPrivacy.setChecked(model.isHidden());
-        if(model.getScore() != 0)
-            binding.diaCurrentScore.setText(String.valueOf(model.getScore()));
-        if(model.getProgress() != 0)
-            binding.diaCurrentProgress.setText(String.valueOf(model.getProgress()));
-        if(model.getRepeat() != 0)
-            binding.diaCurrentRewatch.setText(String.valueOf(model.getRepeat()));
+        if(model.getMedia().getEpisodes() > 0)
+            binding.diaCurrentProgress.setProgressMaximum(model.getMedia().getEpisodes());
+
+        binding.diaCurrentScore.setProgressMaximum(100);
+        binding.diaCurrentScore.setProgressCurrent(model.getScore());
+        binding.diaCurrentProgress.setProgressCurrent(model.getProgress());
+        binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
 
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
-        binding.diaCurrentProgressIncrement.setOnClickListener(this);
     }
 
     /**
@@ -126,7 +126,8 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
                 else {
                     int total = getSeriesModel().getEpisodes();
                     model.setProgress(total);
-                    binding.diaCurrentProgress.setText(String.valueOf(total));
+                    binding.diaCurrentProgress.setProgressCurrent(total);
+                    //binding.diaCurrentProgress.setText(String.valueOf(total));
                 }
                 break;
             default:
@@ -139,16 +140,5 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.dia_current_progress_increment:
-                int current = model.getProgress() + 1;
-                model.setProgress(current);
-                binding.diaCurrentProgress.setText(String.valueOf(current));
-                break;
-        }
     }
 }

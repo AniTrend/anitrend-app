@@ -13,157 +13,115 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <TextView
-                    android:text="@string/dialog_title_status"
-                    android:layout_gravity="center_vertical|start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/dialog_title_status"
+                android:layout_gravity="center_vertical|start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-                <Spinner
-                    android:layout_gravity="center_vertical|end"
-                    android:id="@+id/dia_current_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+            <Spinner
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/dia_current_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            </FrameLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/dialog_title_volumes_read"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <EditText
-                    android:id="@+id/dia_current_volumes"
-                    android:layout_gravity="center_vertical|end"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/subtitle_text_size"
-                    tools:text="5"/>
-
-            </FrameLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/dialog_title_chapters_read"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-                <EditText
-                    android:layout_gravity="center_vertical|end"
-                    android:id="@+id/dia_current_chapters"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/subtitle_text_size"
-                    tools:text="5" />
-
-            </FrameLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/dialog_title_reread"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-                <EditText
-                    android:layout_gravity="center_vertical|end"
-                    android:id="@+id/dia_current_reread"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/subtitle_text_size"
-                    tools:text="5" />
-
-            </FrameLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/dialog_title_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <EditText
-                    android:layout_gravity="center_vertical|end"
-                    android:id="@+id/dia_current_score"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/subtitle_text_size"
-                    tools:text="5" />
-
-            </FrameLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/dialog_title_increment_chapters"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_gravity="center_vertical|end"
-                    android:id="@+id/dia_current_progress_increment"
-                    android:text="++"
-                    android:textSize="30sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </FrameLayout>
+        </FrameLayout>
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
+            android:layout_height="@dimen/xl_margin" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/dia_current_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_chapters_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/dia_current_chapters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_volumes_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/dia_current_volumes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_reread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/dia_current_reread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -175,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <CheckBox
+            <android.support.v7.widget.SwitchCompat
                 android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_privacy"
                 android:layout_width="wrap_content"
@@ -185,7 +143,7 @@
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
+            android:layout_height="@dimen/xl_margin" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

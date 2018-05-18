@@ -59,10 +59,10 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
      */
     @Override
     public Bundle persistChanges() {
-        model.setProgress(!TextUtils.isEmpty(binding.diaCurrentChapters.getText())? Integer.valueOf(binding.diaCurrentChapters.getText().toString()): 0);
-        model.setRepeat(!TextUtils.isEmpty(binding.diaCurrentReread.getText()) ? Integer.valueOf(binding.diaCurrentReread.getText().toString()): 0);
-        model.setProgressVolumes(!TextUtils.isEmpty(binding.diaCurrentVolumes.getText()) ? Integer.valueOf(binding.diaCurrentVolumes.getText().toString()): 0);
-        model.setScore(!TextUtils.isEmpty(binding.diaCurrentScore.getText())? Integer.valueOf(binding.diaCurrentScore.getText().toString()): 0);
+        model.setProgress(binding.diaCurrentChapters.getProgressCurrent());
+        model.setRepeat(binding.diaCurrentReread.getProgressCurrent());
+        model.setProgressVolumes(binding.diaCurrentVolumes.getProgressCurrent());
+        model.setScore(binding.diaCurrentScore.getProgressCurrent());
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
@@ -90,17 +90,19 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
 
         binding.diaCurrentPrivacy.setChecked(model.isHidden());
-        if(model.getScore() != 0)
-            binding.diaCurrentScore.setText(String.valueOf(model.getScore()));
-        if(model.getProgress() != 0)
-            binding.diaCurrentChapters.setText(String.valueOf(model.getProgress()));
-        if(model.getProgressVolumes() != 0)
-            binding.diaCurrentVolumes.setText(String.valueOf(model.getProgressVolumes()));
-        if(model.getRepeat() != 0)
-            binding.diaCurrentReread.setText(String.valueOf(model.getRepeat()));
+
+        if(model.getMedia().getVolumes() > 0)
+            binding.diaCurrentVolumes.setProgressMaximum(model.getMedia().getVolumes());
+        if(model.getMedia().getChapters() > 0)
+            binding.diaCurrentChapters.setProgressMaximum(model.getMedia().getChapters());
+
+        binding.diaCurrentScore.setProgressMaximum(100);
+        binding.diaCurrentScore.setProgressCurrent(model.getScore());
+        binding.diaCurrentChapters.setProgressCurrent(model.getProgress());
+        binding.diaCurrentVolumes.setProgressCurrent(model.getProgressVolumes());
+        binding.diaCurrentReread.setProgressCurrent(model.getRepeat());
 
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
-        binding.diaCurrentProgressIncrement.setOnClickListener(this);
     }
 
     /**
@@ -129,11 +131,11 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
                 else {
                     int total = getSeriesModel().getChapters();
                     model.setProgress(total);
-                    binding.diaCurrentChapters.setText(String.valueOf(total));
+                    binding.diaCurrentChapters.setProgressCurrent(total);
                     total = getSeriesModel().getVolumes();
                     if(total > 0) {
                         model.setProgressVolumes(total);
-                        binding.diaCurrentVolumes.setText(String.valueOf(total));
+                        binding.diaCurrentVolumes.setProgressCurrent(total);
                     }
                 }
                 break;
@@ -147,16 +149,5 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.dia_current_progress_increment:
-                int current = model.getProgress() + 1;
-                model.setProgress(current);
-                binding.diaCurrentChapters.setText(String.valueOf(current));
-                break;
-        }
     }
 }

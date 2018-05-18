@@ -20,7 +20,7 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter;
  * CustomSeriesManageBase for managing mediaLists
  */
 
-public abstract class CustomSeriesManageBase extends RelativeLayout implements CustomView, View.OnClickListener, AdapterView.OnItemSelectedListener {
+public abstract class CustomSeriesManageBase extends RelativeLayout implements CustomView, AdapterView.OnItemSelectedListener {
 
     protected MediaPresenter presenter;
 

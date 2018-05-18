@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mxt.anitrend.base.custom.view.widget.ProgressWidget">
+
+    <data>
+        <variable name="onClick" type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+        <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+            android:id="@+id/progress_decrement"
+            android:background="?selectableItemBackground"
+            android:layout_width="@dimen/avatar_size_md"
+            android:layout_height="match_parent"
+            android:onClick="@{onClick}"
+            android:scaleType="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="?colorAccent"
+            app:srcCompat="@drawable/ic_keyboard_arrow_down_grey_600_24dp" />
+
+        <EditText
+            android:id="@+id/progress_current"
+            android:layout_width="@dimen/avatar_size_md"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="@dimen/subtitle_text_size"
+            android:inputType="number"
+            tools:text="0" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/progress_maximum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subtitle_text_size"
+            android:paddingTop="11dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="11dp"
+            android:paddingBottom="11dp"
+            tools:text="/ 24" />
+
+        <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+            android:id="@+id/progress_increment"
+            android:background="?selectableItemBackground"
+            android:layout_width="@dimen/avatar_size_md"
+            android:layout_height="match_parent"
+            android:onClick="@{onClick}"
+            android:scaleType="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="?colorAccent"
+            app:srcCompat="@drawable/ic_keyboard_arrow_up_grey_600_24dp" />
+
+    </LinearLayout>
+</layout>

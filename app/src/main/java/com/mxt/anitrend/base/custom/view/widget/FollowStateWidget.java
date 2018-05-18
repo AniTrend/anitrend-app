@@ -12,7 +12,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.databinding.WidgetFollowStateBinding;
+import com.mxt.anitrend.databinding.WidgetButtonStateBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -34,7 +34,7 @@ import retrofit2.Response;
 public class FollowStateWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<UserBase> {
 
     private UserBase model;
-    private WidgetFollowStateBinding binding;
+    private WidgetButtonStateBinding binding;
     private WidgetPresenter<UserBase> presenter;
 
     public FollowStateWidget(Context context) {
@@ -57,7 +57,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
      */
     @Override
     public void onInit() {
-        binding = WidgetFollowStateBinding.inflate(CompatUtil.getLayoutInflater(getContext()),this, true);
+        binding = WidgetButtonStateBinding.inflate(CompatUtil.getLayoutInflater(getContext()),this, true);
         presenter = new WidgetPresenter<>(getContext());
         binding.setOnClickListener(this);
     }
@@ -75,11 +75,11 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
 
     private void setControlText() {
         if (model.isFollowing()) {
-            binding.userFollowStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccentDark));
-            binding.userFollowStateText.setText(R.string.following);
+            binding.buttonStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccentDark));
+            binding.buttonStateText.setText(R.string.following);
         } else {
-            binding.userFollowStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccent));
-            binding.userFollowStateText.setText(R.string.follow);
+            binding.buttonStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccent));
+            binding.buttonStateText.setText(R.string.follow);
         }
         resetFlipperState();
     }
