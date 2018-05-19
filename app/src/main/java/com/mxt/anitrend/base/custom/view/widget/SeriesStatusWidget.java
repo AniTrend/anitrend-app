@@ -102,9 +102,11 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     @BindingAdapter("airingStatus")
     public static void setAiringStatus(SeriesStatusWidget view, MediaList mediaList) {
         if(mediaList != null && mediaList.getMedia() != null && mediaList.getMedia().getNextAiringEpisode() != null) {
-            if(mediaList.getMedia().getNextAiringEpisode().getEpisode() - mediaList.getProgress() > 1)
+            if(mediaList.getMedia().getNextAiringEpisode().getEpisode() - mediaList.getProgress() > 1) {
                 view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
-        } else
-            view.setBackgroundColor(CompatUtil.getColorFromAttr(view.getContext(), R.attr.cardColor));
+                return;
+            }
+        }
+        view.setBackgroundColor(CompatUtil.getColorFromAttr(view.getContext(), R.attr.cardColor));
     }
 }

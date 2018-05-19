@@ -85,7 +85,9 @@ final class MediaDialogUtil extends DialogUtil {
                 try {
                     MediaList responseBody;
                     progressDialog.dismiss();
+                    final MediaList modelClone = seriesManageBase.getModel().clone();
                     if(response.isSuccessful() && (responseBody = response.body()) != null) {
+                        responseBody.setMedia(modelClone.getMedia());
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, responseBody), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {

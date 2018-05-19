@@ -48,4 +48,8 @@ public class MediaListUtil {
     public static boolean isTitleSort(@KeyUtil.MediaListSort String mediaSort) {
         return CompatUtil.equals(mediaSort, KeyUtil.TITLE);
     }
+
+    public static boolean isProgressUpdatable(MediaList mediaList) {
+        return mediaList.getMedia().getNextAiringEpisode() != null && mediaList.getMedia().getNextAiringEpisode().getEpisode() - mediaList.getProgress() >= 1;
+    }
 }

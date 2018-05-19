@@ -5,22 +5,20 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProgressBinding;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 
 import java.util.Locale;
 
-public class ProgressWidget extends LinearLayout implements CustomView, View.OnClickListener, TextWatcher {
+public class ProgressWidget extends FrameLayout implements CustomView, View.OnClickListener, TextWatcher {
 
     private WidgetProgressBinding binding;
 

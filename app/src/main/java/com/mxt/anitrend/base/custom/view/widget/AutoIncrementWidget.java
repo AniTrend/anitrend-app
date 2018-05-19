@@ -113,15 +113,17 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     public void onResponse(@NonNull Call<MediaList> call, @NonNull Response<MediaList> response) {
         try {
             MediaList mediaList;
+            final MediaList modelClone = model.clone();
             if(response.isSuccessful() && (mediaList = response.body()) != null) {
                 boolean isModelCategoryChanged = !CompatUtil.equals(mediaList.getStatus(), status);
-                model = mediaList.clone();
+                mediaList.setMedia(modelClone.getMedia()); model = mediaList.clone();
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
-                resetFlipperState();
-                if(isModelCategoryChanged) {
-                    NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                if(isModelCategoryChanged || MediaListUtil.isProgressUpdatable(modelClone)) {
+                    if(isModelCategoryChanged)
+                        NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, model), false);
-                }
+                } else
+                    resetFlipperState();
             } else {
                 resetFlipperState();
                 Log.e(this.toString(), ErrorUtil.getError(response));
