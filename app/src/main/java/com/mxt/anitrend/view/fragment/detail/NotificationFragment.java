@@ -18,6 +18,7 @@ import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.NotificationHistory;
+import com.mxt.anitrend.model.entity.base.NotificationHistory_;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
@@ -236,18 +237,23 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     private void setItemAsRead(final Notification data) {
         new ThreadPool.Builder().build()
                 .execute(() -> {
-                    List<NotificationHistory> dismissibleNotifications = Stream.of(model)
-                            .filter(item -> item.getActivityId() == data.getActivityId())
-                            .map(item -> new NotificationHistory(item.getId()))
-                            .toList();
+                    boolean isNotificationRead = getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
+                            .query().equal(NotificationHistory_.id, data.getId()).build().count() != 0;
+                    if (!isNotificationRead) {
+                        List<NotificationHistory> dismissibleNotifications = Stream.of(model)
+                                .filter(item -> item.getActivityId() != 0 && item.getActivityId() == data.getActivityId())
+                                .map(item -> new NotificationHistory(item.getId()))
+                                .toList();
 
-                    if(!CompatUtil.isEmpty(dismissibleNotifications))
-                        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
-                                .put(dismissibleNotifications);
-                    else
-                        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
-                                .put(new NotificationHistory(data.getId()));
+                        if (!CompatUtil.isEmpty(dismissibleNotifications))
+                            getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
+                                    .put(dismissibleNotifications);
+                        else
+                            getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
+                                    .put(new NotificationHistory(data.getId()));
+                    }
                 });
+
     }
 
     /**
