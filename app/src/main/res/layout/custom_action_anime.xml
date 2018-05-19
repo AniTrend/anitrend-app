@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <android.support.v7.widget.SwitchCompat
+            <android.support.v7.widget.AppCompatCheckBox
                 android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_privacy"
                 android:layout_width="wrap_content"
