@@ -203,7 +203,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
             this.model = model;
             updateUI();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateOrange),
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 

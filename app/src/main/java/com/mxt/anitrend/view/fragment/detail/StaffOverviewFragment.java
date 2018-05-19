@@ -63,7 +63,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
             binding.setModel(model);
             binding.stateLayout.showContent();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
+            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), (view) -> makeRequest());
     }
 

@@ -169,7 +169,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     public void showError(String error) {
         super.showError(error);
         stateLayout.showLoading();
-        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateOrange),
+        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                 error, getString(R.string.try_again), stateLayoutOnClick);
     }
 
@@ -177,7 +177,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     public void showEmpty(String message) {
         super.showEmpty(message);
         stateLayout.showLoading();
-        stateLayout.showError(CompatUtil.getDrawable(getContext(),  R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
+        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                 message, getString(R.string.try_again) , stateLayoutOnClick);
     }
 }
