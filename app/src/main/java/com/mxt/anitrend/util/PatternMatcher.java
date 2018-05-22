@@ -25,7 +25,7 @@ public class PatternMatcher {
 
     private static final Pattern pattern;
     private static final String PATTERN_MEDIA = "(img|webm|youtube).*?(\\([^)]+\\))";
-    private static final String PATTERN_DEEP_LINKS = "(user|manga|anime|character|staff)\\/(.*)";
+    private static final String PATTERN_DEEP_LINKS = "(user|manga|anime|character|staff|studio)\\/(.*)";
 
     private static final String USER_URL_LINK = "__[%s](https://anilist.co/user/%s)__";
     private static final String PATTERN_USER_TAGS = "(@[A-Za-z]\\w+)";

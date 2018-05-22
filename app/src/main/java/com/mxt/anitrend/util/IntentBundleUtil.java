@@ -87,6 +87,12 @@ public class IntentBundleUtil {
                 else
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
                 break;
+            case KeyUtil.DEEP_LINK_STUDIO:
+                if ((splitKeys = hasDepth(lastKey)) != null)
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(splitKeys[0]));
+                else
+                    intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
+                break;
         }
     }
 
