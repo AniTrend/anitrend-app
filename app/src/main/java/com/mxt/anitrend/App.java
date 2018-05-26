@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.base.custom.async.ThreadPool;
 import com.mxt.anitrend.model.entity.MyObjectBox;
+import com.mxt.anitrend.util.ApplicationPref;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -49,14 +50,17 @@ public class App extends Application {
         new ThreadPool.Builder().build()
                 .execute(() -> EmojiManager.initEmojiData(this));
         analytics = FirebaseAnalytics.getInstance(this);
-        analytics.setAnalyticsCollectionEnabled(true);
+        analytics.setAnalyticsCollectionEnabled(new ApplicationPref(this).isUsageAnalyticsEnabled());
         analytics.setMinimumSessionDuration(5000L);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        setCrashAnalytics();
+
+        if (new ApplicationPref(this).isCrashReportsEnabled()) {
+            setCrashAnalytics();
+        }
         setupBoxStore();
         initApp();
     }

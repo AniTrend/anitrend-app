@@ -120,6 +120,14 @@ public class ApplicationPref {
         return sharedPreferences.getString(context.getString(R.string.pref_key_ringtone), "DEFAULT_SOUND");
     }
 
+    public Boolean isCrashReportsEnabled() {
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), false);
+    }
+
+    public Boolean isUsageAnalyticsEnabled() {
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), false);
+    }
+
     public void saveSeasonYear(int year) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KeyUtil.arg_seasonYear, year);
