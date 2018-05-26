@@ -41,7 +41,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Locale;
 
-import io.wax911.emojify.Emoji;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -285,13 +284,6 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
             throwable.printStackTrace();
             NotifyUtil.makeText(getContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEmojiClicked(Emoji emoji) {
-        EditText editor = binding.comment;
-        int start = editor.getSelectionStart();
-        editor.getEditableText().insert(start, emoji.getEmoji());
     }
 
 

@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.AiringPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.FeedPageAdapter;
@@ -42,6 +41,7 @@ import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.VersionBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.DownloaderService;
+import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
@@ -420,9 +420,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                         .build();
                 showBottomSheet();
             }
-            Crashlytics.setUserIdentifier(user.getName());
-            getApplicationBase().getAnalytics()
-                    .setUserId(user.getName());
+            AnalyticsUtil.setCrashalyticsUser(this, user.getName());
         }
 
         mAccountLogin.setVisible(false);

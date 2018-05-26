@@ -131,11 +131,12 @@
 
                 <android.support.v4.widget.Space
                     android:layout_width="@dimen/lg_margin"
+                    android:visibility="gone"
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/insert_emoticon"
+                    android:visibility="gone"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"

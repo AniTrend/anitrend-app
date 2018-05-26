@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.mxt.anitrend.base.custom.async.ThreadPool;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
 
@@ -14,7 +13,6 @@ import org.greenrobot.eventbus.EventBus;
 import io.fabric.sdk.android.Fabric;
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
-import io.wax911.emojify.EmojiManager;
 
 /**
  * Created by max on 2017/10/22.
@@ -47,8 +45,6 @@ public class App extends Application {
                 .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .installDefaultEventBus();
-        new ThreadPool.Builder().build()
-                .execute(() -> EmojiManager.initEmojiData(this));
         analytics = FirebaseAnalytics.getInstance(this);
         analytics.setAnalyticsCollectionEnabled(new ApplicationPref(this).isUsageAnalyticsEnabled());
         analytics.setMinimumSessionDuration(5000L);
@@ -57,10 +53,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        if (new ApplicationPref(this).isCrashReportsEnabled()) {
+        if (new ApplicationPref(this).isCrashReportsEnabled())
             setCrashAnalytics();
-        }
         setupBoxStore();
         initApp();
     }

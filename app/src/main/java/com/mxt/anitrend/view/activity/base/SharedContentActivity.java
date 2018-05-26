@@ -29,7 +29,6 @@ import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.view.sheet.BottomSheetEmoticon;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 
 import org.greenrobot.eventbus.EventBus;
@@ -220,10 +219,6 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     public void onItemClick(View target, Object data) {
         switch (target.getId()) {
             case R.id.insert_emoticon:
-                mBottomSheet = new BottomSheetEmoticon.Builder()
-                        .setTitle(R.string.text_emoticons_scroll)
-                        .build();
-                mBottomSheet.show(getSupportFragmentManager(), mBottomSheet.getTag());
                 break;
             case R.id.insert_gif:
                 mBottomSheet = new BottomSheetGiphy.Builder()

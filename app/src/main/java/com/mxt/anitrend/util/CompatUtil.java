@@ -60,9 +60,11 @@ public class CompatUtil {
     private static final int CACHE_LIMIT = 1024 * 1024 * 250;
 
     public static void hideKeyboard(FragmentActivity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if(inputMethodManager != null)
-            inputMethodManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        if(activity != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null)
+                inputMethodManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
     }
 
     public static boolean isOnline(Context context) {
@@ -343,12 +345,14 @@ public class CompatUtil {
      * Configure our swipe refresh layout
      */
     public static void configureSwipeRefreshLayout(CustomSwipeRefreshLayout swipeRefreshLayout, FragmentActivity fragmentActivity) {
-        swipeRefreshLayout.setDragTriggerDistance(CustomSwipeRefreshLayout.DIRECTION_BOTTOM, (getNavigationBarHeight(fragmentActivity.getResources()) + dipToPx(16f)));
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getColorFromAttr(fragmentActivity, R.attr.rootColor));
-        swipeRefreshLayout.setColorSchemeColors(getColorFromAttr(fragmentActivity, R.attr.contentColor));
-        swipeRefreshLayout.setVisibility(View.GONE);
-        swipeRefreshLayout.setPermitRefresh(true);
-        swipeRefreshLayout.setPermitLoad(false);
+        if(fragmentActivity != null) {
+            swipeRefreshLayout.setDragTriggerDistance(CustomSwipeRefreshLayout.DIRECTION_BOTTOM, (getNavigationBarHeight(fragmentActivity.getResources()) + dipToPx(16f)));
+            swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getColorFromAttr(fragmentActivity, R.attr.rootColor));
+            swipeRefreshLayout.setColorSchemeColors(getColorFromAttr(fragmentActivity, R.attr.contentColor));
+            swipeRefreshLayout.setVisibility(View.GONE);
+            swipeRefreshLayout.setPermitRefresh(true);
+            swipeRefreshLayout.setPermitLoad(false);
+        }
     }
 
     /**

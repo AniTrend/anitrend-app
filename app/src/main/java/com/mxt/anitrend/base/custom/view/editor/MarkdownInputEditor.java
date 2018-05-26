@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ActionMode;
@@ -16,8 +18,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import io.wax911.emojify.EmojiUtils;
 
 import static com.mxt.anitrend.util.KeyUtil.MD_BOLD;
 import static com.mxt.anitrend.util.KeyUtil.MD_BULLET;
@@ -51,11 +51,21 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
         onInit();
     }
 
+    private InputFilter EMOJI_FILTER = (source, start, end, dest, dstart, dend) -> {
+        for (int index = start; index < end; index++) {
+            int type = Character.getType(source.charAt(index));
+            if (type == Character.SURROGATE)
+                return "";
+        }
+        return null;
+    };
+
     /**
      * Optionally included when constructing custom views
      */
     @Override
     public void onInit() {
+        setFilters(new InputFilter[] {EMOJI_FILTER});
         setVerticalScrollBarEnabled(true);
         setCustomSelectionActionModeCallback(this);
         setMaxHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
@@ -200,7 +210,9 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
      */
     public String getFormattedText() {
         String content = getText().toString();
-        return EmojiUtils.hexHtmlify(content);
+        // disabled until anilist introduces emojis
+        //return EmojiUtils.hexHtmlify(content);
+        return content;
     }
 
     /**

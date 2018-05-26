@@ -134,9 +134,6 @@ dependencies {
     implementation "io.objectbox:objectbox-android:${versions.objectBox}"
     annotationProcessor "io.objectbox:objectbox-processor:${versions.objectBox}"
 
-    /** Emojify */
-    implementation "com.github.wax911:android-emojify:${versions.emojify}"
-
     /** Pretty Time */
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 

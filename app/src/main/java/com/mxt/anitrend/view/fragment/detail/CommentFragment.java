@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
-import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter;
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
@@ -32,7 +31,6 @@ import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
-import com.mxt.anitrend.view.sheet.BottomSheetEmoticon;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 import com.mxt.anitrend.view.sheet.BottomSheetUsers;
 
@@ -42,7 +40,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by max on 2017/11/16.
@@ -117,10 +114,6 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
             public void onItemClick(View target, Object data) {
                 switch (target.getId()) {
                     case R.id.insert_emoticon:
-                        mBottomSheet = new BottomSheetEmoticon.Builder()
-                                .setTitle(R.string.text_emoticons_scroll)
-                                .build();
-                        showBottomSheet();
                         break;
                     case R.id.insert_gif:
                         mBottomSheet = new BottomSheetGiphy.Builder()

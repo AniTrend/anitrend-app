@@ -192,9 +192,8 @@ public class DateUtil {
      * @param endDelta End difference plus or minus the current year
      */
     public static List<Integer> getYearRanges(int start, int endDelta) {
-        List<Integer> yearRanges = IntStream.rangeClosed(start, getCurrentYear(0) + endDelta)
+        return IntStream.rangeClosed(start, getCurrentYear(endDelta))
                 .boxed().collect(Collectors.toList());
-        return yearRanges;
     }
 
     /**
