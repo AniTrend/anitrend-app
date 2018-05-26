@@ -22,4 +22,11 @@
         android:summary="@string/pref_header_data_sync_summary"
         android:title="@string/pref_header_data_sync" />
 
+    <header
+        android:breadCrumbTitle="Privacy Settings"
+        android:fragment="com.mxt.anitrend.view.activity.base.SettingsActivity$PrivacyPreferenceFragment"
+        android:icon="@drawable/ic_privacy_grey_600_24dp"
+        android:summary="@string/pref_header_privacy_summary"
+        android:title="@string/pref_header_privacy" />
+
 </preference-headers>
