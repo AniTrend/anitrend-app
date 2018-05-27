@@ -3,14 +3,14 @@ package com.mxt.anitrend.model.entity.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2018/02/24.
  * Notification base meta data class
  */
-public class NotificationBase extends EntityGroup implements Parcelable {
+public class NotificationBase extends RecyclerItem implements Parcelable {
 
     private long id;
     private @KeyUtil.NotificationType String type;

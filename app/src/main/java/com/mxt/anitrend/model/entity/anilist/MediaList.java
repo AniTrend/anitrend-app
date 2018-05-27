@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Maxwell on 1/12/2017.
  */
-public class MediaList extends EntityGroup implements Parcelable, Cloneable {
+public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
 
     private long id;
     private long mediaId;

@@ -5,12 +5,12 @@ import android.os.Parcelable;
 
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.model.entity.anilist.meta.TitleBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 
 /**
  * Created by Maxwell on 10/4/2016.
  */
-public class CharacterBase extends EntityGroup implements Parcelable {
+public class CharacterBase extends RecyclerItem implements Parcelable {
 
     private long id;
     private TitleBase name;

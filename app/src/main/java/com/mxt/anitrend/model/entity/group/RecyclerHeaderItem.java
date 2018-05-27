@@ -7,18 +7,18 @@ import com.mxt.anitrend.util.KeyUtil;
  * Created by max on 2018/02/18.
  */
 
-public class EntityHeader extends EntityGroup {
+public class RecyclerHeaderItem extends RecyclerItem {
 
     private String title;
     private int size;
 
-    public EntityHeader(String title, int size) {
+    public RecyclerHeaderItem(String title, int size) {
         this.title = title;
         this.size = size;
         this.setContentType(KeyUtil.RECYCLER_TYPE_HEADER);
     }
 
-    public EntityHeader(String title) {
+    public RecyclerHeaderItem(String title) {
         this(title, 0);
     }
 
@@ -40,8 +40,8 @@ public class EntityHeader extends EntityGroup {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof EntityHeader)
-            return CompatUtil.equals(((EntityHeader) o).title, title);
+        if(o instanceof RecyclerHeaderItem)
+            return CompatUtil.equals(((RecyclerHeaderItem) o).title, title);
         return super.equals(o);
     }
 }

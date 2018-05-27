@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.group.EntityHeader" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.group.RecyclerHeaderItem" />
     </data>
 
     <FrameLayout

@@ -9,7 +9,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.KeyUtil;
 
 /**
@@ -17,7 +17,7 @@ import com.mxt.anitrend.util.KeyUtil;
  * Media base entity
  */
 
-public class MediaBase extends EntityGroup implements Parcelable {
+public class MediaBase extends RecyclerItem implements Parcelable {
 
     private long id;
     private MediaTitle title;

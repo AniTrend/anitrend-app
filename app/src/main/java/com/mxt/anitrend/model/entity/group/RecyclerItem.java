@@ -7,7 +7,7 @@ import com.mxt.anitrend.util.KeyUtil;
  * EntityGroup for grouping items in a recycler view
  */
 
-public abstract class EntityGroup {
+public abstract class RecyclerItem {
 
     private @KeyUtil.RecyclerViewType int content_type;
 
