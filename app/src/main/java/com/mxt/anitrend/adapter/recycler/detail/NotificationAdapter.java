@@ -35,8 +35,8 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
 
     private Box<NotificationHistory> historyBox;
 
-    public NotificationAdapter(List<Notification> data, Context context) {
-        super(data, context);
+    public NotificationAdapter(Context context) {
+        super(context);
         historyBox = presenter.getDatabase().getBoxStore(NotificationHistory.class);
     }
 

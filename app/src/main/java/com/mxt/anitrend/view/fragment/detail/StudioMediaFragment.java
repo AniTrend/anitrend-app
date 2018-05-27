@@ -51,6 +51,7 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
             id = getArguments().getLong(KeyUtil.arg_id);
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         isFilterable = true;
+        mAdapter = new MediaAdapter(getContext(), true);
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -91,8 +92,6 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new MediaAdapter(model, getContext(), true);
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -162,7 +161,7 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
             }
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

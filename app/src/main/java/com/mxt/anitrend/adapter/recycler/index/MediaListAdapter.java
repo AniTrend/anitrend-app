@@ -2,11 +2,13 @@ package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
+import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
@@ -14,6 +16,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.MediaListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +34,8 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
 
     private String currentUser;
 
-    public MediaListAdapter(List<MediaList> data, Context context) {
-        super(data, context);
+    public MediaListAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
@@ -46,29 +49,25 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
-                } else if(!CompatUtil.isEmpty(clone)) {
-                    data = new ArrayList<>();
-                    for (MediaList model : clone) {
-                        if (model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
-                                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
-                                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())||
-                                model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())) {
-                            data.add(model);
-                        }
-                    }
-                }
                 FilterResults results = new FilterResults();
-                results.values = data;
+                if(CompatUtil.isEmpty(clone))
+                    clone = data;
+                String filter = constraint.toString();
+                if(TextUtils.isEmpty(filter)) {
+                    results.values = new ArrayList<>(clone);
+                    clone = null;
+                } else {
+                    results.values = Stream.of(clone)
+                            .filter(c -> MediaListUtil.isFilterMatch(c, filter))
+                            .toList();
+                }
                 return results;
             }
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 if(results.values != null) {
-                    data = new ArrayList<>((List<MediaList>) results.values);
+                    data = (List<MediaList>) results.values;
                     notifyDataSetChanged();
                 }
             }

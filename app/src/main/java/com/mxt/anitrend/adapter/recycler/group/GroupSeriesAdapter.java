@@ -14,11 +14,9 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesBinding;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import java.util.List;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -27,15 +25,15 @@ import butterknife.OnLongClick;
  * Created by max on 2017/12/31.
  */
 
-public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
+public class GroupSeriesAdapter extends RecyclerViewAdapter<RecyclerItem> {
 
-    public GroupSeriesAdapter(List<EntityGroup> data, Context context) {
-        super(data, context);
+    public GroupSeriesAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new SeriesViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
@@ -52,7 +50,7 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
         return null;
     }
 
-    protected class SeriesViewHolder extends RecyclerViewHolder<EntityGroup> {
+    protected class SeriesViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
         private AdapterSeriesBinding binding;
 
@@ -70,11 +68,11 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<EntityGroup> {
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br/>
          *
-         * @param entityGroup Is the model at the current adapter position
+         * @param recyclerItem Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(EntityGroup entityGroup) {
-            MediaBase model = (MediaBase) entityGroup;
+        public void onBindViewHolder(RecyclerItem recyclerItem) {
+            MediaBase model = (MediaBase) recyclerItem;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.executePendingBindings();

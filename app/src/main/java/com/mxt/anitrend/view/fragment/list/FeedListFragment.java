@@ -69,6 +69,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
         isPager = true; isFeed = true; mColumnSize = R.integer.single_list_x1;
         hasSubscriber = true;
+        mAdapter = new FeedAdapter(getContext());
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
@@ -92,8 +93,6 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new FeedAdapter(model, getContext());
         injectAdapter();
         if(!TapTargetUtil.isActive(KeyUtil.KEY_POST_TYPE_TIP) && isFeed) {
             if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
@@ -202,10 +201,9 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                     swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
                 } else {
-                    pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                    pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                     if(pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
-                        model.set(pairIndex, consumer.getChangeModel());
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
                     }
                 }
@@ -215,19 +213,17 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                     swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
                 } else {
-                    pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                    pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                     if (pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
-                        model.set(pairIndex, consumer.getChangeModel());
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
                     }
                 }
                 break;
             case KeyUtil.MUT_DELETE_FEED:
-                pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
-                    model.remove(pairIndex);
                     mAdapter.onItemRemoved(pairIndex);
                 }
                 break;
@@ -250,7 +246,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 

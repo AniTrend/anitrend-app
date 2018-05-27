@@ -14,11 +14,9 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterStaffBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import java.util.List;
 
 import butterknife.OnClick;
 
@@ -27,15 +25,15 @@ import butterknife.OnClick;
  * Media staff roles which includes the staff or actor character involvement
  */
 
-public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
+public class GroupStaffRoleAdapter extends RecyclerViewAdapter<RecyclerItem> {
 
-    public GroupStaffRoleAdapter(List<EntityGroup> data, Context context) {
-        super(data, context);
+    public GroupStaffRoleAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
@@ -52,7 +50,7 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
         return null;
     }
 
-    protected class StaffViewHolder extends RecyclerViewHolder<EntityGroup> {
+    protected class StaffViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
         private AdapterStaffBinding binding;
 
@@ -73,7 +71,7 @@ public class GroupStaffRoleAdapter extends RecyclerViewAdapter<EntityGroup> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(EntityGroup model) {
+        public void onBindViewHolder(RecyclerItem model) {
             binding.setModel((StaffBase) model);
             if(((StaffBase)model).isFavourite())
                 binding.favouriteIndicator.setVisibility(View.VISIBLE);

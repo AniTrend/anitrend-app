@@ -15,11 +15,9 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterCharacterBinding;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import java.util.List;
 
 import butterknife.OnClick;
 
@@ -27,22 +25,22 @@ import butterknife.OnClick;
  * Created by max on 2017/12/20.
  */
 
-public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
+public class GroupCharacterAdapter extends RecyclerViewAdapter<RecyclerItem> {
 
-    public GroupCharacterAdapter(List<EntityGroup> data, Context context) {
-        super(data, context);
+    public GroupCharacterAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new CharacterViewHolder(AdapterCharacterBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override
-    public void onViewAttachedToWindow(RecyclerViewHolder<EntityGroup> holder) {
+    public void onViewAttachedToWindow(RecyclerViewHolder<RecyclerItem> holder) {
         super.onViewAttachedToWindow(holder);
         StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
         if(getItemViewType(holder.getLayoutPosition()) == KeyUtil.RECYCLER_TYPE_HEADER)
@@ -60,7 +58,7 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
         return null;
     }
 
-    protected class CharacterViewHolder extends RecyclerViewHolder<EntityGroup> {
+    protected class CharacterViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
         private AdapterCharacterBinding binding;
 
@@ -78,11 +76,11 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<EntityGroup> {
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br/>
          *
-         * @param entityGroup Is the model at the current adapter position
+         * @param recyclerItem Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(EntityGroup entityGroup) {
-            CharacterBase model = (CharacterBase) entityGroup;
+        public void onBindViewHolder(RecyclerItem recyclerItem) {
+            CharacterBase model = (CharacterBase) recyclerItem;
             binding.setModel(model);
             if(model.isFavourite())
                 binding.favouriteIndicator.setVisibility(View.VISIBLE);

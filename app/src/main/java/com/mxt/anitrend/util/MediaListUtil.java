@@ -9,6 +9,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MediaListUtil {
 
@@ -51,5 +52,11 @@ public class MediaListUtil {
 
     public static boolean isProgressUpdatable(MediaList mediaList) {
         return mediaList.getMedia().getNextAiringEpisode() != null && mediaList.getMedia().getNextAiringEpisode().getEpisode() - mediaList.getProgress() >= 1;
+    }
+
+    public static boolean isFilterMatch(MediaList model, String filter) {
+        return model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter) ||
+                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter) ||
+                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter);
     }
 }

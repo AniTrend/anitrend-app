@@ -43,8 +43,9 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             searchQuery = getArguments().getString(KeyUtil.arg_search);
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        mAdapter = new StaffAdapter(getContext());
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -53,8 +54,6 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new StaffAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -118,7 +117,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

@@ -25,13 +25,13 @@ import butterknife.OnLongClick;
 
 public class TagAdapter extends RecyclerViewAdapter<MediaTag> {
 
-    public TagAdapter(List<MediaTag> data, Context context) {
-        super(data, context);
+    public TagAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<MediaTag> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaTag> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new TagViewHolder(AdapterTagBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

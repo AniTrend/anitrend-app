@@ -52,8 +52,9 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
             searchQuery = getArguments().getString(KeyUtil.arg_search);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        mAdapter = new MediaAdapter(getContext(), true);
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -62,8 +63,6 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new MediaAdapter(model, getContext(), true);
         injectAdapter();
     }
 
@@ -137,7 +136,7 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

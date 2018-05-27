@@ -8,7 +8,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.AdapterMediaHeaderBinding;
 import com.mxt.anitrend.model.entity.anilist.Media;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -18,17 +18,17 @@ import butterknife.OnLongClick;
  * Group header for media items
  */
 
-public class GroupMediaViewHolder extends RecyclerViewHolder<EntityGroup> {
+public class GroupMediaViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
     private AdapterMediaHeaderBinding binding;
-    private ItemClickListener<EntityGroup> clickListener;
+    private ItemClickListener<RecyclerItem> clickListener;
 
     /**
      * Default constructor which includes binding with butter knife
      *
      * @param binding
      */
-    public GroupMediaViewHolder(AdapterMediaHeaderBinding binding, ItemClickListener<EntityGroup> clickListener) {
+    public GroupMediaViewHolder(AdapterMediaHeaderBinding binding, ItemClickListener<RecyclerItem> clickListener) {
         super(binding.getRoot());
         this.binding = binding;
         this.clickListener = clickListener;
@@ -38,11 +38,11 @@ public class GroupMediaViewHolder extends RecyclerViewHolder<EntityGroup> {
      * Load image, text, buttons, etc. in this method from the given parameter
      * <br/>
      *
-     * @param entityGroup Is the model at the current adapter position
+     * @param recyclerItem Is the model at the current adapter position
      */
     @Override
-    public void onBindViewHolder(EntityGroup entityGroup) {
-        Media model = (Media) entityGroup;
+    public void onBindViewHolder(RecyclerItem recyclerItem) {
+        Media model = (Media) recyclerItem;
         binding.setModel(model);
         binding.seriesTitle.setTitle(model);
         binding.executePendingBindings();

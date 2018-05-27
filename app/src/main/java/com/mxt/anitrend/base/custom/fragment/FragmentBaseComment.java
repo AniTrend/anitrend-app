@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +31,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -51,7 +50,6 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
 
     protected long userActivityId;
     protected FeedList feedList;
-    protected List<FeedReply> model;
 
     protected String query;
     protected boolean isLimit;
@@ -115,8 +113,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
     public void onStart() {
         super.onStart();
         showLoading();
-        /*if(!getPresenter().hasParcel(KeyUtils.key_recycler_state) && model == null)*/
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onRefresh();
         else
             updateUI();
@@ -269,9 +266,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      */
     @Override
     public void onRefresh() {
-        isLimit = false; model = null;
-        if (mAdapter != null)
-            mAdapter.clearItems();
+        isLimit = false;
         if(getPresenter() != null)
             getPresenter().onRefreshPage();
         makeRequest();
@@ -301,24 +296,21 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      * parents data, then call this method after
      */
     protected void injectAdapter() {
-        if(model != null) {
+        if(mAdapter.getItemCount() > 0) {
             mAdapter.setClickListener(this);
             if (recyclerView.getAdapter() == null) {
                 if (getActionMode() != null)
                     mAdapter.setActionModeCallback(getActionMode());
-                if(mAdapter.getItemCount() != model.size())
-                    mAdapter.onItemsInserted(model);
                 recyclerView.setAdapter(mAdapter);
             } else {
                 if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
-                mAdapter.onItemsInserted(model);
-
-                if (query != null)
+                else if(swipeRefreshLayout.isLoading())
+                    swipeRefreshLayout.setLoading(false);
+                if (!TextUtils.isEmpty(query))
                     mAdapter.getFilter().filter(query);
             }
-            if (mAdapter.getItemCount() > 0)
-                showContent();
+            showContent();
         }
         else
             showEmpty(getString(R.string.layout_empty_response));
@@ -331,23 +323,22 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      */
     @Override
     public void onChanged(@Nullable FeedList content) {
-        if(content != null) {
-            if(content.getReplies() != null && !content.getReplies().isEmpty()) {
-                if(isPager) {
-                    if (model == null) model = content.getReplies();
-                    else model.addAll(content.getReplies());
-                }
+        if(content != null && !CompatUtil.isEmpty(content.getReplies())) {
+            if(isPager && !swipeRefreshLayout.isRefreshing()) {
+                if (mAdapter.getItemCount() < 1)
+                    mAdapter.onItemsInserted(content.getReplies());
                 else
-                    model = content.getReplies();
-                updateUI();
-            } else {
-                if (isPager)
-                    setLimitReached();
-                if (model == null || model.size() < 1)
-                    showEmpty(getString(R.string.layout_empty_response));
+                    mAdapter.onItemRangeInserted(content.getReplies());
             }
-        } else
-            showEmpty(getString(R.string.layout_empty_response));
+            else
+                mAdapter.onItemsInserted(content.getReplies());
+            updateUI();
+        } else {
+            if (isPager)
+                setLimitReached();
+            if (mAdapter.getItemCount() < 1)
+                showEmpty(getString(R.string.layout_empty_response));
+        }
     }
 
     /**

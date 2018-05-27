@@ -30,8 +30,8 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
     private String currentUser;
 
-    public AiringAdapter(List<MediaList> data, Context context) {
-        super(data, context);
+    public AiringAdapter(Context context) {
+        super(context);
         if(presenter.getApplicationPref().isAuthenticated())
             currentUser = presenter.getDatabase().getCurrentUser().getName();
     }
@@ -44,36 +44,7 @@ public class AiringAdapter extends RecyclerViewAdapter<MediaList> {
 
     @Override
     public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
-                } else if(!CompatUtil.isEmpty(clone)) {
-                    data = new ArrayList<>();
-                    for (MediaList model : clone) {
-                        if (model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
-                                model.getMedia().getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase()) ||
-                                model.getMedia().getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())||
-                                model.getMedia().getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter.toLowerCase())) {
-                            data.add(model);
-                        }
-                    }
-                }
-                FilterResults results = new FilterResults();
-                results.values = data;
-                return results;
-            }
-
-            @Override @SuppressWarnings("unchecked")
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                if(results.values != null) {
-                    data = new ArrayList<>((List<MediaList>) results.values);
-                    notifyDataSetChanged();
-                }
-            }
-        };
+        return null;
     }
 
     protected class AiringViewHolder extends RecyclerViewHolder<MediaList> {

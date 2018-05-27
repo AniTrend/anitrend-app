@@ -24,13 +24,13 @@ import butterknife.OnClick;
 
 public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
 
-    public StudioAdapter(List<StudioBase> data, Context context) {
-        super(data, context);
+    public StudioAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<StudioBase> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<StudioBase> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new StudioViewHolder(AdapterStudioBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

@@ -25,13 +25,13 @@ import butterknife.OnClick;
 
 public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
 
-    public StaffAdapter(List<StaffBase> data, Context context) {
-        super(data, context);
+    public StaffAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<StaffBase> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<StaffBase> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

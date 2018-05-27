@@ -2,6 +2,7 @@ package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterUserBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +28,13 @@ import butterknife.OnClick;
 
 public class UserAdapter extends RecyclerViewAdapter<UserBase> {
 
-    public UserAdapter(List<UserBase> data, Context context) {
-        super(data, context);
+    public UserAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<UserBase> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<UserBase> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new UserViewHolder(AdapterUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -41,22 +43,28 @@ public class UserAdapter extends RecyclerViewAdapter<UserBase> {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                if(CompatUtil.isEmpty(clone))
+                    clone = data;
                 String filter = constraint.toString();
-                if(filter.isEmpty())
-                    data = clone;
-                else
-                    data = new ArrayList<>(Stream.of(clone)
+                if(TextUtils.isEmpty(filter)) {
+                    results.values = new ArrayList<>(clone);
+                    clone = null;
+                }
+                else {
+                    results.values = new ArrayList<>(Stream.of(clone)
                             .filter((model) -> model.getName().toLowerCase().contains(filter))
                             .toList());
-                FilterResults results = new FilterResults();
-                results.values = data;
+                }
                 return results;
             }
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<UserBase>)results.values);
-                notifyDataSetChanged();
+                if(results.values != null) {
+                    data = (List<UserBase>) results.values;
+                    notifyDataSetChanged();
+                }
             }
         };
     }

@@ -43,8 +43,9 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContaine
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             searchQuery = getArguments().getString(KeyUtil.arg_search);
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.single_list_x1; isPager = true;
+        mAdapter = new UserAdapter(getContext());
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -53,8 +54,6 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContaine
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-           mAdapter = new UserAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -118,7 +117,7 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContaine
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

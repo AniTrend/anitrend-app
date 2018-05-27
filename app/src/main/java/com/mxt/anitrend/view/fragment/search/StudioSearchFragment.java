@@ -43,8 +43,9 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             searchQuery = getArguments().getString(KeyUtil.arg_search);
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_list_x2;  isPager = true;
+        mAdapter = new StudioAdapter(getContext());
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -53,8 +54,6 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new StudioAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -117,7 +116,7 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

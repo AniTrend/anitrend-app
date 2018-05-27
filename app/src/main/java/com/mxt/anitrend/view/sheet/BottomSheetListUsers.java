@@ -39,9 +39,6 @@ import butterknife.ButterKnife;
 public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase>> implements ItemClickListener<UserBase>, Observer<PageContainer<UserBase>>,
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
-
-    protected List<UserBase> model;
-
     protected @BindView(R.id.stateLayout)
     ProgressLayout stateLayout;
     protected @BindView(R.id.recyclerView)
@@ -76,6 +73,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
             userId = getArguments().getLong(KeyUtil.arg_userId);
             requestType = getArguments().getInt(KeyUtil.arg_request_type);
         }
+        mAdapter = new UserAdapter(getContext());
         setViewModel(true); isPager = true;
         presenter = new BasePresenter(getContext());
         mColumnSize = getResources().getInteger(R.integer.single_list_x1);
@@ -105,7 +103,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
         toolbarTitle.setText(getString(mTitle, count));
         searchView.setVisibility(View.GONE);
         stateLayout.showLoading();
-        if(CompatUtil.isEmpty(model))
+        if(mAdapter.getItemCount() < 1)
             onRefresh();
         else
             updateUI();
@@ -148,8 +146,6 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(mAdapter);
         }
-        else
-            mAdapter.onItemsInserted(model);
         if (mAdapter.getItemCount() < 1)
             stateLayout.showEmpty(CompatUtil.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
         else
@@ -160,8 +156,6 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     private void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new UserAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -187,9 +181,6 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
 
     @Override
     public void onRefresh() {
-        model = null;
-        if(mAdapter != null)
-            mAdapter.clearItems();
         if (isPager && presenter != null)
             presenter.onRefreshPage();
         makeRequest();
@@ -222,23 +213,22 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
      * @param content The main data model for the class
      */
     protected void onPostProcessed(@Nullable List<UserBase> content) {
-        if(content != null) {
-            if(content.size() > 0) {
-                if(isPager) {
-                    if (model == null) model = content;
-                    else model.addAll(content);
-                }
+        if(!CompatUtil.isEmpty(content)) {
+            if(isPager) {
+                if (mAdapter.getItemCount() < 1)
+                    mAdapter.onItemsInserted(content);
                 else
-                    model = content;
-                updateUI();
-            } else {
-                if (isPager || (presenter.getPageInfo() != null && !presenter.getPageInfo().hasNextPage()))
-                    setLimitReached();
-                if (model == null || model.size() < 1)
-                    showEmpty(getString(R.string.layout_empty_response));
+                    mAdapter.onItemRangeInserted(content);
             }
-        } else
-            showEmpty(getString(R.string.layout_empty_response));
+            else
+                mAdapter.onItemsInserted(content);
+            updateUI();
+        } else {
+            if (isPager)
+                setLimitReached();
+            if (mAdapter.getItemCount() < 1)
+                showEmpty(getString(R.string.layout_empty_response));
+        }
     }
 
     /**
@@ -257,7 +247,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 

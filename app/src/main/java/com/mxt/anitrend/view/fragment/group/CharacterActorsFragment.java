@@ -16,7 +16,7 @@ import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -34,7 +34,7 @@ import java.util.Collections;
  * Character actors with their respective media
  */
 
-public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
+public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
     private QueryContainerBuilder queryContainer;
 
@@ -52,56 +52,55 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
                     .putVariable(KeyUtil.arg_id, getArguments().getLong(KeyUtil.arg_id));
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        mAdapter = new GroupActorAdapter(getContext());
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
+
+        ((GroupActorAdapter)mAdapter).setMediaClickListener(new ItemClickListener<RecyclerItem>() {
+            /**
+             * When the target view from {@link View.OnClickListener}
+             * is clicked from a view holder this method will be called
+             *
+             * @param target view that has been clicked
+             * @param data   the model that at the click index
+             */
+            @Override
+            public void onItemClick(View target, RecyclerItem data) {
+                switch (target.getId()) {
+                    case R.id.container:
+                        Intent intent = new Intent(getActivity(), MediaActivity.class);
+                        intent.putExtra(KeyUtil.arg_id, ((MediaBase) data).getId());
+                        intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase) data).getType());
+                        CompatUtil.startRevealAnim(getActivity(), target, intent);
+                        break;
+                }
+            }
+
+            /**
+             * When the target view from {@link View.OnLongClickListener}
+             * is clicked from a view holder this method will be called
+             *
+             * @param target view that has been long clicked
+             * @param data   the model that at the long click index
+             */
+            @Override
+            public void onItemLongClick(View target, RecyclerItem data) {
+                switch (target.getId()) {
+                    case R.id.container:
+                        if(getPresenter().getApplicationPref().isAuthenticated()) {
+                            mediaActionUtil = new MediaActionUtil.Builder()
+                                    .setId(((MediaBase) data).getId()).build(getActivity());
+                            mediaActionUtil.startSeriesAction();
+                        } else
+                            NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null) {
-            mAdapter = new GroupActorAdapter(model, getContext());
-            ((GroupActorAdapter)mAdapter).setMediaClickListener(new ItemClickListener<EntityGroup>() {
-                /**
-                 * When the target view from {@link View.OnClickListener}
-                 * is clicked from a view holder this method will be called
-                 *
-                 * @param target view that has been clicked
-                 * @param data   the model that at the click index
-                 */
-                @Override
-                public void onItemClick(View target, EntityGroup data) {
-                    switch (target.getId()) {
-                        case R.id.container:
-                            Intent intent = new Intent(getActivity(), MediaActivity.class);
-                            intent.putExtra(KeyUtil.arg_id, ((MediaBase) data).getId());
-                            intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase) data).getType());
-                            CompatUtil.startRevealAnim(getActivity(), target, intent);
-                            break;
-                    }
-                }
-
-                /**
-                 * When the target view from {@link View.OnLongClickListener}
-                 * is clicked from a view holder this method will be called
-                 *
-                 * @param target view that has been long clicked
-                 * @param data   the model that at the long click index
-                 */
-                @Override
-                public void onItemLongClick(View target, EntityGroup data) {
-                    switch (target.getId()) {
-                        case R.id.container:
-                            if(getPresenter().getApplicationPref().isAuthenticated()) {
-                                mediaActionUtil = new MediaActionUtil.Builder()
-                                        .setId(((MediaBase) data).getId()).build(getActivity());
-                                mediaActionUtil.startSeriesAction();
-                            } else
-                                NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                }
-            });
-        }
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -123,7 +122,7 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, EntityGroup data) {
+    public void onItemClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
@@ -141,7 +140,7 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, EntityGroup data) {
+    public void onItemLongClick(View target, RecyclerItem data) {
 
     }
 
@@ -159,7 +158,7 @@ public class CharacterActorsFragment extends FragmentBaseList<EntityGroup, Conne
             }
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

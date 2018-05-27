@@ -82,6 +82,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         }
         mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = false;
         hasSubscriber = true;
+        mAdapter = new MediaListAdapter(getContext());
+        ((MediaListAdapter)mAdapter).setCurrentUser(userName);
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -125,12 +127,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null) {
-            mAdapter = new MediaListAdapter(model, getContext());
-            ((MediaListAdapter)mAdapter).setCurrentUser(userName);
-        }
-        if (!CompatUtil.isEmpty(model))
-            injectAdapter();
+        injectAdapter();
     }
 
     /**
@@ -165,7 +162,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             @KeyUtil.MediaListSort String mediaListSort = getPresenter().getApplicationPref().getMediaListSort();
             if(CompatUtil.equals(key, "_mediaListSort") && MediaListUtil.isTitleSort(mediaListSort)) {
                 swipeRefreshLayout.setRefreshing(true);
-                sortMediaListByTitle(model);
+                sortMediaListByTitle(mAdapter.getData());
             }
             else
                 super.onSharedPreferenceChanged(sharedPreferences, key);
@@ -219,22 +216,18 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         if(consumer.getRequestMode() == KeyUtil.MUT_SAVE_MEDIA_LIST || consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST) {
             int pairIndex;
             if (getPresenter().isCurrentUser(userId, userName)) {
-                Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if (pairOptional.isPresent()) {
                     switch (consumer.getRequestMode()) {
                         case KeyUtil.MUT_SAVE_MEDIA_LIST:
                             pairIndex = pairOptional.get().getFirst();
-                            if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus())) {
-                                model.set(pairIndex, consumer.getChangeModel());
+                            if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
                                 mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
-                            } else {
-                                model.remove(pairIndex);
+                            else
                                 mAdapter.onItemRemoved(pairIndex);
-                            }
                             break;
                         case KeyUtil.MUT_DELETE_MEDIA_LIST:
                             pairIndex = pairOptional.get().getFirst();
-                            model.remove(pairIndex);
                             mAdapter.onItemRemoved(pairIndex);
                             break;
                     }
@@ -265,20 +258,19 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 
-    protected void sortMediaListByTitle(@NonNull List<MediaList> mediaList) {
-        if(!CompatUtil.isEmpty(mediaList)) {
-            @KeyUtil.SortOrderType String sortOrder = getPresenter().getApplicationPref().getSortOrder();
-            model = Stream.of(mediaList)
-                    .sorted((first, second) -> {
-                        String firstTitle = MediaUtil.getMediaTitle(first.getMedia());
-                        String secondTitle = MediaUtil.getMediaTitle(second.getMedia());
-                        return CompatUtil.equals(sortOrder, KeyUtil.DESC) ? firstTitle.compareTo(secondTitle) : secondTitle.compareTo(firstTitle);
-                    }).toList();
-            updateUI();
-        }
+    protected void sortMediaListByTitle(@NonNull List<MediaList> mediaLists) {
+        @KeyUtil.SortOrderType String sortOrder = getPresenter().getApplicationPref().getSortOrder();
+        mAdapter.onItemsInserted(Stream.of(mediaLists)
+                .sorted((first, second) -> {
+                    String firstTitle = MediaUtil.getMediaTitle(first.getMedia());
+                    String secondTitle = MediaUtil.getMediaTitle(second.getMedia());
+                    return CompatUtil.equals(sortOrder, KeyUtil.DESC) ?
+                            firstTitle.compareTo(secondTitle) : secondTitle.compareTo(firstTitle);
+                }).toList());
+        updateUI();
     }
 }

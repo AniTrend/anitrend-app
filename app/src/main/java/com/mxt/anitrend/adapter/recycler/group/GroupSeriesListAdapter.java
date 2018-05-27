@@ -2,6 +2,7 @@ package com.mxt.anitrend.adapter.recycler.group;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -15,9 +16,11 @@ import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MediaListUtil;
+import com.mxt.anitrend.util.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +33,12 @@ import butterknife.OnLongClick;
  * Created by max on 2018/02/25.
  */
 
-public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
+public class GroupSeriesListAdapter extends RecyclerViewAdapter<RecyclerItem> {
 
     private String currentUser;
 
-    public GroupSeriesListAdapter(List<EntityGroup> data, Context context) {
-        super(data, context);
+    public GroupSeriesListAdapter(Context context) {
+        super(context);
     }
 
     public void setCurrentUser(String currentUser) {
@@ -44,7 +47,7 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
         return new SeriesListViewHolder(AdapterSeriesListBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
@@ -61,36 +64,37 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                if(CompatUtil.isEmpty(clone))
+                    clone = data;
                 String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
+                if(TextUtils.isEmpty(filter)) {
+                    results.values = new ArrayList<>(clone);
+                    clone = null;
                 } else {
-                    data = new ArrayList<>();
-                    for (EntityGroup model : clone) {
+                    List<RecyclerItem> filteredList = new ArrayList<>();
+                    for (RecyclerItem model : clone) {
                         if(model instanceof MediaList) {
-                            MediaBase mediaBase = ((MediaList) model).getMedia();
-
-                            if (mediaBase.getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    mediaBase.getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter) ||
-                                    mediaBase.getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter))
-                                data.add(model);
+                            if (MediaListUtil.isFilterMatch((MediaList) model, filter))
+                                filteredList.add(model);
                         }
                     }
+                    results.values = filteredList;
                 }
-                FilterResults results = new FilterResults();
-                results.values = data;
                 return results;
             }
 
             @Override @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<EntityGroup>) results.values);
-                notifyDataSetChanged();
+                if(results.values != null) {
+                    data = (List<RecyclerItem>) results.values;
+                    notifyDataSetChanged();
+                }
             }
         };
     }
 
-    protected class SeriesListViewHolder extends RecyclerViewHolder<EntityGroup> {
+    protected class SeriesListViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
         private AdapterSeriesListBinding binding;
 
@@ -108,11 +112,11 @@ public class GroupSeriesListAdapter extends RecyclerViewAdapter<EntityGroup> {
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br/>
          *
-         * @param entityGroup Is the model at the current adapter position
+         * @param recyclerItem Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(EntityGroup entityGroup) {
-            MediaList model = (MediaList) entityGroup;
+        public void onBindViewHolder(RecyclerItem recyclerItem) {
+            MediaList model = (MediaList) recyclerItem;
             binding.setModel(model);
             binding.seriesTitle.setTitle(model);
             binding.seriesEpisodes.setModel(model, currentUser);

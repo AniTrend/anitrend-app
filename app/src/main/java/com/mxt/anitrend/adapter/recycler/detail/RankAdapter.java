@@ -26,13 +26,13 @@ import butterknife.OnLongClick;
 
 public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
 
-    public RankAdapter(List<MediaRank> data, Context context) {
-        super(data, context);
+    public RankAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<MediaRank> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<MediaRank> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new RankViewHolder(AdapterRankingBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

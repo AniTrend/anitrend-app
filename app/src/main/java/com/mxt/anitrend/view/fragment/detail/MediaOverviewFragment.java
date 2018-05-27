@@ -109,7 +109,8 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
         binding.setModel(model);
 
         if(genreAdapter == null) {
-            genreAdapter = new GenreAdapter(getPresenter().buildGenres(model), getContext());
+            genreAdapter = new GenreAdapter(getContext());
+            genreAdapter.onItemsInserted(getPresenter().buildGenres(model));
             genreAdapter.setClickListener(new ItemClickListener<Genre>() {
                 @Override
                 public void onItemClick(View target, Genre data) {
@@ -140,7 +141,8 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
         binding.genreRecycler.setAdapter(genreAdapter);
 
         if(tagAdapter == null) {
-            tagAdapter = new TagAdapter(model.getTags(), getContext());
+            tagAdapter = new TagAdapter(getContext());
+            tagAdapter.onItemsInserted(model.getTags());
             tagAdapter.setClickListener(new ItemClickListener<MediaTag>() {
                 @Override
                 public void onItemClick(View target, MediaTag data) {

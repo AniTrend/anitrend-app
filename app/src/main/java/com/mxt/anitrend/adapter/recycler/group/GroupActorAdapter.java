@@ -15,11 +15,9 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.AdapterMediaHeaderBinding;
 import com.mxt.anitrend.databinding.AdapterStaffBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import java.util.List;
 
 import butterknife.OnClick;
 
@@ -28,21 +26,21 @@ import butterknife.OnClick;
  * Character Actor Adapter
  */
 
-public class GroupActorAdapter extends RecyclerViewAdapter<EntityGroup> {
+public class GroupActorAdapter extends RecyclerViewAdapter<RecyclerItem> {
 
-    private ItemClickListener<EntityGroup> mediaClickListener;
+    private ItemClickListener<RecyclerItem> mediaClickListener;
 
-    public GroupActorAdapter(List<EntityGroup> data, Context context) {
-        super(data, context);
+    public GroupActorAdapter(Context context) {
+        super(context);
     }
 
-    public void setMediaClickListener(ItemClickListener<EntityGroup> mediaClickListener) {
+    public void setMediaClickListener(ItemClickListener<RecyclerItem> mediaClickListener) {
         this.mediaClickListener = mediaClickListener;
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<EntityGroup> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+    public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
             return new GroupMediaViewHolder(AdapterMediaHeaderBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false), mediaClickListener);
         return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
@@ -59,7 +57,7 @@ public class GroupActorAdapter extends RecyclerViewAdapter<EntityGroup> {
     }
 
 
-    protected class StaffViewHolder extends RecyclerViewHolder<EntityGroup> {
+    protected class StaffViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
         private AdapterStaffBinding binding;
 
@@ -80,7 +78,7 @@ public class GroupActorAdapter extends RecyclerViewAdapter<EntityGroup> {
          * @param model Is the model at the current adapter position
          */
         @Override
-        public void onBindViewHolder(EntityGroup model) {
+        public void onBindViewHolder(RecyclerItem model) {
             binding.setModel((StaffBase) model);
             if(((StaffBase)model).isFavourite())
                 binding.favouriteIndicator.setVisibility(View.VISIBLE);

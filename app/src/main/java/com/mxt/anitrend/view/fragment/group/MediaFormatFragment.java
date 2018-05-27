@@ -13,7 +13,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -30,7 +30,7 @@ import java.util.Collections;
  * Shared fragment between media for staff and character
  */
 
-public class MediaFormatFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter> {
+public class MediaFormatFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter> {
 
     private long id;
     private @KeyUtil.MediaType String mediaType;
@@ -60,6 +60,7 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        mAdapter = new GroupSeriesAdapter(getContext());
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -72,7 +73,7 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, EntityGroup data) {
+    public void onItemClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
@@ -91,7 +92,7 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, EntityGroup data) {
+    public void onItemLongClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -109,8 +110,6 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new GroupSeriesAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -136,13 +135,13 @@ public class MediaFormatFragment extends FragmentBaseList<EntityGroup, Connectio
                 if (pageContainer.hasPageInfo())
                     getPresenter().setPageInfo(pageContainer.getPageInfo());
                 if (!pageContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupMediaByFormat(pageContainer.getPageData(), model));
+                    onPostProcessed(GroupingUtil.groupMediaByFormat(pageContainer.getPageData(), mAdapter.getData()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

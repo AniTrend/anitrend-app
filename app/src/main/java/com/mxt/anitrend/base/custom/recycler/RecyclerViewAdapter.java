@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.recycler;
 import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -30,7 +31,8 @@ import java.util.List;
 public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerViewHolder<T>> implements Filterable, RecyclerChangeListener<T> {
 
     protected Context context;
-    protected List<T> data, clone;
+    protected @NonNull List<T> data;
+    protected @Nullable List<T> clone;
     protected BasePresenter presenter;
     protected ItemClickListener<T> clickListener;
 
@@ -41,11 +43,15 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
 
     private boolean isLowRamDevice;
 
-    public RecyclerViewAdapter(List<T> data, Context context) {
-        setupDataStore(data);
+    public RecyclerViewAdapter(Context context) {
         this.context = context.getApplicationContext();
         this.presenter = new BasePresenter(this.context);
         this.isLowRamDevice = CompatUtil.isLowRamDevice(this.context);
+        this.data = new ArrayList<>();
+    }
+
+    public @NonNull List<T> getData() {
+        return data;
     }
 
     @Override
@@ -53,16 +59,6 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         if(!hasStableIds())
             return super.getItemId(position);
         return data.get(position).hashCode();
-    }
-
-    private void setupDataStore(List<T> data) {
-        if(data != null) {
-            this.data = new ArrayList<>(data);
-            this.clone = new ArrayList<>(data);
-        } else {
-            this.data = new ArrayList<>();
-            this.clone = new ArrayList<>();
-        }
     }
 
     public void setActionModeCallback(ActionModeHelper<T> selectorCallback) {
@@ -77,16 +73,14 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     @Override
     public void onItemsInserted(@NonNull List<T> swap) {
         data = new ArrayList<>(swap);
-        clone = new ArrayList<>(swap);
         notifyDataSetChanged();
     }
 
     @Override
     public void onItemRangeInserted(@NonNull List<T> swap) {
-        int startRange = getItemCount();
-        int difference = swap.size() - startRange;
-        data = new ArrayList<>(swap);
-        clone = new ArrayList<>(swap);
+        int startRange = getItemCount(), difference;
+        data.addAll(swap);
+        difference = getItemCount() - startRange;
         if(difference > 5)
             notifyItemRangeInserted(startRange, difference);
         else if(difference != 0)
@@ -98,24 +92,20 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         int startRange = getItemCount();
         int difference = swap.size() - startRange;
         data = new ArrayList<>(swap);
-        clone = new ArrayList<>(swap);
         notifyItemRangeChanged(startRange, difference);
     }
 
     @Override
     public void onItemChanged(@NonNull T swap, int position) {
         data.set(position, swap);
-        clone.set(position, swap);
         notifyItemChanged(position);
     }
 
     @Override
     public void onItemRemoved(int position) {
         data.remove(position);
-        clone.remove(position);
         notifyItemRemoved(position);
     }
-
 
     @Override
     public abstract @NonNull RecyclerViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
@@ -149,7 +139,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder<T> holder, int position) {
-        if(getItemCount() != 0) {
+        if(getItemCount() > 0) {
             animateViewHolder(holder, position);
             T model = data.get(position);
             holder.setActionMode(actionMode);
@@ -178,13 +168,17 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public int getItemCount() {
-        return data != null? data.size():0;
+        return data.size();
     }
 
-    public void clearItems() {
-        // data = new ArrayList<>();
-        // clone = new ArrayList<>();
-        // notifyDataSetChanged();
+    /**
+     * Clears data sets and notifies the recycler observer about the changed data set
+     */
+    public void clearDataSet() {
+        data = new ArrayList<>();
+        if(clone != null)
+            clone = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     /**
@@ -240,9 +234,16 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
         this.customAnimation = customAnimation;
     }
 
+    protected boolean isRecyclerStateType(int viewType) {
+        return viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
+                viewType == KeyUtil.RECYCLER_TYPE_LOADING ||
+                viewType == KeyUtil.RECYCLER_TYPE_ERROR;
+    }
+
     private boolean isFullSpanItem(int position) {
         int viewType = getItemViewType(position);
-        return viewType == KeyUtil.RECYCLER_TYPE_HEADER || viewType == KeyUtil.RECYCLER_TYPE_EMPTY || viewType == KeyUtil.RECYCLER_TYPE_LOADING;
+        return viewType == KeyUtil.RECYCLER_TYPE_HEADER || viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
+                viewType == KeyUtil.RECYCLER_TYPE_LOADING || viewType == KeyUtil.RECYCLER_TYPE_ERROR;
     }
 
     private void animateViewHolder(RecyclerViewHolder<T> holder, int position) {

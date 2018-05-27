@@ -29,18 +29,18 @@ public class ReviewAdapter extends RecyclerViewAdapter<Review> {
 
     private boolean isMediaType;
 
-    public ReviewAdapter(List<Review> data, Context context) {
-        super(data, context);
+    public ReviewAdapter(Context context) {
+        super(context);
     }
 
-    public ReviewAdapter(List<Review> data, Context context, boolean isMediaType) {
-        super(data, context);
+    public ReviewAdapter(Context context, boolean isMediaType) {
+        super(context);
         this.isMediaType = isMediaType;
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<Review> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<Review> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(!isMediaType)
             return new ReviewBanner(AdapterReviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         return new ReviewDefault(AdapterSeriesReviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));

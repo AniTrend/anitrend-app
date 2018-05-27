@@ -31,6 +31,7 @@ public class AiringListFragment extends MediaListFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAdapter = new AiringAdapter(getContext());
         UserBase userBase = getPresenter().getDatabase().getCurrentUser();
         userId = userBase.getId();
         userName = userBase.getName();
@@ -44,8 +45,6 @@ public class AiringListFragment extends MediaListFragment {
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new AiringAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -75,7 +74,7 @@ public class AiringListFragment extends MediaListFragment {
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

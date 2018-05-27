@@ -56,6 +56,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         super.onCreate(savedInstanceState);
         mColumnSize = R.integer.single_list_x1; isPager = true;
         setInflateMenu(R.menu.notification_menu);
+        mAdapter = new NotificationAdapter(getContext());
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
@@ -68,8 +69,6 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         long historyItems = getPresenter().getDatabase().getBoxStore(NotificationHistory.class).count();
         if(historyItems < 1)
             markAllNotificationsAsRead();
-        if(mAdapter == null)
-            mAdapter = new NotificationAdapter(model, getContext());
         injectAdapter();
 
         User currentUser = getPresenter().getDatabase().getCurrentUser();
@@ -92,7 +91,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_mark_all:
-                if(model != null) {
+                if(mAdapter.getItemCount() > 0) {
                     new ThreadPool.Builder()
                             .build().execute(this::markAllNotificationsAsRead);
                 } else
@@ -120,7 +119,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 
@@ -240,7 +239,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                     boolean isNotificationRead = getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
                             .query().equal(NotificationHistory_.id, data.getId()).build().count() != 0;
                     if (!isNotificationRead) {
-                        List<NotificationHistory> dismissibleNotifications = Stream.of(model)
+                        List<NotificationHistory> dismissibleNotifications = Stream.of(mAdapter.getData())
                                 .filter(item -> item.getActivityId() != 0 && item.getActivityId() == data.getActivityId())
                                 .map(item -> new NotificationHistory(item.getId()))
                                 .toList();
@@ -263,7 +262,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     private void markAllNotificationsAsRead() {
         DatabaseHelper databaseHelper = getPresenter().getDatabase();
 
-        List<NotificationHistory> notificationHistories = Stream.of(model)
+        List<NotificationHistory> notificationHistories = Stream.of(mAdapter.getData())
                 .map(notification -> new NotificationHistory(notification.getId()))
                 .toList();
 

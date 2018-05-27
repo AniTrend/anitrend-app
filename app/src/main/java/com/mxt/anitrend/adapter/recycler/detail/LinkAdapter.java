@@ -25,13 +25,13 @@ import butterknife.OnLongClick;
 
 public class LinkAdapter extends RecyclerViewAdapter<ExternalLink> {
 
-    public LinkAdapter(List<ExternalLink> data, Context context) {
-        super(data, context);
+    public LinkAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<ExternalLink> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<ExternalLink> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new LinkViewHolder(AdapterLinkBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

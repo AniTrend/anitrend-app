@@ -14,7 +14,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -31,7 +31,7 @@ import java.util.Collections;
  * MediaRelationFragment
  */
 
-public class MediaRelationFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
+public class MediaRelationFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
     private @KeyUtil.MediaType String mediaType;
     private long mediaId;
@@ -54,6 +54,7 @@ public class MediaRelationFragment extends FragmentBaseList<EntityGroup, Connect
             mediaId = getArguments().getLong(KeyUtil.arg_id);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         } mColumnSize = R.integer.grid_giphy_x3;
+        mAdapter = new GroupSeriesAdapter(getContext());
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -63,8 +64,6 @@ public class MediaRelationFragment extends FragmentBaseList<EntityGroup, Connect
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new GroupSeriesAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -89,7 +88,7 @@ public class MediaRelationFragment extends FragmentBaseList<EntityGroup, Connect
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, EntityGroup data) {
+    public void onItemClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
@@ -108,7 +107,7 @@ public class MediaRelationFragment extends FragmentBaseList<EntityGroup, Connect
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, EntityGroup data) {
+    public void onItemLongClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
@@ -135,7 +134,7 @@ public class MediaRelationFragment extends FragmentBaseList<EntityGroup, Connect
             }
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

@@ -72,6 +72,8 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
         }
         mColumnSize = R.integer.single_list_x1; hasSubscriber = true;
         setInflateMenu(R.menu.custom_menu);
+        mAdapter = new CommentAdapter(getContext());
+        feedAdapter = new FeedAdapter(getContext());
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
     }
@@ -144,8 +146,6 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new CommentAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -237,8 +237,8 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
     private void initExtraComponents() {
         composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_FEED_REPLY);
 
-        if(feedAdapter == null) {
-            feedAdapter = new FeedAdapter(Collections.singletonList(feedList), getContext());
+        if(feedAdapter.getItemCount() < 1) {
+            feedAdapter.onItemsInserted(Collections.singletonList(feedList));
             feedAdapter.setClickListener(new ItemClickListener<FeedList>() {
                 @Override
                 public void onItemClick(View target, FeedList data) {
@@ -308,23 +308,21 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
         switch (consumer.getRequestMode()) {
             case KeyUtil.MUT_SAVE_FEED_REPLY:
                 if(!consumer.hasModel()) {
-                    if (model != null && !model.isEmpty())
+                    if (mAdapter.getItemCount() > 1)
                         swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
                 } else {
-                    pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                    pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                     if(pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
-                        model.set(pairIndex, consumer.getChangeModel());
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
                     }
                 }
                 break;
             case KeyUtil.MUT_DELETE_FEED_REPLY:
-                pairOptional = CompatUtil.findIndexOf(model, consumer.getChangeModel());
+                pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
-                    model.remove(pairIndex);
                     mAdapter.onItemRemoved(pairIndex);
                     NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     if(getActivity() != null)

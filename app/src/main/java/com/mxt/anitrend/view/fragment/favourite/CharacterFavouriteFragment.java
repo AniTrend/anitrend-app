@@ -13,7 +13,7 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -28,7 +28,7 @@ import java.util.Collections;
  * CharacterFavouriteFragment
  */
 
-public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, ConnectionContainer<Favourite>, BasePresenter> {
+public class CharacterFavouriteFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>, BasePresenter> {
 
     private long userId;
 
@@ -44,15 +44,14 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             userId = getArguments().getLong(KeyUtil.arg_id);
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        mAdapter = new GroupCharacterAdapter(getContext());
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new GroupCharacterAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -67,7 +66,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
     }
 
     @Override
-    public void onItemClick(View target, EntityGroup data) {
+    public void onItemClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
@@ -78,7 +77,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
     }
 
     @Override
-    public void onItemLongClick(View target, EntityGroup data) {
+    public void onItemLongClick(View target, RecyclerItem data) {
 
     }
 
@@ -95,7 +94,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<EntityGroup, Co
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

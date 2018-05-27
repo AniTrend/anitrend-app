@@ -103,7 +103,8 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
     protected void updateUI() {
         binding.setModel(model);
         if(rankAdapter == null) {
-            rankAdapter = new RankAdapter(model.getRankings(), getContext());
+            rankAdapter = new RankAdapter(getContext());
+            rankAdapter.onItemsInserted(model.getRankings());
             rankAdapter.setClickListener(new ItemClickListener<MediaRank>() {
                 @Override
                 public void onItemClick(View target, MediaRank data) {
@@ -150,7 +151,8 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
         }
 
         if(linkAdapter == null) {
-            linkAdapter = new LinkAdapter(model.getExternalLinks(), getContext());
+            linkAdapter = new LinkAdapter(getContext());
+            linkAdapter.onItemsInserted(model.getExternalLinks());
             linkAdapter.setClickListener(new ItemClickListener<ExternalLink>() {
                 @Override
                 public void onItemClick(View target, ExternalLink data) {

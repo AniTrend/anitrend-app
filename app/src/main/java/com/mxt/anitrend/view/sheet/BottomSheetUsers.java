@@ -24,6 +24,7 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -43,6 +44,12 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
         super.onCreate(savedInstanceState);
         presenter = new BasePresenter(getContext());
         mColumnSize = getResources().getInteger(R.integer.single_list_x1);
+        mAdapter = new UserAdapter(getActivity());
+        if(getArguments() != null) {
+            List<UserBase> baseList = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
+            if(!CompatUtil.isEmpty(baseList))
+                mAdapter.onItemsInserted(baseList);
+        }
     }
 
     /**
@@ -68,11 +75,10 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
      */
     @Override
     protected void updateUI() {
-        toolbarTitle.setText(getString(mTitle, model.size()));
+        toolbarTitle.setText(getString(mTitle, mAdapter.getItemCount()));
         toolbarSearch.setVisibility(View.VISIBLE);
         searchView.setOnQueryTextListener(this);
         searchView.setOnSearchViewListener(this);
-        mAdapter = new UserAdapter(model, getActivity());
         injectAdapter();
     }
 

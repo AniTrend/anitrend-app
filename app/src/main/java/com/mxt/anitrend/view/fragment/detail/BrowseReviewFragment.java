@@ -59,6 +59,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
         if(getArguments() != null)
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         isPager = true; mColumnSize = R.integer.single_list_x1; isFilterable = true;
+        mAdapter = new ReviewAdapter(getContext());
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
@@ -102,8 +103,6 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new ReviewAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -181,7 +180,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

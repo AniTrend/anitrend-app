@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,10 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     public @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
     public @BindView(R.id.stateLayout) ProgressLayout stateLayout;
 
-    protected Rss model;
     protected String query;
     protected boolean isLimit;
     protected boolean isPopular;
-    protected String targetLink;
+    protected String targetLink, copyright;
 
     protected List<ExternalLink> externalLinks;
     protected RecyclerViewAdapter<Episode> mAdapter;
@@ -126,7 +126,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     public void onStart() {
         super.onStart();
         showLoading();
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onRefresh();
         else
             updateUI();
@@ -268,9 +268,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
      */
     @Override
     public void onRefresh() {
-        isLimit = false; model = null;
-        if (mAdapter != null)
-            mAdapter.clearItems();
+        isLimit = false;
         if(getPresenter() != null)
             getPresenter().onRefreshPage();
         makeRequest();
@@ -300,19 +298,18 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
      * parents data, then call this method after
      */
     protected void injectAdapter() {
-        if(model != null) {
-            if (swipeRefreshLayout.isRefreshing())
-                swipeRefreshLayout.setRefreshing(false);
-            mAdapter.setClickListener(clickListener);
-            if (recyclerView.getAdapter() == null)
+        if(mAdapter.getItemCount() > 0) {
+            if (recyclerView.getAdapter() == null) {
                 recyclerView.setAdapter(mAdapter);
-            else {
-                mAdapter.onItemsInserted(model.getChannel().getEpisode());
-                if (query != null)
+            } else {
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
+                else if(swipeRefreshLayout.isLoading())
+                    swipeRefreshLayout.setLoading(false);
+                if (!TextUtils.isEmpty(query))
                     mAdapter.getFilter().filter(query);
             }
-            if (mAdapter.getItemCount() > 0)
-                showContent();
+            showContent();
         }
         else
             showEmpty(getString(R.string.layout_empty_response));
@@ -326,7 +323,8 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     @Override
     public void onChanged(@Nullable Rss content) {
         if(content != null) {
-            model = content;
+            copyright = content.getChannel().getCopyright();
+            mAdapter.onItemsInserted(content.getChannel().getEpisode());
             updateUI();
         } else
             showEmpty(getString(R.string.layout_empty_response));
@@ -337,7 +335,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         public void onItemClick(View target, Episode data) {
             switch (target.getId()) {
                 case R.id.series_image:
-                    DialogUtil.createMessage(getActivity(), data.getTitle(), data.getDescription()+"<br/><br/>"+model.getChannel().getCopyright(),
+                    DialogUtil.createMessage(getActivity(), data.getTitle(), data.getDescription()+"<br/><br/>"+copyright,
                             R.string.Watch, R.string.Dismiss, R.string.action_search, (dialog, which) -> {
                                 Intent intent;
                                 switch (which) {

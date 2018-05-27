@@ -30,13 +30,13 @@ import butterknife.OnLongClick;
 
 public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
 
-    public GiphyAdapter(List<Giphy> data, Context context) {
-        super(data, context);
+    public GiphyAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<Giphy> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<Giphy> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new GiphyViewHolder(AdapterGiphyBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

@@ -37,8 +37,8 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     private boolean isCompatType;
 
-    public MediaAdapter(List<MediaBase> data, Context context, boolean isCompatType) {
-        super(data, context);
+    public MediaAdapter(Context context, boolean isCompatType) {
+        super(context);
         this.isCompatType = isCompatType;
     }
 
@@ -61,28 +61,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     @Override
     public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
-                } else {
-                    data = new ArrayList<>(Stream.of(clone).filter((model) -> model.getTitle().getEnglish().toLowerCase(Locale.getDefault()).contains(filter) ||
-                            model.getTitle().getOriginal().toLowerCase(Locale.getDefault()).contains(filter) ||
-                            model.getTitle().getRomaji().toLowerCase(Locale.getDefault()).contains(filter)).toList());
-                }
-                FilterResults results = new FilterResults();
-                results.values = data;
-                return results;
-            }
-
-            @Override @SuppressWarnings("unchecked")
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<Media>) results.values);
-                notifyDataSetChanged();
-            }
-        };
+        return null;
     }
 
     protected class AnimeViewHolder extends RecyclerViewHolder<MediaBase> {

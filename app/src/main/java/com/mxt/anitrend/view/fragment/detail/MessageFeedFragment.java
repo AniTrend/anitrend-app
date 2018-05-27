@@ -41,12 +41,11 @@ public class MessageFeedFragment extends FeedListFragment {
             userId = getArguments().getLong(KeyUtil.arg_userId);
         }
         isMenuDisabled = true; isFeed = false;
+        ((FeedAdapter)mAdapter).setMessageType(messageType);
     }
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new FeedAdapter(model, getContext(), messageType);
         super.updateUI();
     }
 

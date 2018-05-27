@@ -121,7 +121,8 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
 
     private void constructAdditionalViews() {
         if(!CompatUtil.isEmpty(contentLinks)) {
-            RecyclerViewAdapter<String> previewAdapter = new ImagePreviewAdapter(contentLinks, contentTypes,  getContext());
+            RecyclerViewAdapter<String> previewAdapter = new ImagePreviewAdapter(contentTypes,  getContext());
+            previewAdapter.onItemsInserted(contentLinks);
             previewAdapter.setClickListener(this);
             binding.widgetStatusRecycler.setAdapter(previewAdapter);
 

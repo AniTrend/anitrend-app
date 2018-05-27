@@ -4,14 +4,14 @@ import android.view.View;
 
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEntityGroupBinding;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
-import com.mxt.anitrend.model.entity.group.EntityHeader;
+import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 
 /**
  * Created by max on 2018/02/18.
  */
 
-public class GroupTitleViewHolder extends RecyclerViewHolder<EntityGroup> {
+public class GroupTitleViewHolder extends RecyclerViewHolder<RecyclerItem> {
 
     private AdapterEntityGroupBinding binding;
 
@@ -26,9 +26,9 @@ public class GroupTitleViewHolder extends RecyclerViewHolder<EntityGroup> {
     }
 
     @Override
-    public void onBindViewHolder(EntityGroup model) {
-        binding.setModel((EntityHeader) model);
-        if (((EntityHeader) model).getSize() < 1)
+    public void onBindViewHolder(RecyclerItem model) {
+        binding.setModel((RecyclerHeaderItem) model);
+        if (((RecyclerHeaderItem) model).getSize() < 1)
             binding.catalogHeaderCount.setVisibility(View.GONE);
         else
             binding.catalogHeaderCount.setVisibility(View.VISIBLE);

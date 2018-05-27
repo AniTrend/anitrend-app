@@ -47,6 +47,7 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new BasePresenter(getContext());
+        mAdapter = new GiphyAdapter(getActivity());
         mColumnSize = getResources().getInteger(R.integer.grid_giphy_x3);
         isPager = true;
     }
@@ -78,9 +79,6 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
         toolbarSearch.setVisibility(View.VISIBLE);
         searchView.setOnSearchViewListener(this);
         searchView.setOnQueryTextListener(this);
-
-        if(mAdapter == null)
-            mAdapter = new GiphyAdapter(model, getActivity());
         injectAdapter();
         if(presenter.getApplicationPref().shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
             NotifyUtil.createAlerter(getActivity(), R.string.title_new_feature, R.string.text_giphy_feature,

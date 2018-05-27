@@ -42,6 +42,7 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             userId = getArguments().getLong(KeyUtil.arg_id);
+        mAdapter = new StaffAdapter(getContext());
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
@@ -49,8 +50,6 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new StaffAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -93,7 +92,7 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

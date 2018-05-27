@@ -26,13 +26,13 @@ import butterknife.OnClick;
 
 public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
 
-    public CommentAdapter(List<FeedReply> data, Context context) {
-        super(data, context);
+    public CommentAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<FeedReply> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<FeedReply> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new CommentViewHolder(AdapterCommentBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

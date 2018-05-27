@@ -25,8 +25,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
-import java.util.List;
-
 import butterknife.BindView;
 
 /**
@@ -37,7 +35,6 @@ import butterknife.BindView;
 public abstract class BottomSheetGiphyList extends BottomSheetBase implements ItemClickListener<Giphy>, Observer<GiphyContainer>,
         ResponseCallback, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
-    protected List<Giphy> model;
     protected GiphyContainer container;
 
     protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
@@ -58,8 +55,6 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
-            model = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
         setViewModel(true);
     }
 
@@ -67,7 +62,7 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
     public void onStart() {
         super.onStart();
         stateLayout.showLoading();
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onRefresh();
         else
             updateUI();
@@ -164,9 +159,6 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(mAdapter);
         }
-        else
-            mAdapter.onItemsInserted(model);
-
         if (mAdapter.getItemCount() < 1)
             stateLayout.showEmpty(CompatUtil.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
         else
@@ -195,9 +187,8 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
 
     @Override
     public void onRefresh() {
-        model = null;
         if(mAdapter != null)
-            mAdapter.clearItems();
+            mAdapter.clearDataSet();
         if (isPager && presenter != null)
             presenter.onRefreshPage();
         makeRequest();
@@ -230,23 +221,22 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
      */
     @Override
     public void onChanged(@Nullable GiphyContainer content) {
-        if((container = content) != null) {
-            if(container.getData() != null && container.getData().size() > 0) {
-                if(isPager) {
-                    if (model == null) model = container.getData();
-                    else model.addAll(container.getData());
-                }
+        if(content != null && !CompatUtil.isEmpty(content.getData())) {
+            if(isPager) {
+                if (mAdapter.getItemCount() < 1)
+                    mAdapter.onItemsInserted(content.getData());
                 else
-                    model = container.getData();
-                updateUI();
-            } else {
-                if (isPager)
-                    setLimitReached();
-                if (model == null || model.size() < 1)
-                    showEmpty(getString(R.string.layout_empty_response));
+                    mAdapter.onItemRangeInserted(content.getData());
             }
-        } else
-            showEmpty(getString(R.string.layout_empty_response));
+            else
+                mAdapter.onItemsInserted(content.getData());
+            updateUI();
+        } else {
+            if (isPager)
+                setLimitReached();
+            if (mAdapter.getItemCount() < 1)
+                showEmpty(getString(R.string.layout_empty_response));
+        }
     }
 
     @Override

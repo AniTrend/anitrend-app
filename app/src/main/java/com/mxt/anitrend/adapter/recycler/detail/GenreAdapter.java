@@ -25,13 +25,13 @@ import butterknife.OnLongClick;
 
 public class GenreAdapter extends RecyclerViewAdapter<Genre> {
 
-    public GenreAdapter(List<Genre> data, Context context) {
-        super(data, context);
+    public GenreAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<Genre> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<Genre> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new GenreViewHolder(AdapterGenreBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
     }
 

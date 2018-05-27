@@ -27,14 +27,14 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
 
     private final List<String> contentTypes;
 
-    public ImagePreviewAdapter(List<String> data, List<String> contentTypes, Context context) {
-        super(data, context);
+    public ImagePreviewAdapter(List<String> contentTypes, Context context) {
+        super(context);
         this.contentTypes = contentTypes;
     }
 
     @NonNull
     @Override
-    public RecyclerViewHolder<String> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<String> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new PreviewHolder(AdapterFeedSlideBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 

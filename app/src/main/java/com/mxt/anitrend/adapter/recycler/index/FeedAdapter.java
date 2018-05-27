@@ -35,12 +35,11 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     private final int FEED_STATUS = 10, FEED_MESSAGE = 11, FEED_LIST = 20, FEED_PROGRESS = 21;
     private @KeyUtil.MessageType int messageType;
 
-    public FeedAdapter(List<FeedList> data, Context context) {
-        super(data, context);
+    public FeedAdapter(Context context) {
+        super(context);
     }
 
-    public FeedAdapter(List<FeedList> data, Context context, @KeyUtil.MessageType int messageType) {
-        super(data, context);
+    public void setMessageType(@KeyUtil.MessageType int messageType) {
         this.messageType = messageType;
     }
 

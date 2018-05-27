@@ -75,6 +75,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
         isPager = true; isFilterable = mediaBrowseUtil.isFilterEnabled();
         mColumnSize = mediaBrowseUtil.isCompactType() ? R.integer.grid_giphy_x3 : R.integer.grid_list_x2;
+        mAdapter = new MediaAdapter(getContext(), mediaBrowseUtil.isCompactType());
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -157,8 +158,6 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new MediaAdapter(model, getContext(), mediaBrowseUtil.isCompactType());
         injectAdapter();
     }
 
@@ -236,7 +235,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

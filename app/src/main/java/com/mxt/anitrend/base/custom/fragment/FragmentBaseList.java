@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
 
     protected String query;
 
-    protected List<M> model;
     protected boolean isLimit;
 
     protected RecyclerViewAdapter<M> mAdapter;
@@ -106,8 +106,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     public void onStart() {
         super.onStart();
         showLoading();
-        /*if(!getPresenter().hasParcel(KeyUtils.key_recycler_state) && model == null)*/
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onRefresh();
         else
             updateUI();
@@ -283,9 +282,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      */
     @Override
     public void onRefresh() {
-        isLimit = false; model = null;
-        if (mAdapter != null)
-            mAdapter.clearItems();
+        isLimit = false;
         if(getPresenter() != null)
             getPresenter().onRefreshPage();
         makeRequest();
@@ -305,8 +302,10 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearch(String query) {
         if(isAlive() && mAdapter != null && mAdapter.getFilter() != null && !isPager) {
-            this.query = query;
-            mAdapter.getFilter().filter(query);
+            if(!CompatUtil.equals(this.query, query)) {
+                this.query = query;
+                mAdapter.getFilter().filter(query);
+            }
         }
     }
 
@@ -319,31 +318,21 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      * parents data, then call this method after
      */
     protected void injectAdapter() {
-        if(model != null) {
+        if(mAdapter.getItemCount() > 0) {
             mAdapter.setClickListener(this);
             if (recyclerView.getAdapter() == null) {
                 if (getActionMode() != null)
                     mAdapter.setActionModeCallback(getActionMode());
-                if(mAdapter.getItemCount() != model.size())
-                    mAdapter.onItemsInserted(model);
                 recyclerView.setAdapter(mAdapter);
             } else {
-
-                if (swipeRefreshLayout.isRefreshing()) {
+                if (swipeRefreshLayout.isRefreshing())
                     swipeRefreshLayout.setRefreshing(false);
-                    mAdapter.onItemsInserted(model);
-                }
-                else {
-                    if(swipeRefreshLayout.isLoading())
-                        swipeRefreshLayout.setLoading(false);
-                    mAdapter.onItemRangeInserted(model);
-                }
-
-                if (query != null)
+                else if(swipeRefreshLayout.isLoading())
+                    swipeRefreshLayout.setLoading(false);
+                if (!TextUtils.isEmpty(query))
                     mAdapter.getFilter().filter(query);
             }
-            if (mAdapter.getItemCount() > 0)
-                showContent();
+            showContent();
         }
         else
             showEmpty(getString(R.string.layout_empty_response));
@@ -354,23 +343,22 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      * @param content The main data model for the class
      */
     protected void onPostProcessed(@Nullable List<M> content) {
-        if(content != null) {
-            if(content.size() > 0) {
-                if(isPager) {
-                    if (model == null) model = content;
-                    else model.addAll(content);
-                }
+        if(!CompatUtil.isEmpty(content)) {
+            if(isPager && !swipeRefreshLayout.isRefreshing()) {
+                if (mAdapter.getItemCount() < 1)
+                    mAdapter.onItemsInserted(content);
                 else
-                    model = content;
-                updateUI();
-            } else {
-                if (isPager || (getPresenter().getPageInfo() != null && !getPresenter().getPageInfo().hasNextPage()))
-                    setLimitReached();
-                if (model == null || model.size() < 1)
-                    showEmpty(getString(R.string.layout_empty_response));
+                    mAdapter.onItemRangeInserted(content);
             }
-        } else
-            showEmpty(getString(R.string.layout_empty_response));
+            else
+                mAdapter.onItemsInserted(content);
+            updateUI();
+        } else {
+            if (isPager)
+                setLimitReached();
+            if (mAdapter.getItemCount() < 1)
+                showEmpty(getString(R.string.layout_empty_response));
+        }
     }
 
     /**

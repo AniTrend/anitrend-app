@@ -53,6 +53,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
             mediaId = getArguments().getLong(KeyUtil.arg_id);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
+        mAdapter = new ReviewAdapter(getContext(), true);
         mColumnSize = R.integer.single_list_x1; isPager = true;
         setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
@@ -63,8 +64,6 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new ReviewAdapter(model, getContext(), true);
         injectAdapter();
     }
 
@@ -152,7 +151,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

@@ -49,6 +49,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
             userId = getArguments().getLong(KeyUtil.arg_id);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
+        mAdapter = new MediaAdapter(getContext(), true);
         setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         setViewModel(true);
@@ -56,8 +57,6 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new MediaAdapter(model, getContext(), true);
         injectAdapter();
     }
 
@@ -128,7 +127,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

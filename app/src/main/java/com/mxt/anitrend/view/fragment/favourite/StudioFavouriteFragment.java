@@ -41,15 +41,14 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             userId = getArguments().getLong(KeyUtil.arg_id);
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_list_x2; isPager = true;
+        mAdapter = new StudioAdapter(getContext());
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new StudioAdapter(model, getContext());
         injectAdapter();
     }
 
@@ -91,7 +90,7 @@ public class StudioFavouriteFragment extends FragmentBaseList<StudioBase, Connec
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

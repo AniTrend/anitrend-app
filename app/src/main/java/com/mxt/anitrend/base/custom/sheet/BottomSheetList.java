@@ -26,8 +26,6 @@ import butterknife.BindView;
 
 public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetBase<List<T>> implements ItemClickListener<T>, Observer<List<T>>, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
-    protected List<T> model;
-
     protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
     protected @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
 
@@ -45,8 +43,6 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
-            model = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
         setViewModel(true);
     }
 
@@ -54,7 +50,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     public void onStart() {
         super.onStart();
         stateLayout.showLoading();
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onRefresh();
         else
             updateUI();
@@ -97,8 +93,6 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(mAdapter);
         }
-        else
-            mAdapter.onItemsInserted(model);
         if (mAdapter.getItemCount() < 1)
             stateLayout.showEmpty(CompatUtil.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
         else
@@ -132,9 +126,6 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
 
     @Override
     public void onRefresh() {
-        model = null;
-        if(mAdapter != null)
-            mAdapter.clearItems();
         if (isPager && presenter != null)
             presenter.onRefreshPage();
         makeRequest();

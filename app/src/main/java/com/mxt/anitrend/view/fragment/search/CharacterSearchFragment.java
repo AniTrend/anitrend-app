@@ -11,7 +11,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
-import com.mxt.anitrend.model.entity.group.EntityGroup;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -25,7 +25,7 @@ import java.util.Collections;
  * Created by max on 2017/12/20.
  */
 
-public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageContainer<CharacterBase>, BasePresenter> {
+public class CharacterSearchFragment extends FragmentBaseList<RecyclerItem, PageContainer<CharacterBase>, BasePresenter> {
 
     private String searchQuery;
 
@@ -45,8 +45,9 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             searchQuery = getArguments().getString(KeyUtil.arg_search);
-        setPresenter(new BasePresenter(getContext()));
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
+        mAdapter = new GroupCharacterAdapter(getContext());
+        setPresenter(new BasePresenter(getContext()));
         setViewModel(true);
     }
 
@@ -55,8 +56,6 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null)
-            mAdapter = new GroupCharacterAdapter(model, getContext());
         setSwipeRefreshLayoutEnabled(false);
         injectAdapter();
     }
@@ -82,7 +81,7 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, EntityGroup data) {
+    public void onItemClick(View target, RecyclerItem data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
@@ -100,7 +99,7 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, EntityGroup data) {
+    public void onItemLongClick(View target, RecyclerItem data) {
 
     }
 
@@ -120,7 +119,7 @@ public class CharacterSearchFragment extends FragmentBaseList<EntityGroup, PageC
                 onPostProcessed(Collections.emptyList());
         } else
             onPostProcessed(Collections.emptyList());
-        if(model == null)
+        if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
     }
 }

@@ -67,6 +67,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
             mediaId = getArguments().getLong(KeyUtil.arg_id);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
+        mAdapter = new EpisodeAdapter(getContext());
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
         mColumnSize = R.integer.single_list_x1;
@@ -77,8 +78,6 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
      */
     @Override
     protected void updateUI() {
-        if(mAdapter == null && model != null)
-            mAdapter = new EpisodeAdapter(model.getChannel().getEpisode(), getContext());
         injectAdapter();
     }
 
@@ -115,9 +114,8 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
             if(response.isSuccessful() && (connectionContainer = response.body()) != null) {
                 if(!connectionContainer.isEmpty()) {
                     externalLinks = connectionContainer.getConnection();
-                    if(model == null && externalLinks != null)
+                    if(mAdapter.getItemCount() < 1 && externalLinks != null)
                         targetLink = EpisodeHelper.episodeSupport(externalLinks);
-
                     if (targetLink == null)
                         showEmpty(getString(R.string.waring_missing_episode_links));
                     else

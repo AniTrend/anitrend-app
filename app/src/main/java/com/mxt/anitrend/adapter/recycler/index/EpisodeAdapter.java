@@ -27,8 +27,8 @@ import butterknife.OnLongClick;
 
 public class EpisodeAdapter extends RecyclerViewAdapter<Episode> {
 
-    public EpisodeAdapter(List<Episode> data, Context context) {
-        super(data, context);
+    public EpisodeAdapter(Context context) {
+        super(context);
     }
 
     @NonNull
@@ -39,28 +39,7 @@ public class EpisodeAdapter extends RecyclerViewAdapter<Episode> {
 
     @Override
     public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String filter = constraint.toString();
-                if(filter.isEmpty()) {
-                    data = clone;
-                } else {
-                    data = new ArrayList<>(Stream.of(clone)
-                            .filter((model) -> model.getTitle().toLowerCase().contains(filter))
-                            .toList());
-                }
-                FilterResults results = new FilterResults();
-                results.values = data;
-                return results;
-            }
-
-            @Override @SuppressWarnings("unchecked")
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = new ArrayList<>((List<Episode>)results.values);
-                notifyDataSetChanged();
-            }
-        };
+        return null;
     }
 
     protected class EpisodeViewHolder extends RecyclerViewHolder<Episode> {
