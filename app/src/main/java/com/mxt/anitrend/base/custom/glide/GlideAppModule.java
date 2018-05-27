@@ -59,7 +59,7 @@ public class GlideAppModule extends AppGlideModule {
                 .format(isLowRamDevice ? DecodeFormat.PREFER_RGB_565 : DecodeFormat.PREFER_ARGB_8888)
                 .timeout(KeyUtil.GLIDE_REQUEST_TIMEOUT)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .error(CompatUtil.getDrawable(context, R.drawable.empty_icon));
+                .error(CompatUtil.getDrawable(context, R.drawable.ic_emoji_sweat));
 
         builder.setDefaultRequestOptions(options);
     }
