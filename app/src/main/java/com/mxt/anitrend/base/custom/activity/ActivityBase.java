@@ -432,7 +432,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        if(presenter != null && !TextUtils.isEmpty(newText))
+        if(presenter != null)
             presenter.notifyAllListeners(newText.toLowerCase(Locale.getDefault()), false);
         return false;
     }
