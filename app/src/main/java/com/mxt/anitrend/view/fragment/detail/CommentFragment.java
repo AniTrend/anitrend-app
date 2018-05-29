@@ -324,10 +324,11 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
                     mAdapter.onItemRemoved(pairIndex);
-                    NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
-                    if(getActivity() != null)
-                        getActivity().finish();
                 }
+                break;
+            case KeyUtil.MUT_DELETE_FEED:
+                if(getActivity() != null)
+                    getActivity().finish();
                 break;
         }
         // resetting our components state after each request, this is important because the edit invocation sets its
