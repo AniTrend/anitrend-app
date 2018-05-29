@@ -125,10 +125,13 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
             DeleteState deleteState;
             if(response.isSuccessful() && (deleteState = response.body()) != null) {
                 resetFlipperState();
-                if(requestType == KeyUtil.MUT_DELETE_FEED)
-                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
-                else if (requestType == KeyUtil.MUT_DELETE_FEED_REPLY)
-                    presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
+                if(deleteState.isDeleted()) {
+                    if (requestType == KeyUtil.MUT_DELETE_FEED)
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedList), false);
+                    else if (requestType == KeyUtil.MUT_DELETE_FEED_REPLY)
+                        presenter.notifyAllListeners(new BaseConsumer<>(requestType, feedReply), false);
+                } else
+                    NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             } else
                 Log.e(this.toString(), ErrorUtil.getError(response));
         } catch (Exception e) {
