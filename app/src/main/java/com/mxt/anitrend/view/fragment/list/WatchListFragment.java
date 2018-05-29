@@ -68,6 +68,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mAdapter = new EpisodeAdapter(getContext());
+        mAdapter.setClickListener(clickListener);
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
         mColumnSize = R.integer.single_list_x1;

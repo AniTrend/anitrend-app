@@ -330,7 +330,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             showEmpty(getString(R.string.layout_empty_response));
     }
 
-    public ItemClickListener<Episode> clickListener = new ItemClickListener<Episode>() {
+    protected ItemClickListener<Episode> clickListener = new ItemClickListener<Episode>() {
         @Override
         public void onItemClick(View target, Episode data) {
             switch (target.getId()) {

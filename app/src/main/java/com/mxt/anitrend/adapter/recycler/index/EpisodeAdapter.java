@@ -33,7 +33,7 @@ public class EpisodeAdapter extends RecyclerViewAdapter<Episode> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<Episode> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder<Episode> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new EpisodeViewHolder(AdapterEpisodeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
