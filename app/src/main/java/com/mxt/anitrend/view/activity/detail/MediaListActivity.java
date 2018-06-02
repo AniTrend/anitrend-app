@@ -63,6 +63,7 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_extra).setVisible(false);
+        menu.findItem(R.id.action_share).setVisible(false);
         if(mSearchView != null) {
             MenuItem searchItem = menu.findItem(R.id.action_search);
             mSearchView.setMenuItem(searchItem);
