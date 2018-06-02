@@ -422,40 +422,7 @@
         <item>360</item>
     </string-array>
 
-    <!-- Privacy Settings -->
-    <string name="pref_header_privacy">Privacy</string>
-    <string name="pref_header_privacy_summary">Configure privacy settings</string>
-
-    <string name="pref_title_crash_reports">Crash Reports</string>
-    <string name="pref_key_crash_reports" translatable="false">crash_reports</string>
-    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
-    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
-
-    <string name="pref_title_usage_analytics">Usage Analytics</string>
-    <string name="pref_key_usage_analytics" translatable="false">usage_analytics</string>
-    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
-    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
-
-    <!--Another lmessageBasesage using a bit of html the p tags represent new paragraphs-->
-    <string name="login_notice">
-        <![CDATA[
-            <p>
-              Newly created accounts may encounter <b>error code 104</b>, which means no anime or manga listings were found on the users profile.
-            </p>
-
-            <p>
-              In such a case you will need to sign into your AniList account via the web browser then add some
-              anime and manga listings to your account, just minimum of 4 will do.
-            </p>
-
-            <p>
-              After adding the new content click <a href="https://anilist.co/settings/list"><b>HERE</b></a> and click the <b>Updating User Stats</b> button.
-              This will force synchronization of the changes to the API and the application should allow you to sign in.
-              If you encounter any further problems please head over to the <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a>
-              for more assistance, I or other users will be more than willing to help :)
-            </p>
-        ]]>
-    </string>
+    <!--Another message using a bit of html the p tags represent new paragraphs-->
 
     <string name="create_account">Do you want to create an account?</string>
 
@@ -983,4 +950,19 @@
     <string name="app_filter_tags">Series Tags?</string>
 
     <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+
+    <!-- Privacy Settings -->
+    <string name="pref_key_crash_reports" translatable="false">crash_reports</string>
+    <string name="pref_key_usage_analytics" translatable="false">usage_analytics</string>
+
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+
+    <string name="pref_title_crash_reports">Crash Reports</string>
+    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
+    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
+    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
 </resources>

@@ -402,25 +402,6 @@
     </string-array>
 
     <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
-    <string name="login_notice">
-        <![CDATA[
-            <p>
-                           الحسابات المنشأة حديثًا قد تواجه <b>error code 104</b> والذي يعني عدم وجود قوائم أنيمي او مانغا للمستخدم الحالي.
-            </p>
-
-            <p>
-              في هذا الحالة يجب تسجيل الدخول في موقع AniList من متصفح الإنترنت وإضافة
-              قوائم أنيمي او مانغا للحساب، على الاقل 4 قوائم.
-            </p>
-
-<p>
-              بعد إضافة المحتوى الجديد اضغط <a href="https://anilist.co/settings/list"><b>هنا</b></a>  واضغط على <b>تحديث حالة المستخدم.
-              وبناء على هذا سيتم اجراء مزامنة اجبارية وسيسمح التطبيق عندها لك بتسجيل الدخول.
-              اذا واجهت مشاكل اخرى اذهب الى <a href="https://anilist.co/forum/thread/2081">AniTrend صفحة مجتمع</a>
-              للمساعدة.
-            </p>
-        ]]>
-    </string>
 
     <string name="create_account">هل تريد إنشاء حساب جديد؟</string>
 
@@ -943,4 +924,16 @@
     <string name="app_filter_tags">وسوم السلسلة؟</string>
 
     <string name="anitrend_sign_in_browser">يُنصح بأستخدام Google Chrome</string>
+
+    <!-- Privacy Settings -->
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+
+    <string name="pref_title_crash_reports">Crash Reports</string>
+    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
+    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
+    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
 </resources>

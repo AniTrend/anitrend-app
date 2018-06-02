@@ -400,24 +400,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     </string-array>
 
     <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
-    <string name="login_notice">
-        <![CDATA[
-            <p>
-               Las cuentas nuevas muestran el <b>código de error 104</b>, al no poseer animes o mangas en el perfil de usuario.
-            </p>
-
-            <p>
-              En este caso debes ingresar desde tu cuenta de AniList vía web y agregar a tu listado como mínimo 4 animes y/o mangas.
-            </p>
-
-            <p>
-              Después de agregar el nuevo contenido presiona <a href="https://anilist.co/settings/list"><b>AQUÍ</b></a> y luego en la opción <b>Updating User Stats</b> .
-              Esto es con el motivo de forzar los cambios en la API para poder ingresar desde la aplicación.
-              Si tienes otro inconveniente, por favor notificalo en el foro de <a href="https://anilist.co/forum/thread/2081"> Anitrend</a>
-              para brindarte más asistencia :).
-            </p>
-        ]]>
-    </string>
 
     <string name="create_account">¿Deseas crear una cuenta nueva?</string>
 
@@ -940,4 +922,16 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="app_filter_tags">Series Tags?</string>
 
     <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+
+    <!-- Privacy Settings -->
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+
+    <string name="pref_title_crash_reports">Crash Reports</string>
+    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
+    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
+    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
 </resources>

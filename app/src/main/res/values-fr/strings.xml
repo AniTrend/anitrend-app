@@ -401,27 +401,6 @@
     </string-array>
 
     <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
-    <string name="login_notice">
-        <![CDATA[
-            <p>
-              Il est possible que les comptes créés récemment rencontrent <b>l\'erreur 104</b>. Cette erreur signifie
-              qu\'aucune entrée anime ou manga n\'a été trouvée dans le profil de l\'utilisateur.
-            </p>
-
-            <p>
-              Si cela arrive, vous devrez vous connecter à votre compte Anilist depuis le navigateur internet et
-              ajouter quelques entrées anime ou manga à votre compte. Quatre devrait suffire.
-            </p>
-
-            <p>
-              Après avoir ajouté les entrées, cliquez <a href="https://anilist.co/settings/list"><b>ICI</b></a>
-              puis cliquez sur le bouton <b>"Mettre à jour les Statistiques de l\'Utilisateur"</b>.
-              Cela va forcer la synchronisation des modifications et l\'application devrait vous autoriser à vous connecter.
-              Si vous rencontrez d\'autres problèmes, aller sur <a href="https://anilist.co/forum/thread/2081">la Page AniTrend du Forum</a>
-              pour recevoir de l\'aide. Les utilisateurs et moi-même seront ravis de vous venir en aide. :)
-            </p>
-        ]]>
-    </string>
 
     <string name="create_account">Voulez-vous créer un nouveau compte ?</string>
 
@@ -947,4 +926,16 @@
     <string name="app_filter_tags">Series Tags?</string>
 
     <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+
+    <!-- Privacy Settings -->
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+
+    <string name="pref_title_crash_reports">Crash Reports</string>
+    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
+    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
+    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
 </resources>
