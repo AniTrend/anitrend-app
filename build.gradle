@@ -6,7 +6,7 @@ buildscript {
         'compileSdk'    : 27,
         'targetSdk'     : 27,
         'minSdk'        : 17,
-        'versionCode'   : 79,
+        'versionCode'   : 80,
         'versionName'   : '1.1.0',
         'buildTools'    : '27.0.3',
         'butterKnife'   : '8.8.1',

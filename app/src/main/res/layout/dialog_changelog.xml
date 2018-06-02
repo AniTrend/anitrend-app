@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/series_image_lg"
+        app:srcCompat="@drawable/ic_emoji_announce"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/spacing_md" />
+
+    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:text="What's New AniTrend?" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/md_margin" />
+
+    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        android:id="@+id/changelog_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="Version 1.1.0" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/spacing_sm" />
+
+    <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+        android:id="@+id/changelog_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

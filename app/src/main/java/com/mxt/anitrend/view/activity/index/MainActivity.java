@@ -434,6 +434,10 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
      * Checks to see if this instance is a new installation
      */
     private void checkNewInstallation() {
+        if (getPresenter().getApplicationPref().isUpdated()) {
+            DialogUtil.createChangeLog(this);
+            getPresenter().getApplicationPref().setUpdated();
+        }
         if(getPresenter().getApplicationPref().isFreshInstall()) {
             getPresenter().getApplicationPref().setFreshInstall();
             mBottomSheet = new BottomSheetMessage.Builder()

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
@@ -12,8 +13,14 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.annimon.stream.Stream;
+import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
+import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -191,6 +198,30 @@ public class DialogUtil {
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .itemsCallbackMultiChoice(selectedIndices,listCallbackMultiChoice)
                 .autoDismiss(true).onAny(singleButtonCallback).show();
+    }
+
+    public static void createChangeLog(Context context) {
+        try {
+            MaterialDialog materialDialog = createDefaultDialog(context)
+                    .customView(R.layout.dialog_changelog, true)
+                    .build();
+
+            SingleLineTextView singleLineTextView = (SingleLineTextView) materialDialog.findViewById(R.id.changelog_version);
+            singleLineTextView.setText(String.format("v%s", BuildConfig.VERSION_NAME));
+
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open("changelog.md");
+            StringBuilder stringBuilder = new StringBuilder();
+            int buffer;
+            while ((buffer = inputStream.read()) != -1)
+                stringBuilder.append((char)buffer);
+            RichMarkdownTextView richMarkdownTextView = (RichMarkdownTextView) materialDialog.findViewById(R.id.changelog_information);
+            RichMarkdownTextView.richMarkDown(richMarkdownTextView, stringBuilder.toString());
+
+            materialDialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 
+import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 
 /**
@@ -19,6 +20,7 @@ public class ApplicationPref {
     private Context context;
 
     /** Base Application Values */
+    private final String _versionCode = "_versionCode";
     private final String _freshInstall = "_freshInstall";
     private final String _isAuthenticated = "_isAuthenticated";
 
@@ -276,6 +278,16 @@ public class ApplicationPref {
     public void setUpdateChannel(@KeyUtil.Channel String channel) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(_updateChannel, channel);
+        editor.apply();
+    }
+
+    public boolean isUpdated() {
+        return sharedPreferences.getInt(_versionCode, 1) < BuildConfig.VERSION_CODE;
+    }
+
+    public void setUpdated() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(_versionCode, BuildConfig.VERSION_CODE);
         editor.apply();
     }
 }

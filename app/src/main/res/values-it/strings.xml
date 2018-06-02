@@ -921,4 +921,17 @@
     <string name="app_filter_tags">Series Tags?</string>
 
     <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+
+    <!-- Privacy Settings -->
+
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+
+    <string name="pref_title_crash_reports">Crash Reports</string>
+    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
+    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
+    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
 </resources>
