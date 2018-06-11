@@ -74,7 +74,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     @Override
     public int getItemViewType(int position) {
         FeedList model = data.get(position);
-        if(TextUtils.isEmpty(model.getType()))
+        if(model == null || TextUtils.isEmpty(model.getType()))
             return -1;
         if(CompatUtil.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
