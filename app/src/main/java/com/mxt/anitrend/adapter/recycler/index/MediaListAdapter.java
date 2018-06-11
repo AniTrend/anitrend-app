@@ -13,14 +13,13 @@ import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
-import com.mxt.anitrend.databinding.AdapterSeriesListBinding;
+import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
@@ -41,7 +40,7 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
     @NonNull
     @Override
     public RecyclerViewHolder<MediaList> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SeriesListViewHolder(AdapterSeriesListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new SeriesListViewHolder(AdapterSeriesAiringBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -80,14 +79,14 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
 
     protected class SeriesListViewHolder extends RecyclerViewHolder<MediaList> {
 
-        private AdapterSeriesListBinding binding;
+        private AdapterSeriesAiringBinding binding;
 
         /**
          * Default constructor which includes binding with butter knife
          *
          * @param binding
          */
-        public SeriesListViewHolder(AdapterSeriesListBinding binding) {
+        public SeriesListViewHolder(AdapterSeriesAiringBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -117,6 +116,7 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
         public void onViewRecycled() {
             Glide.with(getContext()).clear(binding.seriesImage);
             binding.seriesEpisodes.onViewRecycled();
+            binding.customRatingWidget.onViewRecycled();
             binding.unbind();
         }
 

@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
-import com.mxt.anitrend.adapter.recycler.index.AiringAdapter;
+import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
 import com.mxt.anitrend.model.entity.base.UserBase;
@@ -31,11 +31,9 @@ public class AiringListFragment extends MediaListFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new AiringAdapter(getContext());
         UserBase userBase = getPresenter().getDatabase().getCurrentUser();
-        userId = userBase.getId();
-        userName = userBase.getName();
-        mediaType = KeyUtil.ANIME;
+        userId = userBase.getId(); userName = userBase.getName(); mediaType = KeyUtil.ANIME;
+        ((MediaListAdapter)mAdapter).setCurrentUser(userName);
         queryContainer = GraphUtil.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_statusIn, KeyUtil.CURRENT);
     }
