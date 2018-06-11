@@ -33,7 +33,11 @@ public class Channel implements Parcelable {
     @ElementList(name = "episode", inline = true)
     private List<Episode> episode;
 
-    public Channel(@Element(name = "title")String title, @Path("link") @Text(required=false)String link, @Element(name = "description")String description, @Element(name = "copyright")String copyright, @ElementList(name = "episode", inline = true)List<Episode> episode) {
+    public Channel(@Element(name = "title")String title,
+                   @Path("link") @Text(required=false) String link,
+                   @Element(name = "description", required = false)String description,
+                   @Element(name = "copyright")String copyright,
+                   @ElementList(name = "episode", inline = true) List<Episode> episode) {
         this.title = title;
         this.link = link;
         this.description = description;
