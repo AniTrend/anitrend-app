@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
@@ -349,7 +350,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      * @param data   the model that at the click index
      */
     @Override
-    public abstract void onItemClick(View target, FeedReply data);
+    public abstract void onItemClick(View target, IntPair<FeedReply> data);
 
     /**
      * When the target view from {@link View.OnLongClickListener}
@@ -359,5 +360,5 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      * @param data   the model that at the long click index
      */
     @Override
-    public abstract void onItemLongClick(View target, FeedReply data);
+    public abstract void onItemLongClick(View target, IntPair<FeedReply> data);
 }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupActorAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -62,15 +63,15 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
              * is clicked from a view holder this method will be called
              *
              * @param target view that has been clicked
-             * @param data   the model that at the click index
+             * @param data   the model that at the clicked index
              */
             @Override
-            public void onItemClick(View target, RecyclerItem data) {
+            public void onItemClick(View target, IntPair<RecyclerItem> data) {
                 switch (target.getId()) {
                     case R.id.container:
                         Intent intent = new Intent(getActivity(), MediaActivity.class);
-                        intent.putExtra(KeyUtil.arg_id, ((MediaBase) data).getId());
-                        intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase) data).getType());
+                        intent.putExtra(KeyUtil.arg_id, ((MediaBase) data.getSecond()).getId());
+                        intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase) data.getSecond()).getType());
                         CompatUtil.startRevealAnim(getActivity(), target, intent);
                         break;
                 }
@@ -81,15 +82,15 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
              * is clicked from a view holder this method will be called
              *
              * @param target view that has been long clicked
-             * @param data   the model that at the long click index
+             * @param data   the model that at the long clicked index
              */
             @Override
-            public void onItemLongClick(View target, RecyclerItem data) {
+            public void onItemLongClick(View target, IntPair<RecyclerItem> data) {
                 switch (target.getId()) {
                     case R.id.container:
                         if(getPresenter().getApplicationPref().isAuthenticated()) {
                             mediaActionUtil = new MediaActionUtil.Builder()
-                                    .setId(((MediaBase) data).getId()).build(getActivity());
+                                    .setId(((MediaBase) data.getSecond()).getId()).build(getActivity());
                             mediaActionUtil.startSeriesAction();
                         } else
                             NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -112,38 +113,6 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
         getViewModel().requestData(KeyUtil.CHARACTER_ACTORS_REQ, getContext());
     }
 
-
-
-    /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, RecyclerItem data) {
-        switch (target.getId()) {
-            case R.id.container:
-                Intent intent = new Intent(getActivity(), StaffActivity.class);
-                intent.putExtra(KeyUtil.arg_id, ((StaffBase)data).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-        }
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, RecyclerItem data) {
-
-    }
-
     @Override
     public void onChanged(@Nullable ConnectionContainer<EdgeContainer<MediaEdge>> content) {
         EdgeContainer<MediaEdge> edgeContainer;
@@ -160,5 +129,35 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
             onPostProcessed(Collections.emptyList());
         if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<RecyclerItem> data) {
+        switch (target.getId()) {
+            case R.id.container:
+                Intent intent = new Intent(getActivity(), StaffActivity.class);
+                intent.putExtra(KeyUtil.arg_id, ((StaffBase)data.getSecond()).getId());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+        }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<RecyclerItem> data) {
+
     }
 }

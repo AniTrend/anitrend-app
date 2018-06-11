@@ -19,7 +19,6 @@ public class UnresolvedViewHolder<T> extends RecyclerViewHolder<T> {
         this.binding = binding;
     }
 
-
     @Override
     public void onBindViewHolder(T model) {
         binding.executePendingBindings();

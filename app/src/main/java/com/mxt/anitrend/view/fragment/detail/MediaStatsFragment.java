@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.IntPair;
 import com.annimon.stream.Stream;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
@@ -107,25 +108,25 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             rankAdapter.onItemsInserted(model.getRankings());
             rankAdapter.setClickListener(new ItemClickListener<MediaRank>() {
                 @Override
-                public void onItemClick(View target, MediaRank data) {
+                public void onItemClick(View target, IntPair<MediaRank> data) {
                     Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                     Bundle args = new Bundle();
                     QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
                             .putVariable(KeyUtil.arg_type, mediaType)
-                            .putVariable(KeyUtil.arg_format, data.getFormat());
+                            .putVariable(KeyUtil.arg_format, data.getSecond().getFormat());
 
                     if(MediaUtil.isAnimeType(model))
-                        queryContainer.putVariable(KeyUtil.arg_season, data.getSeason());
+                        queryContainer.putVariable(KeyUtil.arg_season, data.getSecond().getSeason());
 
-                    if(!data.isAllTime()) {
+                    if(!data.getSecond().isAllTime()) {
                         if (MediaUtil.isAnimeType(model))
-                            queryContainer.putVariable(KeyUtil.arg_seasonYear, data.getYear());
+                            queryContainer.putVariable(KeyUtil.arg_seasonYear, data.getSecond().getYear());
                         else
                             queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
-                                    "%d%%", data.getYear()));
+                                    "%d%%", data.getSecond().getYear()));
                     }
 
-                    switch (data.getType()) {
+                    switch (data.getSecond().getType()) {
                         case KeyUtil.RATED:
                             queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.SCORE + KeyUtil.DESC);
                             break;
@@ -138,13 +139,13 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                     args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
                             .setCompactType(true)
                             .setFilterEnabled(false));
-                    args.putString(KeyUtil.arg_activity_tag, data.getTypeHtmlPlainTitle());
+                    args.putString(KeyUtil.arg_activity_tag, data.getSecond().getTypeHtmlPlainTitle());
                     intent.putExtras(args);
                     startActivity(intent);
                 }
 
                 @Override
-                public void onItemLongClick(View target, MediaRank data) {
+                public void onItemLongClick(View target, IntPair<MediaRank> data) {
 
                 }
             });
@@ -155,14 +156,14 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             linkAdapter.onItemsInserted(model.getExternalLinks());
             linkAdapter.setClickListener(new ItemClickListener<ExternalLink>() {
                 @Override
-                public void onItemClick(View target, ExternalLink data) {
+                public void onItemClick(View target, IntPair<ExternalLink> data) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(data.getUrl()));
+                    intent.setData(Uri.parse(data.getSecond().getUrl()));
                     startActivity(intent);
                 }
 
                 @Override
-                public void onItemLongClick(View target, ExternalLink data) {
+                public void onItemLongClick(View target, IntPair<ExternalLink> data) {
 
                 }
             });

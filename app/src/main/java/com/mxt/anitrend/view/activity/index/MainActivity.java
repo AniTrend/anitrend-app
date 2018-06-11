@@ -420,7 +420,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                         .build();
                 showBottomSheet();
             }
-            AnalyticsUtil.setCrashalyticsUser(this, user.getName());
+            AnalyticsUtil.setCrashAnalyticsUser(this, user.getName());
         }
 
         mAccountLogin.setVisible(false);

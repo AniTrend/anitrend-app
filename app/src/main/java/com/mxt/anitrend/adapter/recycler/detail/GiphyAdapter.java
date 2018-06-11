@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
+import com.annimon.stream.IntPair;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -105,17 +106,12 @@ public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
          */
         @Override @OnClick(R.id.giphy_image)
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
         @Override @OnLongClick(R.id.giphy_image)
         public boolean onLongClick(View view) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemLongClick(view, data.get(index));
-            return true;
+            return performLongClick(clickListener, data, view);
         }
     }
 }

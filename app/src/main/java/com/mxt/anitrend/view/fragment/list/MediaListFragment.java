@@ -169,47 +169,6 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         }
     }
 
-    /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, MediaList data) {
-        switch (target.getId()) {
-            case R.id.series_image:
-                MediaBase mediaBase = data.getMedia();
-                Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtil.arg_id, data.getMediaId());
-                intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-        }
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, MediaList data) {
-        switch (target.getId()) {
-            case R.id.series_image:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    mediaActionUtil = new MediaActionUtil.Builder()
-                            .setId(data.getMediaId()).build(getActivity());
-                    mediaActionUtil.startSeriesAction();
-                } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
     @SuppressLint("SwitchIntDef")
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<MediaList> consumer) {
@@ -260,6 +219,47 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             onPostProcessed(Collections.emptyList());
         if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<MediaList> data) {
+        switch (target.getId()) {
+            case R.id.series_image:
+                MediaBase mediaBase = data.getSecond().getMedia();
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
+                intent.putExtra(KeyUtil.arg_id, data.getSecond().getMediaId());
+                intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+        }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<MediaList> data) {
+        switch (target.getId()) {
+            case R.id.series_image:
+                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                    mediaActionUtil = new MediaActionUtil.Builder()
+                            .setId(data.getSecond().getMediaId()).build(getActivity());
+                    mediaActionUtil.startSeriesAction();
+                } else
+                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     protected void sortMediaListByTitle(@NonNull List<MediaList> mediaLists) {

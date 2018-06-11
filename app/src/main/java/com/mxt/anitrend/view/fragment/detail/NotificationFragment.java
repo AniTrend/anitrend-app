@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
@@ -136,100 +137,6 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     }
 
     /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, Notification data) {
-        Intent intent;
-        setItemAsRead(data);
-        if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
-            intent = new Intent(getActivity(), ProfileActivity.class);
-            intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
-            CompatUtil.startRevealAnim(getActivity(), target, intent);
-        }
-        else
-            switch (data.getType()) {
-                case KeyUtil.ACTIVITY_MESSAGE:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.FOLLOWING:
-                    intent = new Intent(getActivity(), ProfileActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.ACTIVITY_MENTION:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.THREAD_COMMENT_MENTION:
-                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
-                    break;
-                case KeyUtil.THREAD_SUBSCRIBED:
-                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
-                    break;
-                case KeyUtil.THREAD_COMMENT_REPLY:
-                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
-                    break;
-                case KeyUtil.AIRING:
-                    intent = new Intent(getActivity(), MediaActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getMedia().getId());
-                    intent.putExtra(KeyUtil.arg_mediaType, data.getMedia().getType());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.ACTIVITY_LIKE:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.ACTIVITY_REPLY:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.ACTIVITY_REPLY_LIKE:
-                    intent = new Intent(getActivity(), CommentActivity.class);
-                    intent.putExtra(KeyUtil.arg_id, data.getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
-                    break;
-                case KeyUtil.THREAD_LIKE:
-                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
-                    break;
-                case KeyUtil.THREAD_COMMENT_LIKE:
-                    DialogUtil.createMessage(getContext(), data.getUser().getName(), data.getContext());
-                    break;
-            }
-    }
-
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, Notification data) {
-        if(CompatUtil.equals(data.getType(), KeyUtil.AIRING)) {
-            setItemAsRead(data);
-            if(getPresenter().getApplicationPref().isAuthenticated()) {
-                mediaActionUtil = new MediaActionUtil.Builder()
-                        .setId(data.getMedia().getId()).build(getActivity());
-                mediaActionUtil.startSeriesAction();
-            } else
-                NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
      * Ran on a background thread to assure we don't skip frames
      * @see ThreadPool
      */
@@ -274,5 +181,99 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                 if(mAdapter != null)
                     mAdapter.notifyDataSetChanged();
             });
+    }
+
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<Notification> data) {
+        Intent intent;
+        setItemAsRead(data.getSecond());
+        if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getSecond().getType(), KeyUtil.AIRING)) {
+            intent = new Intent(getActivity(), ProfileActivity.class);
+            intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
+            CompatUtil.startRevealAnim(getActivity(), target, intent);
+        }
+        else
+            switch (data.getSecond().getType()) {
+                case KeyUtil.ACTIVITY_MESSAGE:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.FOLLOWING:
+                    intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.ACTIVITY_MENTION:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.THREAD_COMMENT_MENTION:
+                    DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
+                    break;
+                case KeyUtil.THREAD_SUBSCRIBED:
+                    DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
+                    break;
+                case KeyUtil.THREAD_COMMENT_REPLY:
+                    DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
+                    break;
+                case KeyUtil.AIRING:
+                    intent = new Intent(getActivity(), MediaActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getMedia().getId());
+                    intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getMedia().getType());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.ACTIVITY_LIKE:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.ACTIVITY_REPLY:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.ACTIVITY_REPLY_LIKE:
+                    intent = new Intent(getActivity(), CommentActivity.class);
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
+                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    break;
+                case KeyUtil.THREAD_LIKE:
+                    DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
+                    break;
+                case KeyUtil.THREAD_COMMENT_LIKE:
+                    DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
+                    break;
+            }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<Notification> data) {
+        if(CompatUtil.equals(data.getSecond().getType(), KeyUtil.AIRING)) {
+            setItemAsRead(data.getSecond());
+            if(getPresenter().getApplicationPref().isAuthenticated()) {
+                mediaActionUtil = new MediaActionUtil.Builder()
+                        .setId(data.getSecond().getMedia().getId()).build(getActivity());
+                mediaActionUtil.startSeriesAction();
+            } else
+                NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+        }
     }
 }

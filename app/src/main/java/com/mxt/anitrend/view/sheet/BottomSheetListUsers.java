@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
@@ -267,23 +268,36 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
                 message, getString(R.string.try_again) , stateLayoutOnClick);
     }
 
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the clicked index
+     */
     @Override
-    public void onItemClick(View target, UserBase data) {
+    public void onItemClick(View target, IntPair<UserBase> data) {
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtil.arg_id, data.getId());
+                intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
                 CompatUtil.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }
 
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long clicked index
+     */
     @Override
-    public void onItemLongClick(View target, UserBase data) {
+    public void onItemLongClick(View target, IntPair<UserBase> data) {
 
     }
-
 
 
     /**

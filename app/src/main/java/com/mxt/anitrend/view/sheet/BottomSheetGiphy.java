@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.annimon.stream.IntPair;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.GiphyAdapter;
@@ -102,37 +103,6 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     }
 
     /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, Giphy data) {
-        presenter.notifyAllListeners(data, false);
-        closeDialog();
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, Giphy data) {
-        if(getActivity() != null) {
-            String index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE;
-            Gif giphySample = data.getImages().get(index);
-            Intent intent = new Intent(getActivity(), GiphyPreviewActivity.class);
-            intent.putExtra(KeyUtil.arg_model, giphySample.getUrl());
-            getActivity().startActivity(intent);
-        }
-    }
-
-    /**
      * Called when the user submits the query. This could be due to a key press on the
      * keyboard or due to pressing a submit button.
      * The listener can override the standard behavior by returning true
@@ -173,6 +143,37 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     @Override
     public void onSearchViewClosed() {
 
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the clicked index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<Giphy> data) {
+        presenter.notifyAllListeners(data, false);
+        closeDialog();
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long clicked index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<Giphy> data) {
+        if(getActivity() != null) {
+            String index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE;
+            Gif giphySample = data.getSecond().getImages().get(index);
+            Intent intent = new Intent(getActivity(), GiphyPreviewActivity.class);
+            intent.putExtra(KeyUtil.arg_model, giphySample.getUrl());
+            getActivity().startActivity(intent);
+        }
     }
 
     /**
