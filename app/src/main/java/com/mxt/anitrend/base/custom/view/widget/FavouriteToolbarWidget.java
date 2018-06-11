@@ -22,6 +22,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaUtil;
@@ -40,7 +41,6 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
 
     private WidgetPresenter<ResponseBody> presenter;
     private WidgetToolbarFavouriteBinding binding;
-    private @KeyUtil.RequestType int requestType = KeyUtil.MUT_TOGGLE_FAVOURITE;
 
     private StaffBase staffBase;
     private MediaBase mediaBase;
@@ -126,15 +126,20 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
         binding.widgetFlipper.setVisibility(VISIBLE);
     }
 
+    public boolean isModelSet() {
+        return staffBase != null || characterBase != null ||
+                studioBase != null || mediaBase != null;
+    }
+
     @Override
     public void onClick(View view) {
         if(presenter.getApplicationPref().isAuthenticated())
             switch (view.getId()) {
                 case R.id.widget_flipper:
-                    if (requestType != 0) {
+                    if (isModelSet()) {
                         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                             binding.widgetFlipper.showNext();
-                            presenter.requestData(requestType, getContext(), this);
+                            presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
                         }
                         else
                             NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -183,6 +188,9 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                 else if (characterBase != null)
                     characterBase.toggleFavourite();
                 setIconType();
+            } else {
+                Log.e(toString(), ErrorUtil.getError(response));
+                NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
