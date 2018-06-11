@@ -75,7 +75,7 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
      */
     protected @NonNull IntPair<Boolean> isValidIndexPair() {
         final int index = getAdapterPosition();
-        return new IntPair<>(index, index > -1);
+        return new IntPair<>(index, index != RecyclerView.NO_POSITION);
     }
 
     /**
