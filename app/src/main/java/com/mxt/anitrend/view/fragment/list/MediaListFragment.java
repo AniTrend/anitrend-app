@@ -268,7 +268,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 .sorted((first, second) -> {
                     String firstTitle = MediaUtil.getMediaTitle(first.getMedia());
                     String secondTitle = MediaUtil.getMediaTitle(second.getMedia());
-                    return CompatUtil.equals(sortOrder, KeyUtil.DESC) ?
+                    return CompatUtil.equals(sortOrder, KeyUtil.ASC) ?
                             firstTitle.compareTo(secondTitle) : secondTitle.compareTo(firstTitle);
                 }).toList());
         updateUI();
