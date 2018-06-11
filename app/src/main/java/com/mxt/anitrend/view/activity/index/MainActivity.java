@@ -453,9 +453,13 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         switch (view.getId()){
             case R.id.banner_clickable:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    Intent intent = new Intent(this, ProfileActivity.class);
-                    intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                    CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
+                    User user = getPresenter().getDatabase().getCurrentUser();
+                    if(user != null) {
+                        Intent intent = new Intent(this, ProfileActivity.class);
+                        intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                        CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
+                    } else
+                        NotifyUtil.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
                 }
                 else
                     onNavigate(R.id.nav_sign_in);
