@@ -1,5 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,8 +14,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.ImagePreviewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
@@ -25,6 +28,7 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.LinearScaleHelper;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity;
@@ -175,9 +179,14 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
                 getContext().startActivity(intent);
                 break;
             case PatternMatcher.KEY_YOU:
-                intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(data.getSecond()));
-                getContext().startActivity(intent);
+                try {
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(data.getSecond()));
+                    getContext().startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    NotifyUtil.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
