@@ -17,7 +17,9 @@ buildscript {
         'objectBox'     : '1.5.0',
         'architecture'  : '1.1.1',
         'emojify'       : '0.1.7',
-        'kotlin'        : '1.2.31'
+        'kotlin'        : '1.2.31',
+        // testing libraries
+        'mockito'       : '2.18.3'
     ]
     repositories {
         google()
