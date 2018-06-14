@@ -5,6 +5,7 @@ query MediaBase($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
       title {
         userPreferred
       }
+      type
       bannerImage
       isFavourite
       mediaListEntry {

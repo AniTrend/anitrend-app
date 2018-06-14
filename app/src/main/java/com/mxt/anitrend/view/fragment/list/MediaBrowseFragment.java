@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -184,46 +185,6 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         getViewModel().requestData(KeyUtil.MEDIA_BROWSE_REQ, getContext());
     }
 
-    /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, MediaBase data) {
-        switch (target.getId()) {
-            case R.id.container:
-                Intent intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtil.arg_id, data.getId());
-                intent.putExtra(KeyUtil.arg_mediaType, data.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-        }
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, MediaBase data) {
-        switch (target.getId()) {
-            case R.id.container:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    mediaActionUtil = new MediaActionUtil.Builder()
-                            .setId(data.getId()).build(getActivity());
-                    mediaActionUtil.startSeriesAction();
-                } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
     @Override
     public void onChanged(@Nullable PageContainer<MediaBase> content) {
         if(content != null) {
@@ -237,5 +198,45 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
             onPostProcessed(Collections.emptyList());
         if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<MediaBase> data) {
+        switch (target.getId()) {
+            case R.id.container:
+                Intent intent = new Intent(getActivity(), MediaActivity.class);
+                intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
+                intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getType());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+        }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<MediaBase> data) {
+        switch (target.getId()) {
+            case R.id.container:
+                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                    mediaActionUtil = new MediaActionUtil.Builder()
+                            .setId(data.getSecond().getId()).build(getActivity());
+                    mediaActionUtil.startSeriesAction();
+                } else
+                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

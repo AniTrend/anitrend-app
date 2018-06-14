@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
@@ -59,29 +60,29 @@ public class MessageFeedFragment extends FeedListFragment {
     }
 
     @Override
-    public void onItemClick(View target, FeedList data) {
+    public void onItemClick(View target, IntPair<FeedList> data) {
         Intent intent;
         switch (target.getId()) {
             case R.id.messenger_avatar:
-                if (data.getMessenger() != null) {
+                if (data.getSecond().getMessenger() != null) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtil.arg_id, data.getMessenger().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getMessenger().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
             case R.id.recipient_avatar:
-                if (data.getRecipient() != null) {
+                if (data.getSecond().getRecipient() != null) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(KeyUtil.arg_id, data.getRecipient().getId());
+                    intent.putExtra(KeyUtil.arg_id, data.getSecond().getRecipient().getId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
             case R.id.widget_edit:
-                mBottomSheet = new BottomSheetComposer.Builder().setUserActivity(data)
+                mBottomSheet = new BottomSheetComposer.Builder().setUserActivity(data.getSecond())
                         .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
-                        .setUserModel(data.getRecipient())
+                        .setUserModel(data.getSecond().getRecipient())
                         .setTitle(R.string.edit_status_title)
                         .build();
                 showBottomSheet();

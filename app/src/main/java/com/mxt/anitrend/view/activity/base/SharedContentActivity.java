@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -213,10 +214,10 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
      * is clicked from a view holder this method will be called
      *
      * @param target view that has been clicked
-     * @param data   the model that at the click index
+     * @param data   the model that at the clicked index
      */
     @Override
-    public void onItemClick(View target, Object data) {
+    public void onItemClick(View target, IntPair<Object> data) {
         switch (target.getId()) {
             case R.id.insert_emoticon:
                 break;
@@ -240,10 +241,10 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
      * is clicked from a view holder this method will be called
      *
      * @param target view that has been long clicked
-     * @param data   the model that at the long click index
+     * @param data   the model that at the long clicked index
      */
     @Override
-    public void onItemLongClick(View target, Object data) {
+    public void onItemLongClick(View target, IntPair<Object> data) {
 
     }
 }

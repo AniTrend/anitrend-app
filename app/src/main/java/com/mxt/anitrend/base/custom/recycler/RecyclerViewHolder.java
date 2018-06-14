@@ -5,7 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.annimon.stream.IntPair;
+import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.util.ActionModeHelper;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -42,7 +46,6 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
      */
     public abstract void onViewRecycled();
 
-
     /**
      * Handle any onclick events from our views
      * <br/>
@@ -67,18 +70,50 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
     }
 
     /**
-     * Checks if the the current adapter position is not below 0
+     * Constructs an int pair container with a boolean representing a valid adapter position
+     * @return IntPair
      */
-    protected boolean isValidIndex() {
-        return getAdapterPosition() > -1;
+    protected @NonNull IntPair<Boolean> isValidIndexPair() {
+        final int index = getAdapterPosition();
+        return new IntPair<>(index, index != RecyclerView.NO_POSITION);
+    }
+
+    /**
+     * Handle any onclick events from our views
+     * <br/>
+     *
+     * @param v the view that has been clicked
+     * @see View.OnClickListener
+     */
+    protected void performClick(ItemClickListener<T> clickListener, List<T> data, View v) {
+        IntPair<Boolean> pair = isValidIndexPair();
+        T model;
+        if(pair.getSecond() && isClickable((model = data.get(pair.getFirst()))))
+            clickListener.onItemClick(v, new IntPair<>(pair.getFirst(), model));
+    }
+
+    /**
+     * Called when a view has been clicked and held.
+     *
+     * @param v The view that was clicked and held.
+     * @return true if the callback consumed the long click, false otherwise.
+     */
+    protected boolean performLongClick(ItemClickListener<T> clickListener, List<T> data, View v) {
+        IntPair<Boolean> pair = isValidIndexPair();
+        T model;
+        if(pair.getSecond() && isLongClickable((model = data.get(pair.getFirst())))) {
+            clickListener.onItemLongClick(v, new IntPair<>(pair.getFirst(), model));
+            return true;
+        }
+        return false;
     }
 
     protected boolean isClickable (T clicked) {
-        return isValidIndex() && (callback == null || !callback.onItemClick(this, clicked));
+        return (callback == null || !callback.onItemClick(this, clicked));
     }
 
     protected boolean isLongClickable (T clicked) {
-        return isValidIndex() && (callback == null || !callback.onItemLongClick(this, clicked));
+        return (callback == null || !callback.onItemLongClick(this, clicked));
     }
 
     void setActionMode(ActionModeHelper<T> actionModeHelper) {

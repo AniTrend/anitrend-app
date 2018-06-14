@@ -114,7 +114,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     public void onViewAttachedToWindow(@NonNull RecyclerViewHolder<T> holder) {
         super.onViewAttachedToWindow(holder);
         if(holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams)
-            setLayoutSpanSize((StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams(), holder.getLayoutPosition());
+            setLayoutSpanSize((StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams(), holder.getAdapterPosition());
     }
 
     @Override
@@ -241,7 +241,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     }
 
     private boolean isFullSpanItem(int position) {
-        int viewType = getItemViewType(position);
+        int viewType = position != RecyclerView.NO_POSITION ? getItemViewType(position) : KeyUtil.RECYCLER_TYPE_ERROR;
         return viewType == KeyUtil.RECYCLER_TYPE_HEADER || viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
                 viewType == KeyUtil.RECYCLER_TYPE_LOADING || viewType == KeyUtil.RECYCLER_TYPE_ERROR;
     }

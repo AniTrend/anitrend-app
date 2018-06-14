@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
@@ -331,17 +332,24 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     }
 
     protected ItemClickListener<Episode> clickListener = new ItemClickListener<Episode>() {
+        /**
+         * When the target view from {@link View.OnClickListener}
+         * is clicked from a view holder this method will be called
+         *
+         * @param target view that has been clicked
+         * @param data   the model that at the clicked index
+         */
         @Override
-        public void onItemClick(View target, Episode data) {
+        public void onItemClick(View target, IntPair<Episode> data) {
             switch (target.getId()) {
                 case R.id.series_image:
-                    DialogUtil.createMessage(getActivity(), data.getTitle(), data.getDescription()+"<br/><br/>"+copyright,
+                    DialogUtil.createMessage(getActivity(), data.getSecond().getTitle(), data.getSecond().getDescription()+"<br/><br/>"+copyright,
                             R.string.Watch, R.string.Dismiss, R.string.action_search, (dialog, which) -> {
                                 Intent intent;
                                 switch (which) {
                                     case POSITIVE:
-                                        if(data.getLink() != null) {
-                                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getLink()));
+                                        if(data.getSecond().getLink() != null) {
+                                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getSecond().getLink()));
                                             startActivity(intent);
                                         } else
                                             NotifyUtil.makeText(getActivity(), R.string.text_premium_show, Toast.LENGTH_SHORT).show();
@@ -349,7 +357,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtil.arg_search, EpisodeHelper.getActualTile(data.getTitle()));
+                                            intent.putExtra(KeyUtil.arg_search, EpisodeHelper.getActualTile(data.getSecond().getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;
@@ -359,8 +367,15 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             }
         }
 
+        /**
+         * When the target view from {@link View.OnLongClickListener}
+         * is clicked from a view holder this method will be called
+         *
+         * @param target view that has been long clicked
+         * @param data   the model that at the long clicked index
+         */
         @Override
-        public void onItemLongClick(View target, Episode data) {
+        public void onItemLongClick(View target, IntPair<Episode> data) {
 
         }
     };

@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
@@ -360,7 +361,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, M data) {
+    public void onItemClick(View target, IntPair<M> data) {
 
     }
 
@@ -372,7 +373,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, M data) {
+    public void onItemLongClick(View target, IntPair<M> data) {
 
     }
 }

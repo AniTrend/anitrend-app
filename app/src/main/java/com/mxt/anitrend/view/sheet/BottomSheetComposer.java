@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
@@ -107,15 +108,34 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
         composerWidget.setLifecycle(getLifecycle());
     }
 
+    @SuppressLint("SwitchIntDef")
+    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onModelChanged(BaseConsumer<FeedList> consumer) {
+        NotifyUtil.createAlerter(getActivity(), R.string.text_post_information, R.string.completed_success, R.drawable.ic_insert_emoticon_white_24dp, R.color.colorStateGreen);
+        closeDialog();
+    }
+
+    /**
+     * Remove dialog.
+     */
+    @Override
+    public void onDestroyView() {
+        if(composerWidget != null)
+            composerWidget.onViewRecycled();
+        if(mBottomSheet != null)
+            mBottomSheet.closeDialog();
+        super.onDestroyView();
+    }
+
     /**
      * When the target view from {@link View.OnClickListener}
      * is clicked from a view holder this method will be called
      *
      * @param target view that has been clicked
-     * @param data   the model that at the click index
+     * @param data   the model that at the clicked index
      */
     @Override
-    public void onItemClick(View target, Object data) {
+    public void onItemClick(View target, IntPair<Object> data) {
         switch (target.getId()) {
             case R.id.insert_emoticon:
                 break;
@@ -140,30 +160,11 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
      * is clicked from a view holder this method will be called
      *
      * @param target view that has been long clicked
-     * @param data   the model that at the long click index
+     * @param data   the model that at the long clicked index
      */
     @Override
-    public void onItemLongClick(View target, Object data) {
+    public void onItemLongClick(View target, IntPair<Object> data) {
 
-    }
-
-    @SuppressLint("SwitchIntDef")
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<FeedList> consumer) {
-        NotifyUtil.createAlerter(getActivity(), R.string.text_post_information, R.string.completed_success, R.drawable.ic_insert_emoticon_white_24dp, R.color.colorStateGreen);
-        closeDialog();
-    }
-
-    /**
-     * Remove dialog.
-     */
-    @Override
-    public void onDestroyView() {
-        if(composerWidget != null)
-            composerWidget.onViewRecycled();
-        if(mBottomSheet != null)
-            mBottomSheet.closeDialog();
-        super.onDestroyView();
     }
 
     public static class Builder extends BottomSheetBuilder {

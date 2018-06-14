@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -121,6 +122,21 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
         getViewModel().requestData(KeyUtil.MEDIA_REVIEWS_REQ, getContext());
     }
 
+    @Override
+    public void onChanged(@Nullable PageContainer<Review> content) {
+        if(content != null) {
+            if(content.hasPageInfo())
+                getPresenter().setPageInfo(content.getPageInfo());
+            if(!content.isEmpty())
+                onPostProcessed(content.getPageData());
+            else
+                onPostProcessed(Collections.emptyList());
+        } else
+            onPostProcessed(Collections.emptyList());
+        if(mAdapter.getItemCount() < 1)
+            onPostProcessed(null);
+    }
+
     /**
      * When the target view from {@link View.OnClickListener}
      * is clicked from a view holder this method will be called
@@ -129,10 +145,10 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
      * @param data   the model that at the click index
      */
     @Override
-    public void onItemClick(View target, Review data) {
+    public void onItemClick(View target, IntPair<Review> data) {
         switch (target.getId()) {
             case R.id.series_image:
-                MediaBase mediaBase = data.getMedia();
+                MediaBase mediaBase = data.getSecond().getMedia();
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
                 intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
@@ -140,7 +156,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
                 break;
             case R.id.review_read_more:
                 mBottomSheet = new BottomReviewReader.Builder()
-                        .setReview(data)
+                        .setReview(data.getSecond())
                         .setTitle(R.string.drawer_title_reviews)
                         .build();
                 showBottomSheet();
@@ -156,31 +172,16 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
      * @param data   the model that at the long click index
      */
     @Override
-    public void onItemLongClick(View target, Review data) {
+    public void onItemLongClick(View target, IntPair<Review> data) {
         switch (target.getId()) {
             case R.id.series_image:
-            if(getPresenter().getApplicationPref().isAuthenticated()) {
-                mediaActionUtil = new MediaActionUtil.Builder()
-                        .setId(data.getMedia().getId()).build(getActivity());
-                mediaActionUtil.startSeriesAction();
-            } else
-                NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                    mediaActionUtil = new MediaActionUtil.Builder()
+                            .setId(data.getSecond().getMedia().getId()).build(getActivity());
+                    mediaActionUtil.startSeriesAction();
+                } else
+                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
         }
-    }
-
-    @Override
-    public void onChanged(@Nullable PageContainer<Review> content) {
-        if(content != null) {
-            if(content.hasPageInfo())
-                getPresenter().setPageInfo(content.getPageInfo());
-            if(!content.isEmpty())
-                onPostProcessed(content.getPageData());
-            else
-                onPostProcessed(Collections.emptyList());
-        } else
-            onPostProcessed(Collections.emptyList());
-        if(mAdapter.getItemCount() < 1)
-            onPostProcessed(null);
     }
 }
