@@ -1,5 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +14,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.ImagePreviewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
@@ -24,6 +28,7 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.LinearScaleHelper;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.PatternMatcher;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity;
@@ -155,28 +160,33 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
      * is clicked from a view holder this method will be called
      *
      * @param target view that has been clicked
-     * @param data   the model that at the click index
+     * @param data   the model that at the clicked index
      */
     @Override
-    public void onItemClick(View target, String data) {
+    public void onItemClick(View target, IntPair<String> data) {
         Intent intent;
-        switch (contentTypes.get(CompatUtil.getIndexOf(contentLinks, data))) {
+        switch (contentTypes.get(data.getFirst())) {
             case PatternMatcher.KEY_IMG:
                 intent = new Intent(getContext(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, data);
+                intent.putExtra(KeyUtil.arg_model, data.getSecond());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
             case PatternMatcher.KEY_WEB:
                 intent = new Intent(getContext(), VideoPlayerActivity.class);
-                intent.putExtra(KeyUtil.arg_model, data);
+                intent.putExtra(KeyUtil.arg_model, data.getSecond());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
             case PatternMatcher.KEY_YOU:
-                intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(data));
-                getContext().startActivity(intent);
+                try {
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(data.getSecond()));
+                    getContext().startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    NotifyUtil.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -186,10 +196,10 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
      * is clicked from a view holder this method will be called
      *
      * @param target view that has been long clicked
-     * @param data   the model that at the long click index
+     * @param data   the model that at the long clicked index
      */
     @Override
-    public void onItemLongClick(View target, String data) {
+    public void onItemLongClick(View target, IntPair<String> data) {
 
     }
 }

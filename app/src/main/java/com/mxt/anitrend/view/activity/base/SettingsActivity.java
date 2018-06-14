@@ -42,17 +42,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends AppCompatPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (CompatUtil.equals(key, getString(R.string.pref_key_sync_frequency)) || CompatUtil.equals(key, getString(R.string.pref_key_new_message_notifications)))
-            JobSchedulerUtil.scheduleJob(getApplicationContext());
-        else if (CompatUtil.equals(key, ApplicationPref._updateChannel)) {
-            DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-            databaseHelper.getBoxStore(VersionBase.class).removeAll();
-        }
-    }
+public class SettingsActivity extends AppCompatPreferenceActivity {
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -80,7 +70,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
             if (TextUtils.isEmpty(stringValue)) {
                 // Empty values correspond to 'silent' (no ringtone).
                 preference.setSummary(R.string.pref_ringtone_silent);
-
             } else {
                 Ringtone ringtone = RingtoneManager.getRingtone(
                         preference.getContext(), Uri.parse(stringValue));
@@ -137,20 +126,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-    }
-
-    @Override
-    protected void onPause() {
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -273,6 +248,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_sync_frequency)));
         }
 
+
+
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
@@ -298,7 +275,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-//            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_crash_reports)));
+            // bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_crash_reports)));
         }
 
         @Override
@@ -312,5 +289,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Sha
             }
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        JobSchedulerUtil.scheduleJob(getApplicationContext());
+        super.onDestroy();
     }
 }

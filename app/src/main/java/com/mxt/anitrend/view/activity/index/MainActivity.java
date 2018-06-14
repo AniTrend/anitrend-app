@@ -28,6 +28,7 @@ import com.mxt.anitrend.adapter.pager.index.AiringPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.FeedPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.HubPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.MangaPageAdapter;
+import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter;
@@ -50,7 +51,6 @@ import com.mxt.anitrend.util.MarkDown;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
-import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetMessage;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -70,8 +70,8 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * Base main_menu activity to show case template
  */
 
-public class MainActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener, BaseConsumer.onRequestModelChange<User>,
-        NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener,
+        BaseConsumer.onRequestModelChange<User>, NavigationView.OnNavigationItemSelectedListener {
 
     protected @BindView(R.id.toolbar) Toolbar mToolbar;
     protected @BindView(R.id.page_container) ViewPager mViewPager;
@@ -103,8 +103,8 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         setPresenter(new BasePresenter(getApplicationContext()));
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         if (savedInstanceState == null)
             redirectShortcut = getIntent().getIntExtra(KeyUtil.arg_redirect, 0);
     }
@@ -227,13 +227,12 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         final @IdRes int menu = item.getItemId();
         if(selectedItem != menu)
             onNavigate(menu);
-        if(menu != R.id.nav_light_theme && menu != R.id.nav_sign_in && menu != R.id.nav_myanime && menu != R.id.nav_mymanga)
+        if(menu != R.id.nav_light_theme && menu != R.id.nav_sign_in)
             mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void onNavigate(@IdRes int menu) {
-        Intent intent;
         switch (menu) {
             case R.id.nav_home_feed:
                 mToolbar.setTitle(getString(R.string.drawer_title_home));
@@ -267,18 +266,32 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                 selectedItem = menu;
                 break;
             case R.id.nav_myanime:
-                intent = new Intent(this, MediaListActivity.class);
-                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
-                intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                intent.putExtra(KeyUtil.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
-                startActivity(intent);
+                Bundle animeParams = new Bundle();
+                animeParams.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME);
+                animeParams.putString(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                animeParams.putLong(KeyUtil.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
+
+                MediaListPageAdapter animeListPageAdapter = new MediaListPageAdapter(getSupportFragmentManager(), getApplicationContext());
+                animeListPageAdapter.setParams(animeParams);
+
+                mToolbar.setTitle(getString(R.string.drawer_title_myanime));
+                mViewPager.setAdapter(animeListPageAdapter);
+                mNavigationTabStrip.setViewPager(mViewPager);
+                selectedItem = menu;
                 break;
             case R.id.nav_mymanga:
-                intent = new Intent(this, MediaListActivity.class);
-                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
-                intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                intent.putExtra(KeyUtil.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
-                startActivity(intent);
+                Bundle mangaParams = new Bundle();
+                mangaParams.putString(KeyUtil.arg_mediaType, KeyUtil.MANGA);
+                mangaParams.putString(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                mangaParams.putLong(KeyUtil.arg_id, getPresenter().getDatabase().getCurrentUser().getId());
+
+                MediaListPageAdapter mangaListPageAdapter = new MediaListPageAdapter(getSupportFragmentManager(), getApplicationContext());
+                mangaListPageAdapter.setParams(mangaParams);
+
+                mToolbar.setTitle(getString(R.string.drawer_title_mymanga));
+                mViewPager.setAdapter(mangaListPageAdapter);
+                mNavigationTabStrip.setViewPager(mViewPager);
+                selectedItem = menu;
                 break;
             case R.id.nav_hub:
                 mToolbar.setTitle(getString(R.string.drawer_title_hub));
@@ -420,7 +433,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                         .build();
                 showBottomSheet();
             }
-            AnalyticsUtil.setCrashalyticsUser(this, user.getName());
+            AnalyticsUtil.setCrashAnalyticsUser(this, user.getName());
         }
 
         mAccountLogin.setVisible(false);
@@ -453,9 +466,13 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         switch (view.getId()){
             case R.id.banner_clickable:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    Intent intent = new Intent(this, ProfileActivity.class);
-                    intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                    CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
+                    User user = getPresenter().getDatabase().getCurrentUser();
+                    if(user != null) {
+                        Intent intent = new Intent(this, ProfileActivity.class);
+                        intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                        CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
+                    } else
+                        NotifyUtil.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
                 }
                 else
                     onNavigate(R.id.nav_sign_in);

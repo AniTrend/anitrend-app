@@ -82,27 +82,15 @@ public class EpisodeAdapter extends RecyclerViewAdapter<Episode> {
             binding.unbind();
         }
 
-        /**
-         * Handle any onclick events from our views
-         * <br/>
-         *
-         * @param v the view that has been clicked
-         * @see View.OnClickListener
-         */
         @OnClick(R.id.series_image)
         @Override
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
         @Override @OnLongClick(R.id.series_image)
-        public boolean onLongClick(View view) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemLongClick(view, data.get(index));
-            return true;
+        public boolean onLongClick(View v) {
+            return performLongClick(clickListener, data, v);
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
+import com.annimon.stream.IntPair;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -119,14 +120,12 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
          */
         @Override
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
         @Override
-        public boolean onLongClick(View view) {
-            return false;
+        public boolean onLongClick(View v) {
+            return performLongClick(clickListener, data, v);
         }
     }
 }

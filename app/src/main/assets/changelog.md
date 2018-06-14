@@ -1,13 +1,14 @@
 ### Enhancements
-- Access privacy controls in __Settings__ and the privacy policy can be found: __Extras -> About__
-- Searching anime or manga lists from the anime/manga lists page
-- Notifications sharing the same origin Id will marked as read as a whole
-- Sharing media, posts, studios, character and staff links
-- Revised media list manager dialog & added sorting media lists by title
+- Please consider enabling privacy controls in __Settings__ and the privacy policy can be found: __Extras -> About__
+- Consistent design for your media lists and airing anime
 
 ### Bug Fixes
-- Improved notification unread indicator
-- Media rank items applying invalid filters on media browse
+- Favourites issue has been resolved
+- A couple of random crashes have been fixed
+- Inverted title sort for your media lists has been resolved
+
+### Extras
+- __N.B.__ you can bring up the list editor by long pressing any anime or manga
 
 ### Current Issues
 - Clicking on @username shows mixed feed

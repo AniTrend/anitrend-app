@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -78,36 +79,6 @@ public class MediaStaffFragment extends FragmentBaseList<RecyclerItem, Connectio
         getViewModel().requestData(KeyUtil.MEDIA_STAFF_REQ, getContext());
     }
 
-    /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, RecyclerItem data) {
-        switch (target.getId()) {
-            case R.id.container:
-                Intent intent = new Intent(getActivity(), StaffActivity.class);
-                intent.putExtra(KeyUtil.arg_id, ((StaffBase)data).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-        }
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, RecyclerItem data) {
-
-    }
-
     @Override
     public void onChanged(@Nullable ConnectionContainer<EdgeContainer<StaffEdge>> content) {
         EdgeContainer<StaffEdge> edgeContainer;
@@ -124,5 +95,35 @@ public class MediaStaffFragment extends FragmentBaseList<RecyclerItem, Connectio
             onPostProcessed(Collections.emptyList());
         if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<RecyclerItem> data) {
+        switch (target.getId()) {
+            case R.id.container:
+                Intent intent = new Intent(getActivity(), StaffActivity.class);
+                intent.putExtra(KeyUtil.arg_id, ((StaffBase)data.getSecond()).getId());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+        }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<RecyclerItem> data) {
+
     }
 }

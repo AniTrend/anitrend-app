@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -74,36 +75,6 @@ public class CharacterSearchFragment extends FragmentBaseList<RecyclerItem, Page
     }
 
     /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, RecyclerItem data) {
-        switch (target.getId()) {
-            case R.id.container:
-                Intent intent = new Intent(getActivity(), CharacterActivity.class);
-                intent.putExtra(KeyUtil.arg_id, ((CharacterBase)data).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-        }
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, RecyclerItem data) {
-
-    }
-
-    /**
      * Called when the model state is changed.
      *
      * @param content The new data
@@ -121,5 +92,35 @@ public class CharacterSearchFragment extends FragmentBaseList<RecyclerItem, Page
             onPostProcessed(Collections.emptyList());
         if(mAdapter.getItemCount() < 1)
             onPostProcessed(null);
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<RecyclerItem> data) {
+        switch (target.getId()) {
+            case R.id.container:
+                Intent intent = new Intent(getActivity(), CharacterActivity.class);
+                intent.putExtra(KeyUtil.arg_id, ((CharacterBase)data.getSecond()).getId());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+        }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<RecyclerItem> data) {
+
     }
 }

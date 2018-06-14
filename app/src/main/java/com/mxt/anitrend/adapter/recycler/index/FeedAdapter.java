@@ -74,7 +74,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
     @Override
     public int getItemViewType(int position) {
         FeedList model = data.get(position);
-        if(TextUtils.isEmpty(model.getType()))
+        if(model == null || TextUtils.isEmpty(model.getType()))
             return -1;
         if(CompatUtil.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
@@ -150,17 +150,12 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
          */
         @Override @OnClick({R.id.widget_users, R.id.user_avatar, R.id.widget_comment, R.id.series_image})
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
         @Override @OnLongClick(R.id.series_image)
-        public boolean onLongClick(View view) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemLongClick(view, data.get(index));
-            return true;
+        public boolean onLongClick(View v) {
+            return performLongClick(clickListener, data, v);
         }
     }
 
@@ -232,18 +227,12 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
          */
         @Override @OnClick({R.id.container, R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_comment})
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1) {
-                FeedList model = data.get(index);
-                if(isClickable(model))
-                    clickListener.onItemClick(v, model);
-            }
+            performClick(clickListener, data, v);
         }
 
         @Override @OnLongClick(R.id.container)
-        public boolean onLongClick(View view) {
-            int index = getAdapterPosition();
-            return (index > -1 && !isLongClickable(data.get(index)));
+        public boolean onLongClick(View v) {
+            return performLongClick(clickListener, data, v);
         }
     }
     
@@ -307,23 +296,14 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.unbind();
         }
 
-        /**
-         * Handle any onclick events from our views
-         * <br/>
-         *
-         * @param v the view that has been clicked
-         * @see View.OnClickListener
-         */
         @Override @OnClick({R.id.widget_edit, R.id.widget_users, R.id.messenger_avatar, R.id.recipient_avatar,  R.id.widget_comment})
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
         @Override
-        public boolean onLongClick(View view) {
-            return false;
+        public boolean onLongClick(View v) {
+            return performLongClick(clickListener, data, v);
         }
     }
 
@@ -377,26 +357,14 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.unbind();
         }
 
-        /**
-         * Handle any onclick events from our views
-         * <br/>
-         *
-         * @param v the view that has been clicked
-         * @see View.OnClickListener
-         */
         @Override @OnClick({R.id.user_avatar, R.id.widget_comment})
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
         @Override
-        public boolean onLongClick(View view) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemLongClick(view, data.get(index));
-            return true;
+        public boolean onLongClick(View v) {
+            return performLongClick(clickListener, data, v);
         }
     }
 }

@@ -41,15 +41,15 @@
                     android:id="@+id/nav_hub"
                     android:icon="@drawable/ic_group_work_white_24dp"
                     android:title="@string/drawer_title_hub" />
+                <item
+                    android:id="@+id/nav_myanime"
+                    android:icon="@drawable/ic_live_tv_white_24dp"
+                    android:title="@string/drawer_title_myanime" />
+                <item
+                    android:id="@+id/nav_mymanga"
+                    android:icon="@drawable/ic_book_white_24dp"
+                    android:title="@string/drawer_title_mymanga" />
             </group>
-            <item
-                android:id="@+id/nav_myanime"
-                android:icon="@drawable/ic_live_tv_white_24dp"
-                android:title="@string/drawer_title_myanime" />
-            <item
-                android:id="@+id/nav_mymanga"
-                android:icon="@drawable/ic_book_white_24dp"
-                android:title="@string/drawer_title_mymanga" />
         </menu>
     </item>
 

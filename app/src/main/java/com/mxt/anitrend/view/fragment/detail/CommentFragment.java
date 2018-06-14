@@ -113,7 +113,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
         composerWidget.setLifecycle(getLifecycle());
         composerWidget.setItemClickListener(new ItemClickListener<Object>() {
             @Override
-            public void onItemClick(View target, Object data) {
+            public void onItemClick(View target, IntPair<Object> data) {
                 switch (target.getId()) {
                     case R.id.insert_emoticon:
                         break;
@@ -134,7 +134,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
             }
 
             @Override
-            public void onItemLongClick(View target, Object data) {
+            public void onItemLongClick(View target, IntPair<Object> data) {
 
             }
         });
@@ -177,63 +177,6 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
         return super.onBackPress();
     }
 
-    /**
-     * When the target view from {@link View.OnClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    @Override
-    public void onItemClick(View target, FeedReply data) {
-        Intent intent;
-        switch (target.getId()) {
-            case R.id.series_image:
-                MediaBase mediaBase = feedList.getMedia();
-                intent = new Intent(getActivity(), MediaActivity.class);
-                intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
-                intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-            case R.id.widget_mention:
-                composerWidget.mentionUserFrom(data);
-                break;
-            case R.id.widget_edit:
-                composerWidget.setModel(data, KeyUtil.MUT_SAVE_FEED_REPLY);
-                composerWidget.setText(data.getReply());
-                break;
-            case R.id.widget_users:
-                List<UserBase> likes = data.getLikes();
-                if(likes.size() > 0) {
-                    mBottomSheet = new BottomSheetUsers.Builder()
-                            .setModel(likes)
-                            .setTitle(R.string.title_bottom_sheet_likes)
-                            .build();
-                    showBottomSheet();
-                } else
-                    NotifyUtil.makeText(getActivity(), R.string.text_no_likes, Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.user_avatar:
-                intent = new Intent(getActivity(), ProfileActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
-                break;
-        }
-    }
-
-    /**
-     * When the target view from {@link View.OnLongClickListener}
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    @Override
-    public void onItemLongClick(View target, FeedReply data) {
-
-    }
-
     private void initExtraComponents() {
         composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_FEED_REPLY);
 
@@ -241,17 +184,17 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
             feedAdapter.onItemsInserted(Collections.singletonList(feedList));
             feedAdapter.setClickListener(new ItemClickListener<FeedList>() {
                 @Override
-                public void onItemClick(View target, FeedList data) {
+                public void onItemClick(View target, IntPair<FeedList> data) {
                     Intent intent;
                     switch (target.getId()) {
                         case R.id.series_image:
                             intent = new Intent(getActivity(), MediaActivity.class);
-                            intent.putExtra(KeyUtil.arg_id, data.getMedia().getId());
-                            intent.putExtra(KeyUtil.arg_mediaType, data.getMedia().getType());
+                            intent.putExtra(KeyUtil.arg_id, data.getSecond().getMedia().getId());
+                            intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getMedia().getType());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.widget_users:
-                            List<UserBase> likes = data.getLikes();
+                            List<UserBase> likes = data.getSecond().getLikes();
                             if (likes.size() > 0) {
                                 mBottomSheet = new BottomSheetUsers.Builder()
                                         .setModel(likes)
@@ -264,31 +207,31 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                         case R.id.user_avatar:
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra(KeyUtil.arg_id, data.getUser().getId());
+                            intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.recipient_avatar:
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra(KeyUtil.arg_id, data.getRecipient().getId());
+                            intent.putExtra(KeyUtil.arg_id, data.getSecond().getRecipient().getId());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.messenger_avatar:
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra(KeyUtil.arg_id, data.getMessenger().getId());
+                            intent.putExtra(KeyUtil.arg_id, data.getSecond().getMessenger().getId());
                             CompatUtil.startRevealAnim(getActivity(), target, intent);
                             break;
                     }
                 }
 
                 @Override
-                public void onItemLongClick(View target, FeedList data) {
+                public void onItemLongClick(View target, IntPair<FeedList> data) {
                     switch (target.getId()) {
                         case R.id.series_image:
                             if(getPresenter().getApplicationPref().isAuthenticated()) {
                                 mediaActionUtil = new MediaActionUtil.Builder()
-                                        .setId(data.getMedia().getId()).build(getActivity());
+                                        .setId(data.getSecond().getMedia().getId()).build(getActivity());
                                 mediaActionUtil.startSeriesAction();
                             } else
                                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -352,5 +295,62 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
         } else
             NotifyUtil.createAlerter(getActivity(), R.string.text_error_request, R.string.layout_empty_response,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange);
+    }
+
+    /**
+     * When the target view from {@link View.OnClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    @Override
+    public void onItemClick(View target, IntPair<FeedReply> data) {
+        Intent intent;
+        switch (target.getId()) {
+            case R.id.series_image:
+                MediaBase mediaBase = feedList.getMedia();
+                intent = new Intent(getActivity(), MediaActivity.class);
+                intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
+                intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+            case R.id.widget_mention:
+                composerWidget.mentionUserFrom(data.getSecond());
+                break;
+            case R.id.widget_edit:
+                composerWidget.setModel(data.getSecond(), KeyUtil.MUT_SAVE_FEED_REPLY);
+                composerWidget.setText(data.getSecond().getReply());
+                break;
+            case R.id.widget_users:
+                List<UserBase> likes = data.getSecond().getLikes();
+                if(likes.size() > 0) {
+                    mBottomSheet = new BottomSheetUsers.Builder()
+                            .setModel(likes)
+                            .setTitle(R.string.title_bottom_sheet_likes)
+                            .build();
+                    showBottomSheet();
+                } else
+                    NotifyUtil.makeText(getActivity(), R.string.text_no_likes, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.user_avatar:
+                intent = new Intent(getActivity(), ProfileActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
+                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                break;
+        }
+    }
+
+    /**
+     * When the target view from {@link View.OnLongClickListener}
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    @Override
+    public void onItemLongClick(View target, IntPair<FeedReply> data) {
+
     }
 }

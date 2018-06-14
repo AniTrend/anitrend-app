@@ -177,32 +177,14 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
             binding.unbind();
         }
 
-        /**
-         * Handle any onclick events from our views
-         * <br/>
-         *
-         * @param v the view that has been clicked
-         * @see View.OnClickListener
-         */
         @Override @OnClick({R.id.container, R.id.notification_img})
         public void onClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemClick(v, data.get(index));
+            performClick(clickListener, data, v);
         }
 
-        /**
-         * Called when a view has been clicked and held.
-         *
-         * @param v The view that was clicked and held.
-         * @return true if the callback consumed the long click, false otherwise.
-         */
         @Override @OnLongClick(R.id.container)
         public boolean onLongClick(View v) {
-            int index;
-            if((index = getAdapterPosition()) > -1)
-                clickListener.onItemLongClick(v, data.get(index));
-            return true;
+            return performLongClick(clickListener, data, v);
         }
     }
 }

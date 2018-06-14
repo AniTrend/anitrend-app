@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.CustomRatingWidgetBinding;
+import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
 
@@ -72,6 +73,13 @@ public class RatingTextView extends LinearLayout implements CustomView {
         float rating = (float) mediaBase.getAverageScore() * MAX / 100;
         view.setRating(rating);
         view.setFavourState(mediaBase.isFavourite());
+    }
+
+    @BindingAdapter("rating")
+    public static void setAverageRating(RatingTextView view, MediaList mediaList) {
+        float rating = (float) mediaList.getScore() * MAX / 100;
+        view.setRating(rating);
+        view.setFavourState(mediaList.getMedia().isFavourite());
     }
 
     /**

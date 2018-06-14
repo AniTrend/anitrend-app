@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter;
 import com.mxt.anitrend.adapter.recycler.detail.TagAdapter;
@@ -113,15 +114,15 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
             genreAdapter.onItemsInserted(getPresenter().buildGenres(model));
             genreAdapter.setClickListener(new ItemClickListener<Genre>() {
                 @Override
-                public void onItemClick(View target, Genre data) {
+                public void onItemClick(View target, IntPair<Genre> data) {
                     switch (target.getId()) {
                         case R.id.container:
                             Bundle args = new Bundle();
                             Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                             args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
                                     .putVariable(KeyUtil.arg_type, mediaType)
-                                    .putVariable(KeyUtil.arg_genres, data.getGenre()));
-                            args.putString(KeyUtil.arg_activity_tag, data.getGenre());
+                                    .putVariable(KeyUtil.arg_genres, data.getSecond().getGenre()));
+                            args.putString(KeyUtil.arg_activity_tag, data.getSecond().getGenre());
                             args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
                                     .setCompactType(true)
                                     .setBasicFilter(true)
@@ -133,7 +134,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                 }
 
                 @Override
-                public void onItemLongClick(View target, Genre data) {
+                public void onItemLongClick(View target, IntPair<Genre> data) {
 
                 }
             });
@@ -145,10 +146,10 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
             tagAdapter.onItemsInserted(model.getTags());
             tagAdapter.setClickListener(new ItemClickListener<MediaTag>() {
                 @Override
-                public void onItemClick(View target, MediaTag data) {
+                public void onItemClick(View target, IntPair<MediaTag> data) {
                     switch (target.getId()) {
                         case R.id.container:
-                            DialogUtil.createMessage(getActivity(), data.getName(), data.getDescription(),
+                            DialogUtil.createMessage(getActivity(), data.getSecond().getName(), data.getSecond().getDescription(),
                                     R.string.More, R.string.Close, (dialog, which) -> {
                                         switch (which) {
                                             case POSITIVE:
@@ -156,8 +157,8 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                                                 Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                                                 args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
                                                         .putVariable(KeyUtil.arg_type, mediaType)
-                                                        .putVariable(KeyUtil.arg_tags, data.getName()));
-                                                args.putString(KeyUtil.arg_activity_tag, data.getName());
+                                                        .putVariable(KeyUtil.arg_tags, data.getSecond().getName()));
+                                                args.putString(KeyUtil.arg_activity_tag, data.getSecond().getName());
                                                 args.putParcelable(KeyUtil.arg_media_util, new MediaBrowseUtil()
                                                         .setCompactType(true)
                                                         .setBasicFilter(true)
@@ -172,7 +173,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                 }
 
                 @Override
-                public void onItemLongClick(View target, MediaTag data) {
+                public void onItemLongClick(View target, IntPair<MediaTag> data) {
 
                 }
             });
