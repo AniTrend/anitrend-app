@@ -1,13 +1,10 @@
 package com.mxt.anitrend.util;
 
-import android.os.Parcelable;
-
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrend;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,22 +14,17 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.mxt.anitrend.util.KeyUtil.ANIME;
-import static com.mxt.anitrend.util.KeyUtil.CANCELLED;
-import static com.mxt.anitrend.util.KeyUtil.FINISHED;
 import static com.mxt.anitrend.util.KeyUtil.MANGA;
 import static com.mxt.anitrend.util.KeyUtil.MediaStatus;
 import static com.mxt.anitrend.util.KeyUtil.NOT_YET_RELEASED;
 import static com.mxt.anitrend.util.KeyUtil.RELEASING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
