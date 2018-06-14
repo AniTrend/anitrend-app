@@ -77,9 +77,9 @@ dependencies {
 
     /** Testing Libraries */
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.hamcrest:hamcrest-library:${versions.hemcrest}"
-    testImplementation "org.mockito:mockito-core:${versions.mockito}"
-    androidTestImplementation "org.mockito:mockito-android:${versions.mockito}"
+    testImplementation "org.hamcrest:hamcrest-library:${rootProject.hemcrest}"
+    testImplementation "org.mockito:mockito-core:${rootProject.mockito}"
+    androidTestImplementation "org.mockito:mockito-android:${rootProject.mockito}"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
