@@ -2,9 +2,17 @@ package com.mxt.anitrend.base.custom.view.editor;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v13.view.inputmethod.EditorInfoCompat;
+import android.support.v13.view.inputmethod.InputConnectionCompat;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.os.BuildCompat;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -13,11 +21,14 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.MarkDown;
 
 import static com.mxt.anitrend.util.KeyUtil.MD_BOLD;
 import static com.mxt.anitrend.util.KeyUtil.MD_BULLET;
@@ -34,7 +45,8 @@ import static com.mxt.anitrend.util.KeyUtil.MD_STRIKE;
  * Markdown input editor
  */
 
-public class MarkdownInputEditor extends TextInputEditText implements CustomView, ActionMode.Callback {
+public class MarkdownInputEditor extends TextInputEditText implements CustomView, ActionMode.Callback,
+        InputConnectionCompat.OnCommitContentListener{
 
     public MarkdownInputEditor(Context context) {
         super(context);
@@ -72,6 +84,15 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
         setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
     }
+
+    @Override
+    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        InputConnection ic = super.onCreateInputConnection(outAttrs);
+        EditorInfoCompat.setContentMimeTypes(outAttrs, new String [] {"image/png", "image/gif"});
+        return InputConnectionCompat.createWrapper(ic, outAttrs, this);
+    }
+
+
 
     /**
      * Called when action mode is first created. The menu supplied will be used to
@@ -235,5 +256,34 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
 
     public boolean isEmpty() {
         return TextUtils.isEmpty(getText());
+    }
+
+    /**
+     * Intercepts InputConnection#commitContent API calls.
+     *
+     * @param inputContentInfo content to be committed
+     * @param flags            {@code 0} or {@link InputConnection#INPUT_CONTENT_GRANT_READ_URI_PERMISSION}
+     * @param opts             optional bundle data. This can be {@code null}
+     * @return {@code true} if this request is accepted by the application, no matter if the
+     * request is already handled or still being handled in background. {@code false} to use the
+     * default implementation
+     */
+    @Override
+    public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, @Nullable Bundle opts) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && (flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0)
+                inputContentInfo.requestPermission();
+            Uri linkUri = inputContentInfo.getLinkUri();
+            if(linkUri != null) {
+                String link = MarkDown.convertImage(linkUri.toString());
+                getText().insert(getSelectionStart(), link);
+                inputContentInfo.releasePermission();
+                return true;
+            }
+            inputContentInfo.releasePermission();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;  // return true if succeeded
     }
 }
