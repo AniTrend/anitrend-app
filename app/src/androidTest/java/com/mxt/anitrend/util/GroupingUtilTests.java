@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util;
 
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem;
 import com.mxt.anitrend.model.entity.group.RecyclerItem;
 
@@ -42,16 +43,28 @@ public class GroupingUtilTests {
                     .sorted(Comparator.comparing(MediaBase::getFormat))
                     .collect(Collectors.toList());
 
-    private Map<String, List<MediaBase>> formatMap =
+    private Map<String, List<MediaBase>> mediaFormatMap =
             allMedia.stream().collect(Collectors.groupingBy(MediaBase::getFormat));
 
-    /*
-    groupMediaByFormat
-     */
+    // a sorted list of StaffBase objects of different languages
+    private List<StaffBase> allStaff =
+            Stream.of("ENGLISH", "JAPANESE")
+                    .filter(Objects::nonNull)
+                    .sorted()
+                    .map(language -> {
+                        StaffBase staff = mock(StaffBase.class);
+                        when(staff.getLanguage()).thenReturn(language);
+                        return staff;
+                    }).collect(Collectors.toList());
 
+    private Map<String, List<StaffBase>> staffLanguageMap =
+            allStaff.stream().collect(Collectors.groupingBy(StaffBase::getLanguage));
+
+
+    //region groupMediaByFormat
     @Test
     public void groupMediaByFormat_ifTheMediaListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupMediaByFormat(Collections.emptyList(),null), empty());
+        assertThat(GroupingUtil.groupMediaByFormat(Collections.emptyList(), null), empty());
     }
 
     @Test
@@ -63,9 +76,9 @@ public class GroupingUtilTests {
         followed by all media of that format
          */
         List<RecyclerItem> required =
-                formatMap.keySet().stream()
+                mediaFormatMap.keySet().stream()
                         .sorted()
-                        .flatMap(formatToRecyclerItems(formatMap))
+                        .flatMap(getRecyclerItemsMapperForMap(mediaFormatMap))
                         .collect(Collectors.toList());
 
 
@@ -76,6 +89,7 @@ public class GroupingUtilTests {
         assertThat(results, containsItemsOf(required));
     }
 
+    // TODO: 18/06/18 confirm whether exisiting media objects should be included in the results
     @Test
     public void groupMediaByFormat_ifTheExistingListIsNotEmpty_shouldNotReturnExistingHeaders() {
         List<String> existingFormats = Arrays.asList(KeyUtil.MANGA, KeyUtil.OVA, KeyUtil.ONE_SHOT);
@@ -97,9 +111,9 @@ public class GroupingUtilTests {
         followed by all media of that format
          */
         List<RecyclerItem> required =
-                formatMap.keySet().stream()
+                mediaFormatMap.keySet().stream()
                         .sorted()
-                        .flatMap(formatToRecyclerItems(formatMap,
+                        .flatMap(getRecyclerItemsMapperForMap(mediaFormatMap,
                                 format -> !existingFormats.contains(format)))
                         .collect(Collectors.toList());
 
@@ -109,18 +123,81 @@ public class GroupingUtilTests {
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
     }
+    //endregion
 
-    /*
-    groupStaffByLanguage
-     */
-
+    //region groupStaffByLanguage
     @Test
-    public void groupStaffByLanguage() {
+    public void groupStaffByLanguage_ifTheMediaListIsEmpty_shouldReturnAnEmptyList() {
+        assertThat(GroupingUtil.groupStaffByLanguage(Collections.emptyList(), null), empty());
     }
 
     @Test
-    public void groupActorMediaEdge() {
+    public void groupStaffByLanguage_ifTheExistingListIsNull_shouldReturnAllItems() {
+
+
+        /*
+        the required result, a list containing a RecyclerHeaderItem per language,
+        followed by all staff of that language
+         */
+        List<RecyclerItem> required =
+                staffLanguageMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(staffLanguageMap))
+                        .collect(Collectors.toList());
+
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupStaffByLanguage(allStaff, null);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
     }
+
+    // TODO: 18/06/18 confirm whether existing staff objects should be included in the results
+    @Test
+    public void groupStaffByLanguage_ifTheExistingListIsNotEmpty_shouldNotReturnExistingHeaders() {
+        List<String> existingLanguages = Collections.singletonList("ENGLISH");
+
+        List<RecyclerItem> existingItems =
+                existingLanguages.stream()
+                        .flatMap(language -> {
+                            List<RecyclerItem> items = new ArrayList<>();
+                            items.add(new RecyclerHeaderItem(language, 1));
+                            StaffBase staff = mock(StaffBase.class);
+                            when(staff.getLanguage()).thenReturn(language);
+                            items.add(staff);
+                            return items.stream();
+                        })
+                        .collect(Collectors.toList());
+
+        /*
+        The required result, a list containing a RecyclerHeaderItem per non-existing language,
+        followed by all staff of that language
+         */
+        List<RecyclerItem> required =
+                staffLanguageMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(staffLanguageMap,
+                                language -> !existingLanguages.contains(language)))
+                        .collect(Collectors.toList());
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupStaffByLanguage(allStaff, existingItems);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
+    }
+    //endregion
+
+    //region groupActorMediaEdge
+    @Test
+    public void groupActorMediaEdge_ifEdgeListIsEmpty_shouldReturnAnEmptyList() {
+        assertThat(GroupingUtil.groupActorMediaEdge(Collections.emptyList()), empty());
+    }
+
+
+
+    //endregion
 
     @Test
     public void groupMediaByRelationType() {
@@ -146,16 +223,13 @@ public class GroupingUtilTests {
     public void wrapInGroup() {
     }
 
-    /*
-    Test utilities
-     */
-
-    private static Function<String, Stream<RecyclerItem>> formatToRecyclerItems(Map<String, List<MediaBase>> map) {
-        return formatToRecyclerItems(map, format -> true);
+    //region test utils
+    private static <T extends RecyclerItem> Function<String, Stream<RecyclerItem>> getRecyclerItemsMapperForMap(Map<String, List<T>> map) {
+        return getRecyclerItemsMapperForMap(map, format -> true);
     }
 
-    private static Function<String, Stream<RecyclerItem>> formatToRecyclerItems(Map<String, List<MediaBase>> map,
-                                                                                Function<String, Boolean> includeHeader) {
+    private static <T extends RecyclerItem> Function<String, Stream<RecyclerItem>> getRecyclerItemsMapperForMap(Map<String, List<T>> map,
+                                                                                                                Function<String, Boolean> includeHeader) {
         return format -> {
             List<RecyclerItem> formatItems = new ArrayList<>();
             if (includeHeader.apply(format)) {
@@ -171,4 +245,5 @@ public class GroupingUtilTests {
                 .map(Matchers::equalTo)
                 .collect(Collectors.toList()));
     }
+    //endregion
 }
