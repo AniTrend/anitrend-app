@@ -8,7 +8,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.AdapterMediaHeaderBinding;
-import com.mxt.anitrend.model.entity.anilist.Media;
+import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.RecyclerItem;
 
 import butterknife.OnClick;
@@ -43,7 +43,7 @@ public class GroupMediaViewHolder extends RecyclerViewHolder<RecyclerItem> {
      */
     @Override
     public void onBindViewHolder(RecyclerItem recyclerItem) {
-        Media model = (Media) recyclerItem;
+        MediaBase model = (MediaBase) recyclerItem;
         binding.setModel(model);
         binding.seriesTitle.setTitle(model);
         binding.executePendingBindings();
