@@ -2,6 +2,7 @@ package com.mxt.anitrend.util;
 
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
+import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
@@ -43,6 +44,12 @@ public class GroupingUtilTests {
     };
     private static final String[] characterRoles = {
             KeyUtil.MAIN, KeyUtil.SUPPORTING, KeyUtil.BACKGROUND
+    };
+    private static final String[] staffRoles = {
+            "Character Dseign",
+            "Director",
+            "Music",
+            "Series Compostion"
     };
     private static final String[] languages = {"ENGLISH", "JAPANESE"};
 
@@ -126,6 +133,56 @@ public class GroupingUtilTests {
                             entry -> entry.getValue()
                                     .stream()
                                     .map(CharacterEdge::getNode)
+                                    .collect(Collectors.toList())));
+
+    // a sorted list of StaffEdge objects of all staff roles
+    private List<StaffEdge> staffOfAllRoles =
+            Stream.of(staffRoles)
+                    .sorted()
+                    .map(role -> {
+                        StaffEdge edge = mock(StaffEdge.class);
+                        when(edge.getRole()).thenReturn(role);
+                        StaffBase staff = mock(StaffBase.class);
+                        when(edge.getNode()).thenReturn(staff);
+                        return edge;
+                    })
+                    .collect(Collectors.toList());
+
+    private Map<String, List<StaffBase>> staffRoleMap =
+            staffOfAllRoles.stream()
+                    .collect(Collectors.groupingBy(StaffEdge::getRole))
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            entry -> entry.getValue()
+                                    .stream()
+                                    .map(StaffEdge::getNode)
+                                    .collect(Collectors.toList())));
+
+    // a sorted list of MediaEdge objects of all staff roles
+    private List<MediaEdge> mediaOfAllStaffRoles =
+            Stream.of(staffRoles)
+                    .sorted()
+                    .map(role -> {
+                        MediaEdge edge = mock(MediaEdge.class);
+                        when(edge.getStaffRole()).thenReturn(role);
+                        MediaBase media = mock(MediaBase.class);
+                        when(edge.getNode()).thenReturn(media);
+                        return edge;
+                    })
+                    .collect(Collectors.toList());
+
+    private Map<String, List<MediaBase>> mediaStaffRoleMap =
+            mediaOfAllStaffRoles.stream()
+                    .collect(Collectors.groupingBy(MediaEdge::getStaffRole))
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            entry -> entry.getValue()
+                                    .stream()
+                                    .map(MediaEdge::getNode)
                                     .collect(Collectors.toList())));
 
     //region groupMediaByFormat
@@ -333,26 +390,191 @@ public class GroupingUtilTests {
     //endregion
 
     //region groupCharactersByRole
+
     @Test
-    public void groupCharactersByRole() {
+    public void groupCharactersByRole_ifTheCharacterEdgeListIsEmpty_shouldReturnAnEmptyList() {
+        assertThat(GroupingUtil.groupCharactersByRole(Collections.emptyList(), null), empty());
+    }
+
+    @Test
+    public void groupCharactersByRole_ifTheExistingListIsNull_shouldReturnAllItems() {
+
+
+        /*
+        the required result, a list containing a RecyclerHeaderItem per role,
+        followed by all characters of that role
+         */
+        List<RecyclerItem> required =
+                characterRoleMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(characterRoleMap))
+                        .collect(Collectors.toList());
+
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupCharactersByRole(charactersOfAllRoles, null);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
+    }
+
+    // TODO: 18/06/18 confirm whether exisiting character objects should be included in the results
+    @Test
+    public void groupCharactersByRole_ifTheExistingListIsNotEmpty_shouldNotReturnExistingHeaders() {
+        List<String> existingRoles = Arrays.asList(KeyUtil.MAIN, KeyUtil.BACKGROUND);
+
+        List<RecyclerItem> existingItems =
+                existingRoles.stream()
+                        .flatMap(role -> {
+                            List<RecyclerItem> items = new ArrayList<>();
+                            items.add(new RecyclerHeaderItem(role, 1));
+                            items.add(mock(CharacterBase.class));
+                            return items.stream();
+                        })
+                        .collect(Collectors.toList());
+
+        /*
+        The required result, a list containing a RecyclerHeaderItem per non-existing character role,
+        followed by all characters of that role
+         */
+        List<RecyclerItem> required =
+                characterRoleMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(characterRoleMap,
+                                role -> !existingRoles.contains(role)))
+                        .collect(Collectors.toList());
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupCharactersByRole(charactersOfAllRoles, existingItems);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
     }
     //endregion
 
+    //region groupStaffByRole
     @Test
-    public void groupStaffByRole() {
+    public void groupStaffByRole_ifTheStaffEdgeListIsEmpty_shouldReturnAnEmptyList() {
+        assertThat(GroupingUtil.groupStaffByRole(Collections.emptyList(), null), empty());
     }
 
     @Test
-    public void groupMediaByStaffRole() {
+    public void groupStaffByRole_ifTheExistingListIsNull_shouldReturnAllItems() {
+
+
+        /*
+        the required result, a list containing a RecyclerHeaderItem per role,
+        followed by all staff of that role
+         */
+        List<RecyclerItem> required =
+                staffRoleMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(staffRoleMap))
+                        .collect(Collectors.toList());
+
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupStaffByRole(staffOfAllRoles, null);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
     }
 
-    /*
-    wrapInGroup
-     */
+    // TODO: 18/06/18 confirm whether exisiting staff objects should be included in the results
+    @Test
+    public void groupStaffByRole_ifTheExistingListIsNotEmpty_shouldNotReturnExistingHeaders() {
+        List<String> existingRoles = Arrays.asList("Director", "Character Design");
+
+        List<RecyclerItem> existingItems =
+                existingRoles.stream()
+                        .flatMap(role -> {
+                            List<RecyclerItem> items = new ArrayList<>();
+                            items.add(new RecyclerHeaderItem(role, 1));
+                            items.add(mock(StaffBase.class));
+                            return items.stream();
+                        })
+                        .collect(Collectors.toList());
+
+        /*
+        The required result, a list containing a RecyclerHeaderItem per non-existing staff role,
+        followed by all staff of that role
+         */
+        List<RecyclerItem> required =
+                staffRoleMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(staffRoleMap,
+                                role -> !existingRoles.contains(role)))
+                        .collect(Collectors.toList());
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupStaffByRole(staffOfAllRoles, existingItems);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
+    }
+    //endregion
+
+    //region groupMediaByStaffRole
+    @Test
+    public void groupMediaByStaffRole_ifTheMediaEdgeListIsEmpty_shouldReturnAnEmptyList() {
+        assertThat(GroupingUtil.groupMediaByStaffRole(Collections.emptyList(), null), empty());
+    }
 
     @Test
-    public void wrapInGroup() {
+    public void groupMediaByStaffRole_ifTheExistingListIsNull_shouldReturnAllItems() {
+
+
+        /*
+        the required result, a list containing a RecyclerHeaderItem per role,
+        followed by all media of that role
+         */
+        List<RecyclerItem> required =
+                mediaStaffRoleMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(mediaStaffRoleMap))
+                        .collect(Collectors.toList());
+
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupMediaByStaffRole(mediaOfAllStaffRoles, null);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
     }
+
+    // TODO: 18/06/18 confirm whether exisiting media objects should be included in the results
+    @Test
+    public void groupMediaByStaffRole_ifTheExistingListIsNotEmpty_shouldNotReturnExistingHeaders() {
+        List<String> existingRoles = Arrays.asList("Director", "Character Design");
+
+        List<RecyclerItem> existingItems =
+                existingRoles.stream()
+                        .flatMap(role -> {
+                            List<RecyclerItem> items = new ArrayList<>();
+                            items.add(new RecyclerHeaderItem(role, 1));
+                            items.add(mock(MediaBase.class));
+                            return items.stream();
+                        })
+                        .collect(Collectors.toList());
+
+        /*
+        The required result, a list containing a RecyclerHeaderItem per non-existing staff role,
+        followed by all media of that role
+         */
+        List<RecyclerItem> required =
+                mediaStaffRoleMap.keySet().stream()
+                        .sorted()
+                        .flatMap(getRecyclerItemsMapperForMap(mediaStaffRoleMap,
+                                role -> !existingRoles.contains(role)))
+                        .collect(Collectors.toList());
+
+        List<RecyclerItem> results =
+                GroupingUtil.groupMediaByStaffRole(mediaOfAllStaffRoles, existingItems);
+
+        assertThat(results, hasSize(required.size()));
+        assertThat(results, containsItemsOf(required));
+    }
+    //endregion
 
     //region test utils
     private static <T extends RecyclerItem> Function<String, Stream<RecyclerItem>> getRecyclerItemsMapperForMap(Map<String, List<T>> map) {
