@@ -196,7 +196,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         return super.onOptionsItemSelected(item);
     }
 
-    protected boolean hasPermission(String permission) {
+    protected boolean requestPermissionIfMissing(String permission) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }

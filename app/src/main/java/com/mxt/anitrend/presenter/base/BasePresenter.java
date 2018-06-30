@@ -4,23 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.annimon.stream.Stream;
-import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
-import com.mxt.anitrend.model.entity.anilist.WebToken;
+import com.mxt.anitrend.model.entity.anilist.meta.FormatStats;
 import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.crunchy.MediaContent;
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail;
 import com.mxt.anitrend.service.TagGenreService;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.view.activity.index.SplashActivity;
 
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BasePresenter extends CommonPresenter {
 
-    private List<String> favouriteGenres;
+    private List<String> favouriteGenres, favouriteTags, favouriteYears, favouriteFormats;
 
     public BasePresenter(Context context) {
         super(context);
@@ -60,20 +56,68 @@ public class BasePresenter extends CommonPresenter {
         return "00:00";
     }
 
-    public List<String> getTopFavouriteGenres() {
+    public List<String> getTopFavouriteGenres(int limit) {
         if(CompatUtil.isEmpty(favouriteGenres)) {
             UserStats userStats;
             if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
-                if (!CompatUtil.isEmpty(userStats.getFavouredGenresOverview())) {
-                    favouriteGenres = Stream.of(userStats.getFavouredGenresOverview())
+                if (!CompatUtil.isEmpty(userStats.getFavouredGenres())) {
+                    favouriteGenres = Stream.of(userStats.getFavouredGenres())
                             .sortBy(genreStat -> - genreStat.getAmount())
                             .map(GenreStats::getGenre)
-                            .limit(3).toList();
+                            .limit(limit).toList();
 
                 }
             }
         }
         return favouriteGenres;
+    }
+
+    public List<String> getTopFavouriteTags(int limit) {
+        if(CompatUtil.isEmpty(favouriteTags)) {
+            UserStats userStats;
+            if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
+                if (!CompatUtil.isEmpty(userStats.getFavouredTags())) {
+                    favouriteTags = Stream.of(userStats.getFavouredTags())
+                            .sortBy(mediaTagStats -> - mediaTagStats.getAmount())
+                            .map(s -> s.getTag().getName())
+                            .limit(limit).toList();
+
+                }
+            }
+        }
+        return favouriteTags;
+    }
+
+    public List<String> getTopFavouriteYears(int limit) {
+        if(CompatUtil.isEmpty(favouriteYears)) {
+            UserStats userStats;
+            if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
+                if (!CompatUtil.isEmpty(userStats.getFavouredTags())) {
+                    favouriteYears = Stream.of(userStats.getFavouredYears())
+                            .sortBy(yearStats -> - yearStats.getAmount())
+                            .map(y -> String.valueOf(y.getYear()))
+                            .limit(limit).toList();
+
+                }
+            }
+        }
+        return favouriteTags;
+    }
+
+    public List<String> getTopFormats(int limit) {
+        if(CompatUtil.isEmpty(favouriteFormats)) {
+            UserStats userStats;
+            if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
+                if (!CompatUtil.isEmpty(userStats.getFavouredFormats())) {
+                    favouriteFormats = Stream.of(userStats.getFavouredFormats())
+                            .sortBy(formatStats -> - formatStats.getAmount())
+                            .map(FormatStats::getFormat)
+                            .limit(limit).toList();
+
+                }
+            }
+        }
+        return favouriteFormats;
     }
 
     public boolean isCurrentUser(long userId) {

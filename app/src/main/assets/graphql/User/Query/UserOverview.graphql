@@ -14,7 +14,7 @@ query UserOverview($id: Int, $userName: String, $asHtml: Boolean = false) {
       isFollowing
       stats {
         ... on UserStats {
-          favouredGenresOverview {
+          favouredGenres {
             ... on GenreStats {
               genre
               amount

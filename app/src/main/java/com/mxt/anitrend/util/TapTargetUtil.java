@@ -9,19 +9,21 @@ import android.view.View;
 
 import com.mxt.anitrend.R;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
- * Created by max on 2018/03/01.
- * MaterialTapTargetPrompt helper class
+ * Created by max on 2018/03/01. MaterialTapTargetPrompt helper class, should not be used directly
+ * @see TutorialUtil
  */
 
 public class TapTargetUtil {
 
-    private static Map<String, Void> activePrompts = new WeakHashMap<>();
+    private static List<String> activePrompts = new ArrayList<>();
 
     public static MaterialTapTargetPrompt.Builder buildDefault(FragmentActivity context, @IdRes int resource) {
         return new MaterialTapTargetPrompt.Builder(context)
@@ -51,12 +53,19 @@ public class TapTargetUtil {
                 .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
     }
 
+    /**
+     * Checks if the current application tip for the given target is currently showing
+     * and returns a boolean based on that
+     */
     public static boolean isActive(@KeyUtil.TapTargetType String key) {
-        return activePrompts.containsKey(key);
+        return activePrompts.contains(key);
     }
 
+    /**
+     * Adds or removes the key for a given tip
+     */
     public static void setActive(@KeyUtil.TapTargetType String key, boolean remove) {
-        if(!remove) activePrompts.put(key, null);
+        if(!remove) activePrompts.add(key);
         else if(isActive(key))
             activePrompts.remove(key);
     }

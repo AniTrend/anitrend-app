@@ -369,7 +369,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                                         }
                                     });
                         else
-                            hasPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            requestPermissionIfMissing(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
                         break;
                 }
                 break;

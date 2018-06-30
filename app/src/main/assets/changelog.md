@@ -1,14 +1,21 @@
-### Enhancements
+### App Tips
+- Bring up the list editor by long pressing any anime or manga
+- View followers, following, favourites, anime, manga of other users by tapping on the labels in profiles
 - Please consider enabling privacy controls in __Settings__ and the privacy policy can be found: __Extras -> About__
+
+### Enhancements
+- New polish translation
+- Improved suggestions algorithm
 - Consistent design for your media lists and airing anime
+- Support for GIF images from keyboards such as Google Keyboard
+- Lazy loading for series pages to just 3 tabs inclusive (because of too many requests)
 
 ### Bug Fixes
-- Favourites issue has been resolved
+- Incorrect review ratings
+- Favourites for any new anime/manga
 - A couple of random crashes have been fixed
-- Inverted title sort for your media lists has been resolved
-
-### Extras
-- __N.B.__ you can bring up the list editor by long pressing any anime or manga
+- Actor roles now visible in character page
+- Inverted title sort for your media lists
 
 ### Current Issues
 - Clicking on @username shows mixed feed

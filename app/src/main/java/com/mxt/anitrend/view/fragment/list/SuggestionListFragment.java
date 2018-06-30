@@ -34,7 +34,8 @@ public class SuggestionListFragment extends MediaBrowseFragment {
     public void makeRequest() {
         ApplicationPref pref = getPresenter().getApplicationPref();
         Bundle bundle = getViewModel().getParams();
-        queryContainer.putVariable(KeyUtil.arg_genres, getPresenter().getTopFavouriteGenres())
+        queryContainer.putVariable(KeyUtil.arg_tagsInclude, getPresenter().getTopFavouriteTags(6))
+                .putVariable(KeyUtil.arg_genresInclude, getPresenter().getTopFavouriteGenres(4))
                 .putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder())
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer);

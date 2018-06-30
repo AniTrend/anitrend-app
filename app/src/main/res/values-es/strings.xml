@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_manage">Manage</string>
-    <string name="nav_header_customization">Customization</string>
+    <string name="nav_header_discover">Descubrir</string>
+    <string name="nav_header_manage">Gestionar</string>
+    <string name="nav_header_customization">Personalizar</string>
 
-    <string name="nav_header_support">Support</string>
-    <string name="nav_contact">Contact</string>
-    <string name="nav_about">About</string>
+    <string name="nav_header_support">Soporte técnico</string>
+    <string name="nav_contact">Contactar</string>
+    <string name="nav_about">Acerca de</string>
 
-    <string name="action_search">Search</string>
+    <string name="action_search">Buscar</string>
     <string name="action_filter">@string/drawer_title_filter</string>
-    <string name="action_help">Help</string>
+    <string name="action_help">Ayuda</string>
 
-    <string name="action_mode_selected">Selected: %d</string>
+    <string name="action_mode_selected">Seleccionado: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="navigation_drawer_open">Menú deslizante abierto</string>
+    <string name="navigation_drawer_close">Menú deslizante cerrado</string>
 
 
-    <string name="nav_home">Home</string>
-    <string name="nav_history">History</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_history">Historia</string>
 
     <!--
         Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
@@ -57,15 +57,15 @@
 
     <string name="app_description">
         <![CDATA[
-        AniTrend es una aplicación para Android basada en AniList que permite gestionar tu lista de animes y mangas desde tú dispositivo movil.
-        Gracias a su diseño puedes descubrir con facilidad animes y mangas que estén disponibles en Anilist.\n\n
-        ¡Se han añadido muchas de las funciones disponibles en la web de Anilist para mejorar la experiencia del usuario!
+        AniTrend es una aplicación para Android basada en AniList que permite gestionar tu lista de anime y mangas desde tu dispositivo móvil.
+        Gracias a su diseño puedes descubrir con facilidad anime y mangas que estén disponibles en Anilist.\n\n
+        ¡Se han añadido muchas de las características disponibles en la web de Anilist para mejorar la experiencia del usuario!
         ]]>
     </string>
 
-    <string name="Yes">Si</string>
+    <string name="Yes">Sí</string>
     <string name="No">No</string>
-    <string name="Ok">OK</string>
+    <string name="Ok">Ok</string>
 
     <string name="Loading">Cargando</string>
     <string name="Sending">Enviando</string>
@@ -112,7 +112,7 @@
 
     <!--Try to keep all titles short-->
     <string-array name="airing_title">
-        <item>animes en emisión</item>
+        <item>anime en emisión</item>
         <item>episodios recientes</item>
     </string-array>
 
@@ -127,7 +127,7 @@
         <item>anime</item>
         <item>manga</item>
         <item>estudio</item>
-        <item>personal de prod.</item>
+        <item>personal</item>
         <item>personajes</item>
         <item>usuarios</item>
     </string-array>
@@ -135,23 +135,23 @@
     <!--Try to keep all titles short-->
     <string-array name="search_titles">
         <item>anime</item>
-        <item>manga</item>
-        <item>estudio</item>
-        <item>personal de prod.</item>
+        <item>manga</item
+            >        <item>estudio</item>
+        <item>personal</item>
         <item>personajes</item>
     </string-array>
 
     <!--First time usage intro screen-->
     <string name="get_started">Empecemos</string>
     <string name="app_intro_colors_title">Color por estado</string>
-    <string name="app_intro_colors_text">¡Los colores representan el progreso de los animes y mangas!</string>
+    <string name="app_intro_colors_text">¡Los colores representan el progreso del anime y los mangas!</string>
     <string name="app_intro_content_title">Contenido</string>
-    <string name="app_intro_content_text">¡Cuenta con un extenso inventario de animes y mangas categorizados!</string>
+    <string name="app_intro_content_text">¡Cuenta con un extenso inventario de anime y mangas categorizados!</string>
     <string name="app_intro_search_title">Encuentra</string>
-    <string name="app_intro_search_text"> Animes y Mangas gracias a su motor de búsqueda eficiente y lleno de funcionalidades!</string>
-    <string name="app_intro_videos_title">Videos</string>
-    <string name="app_intro_videos_text">¡Facilita la visualización de videos de Youtube a través del reproductor integrado!</string>
-    <string name="app_greeting">Bienvenid@ a AniTrend!</string>
+    <string name="app_intro_search_text"> ¡Anime y Manga gracias a su motor de búsqueda eficiente y lleno de características!</string>
+    <string name="app_intro_videos_title">Vídeos</string>
+    <string name="app_intro_videos_text">¡Facilita la visualización de vídeos de Youtube a través del reproductor integrado!</string>
+    <string name="app_greeting">¡Bienvenido/a a AniTrend!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Ordenar Por:</string>
@@ -163,10 +163,10 @@
 
     <!--Splash Screen-->
     <string name="app_splash_api_unavailable">Servidor no disponible :( ¡Desliza hacia abajo para reintentar!</string>
-    <string name="app_splash_authentication_failed">Fallo de autenticación. ¡Desliza hacia abajo para reintentar!</string>
-    <string name="app_splash_authenticating">Autenticando...</string>
+    <string name="app_splash_authentication_failed">Fallo de autentificación. ¡Desliza hacia abajo para reintentar!</string>
+    <string name="app_splash_authenticating">Autentificando...</string>
     <string name="app_splash_fetching">Solicitando otros datos...</string>
-    <string name="app_splash_profile">Solicitando pérfil del usuario...</string>
+    <string name="app_splash_profile">Solicitando perfil del usuario...</string>
     <string name="app_splash_loading">Iniciando aplicación...</string>
 
     <string name="app_splash_authenticating_message">
@@ -200,8 +200,8 @@
     Indentation will not affect how the text appears it just makes it easier for me and others to read the text-->
     <string name="login_message">
 		<![CDATA[
-        <p> Agrega, elimina o edita animes y Mangas de tu listado
-        presione en un elemento para ver más opciones.</p>
+        <p> Agrega, elimina o edita Anime y Mangas de tu listado
+        manteniendo pulsado un elemento para ver más opciones.</p>
 
         También puedes agregar y quitar
 elementos de tus favoritos al presionar en el icono del corazón .
@@ -210,28 +210,28 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="app_intro_guide">
 		<![CDATA[
-        <p> Visualiza más información acerca de Animes y Mangas al tocar en la imagen o en la tarjeta del listado.
-        ¡Inicia sesión en tu cuenta de Anilist para acceder a más funciones de la aplicación!</p>
+        <p> Visualiza más información acerca de un anime o un manga al tocar en la imagen o en la tarjeta del listado.
+        ¡Inicia sesión con tu cuenta de Anilist para acceder a más características!</p>
 
         Si aún no estás registrado en Anilist puedes crear una cuenta directamente desde la opción "Ingresar" de la aplicación
         ]]>
 	</string>
-    <string name="app_intro_title">¿Que puedo hacer?</string>
+    <string name="app_intro_title">¿Qué puedo hacer?</string>
 
-    <string name="login_welcome_title">Bienvenid@ %s</string>
+    <string name="login_welcome_title">Bienvenido/a %s</string>
 
-    <string name="login_welcome_text">¡Ingresaste exitosamente!</string>
+    <string name="login_welcome_text">¡Has ingresado exitosamente!</string>
 
     <!--Anything with drawer_title is the titles for the navigation drawer-->
     <string name="drawer_title_home">Inicio</string>
     <string name="drawer_title_anime">Descubre Anime</string>
     <string name="drawer_title_manga">Descubre Manga</string>
     <string name="drawer_title_trending">Tendencias Actuales</string>
-    <string name="drawer_title_airing">Animes en Emisión</string>
+    <string name="drawer_title_airing">Anime en Emisión</string>
     <string name="drawer_title_myanime">Mi Lista de Anime</string>
     <string name="drawer_title_mymanga">Mi Lista de Mangas</string>
     <string name="drawer_title_reviews">Reseña de Series</string>
-    <string name="drawer_title_hub">Notificaciones de Anitrend</string>
+    <string name="drawer_title_hub">Centro AniTrend</string>
 
     <string name="drawer_section_configuration">Ajustes</string>
     <string name="drawer_title_filter">Filtros</string>
@@ -249,30 +249,30 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="layout_empty_response">Nada para mostrar</string>
 
     <!-- Application Tips-->
-    <string name="tip_options_text">Accede a los ajustes, ayuda, lista de cambios e interactúa con las publicaciones y actividades de otros usuarios. \n\nToque Para Descartar</string>
+    <string name="tip_options_text">Accede a los ajustes, ayuda, lista de cambios e interactúa con las publicaciones y actividades de otros usuarios. \n\nToca Para Descartar</string>
     <string name="tip_options_title"> Menú de Opciones</string>
     <string name="tip_search_title">Barra de Búsqueda</string>
-    <string name="tip_search_message"> Consigue con facilidad animes y mangas en el listado al utilizar palabras claves. \n\nToque Para Descartar</string>
+    <string name="tip_search_message"> Consigue con facilidad anime y mangas en el listado al utilizar palabras claves. \n\nToca Para Descartar</string>
     <string name="tip_navigation_title">Navegación</string>
-    <string name="tip_navigation_text">Accede al panel de navegación para ver el contenido disponible en la aplicación. \n\nToque Para Descartar</string>
-    <string name="tip_series_options_message">Ahora puedes agregar tus animes y mangas preferidos a una lista y compartirlos con tus amigos. \n\nToque Para Descartar</string>
+    <string name="tip_navigation_text">Accede al panel de navegación para ver el contenido disponible en la aplicación. \n\nToca Para Descartar</string>
+    <string name="tip_series_options_message">Ahora puedes agregar tus anime y mangas preferidos a una lista y compartirlos con tus amigos. \n\nToca Para Descartar</string>
     <string name="tip_series_options_title">Función añadida</string>
     <string name="tip_character_options_title">Favoritos</string>
-    <string name="tip_character_options_message">Pulsa para cambiar el estado de tus personajes favoritos. \n\nToque Para Descartar</string>
+    <string name="tip_character_options_message">Pulsa para cambiar el estado de tus personajes favoritos. \n\nToca Para Descartar</string>
     <string name="tip_messages_title">Mensajes</string>
-    <string name="tip_messages_text">Visualiza las interacciones que has recibido de tus seguidores en Anitrend \n\nToque Para Descartar</string>
+    <string name="tip_messages_text">Visualiza las interacciones que has recibido de tus seguidores en Anitrend \n\nToca Para Descartar</string>
     <string name="tip_status_post_title">Publicar estado</string>
-    <string name="tip_status_post_text">Crea y comparte tus publicaciones, pensamientos y actividades con la comunidad. \n\nToque Para Descartar</string>
+    <string name="tip_status_post_text">Crea y comparte tus publicaciones, pensamientos y actividades con la comunidad. \n\nToca Para Descartar</string>
     <string name="tip_notifications_title">Notificaciones</string>
-    <string name="tip_notifications_text">Accede a todas tus notificaciones en un solo lugar. \n\nToque Para Descartar</string>
+    <string name="tip_notifications_text">Accede a todas tus notificaciones desde un solo lugar. \n\nToca Para Descartar</string>
     <string name="tip_more_actions_title">Más acciones</string>
-    <string name="tip_more_actions_text">Presione aquí para ver los mensajes recibidos y me gusta de este usuario. \n\nToque Para Descartar</string>
+    <string name="tip_more_actions_text">Pulsa aquí para más opciones, como por ejemplos los likes. \n\nToca Para Descartar</string>
     <string name="tip_compose_message_title">Redactar mensaje</string>
-    <string name="tip_compose_message_text">Envíale un mensaje a este usuario. \n\nToque Para Descartar</string>
+    <string name="tip_compose_message_text">Envíale un mensaje a este usuario. \n\nToca Para Descartar</string>
 
     <!--Media attachments on the reply activity-->
     <string name="attach_media">Insertar Archivo</string>
-    <string name="attach_link_title">Insertar enlace</string>
+    <string name="attach_link_title">Insertar Enlace</string>
     <string name="attach_link_text">Insertar enlace web, ejemplo: https://anilist.co/forum/thread/2459/1</string>
     <string name="attach_image_title">Insertar enlace de imagen</string>
     <string name="attach_image_text">Insertar enlace de imagen, ejemplo: https:/media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
@@ -287,20 +287,20 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="title_activity_user_list_view">Lista de usuarios</string>
     <string name="title_activity_studio">Estudio</string>
     <string name="title_activity_settings">Ajustes</string>
-    <string name="title_activity_reply">Respuesta de esté usuario</string>
+    <string name="title_activity_reply">Respuesta de este usuario</string>
 
     <string name="notification_default">Actividad Indefinida</string>
     <string name="notification_series">Nuevo episodio de</string>
     <string name="notification_user_follow_activity">Nuevo seguidor</string>
-    <string name="notification_user_like_reply">Reply Like</string>
+    <string name="notification_user_like_reply">Respuesta </string>
     <string name="notification_user_like_forum">Le gusta tu actividad en el foro</string>
-    <string name="notification_user_like_activity">Le gustó tú actividad</string>
+    <string name="notification_user_like_activity">Le gustó tu actividad</string>
     <string name="notification_user_comment_forum">Comentó en el foro</string>
     <string name="notification_user_reply_forum">Respondió en el foro</string>
-    <string name="notification_user_reply_activity">Comentó tú actividad</string>
+    <string name="notification_user_reply_activity">Comentó tu actividad</string>
     <string name="notification_user_activity_message">Te envío un mensaje directo</string>
     <string name="notification_user_activity_mention">Te ha mencionado</string>
-    <string name="notification_user_like_comment">Le gusta tú comentario</string>
+    <string name="notification_user_like_comment">Le gusta tu comentario</string>
 
 
     <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
@@ -316,7 +316,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="pref_summary_auto_increment">
         <![CDATA[
-        Aumenta el número de episodio o capítulo automáticamente al utilizar el nuevo estilo de lista con solo presionar el número que indica tu progreso en la tarjeta.
+        Aumenta el número de episodios o capítulos automáticamente al utilizar el nuevo estilo de lista con solo pulsar el número que indica tu progreso en la tarjeta.
         ]]>
     </string>
 
@@ -329,9 +329,9 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>Descubre Manga</item>
         <item>Tendencias Actuales</item>
         <item>Animes en Emisión</item>
-        <item>Mi Lista de Animes</item>
+        <item>Mi Lista de Anime</item>
         <item>Mi Lista de Mangas</item>
-        <item>Notificaciones de AniTrend</item>
+        <item>Centro AniTrend</item>
         <item>Reseña de Series</item>
     </string-array>
 
@@ -348,10 +348,10 @@ elementos de tus favoritos al presionar en el icono del corazón .
     </string-array>
 
     <!-- Settings for update channel to use -->
-    <string name="pref_title_update_channel">Update Channel</string>
+    <string name="pref_title_update_channel">Canal de actualizaciones</string>
 
     <string-array name="pref_titles_channel_entries">
-        <item>Stable</item>
+        <item>Estable</item>
         <item>Beta (Experimental)</item>
     </string-array>
 
@@ -408,9 +408,9 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="title_bottom_sheet_likes">Le gusta a %d usuario(s)</string>
 
-    <string name="dialog_unfollow_message">Dejaras de seguir a este usuario, ¿Estás seguro de esto?</string>
+    <string name="dialog_unfollow_message">Dejarás de seguir a este usuario, ¿Estás seguro?</string>
 
-    <string name="info_login_req">¡Por favor ingresa a tú cuenta para acceder a esta  función!</string>
+    <string name="info_login_req">¡Por favor ingresa a tu cuenta para acceder a esta  función!</string>
     <string name="button_try_again">Inténtalo de nuevo</string>
 
     <string name="dialog_add_title">
@@ -450,7 +450,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <![CDATA[
         <p> Parece que hubo un error mientras iniciabas sesión. Esto suele ocurrir en dispositivos de gama de entrada con menos de 1GB de RAM.</p>
 
-        Reinicie la aplicación e inténtelo nuevamente, luego del reinicio vuelva a ingresar, si el problema persiste no dudes en comunicarlo por el
+        Reinicie la aplicación e inténtelo nuevamente, luego del reinicio vuelve a ingresar, si el problema persiste no dudes en comunicarlo por el
         <a href="https://anilist.co/forum/thread/2081">foro de Anitrend</a> para recibir más asistencia.
         ]]>
     </string>
@@ -469,7 +469,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="init_youtube_missing">¡Si deseas ver los trailers instala la aplicación de YouTube!</string>
 
-    <string name="text_confirm_exit">Presione nuevamente para salir de la app</string>
+    <string name="text_confirm_exit">Presiona nuevamente para salir de la app</string>
 
     <string name="text_filter_applying">Aplicando cambios...</string>
 
@@ -502,7 +502,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_new_features">
         <![CDATA[
         Visualiza a tus seguidores y seguidos al pulsar en las etiquetas ubicadas debajo de la descripción del usuario.
-        ¡Además al presionar en animes, tiempo de animes y mangas verás más contenido!.
+        ¡Además al presionar en anime, tiempo de anime y mangas verás más contenido!.
         ]]>
      </string>
 
@@ -527,7 +527,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="text_insufficient_genres">¡No hay suficientes en este género para mostrar en el listado!</string>
 
-    <string name="text_checking_collection">Buscando en tú biblioteca..</string>
+    <string name="text_checking_collection">Buscando en tu biblioteca..</string>
 
     <string name="text_processing_request">Procesando solicitud..</string>
     <string name="text_permission_required">¡Permiso en AniTrend no concedido!</string>
@@ -558,7 +558,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="text_login_error">¡AniTrend no ha podido comprobar sus datos en el inicio de sesión!</string>
 
-    <string name="text_search_empty">Por favor inserte una búsqueda</string>
+    <string name="text_search_empty">Por favor inserta una búsqueda</string>
 
     <string name="text_user_model">¡Error de usuario!</string>
 
@@ -567,7 +567,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_unknown_error">¡Error desconocido, por favor inténtalo nuevamente!</string>
     <string name="text_error_auth_login">Algo salió mal y la aplicación no pudo autorizar tu solicitud</string>
     <string name="text_error_capture_login">¡Sin respuesta del servidor!. Inténtalo más tarde</string>
-    <string name="text_login_success_with_error">Has ingresado con éxito pero se ha cerrado la sesión ya que tú listado está vacío E(104). Ingresa de nuevo cuando registres al menos un anime o manga desde la web de Anitrend.</string>
+    <string name="text_login_success_with_error">Has ingresado con éxito pero se ha cerrado la sesión ya que tu listado está vacío E(104). Ingresa de nuevo cuando registres al menos un anime o manga desde la web de Anitrend.</string>
     <string name="text_error_login">¡Error al iniciar sesión, inténtalo nuevamente!</string>
     <string name="text_login_canceled">Inicio de sesión cancelado</string>
 
@@ -579,7 +579,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="text_activity_loading">¡Los detalles aún se están cargando o no están disponibles!</string>
 
-    <string name="text_removed_from_favourites">Removido de favoritos</string>
+    <string name="text_removed_from_favourites">Eliminado de favoritos</string>
 
     <string name="text_add_to_favourites">Agregado a favoritos</string>
 
@@ -587,10 +587,10 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="text_share_series" formatted="false">
         <![CDATA[
-            Check out this series: %s %s \n\n
+            Échale un ojo a esta serie: %s %s \n\n
             https://anilist.co/anime/%d \n\n
-            Track all your favourite Anime & Manga with AniTrend \n\n
-            Get it on Play Store: \n
+            Sigue tu anime y mangas favoritos con AniTrend \n\n
+            Obténlo en la PlayStore: \n
             %s
         ]]>
     </string>
@@ -598,12 +598,12 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_item_in_favourites">Ahora está en tus favoritos</string>
     <string name="text_item_not_in_favourites">Ya no está en tus favoritos</string>
 
-    <string name="text_error_request">Tú solicitud no pudo ser completada</string>
+    <string name="text_error_request">Tu solicitud no pudo ser completada</string>
 
     <string name="text_what_is_new">¡Novedades!</string>
-    <string name="text_enter_text">Escriba su texto aquí</string>
+    <string name="text_enter_text">Escribe tu texto aquí</string>
     <string name="text_unable_set_text">No se puede enviar el texto..</string>
-    <string name="edit_status_title">Edita tú publicación</string>
+    <string name="edit_status_title">Edita tu publicación</string>
     <string name="edit_status_text">¡Incluso luego de hacerlas públicas!</string>
     <string name="create_status_title">Crea tu publicación</string>
     <string name="create_status_text">Publica tus pensamientos o lo que desees compartir con la comunidad, ¿en que estás pensando?</string>
@@ -614,12 +614,12 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_unable_to_increment_episodes">¡No se puede aumentar más allá de la totalidad de episodios!</string>
     <string name="text_unable_to_increment_chapters">¡No se puede aumentar más allá de la totalidad de capítulos!</string>
 
-    <string name="title_anime_list">Animes del usuario</string>
+    <string name="title_anime_list">Anime del usuario</string>
     <string name="title_manga_list">Mangas del usuario</string>
     <string name="title_favourites_list">Favoritos del usuario</string>
     <string name="text_anime_episodes">%d Episodios</string>
     <string name="text_anime_length">%d Minutos</string>
-    <string name="text_anime_score">%d%% Mean</string>
+    <string name="text_anime_score">%d%% Promedio</string>
 
     <string name="text_message_to">Enviar mensaje a %s</string>
     <string name="title_bottom_sheet_favourites">Favoritos del usuario</string>
@@ -662,7 +662,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_attach_link">Insertar Enlace</string>
     <string name="text_attach_image">Insertar Imagen</string>
     <string name="text_youtube_link">Enlace de Youtube</string>
-    <string name="text_webm_link">Enlace de video</string>
+    <string name="text_webm_link">Enlace de vídeo</string>
 
     <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
     <string name="series_favourite_this">A favoritos</string>
@@ -679,7 +679,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="dialog_title_increment_episodes">Incrementar episodios</string>
     <string name="dialog_hint_enter_your_notes">Introduce tus apuntes</string>
 
-    <string name="dialog_title_volumes_read">Volúmenes leídos</string>
+    <string name="dialog_title_volumes_read">Tomos leídos</string>
     <string name="dialog_title_chapters_read">Capítulos leidos</string>
     <string name="dialog_title_reread">Releído</string>
 
@@ -699,15 +699,15 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string-array name="profile_page_titles">
         <item>resumen</item>
         <item>progreso</item>
-        <item>estados</item>
+        <item>estado</item>
     </string-array>
 
     <!--Staff page titles-->
     <string-array name="staff_page_titles">
         <item>resumen</item>
-        <item>roles en anime</item>
-        <item>roles en manga</item>
-        <item>roles del personal</item>
+        <item>Papeles en anime</item>
+        <item>Papeles en manga</item>
+        <item>Papel del personal</item>
     </string-array>
 
     <!--Anime page titles-->
@@ -717,7 +717,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>estado</item>
         <item>episodios</item>
         <item>personajes</item>
-        <item>personal de prod.</item>
+        <item>personal</item>
         <item>@string/title_social</item>
         <item>reseñas</item>
     </string-array>
@@ -728,7 +728,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>@string/title_relation</item>
         <item>estado</item>
         <item>personajes</item>
-        <item>personal de prod.</item>
+        <item>personal</item>
         <item>@string/title_social</item>
         <item>reseñas</item>
     </string-array>
@@ -738,23 +738,22 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>animes</item>
         <item>personajes</item>
         <item>mangas</item>
-        <item>personal de prod.</item>
+        <item>personal</item>
         <item>estudios</item>
     </string-array>
 
     <!--Character page titles-->
     <string-array name="character_page_titles">
         <item>resumen</item>
-        <item>roles en anime</item>
-        <item>roles en manga</item>
-        <item>roles de actor</item>
+        <item>Papeles en anime</item>
+        <item>Paples en manga</item>
+        <item>Papeles de actor</item>
     </string-array>
 
     <!--Try to keep all titles short-->
     <string-array name="hub_title">
         <item>sugerencias</item>
         <item>Lo más popular</item>
-        <item>Listado</item>
     </string-array>
 
     <!-- Menu title for text composer -->
@@ -775,17 +774,17 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">¡Información de la descarga!</string>
-    <string name="text_download_info"> La actualización será almacenada en su carpeta de descargas.</string>
+    <string name="text_download_info"> La actualización será almacenada en tu carpeta de descargas.</string>
     <string name="title_update_infodadat">¡Novedades de la actualización!</string>
 
     <!-- Sliding dialog that helps you select content type -->
-    <string name="sheet_share_hint">Information to share</string>
-    <string name="sheet_share_title">Format your status post to share</string>
-    <string name="sheet_share_body">Please select the type of content you are trying to share.</string>
+    <string name="sheet_share_hint">Información para compartir</string>
+    <string name="sheet_share_title">Formatea el estado de tu publicación para compartir</string>
+    <string name="sheet_share_body">Por favor, selecciona el tipo de contenido que quieres compartir.</string>
 
     <!--Only replace the first item the others are already provided in this file-->
     <string-array name="post_share_types">
-        <item>Insert Plain Text</item>
+        <item>Introduce texto plano</item>
         <item>@string/attach_link_title</item>
         <item>@string/attach_image_title</item>
         <item>@string/attach_youtube_title</item>
@@ -793,29 +792,29 @@ elementos de tus favoritos al presionar en el icono del corazón .
     </string-array>
 
     <!--These are the anime time labels in your profile-->
-    <string name="anime_time_hours">%.1f Hours</string>
-    <string name="anime_time_days">%.1f Days</string>
-    <string name="anime_time_years">%.1f Years</string>
+    <string name="anime_time_hours">%.1f Horas</string>
+    <string name="anime_time_days">%.1f Días</string>
+    <string name="anime_time_years">%.1f Años</string>
 
     <string-array name="media_status">
-        <item>All</item>
-        <item>Finished</item>
-        <item>Releasing</item>
-        <item>Not Yet Released</item>
-        <item>Canceled</item>
+        <item>Todos</item>
+        <item>Acabados</item>
+        <item>Estrenados</item>
+        <item>Sin Estrenar</item>
+        <item>Cancelados</item>
     </string-array>
 
     <string-array name="media_formats">
-        <item>All</item>
+        <item>Todos</item>
         <item>TV</item>
-        <item>TV Short</item>
-        <item>Movie</item>
-        <item>Special</item>
+        <item>TV Cortos</item>
+        <item>Película</item>
+        <item>Especial</item>
         <item>OVA</item>
         <item>ONA</item>
-        <item>Music</item>
+        <item>Musical</item>
         <item>Manga</item>
-        <item>Novel</item>
+        <item>Novela</item>
         <item>One Shot</item>
     </string-array>
 
@@ -838,100 +837,100 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <item>Outbox</item>
     </string-array>
 
-    <string name="series_type">Series Type:</string>
-    <string name="series_episodes">Episodes:</string>
-    <string name="series_next_ep">Next Episode:</string>
-    <string name="series_chapters">Chapters:</string>
-    <string name="series_volumes">Volumes:</string>
-    <string name="logged_in_as">Logged in as</string>
+    <string name="series_type">Tipo de serie:</string>
+    <string name="series_episodes">Episodios:</string>
+    <string name="series_next_ep">Siguiente episodio:</string>
+    <string name="series_chapters">Capítulos:</string>
+    <string name="series_volumes">Tomos:</string>
+    <string name="logged_in_as">Conectado como</string>
 
-    <string name="sign_into_anilist">Sign Into AniList</string>
+    <string name="sign_into_anilist">Inicia sesión en AniList</string>
 
-    <string name="anitrend_sign_in">AniTrend Sign-In</string>
-    <string name="please_sing_in">Please Sing In</string>
+    <string name="anitrend_sign_in">Inicio de sesión de AniTrend</string>
+    <string name="please_sing_in">Por favor, inicia sesión</string>
 
-    <string name="action_donate">Donate</string>
+    <string name="action_donate">Donar</string>
 
-    <string name="dialog_title_increment_chapters">Increment Chapters</string>
+    <string name="dialog_title_increment_chapters">Aumentar capítulos</string>
 
-    <string name="title_activity_staff">Staff</string>
-    <string name="title_activity_character">Character</string>
-    <string name="title_activity_series">Series</string>
+    <string name="title_activity_staff">Personal</string>
+    <string name="title_activity_character">Personaje</string>
+    <string name="title_activity_series">Serie</string>
 
-    <string name="More">More</string>
+    <string name="More">Más</string>
 
     <string name="title_bottom_sheet_giphy">Powered By Giphy</string>
 
-    <string name="title_bookmark">Bookmark</string>
+    <string name="title_bookmark">Favorito</string>
 
-    <string name="series_share_complete">Detailed</string>
-    <string name="series_share_summary">Summary</string>
+    <string name="series_share_complete">Detalles</string>
+    <string name="series_share_summary">Resumen</string>
 
-    <string name="text_giphy_feature">Spice up your posts. Just simply tap to select and long press to preview.</string>
+    <string name="text_giphy_feature">ale vida a tus publicaciones. Simplemente presiona para seleccionar y mantén pulsado para la vista previa.</string>
 
-    <string name="text_manga_volumes">%d Volumes</string>
-    <string name="text_manga_chapters">%d Chapters</string>
+    <string name="text_manga_volumes">%d Tomos</string>
+    <string name="text_manga_chapters">%d Capítulos</string>
 
-    <string name="title_series_status">Series Status</string>
-    <string name="title_series_season">Series Season</string>
-    <string name="title_series_score">Series Score</string>
-    <string name="title_series_origin">Series Origin</string>
+    <string name="title_series_status">Estado de la serie</string>
+    <string name="title_series_season">Temporada de la serie</string>
+    <string name="title_series_score">Puntaje de la serie</string>
+    <string name="title_series_origin">Origen sde la serie</string>
 
     <string name="title_total_chapters">Total Chapters</string>
     <string name="title_total_volumes">Total Volumes</string>
 
-    <string name="title_total_episodes">Total Episodes</string>
-    <string name="title_episode_duration">Episode Duration</string>
-    <string name="title_next_episode">Next Episode</string>
+    <string name="title_total_episodes">Todos los episodios</string>
+    <string name="title_episode_duration">Duración del episodio</string>
+    <string name="title_next_episode">Siguiente episodio</string>
 
-    <string name="title_hash_tag">Hash Tag</string>
-    <string name="title_main_studio">Main Studio</string>
+    <string name="title_hash_tag">Hashtag</string>
+    <string name="title_main_studio">Estudio principal</string>
 
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register/">Create Account</a>]]></string>
+    <string name="create_new_account"><![CDATA[No tienes una cuenta? <a href="https://anilist.co/register/">Crear cuenta</a>]]></string>
 
-    <string name="title_select_all">Select All</string>
+    <string name="title_select_all">Selecciona todos</string>
 
-    <string name="title_relation">Relations</string>
+    <string name="title_relation">Relacionados</string>
 
     <string name="title_social">Social</string>
 
-    <string name="title_website">Website</string>
-    <string name="title_summary">Summary</string>
+    <string name="title_website">Página web</string>
+    <string name="title_summary">Resumen</string>
 
-    <string name="title_date_of_birth">Date Of Birth:</string>
-    <string name="title_language">Language:</string>
+    <string name="title_date_of_birth">Fecha de nacimiento:</string>
+    <string name="title_language">Idioma:</string>
 
-    <string name="title_series_japanese_name">Japanese Title</string>
-    <string name="title_series_description">Series Description</string>
+    <string name="title_series_japanese_name">Título en japonés</string>
+    <string name="title_series_description">Descripción de la serie</string>
 
-    <string name="title_series_english_name">Series English Name:</string>
-    <string name="title_series_type">Series Type:</string>
-    <string name="title_native_name">Native Name:</string>
+    <string name="title_series_english_name">Título en inglés:</string>
+    <string name="title_series_type">Tipo de serie:</string>
+    <string name="title_native_name">Nombre original:</string>
 
-    <string name="title_alternative_names">Alternative Names</string>
-    <string name="text_unable_to_load_next_page">Error loading more results!</string>
-    <string name="menu_title_mark_all_as_read">Mark All As Read</string>
-    <string name="title_score_distribution">Score Distribution</string>
+    <string name="title_alternative_names">Nombres alternativos</string>
+    <string name="text_unable_to_load_next_page">¡Error al cargar más resultados!</string>
+    <string name="menu_title_mark_all_as_read">Selecciona todo como leído</string>
+    <string name="title_score_distribution">Distribución del puntaje</string>
 
-    <string name="title_score">Score</string>
+    <string name="title_score">Puntaje</string>
     <string name="title_watching">Watching</string>
-    <string name="title_series_stats">Series Stats</string>
-    <string name="error_unresolved_type">Unable to resolve content</string>
+    <string name="title_series_stats">Estadisticas de series</string>
+    <string name="error_unresolved_type">Imposible determinar el contenido</string>
 
-    <string name="menu_title_tags">Tags</string>
-    <string name="app_filter_tags">Series Tags?</string>
+    <string name="menu_title_tags">Etiquetas</string>
+    <string name="app_filter_tags">Etiquetas de series?</string>
 
-    <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+    <string name="anitrend_sign_in_browser">Se recomienda Google Chrome</string>
 
     <!-- Privacy Settings -->
-    <string name="pref_header_privacy">Privacy</string>
-    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+    <string name="pref_header_privacy">Privacidad</string>
+    <string name="pref_header_privacy_summary">Configura los ajustes de privacidad</string>
 
-    <string name="pref_title_crash_reports">Crash Reports</string>
-    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
-    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+    <string name="pref_title_crash_reports">Informe de fallos</string>
+    <string name="pref_crash_reports_summary_off">Habilita los informes de fallos (requiere reiniciar la app)</string>
+    <string name="pref_crash_reports_summary_on">Inhabilita los informes de fallos (requiere reiniciar la app)</string>
 
-    <string name="pref_title_usage_analytics">Usage Analytics</string>
-    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
-    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
+    <string name="pref_title_usage_analytics">Análisis de uso</string>
+    <string name="pref_usage_analytics_summary_off">Habilita el análisis de uso (requiere reinicio de la app)</string>
+    <string name="pref_usage_analytics_summary_on">Inhabilita el análisis de uso (requiere reinicio de la app)</string>
 </resources>

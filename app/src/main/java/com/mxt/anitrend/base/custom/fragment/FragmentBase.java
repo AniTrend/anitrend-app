@@ -32,6 +32,7 @@ import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.util.ActionModeHelper;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
+import com.mxt.anitrend.util.TutorialUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
