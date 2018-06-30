@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.index;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -10,8 +11,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
@@ -21,6 +20,7 @@ import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.MessageBase;
 import com.mxt.anitrend.presenter.activity.LoginPresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
@@ -83,6 +83,11 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
         // startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if(getPresenter().getApplicationPref().isNotificationEnabled())
             JobSchedulerUtil.scheduleJob(getApplicationContext());
+        createApplicationShortcuts();
+        finish();
+    }
+
+    private void createApplicationShortcuts() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             Bundle SHORTCUT_MY_ANIME_BUNDLE = new Bundle();
             SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME);
@@ -112,7 +117,6 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
                             .setShortcutParams(SHORTCUT_PROFILE_BUNDLE)
                             .build());
         }
-        finish();
     }
 
     @Override
@@ -138,7 +142,7 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
                 } else NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.container:
-                if(binding.widgetFlipper.getDisplayedChild() != WidgetPresenter.CONTENT_STATE)
+                if(binding.widgetFlipper.getDisplayedChild() != WidgetPresenter.LOADING_STATE)
                     finish();
                 else
                     NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
@@ -153,8 +157,7 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             if(error == null) error = getString(R.string.text_error_auth_login);
             NotifyUtil.createAlerter(this, getString(R.string.login_error_title),
                     error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG);
-            getPresenter().getParams().putString(KeyUtil.key_analytics_error, error);
-            FirebaseAnalytics.getInstance(this).logEvent(this.toString(), getPresenter().getParams());
+            AnalyticsUtil.reportException(this.toString(), error);
             binding.widgetFlipper.showPrevious();
             Log.e(this.toString(), error);
         }
