@@ -754,7 +754,6 @@
     <string-array name="hub_title">
         <item>Vorschläge</item>
         <item>Beliebteste</item>
-        <item>Playlist</item>
     </string-array>
 
     <!-- Menu title for text composer -->

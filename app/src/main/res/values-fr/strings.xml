@@ -758,7 +758,6 @@
     <string-array name="hub_title">
         <item>suggestions</item>
         <item>most popular</item>
-        <item>playlist</item>
     </string-array>
 
     <!-- Menu title for text composer -->
