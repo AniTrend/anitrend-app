@@ -106,8 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/SmallRating"
-                        app:averageScore="@{model.media.meanScore}"
-                        tools:rating="1"/>
+                        app:averageScore="@{model.score}" />
 
                 </LinearLayout>
 
