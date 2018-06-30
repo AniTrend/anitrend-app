@@ -23,14 +23,13 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.TapTargetUtil;
+import com.mxt.anitrend.util.TutorialUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by max on 2017/11/14.
@@ -134,31 +133,19 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
 
         if(getPresenter().isCurrentUser(model.getId())) {
-            if (!TapTargetUtil.isActive(KeyUtil.KEY_NOTIFICATION_TIP)) {
-                if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_NOTIFICATION_TIP)) {
-                    TapTargetUtil.buildDefault(this, R.string.tip_notifications_title, R.string.tip_notifications_text, R.id.action_notification)
-                            .setPromptStateChangeListener((prompt, state) -> {
-                                if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                    getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_NOTIFICATION_TIP);
-                                if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                    TapTargetUtil.setActive(KeyUtil.KEY_NOTIFICATION_TIP, true);
-                            }).setFocalColour(CompatUtil.getColor(this, R.color.colorGrey600)).show();
-                    TapTargetUtil.setActive(KeyUtil.KEY_NOTIFICATION_TIP, false);
-                }
-            }
+            new TutorialUtil().setContext(this)
+                    .setFocalColour(R.color.colorGrey600)
+                    .setTapTarget(KeyUtil.KEY_NOTIFICATION_TIP)
+                    .setApplicationPref(getPresenter().getApplicationPref())
+                    .showTapTarget(R.string.tip_notifications_title,
+                            R.string.tip_notifications_text, R.id.action_notification);
         } else {
-            if (!TapTargetUtil.isActive(KeyUtil.KEY_MESSAGE_TIP)) {
-                if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_MESSAGE_TIP)) {
-                    TapTargetUtil.buildDefault(this, R.string.tip_compose_message_title, R.string.tip_compose_message_text, R.id.action_message)
-                            .setPromptStateChangeListener((prompt, state) -> {
-                                if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                    getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_MESSAGE_TIP);
-                                if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                    TapTargetUtil.setActive(KeyUtil.KEY_MESSAGE_TIP, true);
-                            }).setFocalColour(CompatUtil.getColor(this, R.color.colorGrey600)).show();
-                    TapTargetUtil.setActive(KeyUtil.KEY_MESSAGE_TIP, false);
-                }
-            }
+            new TutorialUtil().setContext(this)
+                    .setFocalColour(R.color.colorGrey600)
+                    .setTapTarget(KeyUtil.KEY_MESSAGE_TIP)
+                    .setApplicationPref(getPresenter().getApplicationPref())
+                    .showTapTarget(R.string.tip_compose_message_title,
+                            R.string.tip_compose_message_text, R.id.action_message);
         }
     }
 

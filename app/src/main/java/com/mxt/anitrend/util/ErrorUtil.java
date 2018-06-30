@@ -47,13 +47,17 @@ public class ErrorUtil {
         return "Unable to provide information regarding error!";
     }
 
-    private static String getGraphQLError(String errorJson) {
+    private static @Nullable String getGraphQLError(String errorJson) {
         Log.e(TAG, errorJson);
         Type tokenType = new TypeToken<GraphContainer<?>>(){}.getType();
         GraphContainer<?> graphContainer = WebFactory.gson.fromJson(errorJson, tokenType);
         List<GraphError> errors = graphContainer.getErrors();
-        if (!CompatUtil.isEmpty(errors))
-            return errors.get(0).toString();
+        if (!CompatUtil.isEmpty(errors)) {
+            StringBuilder builder = new StringBuilder();
+            for (GraphError error : errors)
+                builder.append(error.toString());
+            return builder.toString();
+        }
         return null;
     }
 }

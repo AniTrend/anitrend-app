@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,7 +27,7 @@ import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.TapTargetUtil;
+import com.mxt.anitrend.util.TutorialUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -36,7 +35,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by max on 2017/12/01.
@@ -132,7 +130,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                 baseStatePageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
             baseStatePageAdapter.setParams(getIntent().getExtras());
             viewPager.setAdapter(baseStatePageAdapter);
-            viewPager.setOffscreenPageLimit(offScreenLimit + 4);
+            viewPager.setOffscreenPageLimit(offScreenLimit);
             smartTabLayout.setViewPager(viewPager);
         } else
             NotifyUtil.createAlerter(this, R.string.text_error_request, R.string.text_unknown_error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
@@ -153,9 +151,14 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             binding.setModel(model);
             binding.setOnClickListener(this);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
-            setFavouriteWidgetMenuItemIcon();
-            setManageMenuItemIcon();
-            showApplicationTips();
+            setFavouriteWidgetMenuItemIcon(); setManageMenuItemIcon();
+            if(getPresenter().getApplicationPref().isAuthenticated())
+                new TutorialUtil().setContext(this)
+                        .setFocalColour(R.color.colorGrey600)
+                        .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
+                        .setApplicationPref(getPresenter().getApplicationPref())
+                        .showTapTarget(R.string.tip_series_options_title,
+                                R.string.tip_series_options_message, R.id.action_manage);
         }
     }
 
@@ -197,21 +200,6 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         if(favouriteWidget != null)
             favouriteWidget.onViewRecycled();
         super.onDestroy();
-    }
-
-    private void showApplicationTips() {
-        if (!TapTargetUtil.isActive(KeyUtil.KEY_DETAIL_TIP) && getPresenter().getApplicationPref().isAuthenticated()) {
-            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_DETAIL_TIP)) {
-                TapTargetUtil.buildDefault(this, R.string.tip_series_options_title, R.string.tip_series_options_message, R.id.action_manage)
-                        .setPromptStateChangeListener((prompt, state) -> {
-                            if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_DETAIL_TIP);
-                            if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
-                                TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, true);
-                        }).setFocalColour(CompatUtil.getColor(this, R.color.colorGrey600)).show();
-                TapTargetUtil.setActive(KeyUtil.KEY_DETAIL_TIP, false);
-            }
-        }
     }
 
     private void setManageMenuItemIcon() {

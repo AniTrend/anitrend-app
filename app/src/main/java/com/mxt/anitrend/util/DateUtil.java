@@ -83,7 +83,7 @@ public class DateUtil {
     public static int getCurrentYear(int delta){
         if(Calendar.getInstance().get(Calendar.MONTH) >= 11 && getCurrentSeason().equals(KeyUtil.WINTER))
             return Calendar.getInstance().get(Calendar.YEAR) + delta;
-        return Calendar.getInstance().get(Calendar.YEAR);
+        return Calendar.getInstance().get(Calendar.YEAR) + delta;
     }
 
     /**
