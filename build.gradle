@@ -3,17 +3,17 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
      ext {
-        compileSdk = 27
-        targetSdk = 27
+        compileSdk = 28
+        targetSdk = 28
         minSdk = 17
-        versionCode = 81
+        versionCode = 84
         versionName = '1.1.1'
         buildTools = '27.0.3'
         butterKnife = '8.8.1'
         glide = '4.7.1'
         retrofit = '2.4.0'
         supportLibrary = '27.1.1'
-        firebase = '16.0.0'
+        firebase = '16.0.1'
         objectBox = '1.5.0'
         architecture = '1.1.1'
         emojify = '0.1.7'
