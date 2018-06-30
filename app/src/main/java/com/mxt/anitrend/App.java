@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.crashlytics.android.core.CrashlyticsListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
@@ -34,11 +35,16 @@ public class App extends Application {
     }
 
     private void setCrashAnalytics(ApplicationPref pref) {
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG || !pref.isCrashReportsEnabled())
-                .build();
+        CrashlyticsCore.Builder builder = new CrashlyticsCore.Builder();
+
+        if (!BuildConfig.DEBUG)
+            builder.disabled(pref.isCrashReportsEnabled());
+        else
+            builder.disabled(true);
+
         fabric = Fabric.with(new Fabric.Builder(this)
-                .kits(crashlyticsCore).debuggable(true)
+                .kits(builder.build())
+                .debuggable(BuildConfig.DEBUG)
                 .appIdentifier(BuildConfig.BUILD_TYPE)
                 .build());
     }
