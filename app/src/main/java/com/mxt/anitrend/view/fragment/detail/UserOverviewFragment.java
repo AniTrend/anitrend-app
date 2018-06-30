@@ -155,13 +155,13 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
 
     private List<StatsRing> generateStatsData() {
         List<StatsRing> userGenreStats = new ArrayList<>();
-        if(model.getStats() != null && !CompatUtil.isEmpty(model.getStats().getFavouredGenresOverview())) {
-            int highestValue = Stream.of(model.getStats().getFavouredGenresOverview())
+        if(model.getStats() != null && !CompatUtil.isEmpty(model.getStats().getFavouredGenres())) {
+            int highestValue = Stream.of(model.getStats().getFavouredGenres())
                     .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
                     .get().getAmount();
 
-            userGenreStats = Stream.of(model.getStats().getFavouredGenresOverview())
-                    .map(genreStats -> {
+            userGenreStats = Stream.of(model.getStats().getFavouredGenres())
+                    .sortBy(s -> - s.getAmount()).map(genreStats -> {
                         float percentage = (((float)genreStats.getAmount()) / ((float)highestValue)) * 100f;
                         return new StatsRing((int)percentage, genreStats.getGenre(), String.valueOf(genreStats.getAmount()));
                     }).limit(5).toList();

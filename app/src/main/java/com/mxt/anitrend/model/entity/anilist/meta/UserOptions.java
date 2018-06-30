@@ -13,18 +13,21 @@ public class UserOptions implements Parcelable {
 
     private @KeyUtil.UserLanguageTitle String titleLanguage;
     private boolean displayAdultContent;
+    private boolean airingNotifications;
     private String profileColor;
 
     protected UserOptions(Parcel in) {
-        displayAdultContent = in.readByte() != 0;
         titleLanguage = in.readString();
+        displayAdultContent = in.readByte() != 0;
+        airingNotifications = in.readByte() != 0;
         profileColor = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte((byte) (displayAdultContent ? 1 : 0));
         dest.writeString(titleLanguage);
+        dest.writeByte((byte) (displayAdultContent ? 1 : 0));
+        dest.writeByte((byte) (airingNotifications ? 1 : 0));
         dest.writeString(profileColor);
     }
 
@@ -51,6 +54,10 @@ public class UserOptions implements Parcelable {
 
     public boolean isDisplayAdultContent() {
         return displayAdultContent;
+    }
+
+    public boolean isAiringNotifications() {
+        return airingNotifications;
     }
 
     public String getProfileColor() {

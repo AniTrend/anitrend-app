@@ -16,7 +16,7 @@ query CurrentUser($asHtml: Boolean = false) {
         ... on UserOptions {
           titleLanguage
           displayAdultContent
-          titleLanguage
+          airingNotifications
           profileColor
         }
       }
@@ -61,12 +61,44 @@ query CurrentUser($asHtml: Boolean = false) {
               amount
             }
           }
-          favouredGenresOverview {
+          favouredGenres {
             ... on GenreStats {
               genre
               amount
               meanScore
               timeWatched
+            }
+          }
+          favouredTags {
+            ... on TagStats {
+              tag {
+                ... on MediaTag {
+                  id
+                  name
+                  description
+                  category
+                  rank
+                  isGeneralSpoiler
+                  isMediaSpoiler
+                  isAdult
+                }
+              }
+              amount
+              meanScore
+              timeWatched
+            }
+          }
+          favouredYears {
+            ... on YearStats {
+              year
+              amount
+              meanScore
+            }
+          }
+          favouredFormats {
+            ... on FormatStats {
+              format
+              amount
             }
           }
         }
