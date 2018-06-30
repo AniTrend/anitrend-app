@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
@@ -288,11 +289,11 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
 
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onGiphyClicked(Giphy giphy) {
+    public void onGiphyClicked(IntPair<Giphy> pair) {
         String index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE;
         EditText editor = binding.comment;
         int start = editor.getSelectionStart();
-        Gif gif = giphy.getImages().get(index);
+        Gif gif = pair.getSecond().getImages().get(index);
         editor.getEditableText().insert(start, MarkDown.convertImage(gif.getUrl()));
     }
 

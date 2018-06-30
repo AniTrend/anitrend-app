@@ -80,11 +80,13 @@ public interface KeyUtil {
     String arg_season = "season";
     String arg_seasonYear = "seasonYear";
     String arg_genres = "genres";
+    String arg_genresInclude = "genresInclude";
     String arg_genresExclude = "genresExclude";
     String arg_isAdult = "isAdult";
     String arg_onList = "onList";
     String arg_tags = "tags";
-    String arg_tagsExlcude = "tagsExclude";
+    String arg_tagsInclude = "tagsInclude";
+    String arg_tagsExclude = "tagsExclude";
 
     /** Media Collection Keys */
     String arg_forceSingleCompletedList = "forceSingleCompletedList";
@@ -131,7 +133,6 @@ public interface KeyUtil {
     String key_navigation_selected = "key_navigation_selected";
     String key_navigation_title = "key_navigation_title";
     String key_bundle_param = "key_bundle_param";
-    String key_analytics_error = "key_analytics_error";
 
 
 
