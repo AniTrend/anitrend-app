@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.util.Log;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
@@ -64,7 +65,7 @@ public class ApplicationPref {
 
     public void toggleTheme() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(_isLightTheme, getTheme() == R.style.AppThemeLight ? R.style.AppThemeDark : R.style.AppThemeLight);
+        editor.putInt(_isLightTheme, getTheme() == R.style.AppThemeLight ? sharedPreferences.getBoolean("amoled_theme",false) ? R.style.AppThemeAMODark : R.style.AppThemeDark : R.style.AppThemeLight);
         editor.apply();
     }
 
