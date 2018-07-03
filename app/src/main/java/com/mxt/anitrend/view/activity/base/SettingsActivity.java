@@ -17,11 +17,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import android.preference.SwitchPreference;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
@@ -196,21 +194,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_startup_page)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_update_channel)));
-            SwitchPreference amoDark = (SwitchPreference) findPreference("amoled_theme");
-            if (amoDark != null) {
-                amoDark.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference arg0, Object isAMODarkOnObj) {
-                        boolean isAMODarkOn = (Boolean)isAMODarkOnObj;
-                        if (isAMODarkOn) {
-                            //setup to possible change theme on toggle
-                            return true;
-                        }
-                        return true;
-                    }
-                });
-            }
-
         }
 
         @Override
