@@ -382,6 +382,12 @@
     <string name="pref_key_startup_page" translatable="false">general_startup_page</string>
     <string name="pref_key_update_channel" translatable="false">_updateChannel</string>
 
+    <!--AMOLED Setting Related-->
+    <string name="pref_key_amoled_theme" translatable="false">amoled_theme</string>
+
+    <string name="pref_title_amoled_theme">Dark Theme (AMOLED)</string>
+    <string name="pref_amoled_theme_summary_off">Enable AMOLED Dark Theme</string>
+    <string name="pref_amoled_theme_summary_on">Disable AMOLED Dark Theme</string>
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>

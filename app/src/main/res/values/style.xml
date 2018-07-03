@@ -91,6 +91,50 @@
 
         <item name="android:windowBackground">@color/colorPrimaryDarker</item>
         <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
+        <!--actionOverflowMenuStyle controls the state of the overflow popup window-->
+        <!--<item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>-->
+    </style>
+
+    <!-- AMOLED Dark Application Theme -->
+    <style name="AppThemeAMODark" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryAMODark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryAMODark</item>
+        <item name="colorAccent">@color/colorAccentAMODark</item>
+
+        <item name="cardColor">@color/colorPrimaryAMODark</item>
+        <item name="drawerColor">@color/colorLight</item>
+
+
+        <item name="rootColor">@color/colorPrimaryAMODark</item>
+        <item name="lineColor">@color/colorPrimaryAMODark</item>
+        <item name="titleColor">@color/colorTextTitleDark</item>
+        <item name="subtitleColor">@color/colorTextSubtitleDark</item>
+        <item name="contentColor">@color/colorTextContentDark</item>
+
+        <item name="voiceDrawable">@drawable/ic_action_voice_search_inverted</item>
+        <item name="closeDrawable">@drawable/ic_action_navigation_close_inverted</item>
+        <item name="backDrawable">@drawable/ic_action_navigation_arrow_back_inverted</item>
+        <item name="suggestionDrawable">@drawable/ic_suggestion</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="toolbarColor">@style/AMODarkToolbarTheme</item>
+        <item name="android:textViewStyle">@style/TextFamily</item>
+
+        <item name="android:windowBackground">@color/colorPrimaryAMODark</item>
+
+        <!--popupMenuStyle doesn't seem to be having any effect-->
+        <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
+
+        <!--actionOverflowMenuStyle controls the state of the overflow popup window-->
+        <item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>
+
+    </style>
+
+    <style name="DarkOverflowMenu" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <!--<item name="android:windowDisablePreview">true</item>-->
+        <!--<item name="overlapAnchor">false</item>-->
+        <item name="android:popupBackground">@color/colorAMODark</item>
     </style>
 
     <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -126,6 +170,37 @@
               but setting this also changes the popup menu's background,
               even if we define popupTheme for our <Toolbar> -->
         <!-- <item name="android:background">@color/color_primary</item> -->
+    </style>
+
+    <style name="AMODarkToolbarTheme" parent="AppThemeAMODark">
+        <!-- android:textColorPrimary is the  color of the title text
+             in the Toolbar, in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">?attr/titleColor</item>
+        <item name="android:textColor">@color/colorTextContentDark</item>
+
+        <!-- android:textColorPrimaryInverse is the  color of the title
+             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+
+        <!-- android:actionMenuTextColor is the color of the text of
+              action (menu) items in the Toolbar, at least in the
+              Theme.AppCompat theme.
+              For some reason, they already get the textColorPrimary
+              when running on API 21, but not on older versions of
+              Android, so this is only necessary to support older
+              Android versions.-->
+        <item name="actionMenuTextColor">?attr/titleColor</item>
+        <!-- android:textColorSecondary is the color of the menu
+             overflow icon (three vertical dots) -->
+        <item name="android:textColorSecondary">?attr/subtitleColor</item>
+
+
+        <!-- This would set the toolbar's background color,
+              but setting this also changes the popup menu's background,
+              even if we define popupTheme for our <Toolbar> -->
+        <!--<item name="android:background">@color/colorPrimaryAMODark</item>-->
+
+        <item name="android:colorBackground">@color/colorPrimaryAMODark</item>
     </style>
 
     <style name="SmallRating" parent="Theme.AppCompat">
