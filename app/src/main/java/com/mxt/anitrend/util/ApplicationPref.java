@@ -109,6 +109,10 @@ public class ApplicationPref {
         editor.apply();
     }
 
+    public String getUserLanguage() {
+        return sharedPreferences.getString(context.getString(R.string.pref_key_selected_Language), "en");
+    }
+
     //Returns amount of time in seconds
     public int getSyncTime() {
         return Integer.valueOf(sharedPreferences.getString(context.getString(R.string.pref_key_sync_frequency), "15")) * 60;

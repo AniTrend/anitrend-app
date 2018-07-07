@@ -16,4 +16,12 @@
         android:key="@string/pref_key_update_channel"
         android:title="@string/pref_title_update_channel" />
 
+    <ListPreference
+        android:defaultValue="en"
+        android:entries="@array/pref_selected_Language_titles"
+        android:entryValues="@array/pref_selected_Language_values"
+        android:key="@string/pref_key_selected_Language"
+        android:title="@string/pref_title_selected_Language" />
+
+
 </PreferenceScreen>
