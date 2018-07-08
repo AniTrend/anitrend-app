@@ -382,7 +382,6 @@
     <string name="pref_key_startup_page" translatable="false">general_startup_page</string>
     <string name="pref_key_update_channel" translatable="false">_updateChannel</string>
 
-
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_header_notifications_summary">Configure how notifications are handled</string>
@@ -420,6 +419,30 @@
         <item>60</item>
         <item>180</item>
         <item>360</item>
+    </string-array>
+
+    <!--Language preferences-->
+    <string name="pref_title_selected_Language">Application Language</string>
+    <string name="pref_key_selected_Language" translatable="false">selected_language</string>
+
+    <string-array name="pref_selected_Language_titles" translatable="false">
+        <item>English</item>
+        <item>العربية</item>
+        <item>Deutsch</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Polski</item>
+    </string-array>
+
+    <string-array name="pref_selected_Language_values" translatable="false">
+        <item>en</item>
+        <item>ar</item>
+        <item>de</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pl</item>
     </string-array>
 
     <!--Another message using a bit of html the p tags represent new paragraphs-->

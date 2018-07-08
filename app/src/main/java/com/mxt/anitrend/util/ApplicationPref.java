@@ -10,6 +10,8 @@ import android.support.annotation.StyleRes;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 
+import java.util.Locale;
+
 /**
  * Created by max on 2017/09/16.
  * Application preferences
@@ -107,6 +109,10 @@ public class ApplicationPref {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(_freshInstall, false);
         editor.apply();
+    }
+
+    public String getUserLanguage() {
+            return sharedPreferences.getString(context.getString(R.string.pref_key_selected_Language), Locale.getDefault().getLanguage());
     }
 
     //Returns amount of time in seconds

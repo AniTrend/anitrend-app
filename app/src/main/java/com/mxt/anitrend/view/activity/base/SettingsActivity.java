@@ -194,6 +194,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_startup_page)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_update_channel)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_selected_Language)));
         }
 
         @Override
