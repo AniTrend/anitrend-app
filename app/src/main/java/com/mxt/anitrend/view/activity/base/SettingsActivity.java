@@ -196,6 +196,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_startup_page)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_update_channel)));
+
             SwitchPreference amoDark = (SwitchPreference) findPreference("amoled_theme");
             if (amoDark != null) {
                 amoDark.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -210,7 +211,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 });
             }
-
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_selected_Language)));
         }
 
         @Override
