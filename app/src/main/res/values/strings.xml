@@ -383,7 +383,7 @@
     <string name="pref_key_update_channel" translatable="false">_updateChannel</string>
 
     <!--AMOLED Setting Related-->
-    <string name="pref_key_amoled_theme" translatable="false">amoled_theme</string>
+    <string name="pref_key_amoled_theme" translatable="false">_isAmoledTheme</string>
 
     <string name="pref_title_amoled_theme">Dark Theme (AMOLED)</string>
     <string name="pref_amoled_theme_summary_off">Enable AMOLED Dark Theme</string>

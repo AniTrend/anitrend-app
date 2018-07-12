@@ -196,21 +196,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_startup_page)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_update_channel)));
-
-            SwitchPreference amoDark = (SwitchPreference) findPreference("amoled_theme");
-            if (amoDark != null) {
-                amoDark.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference arg0, Object isAMODarkOnObj) {
-                        boolean isAMODarkOn = (Boolean)isAMODarkOnObj;
-                        if (isAMODarkOn) {
-                            //setup to possible change theme on toggle
-                            return true;
-                        }
-                        return true;
-                    }
-                });
-            }
+            //bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_amoled_theme)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_selected_Language)));
         }
 

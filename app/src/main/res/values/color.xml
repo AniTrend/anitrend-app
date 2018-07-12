@@ -11,9 +11,8 @@
     <color name="colorAccentDark">#009688</color>
 
     <!-- Color AMODark -->
-    <color name="colorAMODark">#101010</color>
-    <color name="colorPrimaryAMODark">#000000</color>
-    <color name="colorAccentAMODark">#005149</color>
+    <color name="colorBlack">#101010</color>
+    <color name="colorPrimaryBlack">#000000</color>
 
     <color name="colorGreyLight">#fafafa</color>
     <color name="colorAliceBlue">#FBFCFD</color>

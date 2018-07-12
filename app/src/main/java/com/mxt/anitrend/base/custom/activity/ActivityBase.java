@@ -91,7 +91,11 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      * @see ActivityBase#setNavigationStyle()
      */
     protected void configureActivity() {
-        setTheme((style = new ApplicationPref(this).getTheme()));
+        ApplicationPref applicationPref = new ApplicationPref(this);
+        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isAmoledEnabled())
+            setTheme(R.style.AppThemeBlack);
+        else
+            setTheme(style);
         setNavigationStyle();
     }
 

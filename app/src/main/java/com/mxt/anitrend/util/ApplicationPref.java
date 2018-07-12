@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.util.Log;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
@@ -30,6 +29,7 @@ public class ApplicationPref {
     /** Application Base Options */
     public static final String _isLightTheme = "_isLightTheme";
     public static final String _updateChannel = "_updateChannel";
+    public static final String _isAmoledTheme = "_isAmoledTheme";
 
     /** Api Keys */
     private final String _sortOrder = "_sortOrder";
@@ -67,13 +67,17 @@ public class ApplicationPref {
 
     public void toggleTheme() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(_isLightTheme, getTheme() == R.style.AppThemeLight ? sharedPreferences.getBoolean("amoled_theme",false) ? R.style.AppThemeAMODark : R.style.AppThemeDark : R.style.AppThemeLight);
+        editor.putInt(_isLightTheme, getTheme() == R.style.AppThemeLight ? R.style.AppThemeDark : R.style.AppThemeLight);
         editor.apply();
     }
 
     public @StyleRes int getTheme() {
         @StyleRes int style = sharedPreferences.getInt(_isLightTheme, R.style.AppThemeLight);
         return style;
+    }
+
+    public boolean isAmoledEnabled() {
+        return sharedPreferences.getBoolean(_isAmoledTheme, false);
     }
 
     // Returns the IDs of the startup page
