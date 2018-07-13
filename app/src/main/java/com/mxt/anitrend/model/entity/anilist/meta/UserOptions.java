@@ -14,7 +14,7 @@ public class UserOptions implements Parcelable {
     private @KeyUtil.UserLanguageTitle String titleLanguage;
     private boolean displayAdultContent;
     private boolean airingNotifications;
-    private String profileColor;
+    private @KeyUtil.ProfileColor String profileColor;
 
     protected UserOptions(Parcel in) {
         titleLanguage = in.readString();
@@ -60,7 +60,7 @@ public class UserOptions implements Parcelable {
         return airingNotifications;
     }
 
-    public String getProfileColor() {
+    public @KeyUtil.ProfileColor String getProfileColor() {
         return profileColor;
     }
 }
