@@ -93,7 +93,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
             binding.diaCurrentProgress.setProgressMaximum(model.getMedia().getEpisodes());
 
         binding.diaCurrentScore.setProgressMaximum(100);
-        binding.diaCurrentScore.setProgressCurrent(model.getScore());
+        binding.diaCurrentScore.setProgressCurrent((int)model.getScore());
         binding.diaCurrentProgress.setProgressCurrent(model.getProgress());
         binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
 

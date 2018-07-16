@@ -21,7 +21,7 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
     private long id;
     private long mediaId;
     private @KeyUtil.MediaListStatus String status;
-    private int score;
+    private float score;
     private int progress;
     private int progressVolumes;
     private int repeat;
@@ -46,7 +46,7 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         id = in.readLong();
         mediaId = in.readLong();
         status = in.readString();
-        score = in.readInt();
+        score = in.readFloat();
         progress = in.readInt();
         progressVolumes = in.readInt();
         repeat = in.readInt();
@@ -67,7 +67,7 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         dest.writeLong(id);
         dest.writeLong(mediaId);
         dest.writeString(status);
-        dest.writeInt(score);
+        dest.writeFloat(score);
         dest.writeInt(progress);
         dest.writeInt(progressVolumes);
         dest.writeInt(repeat);
@@ -112,7 +112,7 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         return status;
     }
 
-    public int getScore() {
+    public float getScore() {
         return score;
     }
 

@@ -7,6 +7,7 @@ import com.mxt.anitrend.util.KeyUtil;
 
 /**
  * Created by max on 2018/03/22.
+ * https://anilist.github.io/ApiV2-GraphQL-Docs/medialistoptions.doc.html
  */
 
 public class MediaListOptions implements Parcelable {

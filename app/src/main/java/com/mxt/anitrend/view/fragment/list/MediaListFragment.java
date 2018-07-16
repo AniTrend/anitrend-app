@@ -23,6 +23,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.MediaListCollectionBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
@@ -55,6 +56,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     protected long userId;
     protected String userName;
     protected @KeyUtil.MediaType String mediaType;
+    protected MediaListOptions mediaListOptions;
 
     protected MediaListCollectionBase mediaListCollectionBase;
     protected QueryContainerBuilder queryContainer;
@@ -136,22 +138,22 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     public void makeRequest() {
-        ApplicationPref pref = getPresenter().getApplicationPref();
-
+        mediaListOptions = getPresenter().getDatabase().getCurrentUser().getMediaListOptions();
         if (userId != 0)
             queryContainer.putVariable(KeyUtil.arg_userId, userId);
         else
             queryContainer.putVariable(KeyUtil.arg_userName, userName);
 
         queryContainer.putVariable(KeyUtil.arg_mediaType, mediaType)
-                .putVariable(KeyUtil.arg_scoreFormat, KeyUtil.POINT_100)
-                .putVariable(KeyUtil.arg_forceSingleCompletedList, true);
+                .putVariable(KeyUtil.arg_forceSingleCompletedList, true)
+                .putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
 
         // since anilist doesn't support sorting by title we set a temporary sorting key
-        if(!MediaListUtil.isTitleSort(pref.getMediaListSort()))
-            queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaListSort() + pref.getSortOrder());
+        if(!MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
+            queryContainer.putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaListSort() +
+                            getPresenter().getApplicationPref().getSortOrder());
         else
-            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.MEDIA_ID + pref.getSortOrder());
+            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.MEDIA_ID + getPresenter().getApplicationPref().getSortOrder());
 
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_COLLECTION_REQ, getContext());
@@ -161,7 +163,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(getPresenter() != null && isFilterable && GraphUtil.isKeyFilter(key)) {
             @KeyUtil.MediaListSort String mediaListSort = getPresenter().getApplicationPref().getMediaListSort();
-            if(CompatUtil.equals(key, "_mediaListSort") && MediaListUtil.isTitleSort(mediaListSort)) {
+            if(CompatUtil.equals(key, ApplicationPref._mediaListSort) && MediaListUtil.isTitleSort(mediaListSort)) {
                 swipeRefreshLayout.setRefreshing(true);
                 sortMediaListByTitle(mAdapter.getData());
             }
@@ -232,6 +234,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @Override
     public void onItemClick(View target, IntPair<MediaList> data) {
         switch (target.getId()) {
+            case R.id.container:
             case R.id.series_image:
                 MediaBase mediaBase = data.getSecond().getMedia();
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
@@ -252,6 +255,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @Override
     public void onItemLongClick(View target, IntPair<MediaList> data) {
         switch (target.getId()) {
+            case R.id.container:
             case R.id.series_image:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()

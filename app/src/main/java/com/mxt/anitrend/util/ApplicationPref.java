@@ -32,17 +32,17 @@ public class ApplicationPref {
     public static final String _isAmoledTheme = "_isAmoledTheme";
 
     /** Api Keys */
-    private final String _sortOrder = "_sortOrder";
-    private final String _mediaStatus = "_mediaStatus";
-    private final String _mediaFormat = "_mediaFormat";
-    private final String _mediaSource = "_mediaSource";
-    private final String _airingSort = "_airingSort";
-    private final String _characterSort = "_characterSort";
-    private final String _mediaListSort = "_mediaListSort";
-    private final String _mediaSort = "_mediaSort";
-    private final String _mediaTrendSort = "_mediaTrendSort";
-    private final String _reviewSort = "_reviewSort";
-    private final String _staffSort = "_staffSort";
+    private static final String _sortOrder = "_sortOrder";
+    private static final String _mediaStatus = "_mediaStatus";
+    private static final String _mediaFormat = "_mediaFormat";
+    private static final String _mediaSource = "_mediaSource";
+    private static final String _airingSort = "_airingSort";
+    private static final String _characterSort = "_characterSort";
+    public static final String _mediaListSort = "_mediaListSort";
+    private static final String _mediaSort = "_mediaSort";
+    private static final String _mediaTrendSort = "_mediaTrendSort";
+    private static final String _reviewSort = "_reviewSort";
+    private static final String _staffSort = "_staffSort";
 
     private SharedPreferences sharedPreferences;
 

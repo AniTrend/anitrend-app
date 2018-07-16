@@ -97,7 +97,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
             binding.diaCurrentChapters.setProgressMaximum(model.getMedia().getChapters());
 
         binding.diaCurrentScore.setProgressMaximum(100);
-        binding.diaCurrentScore.setProgressCurrent(model.getScore());
+        binding.diaCurrentScore.setProgressCurrent((int)model.getScore());
         binding.diaCurrentChapters.setProgressCurrent(model.getProgress());
         binding.diaCurrentVolumes.setProgressCurrent(model.getProgressVolumes());
         binding.diaCurrentReread.setProgressCurrent(model.getRepeat());
