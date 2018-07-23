@@ -68,8 +68,8 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         model.setProgress(binding.diaCurrentProgress.getProgressCurrent());
         model.setRepeat(binding.diaCurrentRewatch.getProgressCurrent());
         model.setScore(binding.diaCurrentScore.getProgressCurrent());
-        model.setStartedAt(binding.diaCurrentStartedAt.getText().toString());
-        model.setCompletedAt(binding.diaCurrentCompletedAt.getText().toString());
+        model.setStartedAt(binding.diaCurrentStartedAt.getDate());
+        model.setCompletedAt(binding.diaCurrentCompletedAt.getDate());
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
@@ -104,28 +104,8 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         binding.diaCurrentScore.setProgressCurrent(model.getScore());
         binding.diaCurrentProgress.setProgressCurrent(model.getProgress());
         binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
-
-        binding.diaCurrentStartedAt.setText(model.getStartedAt().toString());
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-                String date = String.format(Locale.getDefault(),"%d/%d/%d", y, m, d);
-                binding.diaCurrentStartedAt.setText(date);
-            }
-        };
-        binding.diaCurrentStartedAt.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar myCalendar = Calendar.getInstance();
-                DatePickerDialog dialog = new DatePickerDialog(getContext(), date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                dialog.show();
-            }
-        });
-
-        binding.diaCurrentCompletedAt.setText(model.getCompletedAt().toString());
-
+        binding.diaCurrentStartedAt.setDate(model.getStartedAt());
+        binding.diaCurrentCompletedAt.setDate(model.getCompletedAt());
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
     }
 
