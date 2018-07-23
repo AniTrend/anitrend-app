@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.mxt.anitrend.data.converter.FuzzyDateConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
@@ -230,6 +231,15 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
 
     public void setCustomLists(List<CustomList> customLists) {
         this.customLists = customLists;
+    }
+
+    public void setStartedAt(String startedAt) {
+        FuzzyDateConverter fuzzyDateConverter = new FuzzyDateConverter();
+        this.startedAt = fuzzyDateConverter.convertToEntityProperty(startedAt);
+    }
+
+    public void setCompletedAt(FuzzyDate completedAt) {
+        this.completedAt = completedAt;
     }
 
     @Override

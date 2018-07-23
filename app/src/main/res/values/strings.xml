@@ -964,4 +964,5 @@
     <string name="pref_title_usage_analytics">Usage Analytics</string>
     <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
     <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
+    <string name="dialog_title_start_date">Start Date</string>
 </resources>
