@@ -18,8 +18,6 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
-import java.text.SimpleDateFormat;
-
 /**
  * Created by max on 2018/01/03.
  */
@@ -65,6 +63,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         model.setRepeat(binding.diaCurrentRewatch.getProgressCurrent());
         model.setScore(binding.diaCurrentScore.getProgressCurrent());
         model.setStartedAt(binding.diaCurrentStartedAt.getText().toString());
+        model.setCompletedAt(binding.diaCurrentCompletedAt.getText().toString());
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
@@ -100,6 +99,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         binding.diaCurrentProgress.setProgressCurrent(model.getProgress());
         binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
         binding.diaCurrentStartedAt.setText(model.getStartedAt().toString());
+        binding.diaCurrentCompletedAt.setText(model.getCompletedAt().toString());
 
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
     }

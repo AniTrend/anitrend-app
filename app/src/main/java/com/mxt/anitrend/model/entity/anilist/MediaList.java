@@ -234,12 +234,11 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
     }
 
     public void setStartedAt(String startedAt) {
-        FuzzyDateConverter fuzzyDateConverter = new FuzzyDateConverter();
-        this.startedAt = fuzzyDateConverter.convertToEntityProperty(startedAt);
+        this.startedAt = new FuzzyDateConverter().convertToEntityProperty(startedAt);
     }
 
-    public void setCompletedAt(FuzzyDate completedAt) {
-        this.completedAt = completedAt;
+    public void setCompletedAt(String completedAt) {
+        this.completedAt = new FuzzyDateConverter().convertToEntityProperty(completedAt);
     }
 
     @Override
