@@ -109,7 +109,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-                String date = String.format(Locale.getDefault(),"%d/%d/%d", d, m, y);
+                String date = String.format(Locale.getDefault(),"%d/%d/%d", y, m, d);
                 binding.diaCurrentStartedAt.setText(date);
             }
         };
