@@ -107,19 +107,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|start"
-            android:text="@string/dialog_title_started_at" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_started_at" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/dia_current_started_at"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:clickable="true"
-            />
+            <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+                android:id="@+id/dia_current_started_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:clickable="true" />
         </FrameLayout>
 
         <android.support.v4.widget.Space
@@ -136,13 +135,12 @@
                 android:layout_gravity="center_vertical|start"
                 android:text="@string/dialog_title_completed_at" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
                 android:id="@+id/dia_current_completed_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
-                android:clickable="true"
-                />
+                android:clickable="true" />
         </FrameLayout>
 
         <android.support.v4.widget.Space

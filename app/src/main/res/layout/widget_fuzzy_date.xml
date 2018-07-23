@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget">
+
+    <data>
+        <variable name="onClick" type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/fuzzy_date_view"
+        android:onClick="@{onClick}">
+
+        <TextView
+            android:id="@+id/fuzzy_date_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="@dimen/subtitle_text_size"
+            android:inputType="number"
+            tools:text="01" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subtitle_text_size"
+            android:paddingTop="11dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="11dp"
+            tools:text="/" />
+
+        <TextView
+            android:id="@+id/fuzzy_date_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="@dimen/subtitle_text_size"
+            android:inputType="number"
+            tools:text="01" />
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subtitle_text_size"
+            android:paddingTop="11dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="11dp"
+            tools:text="/" />
+
+        <TextView
+            android:id="@+id/fuzzy_date_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="@dimen/subtitle_text_size"
+            android:inputType="number"
+            tools:text="1900" />
+
+    </LinearLayout>
+</layout>
