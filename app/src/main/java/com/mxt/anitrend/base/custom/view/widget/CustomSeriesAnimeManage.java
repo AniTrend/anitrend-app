@@ -1,5 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,14 +10,19 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionAnimeBinding;
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by max on 2018/01/03.
@@ -98,7 +104,26 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         binding.diaCurrentScore.setProgressCurrent(model.getScore());
         binding.diaCurrentProgress.setProgressCurrent(model.getProgress());
         binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
+
         binding.diaCurrentStartedAt.setText(model.getStartedAt().toString());
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+                String date = String.format(Locale.getDefault(),"%d/%d/%d", d, m, y);
+                binding.diaCurrentStartedAt.setText(date);
+            }
+        };
+        binding.diaCurrentStartedAt.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar myCalendar = Calendar.getInstance();
+                DatePickerDialog dialog = new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                dialog.show();
+            }
+        });
+
         binding.diaCurrentCompletedAt.setText(model.getCompletedAt().toString());
 
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
