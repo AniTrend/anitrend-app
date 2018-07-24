@@ -88,7 +88,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
     @Override
     public void onDateSet(DatePicker datePicker, int y, int m, int d) {
             this.day = d;
-            this.month = m;
+            this.month = m+1;
             this.year = y;
             updateDate();
     }
