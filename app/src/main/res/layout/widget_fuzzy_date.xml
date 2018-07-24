@@ -5,63 +5,66 @@
     tools:context="com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget">
 
     <data>
-        <variable name="onClick" type="android.view.View.OnClickListener" />
+
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:id="@+id/fuzzy_date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:onClick="@{onClick}">
 
         <TextView
             android:id="@+id/fuzzy_date_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="@dimen/subtitle_text_size"
+            android:gravity="center_horizontal"
             android:inputType="number"
+            android:textSize="@dimen/subtitle_text_size"
             tools:text="01" />
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/subtitle_text_size"
-            android:paddingTop="11dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
             android:paddingBottom="11dp"
+            android:paddingEnd="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="11dp"
+            android:textSize="@dimen/subtitle_text_size"
             tools:text="/" />
 
         <TextView
             android:id="@+id/fuzzy_date_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="@dimen/subtitle_text_size"
+            android:gravity="center_horizontal"
             android:inputType="number"
+            android:textSize="@dimen/subtitle_text_size"
             tools:text="01" />
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/subtitle_text_size"
-            android:paddingTop="11dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
             android:paddingBottom="11dp"
+            android:paddingEnd="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="11dp"
+            android:textSize="@dimen/subtitle_text_size"
             tools:text="/" />
 
         <TextView
             android:id="@+id/fuzzy_date_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="@dimen/subtitle_text_size"
+            android:gravity="center_horizontal"
             android:inputType="number"
+            android:textSize="@dimen/subtitle_text_size"
             tools:text="1900" />
 
     </LinearLayout>

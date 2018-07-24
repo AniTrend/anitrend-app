@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaList" />
+
+        <variable
+            name="model"
+            type="com.mxt.anitrend.model.entity.anilist.MediaList" />
     </data>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="@string/dialog_title_status"
-                android:layout_gravity="center_vertical|start"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_status" />
 
             <Spinner
-                android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_status"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end" />
 
         </FrameLayout>
 
@@ -40,16 +42,16 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_gravity="center_vertical|start"
-                android:text="@string/dialog_title_score"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_score" />
 
             <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-                android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_score"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end" />
 
         </FrameLayout>
 
@@ -62,16 +64,16 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_gravity="center_vertical|start"
-                android:text="@string/dialog_title_chapters_read"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_chapters_read" />
 
             <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-                android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_chapters"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end" />
 
         </FrameLayout>
 
@@ -84,16 +86,16 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_gravity="center_vertical|start"
-                android:text="@string/dialog_title_volumes_read"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_volumes_read" />
 
             <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-                android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_volumes"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end" />
 
         </FrameLayout>
 
@@ -106,17 +108,38 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_gravity="center_vertical|start"
-                android:text="@string/dialog_title_reread"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_reread" />
 
             <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-                android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_reread"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end" />
 
+        </FrameLayout>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_started_at" />
+
+            <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+                android:id="@+id/dia_current_started_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:clickable="true" />
         </FrameLayout>
 
         <android.support.v4.widget.Space
@@ -128,16 +151,38 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_gravity="center_vertical|start"
-                android:text="@string/dialog_title_private"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_completed_at" />
+
+            <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+                android:id="@+id/dia_current_completed_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:clickable="true" />
+        </FrameLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:text="@string/dialog_title_private" />
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:layout_gravity="center_vertical|end"
                 android:id="@+id/dia_current_privacy"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end" />
 
         </FrameLayout>
 
@@ -151,21 +196,21 @@
 
             <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
                 android:id="@+id/dia_current_notes"
-                android:hint="@string/dialog_hint_enter_your_notes"
-                android:textSize="@dimen/subtitle_text_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/dialog_hint_enter_your_notes"
                 android:inputType="textCapSentences|textAutoComplete|textAutoCorrect"
-                android:text="@{model.notes}" />
+                android:text="@{model.notes}"
+                android:textSize="@dimen/subtitle_text_size" />
 
         </android.support.design.widget.TextInputLayout>
 
         <FrameLayout
-            android:layerType="software"
             android:layout_width="match_parent"
             android:layout_height="@dimen/md_margin"
-            android:background="@drawable/dashed_background" />
+            android:background="@drawable/dashed_background"
+            android:layerType="software" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </layout>

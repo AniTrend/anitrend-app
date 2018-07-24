@@ -61,6 +61,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     /**
      * Saves the current views states into the model
      * and returns a bundle of the params
+     *
      * @see com.mxt.anitrend.util.MediaListUtil
      */
     @Override
@@ -91,13 +92,13 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         // Apply the adapter to the spinner
         binding.diaCurrentStatus.setAdapter(adapter);
 
-        if(!TextUtils.isEmpty(model.getStatus()))
+        if (!TextUtils.isEmpty(model.getStatus()))
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));
         else
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
 
         binding.diaCurrentPrivacy.setChecked(model.isHidden());
-        if(model.getMedia().getEpisodes() > 0)
+        if (model.getMedia().getEpisodes() > 0)
             binding.diaCurrentProgress.setProgressMaximum(model.getMedia().getEpisodes());
 
         binding.diaCurrentScore.setProgressMaximum(100);
@@ -106,6 +107,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
         binding.diaCurrentStartedAt.setDate(model.getStartedAt());
         binding.diaCurrentCompletedAt.setDate(model.getCompletedAt());
+
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
     }
 
@@ -115,7 +117,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     @Override
     public void onViewRecycled() {
         super.onViewRecycled();
-        if(binding != null)
+        if (binding != null)
             binding.unbind();
     }
 
