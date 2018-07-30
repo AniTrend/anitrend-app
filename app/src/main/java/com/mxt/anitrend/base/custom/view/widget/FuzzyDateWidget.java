@@ -75,7 +75,6 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
 
     @Override
     public void onClick(View v) {
-        Log.d("CustomLOG", v.toString());
         Calendar myCalendar = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(getContext(), this, myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
