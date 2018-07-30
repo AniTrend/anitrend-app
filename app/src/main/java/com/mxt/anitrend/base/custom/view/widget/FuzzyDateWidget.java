@@ -24,7 +24,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
 
     private WidgetFuzzyDateBinding binding;
 
-    private int day, month, year;
+    private FuzzyDate fuzzyDate;
 
     public FuzzyDateWidget(Context context) {
         super(context);
@@ -54,20 +54,18 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
     }
 
     public void setDate(FuzzyDate fuzzyDate) {
-        this.day = fuzzyDate.getDay();
-        this.month = fuzzyDate.getMonth();
-        this.year = fuzzyDate.getYear();
+        this.fuzzyDate = fuzzyDate;
         updateDate();
     }
 
     private void updateDate(){
-        binding.fuzzyDateDay.setText(String.valueOf(day));
-        binding.fuzzyDateMonth.setText(String.valueOf(month));
-        binding.fuzzyDateYear.setText(String.valueOf(year));
+        binding.fuzzyDateDay.setText(String.valueOf(fuzzyDate.getDay()));
+        binding.fuzzyDateMonth.setText(String.valueOf(fuzzyDate.getMonth()));
+        binding.fuzzyDateYear.setText(String.valueOf(fuzzyDate.getYear()));
     }
 
     public FuzzyDate getDate() {
-        return new FuzzyDateConverter().convertToEntityProperty(String.format(Locale.getDefault(),"{\"day\":%d,\"month\":%d,\"year\":%d}", day, month, year));
+        return fuzzyDate;
     }
 
     @Override
@@ -87,9 +85,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
 
     @Override
     public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-            this.day = d;
-            this.month = m+1;
-            this.year = y;
+            fuzzyDate.setDate(d, m+1, y);
             updateDate();
     }
 }
