@@ -6,19 +6,16 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.data.converter.FuzzyDateConverter;
 import com.mxt.anitrend.databinding.WidgetFuzzyDateBinding;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.CompatUtil;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnClickListener, DatePickerDialog.OnDateSetListener{
 

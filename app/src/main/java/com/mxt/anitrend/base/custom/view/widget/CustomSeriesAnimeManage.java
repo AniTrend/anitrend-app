@@ -1,6 +1,5 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,19 +9,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionAnimeBinding;
-import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Created by max on 2018/01/03.

@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.mxt.anitrend.data.converter.FuzzyDateConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.base.MediaBase;
