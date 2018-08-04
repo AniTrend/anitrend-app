@@ -63,6 +63,8 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         model.setRepeat(binding.diaCurrentReread.getProgressCurrent());
         model.setProgressVolumes(binding.diaCurrentVolumes.getProgressCurrent());
         model.setScore(binding.diaCurrentScore.getProgressCurrent());
+        model.setStartedAt(binding.diaCurrentStartedAt.getDate());
+        model.setCompletedAt(binding.diaCurrentCompletedAt.getDate());
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
@@ -101,6 +103,8 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         binding.diaCurrentChapters.setProgressCurrent(model.getProgress());
         binding.diaCurrentVolumes.setProgressCurrent(model.getProgressVolumes());
         binding.diaCurrentReread.setProgressCurrent(model.getRepeat());
+        binding.diaCurrentStartedAt.setDate(model.getStartedAt());
+        binding.diaCurrentCompletedAt.setDate(model.getCompletedAt());
 
         binding.diaCurrentStatus.setOnItemSelectedListener(this);
     }

@@ -73,6 +73,8 @@ public interface KeyUtil {
     String arg_listHiddenFromStatusLists = "hiddenFromStatusLists";
     String arg_listAdvancedScore = "advancedScores";
     String arg_listCustom = "customLists";
+    String arg_startedAt = "startedAt";
+    String arg_completedAt = "completedAt";
 
     /** Media Browse Keys */
     String arg_startDateLike = "startDateLike";

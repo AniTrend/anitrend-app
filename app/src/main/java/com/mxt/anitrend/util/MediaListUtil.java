@@ -25,6 +25,8 @@ public class MediaListUtil {
         queryContainer.putVariable(KeyUtil.arg_listPrivate, model.isHidden());
         queryContainer.putVariable(KeyUtil.arg_listPriority, model.getPriority());
         queryContainer.putVariable(KeyUtil.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
+        queryContainer.putVariable(KeyUtil.arg_startedAt, model.getStartedAt());
+        queryContainer.putVariable(KeyUtil.arg_completedAt, model.getCompletedAt());
 
         if(model.getAdvancedScores() != null)
             queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.getAdvancedScores());

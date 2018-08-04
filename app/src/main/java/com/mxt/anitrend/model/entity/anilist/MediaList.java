@@ -232,6 +232,14 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         this.customLists = customLists;
     }
 
+    public void setStartedAt(FuzzyDate startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public void setCompletedAt(FuzzyDate completedAt) {
+        this.completedAt = completedAt;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof MediaList)
