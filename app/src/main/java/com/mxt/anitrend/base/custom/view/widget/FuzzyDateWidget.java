@@ -78,7 +78,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
         DatePickerDialog datePickerDialog;
         if(fuzzyDate != null && fuzzyDate.isValidDate()) {
             datePickerDialog = new DatePickerDialog(getContext(), this,
-                    fuzzyDate.getYear(), fuzzyDate.getMonth() - 1, fuzzyDate.getMonth());
+                    fuzzyDate.getYear(), fuzzyDate.getMonth() - 1, fuzzyDate.getDay());
         } else {
             Calendar calendar = Calendar.getInstance();
             datePickerDialog = new DatePickerDialog(getContext(), this,
