@@ -14,6 +14,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFuzzyDateBinding;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DateUtil;
 
 import java.util.Calendar;
 
@@ -21,7 +22,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
 
     private WidgetFuzzyDateBinding binding;
 
-    private FuzzyDate fuzzyDate;
+    private @Nullable FuzzyDate fuzzyDate;
 
     public FuzzyDateWidget(Context context) {
         super(context);
@@ -50,18 +51,20 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
         binding.setOnClick(this);
     }
 
-    public void setDate(FuzzyDate fuzzyDate) {
+    public void setDate( @Nullable FuzzyDate fuzzyDate) {
         this.fuzzyDate = fuzzyDate;
         updateDate();
     }
 
-    private void updateDate(){
-        binding.fuzzyDateDay.setText(String.valueOf(fuzzyDate.getDay()));
-        binding.fuzzyDateMonth.setText(String.valueOf(fuzzyDate.getMonth()));
-        binding.fuzzyDateYear.setText(String.valueOf(fuzzyDate.getYear()));
+    private void updateDate() {
+        if(fuzzyDate != null) {
+            String convertedDate = DateUtil.convertDate(fuzzyDate);
+            binding.setModel(convertedDate);
+            binding.executePendingBindings();
+        }
     }
 
-    public FuzzyDate getDate() {
+    public @Nullable FuzzyDate getDate() {
         return fuzzyDate;
     }
 
@@ -72,18 +75,25 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
 
     @Override
     public void onClick(View v) {
-        Calendar myCalendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), this, myCalendar
-                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                myCalendar.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
+        DatePickerDialog datePickerDialog;
+        if(fuzzyDate != null && fuzzyDate.isValidDate()) {
+            datePickerDialog = new DatePickerDialog(getContext(), this,
+                    fuzzyDate.getYear(), fuzzyDate.getMonth() - 1, fuzzyDate.getMonth());
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            datePickerDialog = new DatePickerDialog(getContext(), this,
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH));
+        }
+        datePickerDialog.show();
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int y, int m, int d) {
-            fuzzyDate.setDate(d, m+1, y);
-            updateDate();
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        if(fuzzyDate == null)
+            fuzzyDate = new FuzzyDate(day, month + 1, year);
+        else
+            fuzzyDate.setDate(day, month + 1, year);
+        updateDate();
     }
 }
-
-

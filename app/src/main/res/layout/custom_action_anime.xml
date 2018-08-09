@@ -117,8 +117,7 @@
                 android:id="@+id/dia_current_started_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:clickable="true" />
+                android:layout_gravity="center_vertical|end" />
         </FrameLayout>
 
         <android.support.v4.widget.Space
@@ -139,8 +138,7 @@
                 android:id="@+id/dia_current_completed_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:clickable="true" />
+                android:layout_gravity="center_vertical|end" />
         </FrameLayout>
 
         <android.support.v4.widget.Space

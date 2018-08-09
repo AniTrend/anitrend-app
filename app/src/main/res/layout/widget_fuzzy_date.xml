@@ -5,67 +5,40 @@
     tools:context="com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget">
 
     <data>
-
         <variable
             name="onClick"
             type="android.view.View.OnClickListener" />
+        <variable
+            name="model"
+            type="String" />
     </data>
 
     <LinearLayout
         android:id="@+id/fuzzy_date_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_button"
+        android:padding="@dimen/lg_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         android:onClick="@{onClick}">
-
-        <TextView
-            android:id="@+id/fuzzy_date_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center_horizontal"
-            android:inputType="number"
-            android:textSize="@dimen/subtitle_text_size"
-            tools:text="01" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="11dp"
-            android:paddingEnd="0dp"
-            android:paddingStart="0dp"
-            android:paddingTop="11dp"
-            android:textSize="@dimen/subtitle_text_size"
-            tools:text="/" />
-
-        <TextView
-            android:id="@+id/fuzzy_date_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center_horizontal"
-            android:inputType="number"
-            android:textSize="@dimen/subtitle_text_size"
-            tools:text="01" />
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="11dp"
-            android:paddingEnd="0dp"
-            android:paddingStart="0dp"
-            android:paddingTop="11dp"
-            android:textSize="@dimen/subtitle_text_size"
-            tools:text="/" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:text="@{model}"
+            tools:text="@string/TBA" />
 
-        <TextView
-            android:id="@+id/fuzzy_date_year"
-            android:layout_width="wrap_content"
+        <android.widget.Space
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center_horizontal"
-            android:inputType="number"
-            android:textSize="@dimen/subtitle_text_size"
-            tools:text="1900" />
+            android:layout_width="@dimen/lg_margin"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:srcCompat="@drawable/ic_calendar_grey_600_24dp"/>
 
     </LinearLayout>
 </layout>
