@@ -8,7 +8,6 @@ buildscript {
         minSdk = 17
         versionCode = 86
         versionName = '1.2.0'
-        buildTools = '27.0.3'
         butterKnife = '8.8.1'
         glide = '4.7.1'
         retrofit = '2.4.0'

@@ -674,7 +674,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="dialog_title_status">Estado</string>
     <string name="dialog_title_episodes">Episodios</string>
     <string name="dialog_title_rewatched">Repetido</string>
-    <string name="dialog_title_score">Puntaje (0 – 100)</string>
+    <string name="dialog_title_score">Puntaje</string>
     <string name="dialog_title_private">Lista privada</string>
     <string name="dialog_title_increment_episodes">Incrementar episodios</string>
     <string name="dialog_hint_enter_your_notes">Introduce tus apuntes</string>
@@ -933,4 +933,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_title_usage_analytics">Análisis de uso</string>
     <string name="pref_usage_analytics_summary_off">Habilita el análisis de uso (requiere reinicio de la app)</string>
     <string name="pref_usage_analytics_summary_on">Inhabilita el análisis de uso (requiere reinicio de la app)</string>
+
+    <string name="dialog_title_started_at">Start Date</string>
+    <string name="dialog_title_completed_at">Finish Date</string>
 </resources>
