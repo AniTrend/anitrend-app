@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -45,10 +46,13 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
     }
 
     private void actionPicker() {
+        MediaListOptions mediaListOptions = presenter.getDatabase().getCurrentUser().getMediaListOptions();
+
         // No need to add the parameter onList otherwise we'd have to handle an error code 404,
         // Instead we'd rather check if the the media has a non null mediaList item
         QueryContainerBuilder queryContainerBuilder = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_id, mediaId);
+                .putVariable(KeyUtil.arg_id, mediaId)
+                .putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
 
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder);
         presenter.requestData(KeyUtil.MEDIA_WITH_LIST_REQ, context, this);

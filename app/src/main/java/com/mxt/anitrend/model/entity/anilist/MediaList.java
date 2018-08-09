@@ -192,7 +192,7 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         this.status = status;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 
@@ -67,6 +68,10 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
         }
         bindFields();
         populateFields();
+    }
+
+    public MediaListOptions getMediaListOptions() {
+        return presenter.getDatabase().getCurrentUser().getMediaListOptions();
     }
 
     public @NonNull MediaList getModel() {

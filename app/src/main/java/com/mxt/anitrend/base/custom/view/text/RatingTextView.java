@@ -75,7 +75,7 @@ public class RatingTextView extends LinearLayout implements CustomView {
         if(mediaListOptions != null)
             switch (mediaListOptions.getScoreFormat()) {
                 case KeyUtil.POINT_10_DECIMAL:
-                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%.2f", mediaList.getScore()));
+                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%.1f", mediaList.getScore()));
                     break;
                 case KeyUtil.POINT_100:
                 case KeyUtil.POINT_10:
@@ -87,6 +87,9 @@ public class RatingTextView extends LinearLayout implements CustomView {
                         int score = (int)mediaList.getScore();
                         switch (score) {
                             case 0:
+                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                        R.drawable.ic_face_white_18dp), null, null, null);
+                                break;
                             case 1:
                                 binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                                         R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null);

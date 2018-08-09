@@ -62,13 +62,16 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
     public Bundle persistChanges() {
         model.setProgress(binding.diaCurrentProgress.getProgressCurrent());
         model.setRepeat(binding.diaCurrentRewatch.getProgressCurrent());
-        model.setScore(binding.diaCurrentScore.getProgressCurrent());
+
+        model.setScore(binding.diaCurrentScore.getScoreCurrent());
+
         model.setStartedAt(binding.diaCurrentStartedAt.getDate());
         model.setCompletedAt(binding.diaCurrentCompletedAt.getDate());
+
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
-        return MediaListUtil.getMediaListParams(model);
+        return MediaListUtil.getMediaListParams(model, getMediaListOptions().getScoreFormat());
     }
 
     @Override
@@ -95,8 +98,9 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         if (model.getMedia().getEpisodes() > 0)
             binding.diaCurrentProgress.setProgressMaximum(model.getMedia().getEpisodes());
 
-        binding.diaCurrentScore.setProgressMaximum(100);
-        binding.diaCurrentScore.setProgressCurrent((int)model.getScore());
+        binding.diaCurrentScore.setScoreFormat(getMediaListOptions().getScoreFormat());
+        binding.diaCurrentScore.setScoreCurrent(model.getScore());
+
         binding.diaCurrentProgress.setProgressCurrent(model.getProgress());
         binding.diaCurrentRewatch.setProgressCurrent(model.getRepeat());
         binding.diaCurrentStartedAt.setDate(model.getStartedAt());

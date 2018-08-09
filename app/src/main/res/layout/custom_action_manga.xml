@@ -47,7 +47,7 @@
                 android:layout_gravity="center_vertical|start"
                 android:text="@string/dialog_title_score" />
 
-            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+            <com.mxt.anitrend.base.custom.view.widget.ScoreWidget
                 android:id="@+id/dia_current_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

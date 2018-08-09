@@ -63,6 +63,7 @@ public interface KeyUtil {
 
     /** Media List Keys */
     String arg_listStatus = "status";
+    String arg_listScore= "score";
     String arg_listScore_raw = "scoreRaw";
     String arg_listProgress = "progress";
     String arg_listProgressVolumes = "progressVolumes";
