@@ -3,6 +3,7 @@ package com.mxt.anitrend;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.crashlytics.android.core.CrashlyticsListener;
@@ -37,15 +38,12 @@ public class App extends Application {
     }
 
     private void setCrashAnalytics(ApplicationPref pref) {
-        CrashlyticsCore.Builder builder = new CrashlyticsCore.Builder();
-
-        if (!BuildConfig.DEBUG)
-            builder.disabled(pref.isCrashReportsEnabled());
-        else
-            builder.disabled(true);
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG || !pref.isCrashReportsEnabled())
+                .build();
 
         fabric = Fabric.with(new Fabric.Builder(this)
-                .kits(builder.build())
+                .kits(crashlyticsCore)
                 .debuggable(BuildConfig.DEBUG)
                 .appIdentifier(BuildConfig.BUILD_TYPE)
                 .build());
