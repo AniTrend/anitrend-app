@@ -1,5 +1,16 @@
-<!--- Provide a general summary of the issue in the Title above -->
+# AniTrend Issue
 
+Before opening a new issue, please take a moment to review our [**community guidelines**](https://github.com/AniTrend/anitrend-app/blob/master/CONTRIBUTING.md) to make the contribution process easy and effective for everyone involved.
+
+**Before opening a new issue, you may find an answer in already closed issues**:
+https://github.com/AniTrend/anitrend-app/issues?q=is%3Aissue+is%3Aclosed
+
+
+## Issue Type
+<!--- Tell us what should happen -->
+
+- [ ] Bug
+- [ ] Feature
 
 # Expected Behavior
 <!--- Tell us what should happen -->
@@ -36,5 +47,5 @@ Please provide any relevant information about your device. This is important in 
 * Phone Brand:
 
 ## Failure Logs
+<!--- Please include any relevant log snippets or files here, if any otherwise remove this heading section -->
 
-Please include any relevant log snippets or files here, if any otherwise remove this heading section

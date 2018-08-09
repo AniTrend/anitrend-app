@@ -192,7 +192,7 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         this.status = status;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 
@@ -230,6 +230,14 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
 
     public void setCustomLists(List<CustomList> customLists) {
         this.customLists = customLists;
+    }
+
+    public void setStartedAt(FuzzyDate startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public void setCompletedAt(FuzzyDate completedAt) {
+        this.completedAt = completedAt;
     }
 
     @Override

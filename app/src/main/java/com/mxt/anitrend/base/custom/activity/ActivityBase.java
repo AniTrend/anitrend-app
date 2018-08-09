@@ -53,7 +53,7 @@ import butterknife.BindView;
 
 /**
  * Created by max on 2017/06/09.
- * Activity base <T type of data model, S extends CommonPresenter>
+ * Activity base <M type of data model, P extends CommonPresenter>
  */
 
 public abstract class ActivityBase<M, P extends CommonPresenter> extends AppCompatActivity implements Observer<M>, CommonPresenter.AbstractPresenter<P>,
