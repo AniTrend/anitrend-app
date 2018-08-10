@@ -15,6 +15,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.crunchy.MediaContent;
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail;
+import com.mxt.anitrend.service.AuthenticatorService;
 import com.mxt.anitrend.service.TagGenreService;
 import com.mxt.anitrend.util.CompatUtil;
 
@@ -146,7 +147,8 @@ public class BasePresenter extends CommonPresenter {
             if(databaseHelper.getCurrentUser() == null) {
                 Log.e("checkValidAuth", "Last attempt to authenticate failed, refreshing session!");
                 WebTokenRequest.invalidateInstance(getContext());
-            }
+            } else
+                getContext().startService(new Intent(getContext(), AuthenticatorService.class));
         }
     }
 }

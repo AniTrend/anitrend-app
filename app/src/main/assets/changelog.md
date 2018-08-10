@@ -5,19 +5,11 @@
 - Take a moment to give us your [feedback](https://poll.ly/#/PEA4x1Wg), thank you.
 
 ### Enhancements
-- New polish translation
-- Improved suggestions algorithm
-- Consistent design for your media lists and airing anime
-- Support for GIF images from keyboards such as Google Keyboard
-- Lazy loading for series pages to just 3 tabs inclusive (because of too many requests)
+- Amoled theme, find option in settings then use the toggle theme entry
+- Changeable application language, find this option in settings
 
 ### Bug Fixes
-- Incorrect review ratings
-- Favourites for any new anime/manga
-- A couple of random crashes have been fixed
-- Actor roles now visible in character page
-- Inverted title sort for your media lists
-- Arabic translation related crashes
+-
 
 ### Current Issues
 - Clicking on @username shows mixed feed

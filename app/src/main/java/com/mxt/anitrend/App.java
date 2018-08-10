@@ -1,13 +1,16 @@
 package com.mxt.anitrend;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.crashlytics.android.core.CrashlyticsListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.LocaleHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -35,15 +38,12 @@ public class App extends Application {
     }
 
     private void setCrashAnalytics(ApplicationPref pref) {
-        CrashlyticsCore.Builder builder = new CrashlyticsCore.Builder();
-
-        if (!BuildConfig.DEBUG)
-            builder.disabled(pref.isCrashReportsEnabled());
-        else
-            builder.disabled(true);
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG || !pref.isCrashReportsEnabled())
+                .build();
 
         fabric = Fabric.with(new Fabric.Builder(this)
-                .kits(builder.build())
+                .kits(crashlyticsCore)
                 .debuggable(BuildConfig.DEBUG)
                 .appIdentifier(BuildConfig.BUILD_TYPE)
                 .build());
@@ -67,6 +67,11 @@ public class App extends Application {
         setCrashAnalytics(pref);
         setupBoxStore();
         initApp(pref);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base));
     }
 
     /**

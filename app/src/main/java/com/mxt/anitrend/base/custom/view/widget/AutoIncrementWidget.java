@@ -149,7 +149,9 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         model.setProgress(model.getProgress() + 1);
         if(MediaUtil.isIncrementLimitReached(model))
             model.setStatus(KeyUtil.COMPLETED);
-        presenter.setParams(MediaListUtil.getMediaListParams(model));
+
+        presenter.setParams(MediaListUtil.getMediaListParams(model, presenter.getDatabase()
+                .getCurrentUser().getMediaListOptions().getScoreFormat()));
         presenter.requestData(requestType, getContext(), this);
     }
 }

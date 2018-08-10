@@ -673,7 +673,7 @@
     <string name="dialog_title_status">Status</string>
     <string name="dialog_title_episodes">Odcinki</string>
     <string name="dialog_title_rewatched">Ponownie Obejrzane</string>
-    <string name="dialog_title_score">Ocena (0 – 100)</string>
+    <string name="dialog_title_score">Ocena</string>
     <string name="dialog_title_private">Prywatne</string>
     <string name="dialog_title_increment_episodes">Zwiększ odcinki</string>
     <string name="dialog_hint_enter_your_notes">Wprowadź swoje notatki</string>
@@ -937,4 +937,7 @@
     <string name="pref_title_usage_analytics">Analityka użytkowania</string>
     <string name="pref_usage_analytics_summary_off">Włącz Analityke użytkowania (wymaga ponownego uruchomienia aplikacji)</string>
     <string name="pref_usage_analytics_summary_on">Wyłącz Analityke użytkowania (wymaga ponownego uruchomienia aplikacji)</string>
+
+    <string name="dialog_title_started_at">Start Date</string>
+    <string name="dialog_title_completed_at">Finish Date</string>
 </resources>

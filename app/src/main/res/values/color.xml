@@ -10,6 +10,10 @@
     <color name="colorPrimaryDarker">#182128</color>
     <color name="colorAccentDark">#009688</color>
 
+    <!-- Color AMODark -->
+    <color name="colorBlack">#101010</color>
+    <color name="colorPrimaryBlack">#000000</color>
+
     <color name="colorGreyLight">#fafafa</color>
     <color name="colorAliceBlue">#FBFCFD</color>
     <color name="colorCornflowerBlue">#54A5FA</color>

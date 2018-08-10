@@ -3,10 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable name="rating" type="String" />
-    </data>
-
     <LinearLayout
         android:background="@drawable/rating_bubble"
         android:orientation="horizontal"
@@ -14,12 +10,12 @@
         android:layout_height="wrap_content">
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:id="@+id/rating_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="9sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:text="@{rating}"
             tools:text="4.35"/>
 
         <android.support.v4.widget.Space

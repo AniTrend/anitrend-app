@@ -4,7 +4,6 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.compileSdk
-    buildToolsVersion rootProject.buildTools
     defaultConfig {
         applicationId "com.mxt.anitrend"
         minSdkVersion rootProject.minSdk

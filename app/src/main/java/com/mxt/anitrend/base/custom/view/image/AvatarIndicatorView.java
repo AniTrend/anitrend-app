@@ -63,14 +63,12 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     private void checkLastSyncTime() {
         if(presenter.getApplicationPref().isAuthenticated()) {
             if((currentUser = presenter.getDatabase().getCurrentUser()) != null) {
+                AvatarImageView.setImage(binding.userAvatar, currentUser.getAvatar());
                 if (currentUser.getUnreadNotificationCount() > 0) {
                     binding.notificationCount.setText(String.valueOf(currentUser.getUnreadNotificationCount()));
                     showNotificationWidget();
                 } else
                     hideNotificationCountWidget();
-
-                AvatarImageView.setImage(binding.userAvatar, currentUser.getAvatar());
-                invalidate();
             } else
                 hideNotificationCountWidget();
         }
@@ -94,11 +92,15 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     private void showNotificationWidget() {
         binding.notificationCount.setVisibility(VISIBLE);
         binding.container.setVisibility(VISIBLE);
+        binding.executePendingBindings();
+        invalidate();
     }
 
     private void hideNotificationCountWidget() {
         binding.notificationCount.setVisibility(GONE);
         binding.container.setVisibility(GONE);
+        binding.executePendingBindings();
+        invalidate();
     }
 
     @Override

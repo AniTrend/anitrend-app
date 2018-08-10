@@ -120,12 +120,12 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
             binding.unbind();
         }
 
-        @Override @OnClick(R.id.series_image)
+        @Override @OnClick({R.id.series_image, R.id.container})
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.series_image)
+        @Override @OnLongClick({R.id.series_image, R.id.container})
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }

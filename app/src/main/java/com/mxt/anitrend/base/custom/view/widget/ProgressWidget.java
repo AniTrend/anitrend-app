@@ -20,10 +20,11 @@ import java.util.Locale;
 
 public class ProgressWidget extends FrameLayout implements CustomView, View.OnClickListener, TextWatcher {
 
-    private WidgetProgressBinding binding;
-
     private int progressMaximum, progressCurrent;
-    private boolean isNotDirectInput;
+
+    protected WidgetProgressBinding binding;
+    protected boolean isNotDirectInput;
+    protected float deltaFactor;
 
     public ProgressWidget(Context context) {
         super(context);
@@ -55,6 +56,14 @@ public class ProgressWidget extends FrameLayout implements CustomView, View.OnCl
         binding.progressCurrent.setTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.contentColor));
         binding.progressMaximum.setVisibility(GONE);
         binding.setOnClick(this);
+        setDefaultDeltaFactor();
+    }
+
+    /**
+     * Sets the default delta value for manipulating scores or progress
+     */
+    protected void setDefaultDeltaFactor() {
+        deltaFactor = 1;
     }
 
     public void setProgressMaximum(int progressMaximum) {
@@ -120,12 +129,12 @@ public class ProgressWidget extends FrameLayout implements CustomView, View.OnCl
         switch (v.getId()) {
             case R.id.progress_increment:
                 isNotDirectInput = true;
-                progressChange(progressCurrent + 1);
+                progressChange(progressCurrent + (int)deltaFactor);
                 isNotDirectInput = false;
                 break;
             case R.id.progress_decrement:
                 isNotDirectInput = true;
-                progressChange(progressCurrent - 1);
+                progressChange(progressCurrent - (int)deltaFactor);
                 isNotDirectInput = false;
                 break;
         }

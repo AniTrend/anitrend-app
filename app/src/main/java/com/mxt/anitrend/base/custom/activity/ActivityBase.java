@@ -2,6 +2,7 @@ package com.mxt.anitrend.base.custom.activity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -36,6 +37,7 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.LocaleHelper;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
@@ -51,7 +53,7 @@ import butterknife.BindView;
 
 /**
  * Created by max on 2017/06/09.
- * Activity base <T type of data model, S extends CommonPresenter>
+ * Activity base <M type of data model, P extends CommonPresenter>
  */
 
 public abstract class ActivityBase<M, P extends CommonPresenter> extends AppCompatActivity implements Observer<M>, CommonPresenter.AbstractPresenter<P>,
@@ -89,8 +91,17 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      * @see ActivityBase#setNavigationStyle()
      */
     protected void configureActivity() {
-        setTheme((style = new ApplicationPref(this).getTheme()));
+        ApplicationPref applicationPref = new ApplicationPref(this);
+        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isAmoledEnabled())
+            setTheme(R.style.AppThemeBlack);
+        else
+            setTheme(style);
         setNavigationStyle();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base));
     }
 
     @Override

@@ -10,6 +10,8 @@ import android.support.annotation.StyleRes;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 
+import java.util.Locale;
+
 /**
  * Created by max on 2017/09/16.
  * Application preferences
@@ -27,19 +29,20 @@ public class ApplicationPref {
     /** Application Base Options */
     public static final String _isLightTheme = "_isLightTheme";
     public static final String _updateChannel = "_updateChannel";
+    public static final String _isAmoledTheme = "_isAmoledTheme";
 
     /** Api Keys */
-    private final String _sortOrder = "_sortOrder";
-    private final String _mediaStatus = "_mediaStatus";
-    private final String _mediaFormat = "_mediaFormat";
-    private final String _mediaSource = "_mediaSource";
-    private final String _airingSort = "_airingSort";
-    private final String _characterSort = "_characterSort";
-    private final String _mediaListSort = "_mediaListSort";
-    private final String _mediaSort = "_mediaSort";
-    private final String _mediaTrendSort = "_mediaTrendSort";
-    private final String _reviewSort = "_reviewSort";
-    private final String _staffSort = "_staffSort";
+    private static final String _sortOrder = "_sortOrder";
+    private static final String _mediaStatus = "_mediaStatus";
+    private static final String _mediaFormat = "_mediaFormat";
+    private static final String _mediaSource = "_mediaSource";
+    private static final String _airingSort = "_airingSort";
+    private static final String _characterSort = "_characterSort";
+    public static final String _mediaListSort = "_mediaListSort";
+    private static final String _mediaSort = "_mediaSort";
+    private static final String _mediaTrendSort = "_mediaTrendSort";
+    private static final String _reviewSort = "_reviewSort";
+    private static final String _staffSort = "_staffSort";
 
     private SharedPreferences sharedPreferences;
 
@@ -71,6 +74,10 @@ public class ApplicationPref {
     public @StyleRes int getTheme() {
         @StyleRes int style = sharedPreferences.getInt(_isLightTheme, R.style.AppThemeLight);
         return style;
+    }
+
+    public boolean isAmoledEnabled() {
+        return sharedPreferences.getBoolean(_isAmoledTheme, false);
     }
 
     // Returns the IDs of the startup page
@@ -107,6 +114,10 @@ public class ApplicationPref {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(_freshInstall, false);
         editor.apply();
+    }
+
+    public String getUserLanguage() {
+            return sharedPreferences.getString(context.getString(R.string.pref_key_selected_Language), Locale.getDefault().getLanguage());
     }
 
     //Returns amount of time in seconds

@@ -63,6 +63,7 @@ public interface KeyUtil {
 
     /** Media List Keys */
     String arg_listStatus = "status";
+    String arg_listScore= "score";
     String arg_listScore_raw = "scoreRaw";
     String arg_listProgress = "progress";
     String arg_listProgressVolumes = "progressVolumes";
@@ -73,6 +74,8 @@ public interface KeyUtil {
     String arg_listHiddenFromStatusLists = "hiddenFromStatusLists";
     String arg_listAdvancedScore = "advancedScores";
     String arg_listCustom = "customLists";
+    String arg_startedAt = "startedAt";
+    String arg_completedAt = "completedAt";
 
     /** Media Browse Keys */
     String arg_startDateLike = "startDateLike";
@@ -447,6 +450,20 @@ public interface KeyUtil {
 
     @StringDef({ADAPTATION, PREQUEL, SEQUEL, PARENT, SIDE_STORY, CHARACTER, SUMMARY, ALTERNATIVE, SPIN_OFF, OTHER})
     @interface MediaRelation {}
+
+    // ------------------------------------------------------------------------------------
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Profile Colors
+    // ------------------------------------------------------------------------------------
+
+    String BLUE = "blue", PURPLE = "purple", PINK = "pink", ORANGE = "orange",
+            RED = "red", GREEN = "green", GREY = "gray";
+
+    @StringDef({BLUE, PURPLE, PINK, ORANGE, RED, GREEN, GREY})
+    @interface ProfileColor {}
 
     // ------------------------------------------------------------------------------------
 

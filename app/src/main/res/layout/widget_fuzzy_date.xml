@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget">
+
+    <data>
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="model"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/fuzzy_date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_button"
+        android:padding="@dimen/lg_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:onClick="@{onClick}">
+
+        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:text="@{model}"
+            tools:text="@string/TBA" />
+
+        <android.widget.Space
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/lg_margin"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:srcCompat="@drawable/ic_calendar_grey_600_24dp"/>
+
+    </LinearLayout>
+</layout>

@@ -674,7 +674,7 @@
     <string name="dialog_title_status">الحالة</string>
     <string name="dialog_title_episodes">الحلقات التي تم مشاهدتها</string>
     <string name="dialog_title_rewatched">إعادة المشاهدة</string>
-    <string name="dialog_title_score">التقييم (من 0 إلى 100)</string>
+    <string name="dialog_title_score">التقييم</string>
     <string name="dialog_title_private">خاص</string>
     <string name="dialog_title_increment_episodes">زيادة الحلقات</string>
     <string name="dialog_hint_enter_your_notes">أكتب ملاحظاتك</string>
@@ -933,4 +933,7 @@
     <string name="pref_title_usage_analytics">Usage Analytics</string>
     <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
     <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
+
+    <string name="dialog_title_started_at">Start Date</string>
+    <string name="dialog_title_completed_at">Finish Date</string>
 </resources>
