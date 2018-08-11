@@ -5,12 +5,15 @@
 - Take a moment to give us your [feedback](https://poll.ly/#/PEA4x1Wg), thank you.
 
 ### Enhancements
-- Amoled theme, find option in settings then use the toggle theme entry
-- Changeable application language, find this option in settings
+- New amoled theme: __Settings -> General__
+- New changeable application language: __Settings -> General__
+- New personalised score types based on your profile settings
+- New start and end dates for your anime/manga lists
 
 ### Bug Fixes
--
+- What??? Do you seriously expect us to fix any bugs!? Look just enjoy the app, they're all features!
 
 ### Current Issues
 - Clicking on @username shows mixed feed
-- Emojis have been disabled. _New AniList site doesn't support them anymore_
+- Sometimes image slide count doesn't change when you scroll slowly in feeds
+- Notifications don't always work (We don't have an ETA for a fix at the moment, please bear with us)
