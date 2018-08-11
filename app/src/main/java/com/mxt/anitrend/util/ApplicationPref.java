@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 
@@ -29,7 +30,6 @@ public class ApplicationPref {
     /** Application Base Options */
     public static final String _isLightTheme = "_isLightTheme";
     public static final String _updateChannel = "_updateChannel";
-    public static final String _isAmoledTheme = "_isAmoledTheme";
 
     /** Api Keys */
     private static final String _sortOrder = "_sortOrder";
@@ -77,7 +77,7 @@ public class ApplicationPref {
     }
 
     public boolean isAmoledEnabled() {
-        return sharedPreferences.getBoolean(_isAmoledTheme, false);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_amoled_theme), false);
     }
 
     // Returns the IDs of the startup page

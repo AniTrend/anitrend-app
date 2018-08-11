@@ -43,6 +43,7 @@ public class DatabaseHelper implements BoxQuery {
      * @param classType Type of class which must not be a list instance
      * @return Box of type class requested
      */
+    @Override
     public <S> Box<S> getBoxStore(Class<S> classType) {
         if(boxStore == null)
             boxStore = ((App)context.getApplicationContext()).getBoxStore();
@@ -50,8 +51,9 @@ public class DatabaseHelper implements BoxQuery {
     }
 
     /**
-     * When logging out of the application
+     * Used when the application is logging out a user preferably
      */
+    @Override
     public void invalidateBoxStores() {
         getBoxStore(WebToken.class).removeAll();
         getBoxStore(AuthBase.class).removeAll();

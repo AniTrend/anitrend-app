@@ -37,7 +37,7 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.LocaleHelper;
+import com.mxt.anitrend.util.LocaleUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
@@ -101,7 +101,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base));
+        super.attachBaseContext(LocaleUtil.onAttach(base));
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.annimon.stream.Stream;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
@@ -50,7 +49,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDown.convertLink(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.convertLink(editText.getText()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -75,7 +74,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDown.convertImage(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.convertImage(editText.getText()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -100,7 +99,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDown.convertYoutube(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.convertYoutube(editText.getText()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -125,7 +124,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDown.convertVideo(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.convertVideo(editText.getText()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -166,7 +165,7 @@ public class DialogUtil {
         createDefaultDialog(context).title(title)
                 .positiveText(R.string.Close)
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDown.convert(content))
+                .content(MarkDownUtil.convert(content))
                 .autoDismiss(true).show();
     }
 
@@ -176,7 +175,7 @@ public class DialogUtil {
                 .negativeText(negative)
                 .neutralText(neutral)
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDown.convert(content))
+                .content(MarkDownUtil.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
 
@@ -185,7 +184,7 @@ public class DialogUtil {
                 .positiveText(positive)
                 .negativeText(negative)
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDown.convert(content))
+                .content(MarkDownUtil.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
 

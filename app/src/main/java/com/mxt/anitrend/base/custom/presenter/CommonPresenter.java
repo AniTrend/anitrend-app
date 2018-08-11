@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener;
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.util.ApplicationPref;
@@ -21,7 +22,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
 
     private Bundle bundle;
     private Context context;
-    private DatabaseHelper databaseHelper;
+    private BoxQuery databaseHelper;
     private ApplicationPref applicationPref;
     
     public CommonPresenter(Context context) {
@@ -42,7 +43,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
         this.bundle = bundle;
     }
 
-    public DatabaseHelper getDatabase() {
+    public BoxQuery getDatabase() {
         if(databaseHelper == null)
             databaseHelper = new DatabaseHelper(context);
         return databaseHelper;

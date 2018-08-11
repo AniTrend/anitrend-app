@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.activity.index;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -26,7 +25,7 @@ import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.ShortcutHelper;
+import com.mxt.anitrend.util.ShortcutUtil;
 
 /**
  * Created by max on 2017/11/03.
@@ -100,19 +99,19 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             Bundle SHORTCUT_PROFILE_BUNDLE = new Bundle();
             SHORTCUT_PROFILE_BUNDLE.putString(KeyUtil.arg_userName, model.getName());
 
-            ShortcutHelper.createShortcuts(LoginActivity.this,
-                    new ShortcutHelper.ShortcutBuilder()
+            ShortcutUtil.createShortcuts(LoginActivity.this,
+                    new ShortcutUtil.ShortcutBuilder()
                             .setShortcutType(KeyUtil.SHORTCUT_NOTIFICATION)
                             .build(),
-                    new ShortcutHelper.ShortcutBuilder()
+                    new ShortcutUtil.ShortcutBuilder()
                             .setShortcutType(KeyUtil.SHORTCUT_MY_ANIME)
                             .setShortcutParams(SHORTCUT_MY_ANIME_BUNDLE)
                             .build(),
-                    new ShortcutHelper.ShortcutBuilder()
+                    new ShortcutUtil.ShortcutBuilder()
                             .setShortcutType(KeyUtil.SHORTCUT_MY_MANGA)
                             .setShortcutParams(SHORTCUT_MY_MANGA_BUNDLE)
                             .build(),
-                    new ShortcutHelper.ShortcutBuilder()
+                    new ShortcutUtil.ShortcutBuilder()
                             .setShortcutType(KeyUtil.SHORTCUT_PROFILE)
                             .setShortcutParams(SHORTCUT_PROFILE_BUNDLE)
                             .build());

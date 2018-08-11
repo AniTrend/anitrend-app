@@ -15,7 +15,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter;
 import com.mxt.anitrend.base.custom.async.ThreadPool;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.NotificationHistory;
@@ -78,8 +77,8 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
 
         //Testing notifications by forcing the notification dispatcher
         /*for (int i = 0; i < 3; i++)
-            NotificationDispatcher.createNotification(getContext(), new ArrayList<>(model.subList(i, i + 1)));*/
-        // NotificationDispatcher.createNotification(getContext(), new ArrayList<>(model.subList(5, 6)));
+            NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(i, i + 1)));*/
+        // NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(5, 6)));
     }
 
     @Override
@@ -167,13 +166,11 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
      * @see ThreadPool
      */
     private void markAllNotificationsAsRead() {
-        DatabaseHelper databaseHelper = getPresenter().getDatabase();
-
         List<NotificationHistory> notificationHistories = Stream.of(mAdapter.getData())
                 .map(notification -> new NotificationHistory(notification.getId()))
                 .toList();
 
-        databaseHelper.getBoxStore(NotificationHistory.class)
+        getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
                 .put(notificationHistories);
 
         if (getActivity() != null)

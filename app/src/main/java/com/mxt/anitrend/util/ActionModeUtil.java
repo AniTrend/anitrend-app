@@ -18,7 +18,7 @@ import java.util.List;
  * Custom action mode holder class
  */
 
-public class ActionModeHelper<T> {
+public class ActionModeUtil<T> {
 
     private boolean isEnabled;
     private ActionMode mActionMode;
@@ -27,7 +27,7 @@ public class ActionModeHelper<T> {
     private final List<T> mSelectedItems;
     private final ActionModeListener modeListener;
 
-    public ActionModeHelper(ActionModeListener modeListener, boolean isEnabled) {
+    public ActionModeUtil(ActionModeListener modeListener, boolean isEnabled) {
         this.modeListener = modeListener;
         this.mSelectedItems = new ArrayList<>();
         this.isEnabled = isEnabled;

@@ -15,7 +15,7 @@ import java.util.Locale;
  *
  * Created by gunhansancar on 07/10/15.
  */
-public class LocaleHelper {
+public class LocaleUtil {
 
     public static Context onAttach(Context context) {
         String language = new ApplicationPref(context).getUserLanguage();

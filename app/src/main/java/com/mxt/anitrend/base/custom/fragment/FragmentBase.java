@@ -29,10 +29,9 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
-import com.mxt.anitrend.util.ActionModeHelper;
+import com.mxt.anitrend.util.ActionModeUtil;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
-import com.mxt.anitrend.util.TutorialUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -44,7 +43,7 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     protected boolean isFilterable, isPager, isMenuDisabled, isFeed, hasSubscriber;
 
     private @MenuRes int inflateMenu;
-    private ActionModeHelper<M> actionMode;
+    private ActionModeUtil<M> actionMode;
     protected ViewModelBase<VM> viewModel;
     private CommonPresenter presenter;
     protected MediaActionUtil mediaActionUtil;
@@ -265,10 +264,10 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     public abstract void onChanged(@Nullable VM model);
 
     protected void setActionModeEnabled(boolean isEnabled) {
-        this.actionMode = new ActionModeHelper<>(this, isEnabled);
+        this.actionMode = new ActionModeUtil<>(this, isEnabled);
     }
 
-    protected ActionModeHelper<M> getActionMode() {
+    protected ActionModeUtil<M> getActionMode() {
         return actionMode;
     }
 

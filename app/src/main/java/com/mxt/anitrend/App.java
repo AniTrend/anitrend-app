@@ -3,14 +3,12 @@ package com.mxt.anitrend;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.crashlytics.android.core.CrashlyticsListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
-import com.mxt.anitrend.util.LocaleHelper;
+import com.mxt.anitrend.util.LocaleUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -71,7 +69,7 @@ public class App extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base));
+        super.attachBaseContext(LocaleUtil.onAttach(base));
     }
 
     /**

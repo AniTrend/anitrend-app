@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.data.DatabaseHelper;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
@@ -15,7 +16,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.JobSchedulerUtil;
-import com.mxt.anitrend.util.ShortcutHelper;
+import com.mxt.anitrend.util.ShortcutUtil;
 
 import java.util.concurrent.ExecutionException;
 
@@ -46,7 +47,7 @@ public class WebTokenRequest {
         WebFactory.invalidate();
         token = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-            ShortcutHelper.removeAllDynamicShortcuts(context);
+            ShortcutUtil.removeAllDynamicShortcuts(context);
         AnalyticsUtil.clearSession();
     }
 
@@ -91,9 +92,9 @@ public class WebTokenRequest {
         WebToken authenticatedToken = new AuthenticationCodeAsync().execute(code).get();
         if(authenticatedToken != null) {
             createNewTokenReference(authenticatedToken);
-            DatabaseHelper databaseHelper = new DatabaseHelper(context);
-            databaseHelper.saveWebToken(authenticatedToken);
-            databaseHelper.saveAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
+            BoxQuery boxQuery = new DatabaseHelper(context);
+            boxQuery.saveWebToken(authenticatedToken);
+            boxQuery.saveAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
             return true;
         }
         return false;

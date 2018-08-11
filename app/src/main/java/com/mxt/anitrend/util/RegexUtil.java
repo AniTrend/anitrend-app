@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * Created by max on 2017/04/08.
  * Pattern matcher uses regex to return possible matches for media types
  */
-public class PatternMatcher {
+public class RegexUtil {
 
     public static final String KEY_IMG = "img";
     public static final String KEY_WEB = "webm";

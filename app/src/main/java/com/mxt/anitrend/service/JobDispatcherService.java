@@ -9,7 +9,7 @@ import com.mxt.anitrend.base.custom.async.NotificationSyncTask;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotificationDispatcher;
+import com.mxt.anitrend.util.NotificationUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -72,8 +72,8 @@ public class JobDispatcherService extends JobService implements BaseConsumer.onR
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<User> consumer) {
         if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ && consumer.getChangeModel() != null) {
-            NotificationDispatcher.createNotification(getApplicationContext(), consumer.getChangeModel().getUnreadNotificationCount());
-            jobFinished(job, false);
+            NotificationUtil.createNotification(getApplicationContext(), consumer.getChangeModel().getUnreadNotificationCount());
+            jobFinished(job, true);
         } else
             jobFinished(job, true);
     }

@@ -13,8 +13,8 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.util.MarkDown;
-import com.mxt.anitrend.util.PatternMatcher;
+import com.mxt.anitrend.util.MarkDownUtil;
+import com.mxt.anitrend.util.RegexUtil;
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.RichType;
 import com.zzhoujay.richtext.ig.DefaultImageGetter;
@@ -56,14 +56,14 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
 
     @BindingAdapter("markDown")
     public static void markDown(RichMarkdownTextView richMarkdownTextView, String markdown) {
-        String strippedText = PatternMatcher.removeTags(markdown);
-        Spanned markdownSpan = MarkDown.convert(strippedText, richMarkdownTextView.getContext(), richMarkdownTextView);
+        String strippedText = RegexUtil.removeTags(markdown);
+        Spanned markdownSpan = MarkDownUtil.convert(strippedText, richMarkdownTextView.getContext(), richMarkdownTextView);
         richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 
     @BindingAdapter("textHtml")
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, String html) {
-        Spanned markdownSpan = MarkDown.convert(html, richMarkdownTextView.getContext(), richMarkdownTextView);
+        Spanned markdownSpan = MarkDownUtil.convert(html, richMarkdownTextView.getContext(), richMarkdownTextView);
         richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 
@@ -76,21 +76,21 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
     @BindingAdapter("textHtml")
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, @StringRes int resId) {
         String text = richMarkdownTextView.getContext().getString(resId);
-        Spanned markdownSpan = MarkDown.convert(text, richMarkdownTextView.getContext(), richMarkdownTextView);
+        Spanned markdownSpan = MarkDownUtil.convert(text, richMarkdownTextView.getContext(), richMarkdownTextView);
         richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 
     @BindingAdapter("richMarkDown")
     public static void richMarkDown(RichMarkdownTextView richMarkdownTextView, String markdown) {
-        RichText.from(PatternMatcher.convertToStandardMarkdown(markdown))
+        RichText.from(RegexUtil.convertToStandardMarkdown(markdown))
                 .imageGetter(new DefaultImageGetter())
                 .bind(richMarkdownTextView.getContext())
                 .type(RichType.markdown).into(richMarkdownTextView);
     }
 
     public void setMarkDownText(String markDownText) {
-        String strippedText = PatternMatcher.removeTags(markDownText);
-        Spanned markdownSpan = MarkDown.convert(strippedText, getContext(), this);
+        String strippedText = RegexUtil.removeTags(markDownText);
+        Spanned markdownSpan = MarkDownUtil.convert(strippedText, getContext(), this);
         setText(markdownSpan, TextView.BufferType.SPANNABLE);
     }
 }

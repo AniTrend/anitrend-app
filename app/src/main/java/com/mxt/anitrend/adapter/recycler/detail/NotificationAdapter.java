@@ -94,7 +94,8 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
             binding.notificationTime.setText(DateUtil.getPrettyDateUnix(model.getCreatedAt()));
 
             if(!CompatUtil.equals(model.getType(), KeyUtil.AIRING))
-                AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar().getLarge());
+                if(model.getUser() != null && model.getUser().getAvatar() != null)
+                    AspectImageView.setImage(binding.notificationImg, model.getUser().getAvatar().getLarge());
             else
                 AspectImageView.setImage(binding.notificationImg, model.getMedia().getCoverImage().getLarge());
 
