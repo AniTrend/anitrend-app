@@ -28,7 +28,7 @@ import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.N_MR1)
 @RequiresApi(Build.VERSION_CODES.N_MR1)
-public class ShortcutHelper {
+public class ShortcutUtil {
 
     private static <S> Intent createIntentAction(Context context, Class<S> targetActivity, Bundle param) {
         Intent intent = new Intent(context, targetActivity);

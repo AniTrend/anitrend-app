@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
-import com.mxt.anitrend.util.ActionModeHelper;
+import com.mxt.anitrend.util.ActionModeUtil;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    private ActionModeHelper<T> callback;
+    private ActionModeUtil<T> callback;
 
     /**
      * Default constructor which includes binding with butter knife
@@ -116,7 +116,7 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
         return (callback == null || !callback.onItemLongClick(this, clicked));
     }
 
-    void setActionMode(ActionModeHelper<T> actionModeHelper) {
-        callback = actionModeHelper;
+    void setActionMode(ActionModeUtil<T> actionModeUtil) {
+        callback = actionModeUtil;
     }
 }

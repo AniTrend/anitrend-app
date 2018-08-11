@@ -8,7 +8,7 @@ import android.util.Log;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
-import com.mxt.anitrend.data.DatabaseHelper;
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.model.entity.anilist.meta.FormatStats;
 import com.mxt.anitrend.model.entity.anilist.meta.GenreStats;
@@ -143,8 +143,8 @@ public class BasePresenter extends CommonPresenter {
 
     public void checkValidAuth() {
         if(getApplicationPref().isAuthenticated()) {
-            DatabaseHelper databaseHelper = getDatabase();
-            if(databaseHelper.getCurrentUser() == null) {
+            BoxQuery boxQuery = getDatabase();
+            if(boxQuery.getCurrentUser() == null) {
                 Log.e("checkValidAuth", "Last attempt to authenticate failed, refreshing session!");
                 WebTokenRequest.invalidateInstance(getContext());
             } else

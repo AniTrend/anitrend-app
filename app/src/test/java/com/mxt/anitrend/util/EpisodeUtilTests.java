@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EpisodeHelperTests {
+public class EpisodeUtilTests {
 
 
     @Test
@@ -28,7 +28,7 @@ public class EpisodeHelperTests {
 
         List<ExternalLink> links = Collections.singletonList(link);
 
-        assertThat(EpisodeHelper.episodeSupport(links), equalTo(show + ".rss"));
+        assertThat(EpisodeUtil.episodeSupport(links), equalTo(show + ".rss"));
 
     }
 
@@ -40,7 +40,7 @@ public class EpisodeHelperTests {
         when(link.getUrl()).thenReturn(url);
         List<ExternalLink> links = Collections.singletonList(link);
 
-        assertThat(EpisodeHelper.episodeSupport(links), equalTo(url));
+        assertThat(EpisodeUtil.episodeSupport(links), equalTo(url));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class EpisodeHelperTests {
         when(link2.getUrl()).thenReturn(feedUrl);
         List<ExternalLink> links = Arrays.asList(link1, link2);
 
-        assertThat(EpisodeHelper.episodeSupport(links),
+        assertThat(EpisodeUtil.episodeSupport(links),
                 is(anyOf(
                         equalTo(show + ".rss"),
                         equalTo(feedUrl)
@@ -75,6 +75,6 @@ public class EpisodeHelperTests {
         when(link2.getUrl()).thenReturn(twitter);
         List<ExternalLink> links = Arrays.asList(link1, link2);
 
-        assertThat(EpisodeHelper.episodeSupport(links), nullValue());
+        assertThat(EpisodeUtil.episodeSupport(links), nullValue());
     }
 }

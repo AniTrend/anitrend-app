@@ -10,7 +10,7 @@ import java.util.List;
  * Episode list helper that check for crunchy feeds
  */
 
-public class EpisodeHelper {
+public class EpisodeUtil {
 
     public static String episodeSupport(List<ExternalLink> links) {
         for (ExternalLink link : links)

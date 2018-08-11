@@ -9,7 +9,7 @@ import com.mxt.anitrend.base.custom.async.NotificationSyncTask;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotificationDispatcher;
+import com.mxt.anitrend.util.NotificationUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

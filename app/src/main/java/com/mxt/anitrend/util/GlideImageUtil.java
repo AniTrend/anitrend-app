@@ -17,18 +17,19 @@ import com.bumptech.glide.request.transition.Transition;
 import com.mxt.anitrend.R;
 
 /**
+ * Created by max
  * Uses glide to load images into an AppCompatTextView
  */
-public class GlideImageGetter implements Html.ImageGetter {
+public class GlideImageUtil implements Html.ImageGetter {
 
     private Context context;
     private AppCompatTextView appCompatTextView;
 
-    public static GlideImageGetter create(Context context, AppCompatTextView appCompatTextView) {
-        return new GlideImageGetter(context, appCompatTextView);
+    public static GlideImageUtil create(Context context, AppCompatTextView appCompatTextView) {
+        return new GlideImageUtil(context, appCompatTextView);
     }
 
-    private GlideImageGetter(Context context, AppCompatTextView appCompatTextView) {
+    private GlideImageUtil(Context context, AppCompatTextView appCompatTextView) {
         this.context = context;
         this.appCompatTextView = appCompatTextView;
     }

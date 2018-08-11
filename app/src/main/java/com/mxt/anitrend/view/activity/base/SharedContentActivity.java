@@ -28,7 +28,7 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 
@@ -192,16 +192,16 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         @KeyUtil.ShareType int position = sharedResourceType.getSelectedItemPosition();
         switch (position) {
             case KeyUtil.IMAGE_TYPE:
-                binding.composerWidget.setText(MarkDown.convertImage(text));
+                binding.composerWidget.setText(MarkDownUtil.convertImage(text));
                 break;
             case KeyUtil.LINK_TYPE:
-                binding.composerWidget.setText(MarkDown.convertLink(text));
+                binding.composerWidget.setText(MarkDownUtil.convertLink(text));
                 break;
             case KeyUtil.WEBM_TYPE:
-                binding.composerWidget.setText(MarkDown.convertVideo(text));
+                binding.composerWidget.setText(MarkDownUtil.convertVideo(text));
                 break;
             case KeyUtil.YOUTUBE_TYPE:
-                binding.composerWidget.setText(MarkDown.convertYoutube(text));
+                binding.composerWidget.setText(MarkDownUtil.convertYoutube(text));
                 break;
             case KeyUtil.PLAIN_TYPE:
                 binding.composerWidget.setText(text);

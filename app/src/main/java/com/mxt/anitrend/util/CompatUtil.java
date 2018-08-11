@@ -454,10 +454,10 @@ public class CompatUtil {
 
     /**
      * Sorts a given map by the order of the of the keys in the map in descending order
-     * @see ComparatorProvider#getKeyComparator() for logic on how comparator handles this
+     * @see ComparatorUtil#getKeyComparator() for logic on how comparator handles this
      */
     public static <T> List<Map.Entry<String, T>> getKeyFilteredMap(Map<String, T> map) {
-        return Stream.of(map).sorted(ComparatorProvider.getKeyComparator()).toList();
+        return Stream.of(map).sorted(ComparatorUtil.getKeyComparator()).toList();
     }
 
     public static boolean isLowRamDevice(Context context) {

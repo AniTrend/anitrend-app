@@ -30,7 +30,7 @@ import com.mxt.anitrend.model.entity.crunchy.Rss;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.EpisodeHelper;
+import com.mxt.anitrend.util.EpisodeUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
@@ -93,7 +93,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             isPopular = getArguments().getBoolean(KeyUtil.arg_popular);
             externalLinks = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
             if(externalLinks != null)
-                targetLink = EpisodeHelper.episodeSupport(externalLinks);
+                targetLink = EpisodeUtil.episodeSupport(externalLinks);
         }
     }
 
@@ -357,7 +357,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtil.arg_search, EpisodeHelper.getActualTile(data.getSecond().getTitle()));
+                                            intent.putExtra(KeyUtil.arg_search, EpisodeUtil.getActualTile(data.getSecond().getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;

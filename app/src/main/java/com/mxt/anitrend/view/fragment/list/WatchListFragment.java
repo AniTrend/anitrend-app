@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.util.EpisodeHelper;
+import com.mxt.anitrend.util.EpisodeUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -116,7 +116,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
                 if(!connectionContainer.isEmpty()) {
                     externalLinks = connectionContainer.getConnection();
                     if(mAdapter.getItemCount() < 1 && externalLinks != null)
-                        targetLink = EpisodeHelper.episodeSupport(externalLinks);
+                        targetLink = EpisodeUtil.episodeSupport(externalLinks);
                     if (targetLink == null)
                         showEmpty(getString(R.string.waring_missing_episode_links));
                     else

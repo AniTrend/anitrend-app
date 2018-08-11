@@ -47,7 +47,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
@@ -406,7 +406,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         if(versionBase != null && versionBase.isNewerVersion()) {
             // If a new version of the application is available on GitHub
             TextView mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update).getActionView().findViewById(R.id.app_update_info);
-            mAppUpdateWidget.setText(MarkDown.convert(getString(R.string.app_update, versionBase.getVersion())));
+            mAppUpdateWidget.setText(MarkDownUtil.convert(getString(R.string.app_update, versionBase.getVersion())));
             mAppUpdateWidget.setVisibility(View.VISIBLE);
         }
         checkNewInstallation();

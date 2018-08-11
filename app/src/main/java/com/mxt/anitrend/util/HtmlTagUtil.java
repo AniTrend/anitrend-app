@@ -6,15 +6,16 @@ import android.text.Html;
 import org.xml.sax.XMLReader;
 
 /**
+ * created by max
  * Helps us handle custom tags which may not be supported
  */
-public class HtmlTagHandler implements Html.TagHandler {
+public class HtmlTagUtil implements Html.TagHandler {
 
-    public static HtmlTagHandler create() {
-        return new HtmlTagHandler();
+    public static HtmlTagUtil create() {
+        return new HtmlTagUtil();
     }
 
-    private HtmlTagHandler() {
+    private HtmlTagUtil() {
 
     }
 

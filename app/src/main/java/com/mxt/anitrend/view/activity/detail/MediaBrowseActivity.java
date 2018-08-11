@@ -13,7 +13,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment;
 
 import butterknife.BindView;
@@ -42,7 +42,7 @@ public class MediaBrowseActivity extends ActivityBase<MediaBase, MediaPresenter>
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(getIntent().hasExtra(KeyUtil.arg_activity_tag)) {
-            Spanned activityTitle = MarkDown.convert(getIntent().getStringExtra(KeyUtil.arg_activity_tag));
+            Spanned activityTitle = MarkDownUtil.convert(getIntent().getStringExtra(KeyUtil.arg_activity_tag));
             mActionBar.setTitle(activityTitle);
         }
         onActivityReady();

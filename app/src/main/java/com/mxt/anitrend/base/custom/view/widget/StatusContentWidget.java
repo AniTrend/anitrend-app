@@ -29,7 +29,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.LinearScaleHelper;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.PatternMatcher;
+import com.mxt.anitrend.util.RegexUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity;
 
@@ -107,7 +107,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
 
     private void findMediaAttachments(@Nullable String value) {
         if(!TextUtils.isEmpty(value)) {
-            Matcher matcher = PatternMatcher.findMedia(value);
+            Matcher matcher = RegexUtil.findMedia(value);
             contentLinks = new ArrayList<>();
             contentTypes = new ArrayList<>();
             while (matcher.find()) {
@@ -115,8 +115,8 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
                 String tag = matcher.group(gc - 1);
                 String media = matcher.group(gc);
                 contentTypes.add(tag);
-                if (tag.equals(PatternMatcher.KEY_YOU))
-                    contentLinks.add(PatternMatcher.buildYoutube(media.replace("(", "").replace(")", "")));
+                if (tag.equals(RegexUtil.KEY_YOU))
+                    contentLinks.add(RegexUtil.buildYoutube(media.replace("(", "").replace(")", "")));
                 else
                     contentLinks.add(media.replace("(", "").replace(")", ""));
             }
@@ -166,19 +166,19 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
     public void onItemClick(View target, IntPair<String> data) {
         Intent intent;
         switch (contentTypes.get(data.getFirst())) {
-            case PatternMatcher.KEY_IMG:
+            case RegexUtil.KEY_IMG:
                 intent = new Intent(getContext(), ImagePreviewActivity.class);
                 intent.putExtra(KeyUtil.arg_model, data.getSecond());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
-            case PatternMatcher.KEY_WEB:
+            case RegexUtil.KEY_WEB:
                 intent = new Intent(getContext(), VideoPlayerActivity.class);
                 intent.putExtra(KeyUtil.arg_model, data.getSecond());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
                 break;
-            case PatternMatcher.KEY_YOU:
+            case RegexUtil.KEY_YOU:
                 try {
                     intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(data.getSecond()));
