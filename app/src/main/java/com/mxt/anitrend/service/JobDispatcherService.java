@@ -72,8 +72,8 @@ public class JobDispatcherService extends JobService implements BaseConsumer.onR
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<User> consumer) {
         if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ && consumer.getChangeModel() != null) {
-            NotificationDispatcher.createNotification(getApplicationContext(), consumer.getChangeModel().getUnreadNotificationCount());
-            jobFinished(job, false);
+            NotificationUtil.createNotification(getApplicationContext(), consumer.getChangeModel().getUnreadNotificationCount());
+            jobFinished(job, true);
         } else
             jobFinished(job, true);
     }
