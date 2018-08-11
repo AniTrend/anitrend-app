@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SnapHelper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,9 +26,9 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetStatusBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
+import com.mxt.anitrend.util.CenterSnapUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.LinearScaleHelper;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.RegexUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
@@ -41,11 +42,10 @@ import java.util.regex.Matcher;
  * Created by max on 2017/11/25.
  */
 
-public class StatusContentWidget extends LinearLayout implements CustomView, LinearScaleHelper.PageChangeListener, ItemClickListener<String> {
+public class StatusContentWidget extends LinearLayout implements CustomView, ItemClickListener<String>, CenterSnapUtil.PositionChangeListener {
 
     private List<String> contentLinks, contentTypes;
     private WidgetStatusBinding binding;
-    private LinearScaleHelper linearScaleHelper;
 
     public StatusContentWidget(@NonNull Context context) {
         super(context);
@@ -76,7 +76,8 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
         binding = WidgetStatusBinding.inflate(LayoutInflater.from(getContext()), this, true);
         binding.widgetStatusRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.widgetStatusRecycler.setNestedScrollingEnabled(true);
-        linearScaleHelper = new LinearScaleHelper();
+        SnapHelper snapHelper = new CenterSnapUtil(this);
+        snapHelper.attachToRecyclerView(binding.widgetStatusRecycler);
     }
 
     public void setModel(FeedList model) {
@@ -100,9 +101,6 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
     @Override
     public void onViewRecycled() {
         contentLinks = null; contentTypes = null;
-        binding.widgetStatusRecycler.onViewRecycled();
-        if(linearScaleHelper != null)
-            linearScaleHelper.onViewRecycled();
     }
 
     private void findMediaAttachments(@Nullable String value) {
@@ -137,13 +135,6 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Lin
                 binding.widgetStatusIndicator.setVisibility(VISIBLE);
                 binding.widgetStatusIndicator.setMaximum(previewAdapter.getItemCount());
                 binding.widgetStatusIndicator.setCurrentPosition(1);
-
-                linearScaleHelper.setPageChangeListener(this);
-
-                linearScaleHelper.setScale(1.4f);
-                linearScaleHelper.setPagePadding(0);
-                linearScaleHelper.setShowLeftCardWidth(0);
-                linearScaleHelper.attachToRecyclerView(binding.widgetStatusRecycler);
             }
             binding.widgetSlideHolder.setVisibility(VISIBLE);
         } else

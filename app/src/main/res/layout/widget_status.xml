@@ -18,7 +18,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="visible">
 
-            <com.mxt.anitrend.base.custom.recycler.SpeedRecyclerView
+            <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                 android:id="@+id/widget_status_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
