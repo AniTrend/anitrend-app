@@ -43,6 +43,7 @@
 
     <color name="colorLight">#f1f1f1</color>
     <color name="colorDark">#1a1a1a</color>
+    <color name="colorGrey">#424242</color>
 
     <!--Content Colors-->
     <color name="colorTextTitleLight">@color/colorTextDark</color>
