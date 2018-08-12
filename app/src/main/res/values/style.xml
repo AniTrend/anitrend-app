@@ -93,7 +93,7 @@
         <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
 
         <!--actionOverflowMenuStyle controls the state of the overflow popup window-->
-        <!--<item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>-->
+        <item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>
     </style>
 
     <!-- AMOLED Dark Application Theme -->
