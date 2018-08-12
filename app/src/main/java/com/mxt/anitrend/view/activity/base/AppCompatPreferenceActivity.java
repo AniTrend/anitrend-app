@@ -27,8 +27,12 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     protected void configureActivity() {
         int style = new ApplicationPref(this).getTheme();
+        ApplicationPref applicationPref = new ApplicationPref(this);
+        if(!CompatUtil.isLightTheme(style) && applicationPref.isAmoledEnabled())
+            setTheme(R.style.AppThemeBlack);
+        else
+            setTheme(style);
         setNavigationStyle(style);
-        setTheme(style);
     }
 
     /**
