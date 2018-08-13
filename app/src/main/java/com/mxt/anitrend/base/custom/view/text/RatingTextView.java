@@ -114,21 +114,25 @@ public class RatingTextView extends LinearLayout implements CustomView {
         if(mediaListOptions != null)
             switch (mediaListOptions.getScoreFormat()) {
                 case KeyUtil.POINT_10_DECIMAL:
-                    mediaScoreDefault = (mediaBase.getMeanScore() / 10);
+                    mediaScoreDefault = (mediaBase.getMeanScore() / 10f);
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%.1f", mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_100:
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getMeanScore()));
                     break;
                 case KeyUtil.POINT_10:
-                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getMeanScore() / 10));
+                    mediaScoreDefault = (mediaBase.getMeanScore() / 10);
+                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", (int) mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_5:
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", (int) mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_3:
                     binding.ratingValue.setText("");
-                        if(mediaBase.getMeanScore() >= 0 && mediaBase.getMeanScore() <= 33)
+                        if(mediaBase.getMeanScore() == 0)
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                    R.drawable.ic_face_white_18dp), null, null, null);
+                        if(mediaBase.getMeanScore() > 0 && mediaBase.getMeanScore() <= 33)
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null);
                         else if (mediaBase.getMeanScore() >= 34 && mediaBase.getMeanScore() <= 66)
