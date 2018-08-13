@@ -27,6 +27,7 @@ import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.util.TutorialUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -35,6 +36,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by max on 2017/12/01.
@@ -152,13 +154,15 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             binding.setOnClickListener(this);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
             setFavouriteWidgetMenuItemIcon(); setManageMenuItemIcon();
-            if(getPresenter().getApplicationPref().isAuthenticated())
-                new TutorialUtil().setContext(this)
+            if(getPresenter().getApplicationPref().isAuthenticated()) {
+                MaterialTapTargetPrompt.Builder favouritesPrompt = new TutorialUtil().setContext(this)
                         .setFocalColour(R.color.colorGrey600)
                         .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
                         .setApplicationPref(getPresenter().getApplicationPref())
-                        .showTapTarget(R.string.tip_series_options_title,
+                        .createTapTarget(R.string.tip_series_options_title,
                                 R.string.tip_series_options_message, R.id.action_manage);
+                TapTargetUtil.showMultiplePrompts(favouritesPrompt);
+            }
         }
     }
 

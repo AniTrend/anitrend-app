@@ -23,6 +23,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.util.TutorialUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
@@ -131,7 +132,6 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         binding.setOnClickListener(this);
         binding.profileStatsWidget.setParams(getIntent().getExtras());
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
-
         if(getPresenter().isCurrentUser(model.getId())) {
             new TutorialUtil().setContext(this)
                     .setFocalColour(R.color.colorGrey600)

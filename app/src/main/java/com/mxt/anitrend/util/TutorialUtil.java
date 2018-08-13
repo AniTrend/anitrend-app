@@ -24,7 +24,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.PromptSt
  *     .setFocalColour(R.color.colorGrey600)
  *     .setTapTarget(KeyUtil.KEY_NOTIFICATION_TIP)
  *     .setApplicationPref(getPresenter().getApplicationPref())
- *     .showTapTarget(
+ *     .createTapTarget(
  *         R.string.tip_notifications_title,
  *         R.string.tip_notifications_text,
  *         R.id.action_notification
@@ -96,7 +96,65 @@ public class TutorialUtil {
     }
 
     /**
-     * Display a hint, highlighting a given a resource id
+     * Get the prompt you want to display, highlighting a given a resource id
+     * <br/>
+     *
+     * @param resource Item that should be focused on by the application tip
+     */
+    public @Nullable MaterialTapTargetPrompt.Builder createTapTarget(@IdRes int resource) {
+        if(applicationPref == null) {
+            Log.e(toString(), "Did you forget to set the current application preferences?");
+            return null;
+        }
+        if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
+            return TapTargetUtil.buildDefault(context, resource)
+                    .setPromptStateChangeListener(defaultStateChangeListener)
+                    .setFocalColour(CompatUtil.getColor(context, focalColour));
+        return null;
+    }
+
+    /**
+     * Get the prompt you want to display, highlighting a given a resource id, heading and subheading
+     * <br/>
+     *
+     * @param primary Heading for the tip that should be displayed
+     * @param secondary Sub Heading for the tip that should be displayed
+     * @param resource Item that should be focused on by the application tip
+     */
+    public @Nullable MaterialTapTargetPrompt.Builder createTapTarget(@StringRes int primary, @StringRes int secondary, @IdRes int resource) {
+        if(applicationPref == null) {
+            Log.e(toString(), "Did you forget to set the current application preferences?");
+            return null;
+        }
+        if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
+            return TapTargetUtil.buildDefault(context, primary, secondary, resource)
+                    .setPromptStateChangeListener(defaultStateChangeListener)
+                    .setFocalColour(CompatUtil.getColor(context, focalColour));
+        return null;
+    }
+
+    /**
+     * Get the prompt you want to display, highlighting a given a resource view
+     * <br/>
+     *
+     * @param primary Heading for the tip that should be displayed
+     * @param secondary Sub Heading for the tip that should be displayed
+     * @param resource Item that should be focused on by the application tip
+     */
+    public @Nullable MaterialTapTargetPrompt.Builder createTapTarget(@StringRes int primary, @StringRes int secondary, View resource) {
+        if(applicationPref == null) {
+            Log.e(toString(), "Did you forget to set the current application preferences?");
+            return null;
+        }
+        if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
+            return TapTargetUtil.buildDefault(context, primary, secondary, resource)
+                    .setPromptStateChangeListener(defaultStateChangeListener)
+                    .setFocalColour(CompatUtil.getColor(context, focalColour));
+        return null;
+    }
+
+    /**
+     * Display hint, highlighting a given a resource id
      * <br/>
      *
      * @param resource Item that should be focused on by the application tip
@@ -111,11 +169,10 @@ public class TutorialUtil {
                     .setPromptStateChangeListener(defaultStateChangeListener)
                     .setFocalColour(CompatUtil.getColor(context, focalColour))
                     .show();
-
     }
 
     /**
-     * Display a hint, highlighting a given a resource id, heading and subheading
+     * Display hint, highlighting a given a resource id, heading and subheading
      * <br/>
      *
      * @param primary Heading for the tip that should be displayed
@@ -135,7 +192,7 @@ public class TutorialUtil {
     }
 
     /**
-     * Display a hint, highlighting a given a resource view
+     * Display hint, highlighting a given a resource view
      * <br/>
      *
      * @param primary Heading for the tip that should be displayed
