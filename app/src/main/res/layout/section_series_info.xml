@@ -32,11 +32,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:ellipsize="end"
                 android:textStyle="bold"
                 android:text="@{model.title.romaji}"
                 android:textIsSelectable="true"
@@ -61,14 +59,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title_series_english_name"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{model.title.english}"
                 android:fontFamily="sans-serif-light"
                 android:textIsSelectable="true"
-                android:maxLines="2"
-                android:ellipsize="end"
                 tools:text="Gintama" />
 
             <android.support.v4.widget.Space
