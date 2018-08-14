@@ -155,7 +155,7 @@ dependencies {
     implementation 'com.github.XunMengWinter:CircularAnim:0.3.4'
 
     /** Alerter */
-    implementation 'com.tapadoo.android:alerter:3.0.0'
+    implementation 'com.tapadoo.android:alerter:2.0.6'
 
     /** Rich Text Markdown Parser */
     implementation 'com.zzhoujay.richtext:richtext:3.0.5'
