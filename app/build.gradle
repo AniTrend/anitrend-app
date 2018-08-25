@@ -173,7 +173,7 @@ dependencies {
     implementation'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     /** About Library */
-    implementation 'com.github.medyo:android-about-page:1.2.2'
+    implementation 'com.github.medyo:android-about-page:1.2.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
