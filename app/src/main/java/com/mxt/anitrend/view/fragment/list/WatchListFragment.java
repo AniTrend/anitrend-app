@@ -38,16 +38,16 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
     private long mediaId;
     private @KeyUtil.MediaType String mediaType;
 
-    public static Fragment newInstance(Bundle params, boolean popular) {
+    public static FragmentChannelBase newInstance(Bundle params, boolean popular) {
         Bundle args = new Bundle(params);
-        WatchListFragment fragment = new WatchListFragment();
+        FragmentChannelBase fragment = new WatchListFragment();
         args.putBoolean(KeyUtil.arg_popular, popular);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static Fragment newInstance(List<ExternalLink> externalLinks, boolean popular) {
-        WatchListFragment fragment = new WatchListFragment();
+    public static FragmentChannelBase newInstance(List<ExternalLink> externalLinks, boolean popular) {
+        FragmentChannelBase fragment = new WatchListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(KeyUtil.arg_list_model, (ArrayList<? extends Parcelable>) externalLinks);
         args.putBoolean(KeyUtil.arg_popular, popular);
@@ -71,7 +71,6 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
         mAdapter.setClickListener(clickListener);
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
-        mColumnSize = R.integer.single_list_x1;
     }
 
     /**

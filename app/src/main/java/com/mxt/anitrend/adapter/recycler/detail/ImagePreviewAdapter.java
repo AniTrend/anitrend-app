@@ -68,7 +68,7 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
         public void onBindViewHolder(String model) {
             String targetModel;
             RequestOptions requestOptions = null;
-            switch (contentTypes.get(getAdapterPosition())) {
+            switch (contentTypes.get(getAdapterPosition()).toLowerCase()) {
                 case RegexUtil.KEY_IMG:
                     targetModel = model;
                     ViewCompat.setTransitionName(binding.feedStatusImage, model);

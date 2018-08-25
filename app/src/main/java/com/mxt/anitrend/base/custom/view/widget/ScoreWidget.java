@@ -150,7 +150,12 @@ public class ScoreWidget extends ProgressWidget {
         if (isNotDirectInput)
             return;
         String currentChange = editable.toString();
-        float temporaryValue = !TextUtils.isEmpty(currentChange) ? Float.parseFloat(currentChange) : 0;
+        float temporaryValue = 0;
+        try {
+            temporaryValue = !TextUtils.isEmpty(currentChange) ? Float.parseFloat(currentChange) : 0;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
         if(boundCheck(temporaryValue))
             scoreCurrent = temporaryValue;
         else

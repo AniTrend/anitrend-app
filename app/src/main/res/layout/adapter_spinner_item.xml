@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@android:id/text1"
-    android:padding="@dimen/lg_margin"
-    android:layout_width="match_parent"
+    android:id="@+id/container"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:ellipsize="marquee"
-    tools:text="Plain Text"/>
+    android:padding="@dimen/mg_margin"
+    android:orientation="horizontal">
+
+    <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+        android:id="@+id/spinner_icon"
+        android:layout_width="@dimen/xl_margin"
+        android:layout_height="@dimen/xl_margin"
+        android:layout_gravity="center_vertical"
+        tools:src="@drawable/ic_calendar_grey_600_24dp"/>
+
+    <Space
+        android:layout_width="@dimen/lg_margin"
+        android:layout_height="wrap_content" />
+
+    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        android:id="@+id/spinner_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        tools:text="Plain Text"/>
+
+    <Space
+        android:layout_width="@dimen/lg_margin"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

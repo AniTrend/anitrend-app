@@ -2,6 +2,9 @@ package com.mxt.anitrend.base.custom.view.image;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -47,5 +50,13 @@ public class AppCompatTintImageView extends AppCompatImageView implements Custom
     @Override
     public void onViewRecycled() {
 
+    }
+
+    public void setTintDrawable(@DrawableRes int drawable, @ColorRes int colorTint) {
+        setImageDrawable(CompatUtil.getDrawable(getContext(), drawable, colorTint));
+    }
+
+    public void setTintDrawableAttr(@DrawableRes int drawable, @AttrRes int colorAttribute) {
+        setImageDrawable(CompatUtil.getDrawableTintAttr(getContext(), drawable, colorAttribute));
     }
 }

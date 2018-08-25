@@ -60,6 +60,11 @@ query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = 
                 episode
               }
             }
+			mediaListEntry {
+              ... on MediaList {
+                status
+              }
+            }
           }
         }
       }

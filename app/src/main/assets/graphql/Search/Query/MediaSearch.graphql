@@ -58,6 +58,11 @@ query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: M
             episode
           }
         }
+        mediaListEntry {
+          ... on MediaList {
+            status
+          }
+        }
       }
     }
   }

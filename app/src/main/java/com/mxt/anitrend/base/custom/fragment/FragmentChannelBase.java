@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
 
     protected List<ExternalLink> externalLinks;
     protected RecyclerViewAdapter<Episode> mAdapter;
-    private GridLayoutManager mLayoutManager;
+    private StaggeredGridLayoutManager mLayoutManager;
 
     private final View.OnClickListener stateLayoutOnClick = view -> {
         if(swipeRefreshLayout.isRefreshing())
@@ -95,6 +96,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             if(externalLinks != null)
                 targetLink = EpisodeUtil.episodeSupport(externalLinks);
         }
+        mColumnSize = R.integer.single_list_x1;
     }
 
     /**
@@ -108,7 +110,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         unbinder = ButterKnife.bind(this, root);
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(true); //set to false if somethings fail to work properly
-        mLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(mColumnSize));
+        mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
 
         swipeRefreshLayout.setOnRefreshAndLoadListener(this);

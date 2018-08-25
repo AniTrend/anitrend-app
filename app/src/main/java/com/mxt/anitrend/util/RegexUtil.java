@@ -34,7 +34,7 @@ public class RegexUtil {
 
 
     static {
-        pattern = Pattern.compile(PATTERN_MEDIA);
+        pattern = Pattern.compile(PATTERN_MEDIA, Pattern.CASE_INSENSITIVE);
     }
 
     /**
@@ -45,7 +45,7 @@ public class RegexUtil {
     }
 
     private static @NonNull Matcher findImages(@NonNull String param) {
-        return Pattern.compile("(img).*?(\\([^)]+\\))").matcher(param);
+        return Pattern.compile("(img|Img|IMG).*?(\\([^)]+\\))", Pattern.CASE_INSENSITIVE).matcher(param);
     }
 
     /**

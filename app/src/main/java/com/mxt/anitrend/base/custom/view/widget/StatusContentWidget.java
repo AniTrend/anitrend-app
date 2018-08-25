@@ -156,7 +156,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
     @Override
     public void onItemClick(View target, IntPair<String> data) {
         Intent intent;
-        switch (contentTypes.get(data.getFirst())) {
+        switch (contentTypes.get(data.getFirst()).toLowerCase()) {
             case RegexUtil.KEY_IMG:
                 intent = new Intent(getContext(), ImagePreviewActivity.class);
                 intent.putExtra(KeyUtil.arg_model, data.getSecond());

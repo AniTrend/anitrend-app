@@ -57,6 +57,7 @@
                                     android:ellipsize="end"
                                     android:textStyle="bold"
                                     android:text="@{model.name.fullName}"
+                                    android:textIsSelectable="true"
                                     tools:text="Gintoki Sakata"/>
 
                                 <android.support.v4.widget.Space
@@ -85,6 +86,7 @@
                                     android:fontFamily="sans-serif-light"
                                     android:maxLines="2"
                                     android:ellipsize="end"
+                                    android:textIsSelectable="true"
                                     tools:text="坂田銀時" />
 
                             </LinearLayout>

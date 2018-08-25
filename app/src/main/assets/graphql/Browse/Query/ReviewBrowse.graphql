@@ -84,6 +84,11 @@ query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $
                 episode
               }
             }
+            mediaListEntry {
+              ... on MediaList {
+                status
+              }
+            }
           }
         }
       }
