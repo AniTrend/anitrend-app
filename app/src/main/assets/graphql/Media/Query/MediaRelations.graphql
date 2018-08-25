@@ -63,6 +63,11 @@ query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
                     episode
                   }
                 }
+                mediaListEntry {
+                  ... on MediaList {
+                    status
+                  }
+                }
               }
             }
           }
