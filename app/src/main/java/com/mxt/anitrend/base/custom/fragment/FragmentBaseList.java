@@ -273,7 +273,9 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(getPresenter() != null && isFilterable && GraphUtil.isKeyFilter(key)) {
-            swipeRefreshLayout.setRefreshing(true);
+            showLoading();
+            if(mAdapter != null)
+                mAdapter.clearDataSet();
             onRefresh();
         }
     }
