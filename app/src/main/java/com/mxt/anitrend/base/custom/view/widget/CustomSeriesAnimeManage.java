@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.spinner.StatusArrayAdapter;
 import com.mxt.anitrend.databinding.CustomActionAnimeBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -82,12 +83,12 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
 
     @Override
     protected void bindFields() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.media_list_status, R.layout.adapter_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter listAdapter = new StatusArrayAdapter(getContext(),
+                R.layout.adapter_spinner_item, R.id.spinner_text,
+                CompatUtil.getStringList(getContext(), R.array.media_list_status));
+
         // Apply the adapter to the spinner
-        binding.diaCurrentStatus.setAdapter(adapter);
+        binding.diaCurrentStatus.setAdapter(listAdapter);
 
         if (!TextUtils.isEmpty(model.getStatus()))
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));

@@ -6,6 +6,7 @@ import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -69,6 +70,44 @@ public class RatingTextView extends LinearLayout implements CustomView {
         @ColorRes int colorTint = isFavourite ? R.color.colorStateYellow : R.color.white;
         Drawable drawable = CompatUtil.getDrawable(getContext(), R.drawable.ic_star_grey_600_24dp, colorTint);
         binding.ratingFavourState.setImageDrawable(drawable);
+    }
+
+    private void setListStatus(MediaBase mediaBase) {
+        if(mediaBase.getMediaListEntry() != null) {
+            binding.ratingListStatus.setVisibility(VISIBLE);
+            switch (mediaBase.getMediaListEntry().getStatus()) {
+                case KeyUtil.CURRENT:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_remove_red_eye_white_18dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.PLANNING:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_bookmark_white_24dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.COMPLETED:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_done_all_grey_600_24dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.DROPPED:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_delete_red_600_18dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.PAUSED:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_pause_white_18dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.REPEATING:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_repeat_white_18dp,
+                            R.color.white);
+                    break;
+            }
+        }
+        else
+            binding.ratingListStatus.setVisibility(GONE);
+    }
+
+    private void setListStatus() {
+        binding.ratingListStatus.setVisibility(GONE);
     }
 
     private void setRating(MediaList mediaList) {
@@ -151,12 +190,14 @@ public class RatingTextView extends LinearLayout implements CustomView {
     public static void setAverageRating(RatingTextView view, MediaBase mediaBase) {
         //float rating = (float) mediaBase.getAverageScore() * MAX / 100;
         view.setRating(mediaBase);
+        view.setListStatus(mediaBase);
         view.setFavourState(mediaBase.isFavourite());
     }
 
     @BindingAdapter("rating")
     public static void setAverageRating(RatingTextView view, MediaList mediaList) {
         //float rating = (float) mediaList.getScore() * MAX / 100;
+        view.setListStatus();
         view.setRating(mediaList);
         view.setFavourState(mediaList.getMedia().isFavourite());
     }

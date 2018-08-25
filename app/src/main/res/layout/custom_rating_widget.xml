@@ -28,6 +28,13 @@
             android:layout_height="12dp"
             tools:srcCompat="@drawable/ic_star_yellow_700_24dp"/>
 
+        <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+            android:id="@+id/rating_list_status"
+            android:layout_marginStart="@dimen/md_margin"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            tools:srcCompat="@drawable/ic_bookmark_white_24dp"/>
+
     </LinearLayout>
     
 </layout>
