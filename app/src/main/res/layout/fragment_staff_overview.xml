@@ -58,6 +58,7 @@
                                 android:maxLines="2"
                                 android:ellipsize="end"
                                 android:textStyle="bold"
+                                android:textIsSelectable="true"
                                 android:text="@{model.name.fullName}"
                                 tools:text="Tomokazu Sugita"/>
 
@@ -87,6 +88,7 @@
                                 android:fontFamily="sans-serif-light"
                                 android:maxLines="2"
                                 android:ellipsize="end"
+                                android:textIsSelectable="true"
                                 tools:text="Japanese" />
 
                         </LinearLayout>

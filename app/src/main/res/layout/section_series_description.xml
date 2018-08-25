@@ -14,17 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
-            android:id="@+id/series_rating"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:averageScore="@{model.meanScore}" />
-
-        <android.support.v4.widget.Space
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/xl_margin" />
-
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

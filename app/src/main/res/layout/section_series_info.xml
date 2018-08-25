@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title_series_english_name"/>
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{model.title.english}"
@@ -71,18 +71,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            <com.mxt.anitrend.base.custom.view.text.SeriesTypeView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/title_series_type"/>
-
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="@{presenter.getMediaFormat(model)}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                app:seriesType="@{presenter.getMediaFormat(model)}"
                 android:textIsSelectable="true"
-                tools:text="TV"/>
+                tools:text="Series Type: TV"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="wrap_content"
