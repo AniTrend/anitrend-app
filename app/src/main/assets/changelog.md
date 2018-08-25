@@ -9,9 +9,12 @@
 - New changeable application language: __Settings -> General__
 - New personalised score types based on your profile settings
 - New start and end dates for your anime/manga lists
+- Media list status icons for media in your list
+- Additional support for trailers when a device doesn't have the YouTube app
 
 ### Bug Fixes
-- What??? Do you seriously expect us to fix any bugs!? Look just enjoy the app, they're all features!
+- Crash issue with Android Pie devices when viewing status feeds
+- 404 on profile links that end with /
 
 ### Current Issues
 - Clicking on @username shows mixed feed
