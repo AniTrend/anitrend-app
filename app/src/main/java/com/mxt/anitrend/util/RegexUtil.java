@@ -128,7 +128,7 @@ public class RegexUtil {
         if(matcher.find())
             temp = matcher.group(matcher.groupCount());
         else
-            temp = NO_THUMBNAIL;
+            return NO_THUMBNAIL;
         return String.format(VID_THUMB, temp);
     }
 
