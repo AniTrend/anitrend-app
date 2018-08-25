@@ -52,8 +52,11 @@ public class IntentBundleUtil {
             case KeyUtil.DEEP_LINK_USER:
                 if(TextUtils.isDigitsOnly(lastKey))
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
-                else
+                else {
+                    if (lastKey.contains("/"))
+                        lastKey = lastKey.replace("/", "");
                     intent.putExtra(KeyUtil.arg_userName, lastKey);
+                }
                 break;
             case KeyUtil.DEEP_LINK_MANGA:
                 if ((splitKeys = hasDepth(lastKey)) != null)
