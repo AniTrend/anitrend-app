@@ -57,11 +57,9 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
     }
 
     private void updateDate() {
-        if(fuzzyDate != null) {
-            String convertedDate = DateUtil.convertDate(fuzzyDate);
-            binding.setModel(convertedDate);
-            binding.executePendingBindings();
-        }
+        String convertedDate = DateUtil.convertDate(fuzzyDate);
+        binding.setModel(convertedDate);
+        binding.executePendingBindings();
     }
 
     public @Nullable FuzzyDate getDate() {
