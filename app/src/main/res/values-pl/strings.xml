@@ -788,10 +788,10 @@
     <!--Only replace the first item the others are already provided in this file-->
     <string-array name="post_share_types">
         <item>Zwykły tekst</item>
-        <item>Link</item>
-        <item>Link do zdjęcia</item>
-        <item>Link do YouTube</item>
-        <item>Link do Wideo</item>
+        <item>Website</item>
+        <item>zdjęcia</item>
+        <item>YouTube</item>
+        <item>Video</item>
     </string-array>
 
     <!--These are the anime time labels in your profile-->

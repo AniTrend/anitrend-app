@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.spinner.ShareArrayAdapter;
+import com.mxt.anitrend.adapter.spinner.StatusArrayAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView;
@@ -110,9 +112,10 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
         bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.post_share_types, R.layout.adapter_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sharedResourceType.setAdapter(adapter);
+        ArrayAdapter listAdapter = new ShareArrayAdapter(this,
+                R.layout.adapter_spinner_item, R.id.spinner_text,
+                CompatUtil.getStringList(this, R.array.post_share_types));
+        sharedResourceType.setAdapter(listAdapter);
         onActivityReady();
     }
 
