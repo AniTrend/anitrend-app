@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.annimon.stream.IntPair;
+import com.google.android.youtube.player.YouTubeIntents;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter;
 import com.mxt.anitrend.adapter.recycler.detail.TagAdapter;
@@ -30,6 +31,7 @@ import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
+import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment;
 import com.mxt.anitrend.view.fragment.youtube.YoutubePlayerFragment;
 
 import butterknife.ButterKnife;
@@ -97,11 +99,16 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
      */
     @Override
     protected void updateUI() {
-        if(model.getTrailer() != null && CompatUtil.equals(model.getTrailer().getSite(), "youtube")) {
-            if (youtubePlayerFragment == null) {
-                youtubePlayerFragment = YoutubePlayerFragment.newInstance(model.getTrailer());
+        if(getActivity() != null && model.getTrailer() != null && CompatUtil.equals(model.getTrailer().getSite(), "youtube")) {
+            if(YouTubeIntents.canResolvePlayVideoIntent(getActivity())) {
+                if (youtubePlayerFragment == null)
+                    youtubePlayerFragment = YoutubePlayerFragment.newInstance(model.getTrailer());
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.youtube_view, youtubePlayerFragment)
+                        .commit();
+            } else {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(model.getTrailer()))
                         .commit();
             }
         } else
