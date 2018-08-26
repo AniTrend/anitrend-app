@@ -65,4 +65,8 @@ public class PageInfo implements Parcelable {
     public void setTotal(int total) {
         this.total = total;
     }
+
+    public void setPerPage(int perPage) {
+        this.perPage = perPage;
+    }
 }
