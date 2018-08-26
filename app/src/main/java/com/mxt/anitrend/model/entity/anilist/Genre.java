@@ -21,6 +21,10 @@ public class Genre implements Parcelable {
     private String genre;
     private boolean isSelected;
 
+    public Genre() {
+
+    }
+
     public Genre(String genre) {
         this.genre = genre;
     }
