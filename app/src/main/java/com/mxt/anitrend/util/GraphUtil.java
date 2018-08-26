@@ -1,6 +1,13 @@
 package com.mxt.anitrend.util;
 
+import android.text.TextUtils;
+
+import com.annimon.stream.Stream;
+import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import com.mxt.anitrend.presenter.base.BasePresenter;
+
+import java.util.List;
 
 /**
  * Created by max on 2018/03/22.
@@ -34,5 +41,17 @@ public class GraphUtil {
     public static boolean isKeyFilter(String preferenceKey) {
         return !CompatUtil.equals(preferenceKey, ApplicationPref._isLightTheme) &&
                !CompatUtil.equals(preferenceKey, ApplicationPref._updateChannel);
+    }
+
+    /**
+     * Remove empty json object responses, to resolve undefined content errors
+     */
+    public static List<FeedList> filterFeedList(BasePresenter presenter, List<FeedList> feedLists) {
+        List<FeedList> filteredList = Stream.of(feedLists)
+                .filter(f -> f != null && !TextUtils.isEmpty(f.getType()))
+                .toList();
+        if(presenter.getPageInfo() != null)
+            presenter.getPageInfo().setPerPage(filteredList.size());
+        return filteredList;
     }
 }
