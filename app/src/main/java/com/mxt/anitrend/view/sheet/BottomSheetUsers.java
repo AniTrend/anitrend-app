@@ -25,7 +25,6 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;

@@ -14,8 +14,6 @@ import com.mxt.anitrend.databinding.AdapterTagBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.util.CompatUtil;
 
-import java.util.List;
-
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 

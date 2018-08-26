@@ -12,8 +12,8 @@ import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
-import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem;
+import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment;
 
 import java.util.ArrayList;

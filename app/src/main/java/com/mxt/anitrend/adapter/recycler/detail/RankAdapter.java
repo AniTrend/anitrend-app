@@ -15,8 +15,6 @@ import com.mxt.anitrend.model.entity.anilist.MediaRank;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import java.util.List;
-
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 

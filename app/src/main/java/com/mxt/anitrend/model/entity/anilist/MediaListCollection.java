@@ -1,8 +1,10 @@
 package com.mxt.anitrend.model.entity.anilist;
 
-import java.util.List;
 import android.os.Parcel;
+
 import com.mxt.anitrend.model.entity.base.MediaListCollectionBase;
+
+import java.util.List;
 
 public class MediaListCollection extends MediaListCollectionBase {
 

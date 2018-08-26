@@ -11,7 +11,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

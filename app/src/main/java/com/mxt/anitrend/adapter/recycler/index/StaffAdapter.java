@@ -14,8 +14,6 @@ import com.mxt.anitrend.databinding.AdapterStaffBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.util.CompatUtil;
 
-import java.util.List;
-
 import butterknife.OnClick;
 
 /**

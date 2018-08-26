@@ -20,8 +20,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import java.util.List;
-
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import io.objectbox.Box;

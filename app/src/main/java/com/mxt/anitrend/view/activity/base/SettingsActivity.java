@@ -4,7 +4,6 @@ package com.mxt.anitrend.view.activity.base;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -17,18 +16,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import android.preference.SwitchPreference;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.data.DatabaseHelper;
-import com.mxt.anitrend.model.entity.base.VersionBase;
-import com.mxt.anitrend.util.ApplicationPref;
-import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
 
 import java.util.List;

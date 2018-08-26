@@ -9,7 +9,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
