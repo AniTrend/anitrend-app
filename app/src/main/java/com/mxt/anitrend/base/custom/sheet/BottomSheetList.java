@@ -17,7 +17,6 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.KeyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.List;

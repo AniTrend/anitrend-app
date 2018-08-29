@@ -15,8 +15,6 @@ import com.mxt.anitrend.databinding.AdapterReviewBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
 
-import java.util.List;
-
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 

@@ -8,11 +8,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.spinner.StatusArrayAdapter;
 import com.mxt.anitrend.databinding.CustomActionAnimeBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -83,12 +81,8 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
 
     @Override
     protected void bindFields() {
-        ArrayAdapter listAdapter = new StatusArrayAdapter(getContext(),
-                R.layout.adapter_spinner_item, R.id.spinner_text,
-                CompatUtil.getStringList(getContext(), R.array.media_list_status));
-
         // Apply the adapter to the spinner
-        binding.diaCurrentStatus.setAdapter(listAdapter);
+        binding.diaCurrentStatus.setAdapter(getIconArrayAdapter());
 
         if (!TextUtils.isEmpty(model.getStatus()))
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));

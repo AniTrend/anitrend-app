@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.fragment.youtube;
 
 import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;

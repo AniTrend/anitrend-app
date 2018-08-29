@@ -9,14 +9,12 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.spinner.ShareArrayAdapter;
-import com.mxt.anitrend.adapter.spinner.StatusArrayAdapter;
+import com.mxt.anitrend.adapter.spinner.IconArrayAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView;
@@ -37,6 +35,9 @@ import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,6 +85,12 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     protected @BindView(R.id.sheet_share_post_type) Spinner sharedResourceType;
     protected @BindView(R.id.sheet_share_post_type_approve) AppCompatTintImageView sharedResourceApprove;
 
+    private Map<Integer, Integer> indexIconMap = new HashMap<Integer, Integer>() {{
+        put(0, R.drawable.ic_textsms_white_24dp);
+        put(1, R.drawable.ic_link_white_24dp); put(2, R.drawable.ic_crop_original_white_24dp);
+        put(3, R.drawable.ic_youtube); put(4, R.drawable.ic_slow_motion_video_white_24dp);
+    }};
+
     /**
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style, also if you wish
@@ -112,10 +119,11 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
         bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        ArrayAdapter listAdapter = new ShareArrayAdapter(this,
+        IconArrayAdapter iconArrayAdapter = new IconArrayAdapter(this,
                 R.layout.adapter_spinner_item, R.id.spinner_text,
                 CompatUtil.getStringList(this, R.array.post_share_types));
-        sharedResourceType.setAdapter(listAdapter);
+        iconArrayAdapter.setIndexIconMap(indexIconMap);
+        sharedResourceType.setAdapter(iconArrayAdapter);
         onActivityReady();
     }
 

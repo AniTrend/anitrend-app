@@ -22,6 +22,7 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -168,7 +169,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
             if(content.hasPageInfo())
                 getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
-                onPostProcessed(content.getPageData());
+                onPostProcessed(GraphUtil.filterFeedList(getPresenter(), content.getPageData()));
             else
                 onPostProcessed(Collections.emptyList());
         } else

@@ -3,21 +3,14 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.Toast;
 
-import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.spinner.StatusArrayAdapter;
 import com.mxt.anitrend.databinding.CustomActionMangaBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -88,12 +81,8 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
 
     @Override
     protected void bindFields() {
-        ArrayAdapter listAdapter = new StatusArrayAdapter(getContext(),
-                R.layout.adapter_spinner_item, R.id.spinner_text,
-                CompatUtil.getStringList(getContext(), R.array.media_list_status));
-
         // Apply the adapter to the spinner
-        binding.diaCurrentStatus.setAdapter(listAdapter);
+        binding.diaCurrentStatus.setAdapter(getIconArrayAdapter());
 
         if(!TextUtils.isEmpty(model.getStatus()))
             binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));

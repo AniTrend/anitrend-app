@@ -3,7 +3,6 @@ package com.mxt.anitrend.base.custom.view.image;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.support.annotation.AttrRes;
-import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;

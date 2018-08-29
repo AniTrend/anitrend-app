@@ -7,7 +7,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.base.custom.annotation.processor.GraphProcessor;
-import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.container.attribute.GraphError;
 import com.mxt.anitrend.model.entity.container.body.DataContainer;
 import com.mxt.anitrend.model.entity.container.body.GraphContainer;
