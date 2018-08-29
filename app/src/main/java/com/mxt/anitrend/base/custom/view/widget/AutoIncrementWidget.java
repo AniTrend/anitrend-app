@@ -17,6 +17,7 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
@@ -24,6 +25,8 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -145,13 +148,24 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         }
     }
 
-    private void updateModelState() {
-        model.setProgress(model.getProgress() + 1);
-        if(MediaUtil.isIncrementLimitReached(model))
-            model.setStatus(KeyUtil.COMPLETED);
 
+    private void updateModelState() {
+        if(model.getProgress() == 0) {
+            model.setStatus(KeyUtil.CURRENT);
+            model.setStartedAt(getCurrentDate());
+        }
+        model.setProgress(model.getProgress() + 1);
+        if(MediaUtil.isIncrementLimitReached(model)) {
+            model.setStatus(KeyUtil.COMPLETED);
+            model.setCompletedAt(getCurrentDate());
+        }
         presenter.setParams(MediaListUtil.getMediaListParams(model, presenter.getDatabase()
                 .getCurrentUser().getMediaListOptions().getScoreFormat()));
         presenter.requestData(requestType, getContext(), this);
+    }
+
+    private FuzzyDate getCurrentDate(){
+        Calendar calendar = Calendar.getInstance();
+        return new FuzzyDate(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
     }
 }
