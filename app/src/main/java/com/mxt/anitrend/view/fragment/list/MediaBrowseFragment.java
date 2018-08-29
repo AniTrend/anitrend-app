@@ -138,7 +138,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                             });
                     return true;
                 case R.id.action_year:
-                    final List<Integer> yearRanges = DateUtil.getYearRanges(1980, 1);
+                    final List<Integer> yearRanges = DateUtil.getYearRanges(1950, 1);
                     DialogUtil.createSelection(getContext(), R.string.app_filter_year, CompatUtil.getIndexOf(yearRanges, getPresenter().getApplicationPref().getSeasonYear()),
                             yearRanges, (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
