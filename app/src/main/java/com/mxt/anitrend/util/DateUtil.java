@@ -42,7 +42,7 @@ public class DateUtil {
      *
      * @return Season name
      */
-    public static @KeyUtil.MediaSeason String getCurrentSeason(){
+    public static @KeyUtil.MediaSeason String getCurrentSeason() {
         int month = Calendar.getInstance().get(Calendar.MONTH);
         return seasons[month];
     }
@@ -70,7 +70,7 @@ public class DateUtil {
      *
      * @return Season name
      */
-    public static int getMenuSelect(){
+    public static int getMenuSelect() {
         String value = seasons[Calendar.getInstance().get(Calendar.MONTH)];
         return CompatUtil.constructListFrom(KeyUtil.MediaSeason).indexOf(value);
     }
@@ -82,7 +82,7 @@ public class DateUtil {
      *
      * @return current year with a given delta
      */
-    public static int getCurrentYear(int delta){
+    public static int getCurrentYear(int delta) {
         if(Calendar.getInstance().get(Calendar.MONTH) >= 11 && getCurrentSeason().equals(KeyUtil.WINTER))
             return Calendar.getInstance().get(Calendar.YEAR) + delta;
         return Calendar.getInstance().get(Calendar.YEAR) + delta;
@@ -210,6 +210,15 @@ public class DateUtil {
      */
     public static int getDate() {
         return Calendar.getInstance().get(Calendar.DATE);
+    }
+
+
+    /**
+     * Get the current fuzzy date
+     */
+    public static @NonNull FuzzyDate getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        return new FuzzyDate(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
     }
 
     /**
