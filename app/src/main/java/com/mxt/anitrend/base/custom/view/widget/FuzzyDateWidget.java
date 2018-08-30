@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -83,6 +84,12 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH));
         }
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Clear", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                onDateSet(datePickerDialog.getDatePicker(), -1, -2, -1);
+            }
+        });
         datePickerDialog.show();
     }
 
@@ -92,6 +99,8 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
             fuzzyDate = new FuzzyDate(day, month + 1, year);
         else
             fuzzyDate.setDate(day, month + 1, year);
+        if(fuzzyDate.getDay() == -1)
+            fuzzyDate.setDate(null, null, null);
         updateDate();
     }
 }

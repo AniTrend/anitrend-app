@@ -5,15 +5,17 @@ import android.os.Parcelable;
 
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by max on 2018/03/20.
  */
 
 public class FuzzyDate implements Parcelable {
 
-    private int day;
-    private int month;
-    private int year;
+    private @Nullable Integer day;
+    private @Nullable Integer month;
+    private @Nullable Integer year;
 
     public FuzzyDate(int day, int month, int year) {
         this.day = day;
@@ -63,14 +65,18 @@ public class FuzzyDate implements Parcelable {
         return year;
     }
 
-    public void setDate(int day, int month, int year) {
+    public void setDate(@Nullable Integer day, @Nullable Integer month, @Nullable Integer year) {
         this.day = day;
         this.month = month;
         this.year = year;
     }
 
+    @SuppressWarnings("NullPointerException")
     public boolean isValidDate() {
-        return day != 0 || month != 0 || year != 0;
+        boolean isValid = day != null || month != null || year != null;
+        if(isValid)
+            isValid = day != 0 || month != 0 || year != 0;
+        return isValid;
     }
 
     @Override
