@@ -5,12 +5,14 @@
 - Take a moment to give us your [feedback](https://poll.ly/#/PEA4x1Wg), thank you.
 
 ### Enhancements
+- New genre and tags filters
 - New amoled theme: __Settings -> General__
 - New changeable application language: __Settings -> General__
 - New personalised score types based on your profile settings
 - New start and end dates for your anime/manga lists
 - Media list status icons for media in your list
 - Additional support for trailers when a device doesn't have the YouTube app
+- Many other minor enhancement and improvements
 
 ### Bug Fixes
 - Crash issue with Android Pie devices when viewing status feeds
