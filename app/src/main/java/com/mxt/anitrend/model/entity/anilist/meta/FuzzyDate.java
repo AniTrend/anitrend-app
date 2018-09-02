@@ -17,7 +17,7 @@ public class FuzzyDate implements Parcelable {
     private @Nullable Integer month;
     private @Nullable Integer year;
 
-    public FuzzyDate(int day, int month, int year) {
+    public FuzzyDate(@Nullable Integer day,@Nullable Integer month,@Nullable Integer year) {
         this.day = day;
         this.month = month;
         this.year = year;
@@ -73,10 +73,7 @@ public class FuzzyDate implements Parcelable {
 
     @SuppressWarnings("NullPointerException")
     public boolean isValidDate() {
-        boolean isValid = day != null || month != null || year != null;
-        if(isValid)
-            isValid = day != 0 || month != 0 || year != 0;
-        return isValid;
+        return day != 0 || month != 0 || year != 0;
     }
 
     @Override

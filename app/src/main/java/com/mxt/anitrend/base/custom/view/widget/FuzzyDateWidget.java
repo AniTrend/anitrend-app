@@ -88,7 +88,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getContext().getText(R.string.dialog_button_clear), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                onDateSet(datePickerDialog.getDatePicker(), -1, -2, -1);
+                onDateSet(datePickerDialog.getDatePicker(), 0, 0, 0);
             }
         });
         datePickerDialog.show();
@@ -100,8 +100,6 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
             fuzzyDate = new FuzzyDate(day, month + 1, year);
         else
             fuzzyDate.setDate(day, month + 1, year);
-        if(fuzzyDate.getDay() == -1)
-            fuzzyDate.setDate(null, null, null);
         updateDate();
     }
 }

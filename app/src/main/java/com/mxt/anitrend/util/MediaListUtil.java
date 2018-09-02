@@ -8,6 +8,7 @@ import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class MediaListUtil {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_scoreFormat, scoreFormat);
 
-        if(model.getId() > 0)
+        if (model.getId() > 0)
             queryContainer.putVariable(KeyUtil.arg_id, model.getId());
         queryContainer.putVariable(KeyUtil.arg_mediaId, model.getMediaId());
         queryContainer.putVariable(KeyUtil.arg_listStatus, model.getStatus());
@@ -35,13 +36,19 @@ public class MediaListUtil {
         queryContainer.putVariable(KeyUtil.arg_listPrivate, model.isHidden());
         queryContainer.putVariable(KeyUtil.arg_listPriority, model.getPriority());
         queryContainer.putVariable(KeyUtil.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
-        queryContainer.putVariable(KeyUtil.arg_startedAt, model.getStartedAt());
-        queryContainer.putVariable(KeyUtil.arg_completedAt, model.getCompletedAt());
 
-        if(model.getAdvancedScores() != null)
+        if (model.getStartedAt().isValidDate()) {
+            queryContainer.putVariable(KeyUtil.arg_startedAt, model.getStartedAt());
+            queryContainer.putVariable(KeyUtil.arg_completedAt, model.getCompletedAt());
+        } else {
+            queryContainer.putVariable(KeyUtil.arg_startedAt, new FuzzyDate(null, null, null));
+            queryContainer.putVariable(KeyUtil.arg_completedAt, new FuzzyDate(null, null, null));
+        }
+
+        if (model.getAdvancedScores() != null)
             queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.getAdvancedScores());
 
-        if(!CompatUtil.isEmpty(model.getCustomLists())) {
+        if (!CompatUtil.isEmpty(model.getCustomLists())) {
             List<String> enabledCustomLists = Stream.of(model.getCustomLists())
                     .filter(CustomList::isEnabled)
                     .map(CustomList::getName)
