@@ -20,6 +20,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
@@ -152,20 +153,15 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     private void updateModelState() {
         if(model.getProgress() == 0) {
             model.setStatus(KeyUtil.CURRENT);
-            model.setStartedAt(getCurrentDate());
+            model.setStartedAt(DateUtil.getCurrentDate());
         }
         model.setProgress(model.getProgress() + 1);
         if(MediaUtil.isIncrementLimitReached(model)) {
             model.setStatus(KeyUtil.COMPLETED);
-            model.setCompletedAt(getCurrentDate());
+            model.setCompletedAt(DateUtil.getCurrentDate());
         }
         presenter.setParams(MediaListUtil.getMediaListParams(model, presenter.getDatabase()
                 .getCurrentUser().getMediaListOptions().getScoreFormat()));
         presenter.requestData(requestType, getContext(), this);
-    }
-
-    private FuzzyDate getCurrentDate(){
-        Calendar calendar = Calendar.getInstance();
-        return new FuzzyDate(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
     }
 }

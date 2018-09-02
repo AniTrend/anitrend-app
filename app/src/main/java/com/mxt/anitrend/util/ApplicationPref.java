@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by max on 2017/09/16.
@@ -31,6 +34,8 @@ public class ApplicationPref {
     public static final String _updateChannel = "_updateChannel";
 
     /** Api Keys */
+    private static final String _genreFilter = "_genreFilter";
+    private static final String _tagFilter = "_tagFilter";
     private static final String _sortOrder = "_sortOrder";
     private static final String _mediaStatus = "_mediaStatus";
     private static final String _mediaFormat = "_mediaFormat";
@@ -299,5 +304,31 @@ public class ApplicationPref {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(_versionCode, BuildConfig.VERSION_CODE);
         editor.apply();
+    }
+
+    public void setSelectedGenres(@Nullable Map<Integer, String> selectedIndices) {
+        String selected = new SelectedFilterUtil()
+                .convertToDatabaseValue(selectedIndices);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_genreFilter, selected);
+        editor.apply();
+    }
+
+    public @NonNull Map<Integer, String> getSelectedGenres() {
+        String selected = sharedPreferences.getString(_genreFilter, null);
+        return new SelectedFilterUtil().convertToEntityProperty(selected);
+    }
+
+    public void setSelectedTags(@Nullable Map<Integer, String> selectedIndices) {
+        String selected = new SelectedFilterUtil()
+                .convertToDatabaseValue(selectedIndices);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_tagFilter, selected);
+        editor.apply();
+    }
+
+    public @NonNull Map<Integer, String> getSelectedTags() {
+        String selected = sharedPreferences.getString(_tagFilter, null);
+        return new SelectedFilterUtil().convertToEntityProperty(selected);
     }
 }
