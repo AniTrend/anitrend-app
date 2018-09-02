@@ -13,11 +13,11 @@ import javax.annotation.Nullable;
 
 public class FuzzyDate implements Parcelable {
 
-    private @Nullable Integer day;
-    private @Nullable Integer month;
-    private @Nullable Integer year;
+    private int day;
+    private int month;
+    private int year;
 
-    public FuzzyDate(@Nullable Integer day,@Nullable Integer month,@Nullable Integer year) {
+    public FuzzyDate(int day,int month,int year) {
         this.day = day;
         this.month = month;
         this.year = year;
@@ -65,13 +65,12 @@ public class FuzzyDate implements Parcelable {
         return year;
     }
 
-    public void setDate(@Nullable Integer day, @Nullable Integer month, @Nullable Integer year) {
+    public void setDate(int day, int month, int year) {
         this.day = day;
         this.month = month;
         this.year = year;
     }
 
-    @SuppressWarnings("NullPointerException")
     public boolean isValidDate() {
         return day != 0 || month != 0 || year != 0;
     }

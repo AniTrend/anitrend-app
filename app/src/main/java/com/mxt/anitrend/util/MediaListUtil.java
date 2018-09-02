@@ -36,14 +36,8 @@ public class MediaListUtil {
         queryContainer.putVariable(KeyUtil.arg_listPrivate, model.isHidden());
         queryContainer.putVariable(KeyUtil.arg_listPriority, model.getPriority());
         queryContainer.putVariable(KeyUtil.arg_listHiddenFromStatusLists, model.isHiddenFromStatusLists());
-
-        if (model.getStartedAt().isValidDate()) {
-            queryContainer.putVariable(KeyUtil.arg_startedAt, model.getStartedAt());
-            queryContainer.putVariable(KeyUtil.arg_completedAt, model.getCompletedAt());
-        } else {
-            queryContainer.putVariable(KeyUtil.arg_startedAt, new FuzzyDate(null, null, null));
-            queryContainer.putVariable(KeyUtil.arg_completedAt, new FuzzyDate(null, null, null));
-        }
+        queryContainer.putVariable(KeyUtil.arg_startedAt, model.getStartedAt());
+        queryContainer.putVariable(KeyUtil.arg_completedAt, model.getCompletedAt());
 
         if (model.getAdvancedScores() != null)
             queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.getAdvancedScores());
