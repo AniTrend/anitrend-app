@@ -8,7 +8,6 @@ import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget;
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.CustomList;
-import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 
 import java.util.List;

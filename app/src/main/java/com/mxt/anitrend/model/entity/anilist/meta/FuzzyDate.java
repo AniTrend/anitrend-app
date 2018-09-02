@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import java.util.Locale;
 
-import javax.annotation.Nullable;
-
 /**
  * Created by max on 2018/03/20.
  */
