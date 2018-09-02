@@ -996,4 +996,5 @@
 
     <string name="dialog_title_started_at">Start Date</string>
     <string name="dialog_title_completed_at">Finish Date</string>
+    <string name="dialog_button_clear">Clear</string>
 </resources>
