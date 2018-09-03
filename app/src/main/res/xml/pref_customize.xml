@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="@string/pref_title_black_theme"
+        android:summary="@string/pref_black_theme_summary"
+        android:key="@string/pref_key_black_theme" />
+
+
+    <ListPreference
+        android:defaultValue="en"
+        android:entries="@array/pref_selected_Language_titles"
+        android:entryValues="@array/pref_selected_Language_values"
+        android:key="@string/pref_key_selected_Language"
+        android:title="@string/pref_title_language" />
+</PreferenceScreen>
