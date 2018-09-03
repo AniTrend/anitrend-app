@@ -92,7 +92,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     protected void configureActivity() {
         ApplicationPref applicationPref = new ApplicationPref(this);
-        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isAmoledEnabled())
+        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
@@ -387,7 +387,8 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(error))
             Log.e(TAG, error);
         if(isAlive()) {
-            AnalyticsUtil.reportException(TAG, error);
+            if (getPresenter() != null && getPresenter().getApplicationPref().isCrashReportsEnabled())
+                AnalyticsUtil.reportException(TAG, error);
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request), error,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange,
                     KeyUtil.DURATION_MEDIUM);

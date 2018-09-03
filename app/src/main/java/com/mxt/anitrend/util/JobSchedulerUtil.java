@@ -18,8 +18,14 @@ import com.mxt.anitrend.service.JobDispatcherService;
  */
 public final class JobSchedulerUtil {
 
-    private static final int MINIMUM_SYNC_TIME = 5 * 60;
     private static final String JOB_DISPATCHER = "anitrend_job_service_18602_0589";
+
+    /**
+     * Gets the 45% of the current set sync time from preferences
+     */
+    private static int getMinimumSyncTime(ApplicationPref applicationPref) {
+        return (int) (0.45 * applicationPref.getSyncTime());
+    }
 
     /**
      * Schedules a new job service or replaces the existing job if one
@@ -41,7 +47,7 @@ public final class JobSchedulerUtil {
                         // The Job should be preserved until the next boot.
                         .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                         // start between 5 to e.g. XX minutes set in our sync preferences
-                        .setTrigger(Trigger.executionWindow(MINIMUM_SYNC_TIME, applicationPref.getSyncTime()))
+                        .setTrigger(Trigger.executionWindow(getMinimumSyncTime(applicationPref), applicationPref.getSyncTime()))
                         // overwrite an existing job with the same tag
                         .setReplaceCurrent(true)
                         // retry with exponential backoff

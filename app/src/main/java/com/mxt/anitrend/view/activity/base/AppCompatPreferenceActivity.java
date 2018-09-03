@@ -26,10 +26,11 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
+    protected ApplicationPref applicationPref;
+
     protected void configureActivity() {
-        ApplicationPref applicationPref = new ApplicationPref(this);
         @StyleRes int style = applicationPref.getTheme();
-        if(!CompatUtil.isLightTheme(style) && applicationPref.isAmoledEnabled())
+        if(!CompatUtil.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
@@ -54,6 +55,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
+        applicationPref = new ApplicationPref(this);
         configureActivity();
         super.onCreate(savedInstanceState);
     }

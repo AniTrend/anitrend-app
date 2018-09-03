@@ -157,7 +157,8 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
             if(error == null) error = getString(R.string.text_error_auth_login);
             NotifyUtil.createAlerter(this, getString(R.string.login_error_title),
                     error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG);
-            AnalyticsUtil.reportException(this.toString(), error);
+            if (getPresenter() != null && getPresenter().getApplicationPref().isCrashReportsEnabled())
+                AnalyticsUtil.reportException(TAG, error);
             binding.widgetFlipper.showPrevious();
             Log.e(this.toString(), error);
         }

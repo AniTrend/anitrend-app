@@ -64,7 +64,7 @@ public class GlideImageUtil implements Html.ImageGetter {
         }
 
         public void setDrawable(Drawable drawable) {
-            // TODO: 2018/04/28 Check image bounds and make sure the maximum widgth is not more than device screen width
+            // TODO: 2018/04/28 Check image bounds and make sure the maximum width is not more than device screen width
             this.drawable = drawable;
             int width = drawable.getIntrinsicWidth();
             int height = drawable.getIntrinsicHeight();
