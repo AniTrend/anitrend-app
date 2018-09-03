@@ -167,7 +167,6 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         itemClickListener = null;
     }
 
-    // TODO: 2018/03/25 Check how parameters are being passed
     @SuppressLint("SwitchIntDef")
     public void startRequestData() {
         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
