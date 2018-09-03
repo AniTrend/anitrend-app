@@ -92,7 +92,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     protected void configureActivity() {
         ApplicationPref applicationPref = new ApplicationPref(this);
-        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isAmoledEnabled())
+        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);

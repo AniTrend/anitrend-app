@@ -79,8 +79,8 @@ public class ApplicationPref {
         return style;
     }
 
-    public boolean isAmoledEnabled() {
-        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_amoled_theme), false);
+    public boolean isBlackThemeEnabled() {
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_key_black_theme), false);
     }
 
     // Returns the IDs of the startup page
