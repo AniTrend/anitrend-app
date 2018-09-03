@@ -1,9 +1,12 @@
 package com.mxt.anitrend.util;
 
+
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 import com.google.gson.reflect.TypeToken;
+import com.mxt.anitrend.base.interfaces.base.PreferenceConverter;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
@@ -13,31 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.annotation.Nullable;
-
-import io.objectbox.converter.PropertyConverter;
-
 /**
  * Created by max on 2018/09/01.
  * Converter for genres and tags selection preference
  */
 
-public class SelectedFilterUtil implements PropertyConverter<Map<Integer, String>, String> {
-
-    @Override
-    public @NonNull Map<Integer, String> convertToEntityProperty(@Nullable String databaseValue) {
-        if(databaseValue == null)
-            return new WeakHashMap<>();
-        Type targetType = new TypeToken<Map<Integer, String>>(){}.getType();
-        return WebFactory.gson.fromJson(databaseValue, targetType);
-    }
-
-    @Override
-    public @NonNull String convertToDatabaseValue(@Nullable Map<Integer, String> entityProperty) {
-        if(entityProperty == null)
-            WebFactory.gson.toJson(new WeakHashMap<>());
-        return WebFactory.gson.toJson(entityProperty);
-    }
+public class GenreTagUtil implements PreferenceConverter<Map<Integer, String>> {
 
     public static @Nullable Map<Integer, String> createTagSelectionMap(@NonNull List<MediaTag> mediaTags, @Nullable Integer[] selectedIndices) {
         if (selectedIndices != null) {
@@ -64,5 +48,20 @@ public class SelectedFilterUtil implements PropertyConverter<Map<Integer, String
             return Stream.of(selectedItems).map(Map.Entry::getValue)
                     .toList();
         return null;
+    }
+
+    @Override
+    public @NonNull Map<Integer, String> convertToEntity(@Nullable String json) {
+        if(json == null)
+            return new WeakHashMap<>();
+        Type targetType = new TypeToken<Map<Integer, String>>(){}.getType();
+        return WebFactory.gson.fromJson(json, targetType);
+    }
+
+    @Override
+    public @NonNull String convertToJson(@Nullable Map<Integer, String> entity) {
+        if(entity == null)
+            WebFactory.gson.toJson(new WeakHashMap<>());
+        return WebFactory.gson.toJson(entity);
     }
 }

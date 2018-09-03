@@ -11,7 +11,6 @@ import android.support.annotation.StyleRes;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -307,8 +306,8 @@ public class ApplicationPref {
     }
 
     public void setSelectedGenres(@Nullable Map<Integer, String> selectedIndices) {
-        String selected = new SelectedFilterUtil()
-                .convertToDatabaseValue(selectedIndices);
+        String selected = new GenreTagUtil()
+                .convertToJson(selectedIndices);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(_genreFilter, selected);
         editor.apply();
@@ -316,12 +315,12 @@ public class ApplicationPref {
 
     public @NonNull Map<Integer, String> getSelectedGenres() {
         String selected = sharedPreferences.getString(_genreFilter, null);
-        return new SelectedFilterUtil().convertToEntityProperty(selected);
+        return new GenreTagUtil().convertToEntity(selected);
     }
 
     public void setSelectedTags(@Nullable Map<Integer, String> selectedIndices) {
-        String selected = new SelectedFilterUtil()
-                .convertToDatabaseValue(selectedIndices);
+        String selected = new GenreTagUtil()
+                .convertToJson(selectedIndices);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(_tagFilter, selected);
         editor.apply();
@@ -329,6 +328,6 @@ public class ApplicationPref {
 
     public @NonNull Map<Integer, String> getSelectedTags() {
         String selected = sharedPreferences.getString(_tagFilter, null);
-        return new SelectedFilterUtil().convertToEntityProperty(selected);
+        return new GenreTagUtil().convertToEntity(selected);
     }
 }
