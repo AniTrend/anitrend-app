@@ -470,7 +470,7 @@
 
     <string name="text_confirm_exit">Naciśnij ponownie, aby zamknąć aplikację</string>
 
-    <string name="text_filter_applying">Stosowanie zmian ...</string>
+    <string name="text_filter_applying">Stosowanie zmian…</string>
 
     <string name="text_filter_restriction">Filtry nie mają zastosowania na tej stronie</string>
 
@@ -756,7 +756,6 @@
     <string-array name="hub_title">
         <item>propozycje</item>
         <item>najbardziej popularne</item>
-        <item>playlista</item>
     </string-array>
 
     <!-- Menu title for text composer -->
@@ -929,13 +928,14 @@
     <string name="pref_header_privacy">Privacy</string>
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
-    <!-- AMOLED Setting Related -->
-    <string name="pref_title_amoled_theme">Amoled Theme</string>
-    <string name="pref_amoled_theme_summary_off">Toggle Theme option will default to non amoled mode (requires restart)</string>
-    <string name="pref_amoled_theme_summary_on">Toggle Theme option will default to amoled mode (requires restart)</string>
+    <!-- Black Setting Related -->
+    <string name="pref_key_black_theme" translatable="false">_isBlackTheme</string>
+    <string name="pref_title_black_theme">Black Theme</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
-    <string name="pref_title_selected_Language">Application Language</string>
+    <string name="pref_title_language">Application Language</string>
+    <string name="pref_title_language_summary">Set application specific language</string>
 
     <string name="pref_title_crash_reports">Crash Reports</string>
     <string name="pref_crash_reports_summary_off">Don\'t allow crashes to be reported (requires restart)</string>
@@ -947,4 +947,6 @@
 
     <string name="dialog_title_started_at">Start Date</string>
     <string name="dialog_title_completed_at">Finish Date</string>
+    <string name="pref_header_customize">Customize</string>
+    <string name="pref_header_customize_summary">Customize application behavior</string>
 </resources>

@@ -925,22 +925,26 @@
     <string name="pref_header_privacy">Privacy</string>
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
-    <!-- AMOLED Setting Related -->
-    <string name="pref_title_amoled_theme">Amoled Theme</string>
-    <string name="pref_amoled_theme_summary_off">Toggle Theme option will default to non amoled mode (requires restart)</string>
-    <string name="pref_amoled_theme_summary_on">Toggle Theme option will default to amoled mode (requires restart)</string>
+    <!-- Black Setting Related -->
+    <string name="pref_key_black_theme" translatable="false">_isBlackTheme</string>
+    <string name="pref_title_black_theme">Black Theme</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
-    <string name="pref_title_selected_Language">Application Language</string>
+    <string name="pref_title_language">Application Language</string>
+    <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
 
     <string name="pref_title_crash_reports">Crash Reports</string>
-    <string name="pref_crash_reports_summary_off">Don\'t allow crashes to be reported (requires restart)</string>
-    <string name="pref_crash_reports_summary_on">Allow AniTrend to crashes to be reported, this will not include any sensitive information (requires restart)</string>
+    <string name="pref_crash_reports_summary_off">Application will not send crash reports, please enable this option to make bug discovery and fixing easier</string>
+    <string name="pref_crash_reports_summary_on">Application will automatically send crash reports</string>
 
     <string name="pref_title_usage_analytics">Usage Analytics</string>
-    <string name="pref_usage_analytics_summary_off">Don\'t send any information about usage or bug identification (requires restart)</string>
-    <string name="pref_usage_analytics_summary_on">Allow information like most used activity and user id to be attached to bug reports (requires restart)</string>
+    <string name="pref_usage_analytics_summary_off">Application will not send any anonymous statistics on most used features, please consider enabling this option for better design choices in future</string>
+    <string name="pref_usage_analytics_summary_on">Application will only send anonymous statistics like most used features</string>
 
     <string name="dialog_title_started_at">Start Date</string>
     <string name="dialog_title_completed_at">Finish Date</string>
+    <string name="pref_header_customize">Customize</string>
+    <string name="pref_header_customize_summary">Customize application behavior</string>
+    <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
 </resources>
