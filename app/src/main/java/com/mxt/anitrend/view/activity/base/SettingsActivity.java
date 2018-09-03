@@ -4,6 +4,7 @@ package com.mxt.anitrend.view.activity.base;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -20,9 +21,12 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 
 import java.util.List;
 
@@ -38,6 +42,20 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        if (CompatUtil.equals(key, getString(R.string.pref_key_crash_reports)) || CompatUtil.equals(key, getString(R.string.pref_key_usage_analytics)) ||
+                CompatUtil.equals(key, getString(R.string.pref_key_selected_Language)) || CompatUtil.equals(key, getString(R.string.pref_key_black_theme))) {
+            // Change the application theme if the current theme is not in dark mode
+            if (CompatUtil.equals(key, getString(R.string.pref_key_black_theme)))
+                if(applicationPref != null && CompatUtil.isLightTheme(getApplicationContext()))
+                    applicationPref.toggleTheme();
+            NotifyUtil.makeText(getApplicationContext(), R.string.text_application_restart_required, Toast.LENGTH_LONG).show();
+        } else if (CompatUtil.equals(key, getString(R.string.pref_key_sync_frequency))) {
+            JobSchedulerUtil.cancelJob(getApplicationContext());
+            JobSchedulerUtil.scheduleJob(getApplicationContext());
+        }
+    };
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -289,8 +307,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        JobSchedulerUtil.scheduleJob(getApplicationContext());
-        super.onDestroy();
+    protected void onPostResume() {
+        super.onPostResume();
+        if (applicationPref != null)
+            applicationPref.getSharedPreferences()
+                    .registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
+    @Override
+    protected void onPause() {
+        if (applicationPref != null)
+            applicationPref.getSharedPreferences()
+                    .unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        super.onPause();
     }
 }
