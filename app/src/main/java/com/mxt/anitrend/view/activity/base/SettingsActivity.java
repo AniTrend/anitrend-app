@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (CompatUtil.equals(key, getString(R.string.pref_key_black_theme)))
                 if(applicationPref != null && CompatUtil.isLightTheme(getApplicationContext()))
                     applicationPref.toggleTheme();
-            NotifyUtil.makeText(getApplicationContext(), R.string.text_application_restart_required, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.text_application_restart_required, Toast.LENGTH_LONG).show();
         } else if (CompatUtil.equals(key, getString(R.string.pref_key_sync_frequency))) {
             JobSchedulerUtil.cancelJob(getApplicationContext());
             JobSchedulerUtil.scheduleJob(getApplicationContext());
