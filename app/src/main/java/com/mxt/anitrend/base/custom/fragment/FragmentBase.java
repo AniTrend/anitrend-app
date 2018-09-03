@@ -333,7 +333,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     public void showError(String error) {
         if(!TextUtils.isEmpty(error)) {
             Log.e(TAG, error);
-            AnalyticsUtil.reportException(TAG, error);
+            if (getPresenter() != null && getPresenter().getApplicationPref().isCrashReportsEnabled())
+                AnalyticsUtil.reportException(TAG, error);
         }
     }
 
