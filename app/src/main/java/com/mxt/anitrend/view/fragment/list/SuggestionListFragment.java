@@ -17,7 +17,6 @@ import com.mxt.anitrend.util.KeyUtil;
  * Created by max on 2017/11/04.
  * Suggestions adapter
  */
-// TODO: 2018/04/07 Hide genres from filter list
 public class SuggestionListFragment extends MediaBrowseFragment {
 
     public static SuggestionListFragment newInstance(Bundle params) {
@@ -46,6 +45,7 @@ public class SuggestionListFragment extends MediaBrowseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.findItem(R.id.action_genre).setVisible(false);
+        menu.findItem(R.id.action_tag).setVisible(false);
         menu.findItem(R.id.action_type).setVisible(false);
         menu.findItem(R.id.action_year).setVisible(false);
         menu.findItem(R.id.action_status).setVisible(false);

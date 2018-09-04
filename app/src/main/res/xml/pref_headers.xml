@@ -2,6 +2,13 @@
 
     <!-- These settings headers are only used on tablets. -->
     <header
+        android:breadCrumbTitle="Customization Settings"
+        android:fragment="com.mxt.anitrend.view.activity.base.SettingsActivity$CustomizePreferenceFragment"
+        android:icon="@drawable/ic_format_color_fill_grey_600_24dp"
+        android:summary="@string/pref_header_customize_summary"
+        android:title="@string/pref_header_customize" />
+
+    <header
         android:breadCrumbTitle="General Settings"
         android:fragment="com.mxt.anitrend.view.activity.base.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_touch_app_grey_600_24dp"

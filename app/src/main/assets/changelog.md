@@ -10,7 +10,7 @@
 - New changeable application language: __Settings -> General__
 - New personalised score types based on your profile settings
 - New start and end dates for your anime/manga lists
-- Media list status icons for media in your list
+- Media list status icons for your list
 - Additional support for trailers when a device doesn't have the YouTube app
 - Many other minor enhancement and improvements
 

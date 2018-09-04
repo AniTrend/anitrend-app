@@ -29,7 +29,7 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.SelectedFilterUtil;
+import com.mxt.anitrend.util.GenreTagUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -134,7 +134,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                                 (dialog, which, text) -> false, (dialog, which) -> {
                                     switch (which) {
                                         case POSITIVE:
-                                            Map<Integer, String> selectedIndices = SelectedFilterUtil
+                                            Map<Integer, String> selectedIndices = GenreTagUtil
                                                     .createGenreSelectionMap(genres, dialog.getSelectedIndices());
 
                                             getPresenter().getApplicationPref()
@@ -165,7 +165,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                                 (dialog, which, text) -> false, (dialog, which) -> {
                                     switch (which) {
                                         case POSITIVE:
-                                            Map<Integer, String> selectedIndices = SelectedFilterUtil
+                                            Map<Integer, String> selectedIndices = GenreTagUtil
                                                     .createTagSelectionMap(tagList, dialog.getSelectedIndices());
 
                                             getPresenter().getApplicationPref()
@@ -227,8 +227,8 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
 
                 queryContainer.putVariable(KeyUtil.arg_status, pref.getMediaStatus())
-                        .putVariable(KeyUtil.arg_genres, SelectedFilterUtil.getMappedValues(pref.getSelectedGenres()))
-                        .putVariable(KeyUtil.arg_tags, SelectedFilterUtil.getMappedValues(pref.getSelectedTags()))
+                        .putVariable(KeyUtil.arg_genres, GenreTagUtil.getMappedValues(pref.getSelectedGenres()))
+                        .putVariable(KeyUtil.arg_tags, GenreTagUtil.getMappedValues(pref.getSelectedTags()))
                         .putVariable(KeyUtil.arg_format, pref.getMediaFormat());
             }
             queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder());
