@@ -26,7 +26,7 @@ public class MediaListUtil {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_scoreFormat, scoreFormat);
 
-        if(model.getId() > 0)
+        if (model.getId() > 0)
             queryContainer.putVariable(KeyUtil.arg_id, model.getId());
         queryContainer.putVariable(KeyUtil.arg_mediaId, model.getMediaId());
         queryContainer.putVariable(KeyUtil.arg_listStatus, model.getStatus());
@@ -38,10 +38,10 @@ public class MediaListUtil {
         queryContainer.putVariable(KeyUtil.arg_startedAt, model.getStartedAt());
         queryContainer.putVariable(KeyUtil.arg_completedAt, model.getCompletedAt());
 
-        if(model.getAdvancedScores() != null)
+        if (model.getAdvancedScores() != null)
             queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.getAdvancedScores());
 
-        if(!CompatUtil.isEmpty(model.getCustomLists())) {
+        if (!CompatUtil.isEmpty(model.getCustomLists())) {
             List<String> enabledCustomLists = Stream.of(model.getCustomLists())
                     .filter(CustomList::isEnabled)
                     .map(CustomList::getName)
