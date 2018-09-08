@@ -11,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
@@ -79,7 +80,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
         }
     };
-    
+
     /**
      * Set up your custom bottom sheet and check for arguments if any
      */
@@ -157,7 +158,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
         CoordinatorLayout.Behavior coordinatorBehavior = layoutParams.getBehavior();
 
-        if (coordinatorBehavior != null && coordinatorBehavior instanceof BottomSheetBehavior) {
+        if (coordinatorBehavior instanceof BottomSheetBehavior) {
             bottomSheetBehavior = (BottomSheetBehavior) coordinatorBehavior;
             bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
             bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);

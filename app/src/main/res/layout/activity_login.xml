@@ -23,7 +23,7 @@
             android:orientation="vertical"
             android:layout_gravity="center"
             android:elevation="@dimen/md_margin"
-            android:background="?colorPrimary">
+            android:background="@drawable/material_curve">
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
                 android:layout_width="wrap_content"
@@ -67,6 +67,7 @@
                     app:cardBackgroundColor="?attr/colorPrimaryDark"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true"
+                    app:cardCornerRadius="@dimen/lg_margin"
                     app:contentPadding="@dimen/lg_margin">
 
                     <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
