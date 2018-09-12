@@ -31,8 +31,8 @@
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
-        <item name="android:statusBarColor">@color/colorRootDark</item>
-        <item name="android:navigationBarColor">@color/colorRootDark</item>
+        <item name="android:statusBarColor">@color/colorLineDark</item>
+        <item name="android:navigationBarColor">@color/colorLineDark</item>
 
         <item name="android:popupMenuStyle">@style/PopupThemeLight</item>
     </style>

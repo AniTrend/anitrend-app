@@ -25,27 +25,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.mxt.anitrend.base.custom.view.container.CardViewBase
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/lg_margin">
+                <include layout="@layout/section_series_info" app:model="@{model}"
+                    app:presenter="@{presenter}" />
 
-                    <include layout="@layout/section_series_info" app:model="@{model}"
-                        app:presenter="@{presenter}" />
-
-                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
-
-                <com.mxt.anitrend.base.custom.view.container.CardViewBase
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/lg_margin">
-
-                    <include layout="@layout/section_series_description" app:model="@{model}"
-                        app:presenter="@{presenter}"/>
-
-                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+                <include layout="@layout/section_series_description" app:model="@{model}"
+                    app:presenter="@{presenter}"/>
 
                 <FrameLayout
                     android:id="@+id/youtube_view"
@@ -62,17 +46,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <com.mxt.anitrend.base.custom.view.container.CardViewBase
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/lg_margin">
-
-                    <include layout="@layout/section_series_details" app:model="@{model}"
-                        app:presenter="@{presenter}"/>
-
-                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+                <include layout="@layout/section_series_details" app:model="@{model}"
+                    app:presenter="@{presenter}"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/tags_recycler"

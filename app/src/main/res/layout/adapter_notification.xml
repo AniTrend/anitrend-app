@@ -3,10 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <com.mxt.anitrend.base.custom.view.container.NotificationCardView
             android:clickable="true"
             android:focusable="true"
@@ -16,24 +12,23 @@
             android:layout_margin="@dimen/lg_margin"
             android:foreground="?selectableItemBackground">
 
-            <FrameLayout
-                android:orientation="horizontal"
-                android:id="@+id/notification_indicator"
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_notification_border" />
-
             <LinearLayout
-                android:padding="16dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/notification_indicator"
+                    android:layout_width="@dimen/md_margin"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/ic_notification_border" />
 
                 <LinearLayout
-                    android:layout_weight="1"
+                    android:padding="@dimen/xl_margin"
                     android:orientation="vertical"
-                    android:layout_marginEnd="@dimen/lg_margin"
+                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent">
 
@@ -80,15 +75,12 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AspectImageView
                     android:id="@+id/notification_img"
-                    android:layout_width="75dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     tools:src="@drawable/sample_img" />
 
             </LinearLayout>
 
         </com.mxt.anitrend.base.custom.view.container.NotificationCardView>
-
-    </FrameLayout>
-
 
 </layout>
