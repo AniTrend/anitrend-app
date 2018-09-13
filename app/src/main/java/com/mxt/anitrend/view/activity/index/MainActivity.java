@@ -382,6 +382,18 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         }
     }
 
+    /**
+     * Called for each of the requested permissions as they are granted
+     *
+     * @param permission the current permission granted
+     */
+    @Override
+    protected void onPermissionGranted(@NonNull String permission) {
+        super.onPermissionGranted(permission);
+        if (permission.equals(android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            onNavigate(R.id.nav_check_update);
+    }
+
     @Override
     protected void updateUI() {
         VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
