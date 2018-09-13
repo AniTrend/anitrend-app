@@ -15,6 +15,10 @@ Big shout out to all the testers, translators and donators on the [AniTrend Disc
 
 - Find all issues, feature requests, bugs and project road map [here](https://waffle.io/AniTrend/anitrend-app)
 
+## Documentation
+
+Development documentation for AniTrend is still a work in progress so for the time bieng on the essentials are available and can be found over at: __[anitrend.gitbook.io](https://anitrend.gitbook.io/project/)__
+
 # Screenshots
 
 ### Dual Application Themes
