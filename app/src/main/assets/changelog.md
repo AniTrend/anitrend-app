@@ -15,6 +15,7 @@
 - Many other minor enhancement and improvements
 
 ### Bug Fixes
+- Crashes with pre-lollipop devices when attempting to login with v1.2.0
 - Crash issue with Android Pie devices when viewing status feeds
 - 404 on profile links that end with /
 
