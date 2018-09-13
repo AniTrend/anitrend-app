@@ -79,7 +79,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
         }
     };
-    
+
     /**
      * Set up your custom bottom sheet and check for arguments if any
      */
@@ -157,7 +157,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
         CoordinatorLayout.Behavior coordinatorBehavior = layoutParams.getBehavior();
 
-        if (coordinatorBehavior != null && coordinatorBehavior instanceof BottomSheetBehavior) {
+        if (coordinatorBehavior instanceof BottomSheetBehavior) {
             bottomSheetBehavior = (BottomSheetBehavior) coordinatorBehavior;
             bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
             bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);

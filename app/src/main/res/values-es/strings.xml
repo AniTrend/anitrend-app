@@ -927,7 +927,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_key_black_theme" translatable="false">_isBlackTheme</string>
     <string name="pref_title_black_theme">Black Theme</string>
     <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
@@ -948,4 +947,5 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_header_customize">Customize</string>
     <string name="pref_header_customize_summary">Customize application behavior</string>
     <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
+    <string name="dialog_button_clear">Clear</string>
 </resources>

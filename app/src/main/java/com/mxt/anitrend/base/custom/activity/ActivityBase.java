@@ -252,14 +252,21 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION) {
             for (int i = 0; i < permissions.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    NotifyUtil.makeText(this, R.string.completed_success, Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Granted " + permissions[i]);
-                }
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                    onPermissionGranted(permissions[i]);
                 else
                     NotifyUtil.makeText(this, R.string.text_permission_required, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /**
+     * Called for each of the requested permissions as they are granted
+     *
+     * @param permission the current permission granted
+     */
+    protected void onPermissionGranted(@NonNull String permission) {
+        Log.i(TAG, "Granted " + permission);
     }
 
     /**

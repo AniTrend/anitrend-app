@@ -1,7 +1,7 @@
 {
-    "code": 85,
+    "code": 90,
     "migration": false,
     "releaseNotes": "",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "appId": "com.mxt.anitrend"
 }

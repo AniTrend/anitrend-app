@@ -8,14 +8,18 @@
         <import type="com.mxt.anitrend.util.CompatUtil" />
     </data>
 
-    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+    <android.support.v7.widget.CardView
+        android:id="@+id/container"
         android:clickable="true"
         android:focusable="true"
-        android:id="@+id/container"
+        android:foreground="?selectableItemBackground"
+        android:layout_margin="@dimen/lg_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
-        android:foreground="?selectableItemBackground">
+        app:cardPreventCornerOverlap="false"
+        app:cardBackgroundColor="?cardColor"
+        app:cardElevation="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/lg_margin">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -24,7 +28,7 @@
 
             <com.mxt.anitrend.base.custom.view.image.AspectImageView
                 android:id="@+id/series_image"
-                android:layout_width="@dimen/avatar_size_lg"
+                android:layout_width="@dimen/avatar_size_xl"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/sample_img"
                 app:imageUrl="@{model.coverImage}"/>
@@ -34,8 +38,8 @@
                 android:layout_height="wrap_content" />
 
             <LinearLayout
+                android:layout_margin="@dimen/lg_margin"
                 android:orientation="vertical"
-                android:layout_marginEnd="@dimen/lg_margin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -82,6 +86,6 @@
 
         </LinearLayout>
 
-    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+    </android.support.v7.widget.CardView>
 
 </layout>

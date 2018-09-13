@@ -25,11 +25,11 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
+import com.mxt.anitrend.util.GenreTagUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.GenreTagUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;

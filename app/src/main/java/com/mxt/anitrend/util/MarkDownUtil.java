@@ -49,15 +49,6 @@ public final class MarkDownUtil {
         return result;
     }
 
-/*    private static SpannableStringBuilder fromMD(@NonNull String content, Context context, AppCompatTextView source) {
-        Spanned htmlConverted;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            htmlConverted = Html.fromHtml(Processor.process(content), Html.FROM_HTML_MODE_LEGACY, GlideImageUtil.create(context, source), HtmlTagUtil.create());
-        else
-            htmlConverted = Html.fromHtml(Processor.process(content), GlideImageUtil.create(context, source), HtmlTagUtil.create());
-        return (SpannableStringBuilder) htmlConverted;
-    }*/
-
     public static Spanned convert(@Nullable String input, Context context, AppCompatTextView source) {
         SpannableStringBuilder result;
         if(TextUtils.isEmpty(input))

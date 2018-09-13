@@ -11,19 +11,21 @@
         android:id="@+id/widget_flipper"
         android:clickable="true"
         android:focusable="true"
+        android:layout_margin="@dimen/md_margin"
         android:inAnimation="@android:anim/slide_in_left"
         android:outAnimation="@android:anim/slide_out_right"
         android:foreground="?selectableItemBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClickListener="@{onClickEvent}"
-        android:background="@color/black_transparent_image">
+        android:background="@drawable/material_curve_black">
 
         <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
             android:id="@+id/series_progress_increment"
-            android:textColor="@color/white"
             android:padding="@dimen/lg_margin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="32/? +"/>

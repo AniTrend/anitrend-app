@@ -17,7 +17,6 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
-import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
@@ -26,8 +25,6 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-
-import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Response;
