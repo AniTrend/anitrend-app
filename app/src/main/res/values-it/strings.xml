@@ -783,11 +783,11 @@
 
     <!--Only replace the first item the others are already provided in this file-->
     <string-array name="post_share_types">
-        <item>Insert Plain Text</item>
-        <item>@string/attach_link_title</item>
-        <item>@string/attach_image_title</item>
-        <item>@string/attach_youtube_title</item>
-        <item>@string/attach_webm_title</item>
+        <item>Plain Text</item>
+        <item>Website</item>
+        <item>Picture</item>
+        <item>YouTube</item>
+        <item>Video</item>
     </string-array>
 
     <!--These are the anime time labels in your profile-->
@@ -922,18 +922,29 @@
     <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
 
     <!-- Privacy Settings -->
-
     <string name="pref_header_privacy">Privacy</string>
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
+    <!-- Black Setting Related -->
+    <string name="pref_title_black_theme">Black Theme</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
+
+    <!--Language preferences-->
+    <string name="pref_title_language">Application Language</string>
+    <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
+
     <string name="pref_title_crash_reports">Crash Reports</string>
-    <string name="pref_crash_reports_summary_off">Enable Crash Reports (require app restart)</string>
-    <string name="pref_crash_reports_summary_on">Disable Crash Reports (require app restart)</string>
+    <string name="pref_crash_reports_summary_off">Application will not send crash reports, please enable this option to make bug discovery and fixing easier</string>
+    <string name="pref_crash_reports_summary_on">Application will automatically send crash reports</string>
 
     <string name="pref_title_usage_analytics">Usage Analytics</string>
-    <string name="pref_usage_analytics_summary_off">Enable Usage Analytics (require app restart)</string>
-    <string name="pref_usage_analytics_summary_on">Disable Usage Analytics (require app restart)</string>
+    <string name="pref_usage_analytics_summary_off">Application will not send any anonymous statistics on most used features, please consider enabling this option for better design choices in future</string>
+    <string name="pref_usage_analytics_summary_on">Application will only send anonymous statistics like most used features</string>
 
     <string name="dialog_title_started_at">Start Date</string>
     <string name="dialog_title_completed_at">Finish Date</string>
+    <string name="pref_header_customize">Customize</string>
+    <string name="pref_header_customize_summary">Customize application behavior</string>
+    <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
+    <string name="dialog_button_clear">Clear</string>
 </resources>

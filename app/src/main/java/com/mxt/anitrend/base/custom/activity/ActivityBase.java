@@ -37,7 +37,7 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.LocaleHelper;
+import com.mxt.anitrend.util.LocaleUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
@@ -92,7 +92,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     protected void configureActivity() {
         ApplicationPref applicationPref = new ApplicationPref(this);
-        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isAmoledEnabled())
+        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
@@ -101,7 +101,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base));
+        super.attachBaseContext(LocaleUtil.onAttach(base));
     }
 
     @Override
@@ -252,14 +252,21 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION) {
             for (int i = 0; i < permissions.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    NotifyUtil.makeText(this, R.string.completed_success, Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Granted " + permissions[i]);
-                }
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                    onPermissionGranted(permissions[i]);
                 else
                     NotifyUtil.makeText(this, R.string.text_permission_required, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /**
+     * Called for each of the requested permissions as they are granted
+     *
+     * @param permission the current permission granted
+     */
+    protected void onPermissionGranted(@NonNull String permission) {
+        Log.i(TAG, "Granted " + permission);
     }
 
     /**
@@ -387,7 +394,8 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(error))
             Log.e(TAG, error);
         if(isAlive()) {
-            AnalyticsUtil.reportException(TAG, error);
+            if (getPresenter() != null && getPresenter().getApplicationPref().isCrashReportsEnabled())
+                AnalyticsUtil.reportException(TAG, error);
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request), error,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange,
                     KeyUtil.DURATION_MEDIUM);

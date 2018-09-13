@@ -8,7 +8,19 @@
         <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.MediaPresenter" />
     </data>
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:layout_margin="@dimen/lg_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="false"
+        app:cardBackgroundColor="?cardColor"
+        app:cardElevation="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/xl_margin">
+
+        <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,20 +35,16 @@
             app:imageUrl="@{model.coverImage}"
             tools:src="@drawable/sample_img"/>
 
-        <android.support.v4.widget.Space
-            android:layout_width="@dimen/xl_margin"
-            android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:padding="@dimen/xl_margin"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:ellipsize="end"
                 android:textStyle="bold"
                 android:text="@{model.title.romaji}"
                 android:textIsSelectable="true"
@@ -67,55 +75,28 @@
                 android:text="@{model.title.english}"
                 android:fontFamily="sans-serif-light"
                 android:textIsSelectable="true"
-                android:maxLines="2"
-                android:ellipsize="end"
                 tools:text="Gintama" />
 
             <android.support.v4.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+            <com.mxt.anitrend.base.custom.view.text.SeriesTypeView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/title_series_type"/>
-
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="@{presenter.getMediaFormat(model)}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                app:seriesType="@{presenter.getMediaFormat(model)}"
                 android:textIsSelectable="true"
-                tools:text="TV"/>
+                tools:text="Series Type: TV"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />
-
-            <com.mxt.anitrend.base.custom.view.text.RangeDateTextView
-                android:id="@+id/series_start_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                android:textIsSelectable="true"
-                app:startDate="@{model.startDate}"
-                tools:text="Started: 2017/09/30"/>
-
-            <android.support.v4.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/md_margin" />
-
-            <com.mxt.anitrend.base.custom.view.text.RangeDateTextView
-                android:id="@+id/series_end_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                android:textIsSelectable="true"
-                app:endDate="@{model.endDate}"
-                tools:text="Ended: 2017/10/30"/>
 
         </LinearLayout>
 
     </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </layout>

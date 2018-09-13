@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFuzzyDateBinding;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
@@ -57,11 +59,9 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
     }
 
     private void updateDate() {
-        if(fuzzyDate != null) {
-            String convertedDate = DateUtil.convertDate(fuzzyDate);
-            binding.setModel(convertedDate);
-            binding.executePendingBindings();
-        }
+        String convertedDate = DateUtil.convertDate(fuzzyDate);
+        binding.setModel(convertedDate);
+        binding.executePendingBindings();
     }
 
     public @Nullable FuzzyDate getDate() {
@@ -85,6 +85,12 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH));
         }
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getContext().getText(R.string.dialog_button_clear), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                onDateSet(datePickerDialog.getDatePicker(), 0, -1, 0);
+            }
+        });
         datePickerDialog.show();
     }
 

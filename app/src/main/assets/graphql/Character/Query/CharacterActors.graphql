@@ -76,6 +76,11 @@ query CharacterActors($id: Int!, $page: Int, $perPage: Int, $sort: [StaffSort] =
                     episode
                   }
                 }
+                mediaListEntry {
+                  ... on MediaList {
+                    status
+                  }
+                }
               }
             }
           }

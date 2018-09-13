@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
-import com.mxt.anitrend.R;
-import com.mxt.anitrend.util.CompatUtil;
-
 public class NotificationCardView extends CardViewBase {
 
     public NotificationCardView(@NonNull Context context) {

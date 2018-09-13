@@ -7,16 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
-import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEpisodeBinding;
 import com.mxt.anitrend.model.entity.crunchy.Episode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;

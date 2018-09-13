@@ -33,7 +33,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -167,7 +167,6 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         itemClickListener = null;
     }
 
-    // TODO: 2018/03/25 Check how parameters are being passed
     @SuppressLint("SwitchIntDef")
     public void startRequestData() {
         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
@@ -294,7 +293,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         EditText editor = binding.comment;
         int start = editor.getSelectionStart();
         Gif gif = pair.getSecond().getImages().get(index);
-        editor.getEditableText().insert(start, MarkDown.convertImage(gif.getUrl()));
+        editor.getEditableText().insert(start, MarkDownUtil.convertImage(gif.getUrl()));
     }
 
     public void appendText(String textValue) {

@@ -19,6 +19,7 @@ import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
@@ -145,11 +146,17 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
         }
     }
 
-    private void updateModelState() {
-        model.setProgress(model.getProgress() + 1);
-        if(MediaUtil.isIncrementLimitReached(model))
-            model.setStatus(KeyUtil.COMPLETED);
 
+    private void updateModelState() {
+        if(model.getProgress() == 0) {
+            model.setStatus(KeyUtil.CURRENT);
+            model.setStartedAt(DateUtil.getCurrentDate());
+        }
+        model.setProgress(model.getProgress() + 1);
+        if(MediaUtil.isIncrementLimitReached(model)) {
+            model.setStatus(KeyUtil.COMPLETED);
+            model.setCompletedAt(DateUtil.getCurrentDate());
+        }
         presenter.setParams(MediaListUtil.getMediaListParams(model, presenter.getDatabase()
                 .getCurrentUser().getMediaListOptions().getScoreFormat()));
         presenter.requestData(requestType, getContext(), this);

@@ -58,6 +58,11 @@ query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: 
             episode
           }
         }
+		mediaListEntry {
+			... on MediaList {
+				status
+			}
+		}
       }
     }
   }

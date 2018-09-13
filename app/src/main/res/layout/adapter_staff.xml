@@ -21,7 +21,7 @@
         app:cardPreventCornerOverlap="false"
         app:cardBackgroundColor="?cardColor"
         app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/xl_margin"
         tools:layout_width="@dimen/series_image_lg">
 
         <LinearLayout

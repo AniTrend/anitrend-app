@@ -37,8 +37,8 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         if(isAlive())
             initialize(BuildConfig.API_KEY, this);
     }
@@ -52,7 +52,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
-        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             this.youTubePlayer = youTubePlayer;
             if (!wasRestored)
                 this.youTubePlayer.cueVideo(mediaTrailer.getId());
@@ -69,6 +69,6 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
      * @return true if the fragment is still valid otherwise false
      */
     private boolean isAlive() {
-        return isVisible() || !isDetached() || !isRemoving();
+        return isVisible() || !isDetached() || !isRemoving() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED);
     }
 }

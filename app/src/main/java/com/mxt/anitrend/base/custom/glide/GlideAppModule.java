@@ -39,7 +39,7 @@ public class GlideAppModule extends AppGlideModule {
         boolean isLowRamDevice = CompatUtil.isLowRamDevice(context);
 
         MemorySizeCalculator calculator = new MemorySizeCalculator.Builder(context)
-                .setMemoryCacheScreens(isLowRamDevice? 2 : 3).build();
+                .setMemoryCacheScreens(isLowRamDevice? 1 : 2).build();
 
         // Increasing cache & pool by 25% - default is 250MB
         int memoryCacheSize = (int) (1.25 * calculator.getMemoryCacheSize());

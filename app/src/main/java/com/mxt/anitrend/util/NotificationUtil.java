@@ -14,10 +14,10 @@ import static android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT;
 
 /**
  * Created by max on 1/22/2017.
- * NotificationDispatcher
+ * NotificationUtil
  */
 
-public final class NotificationDispatcher {
+public final class NotificationUtil {
 
     private static final int NOTIFICATION_ID = 0x00000111;
 

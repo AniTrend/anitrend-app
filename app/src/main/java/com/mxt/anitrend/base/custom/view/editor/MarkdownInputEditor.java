@@ -12,9 +12,7 @@ import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.os.BuildCompat;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ActionMode;
@@ -28,7 +26,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.MarkDownUtil;
 
 import static com.mxt.anitrend.util.KeyUtil.MD_BOLD;
 import static com.mxt.anitrend.util.KeyUtil.MD_BULLET;
@@ -275,7 +273,7 @@ public class MarkdownInputEditor extends TextInputEditText implements CustomView
                 inputContentInfo.requestPermission();
             Uri linkUri = inputContentInfo.getLinkUri();
             if(linkUri != null) {
-                String link = MarkDown.convertImage(linkUri.toString());
+                String link = MarkDownUtil.convertImage(linkUri.toString());
                 getText().insert(getSelectionStart(), link);
                 inputContentInfo.releasePermission();
                 return true;

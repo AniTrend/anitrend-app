@@ -9,12 +9,12 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.spinner.IconArrayAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView;
@@ -28,13 +28,16 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
+import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +85,12 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     protected @BindView(R.id.sheet_share_post_type) Spinner sharedResourceType;
     protected @BindView(R.id.sheet_share_post_type_approve) AppCompatTintImageView sharedResourceApprove;
 
+    private Map<Integer, Integer> indexIconMap = new HashMap<Integer, Integer>() {{
+        put(0, R.drawable.ic_textsms_white_24dp);
+        put(1, R.drawable.ic_link_white_24dp); put(2, R.drawable.ic_crop_original_white_24dp);
+        put(3, R.drawable.ic_youtube); put(4, R.drawable.ic_slow_motion_video_white_24dp);
+    }};
+
     /**
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style, also if you wish
@@ -110,9 +119,11 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
         bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.post_share_types, R.layout.adapter_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sharedResourceType.setAdapter(adapter);
+        IconArrayAdapter iconArrayAdapter = new IconArrayAdapter(this,
+                R.layout.adapter_spinner_item, R.id.spinner_text,
+                CompatUtil.getStringList(this, R.array.post_share_types));
+        iconArrayAdapter.setIndexIconMap(indexIconMap);
+        sharedResourceType.setAdapter(iconArrayAdapter);
         onActivityReady();
     }
 
@@ -192,16 +203,16 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         @KeyUtil.ShareType int position = sharedResourceType.getSelectedItemPosition();
         switch (position) {
             case KeyUtil.IMAGE_TYPE:
-                binding.composerWidget.setText(MarkDown.convertImage(text));
+                binding.composerWidget.setText(MarkDownUtil.convertImage(text));
                 break;
             case KeyUtil.LINK_TYPE:
-                binding.composerWidget.setText(MarkDown.convertLink(text));
+                binding.composerWidget.setText(MarkDownUtil.convertLink(text));
                 break;
             case KeyUtil.WEBM_TYPE:
-                binding.composerWidget.setText(MarkDown.convertVideo(text));
+                binding.composerWidget.setText(MarkDownUtil.convertVideo(text));
                 break;
             case KeyUtil.YOUTUBE_TYPE:
-                binding.composerWidget.setText(MarkDown.convertYoutube(text));
+                binding.composerWidget.setText(MarkDownUtil.convertYoutube(text));
                 break;
             case KeyUtil.PLAIN_TYPE:
                 binding.composerWidget.setText(text);

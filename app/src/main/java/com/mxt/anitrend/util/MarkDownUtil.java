@@ -10,6 +10,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.github.rjeschke.txtmark.Processor;
 
@@ -17,7 +18,7 @@ import com.github.rjeschke.txtmark.Processor;
  * Created by max on 2017/03/26.
  * Moved markdown processor to global location
  */
-public final class MarkDown {
+public final class MarkDownUtil {
 
     private static SpannableStringBuilder fromMD(@NonNull String content) {
         Spanned htmlConverted;
@@ -34,35 +35,36 @@ public final class MarkDown {
         if(TextUtils.isEmpty(input))
             result = fromMD("<b>No content available</b>");
         else
-            result = fromMD(PatternMatcher.findUserTags(input));
+            result = fromMD(RegexUtil.findUserTags(input));
 
-        if(result.length() > 0)
-            while (result.charAt(result.length() - 1) == '\n')
-                result = result.delete(result.length() - 1, result.length());
+        try {
+            if(result.length() > 0)
+                while (result.charAt(result.length() - 1) == '\n')
+                    result = result.delete(result.length() - 1, result.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("convert(input)", e.getMessage());
+        }
 
         return result;
     }
-
-/*    private static SpannableStringBuilder fromMD(@NonNull String content, Context context, AppCompatTextView source) {
-        Spanned htmlConverted;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            htmlConverted = Html.fromHtml(Processor.process(content), Html.FROM_HTML_MODE_LEGACY, GlideImageGetter.create(context, source), HtmlTagHandler.create());
-        else
-            htmlConverted = Html.fromHtml(Processor.process(content), GlideImageGetter.create(context, source), HtmlTagHandler.create());
-        return (SpannableStringBuilder) htmlConverted;
-    }*/
 
     public static Spanned convert(@Nullable String input, Context context, AppCompatTextView source) {
         SpannableStringBuilder result;
         if(TextUtils.isEmpty(input))
             result = fromMD("<b>No content available</b>");
         else
-            result = fromMD(PatternMatcher.findUserTags(input));
-            // result = fromMD(PatternMatcher.findUserTags(input), context, source);
+            result = fromMD(RegexUtil.findUserTags(input));
+            // result = fromMD(RegexUtil.findUserTags(input), context, source);
 
-        if(result.length() > 0)
-            while (result.charAt(result.length() - 1) == '\n')
-                result = result.delete(result.length() - 1, result.length());
+        try {
+            if(result.length() > 0)
+                while (result.charAt(result.length() - 1) == '\n')
+                    result = result.delete(result.length() - 1, result.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("convert(input...)", e.getMessage());
+        }
 
         return result;
     }
@@ -84,18 +86,18 @@ public final class MarkDown {
     }
 
     public static String convertLink(String text) {
-        return PatternMatcher.createLinkStandard(text);
+        return RegexUtil.createLinkStandard(text);
     }
 
     public static String convertImage(String text) {
-        return PatternMatcher.createImageStandard(text);
+        return RegexUtil.createImageStandard(text);
     }
 
     public static String convertYoutube(String text) {
-        return PatternMatcher.createYoutubeStandard(text);
+        return RegexUtil.createYoutubeStandard(text);
     }
 
     public static String convertVideo(String text) {
-        return PatternMatcher.createWebMStandard(text);
+        return RegexUtil.createWebMStandard(text);
     }
 }

@@ -14,8 +14,6 @@ import com.mxt.anitrend.databinding.AdapterStudioBinding;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.util.CompatUtil;
 
-import java.util.List;
-
 import butterknife.OnClick;
 
 /**

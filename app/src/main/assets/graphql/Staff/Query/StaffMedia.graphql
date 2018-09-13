@@ -59,6 +59,11 @@ query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORM
               episode
             }
           }
+          mediaListEntry {
+            ... on MediaList {
+              status
+            }
+          }
         }
       }
     }

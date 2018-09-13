@@ -6,11 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.crashlytics.android.core.CrashlyticsListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
-import com.mxt.anitrend.util.LocaleHelper;
+import com.mxt.anitrend.util.LocaleUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,9 +24,9 @@ import io.objectbox.android.AndroidObjectBrowser;
 
 public class App extends Application {
 
-    private FirebaseAnalytics analytics;
+    private @Nullable FirebaseAnalytics analytics;
     private BoxStore boxStore;
-    private Fabric fabric;
+    private @Nullable Fabric fabric;
 
     private void setupBoxStore() {
         boxStore = MyObjectBox.builder()
@@ -38,15 +37,16 @@ public class App extends Application {
     }
 
     private void setCrashAnalytics(ApplicationPref pref) {
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG || !pref.isCrashReportsEnabled())
-                .build();
+        if (!BuildConfig.DEBUG)
+            if (pref.isCrashReportsEnabled()) {
+                CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                        .build();
 
-        fabric = Fabric.with(new Fabric.Builder(this)
-                .kits(crashlyticsCore)
-                .debuggable(BuildConfig.DEBUG)
-                .appIdentifier(BuildConfig.BUILD_TYPE)
-                .build());
+                fabric = Fabric.with(new Fabric.Builder(this)
+                        .kits(crashlyticsCore)
+                        .appIdentifier(BuildConfig.BUILD_TYPE)
+                        .build());
+            }
     }
 
     private void initApp(ApplicationPref pref) {
@@ -55,9 +55,11 @@ public class App extends Application {
                 .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .installDefaultEventBus();
-        analytics = FirebaseAnalytics.getInstance(this);
-        analytics.setAnalyticsCollectionEnabled(pref.isUsageAnalyticsEnabled());
-        analytics.setMinimumSessionDuration(5000L);
+        if (pref.isUsageAnalyticsEnabled()) {
+            analytics = FirebaseAnalytics.getInstance(this);
+            analytics.setAnalyticsCollectionEnabled(pref.isUsageAnalyticsEnabled());
+            analytics.setMinimumSessionDuration(5000L);
+        }
     }
 
     @Override
@@ -71,7 +73,7 @@ public class App extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base));
+        super.attachBaseContext(LocaleUtil.onAttach(base));
     }
 
     /**
@@ -90,7 +92,7 @@ public class App extends Application {
      *
      * @see com.mxt.anitrend.util.AnalyticsUtil
      */
-    public @NonNull Fabric getFabric() {
+    public @Nullable Fabric getFabric() {
         return fabric;
     }
 
@@ -99,7 +101,7 @@ public class App extends Application {
      *
      * @see com.mxt.anitrend.util.AnalyticsUtil
      */
-    public @NonNull FirebaseAnalytics getAnalytics() {
+    public @Nullable FirebaseAnalytics getAnalytics() {
         return analytics;
     }
 }

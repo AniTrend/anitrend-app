@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.mxt.anitrend.BuildConfig;
@@ -17,7 +16,7 @@ import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.util.EpisodeHelper;
+import com.mxt.anitrend.util.EpisodeUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -38,16 +37,16 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
     private long mediaId;
     private @KeyUtil.MediaType String mediaType;
 
-    public static Fragment newInstance(Bundle params, boolean popular) {
+    public static FragmentChannelBase newInstance(Bundle params, boolean popular) {
         Bundle args = new Bundle(params);
-        WatchListFragment fragment = new WatchListFragment();
+        FragmentChannelBase fragment = new WatchListFragment();
         args.putBoolean(KeyUtil.arg_popular, popular);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static Fragment newInstance(List<ExternalLink> externalLinks, boolean popular) {
-        WatchListFragment fragment = new WatchListFragment();
+    public static FragmentChannelBase newInstance(List<ExternalLink> externalLinks, boolean popular) {
+        FragmentChannelBase fragment = new WatchListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(KeyUtil.arg_list_model, (ArrayList<? extends Parcelable>) externalLinks);
         args.putBoolean(KeyUtil.arg_popular, popular);
@@ -71,7 +70,6 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
         mAdapter.setClickListener(clickListener);
         setPresenter(new WidgetPresenter<>(getContext()));
         setViewModel(true);
-        mColumnSize = R.integer.single_list_x1;
     }
 
     /**
@@ -116,7 +114,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
                 if(!connectionContainer.isEmpty()) {
                     externalLinks = connectionContainer.getConnection();
                     if(mAdapter.getItemCount() < 1 && externalLinks != null)
-                        targetLink = EpisodeHelper.episodeSupport(externalLinks);
+                        targetLink = EpisodeUtil.episodeSupport(externalLinks);
                     if (targetLink == null)
                         showEmpty(getString(R.string.waring_missing_episode_links));
                     else

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -25,10 +26,15 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
+    protected ApplicationPref applicationPref;
+
     protected void configureActivity() {
-        int style = new ApplicationPref(this).getTheme();
+        @StyleRes int style = applicationPref.getTheme();
+        if(!CompatUtil.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
+            setTheme(R.style.AppThemeBlack);
+        else
+            setTheme(style);
         setNavigationStyle(style);
-        setTheme(style);
     }
 
     /**
@@ -49,6 +55,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
+        applicationPref = new ApplicationPref(this);
         configureActivity();
         super.onCreate(savedInstanceState);
     }

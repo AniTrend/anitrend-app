@@ -24,7 +24,7 @@ public class IntentBundleUtil {
     public IntentBundleUtil(Intent intent, FragmentActivity context) {
         if(intent != null) {
             if(intent.hasExtra(KeyUtil.arg_shortcut_used) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
-                ShortcutHelper.reportShortcutUsage(context, intent.getIntExtra(KeyUtil.arg_shortcut_used, KeyUtil.SHORTCUT_SEARCH));
+                ShortcutUtil.reportShortcutUsage(context, intent.getIntExtra(KeyUtil.arg_shortcut_used, KeyUtil.SHORTCUT_SEARCH));
             checkIntentData(intent, context);
         }
     }
@@ -52,8 +52,11 @@ public class IntentBundleUtil {
             case KeyUtil.DEEP_LINK_USER:
                 if(TextUtils.isDigitsOnly(lastKey))
                     intent.putExtra(KeyUtil.arg_id, Long.valueOf(lastKey));
-                else
+                else {
+                    if (lastKey.contains("/"))
+                        lastKey = lastKey.replace("/", "");
                     intent.putExtra(KeyUtil.arg_userName, lastKey);
+                }
                 break;
             case KeyUtil.DEEP_LINK_MANGA:
                 if ((splitKeys = hasDepth(lastKey)) != null)
@@ -102,7 +105,7 @@ public class IntentBundleUtil {
             sharedIntent = ShareCompat.IntentReader.from(context);
         else
             if ((INTENT_DATA = hasData(intent)) != null)
-                if((deepLinkMatcher = PatternMatcher.findIntentKeys(INTENT_DATA.getPath())) != null)
+                if((deepLinkMatcher = RegexUtil.findIntentKeys(INTENT_DATA.getPath())) != null)
                     injectIntentParams(intent);
     }
 

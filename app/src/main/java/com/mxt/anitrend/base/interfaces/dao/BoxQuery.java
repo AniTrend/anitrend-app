@@ -9,7 +9,23 @@ import com.mxt.anitrend.model.entity.base.VersionBase;
 
 import java.util.List;
 
+import io.objectbox.Box;
+
 public interface BoxQuery {
+
+    /**
+     * Gets the object box from a requested class type.
+     *
+     * <br/>
+     * @param classType Type of class which must not be a list instance
+     * @return Box of type class requested
+     */
+    <S> Box<S> getBoxStore(Class<S> classType);
+
+    /**
+     * Used when the application is logging out a user preferably
+     */
+    void invalidateBoxStores();
 
     /**
      * Gets current authenticated user

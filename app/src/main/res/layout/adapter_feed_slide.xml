@@ -9,12 +9,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:layout_height="wrap_content">
 
         <com.mxt.anitrend.base.custom.view.image.WideImageView
             android:id="@+id/feed_status_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
             android:onClickListener="@{onClickListener}"
@@ -23,7 +24,7 @@
             tools:scaleType="centerCrop"
             tools:src="@drawable/sample_banner"/>
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/feed_play_back"
             android:layout_gravity="center"
             android:layout_width="95dp"

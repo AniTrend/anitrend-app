@@ -92,6 +92,11 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $user
                 episode
               }
             }
+			mediaListEntry {
+              ... on MediaList {
+                status
+              }
+            }
           }
         }
 		siteUrl

@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(Parameterized.class)
-public class EpisodeHelper_GetActualTitleTest {
+public class EpisodeUtil_GetActualTitleTest {
 
     @Parameterized.Parameters
     public static Iterable<Object[]> data() {
@@ -30,7 +30,7 @@ public class EpisodeHelper_GetActualTitleTest {
 
     @Test
     public void getActualTile() {
-        assertThat(EpisodeHelper.getActualTile(inputTitle), equalTo(actualTitle));
+        assertThat(EpisodeUtil.getActualTile(inputTitle), equalTo(actualTitle));
     }
 
 }

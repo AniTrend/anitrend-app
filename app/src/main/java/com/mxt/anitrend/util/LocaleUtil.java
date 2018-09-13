@@ -2,11 +2,9 @@ package com.mxt.anitrend.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.preference.PreferenceManager;
 
 import java.util.Locale;
 
@@ -15,7 +13,7 @@ import java.util.Locale;
  *
  * Created by gunhansancar on 07/10/15.
  */
-public class LocaleHelper {
+public class LocaleUtil {
 
     public static Context onAttach(Context context) {
         String language = new ApplicationPref(context).getUserLanguage();

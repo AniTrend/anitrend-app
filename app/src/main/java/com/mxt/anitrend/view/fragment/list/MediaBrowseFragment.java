@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.annimon.stream.IntPair;
+import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
@@ -24,6 +25,7 @@ import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
+import com.mxt.anitrend.util.GenreTagUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.MediaBrowseUtil;
@@ -33,6 +35,8 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Created by max on 2018/02/03.
@@ -88,9 +92,9 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
             menu.findItem(R.id.action_type).setVisible(false);
             menu.findItem(R.id.action_year).setVisible(false);
             menu.findItem(R.id.action_status).setVisible(false);
+            menu.findItem(R.id.action_genre).setVisible(false);
+            menu.findItem(R.id.action_tag).setVisible(false);
         }
-        menu.findItem(R.id.action_genre).setVisible(false);
-        menu.findItem(R.id.action_tag).setVisible(false);
     }
 
     @Override
@@ -118,15 +122,61 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     if(CompatUtil.isEmpty(genres)) {
                         NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                         getPresenter().checkGenresAndTags(getActivity());
+                    } else {
+                        Map<Integer, String> genresIndexMap = getPresenter()
+                                .getApplicationPref().getSelectedGenres();
+
+                        Integer[] selectedGenres = Stream.of(genresIndexMap)
+                                .map(Map.Entry::getKey)
+                                .toArray(Integer[]::new);
+
+                        DialogUtil.createCheckList(getContext(), R.string.app_filter_genres, genres, selectedGenres,
+                                (dialog, which, text) -> false, (dialog, which) -> {
+                                    switch (which) {
+                                        case POSITIVE:
+                                            Map<Integer, String> selectedIndices = GenreTagUtil
+                                                    .createGenreSelectionMap(genres, dialog.getSelectedIndices());
+
+                                            getPresenter().getApplicationPref()
+                                                    .setSelectedGenres(selectedIndices);
+                                            break;
+                                        case NEGATIVE:
+                                            getPresenter().getApplicationPref()
+                                                    .setSelectedGenres(new WeakHashMap<>());
+                                            break;
+                                    }
+                                });
                     }
-                    // pending implementation :
-                    // https://github.com/AniTrend/anitrend-app/blob/aac381ad369d372bf03688c9fc8e6bb27c78c323/app/src/main/java/com/mxt/anitrend/base/custom/fragment/FragmentBase.java
                     return true;
                 case R.id.action_tag:
                     List<MediaTag> tagList = getPresenter().getDatabase().getMediaTags();
                     if(CompatUtil.isEmpty(tagList)) {
                         NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                         getPresenter().checkGenresAndTags(getActivity());
+                    } else {
+                        Map<Integer, String> tagsIndexMap = getPresenter()
+                                .getApplicationPref().getSelectedTags();
+
+                        Integer[] selectedTags = Stream.of(tagsIndexMap)
+                                .map(Map.Entry::getKey)
+                                .toArray(Integer[]::new);
+
+                        DialogUtil.createCheckList(getContext(), R.string.app_filter_tags, tagList, selectedTags,
+                                (dialog, which, text) -> false, (dialog, which) -> {
+                                    switch (which) {
+                                        case POSITIVE:
+                                            Map<Integer, String> selectedIndices = GenreTagUtil
+                                                    .createTagSelectionMap(tagList, dialog.getSelectedIndices());
+
+                                            getPresenter().getApplicationPref()
+                                                    .setSelectedTags(selectedIndices);
+                                            break;
+                                        case NEGATIVE:
+                                            getPresenter().getApplicationPref()
+                                                    .setSelectedTags(new WeakHashMap<>());
+                                            break;
+                                    }
+                                });
                     }
                     return true;
                 case R.id.action_type:
@@ -138,7 +188,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                             });
                     return true;
                 case R.id.action_year:
-                    final List<Integer> yearRanges = DateUtil.getYearRanges(1980, 1);
+                    final List<Integer> yearRanges = DateUtil.getYearRanges(1950, 1);
                     DialogUtil.createSelection(getContext(), R.string.app_filter_year, CompatUtil.getIndexOf(yearRanges, getPresenter().getApplicationPref().getSeasonYear()),
                             yearRanges, (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
@@ -177,6 +227,8 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
 
                 queryContainer.putVariable(KeyUtil.arg_status, pref.getMediaStatus())
+                        .putVariable(KeyUtil.arg_genres, GenreTagUtil.getMappedValues(pref.getSelectedGenres()))
+                        .putVariable(KeyUtil.arg_tags, GenreTagUtil.getMappedValues(pref.getSelectedTags()))
                         .putVariable(KeyUtil.arg_format, pref.getMediaFormat());
             }
             queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder());

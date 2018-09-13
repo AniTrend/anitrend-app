@@ -1,6 +1,5 @@
 package com.mxt.anitrend.util;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
@@ -15,10 +14,12 @@ import com.mxt.anitrend.App;
 public final class AnalyticsUtil {
 
     public static void logCurrentScreen(FragmentActivity fragmentActivity, @NonNull String tag) {
-        if(fragmentActivity != null && new ApplicationPref(fragmentActivity).isUsageAnalyticsEnabled()) {
+        if(fragmentActivity != null) {
             App app = ((App) fragmentActivity.getApplicationContext());
-            app.getAnalytics().setCurrentScreen(fragmentActivity, tag, null);
-            app.getFabric().setCurrentActivity(fragmentActivity);
+            if (app.getFabric() != null)
+                app.getFabric().setCurrentActivity(fragmentActivity);
+            if (app.getAnalytics() != null)
+                app.getAnalytics().setCurrentScreen(fragmentActivity, tag, null);
         }
     }
 
@@ -30,8 +31,11 @@ public final class AnalyticsUtil {
         Crashlytics.setUserIdentifier("");
     }
 
-    public static void setCrashAnalyticsUser(Context context, String userName) {
-        if(new ApplicationPref(context).isCrashReportsEnabled())
-            Crashlytics.setUserIdentifier(userName);
+    public static void setCrashAnalyticsUser(FragmentActivity fragmentActivity, String userName) {
+        if(fragmentActivity != null) {
+            App app = ((App) fragmentActivity.getApplicationContext());
+            if (app.getFabric() != null)
+                Crashlytics.setUserIdentifier(userName);
+        }
     }
 }

@@ -116,10 +116,6 @@ public class MediaList extends RecyclerItem implements Parcelable, Cloneable {
         return score;
     }
 
-    public String getScoreFormatted() {
-        return String.valueOf(score);
-    }
-
     public int getProgress() {
         return progress;
     }

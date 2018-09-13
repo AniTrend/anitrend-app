@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
-import com.annimon.stream.IntPair;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -20,7 +19,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;

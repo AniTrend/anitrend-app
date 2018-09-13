@@ -1,7 +1,6 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -71,6 +70,44 @@ public class RatingTextView extends LinearLayout implements CustomView {
         binding.ratingFavourState.setImageDrawable(drawable);
     }
 
+    private void setListStatus(MediaBase mediaBase) {
+        if(mediaBase.getMediaListEntry() != null) {
+            binding.ratingListStatus.setVisibility(VISIBLE);
+            switch (mediaBase.getMediaListEntry().getStatus()) {
+                case KeyUtil.CURRENT:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_remove_red_eye_white_18dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.PLANNING:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_bookmark_white_24dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.COMPLETED:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_done_all_grey_600_24dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.DROPPED:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_delete_red_600_18dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.PAUSED:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_pause_white_18dp,
+                            R.color.white);
+                    break;
+                case KeyUtil.REPEATING:
+                    binding.ratingListStatus.setTintDrawable(R.drawable.ic_repeat_white_18dp,
+                            R.color.white);
+                    break;
+            }
+        }
+        else
+            binding.ratingListStatus.setVisibility(GONE);
+    }
+
+    private void setListStatus() {
+        binding.ratingListStatus.setVisibility(GONE);
+    }
+
     private void setRating(MediaList mediaList) {
         if(mediaListOptions != null)
             switch (mediaListOptions.getScoreFormat()) {
@@ -114,21 +151,25 @@ public class RatingTextView extends LinearLayout implements CustomView {
         if(mediaListOptions != null)
             switch (mediaListOptions.getScoreFormat()) {
                 case KeyUtil.POINT_10_DECIMAL:
-                    mediaScoreDefault = (mediaBase.getMeanScore() / 10);
+                    mediaScoreDefault = (mediaBase.getMeanScore() / 10f);
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%.1f", mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_100:
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getMeanScore()));
                     break;
                 case KeyUtil.POINT_10:
-                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getMeanScore() / 10));
+                    mediaScoreDefault = (mediaBase.getMeanScore() / 10);
+                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", (int) mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_5:
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", (int) mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_3:
                     binding.ratingValue.setText("");
-                        if(mediaBase.getMeanScore() >= 0 && mediaBase.getMeanScore() <= 33)
+                        if(mediaBase.getMeanScore() == 0)
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                    R.drawable.ic_face_white_18dp), null, null, null);
+                        if(mediaBase.getMeanScore() > 0 && mediaBase.getMeanScore() <= 33)
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null);
                         else if (mediaBase.getMeanScore() >= 34 && mediaBase.getMeanScore() <= 66)
@@ -147,12 +188,14 @@ public class RatingTextView extends LinearLayout implements CustomView {
     public static void setAverageRating(RatingTextView view, MediaBase mediaBase) {
         //float rating = (float) mediaBase.getAverageScore() * MAX / 100;
         view.setRating(mediaBase);
+        view.setListStatus(mediaBase);
         view.setFavourState(mediaBase.isFavourite());
     }
 
     @BindingAdapter("rating")
     public static void setAverageRating(RatingTextView view, MediaList mediaList) {
         //float rating = (float) mediaList.getScore() * MAX / 100;
+        view.setListStatus();
         view.setRating(mediaList);
         view.setFavourState(mediaList.getMedia().isFavourite());
     }

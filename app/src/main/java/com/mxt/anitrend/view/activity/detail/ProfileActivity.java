@@ -131,7 +131,6 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         binding.setOnClickListener(this);
         binding.profileStatsWidget.setParams(getIntent().getExtras());
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
-
         if(getPresenter().isCurrentUser(model.getId())) {
             new TutorialUtil().setContext(this)
                     .setFocalColour(R.color.colorGrey600)

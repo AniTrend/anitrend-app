@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * Created by max on 2017/04/08.
  * Pattern matcher uses regex to return possible matches for media types
  */
-public class PatternMatcher {
+public class RegexUtil {
 
     public static final String KEY_IMG = "img";
     public static final String KEY_WEB = "webm";
@@ -34,7 +34,7 @@ public class PatternMatcher {
 
 
     static {
-        pattern = Pattern.compile(PATTERN_MEDIA);
+        pattern = Pattern.compile(PATTERN_MEDIA, Pattern.CASE_INSENSITIVE);
     }
 
     /**
@@ -45,7 +45,7 @@ public class PatternMatcher {
     }
 
     private static @NonNull Matcher findImages(@NonNull String param) {
-        return Pattern.compile("(img).*?(\\([^)]+\\))").matcher(param);
+        return Pattern.compile("(img|Img|IMG).*?(\\([^)]+\\))", Pattern.CASE_INSENSITIVE).matcher(param);
     }
 
     /**
@@ -128,7 +128,7 @@ public class PatternMatcher {
         if(matcher.find())
             temp = matcher.group(matcher.groupCount());
         else
-            temp = NO_THUMBNAIL;
+            return NO_THUMBNAIL;
         return String.format(VID_THUMB, temp);
     }
 

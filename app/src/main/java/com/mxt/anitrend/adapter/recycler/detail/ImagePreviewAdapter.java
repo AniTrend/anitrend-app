@@ -8,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
-import com.annimon.stream.IntPair;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedSlideBinding;
-import com.mxt.anitrend.util.PatternMatcher;
+import com.mxt.anitrend.util.RegexUtil;
 
 import java.util.List;
 
@@ -69,19 +68,19 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
         public void onBindViewHolder(String model) {
             String targetModel;
             RequestOptions requestOptions = null;
-            switch (contentTypes.get(getAdapterPosition())) {
-                case PatternMatcher.KEY_IMG:
+            switch (contentTypes.get(getAdapterPosition()).toLowerCase()) {
+                case RegexUtil.KEY_IMG:
                     targetModel = model;
                     ViewCompat.setTransitionName(binding.feedStatusImage, model);
                     binding.feedPlayBack.setVisibility(View.GONE);
                     break;
-                case PatternMatcher.KEY_YOU:
-                    targetModel = PatternMatcher.getYoutubeThumb(model);
+                case RegexUtil.KEY_YOU:
+                    targetModel = RegexUtil.getYoutubeThumb(model);
                     binding.feedPlayBack.setVisibility(View.VISIBLE);
                     requestOptions = RequestOptions.centerCropTransform();
                     break;
                 default:
-                    targetModel = PatternMatcher.NO_THUMBNAIL;
+                    targetModel = RegexUtil.NO_THUMBNAIL;
                     binding.feedPlayBack.setVisibility(View.VISIBLE);
                     break;
             }

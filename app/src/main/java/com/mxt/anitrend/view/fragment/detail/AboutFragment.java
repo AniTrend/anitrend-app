@@ -8,13 +8,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.DialogUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -46,6 +45,9 @@ public class AboutFragment extends FragmentBase<Void, BasePresenter, Void> {
                 .addGroup("Additional Information")
                 .addGitHub("AniTrend")
                 .addWebsite("https://anitrend.co")
+                .addItem(new Element().setTitle(getString(R.string.text_what_is_new))
+                        .setOnClickListener((v) -> DialogUtil.createChangeLog(getActivity()))
+                .setIconDrawable(R.drawable.ic_fiber_new_white_24dp))
                 .addGroup("Legal Information")
                 .addItem(new Element().setTitle("Terms & Conditions").setIconDrawable(R.drawable.ic_privacy_grey_600_24dp)
                         .setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AniTrend/anitrend-app/blob/develop/TERMS_OF_SERVICE.md"))))

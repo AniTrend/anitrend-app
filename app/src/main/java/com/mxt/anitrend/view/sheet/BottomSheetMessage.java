@@ -11,7 +11,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDown;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

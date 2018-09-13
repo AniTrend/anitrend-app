@@ -5,12 +5,20 @@
 - Take a moment to give us your [feedback](https://poll.ly/#/PEA4x1Wg), thank you.
 
 ### Enhancements
-- Amoled theme, find option in settings then use the toggle theme entry
-- Changeable application language, find this option in settings
+- New genre and tags filters
+- New amoled theme: __Settings -> General__
+- New changeable application language: __Settings -> General__
+- New personalised score types based on your profile settings
+- New start and end dates for your anime/manga lists
+- Media list status icons for your list
+- Additional support for trailers when a device doesn't have the YouTube app
+- Many other minor enhancement and improvements
 
 ### Bug Fixes
--
+- Crash issue with Android Pie devices when viewing status feeds
+- 404 on profile links that end with /
 
 ### Current Issues
 - Clicking on @username shows mixed feed
-- Emojis have been disabled. _New AniList site doesn't support them anymore_
+- Sometimes image slide count doesn't change when you scroll slowly in feeds
+- Notifications don't always work (We don't have an ETA for a fix at the moment, please bear with us)

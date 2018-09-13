@@ -105,6 +105,11 @@ query FeedListReply($id: Int, $asHtml: Boolean = false) {
               episode
             }
           }
+          mediaListEntry {
+            ... on MediaList {
+              status
+            }
+          }
         }
       }
       siteUrl
