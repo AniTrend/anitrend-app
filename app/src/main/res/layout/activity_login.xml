@@ -15,97 +15,99 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.mxt.anitrend.base.custom.view.container.LoginCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:padding="@dimen/spacing_xl"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:elevation="@dimen/md_margin"
-            android:background="@drawable/material_curve">
+            android:layout_gravity="center">
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:text="@string/anitrend_sign_in" />
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_lg">
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="?colorAccent"
-                android:text="@string/anitrend_sign_in_browser"/>
-
-            <android.support.v4.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/lg_margin" />
-
-            <ViewFlipper
-                android:id="@+id/widget_flipper"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:inAnimation="@android:anim/fade_in"
-                android:outAnimation="@android:anim/fade_out">
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/auth_sign_in"
+                <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClickListener="@{onClickListener}"
-                    android:foreground="?selectableItemBackground"
-                    app:cardBackgroundColor="?attr/colorPrimaryDark"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardUseCompatPadding="true"
-                    app:cardCornerRadius="@dimen/lg_margin"
-                    app:contentPadding="@dimen/lg_margin">
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:text="@string/anitrend_sign_in" />
 
-                    <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="?colorAccent"
+                    android:text="@string/anitrend_sign_in_browser"/>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/lg_margin" />
+
+                <ViewFlipper
+                    android:id="@+id/widget_flipper"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inAnimation="@android:anim/fade_in"
+                    android:outAnimation="@android:anim/fade_out">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/auth_sign_in"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/sm_margin"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:text="@string/sign_into_anilist"/>
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClickListener="@{onClickListener}"
+                        android:foreground="?selectableItemBackground"
+                        app:cardBackgroundColor="?attr/colorPrimaryDark"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true"
+                        app:cardCornerRadius="@dimen/lg_margin"
+                        app:contentPadding="@dimen/lg_margin">
 
-                </android.support.v7.widget.CardView>
+                        <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/sm_margin"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                            android:text="@string/sign_into_anilist"/>
 
-                <com.github.rahatarmanahmed.cpv.CircularProgressView
-                    android:layout_width="@dimen/avatar_ripple_radius"
-                    android:layout_height="@dimen/avatar_ripple_radius"
-                    android:layout_gravity="center"
-                    app:cpv_animAutostart="true"
-                    app:cpv_color="?colorAccent"
-                    app:cpv_indeterminate="true" />
+                    </android.support.v7.widget.CardView>
 
-            </ViewFlipper>
+                    <com.github.rahatarmanahmed.cpv.CircularProgressView
+                        android:layout_width="@dimen/avatar_ripple_radius"
+                        android:layout_height="@dimen/avatar_ripple_radius"
+                        android:layout_gravity="center"
+                        app:cpv_animAutostart="true"
+                        app:cpv_color="?colorAccent"
+                        app:cpv_indeterminate="true" />
 
-            <android.support.v4.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/lg_margin" />
+                </ViewFlipper>
 
-            <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:textStyle="italic"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:padding="@dimen/md_margin"
-                app:basicHtml="@{@string/create_new_account}"
-                tools:text="@string/create_account"/>
+                <android.support.v4.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/lg_margin" />
 
-        </LinearLayout>
+                <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textStyle="italic"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:padding="@dimen/md_margin"
+                    app:basicHtml="@{@string/create_new_account}"
+                    tools:text="@string/create_account"/>
+            </LinearLayout>
+
+        </com.mxt.anitrend.base.custom.view.container.LoginCardView>
 
     </FrameLayout>
 
