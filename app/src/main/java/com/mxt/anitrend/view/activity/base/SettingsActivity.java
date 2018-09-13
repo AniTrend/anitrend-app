@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.JobSchedulerUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 
 import java.util.List;
 

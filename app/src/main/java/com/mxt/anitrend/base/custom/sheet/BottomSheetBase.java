@@ -11,7 +11,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
