@@ -967,7 +967,7 @@
     <!-- Black Setting Related -->
     <string name="pref_key_black_theme" translatable="false">_isBlackTheme</string>
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
