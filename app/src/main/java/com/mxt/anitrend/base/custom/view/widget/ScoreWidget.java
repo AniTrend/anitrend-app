@@ -3,8 +3,8 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -80,8 +80,8 @@ public class ScoreWidget extends ProgressWidget {
         if (scoreFormat != null) {
             switch (scoreFormat) {
                 case KeyUtil.POINT_10_DECIMAL:
-                    binding.progressCurrent.setInputType(InputType.TYPE_CLASS_NUMBER |
-                            InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    char separator = DecimalFormatSymbols.getInstance().getDecimalSeparator();
+                    binding.progressCurrent.setKeyListener(DigitsKeyListener.getInstance("0123456789" + separator));
                     deltaFactor = 0.1f;
                     break;
                 default:
