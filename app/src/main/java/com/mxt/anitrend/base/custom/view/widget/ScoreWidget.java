@@ -13,6 +13,7 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class ScoreWidget extends ProgressWidget {
@@ -142,7 +143,8 @@ public class ScoreWidget extends ProgressWidget {
     }
 
     private float getRoundedScore(float score) {
-        return Float.valueOf(new DecimalFormat("#.#").format(score));
+        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.US);
+        return Float.valueOf(new DecimalFormat("#.#", formatSymbols).format(score));
     }
 
     @Override
