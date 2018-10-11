@@ -390,8 +390,12 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     @Override
     protected void onPermissionGranted(@NonNull String permission) {
         super.onPermissionGranted(permission);
-        if (permission.equals(android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            onNavigate(R.id.nav_check_update);
+        try {
+            if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                onNavigate(R.id.nav_check_update);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
