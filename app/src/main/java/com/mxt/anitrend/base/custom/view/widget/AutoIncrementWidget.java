@@ -148,7 +148,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
 
 
     private void updateModelState() {
-        if(model.getProgress() == 0) {
+        if(model.getProgress() < 1 && CompatUtil.equals(model.getStatus(), KeyUtil.PLANNING)) {
             model.setStatus(KeyUtil.CURRENT);
             model.setStartedAt(DateUtil.getCurrentDate());
         }

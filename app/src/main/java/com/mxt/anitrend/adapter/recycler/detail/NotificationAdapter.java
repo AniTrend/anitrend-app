@@ -9,10 +9,12 @@ import android.widget.Filter;
 
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.base.custom.view.image.AspectImageView;
 import com.mxt.anitrend.databinding.AdapterNotificationBinding;
+import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.base.NotificationHistory;
 import com.mxt.anitrend.model.entity.base.NotificationHistory_;
@@ -40,8 +42,30 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
 
     @NonNull
     @Override
-    public RecyclerViewHolder<Notification> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NotificationHolder(AdapterNotificationBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+    public RecyclerViewHolder<Notification> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
+        if (viewType == KeyUtil.RECYCLER_TYPE_CONTENT)
+            return new NotificationHolder(AdapterNotificationBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new UnresolvedViewHolder<>(CustomRecyclerUnresolvedBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+    }
+
+    /**
+     * Return the view type of the item at <code>position</code> for the purposes
+     * of view recycling.
+     *
+     * <p>The default implementation of this method returns 0, making the assumption of
+     * a single view type for the adapter. Unlike ListView adapters, types need not
+     * be contiguous. Consider using id resources to uniquely identify item view types.
+     *
+     * @param position position to query
+     * @return integer value identifying the type of the view needed to represent the item at
+     * <code>position</code>. Type codes need not be contiguous.
+     */
+    @Override
+    public int getItemViewType(int position) {
+        final Notification notification = data.get(position);
+        if (!notification.getType().equals(KeyUtil.AIRING) && notification.getUser() == null)
+            return KeyUtil.RECYCLER_TYPE_ERROR;
+        return KeyUtil.RECYCLER_TYPE_CONTENT;
     }
 
     /**

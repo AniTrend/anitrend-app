@@ -6,8 +6,8 @@ buildscript {
         compileSdk = 28
         targetSdk = 28
         minSdk = 17
-        versionCode = 91
-        versionName = '1.2.1'
+        versionCode = 92
+        versionName = '1.2.2'
         butterKnife = '8.8.1'
         glide = '4.7.1'
         retrofit = '2.4.0'
@@ -28,7 +28,7 @@ buildscript {
         maven { url "http://objectbox.net/beta-repo/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         // Google Play Services
         classpath 'com.google.gms:google-services:4.0.1'
         // Crash Analytics
