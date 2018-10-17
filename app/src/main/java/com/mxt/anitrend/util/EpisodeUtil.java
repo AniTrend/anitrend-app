@@ -14,9 +14,13 @@ public class EpisodeUtil {
 
     public static String episodeSupport(List<ExternalLink> links) {
         for (ExternalLink link : links)
-            if(link.getUrl().startsWith(BuildConfig.CRUNCHY_LINK))
+            if(link.getUrl().startsWith(BuildConfig.CRUNCHY_LINK) ||
+                    link.getUrl().startsWith(BuildConfig.CRUNCHY_LINK
+                            .replace("https", "https")))
                 return linkStripper(link.getUrl()+".rss");
-            else if(link.getUrl().startsWith(BuildConfig.FEEDS_LINK))
+            else if(link.getUrl().startsWith(BuildConfig.FEEDS_LINK) ||
+                    link.getUrl().startsWith(BuildConfig.FEEDS_LINK
+                            .replace("https", "https")))
                 return link.getUrl();
         return null;
     }

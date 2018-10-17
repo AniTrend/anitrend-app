@@ -17,12 +17,15 @@ public class MediaContent implements Parcelable {
     private String url;
     @Attribute(name = "type")
     private String type;
-    @Attribute(name = "medium")
+    @Attribute(name = "medium", required = false)
     private String medium;
     @Attribute(name = "duration", required = false)
     private String duration;
 
-    public MediaContent(@Attribute(name = "url", required = false) String url, @Attribute(name = "type") String type, @Attribute(name = "medium") String medium, @Attribute(name = "duration", required = false) String duration) {
+    public MediaContent(@Attribute(name = "url", required = false) String url,
+                        @Attribute(name = "type") String type,
+                        @Attribute(name = "medium") String medium,
+                        @Attribute(name = "duration", required = false) String duration) {
         this.url = url;
         this.type = type;
         this.medium = medium;

@@ -19,16 +19,21 @@ public class Episode implements Parcelable {
     private String title;
     @Element(name = "link")
     private String link;
-    @Element(name = "description")
+    @Element(name = "description", required = false)
     private String description;
     @Element(name = "publisher", required = false)
     private String publisher;
-    @Element(name = "content")
+    @Element(name = "content", required = false)
     private MediaContent content;
     @ElementList(name = "thumbnail", inline = true, required = false)
     private List<Thumbnail> thumbnail;
 
-    public Episode(@Element(name = "title")String title, @Element(name = "link")String link, @Element(name = "description")String description, @Element(name = "publisher", required = false)String publisher, @Element(name = "content")MediaContent content, @ElementList(name = "thumbnail", inline = true, required = false)List<Thumbnail> thumbnail) {
+    public Episode(@Element(name = "title") String title,
+                   @Element(name = "link") String link,
+                   @Element(name = "description", required = false) String description,
+                   @Element(name = "publisher", required = false) String publisher,
+                   @Element(name = "content", required = false) MediaContent content,
+                   @ElementList(name = "thumbnail", inline = true, required = false) List<Thumbnail> thumbnail) {
         this.title = title;
         this.link = link;
         this.description = description;
