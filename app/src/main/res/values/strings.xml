@@ -982,6 +982,7 @@
         <item>Français</item>
         <item>Italiano</item>
         <item>Polski</item>
+        <item>Português</item>
     </string-array>
 
     <string-array name="pref_selected_Language_values" translatable="false">
@@ -992,6 +993,7 @@
         <item>fr</item>
         <item>it</item>
         <item>pl</item>
+        <item>pt</item>
     </string-array>
 
     <string name="dialog_title_started_at">Start Date</string>

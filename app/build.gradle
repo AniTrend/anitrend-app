@@ -12,6 +12,7 @@ android {
         versionName rootProject.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -174,6 +175,9 @@ dependencies {
 
     /** About Library */
     implementation 'com.github.medyo:android-about-page:1.2.4'
+
+    /** Multidex */
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'
