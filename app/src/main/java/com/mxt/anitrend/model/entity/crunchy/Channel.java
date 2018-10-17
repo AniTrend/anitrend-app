@@ -17,26 +17,26 @@ import java.util.List;
 @Root(name = "channel", strict = false)
 public class Channel implements Parcelable {
 
-    @Element(name = "title")
+    @Element(name = "title", required = false)
     private String title;
 
+    @Text(required = false)
     @Path("link")
-    @Text(required=false)
     private String link;
 
-    @Element(name = "description")
+    @Element(name = "description", required = false)
     private String description;
 
-    @Element(name = "copyright")
+    @Element(name = "copyright", required = false)
     private String copyright;
 
-    @ElementList(name = "episode", inline = true)
+    @ElementList(name = "episode", inline = true, required = false)
     private List<Episode> episode;
 
-    public Channel(@Element(name = "title")String title,
+    public Channel(@Element(name = "title", required = false) String title,
                    @Path("link") @Text(required=false) String link,
                    @Element(name = "description", required = false)String description,
-                   @Element(name = "copyright")String copyright,
+                   @Element(name = "copyright", required = false) String copyright,
                    @ElementList(name = "episode", inline = true) List<Episode> episode) {
         this.title = title;
         this.link = link;
