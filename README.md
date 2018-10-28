@@ -34,7 +34,7 @@ Development documentation for AniTrend is still a work in progress so for the ti
 
 <br/>
 
-### Chrunchyroll Feeds Integration
+### Crunchyroll Feeds Integration
 
 <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145319.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145336.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145413.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145710.png" width="200px"/>
 
