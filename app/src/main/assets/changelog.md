@@ -3,7 +3,7 @@
 - Please consider enabling privacy controls in __Settings__ and the privacy policy can be found: __Extras -> About__
 
 ### Enhancements
-- Series in repeating will not automatically get moved when you start reading or watching it
+- New portuguese translation
 
 ### Bug Fixes
 - Specific crash with android marshmallow when requesting storage permissions
