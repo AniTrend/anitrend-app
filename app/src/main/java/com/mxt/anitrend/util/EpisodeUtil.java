@@ -12,21 +12,22 @@ import java.util.List;
 
 public class EpisodeUtil {
 
+    private static final String HTTP_SECURE = "https", HTTP_STANDARD = "http";
+    private static final String crunchyStandard = BuildConfig.CRUNCHY_LINK.replace(HTTP_SECURE, HTTP_STANDARD);
+    private static final String feedStandard = BuildConfig.FEEDS_LINK.replace(HTTP_SECURE, HTTP_STANDARD);
+
     public static String episodeSupport(List<ExternalLink> links) {
         for (ExternalLink link : links)
-            if(link.getUrl().startsWith(BuildConfig.CRUNCHY_LINK) ||
-                    link.getUrl().startsWith(BuildConfig.CRUNCHY_LINK
-                            .replace("https", "https")))
+            if(link.getUrl().startsWith(BuildConfig.CRUNCHY_LINK) || link.getUrl().startsWith(crunchyStandard))
                 return linkStripper(link.getUrl()+".rss");
-            else if(link.getUrl().startsWith(BuildConfig.FEEDS_LINK) ||
-                    link.getUrl().startsWith(BuildConfig.FEEDS_LINK
-                            .replace("https", "https")))
+            else if(link.getUrl().startsWith(BuildConfig.FEEDS_LINK) || link.getUrl().startsWith(feedStandard))
                 return link.getUrl();
         return null;
     }
 
     private static String linkStripper(String link) {
-        return link.replace(BuildConfig.CRUNCHY_LINK, "");
+        String stripped = link.replace(BuildConfig.CRUNCHY_LINK, "");
+        return stripped.replace(crunchyStandard, "");
     }
 
     /**
