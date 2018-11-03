@@ -12,7 +12,6 @@ android {
         versionName rootProject.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -111,7 +110,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.11.0"
 
     /** Glide Libraries */
     implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
@@ -175,9 +174,6 @@ dependencies {
 
     /** About Library */
     implementation 'com.github.medyo:android-about-page:1.2.4'
-
-    /** Multidex */
-    implementation 'com.android.support:multidex:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

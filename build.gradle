@@ -1,18 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.31'
      ext {
         compileSdk = 28
         targetSdk = 28
         minSdk = 17
-        versionCode = 93
-        versionName = '1.2.3'
+        versionCode = 94
+        versionName = '1.2.4'
         butterKnife = '8.8.1'
-        glide = '4.8.0'
+        glide = '4.7.1'
         retrofit = '2.4.0'
-        supportLibrary = '28.0.0'
-        firebase = '16.0.4'
+        supportLibrary = '27.1.1'
+        firebase = '16.0.1'
         objectBox = '2.0.0'
         architecture = '1.1.1'
         emojify = '0.1.7'

@@ -1,15 +1,12 @@
-### App Tips
-- Notification work around: (try to toggle notifications in setting and set the sync frequency to 15 minutes)
-- Please consider enabling privacy controls in __Settings__ and the privacy policy can be found: __Extras -> About__
+__Anitrend v2.0 development is about to start__
 
-### Enhancements
+#### Enhancements
 - New portuguese translation
+- Updated italian translations
 
-### Bug Fixes
-- Specific crash with android marshmallow when requesting storage permissions
-- Crashes caused by different locale when rating anime or manga
-- Notification crashes that randoms started on the 1st of October
+#### Bug Fixes
+- Crunchyroll link detection issues
 
-### Current Issues
+#### Current Issues
 - Clicking on @username shows mixed feed
 - Sometimes image slide count doesn't change when you scroll slowly in feeds

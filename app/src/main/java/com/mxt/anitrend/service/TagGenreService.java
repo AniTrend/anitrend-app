@@ -35,12 +35,6 @@ public class TagGenreService extends IntentService {
         super(ServiceName);
     }
 
-    public final void initAnalytics() {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getApplicationContext());
-        analytics.setAnalyticsCollectionEnabled(true);
-        analytics.setMinimumSessionDuration(KeyUtil.DURATION_LONG);
-    }
-
     private void fetchAllMediaTags() {
         WidgetPresenter<List<MediaTag>> widgetPresenter = new WidgetPresenter<>(getApplicationContext());
         if(widgetPresenter.getDatabase().getBoxStore(MediaTag.class).count() < 1) {
@@ -97,6 +91,5 @@ public class TagGenreService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         fetchAllMediaGenres();
         fetchAllMediaTags();
-        initAnalytics();
     }
 }
