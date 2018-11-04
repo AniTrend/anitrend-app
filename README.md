@@ -1,4 +1,4 @@
-# AniTrend v1.2.2 &nbsp; [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/AniTrend/anitrend-app/blob/master/LICENSE.md)
+# AniTrend v1.2.4 &nbsp; [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/AniTrend/anitrend-app/blob/master/LICENSE.md)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/30a8f983c55541cbb504671ecc32786c)](https://www.codacy.com/app/wax911/anitrend-app?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wax911/anitrend-app&amp;utm_campaign=Badge_Grade) &nbsp; [![Build Status](https://travis-ci.org/AniTrend/anitrend-app.svg?branch=master)](https://travis-ci.org/AniTrend/anitrend-app) &nbsp; [![Waffle.io - Columns and their card count](https://badge.waffle.io/AniTrend/anitrend-app.svg?columns=all)](https://waffle.io/AniTrend/anitrend-app)
 
 Discover anime or manga with AniTrend which is a free [AniList](https://anilist.co) android client written in java.(AniTrend does not offer streaming capabilities, but official website links such as Hulu, Chrunchyroll, Netflix will be provided if available)
@@ -23,32 +23,32 @@ Development documentation for AniTrend is still a work in progress so for the ti
 
 ### Dual Application Themes
 
-<img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145123.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145158.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145057.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145213.png" width="200px"/>
+<img src="https://anitrend.co/images/pixel/device-2018-02-26-145123.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145158.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145057.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145213.png" width="200px"/>
 
 
 <br/>
 
 ### Dedicated Anime &amp; Manga Pages
 
-<img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145523.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145539.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145557.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145619.png" width="200px"/>
+<img src="https://anitrend.co/images/pixel/device-2018-02-26-145523.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145539.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145557.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145619.png" width="200px"/>
 
 <br/>
 
 ### Crunchyroll Feeds Integration
 
-<img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145319.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145336.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145413.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145710.png" width="200px"/>
+<img src="https://anitrend.co/images/pixel/device-2018-02-26-145319.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145336.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145413.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145710.png" width="200px"/>
 
 <br/>
 
 ### Anime &amp; Manga Reviews
 
-<img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145855.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145917.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150123.png" width="200px"/>
+<img src="https://anitrend.co/images/pixel/device-2018-02-26-145855.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145917.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-150123.png" width="200px"/>
 
 <br/>
 
 ### More, More &amp; So Much More
 
-<img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-143948.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-144555.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-143446.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-143529.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150251.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-145643.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150446.png" width="200px"/> <img src="https://github.com/wax911/anitrend-resources/raw/master/screenshots/Pixel/device-2018-02-26-150919.png" width="200px"/>
+<img src="https://anitrend.co/images/pixel/device-2018-02-26-143948.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-144555.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-143446.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-143529.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-150251.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-145643.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-150446.png" width="200px"/> <img src="https://anitrend.co/images/pixel/device-2018-02-26-150919.png" width="200px"/>
 
 # License
 
