@@ -274,7 +274,7 @@
     <string name="attach_link_title">Infoga webblänk</string>
     <string name="attach_link_text">Ange webbadress t.ex. https://anilist.co/forum/thread/2459/1</string>
     <string name="attach_image_title">Infoga bildlänk</string>
-    <string name="attach_image_text"Ange bildadress, t ex: https:/media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
+    <string name="attach_image_text">Ange bildadress, t ex: https:/media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
     <string name="attach_youtube_title">Sätt i Youtube-id</string>
     <string name="attach_youtube_text">Ange youtube-id från en video du vill dela till exempel: https://www.youtube.com/watch?v=izdhszFZy-c eller https://youtu.be/izdhszFZy-c endast lämnar: izdhszFZy-c</string>
     <string name="attach_webm_title">Sätt in videolänk</string>
