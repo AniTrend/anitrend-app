@@ -533,7 +533,7 @@
     <string name="text_processing_request">Behandling av förfrågan ..</string>
     <string name="text_permission_required">AniTrend beviljades inte tillstånd!</string>
 
-    <string name="text_read_more"Läs mer</string>
+    <string name="text_read_more">Läs mer</string>
 
     <string name="text_reviewed_by">Av: %s</string>
 
