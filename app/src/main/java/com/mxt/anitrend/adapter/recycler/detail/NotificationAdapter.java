@@ -63,7 +63,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
     @Override
     public int getItemViewType(int position) {
         final Notification notification = data.get(position);
-        if (!notification.getType().equals(KeyUtil.AIRING) && notification.getUser() == null)
+        if (!CompatUtil.equals(notification.getType(), KeyUtil.AIRING) && notification.getUser() == null)
             return KeyUtil.RECYCLER_TYPE_ERROR;
         return KeyUtil.RECYCLER_TYPE_CONTENT;
     }

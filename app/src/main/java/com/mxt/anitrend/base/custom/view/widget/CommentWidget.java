@@ -39,7 +39,6 @@ public class CommentWidget extends SingleLineTextView implements CustomView {
     public void onInit() {
         final int padding = getResources().getDimensionPixelSize(R.dimen.spacing_small);
         setPadding(padding, padding, padding, padding);
-        setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
         setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawableTintAttr(getContext(), R.drawable.ic_mode_comment_grey_600_18dp,
                 R.attr.colorAccent),null, null, null);
     }

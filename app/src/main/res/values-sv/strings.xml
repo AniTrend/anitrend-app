@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_header_discover">Upptäck</string>
+    <string name="nav_header_manage">Hantera</string>
+    <string name="nav_header_customization">Anpassning</string>
+
+    <string name="nav_header_support">Support</string>
+    <string name="nav_contact">Kontakta</string>
+    <string name="nav_about">Om</string>
+
+    <string name="action_search">Sök</string>
+    <string name="action_filter">@string/drawer_title_filter</string>
+    <string name="action_help">Hjälp</string>
+
+    <string name="action_mode_selected">Vald: %d</string>
+
+    <string name="navigation_drawer_open">Navigationslådan öppnades</string>
+    <string name="navigation_drawer_close">Navigationslådan stängd</string>
+
+
+    <string name="nav_home">Hem</string>
+    <string name="nav_history">Historia</string>
+
+    <!--
+        Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
+
+        What You'll Need:
+
+        1. A good text editor I recommend Atom (https://atom.io/), Sublime (https://www.sublimetext.com/), Brackets (http://brackets.io/) if you want to use something else no problem
+        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information
+        3. Know what character escaping is, because you cannot use characters like ' or , or ; or & or $ or % e.t.c without escaping them. e.g.
+           What\'s Trending should become What\'s Trending (Refer to http://www.ascii.cl/htmlcodes.htm look at the HTML Name Column for some conventions) not what i am looking for?
+           Contact me on the AniTrend Discord server (https://discord.gg/nqsFGgX) under the #translators channel
+
+        Just a quick note for translators, if you see some text that has %s or %d or %f just leave those as they are those are place holders:
+        %s - is a place holder for text most likely coming from AniList, e.g. %s liked your status post -> will be wax911 or Josh liked your status post
+        %d - is a place holder for a number, e.g. You have %d notifications -> will be You have 1 or 3 or 10 notifications
+        %f - is also a place holder for a decimal number works exactly as the others mentioned above
+
+        I know different languages have different rules like RTL so if you need to change the positions/order of %s or %d or %f you can still do so just don't remove the % sign
+
+        N.B. If any of mediaTagstags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
+        So you can just omit those fields
+
+        Special Cases:
+
+        1. There are some cases I used <![CDATA[ some text here ]]> don't worry about that, it's just a way that helps me to write long text in a nicer fashion, just replace the text inside
+
+        Uploading your files:
+
+        You may just upload the files in #translators and the file name should be something like strings_en.xml for english and strings_fr.xml for french respective of your locale
+
+        To All Translators I am very grateful for your help! :)
+    -->
+
+    <string name="text_popularity"> Popularitet: %d</string>
+
+    <string name="app_description">
+        <![CDATA[
+        AniTrend är en AniList android-klient som hjälper dig att hantera dina manga- och anime-listor från din mobil enhet.
+        AniTrend erbjuder många funktioner som gör det enklare för dig att upptäcka anime eller manga genom att göra innehåll enkelt tillgängligt.\n\n
+        De flesta av de grundläggande anime- eller manga-hanteringsfunktionerna har överförts till AniTrend för att förbättra användarnas upplevelse!
+        ]]>
+    </string>
+
+    <string name="Yes">Ja</string>
+    <string name="No">Nej</string>
+    <string name="Ok">Ok</string>
+
+    <string name="Loading">Laddar</string>
+    <string name="Sending">Sändning</string>
+
+    <string name="Dismiss">Avfärda</string>
+    <string name="Cancel">Annullera</string>
+
+    <string name="Close">Stänga</string>
+    <string name="Apply">Tillämpa</string>
+    <string name="Reset">Återställa</string>
+
+    <string name="Add">Lägg till</string>
+    <string name="Delete">Radera</string>
+    <string name="Update">Uppdatering</string>
+
+    <string name="Go_Back">Gå tillbaka</string>
+
+    <string name="follow">Följ</string>
+
+    <string name="Retry">Försök igen</string>
+
+    <string name="Watch">Kolla på</string>
+
+    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
+    <string-array name="feed_titles">
+        <item>Framsteg</item>
+        <item>Status</item>
+        <item>offentlig status</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="seasons_titles">
+        <item>vinter</item>
+        <item>vår</item>
+        <item>sommar</item>
+        <item>höst</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="trending_title">
+        <item>tittas på</item>
+        <item>nyligen tillagd</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="airing_title">
+        <item>vädring anime</item>
+        <item>senaste episoderna</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="manga_title">
+        <item>manga lista</item>
+        <item>nyligen tillagd</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="search_titles_auth">
+        <item>anime</item>
+        <item>manga</item>
+        <item>studio</item>
+        <item>personal</item>
+        <item>karaktär</item>
+        <item>användare</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="search_titles">
+        <item>anime</item>
+        <item>manga</item>
+        <item>studio</item>
+        <item>karaktär</item>
+        <item>användare</item>
+    </string-array>
+
+    <!--First time usage intro screen-->
+    <string name="get_started">Komma igång</string>
+    <string name="app_intro_colors_title">Färgstater</string>
+    <string name="app_intro_colors_text">Färger som representerar Anime/Manga Status!</string>
+    <string name="app_intro_content_title">Innehåll</string>
+    <string name="app_intro_content_text">Flera anime &amp; Manga listor!</string>
+    <string name="app_intro_search_title">Sökande</string>
+    <string name="app_intro_search_text">Anime, Manga &amp; Mer sökfunktionalitet!</string>
+    <string name="app_intro_videos_title">Videoklipp</string>
+    <string name="app_intro_videos_text">Använda Inbyggd Youtube Video Player!</string>
+    <string name="app_greeting">Välkommen till AniTrend!</string>
+
+    <!--Filter menu entry these are the dialog titles-->
+    <string name="app_filter_sort">Sortera efter?</string>
+    <string name="app_filter_order">Sortera efter?</string>
+    <string name="app_filter_genres">Serie Genrer?</string>
+    <string name="app_filter_show_type">Serie Typ?</string>
+    <string name="app_filter_year">Serien år</string>
+    <string name="app_filter_status">Visa endast?</string>
+
+    <!--Splash Screen-->
+    <string name="app_splash_api_unavailable">Det går inte att ansluta till servern :( Sväng ner för att försöka igen!</string>
+    <string name="app_splash_authentication_failed">Auktorisering misslyckades. Dra ner för att försöka igen!</string>
+    <string name="app_splash_authenticating">Autentisering...</string>
+    <string name="app_splash_fetching">Begär extra data...</string>
+    <string name="app_splash_profile">Begär profil...</string>
+    <string name="app_splash_loading">Programinitiering...</string>
+
+    <string name="app_splash_authenticating_message">
+		<![CDATA[
+        <p>
+        <b>AniTrend</b> har misslyckats med att verifiera med servern mer än en gång! Kontrollera att din internetanslutning är
+         igång och kontrollera även om <a href="https://anilist.co"><b>Anilist hemsida</b></a> är tillgänglig innan du trycker på JA!
+        </p>
+
+      Om webbplatsen är tillgänglig skulle du vilja <b>AniTrend</b> att återställa sig genom att logga ut, förutsatt att du var inloggad tidigare?
+         Du måste bara logga in igen.
+        ]]>
+	</string>
+
+    <!--Do not Translate, native anilist strings-->
+    <string-array name="order_by_types">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+
+    <!--You can translate this just try to keep the meaning consistent :)-->
+    <string name="campaign_link">
+		<![CDATA[
+      Spåra all din favorit Anime & Manga med AniTrend\n\n
+      Hämta det på Play Store:\n
+        https://play.google.com/store/apps/details?id=com.mxt.anitrend
+        ]]>
+	</string>
+
+    <!--N.B. When using CDATA a new line can either be /n or </p> or </br>
+    Indentation will not affect how the text appears it just makes it easier for me and others to read the text-->
+    <string name="login_message">
+		<![CDATA[
+        <p>Du kan komma åt fler alternativ som Redigering, Lägga till &
+         Ta bort Anime eller Manga-objekt från dina listor genom att länge trycka på objektet för att få fler alternativ.</p>
+
+          Du kan också lägga till / ta bort objekt från dina favoriter på din lista genom att trycka på hjärtatikonen.
+        ]]>
+	</string>
+
+    <string name="app_intro_guide">
+		<![CDATA[
+        <p>Du kan se detaljerna för något av ovanstående listor genom att trycka på bilden eller kortet,
+         Du kan också logga in på programmet med ditt AniList-konto för att få tillgång till fler funktioner!</p>
+
+        Om du inte har ett AniList-konto kommer programmet att ge dig möjlighet att registrera dig från inloggningsskärmen
+        ]]>
+	</string>
+    <string name="app_intro_title">Hur?</string>
+
+    <string name="login_welcome_title">Välkommen %s</string>
+
+    <string name="login_welcome_text">Du är inloggat</string>
+
+    <!--Anything with drawer_title is the titles for the navigation drawer-->
+    <string name="drawer_title_home">Statusmatningar</string>
+    <string name="drawer_title_anime">Upptäck Anime</string>
+    <string name="drawer_title_manga">Upptäck Manga</string>
+    <string name="drawer_title_trending">Vad är i Trending</string>
+    <string name="drawer_title_airing">Pågående Anime</string>
+    <string name="drawer_title_myanime">Min anime lista</string>
+    <string name="drawer_title_mymanga">Min manga lista</string>
+    <string name="drawer_title_reviews">RSerie Recensioner</string>
+    <string name="drawer_title_hub">AniTrend Hub</string>
+
+    <string name="drawer_section_configuration">Konfiguration</string>
+    <string name="drawer_title_filter">Filtrera</string>
+    <string name="drawer_light_theme">Byt tema</string>
+    <string name="drawer_title_style">Växla stil</string>
+
+    <string name="drawer_section_account">Konto</string>
+    <string name="drawer_title_sign_in">Logga in</string>
+    <string name="drawer_title_profile">Profil</string>
+    <string name="drawer_title_sign_out">Logga ut</string>
+
+    <string name="drawer_section_extras">Extra</string>
+    <string name="drawer_title_share">Dela</string>
+    <string name="drawer_title_update">Uppdatera</string>
+    <string name="layout_empty_response">Ingen data att visa</string>
+
+    <!-- Application Tips-->
+    <string name="tip_options_text">Få tillgång till programinställningarna, hjälp, changelog och postaktivitetsstatus. \n\nTryck här för att avvisa</string>
+    <string name="tip_options_title">Valmeny</string>
+    <string name="tip_search_title">Sökruta</string>
+    <string name="tip_search_message">Sök efter olika anime &amp; manga listningar, sökbar med namns nyckelord. \n\nTap här för att avvisa</string>
+    <string name="tip_navigation_title">Navigering</string>
+    <string name="tip_navigation_text">Öppna navigeringslådan för att visa annat innehåll i programmet. \n\nTryck här för att avvisa</string>
+    <string name="tip_series_options_message">Favorit, lägg till i din lista och dela den här nuvarande listan med vänner. \n\nTryck här för att avvisa</string>
+    <string name="tip_series_options_title">Alternativ tillgängligt</string>
+    <string name="tip_character_options_title">Favorit</string>
+    <string name="tip_character_options_message">Växla status för denna karaktär. \n\nTryck här för att avvisa</string>
+    <string name="tip_messages_title">Meddelanden</string>
+    <string name="tip_messages_text">Visa alla dina meddelanden som skickas till dig och de som du skickade. \n\nTryck här för att avvisa</string>
+    <string name="tip_status_post_title">Skapa statuspost</string>
+    <string name="tip_status_post_text">Lägg in ett statusmeddelande för alla att se. \n\nTryck här för att avvisa</string>
+    <string name="tip_notifications_title">Notiser</string>
+    <string name="tip_notifications_text">Få tillgång till alla meddelanden från ett ställe. \n\nTryck här för att avvisa</string>
+    <string name="tip_more_actions_title">Fler åtgärder</string>
+    <string name="tip_more_actions_text">Tryck här för fler alternativ, t.ex. visning av liknande. \ n \ nTryck här för att avvisa</string>
+    <string name="tip_compose_message_title">Skriv meddelandet</string>
+    <string name="tip_compose_message_text">Skicka ett meddelande till den nuvarande användaren. \n\ nTryck här för att avvisa</string>
+
+    <!--Media attachments on the reply activity-->
+    <string name="attach_media">Infoga media</string>
+    <string name="attach_link_title">Infoga webblänk</string>
+    <string name="attach_link_text">Ange webbadress t.ex. https://anilist.co/forum/thread/2459/1</string>
+    <string name="attach_image_title">Infoga bildlänk</string>
+    <string name="attach_image_text">Ange bildadress, t ex: https:/media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
+    <string name="attach_youtube_title">Sätt i Youtube-id</string>
+    <string name="attach_youtube_text">Ange youtube-id från en video du vill dela till exempel: https://www.youtube.com/watch?v=izdhszFZy-c eller https://youtu.be/izdhszFZy-c endast lämnar: izdhszFZy-c</string>
+    <string name="attach_webm_title">Sätt in videolänk</string>
+    <string name="attach_webm_text">Ange länk där videon kan hittas, t ex: http://dl1.webmfiles.org/big-buck-bunny_trailer.webm</string>
+
+    <!--Activity / Screen Names-->
+    <string name="title_activity_notification">Anmälningsnav</string>
+    <string name="title_activity_message">Message Hub</string>
+    <string name="title_activity_user_list_view">Användarlistor</string>
+    <string name="title_activity_studio">Studio</string>
+    <string name="title_activity_settings">Inställningar</string>
+    <string name="title_activity_reply">Svara Kompositör</string>
+
+    <string name="notification_default">Odefinierad aktivitet</string>
+    <string name="notification_series">Ny episod luftas</string>
+    <string name="notification_user_follow_activity">Ny följare</string>
+    <string name="notification_user_like_reply">Svara som</string>
+    <string name="notification_user_like_forum">Forum Gilla</string>
+    <string name="notification_user_like_activity">Aktivitet som</string>
+    <string name="notification_user_comment_forum">Kommentera Forum</string>
+    <string name="notification_user_reply_forum">Svara på forumet</string>
+    <string name="notification_user_reply_activity">Kommentera Aktivitet</string>
+    <string name="notification_user_activity_message">Direkt meddelande</string>
+    <string name="notification_user_activity_mention">Nämna dig</string>
+    <string name="notification_user_like_comment">Kommentera Gilla</string>
+
+
+    <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
+    <string name="notification_episode" formatted="false">Avsnitt %s av %s har precis börjat!</string>
+    <string name="notification_episode_short" formatted="false">AV %s av %s börjat!</string>
+
+
+    <!-- Settings for Application -->
+    <string name="pref_header_general">Allmän</string>
+    <string name="pref_header_general_summary">Konfigurera grundläggande applikationsbeteende</string>
+
+    <string name="pref_title_auto_increment">Smarta framstegsökning</string>
+
+    <string name="pref_summary_auto_increment">
+        <![CDATA[
+        Öka automatiskt avsnittet eller kapitelnumret när du
+           knacka på den med nya liststilar på dina airing-, anime- och mangalistor,
+           snarare än att öppna en dialogruta.
+        ]]>
+    </string>
+
+
+    <string name="pref_title_startup_page">Página de inicio</string>
+
+    <string-array name="pref_titles_menu_entries">
+        <item>Hem</item>
+        <item>Upptäck Anime</item>
+        <item>Upptäck Manga</item>
+        <item>Vad är i trend</item>
+        <item>Pågående anime</item>
+        <item>Min anime lista</item>
+        <item>Min Manga Lista</item>
+        <item>AniTrend Hub</item>
+        <item>Serie Recensioner</item>
+    </string-array>
+
+    <string-array name="pref_values_menu_entries">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <!-- Settings for update channel to use -->
+    <string name="pref_title_update_channel">Uppdateringskanal</string>
+
+    <string-array name="pref_titles_channel_entries">
+        <item>Stabil</item>
+        <item>Beta (Experimentell)</item>
+    </string-array>
+
+    <!-- Do Not Translate This -->
+    <string-array name="pref_values_channel_entries">
+        <item>master</item>
+        <item>develop</item>
+    </string-array>
+
+
+    <!-- Settings for Notifications -->
+    <string name="pref_header_notifications">Anmälningar</string>
+    <string name="pref_header_notifications_summary">Konfigurera hur meddelanden hanteras</string>
+
+    <string name="pref_title_new_message_notifications">Nya meddelandemeddelanden</string>
+    <string name="pref_key_new_message_notifications">notifications_new_message</string>
+
+    <string name="pref_title_ringtone">Meddelande ringsignal</string>
+
+    <string name="pref_ringtone_silent">Tyst</string>
+
+
+    <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
+    <string name="pref_header_data_sync">Data &amp; synkronisera</string>
+    <string name="pref_header_data_sync_summary">Konfigurera anmälningsfrekvensen</string>
+
+    <string name="pref_title_sync_frequency">Synkroniseringsfrekvens</string>
+
+    <string name="pref_title_system_sync_settings">System synkroniseringsinställningar</string>
+
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minuter</item>
+        <item>30 minuter</item>
+        <item>1 timme</item>
+        <item>3 timmar</item>
+        <item>6 timmar</item>
+    </string-array>
+
+    <!--These are the actual value of the titles above, obviously no translation required here-->
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+    </string-array>
+
+    <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
+
+    <string name="create_account">Vill du skapa ett konto?</string>
+
+    <string name="dialog_confirm_delete">Bekräfta radering!</string>
+    <string name="dialog_delete_message">Är du säker på att du vill fortsätta med den här åtgärden? Det blir ingen ånger efter att begäran skickats!</string>
+
+    <string name="title_bottom_sheet_likes">Totalt Likes: %d</string>
+
+    <string name="dialog_unfollow_message">Du håller på att följa upp den här användaren, är du säker på det här?</string>
+
+    <string name="info_login_req">¡Vänligen logga in för att komma åt den här funktionen!</string>
+    <string name="button_try_again">Försök igen</string>
+
+    <string name="dialog_add_title">
+        <![CDATA[
+        <small>Lägg till: %s</small>
+        ]]>
+    </string>
+
+    <string name="dialog_edit_title">
+        <![CDATA[
+        <small>Uppdatering: %s</small>
+        ]]>
+    </string>
+
+    <string name="title_view_likes">Vissa Likes</string>
+    <string name="input_empty_warning">Ingången kan inte vara tom!</string>
+    <string name="completed_success">Åtgärden avslutades framgångsrikt</string>
+
+    <string name="drawer_update_title">Uppdatera AniTrend?</string>
+
+    <string name="drawer_update_text">
+        <![CDATA[
+        Kontrollera om du har den senaste versionen. Om inte en nyare version laddas ner från <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
+        <br/><br/>
+        <b>N.B.</b> Om du hämtade den här appen från <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+       då är det inte nödvändigt att använda den här funktionen. Vill du fortfarande fortsätta med att kontrollera &amp; uppdatering till den senaste version?
+        ]]>
+    </string>
+
+    <string name="drawer_signout_title">Bekräfta utloggning!</string>
+    <string name="drawer_signout_text">Är du säker på att du vill logga ut från programmet? Du måste logga in på programmet igen.</string>
+    <string name="login_title">Låt oss börja!</string>
+
+    <string name="login_error_title">Oväntad stat!</string>
+
+    <string name="login_error_text">
+        <![CDATA[
+        <p> Ser ut att appen återupptogs från ett oväntat tillstånd medan du behandlar din inloggningsinformation. Detta kan uppstå på lågdrivna enheter 1 GB RAM eller mindre.</p>
+
+        Applikationen försöker nu starta om i hopp om att lösa felet, efter omstart, försök igen logga in, och om det här problemet kvarstår är du välkommen att gå över till
+        <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Sida</a> för mer hjälp.
+        ]]>
+    </string>
+
+    <string name="app_update">
+        <![CDATA[
+        <b>Hämta: <i>v%s</i></b>
+        ]]>
+    </string>
+
+    <string name="app_no_date">Du har den senaste versionen av AniTrend!</string>
+
+    <string name="title_permission_write">Behörighet krävs</string>
+
+    <string name="text_permission_write">AniTrend kräver tillstånd att spara alla nedladdade filer till enhetens nedladdningsplats, vill du fortsätta?</string>
+
+    <string name="init_youtube_missing">Överväg att installera YouTube-appen om du vill titta på trailers!</string>
+
+    <string name="text_confirm_exit">Tryck tillbaka igen för att lämna appen</string>
+
+    <string name="text_filter_applying">Använda ändringar...</string>
+
+    <string name="text_filter_restriction">Filter som inte är tillämpliga på den här sidan</string>
+
+    <string name="text_quality_changed">Innehållslista Kvalitet ändrad!</string>
+
+    <string name="text_review_changed">Ändrad granskningstyp!</string>
+
+    <string name="text_auth_unknown">Oväntad programstatus, Vänligen starta om programmet för att åtgärda det här!</string>
+
+
+    <string name="title_bottom_sheet_followers">Följare: %d</string>
+    <string name="title_bottom_sheet_following">Följer: %d</string>
+
+    <string name="text_no_likes">Inget likes att visa</string>
+
+    <string name="text_user_anime_time">Kollat på %s animes</string>
+
+    <string name="text_user_manga_chapters">Läst %s mangas</string>
+
+    <string name="text_notification">%d Underrättelse</string>
+    <string name="text_notifications">%d Anmälningar</string>
+
+    <string name="alerter_notification_title">Meddelanden tillgängliga</string>
+    <string name="alerter_notification_text">Du har en eller flera olästa anmälningar!</string>
+
+    <string name="title_new_features">Nya egenskaper!</string>
+
+    <string name="text_new_features">
+        <![CDATA[
+        Följande och följare är tillgängliga genom att knacka på etiketterna under användarbeskrivningen.
+           Du kan också klicka på Anime, Anime Time & Manga-etiketterna nedan för mer innehåll!
+        ]]>
+     </string>
+
+    <string name="text_reply_action_feedback">Taggad in i ingången!</string>
+
+    <string name="busy_please_wait">Upptagen, var god vänta!</string>
+
+    <string name="warning_empty_input">Tom inmatning är inte tillåten</string>
+
+    <string name="text_experimental_feature">Detta är en experimentell funktion!</string>
+
+    <string name="text_premium_show">Premium show. Länk ej tillgänglig!</string>
+
+    <string name="text_link_unavailable">Länk till det här avsnittet är inte tillgängligt</string>
+    <string name="error_episode_fetch">Uppfått felkod: %d</string>
+
+    <string name="waring_missing_episode_links">Nuvarande serier har inga Crunchyroll-länkar</string>
+
+    <string name="text_play_video">Spela filmen</string>
+    <string name="text_multiple_images">Flera bilder</string>
+    <string name="text_multiple_videos">Flera videor</string>
+
+    <string name="text_insufficient_genres">För lite genrer just nu!</string>
+
+    <string name="text_checking_collection">Söker i ditt bibliotek ..</string>
+
+    <string name="text_processing_request">Behandling av förfrågan ..</string>
+    <string name="text_permission_required">AniTrend beviljades inte tillstånd!</string>
+
+    <string name="text_read_more">Läs mer</string>
+
+    <string name="text_reviewed_by">Av: %s</string>
+
+    <string name="Help">Hjälp!</string>
+
+    <string name="Sync_Changes">Synkronisera ändringar</string>
+
+    <string name="title_anitrend_help">AniTrend Hjälp</string>
+
+    <string name="text_waiting_for_response">Väntar på svar</string>
+
+    <string name="text_operation_unsuccessful">Operation misslyckades!</string>
+
+    <string name="text_almost_finished">Nästan färdig!</string>
+
+    <string name="canceled_by_user">Avbruten av användaren!</string>
+
+    <string name="text_processing">Bearbetning..</string>
+
+    <string name="text_already_authenticated">Du är redan inloggad!</string>
+
+    <string name="text_please_sign_in">Var god logga in</string>
+
+    <string name="text_login_error">AniTrend har misslyckats med att hämta dina inloggningsuppgifter!</string>
+
+    <string name="text_search_empty">Sökning av innehåll kan inte vara tomt</string>
+
+    <string name="text_user_model">Användarmodell Fel!</string>
+
+
+    <string name="text_signed_out">Loggat ut E(104) Dra ner för att ladda om</string>
+    <string name="text_unknown_error">Det gick inte att lämna information om felet, var god försök igen!</string>
+    <string name="text_error_auth_login">Något gick fel och programmet kunde inte godkänna din begäran</string>
+    <string name="text_error_capture_login">Det gick inte att spara svar från servern! Vänligen försök igen senare</string>
+    <string name="text_login_success_with_error">Logga in fullständigt men ditt konto har inga listor! AniTrend har skrivit ut dig Detta har gjorts för att undvika fel 104 Var god lägg till minst en anime från AniList.</string>
+    <string name="text_error_login">Något gick fel när du försökte att logga in!</string>
+    <string name="text_login_canceled">Login lyckades men avbröts</string>
+
+    <string name="text_emoticons_scroll">Emoticons: Bläddra åt sidan</string>
+
+    <string name="text_post_information">Postinformation</string>
+
+    <string name="text_sending_request">Sändningsförfrågan ..</string>
+
+    <string name="text_activity_loading">Aktiviteten kan fortfarande laddas eller ingen data finns!</string>
+
+    <string name="text_removed_from_favourites">Ta bort från favoriter</string>
+
+    <string name="text_add_to_favourites">Lades till i favoriter!</string>
+
+    <string name="text_feature_on_hold">Funktion i väntan på grund av tekniska skäl!</string>
+
+    <string name="text_share_series" formatted="false">
+        <![CDATA[
+            Kolla in den här serien: %s %s \n\n
+            https://anilist.co/anime/%d \n\n
+            Spåra all din favorit Anime & Manga med AniTrend \n\n
+            Hämta det på Play Store: \n
+            %s
+        ]]>
+    </string>
+
+    <string name="text_item_in_favourites">Redan i favoriter</string>
+    <string name="text_item_not_in_favourites">Inte i favoriter</string>
+
+    <string name="text_error_request">Det gick inte att slutföra förfrågan framgångsrikt</string>
+
+    <string name="text_what_is_new">Vad är nytt!</string>
+    <string name="text_enter_text">Ange lite text här</string>
+    <string name="text_unable_set_text">Kan inte ställa in text ..</string>
+    <string name="edit_status_title">Redigera aktivitetsstatus</string>
+    <string name="edit_status_text">Ändra din tidigare skapade aktivitetsstatuspost!</string>
+    <string name="create_status_title">Skapa aktivitetsstatus</string>
+    <string name="create_status_text">Komponera din statuspost, vad tänker du på?</string>
+    <string name="text_changes_saved">Ändringar sparade!</string>
+
+    <string name="dialog_action_null">Föremålet som skickades till DialogManager var null!</string>
+
+    <string name="text_unable_to_increment_episodes">Ökningspasset bortom totalt antal episoder inte tillåtet!</string>
+    <string name="text_unable_to_increment_chapters">Ökningskapitlar utöver totalkapitalantalet är inte tillåtna!</string>
+
+    <string name="title_anime_list">Användare Anime List</string>
+    <string name="title_manga_list">Användare Manga Lista</string>
+    <string name="title_favourites_list">Användarnas favoriter</string>
+    <string name="text_anime_episodes">%d episoder</string>
+    <string name="text_anime_length">%d Minuter</string>
+    <string name="text_anime_score">%d%% Betyda</string>
+
+    <string name="text_message_to">Skicka ett meddelande till %s</string>
+    <string name="title_bottom_sheet_favourites">Användar favoriter</string>
+    <string name="warning_anime_is_airing">Anime är fortfarande igång!</string>
+    <string name="warning_anime_not_airing">Anime har inte släppt än!</string>
+    <string name="warning_manga_publishing">Manga publicerar fortfarande!</string>
+    <string name="warning_manga_not_publishing">Manga har inte publicerats än!</string>
+
+    <string name="text_update_check_failed">Det går inte att söka efter uppdateringar</string>
+    <string name="text_downloading_update">Ladda ner senaste versionen av AniTrend!</string>
+
+    <string name="title_new_feature">Ny funktion!</string>
+
+    <!--
+        End of strings used in Antrend v0.9.9r7
+        All new translation will be appended after this line,
+        so it's easier for everyone to add more strings :)
+    -->
+
+    <!--Start of Menu labels-->
+    <string name="menu_title_notifications">Anmälningar</string>
+    <string name="menu_title_messages">Meddelanden</string>
+    <string name="menu_title_create_status">Skapa status</string>
+    <string name="menu_title_compose_message">Skapa komponera meddelande</string>
+
+    <string name="menu_title_sorting">Sortering</string>
+    <string name="menu_title_order">Ordning</string>
+    <string name="menu_title_genres">Benrer</string>
+    <string name="menu_title_formats">Typer</string>
+    <string name="menu_title_year">År</string>
+    <string name="menu_title_status">Status</string>
+
+    <string name="menu_title_new_activity_post">Ny aktivitetspost</string>
+    <string name="menu_title_changelog">Ändringslogg</string>
+    <string name="menu_title_about">Handla om</string>
+    <string name="menu_title_help">Hjälp</string>
+    <!--End of Menu labels-->
+
+    <!--Reply or comment page when you tap the attach icon-->
+    <string name="text_attach_link">Bifoga länk</string>
+    <string name="text_attach_image">Bifoga bild</string>
+    <string name="text_youtube_link">Youtube Link</string>
+    <string name="text_webm_link">WebM Link</string>
+
+    <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
+    <string name="series_favourite_this">Favorit Detta</string>
+    <string name="series_add_to_list">Lägg till i lista</string>
+    <string name="series_write_a_review">Skriva en recension</string>
+    <string name="series_share">Dela</string>
+
+    <!--Start of Dialog you use to add, remove or update anime or manga listings-->
+    <string name="dialog_title_status">Status</string>
+    <string name="dialog_title_episodes">Episoder</string>
+    <string name="dialog_title_rewatched">Kollat Om</string>
+    <string name="dialog_title_score">Score</string>
+    <string name="dialog_title_private">Privat</string>
+    <string name="dialog_title_increment_episodes">Ökningspisoder</string>
+    <string name="dialog_hint_enter_your_notes">Ange dina anteckningar</string>
+
+    <string name="dialog_title_volumes_read">Volymer Läst</string>
+    <string name="dialog_title_chapters_read">Kapitler läst</string>
+    <string name="dialog_title_reread">Om Läst</string>
+
+    <!--More labels from profiles-->
+    <string name="text_top_genres">Top Genres:</string>
+    <string name="text_tap_on_item_below_to_view_stats">Tryck på på objektet nedan för att se statistik!</string>
+    <string name="following">Följer</string>
+    <string name="followers">Följare</string>
+    <string name="favourites">Favoriter</string>
+
+    <string name="anime">Anime</string>
+    <string name="anime_time">Anime Tid</string>
+    <string name="manga">Manga</string>
+    <string name="chapters">Kapitel</string>
+
+    <!--Profile page titles-->
+    <string-array name="profile_page_titles">
+        <item>översikt</item>
+        <item>framsteg</item>
+        <item>status</item>
+    </string-array>
+
+    <!--Staff page titles-->
+    <string-array name="staff_page_titles">
+        <item>översikt</item>
+        <item>anime roller</item>
+        <item>manga roller</item>
+        <item>personal roller</item>
+    </string-array>
+
+    <!--Anime page titles-->
+    <string-array name="anime_page_titles">
+        <item>översikt</item>
+        <item>@string/title_relation</item>
+        <item>statistik</item>
+        <item>episoder</item>
+        <item>karaktär</item>
+        <item>personal</item>
+        <item>@string/title_social</item>
+        <item>recensioner</item>
+    </string-array>
+
+    <!--Manga page titles-->
+    <string-array name="manga_page_titles">
+        <item>översikt</item>
+        <item>@string/title_relation</item>
+        <item>statistik</item>
+        <item>karaktär</item>
+        <item>personal</item>
+        <item>@string/title_social</item>
+        <item>studior</item>
+    </string-array>
+
+    <!--Favourites page titles-->
+    <string-array name="favorites_page_titles">
+        <item>animes</item>
+        <item>karaktär</item>
+        <item>mangas</item>
+        <item>personal</item>
+        <item>studior</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>översikt</item>
+        <item>anime roller</item>
+        <item>manga roller</item>
+        <item>skådespelare rollerr</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="hub_title">
+        <item>förslag</item>
+        <item>mest populär</item>
+    </string-array>
+
+    <!-- Menu title for text composer -->
+    <string name="action_attach">Fästa</string>
+    <string name="action_send">Skicka</string>
+    <string name="action_preview">Förhandsvisning</string>
+
+    <!-- Some text for comments or composer -->
+    <string name="text_hint_comment">Skriv in din kommentar</string>
+    <string name="text_edit_mode">Redigeringsläge Aktiv!</string>
+    <string name="text_preview_mode">Förhandsgranskningsläge Aktiv!</string>
+
+    <!-- Menu title for text composer -->
+    <string name="text_compose_success">Framgång, glöm inte att uppdatera ditt flöde!</string>
+
+    <!-- Some controls will be shown even though they will be disabled -->
+    <string name="text_feature_disabled">Funktionen är inaktiverad i detta sammanhang!</string>
+
+    <!-- Dialogs for check updates, etc -->
+    <string name="title_download_info">Ladda ner Info!</string>
+    <string name="text_download_info">Uppdateringsfilen sparas i din nedladdningsmapp.</string>
+    <string name="title_update_infodadat">Uppdatera information!</string>
+
+    <!-- Sliding dialog that helps you select content type -->
+    <string name="sheet_share_hint">Information att dela med</string>
+    <string name="sheet_share_title">Formatera ditt statuspost</string>
+    <string name="sheet_share_body">Beskriv innehållet i länken nedan.</string>
+
+    <!--Only replace the first item the others are already provided in this file-->
+    <string-array name="post_share_types">
+        <item>Oformatterad text</item>
+        <item>@string/attach_link_title</item>
+        <item>@string/attach_image_title</item>
+        <item>@string/attach_youtube_title</item>
+        <item>@string/attach_webm_title</item>
+    </string-array>
+
+    <!--These are the anime time labels in your profile-->
+    <string name="anime_time_hours">%.1f Timmar</string>
+    <string name="anime_time_days">%.1f Dagar</string>
+    <string name="anime_time_years">%.1f År</string>
+
+    <string-array name="media_status">
+        <item>Alla</item>
+        <item>Färdiga</item>
+        <item>Släpper</item>
+        <item>Inte släppts ännu</item>
+        <item>Avbruten</item>
+    </string-array>
+
+    <string-array name="media_formats">
+        <item>Alla</item>
+        <item>TV</item>
+        <item>TV Kort</item>
+        <item>Film</item>
+        <item>Särskild</item>
+        <item>OVA</item>
+        <item>ONA</item>
+        <item>Musik</item>
+        <item>Manga</item>
+        <item>Novel</item>
+        <item>One Shot</item>
+    </string-array>
+
+    <string-array name="reviews_title">
+        <item>@string/anime</item>
+        <item>@string/manga</item>
+    </string-array>
+
+    <string-array name="media_list_status">
+        <item>Current</item>
+        <item>Planning</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+        <item>Paused</item>
+        <item>Repeating</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>Inbox</item>
+        <item>Outbox</item>
+    </string-array>
+
+    <string name="series_type">Serie Typ:</string>
+    <string name="series_episodes">Episoder:</string>
+    <string name="series_next_ep">Nästa avsnitt:</string>
+    <string name="series_chapters">Kapitel:</string>
+    <string name="series_volumes">Volymer:</string>
+    <string name="logged_in_as">Inloggad som</string>
+
+    <string name="sign_into_anilist">Logga in AniList</string>
+
+    <string name="anitrend_sign_in">AniTrend inloggning</string>
+    <string name="please_sing_in">Var god logga in</string>
+
+    <string name="action_donate">Donera</string>
+
+    <string name="dialog_title_increment_chapters">AKapitalökning</string>
+
+    <string name="title_activity_staff">Personal</string>
+    <string name="title_activity_character">Karaktär</string>
+    <string name="title_activity_series">Serier</string>
+
+    <string name="More">Mer</string>
+
+    <string name="title_bottom_sheet_giphy">Powered By Giphy</string>
+
+    <string name="title_bookmark">Bokmärke</string>
+
+    <string name="series_share_complete">Detaljerad</string>
+    <string name="series_share_summary">Sammanfattning</string>
+
+    <string name="text_giphy_feature">Spice upp dina inlägg. Tryck bara för att välja och tryck länge för att förhandsgranska.</string>
+
+    <string name="text_manga_volumes">%d Volymerna</string>
+    <string name="text_manga_chapters">%d Kapitel</string>
+
+    <string name="title_series_status">Serie Status</string>
+    <string name="title_series_season">Serie Säsong</string>
+    <string name="title_series_score">Seriepoäng</string>
+    <string name="title_series_origin">Serie Ursprung</string>
+
+    <string name="title_total_chapters">Total Chapters</string>
+    <string name="title_total_volumes">Total Volumes</string>
+
+    <string name="title_total_episodes">Totalt antal episoder</string>
+    <string name="title_episode_duration">Episodsvarighet</string>
+    <string name="title_next_episode">Nästa avsnitt</string>
+
+    <string name="title_hash_tag">Hashtag</string>
+    <string name="title_main_studio">Huvud Studio</string>
+
+    <string name="create_new_account"><![CDATA[Har du inget konto? <a href="https://anilist.co/register/">Skapa konto</a>]]></string>
+
+    <string name="title_select_all">Välj alla</string>
+
+    <string name="title_relation">Relationer</string>
+
+    <string name="title_social">Social</string>
+
+    <string name="title_website">Hemsida</string>
+    <string name="title_summary">Sammanfattning</string>
+
+    <string name="title_date_of_birth">Födelsedatum:</string>
+    <string name="title_language">Språk:</string>
+
+    <string name="title_series_japanese_name">Japansk titel</string>
+    <string name="title_series_description">Serie Beskrivning</string>
+
+    <string name="title_series_english_name">Serie Engelska Namn:</string>
+    <string name="title_series_type">Serie Typ:</string>
+    <string name="title_native_name">Inhemskt namn:</string>
+
+    <string name="title_alternative_names">Alternativa namn</string>
+    <string name="text_unable_to_load_next_page">Fel vid inläsning av fler resultat!</string>
+    <string name="menu_title_mark_all_as_read">Markera allt som läst</string>
+    <string name="title_score_distribution">Poängfördelning</string>
+
+    <string name="title_score">Poäng</string>
+    <string name="title_watching">Tittar på</string>
+    <string name="title_series_stats">Seriestatistik</string>
+    <string name="error_unresolved_type">Det gick inte att lösa innehåll</string>
+
+    <string name="menu_title_tags">Tags</string>
+    <string name="app_filter_tags">Serie-etiketter?</string>
+
+    <string name="anitrend_sign_in_browser">Google Chrome rekommenderas</string>
+
+    <!-- Privacy Settings -->
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+
+    <!-- Black Setting Related -->
+    <string name="pref_title_black_theme">Black Theme</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
+
+    <!--Language preferences-->
+    <string name="pref_title_language">Application Language</string>
+    <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
+
+    <string name="pref_title_crash_reports">Crash Reports</string>
+    <string name="pref_crash_reports_summary_off">Application will not send crash reports, please enable this option to make bug discovery and fixing easier</string>
+    <string name="pref_crash_reports_summary_on">Application will automatically send crash reports</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Application will not send any anonymous statistics on most used features, please consider enabling this option for better design choices in future</string>
+    <string name="pref_usage_analytics_summary_on">Application will only send anonymous statistics like most used features</string>
+
+    <string name="dialog_title_started_at">Start Date</string>
+    <string name="dialog_title_completed_at">Finish Date</string>
+    <string name="pref_header_customize">Customize</string>
+    <string name="pref_header_customize_summary">Customize application behavior</string>
+    <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
+    <string name="dialog_button_clear">Clear</string>
+</resources>
