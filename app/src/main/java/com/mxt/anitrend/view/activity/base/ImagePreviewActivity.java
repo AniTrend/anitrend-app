@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.base;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.net.Uri;
@@ -77,14 +78,16 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.image_preview_download:
-                Uri imageUri = Uri.parse(mImageUri);
-                DownloadManager.Request r = new DownloadManager.Request(imageUri);
-                r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.getLastPathSegment());
-                r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    Uri imageUri = Uri.parse(mImageUri);
+                    DownloadManager.Request r = new DownloadManager.Request(imageUri);
+                    r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.getLastPathSegment());
+                    r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-                // Start download
-                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                dm.enqueue(r);
+                    // Start download
+                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                    dm.enqueue(r);
+                }
                 return true;
             case R.id.image_preview_share:
             case R.id.action_share:
