@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/image_toolbar_menu">
+    <item
+        android:id="@+id/image_preview_download"
+        android:icon="@android:drawable/stat_sys_download"
+        app:showAsAction="ifRoom"
+        android:title="@string/image_preview_download">
+    </item>
+    <item
+        android:id="@+id/image_preview_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/image_preview_share">
+    </item>
+    <item
+        android:id="@+id/image_preview_link"
+        android:icon="@drawable/ic_link_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/image_preview_link">
+    </item>
+</menu>

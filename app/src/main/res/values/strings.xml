@@ -1005,4 +1005,10 @@
     <string name="pref_header_customize">Customize</string>
     <string name="pref_header_customize_summary">Customize application behavior</string>
     <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
+
+    <!-- Image Preview strings -->
+    <string name="image_preview_title">Preview</string>
+    <string name="image_preview_download">Download</string>
+    <string name="image_preview_share">Share</string>
+    <string name="image_preview_link">Original Link</string>
 </resources>
