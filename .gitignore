@@ -136,4 +136,7 @@ fabric.properties
 # Credentials File
 secrets.properties
 
+# Google services local configuration
+app/google-services.json
+
 .directory
