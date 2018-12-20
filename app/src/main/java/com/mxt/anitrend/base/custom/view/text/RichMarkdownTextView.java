@@ -15,11 +15,20 @@ import android.widget.TextView;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.RegexUtil;
-import com.zzhoujay.richtext.RichText;
-import com.zzhoujay.richtext.RichType;
-import com.zzhoujay.richtext.ig.DefaultImageGetter;
+
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+
+import ru.noties.markwon.Markwon;
+import ru.noties.markwon.SpannableConfiguration;
+import ru.noties.markwon.il.AsyncDrawableLoader;
+import ru.noties.markwon.renderer.SpannableRenderer;
 
 public class RichMarkdownTextView extends AppCompatTextView implements CustomView {
+
+    private SpannableConfiguration configuration;
+    private final Parser parser = Markwon.createParser();
+    private final SpannableRenderer renderer = new SpannableRenderer();
 
     public RichMarkdownTextView(Context context) {
         super(context);
@@ -44,6 +53,11 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
         setFocusable(false);
         LinkifyCompat.addLinks(this, Linkify.WEB_URLS);
         setMovementMethod(LinkMovementMethod.getInstance());
+        configuration = SpannableConfiguration.builder(getContext())
+                .asyncDrawableLoader(AsyncDrawableLoader.create())
+                .htmlAllowNonClosedTags(true)
+                .softBreakAddsNewLine(true)
+                .build();
     }
 
     /**
@@ -54,43 +68,56 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
 
     }
 
+    private void renderMarkdown(String content) {
+        final Node node = parser.parse(content);
+        final CharSequence text = renderer.render(configuration, node);
+        Markwon.scheduleDrawables(this);
+        Markwon.setText(this, text);
+    }
+
     @BindingAdapter("markDown")
     public static void markDown(RichMarkdownTextView richMarkdownTextView, String markdown) {
+        richMarkdownTextView.renderMarkdown(markdown);
+        /*
         String strippedText = RegexUtil.removeTags(markdown);
         Spanned markdownSpan = MarkDownUtil.convert(strippedText, richMarkdownTextView.getContext(), richMarkdownTextView);
-        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
+        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);*/
     }
 
     @BindingAdapter("textHtml")
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, String html) {
+        richMarkdownTextView.renderMarkdown(html);
+        /*
         Spanned markdownSpan = MarkDownUtil.convert(html, richMarkdownTextView.getContext(), richMarkdownTextView);
-        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
+        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);*/
     }
 
     @BindingAdapter("basicHtml")
     public static void basicText(RichMarkdownTextView richMarkdownTextView, String html) {
-        Spanned htmlSpan = Html.fromHtml(html);
-        richMarkdownTextView.setText(htmlSpan);
+        richMarkdownTextView.renderMarkdown(html);
+        /*Spanned htmlSpan = Html.fromHtml(html);
+        richMarkdownTextView.setText(htmlSpan);*/
     }
 
     @BindingAdapter("textHtml")
     public static void htmlText(RichMarkdownTextView richMarkdownTextView, @StringRes int resId) {
         String text = richMarkdownTextView.getContext().getString(resId);
+        richMarkdownTextView.renderMarkdown(text);
+        /*
         Spanned markdownSpan = MarkDownUtil.convert(text, richMarkdownTextView.getContext(), richMarkdownTextView);
-        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);
+        richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE);*/
     }
 
     @BindingAdapter("richMarkDown")
     public static void richMarkDown(RichMarkdownTextView richMarkdownTextView, String markdown) {
-        RichText.from(RegexUtil.convertToStandardMarkdown(markdown))
-                .imageGetter(new DefaultImageGetter())
-                .bind(richMarkdownTextView.getContext())
-                .type(RichType.markdown).into(richMarkdownTextView);
+        richMarkdownTextView.renderMarkdown(markdown);
     }
 
     public void setMarkDownText(String markDownText) {
+        renderMarkdown(markDownText);
+        /*
         String strippedText = RegexUtil.removeTags(markDownText);
         Spanned markdownSpan = MarkDownUtil.convert(strippedText, getContext(), this);
-        setText(markdownSpan, TextView.BufferType.SPANNABLE);
+        setText(markdownSpan, TextView.BufferType.SPANNABLE);*/
     }
 }

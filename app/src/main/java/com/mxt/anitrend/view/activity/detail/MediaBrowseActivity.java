@@ -42,7 +42,7 @@ public class MediaBrowseActivity extends ActivityBase<MediaBase, MediaPresenter>
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(getIntent().hasExtra(KeyUtil.arg_activity_tag)) {
-            Spanned activityTitle = MarkDownUtil.convert(getIntent().getStringExtra(KeyUtil.arg_activity_tag));
+            Spanned activityTitle = MarkDownUtil.convert(getIntent().getStringExtra(KeyUtil.arg_activity_tag), this);
             mActionBar.setTitle(activityTitle);
         }
         onActivityReady();

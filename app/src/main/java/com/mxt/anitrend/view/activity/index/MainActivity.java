@@ -422,7 +422,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         if(versionBase != null && versionBase.isNewerVersion()) {
             // If a new version of the application is available on GitHub
             TextView mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update).getActionView().findViewById(R.id.app_update_info);
-            mAppUpdateWidget.setText(MarkDownUtil.convert(getString(R.string.app_update, versionBase.getVersion())));
+            mAppUpdateWidget.setText(MarkDownUtil.convert(getString(R.string.app_update, versionBase.getVersion()), this));
             mAppUpdateWidget.setVisibility(View.VISIBLE);
         }
         checkNewInstallation();

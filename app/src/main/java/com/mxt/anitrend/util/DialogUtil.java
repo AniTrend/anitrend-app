@@ -165,7 +165,7 @@ public class DialogUtil {
         createDefaultDialog(context).title(title)
                 .positiveText(R.string.Close)
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDownUtil.convert(content))
+                .content(MarkDownUtil.convert(content, context))
                 .autoDismiss(true).show();
     }
 
@@ -175,7 +175,7 @@ public class DialogUtil {
                 .negativeText(negative)
                 .neutralText(neutral)
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDownUtil.convert(content))
+                .content(MarkDownUtil.convert(content, context))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
 
@@ -184,7 +184,7 @@ public class DialogUtil {
                 .positiveText(positive)
                 .negativeText(negative)
                 .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDownUtil.convert(content))
+                .content(MarkDownUtil.convert(content, context))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
 

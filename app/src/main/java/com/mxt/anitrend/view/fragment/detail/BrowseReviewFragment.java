@@ -114,6 +114,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     public void makeRequest() {
         ApplicationPref pref = getPresenter().getApplicationPref();
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
+                .putVariable(KeyUtil.arg_isFollowing, true)
                 .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, pref.getReviewSort() + pref.getSortOrder());

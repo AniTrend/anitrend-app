@@ -115,6 +115,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     @Override
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                .putVariable(KeyUtil.arg_asHtml, true)
                 .putVariable(KeyUtil.arg_userName, userName);
         if(userId > 0)
             queryContainer.putVariable(KeyUtil.arg_id, userId);

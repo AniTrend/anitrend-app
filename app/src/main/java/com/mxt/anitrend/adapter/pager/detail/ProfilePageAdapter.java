@@ -34,9 +34,11 @@ public class ProfilePageAdapter extends BaseStatePageAdapter {
                 return UserOverviewFragment.newInstance(getParams());
             case 1:
                 return UserFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_asHtml, true)
                         .putVariable(KeyUtil.arg_type, KeyUtil.MEDIA_LIST));
             case 2:
                 return UserFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                        .putVariable(KeyUtil.arg_asHtml, true)
                         .putVariable(KeyUtil.arg_type, KeyUtil.TEXT));
         }
         return null;

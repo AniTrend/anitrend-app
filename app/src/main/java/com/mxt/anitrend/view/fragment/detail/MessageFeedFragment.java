@@ -54,6 +54,7 @@ public class MessageFeedFragment extends FeedListFragment {
     public void makeRequest() {
         queryContainer = GraphUtil.getDefaultQuery(true);
         queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
+                .putVariable(KeyUtil.arg_asHtml, true)
                 .putVariable(messageType == KeyUtil.MESSAGE_TYPE_INBOX ? KeyUtil.arg_userId : KeyUtil.arg_messengerId, userId);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.FEED_MESSAGE_REQ, getContext());

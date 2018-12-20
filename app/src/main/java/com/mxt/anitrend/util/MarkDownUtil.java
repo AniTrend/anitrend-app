@@ -12,30 +12,36 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.github.rjeschke.txtmark.Processor;
+import ru.noties.markwon.Markwon;
+import ru.noties.markwon.SpannableConfiguration;
 
 /**
  * Created by max on 2017/03/26.
  * Moved markdown processor to global location
  */
+@Deprecated
 public final class MarkDownUtil {
 
-    private static SpannableStringBuilder fromMD(@NonNull String content) {
+    private static SpannableStringBuilder fromMD(@NonNull String content, Context context) {
         Spanned htmlConverted;
+        SpannableConfiguration spannableConfiguration = SpannableConfiguration.builder(context)
+                .htmlAllowNonClosedTags(true)
+                .build();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            htmlConverted = Html.fromHtml(Processor.process(content),
+            htmlConverted = Html.fromHtml(
+                    Markwon.markdown(spannableConfiguration ,content).toString(),
                     Html.FROM_HTML_MODE_LEGACY);
         else
-            htmlConverted = Html.fromHtml(Processor.process(content));
+            htmlConverted = Html.fromHtml(Markwon.markdown(spannableConfiguration ,content).toString());
         return (SpannableStringBuilder) htmlConverted;
     }
 
-    public static Spanned convert(@Nullable String input) {
+    public static Spanned convert(@Nullable String input, Context context) {
         SpannableStringBuilder result;
         if(TextUtils.isEmpty(input))
-            result = fromMD("<b>No content available</b>");
+            result = fromMD("<b>No content available</b>", context);
         else
-            result = fromMD(RegexUtil.findUserTags(input));
+            result = fromMD(RegexUtil.findUserTags(input), context);
 
         try {
             if(result.length() > 0)
@@ -52,9 +58,9 @@ public final class MarkDownUtil {
     public static Spanned convert(@Nullable String input, Context context, AppCompatTextView source) {
         SpannableStringBuilder result;
         if(TextUtils.isEmpty(input))
-            result = fromMD("<b>No content available</b>");
+            result = fromMD("<b>No content available</b>", context);
         else
-            result = fromMD(RegexUtil.findUserTags(input));
+            result = fromMD(RegexUtil.findUserTags(input), context);
             // result = fromMD(RegexUtil.findUserTags(input), context, source);
 
         try {
