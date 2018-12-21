@@ -67,7 +67,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         isMenuDisabled = true; mColumnSize = R.integer.grid_list_x2;
-        setPresenter(new MediaPresenter(getContext()));
+                setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
 

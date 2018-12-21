@@ -5,29 +5,27 @@ import android.databinding.BindingAdapter;
 import android.support.annotation.StringRes;
 import android.support.v4.text.util.LinkifyCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.Html;
-import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
+import com.mxt.anitrend.AnilistMarkdown;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
-import com.mxt.anitrend.util.MarkDownUtil;
-import com.mxt.anitrend.util.RegexUtil;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 
 import ru.noties.markwon.Markwon;
 import ru.noties.markwon.SpannableConfiguration;
+import ru.noties.markwon.SpannableFactoryDef;
 import ru.noties.markwon.il.AsyncDrawableLoader;
 import ru.noties.markwon.renderer.SpannableRenderer;
 
 public class RichMarkdownTextView extends AppCompatTextView implements CustomView {
 
     private SpannableConfiguration configuration;
-    private final Parser parser = Markwon.createParser();
+    private final Parser parser = AnilistMarkdown.createParser();
     private final SpannableRenderer renderer = new SpannableRenderer();
 
     public RichMarkdownTextView(Context context) {
@@ -54,6 +52,7 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
         LinkifyCompat.addLinks(this, Linkify.WEB_URLS);
         setMovementMethod(LinkMovementMethod.getInstance());
         configuration = SpannableConfiguration.builder(getContext())
+                .factory(new SpannableFactoryDef())
                 .asyncDrawableLoader(AsyncDrawableLoader.create())
                 .htmlAllowNonClosedTags(true)
                 .softBreakAddsNewLine(true)
@@ -69,7 +68,14 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
     }
 
     private void renderMarkdown(String content) {
-        final Node node = parser.parse(content);
+
+        Node node;
+
+        if(TextUtils.isEmpty(content))
+            node = parser.parse("<b>No content available</b>");
+        else
+            node = parser.parse(content);
+
         final CharSequence text = renderer.render(configuration, node);
         Markwon.scheduleDrawables(this);
         Markwon.setText(this, text);
@@ -121,3 +127,4 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
         setText(markdownSpan, TextView.BufferType.SPANNABLE);*/
     }
 }
+
