@@ -10,6 +10,6 @@ public class AnilistMarkdownExtension implements Parser.ParserExtension {
     public void extend(Parser.Builder parserBuilder) {
         // Processes "youtube()" links
         parserBuilder.customDelimiterProcessor(new AnilistMarkdownYoutubeLinkProcessor());
-        parserBuilder.postProcessor(new AnilistMarkdownPostProcessor())
+        parserBuilder.postProcessor(new AnilistMarkdownPostProcessor());
     }
 }
