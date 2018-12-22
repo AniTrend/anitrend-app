@@ -64,7 +64,6 @@ mutation RateReview($id: Int, $rating: ReviewRating, $asHtml: Boolean = false) {
           episodes
           chapters
           volumes
-          isAdult
           isFavourite
           nextAiringEpisode {
             ... on AiringSchedule {

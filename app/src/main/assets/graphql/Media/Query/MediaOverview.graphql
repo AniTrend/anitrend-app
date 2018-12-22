@@ -1,5 +1,5 @@
-query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isMain: Boolean = true, $asHtml: Boolean = false) {
-  Media(id: $id, type: $type, isAdult: $isAdult) {
+query MediaOverview($id: Int!, $type: MediaType, $isMain: Boolean = true, $asHtml: Boolean = false) {
+  Media(id: $id, type: $type) {
     ... on Media {
       id
       title {
@@ -42,7 +42,6 @@ query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isM
           category
           rank
           isGeneralSpoiler
-          isAdult
         }
       }
       trailer {

@@ -82,7 +82,6 @@ query MediaSocial($mediaId: Int!, $isFollowing: Boolean = true, $page: Int, $per
             episodes
             chapters
             volumes
-            isAdult
             isFavourite
             nextAiringEpisode {
               ... on AiringSchedule {

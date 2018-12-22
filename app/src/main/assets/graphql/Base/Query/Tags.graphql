@@ -7,7 +7,6 @@ query Tag {
       category
       rank
       isGeneralSpoiler
-      isAdult
     }
   }
 }

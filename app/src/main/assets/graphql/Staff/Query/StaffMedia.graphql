@@ -49,7 +49,6 @@ query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORM
           episodes
           chapters
           volumes
-          isAdult
           isFavourite
           nextAiringEpisode {
             ... on AiringSchedule {

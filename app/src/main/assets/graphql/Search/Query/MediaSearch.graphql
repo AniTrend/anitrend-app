@@ -1,4 +1,4 @@
-query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: MediaType, $format: MediaFormat, $startDate: String, $endDate: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort] = SEARCH_MATCH) {
+query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: MediaType, $format: MediaFormat, $startDate: String, $endDate: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $sort: [MediaSort] = SEARCH_MATCH) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: M
         hasNextPage
       }
     }
-    media(id: $id, search: $search, startDate_like: $startDate, endDate_like: $endDate, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, isAdult: $isAdult, sort: $sort) {
+    media(id: $id, search: $search, startDate_like: $startDate, endDate_like: $endDate, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, sort: $sort) {
       ... on Media {
         id
         title {
@@ -48,7 +48,6 @@ query MediaSearch($id: Int, $page: Int, $perPage: Int, $search: String, $type: M
         episodes
         chapters
         volumes
-        isAdult
         isFavourite
         nextAiringEpisode {
           ... on AiringSchedule {

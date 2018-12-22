@@ -1,5 +1,5 @@
-query MediaEpisodes($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
-  Media(id: $id, type: $type, isAdult: $isAdult) {
+query MediaEpisodes($id: Int!, $type: MediaType) {
+  Media(id: $id, type: $type) {
     ... on Media {
       externalLinks {
         ... on MediaExternalLink {

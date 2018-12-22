@@ -1,4 +1,4 @@
-query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: MediaType, $format: MediaFormat, $startDateLike: String, $endDateLike: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort], $onList: Boolean, $status: MediaStatus, $tags: [String], $tagsExclude: [String]) {
+query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: MediaType, $format: MediaFormat, $startDateLike: String, $endDateLike: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $sort: [MediaSort], $onList: Boolean, $status: MediaStatus, $tags: [String], $tagsExclude: [String]) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... on PageInfo {
@@ -8,7 +8,7 @@ query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: 
         hasNextPage
       }
     }
-    media(id: $id, seasonYear: $seasonYear, startDate_like: $startDateLike, endDate_like: $endDateLike, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, isAdult: $isAdult, sort: $sort, onList: $onList, status: $status, tag_in: $tags, tag_not_in: $tagsExclude) {
+    media(id: $id, seasonYear: $seasonYear, startDate_like: $startDateLike, endDate_like: $endDateLike, season: $season, type: $type, format: $format, genre_in: $genres, genre_not_in: $genresExclude, sort: $sort, onList: $onList, status: $status, tag_in: $tags, tag_not_in: $tagsExclude) {
       ... on Media {
         id
         title {
@@ -48,7 +48,6 @@ query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: 
         episodes
         chapters
         volumes
-        isAdult
         isFavourite
         nextAiringEpisode {
           ... on AiringSchedule {

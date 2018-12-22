@@ -72,7 +72,6 @@ query MediaListCollection($userId: Int, $userName: String, $type: MediaType, $fo
                   episodes
                   chapters
                   volumes
-                  isAdult
                   isFavourite
                   nextAiringEpisode {
                     ... on AiringSchedule {

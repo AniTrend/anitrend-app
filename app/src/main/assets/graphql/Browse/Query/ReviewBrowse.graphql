@@ -74,7 +74,6 @@ query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $
             episodes
             chapters
             volumes
-            isAdult
             isFavourite
             nextAiringEpisode {
               ... on AiringSchedule {

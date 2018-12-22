@@ -1,5 +1,5 @@
-query MediaStaff($id: Int!, $type: MediaType, $sort: [StaffSort] = ROLE, $isAdult: Boolean = false, $page: Int, $perPage: Int) {
-  Media(id: $id, type: $type, isAdult: $isAdult) {
+query MediaStaff($id: Int!, $type: MediaType, $sort: [StaffSort] = ROLE, $page: Int, $perPage: Int) {
+  Media(id: $id, type: $type) {
     staff(sort: $sort, page: $page, perPage: $perPage) {
       ... on StaffConnection {
         pageInfo {

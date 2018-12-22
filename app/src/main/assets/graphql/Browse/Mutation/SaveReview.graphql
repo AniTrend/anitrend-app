@@ -58,7 +58,6 @@ mutation SaveReview($id: Int, $mediaId: Int, $body: String, $summary: String, $s
           episodes
           chapters
           volumes
-          isAdult
           isFavourite
           nextAiringEpisode {
             ... on AiringSchedule {

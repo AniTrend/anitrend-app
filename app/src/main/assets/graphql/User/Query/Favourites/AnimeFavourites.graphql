@@ -50,7 +50,6 @@ query AnimeFavourites($id: Int, $userName: String, $page: Int, $perPage: Int) {
             episodes
             chapters
             volumes
-            isAdult
             isFavourite
             nextAiringEpisode {
               ... on AiringSchedule {

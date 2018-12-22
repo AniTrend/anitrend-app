@@ -1,5 +1,5 @@
-query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
-  Media(id: $id, type: $type, isAdult: $isAdult) {
+query MediaRelations($id: Int!, $type: MediaType) {
+  Media(id: $id, type: $type) {
     relations {
       ... on MediaConnection {
         pageInfo {
@@ -53,7 +53,6 @@ query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
                 episodes
                 chapters
                 volumes
-                isAdult
                 isFavourite
                 nextAiringEpisode {
                   ... on AiringSchedule {

@@ -77,7 +77,6 @@ query MediaListBrowse($id: Int, $userId: Int, $userName: String, $page: Int, $pe
             episodes
             chapters
             volumes
-            isAdult
             isFavourite
             nextAiringEpisode {
               ... on AiringSchedule {

@@ -67,7 +67,6 @@ mutation UpdateMediaListEntries($ids: [Int], $scoreFormat: ScoreFormat = POINT_1
           episodes
           chapters
           volumes
-          isAdult
           isFavourite
           nextAiringEpisode {
             ... on AiringSchedule {

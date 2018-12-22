@@ -66,7 +66,6 @@ query CharacterActors($id: Int!, $page: Int, $perPage: Int, $sort: [StaffSort] =
                 episodes
                 chapters
                 volumes
-                isAdult
                 isFavourite
                 nextAiringEpisode {
                   ... on AiringSchedule {

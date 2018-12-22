@@ -82,7 +82,6 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $user
             episodes
             chapters
             volumes
-            isAdult
             isFavourite
             nextAiringEpisode {
               ... on AiringSchedule {
