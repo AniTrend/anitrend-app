@@ -58,6 +58,16 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
           ...userBase
         }
       }
+      ... on ActivityReplySubscribedNotification {
+          id
+          type
+          createdAt
+          context
+          activityId
+          user {
+            ...userBase
+          }
+        }
       ... on ActivityLikeNotification {
         id
         type
