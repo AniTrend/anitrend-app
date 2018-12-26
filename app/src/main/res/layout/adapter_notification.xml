@@ -65,7 +65,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/lg_margin" />
 
-                    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    <!--<com.mxt.anitrend.base.custom.view.text.SingleLineTextView-->
+                        <!--android:id="@+id/notification_content"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--tools:text="replied to your activity post" />-->
+
+                    <TextView
                         android:id="@+id/notification_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

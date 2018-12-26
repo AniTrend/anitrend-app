@@ -165,6 +165,7 @@ public class NotificationAdapter extends RecyclerViewAdapter<Notification> {
                     binding.notificationContent.setText(model.getContext());
                     break;
                 case KeyUtil.ACTIVITY_REPLY:
+                case KeyUtil.ACTIVITY_REPLY_SUBSCRIBED:
                     binding.notificationSubject.setText(R.string.notification_user_reply_activity);
                     binding.notificationHeader.setText(model.getUser().getName());
                     binding.notificationContent.setText(model.getContext());
