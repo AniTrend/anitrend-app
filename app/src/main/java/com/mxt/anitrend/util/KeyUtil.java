@@ -21,6 +21,9 @@ public interface KeyUtil {
     String CHANNEL_ID = "anitrend_app";
     String CHANNEL_TITLE = "AniTrend Notifications";
 
+    String WorkTag = "anitrend_notification_job";
+    String UniqueWorkId = "periodic_notification_sync";
+
 
     // ------------------------------------------------------------------------------------
     // GraphQL Variable Params Keys

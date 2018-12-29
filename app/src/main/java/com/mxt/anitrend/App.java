@@ -9,6 +9,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.LocaleUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,6 +61,7 @@ public class App extends Application {
             analytics.setAnalyticsCollectionEnabled(pref.isUsageAnalyticsEnabled());
             analytics.setMinimumSessionDuration(5000L);
         }
+        JobSchedulerUtil.scheduleJob(getApplicationContext());
     }
 
     @Override

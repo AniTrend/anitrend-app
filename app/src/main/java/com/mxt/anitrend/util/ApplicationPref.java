@@ -125,7 +125,7 @@ public class ApplicationPref {
 
     //Returns amount of time in seconds
     public int getSyncTime() {
-        return Integer.valueOf(sharedPreferences.getString(context.getString(R.string.pref_key_sync_frequency), "15")) * 60;
+        return Integer.valueOf(sharedPreferences.getString(context.getString(R.string.pref_key_sync_frequency), "15"));
     }
 
     public boolean isNotificationEnabled() {
