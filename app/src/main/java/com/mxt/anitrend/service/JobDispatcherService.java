@@ -1,87 +1,79 @@
 package com.mxt.anitrend.service;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.firebase.jobdispatcher.JobParameters;
-import com.firebase.jobdispatcher.JobService;
-import com.firebase.jobdispatcher.RetryStrategy;
-import com.mxt.anitrend.base.custom.async.NotificationSyncTask;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
+import com.mxt.anitrend.model.api.retro.WebFactory;
+import com.mxt.anitrend.model.api.retro.anilist.UserModel;
 import com.mxt.anitrend.model.entity.anilist.User;
+import com.mxt.anitrend.model.entity.container.body.GraphContainer;
+import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotificationUtil;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import androidx.work.ListenableWorker;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Maxwell on 1/22/2017.
- * Force run a specific job for the current package:
- * adb shell cmd jobscheduler run -f com.mxt.anitrend Id
- *
- * Run all registered jobs for the current package:
- * adb shell dumpsys jobscheduler | grep com.mxt.anitrend
  */
-public class JobDispatcherService extends JobService implements BaseConsumer.onRequestModelChange<User> {
+public class JobDispatcherService extends Worker {
 
-    private JobParameters job;
-    private NotificationSyncTask notificationSyncTask;
+    private final BasePresenter presenter;
 
-    /**
-     * The entry point to your Job. Implementations should offload work to another thread of
-     * execution as soon as possible. <br/>
-     * When work is complete call jobFinished(job, true);
-     * @param job
-     *
-     * @return whether there is more work remaining.
-     */
-    @Override
-    public boolean onStartJob(JobParameters job) {
-        this.job = job;
-        notificationSyncTask = new NotificationSyncTask();
-        notificationSyncTask.InitializeWith(getApplicationContext());
-        return true;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        if(!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
+    public JobDispatcherService(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+        presenter = new BasePresenter(context);
     }
 
     /**
-     * Called when the scheduling engine has decided to interrupt the execution of a running job,
-     * most likely because the runtime constraints associated with the job are no longer satisfied.
+     * Override this method to do your actual background processing.  This method is called on a
+     * background thread - you are required to <b>synchronously</b> do your work and return the
+     * {@link Result} from this method.  Once you return from this
+     * method, the Worker is considered to have finished what its doing and will be destroyed.  If
+     * you need to do your work asynchronously on a thread of your own choice, see
+     * {@link ListenableWorker}.
+     * <p>
+     * A Worker is given a maximum of ten minutes to finish its execution and return a
+     * {@link Result}.  After this time has expired, the Worker will
+     * be signalled to stop.
      *
-     * @param job
-     *
-     * @return whether the job should be retried
-     *
-     * @see RetryStrategy
+     * @return The {@link Result} of the computation; note that
+     * dependent work will not execute if you use
+     * {@link Result#failure()}
      */
+    @NonNull
     @Override
-    public boolean onStopJob(JobParameters job) {
-        if(notificationSyncTask != null)
-            notificationSyncTask.onDestroy();
-        Log.i("onStopJob", "JobDispatcher engine has decided to interrupt the execution of a running job");
-        return true;
-    }
-
-    @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onModelChanged(BaseConsumer<User> consumer) {
-        if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ && consumer.getChangeModel() != null) {
-            NotificationUtil.createNotification(getApplicationContext(), consumer.getChangeModel().getUnreadNotificationCount());
-            jobFinished(job, false);
-        } else
-            jobFinished(job, true);
-    }
-
-    @Override
-    public void onDestroy() {
-        if(EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
-        super.onDestroy();
+    public Result doWork() {
+        if (presenter.getApplicationPref().isAuthenticated()) {
+            UserModel userModel = WebFactory.createService(UserModel.class, getApplicationContext());
+            Call<GraphContainer<User>> request = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false));
+            try {
+                Response<GraphContainer<User>> response = request.execute();
+                GraphContainer<User> userGraphContainer = response.body();
+                if (response.isSuccessful() && userGraphContainer != null) {
+                    User currentUser = userGraphContainer.getData().getResult();
+                    User previousUserData = presenter.getDatabase().getCurrentUser();
+                    presenter.getDatabase().saveCurrentUser(currentUser);
+                    if (previousUserData.getUnreadNotificationCount() != currentUser.getUnreadNotificationCount()) {
+                        if (currentUser.getUnreadNotificationCount() > 0) {
+                            presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_CURRENT_REQ, currentUser), false);
+                            NotificationUtil.createNotification(getApplicationContext(), currentUser);
+                        }
+                    }
+                    return Result.success();
+                }
+            } catch (Exception e) {
+                Log.e(toString(), e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return Result.retry();
     }
 }

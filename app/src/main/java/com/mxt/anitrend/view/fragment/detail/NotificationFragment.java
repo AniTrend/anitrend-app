@@ -236,6 +236,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                     CompatUtil.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_REPLY:
+                case KeyUtil.ACTIVITY_REPLY_SUBSCRIBED:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
                     CompatUtil.startRevealAnim(getActivity(), target, intent);

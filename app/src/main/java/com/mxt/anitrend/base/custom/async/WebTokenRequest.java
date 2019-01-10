@@ -43,7 +43,7 @@ public class WebTokenRequest {
         CommonPresenter presenter = new BasePresenter(context);
         presenter.getApplicationPref().setAuthenticated(false);
         presenter.getDatabase().invalidateBoxStores();
-        JobSchedulerUtil.cancelJob(context);
+        JobSchedulerUtil.cancelJob();
         WebFactory.invalidate();
         token = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
