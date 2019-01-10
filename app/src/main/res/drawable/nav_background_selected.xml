@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:right="@dimen/xl_margin">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorAccent" />
+            <corners
+                android:topRightRadius="?attr/listPreferredItemHeightSmall"
+                android:bottomRightRadius="?attr/listPreferredItemHeightSmall" />
+        </shape>
+    </item>
+
+</layer-list>

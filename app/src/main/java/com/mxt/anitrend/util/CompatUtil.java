@@ -48,7 +48,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Cache;
-import top.wefor.circularanim.CircularAnim;
 
 /**
  * Created by max on 2017/09/16.
@@ -201,11 +200,13 @@ public class CompatUtil {
      * @param target The view from the calling activity with transition name
      * @param data Intent with bundle and or activity to start
      */
+    @Deprecated
     public static void startSharedTransitionActivity(FragmentActivity base, View target, Intent data) {
-        Pair participants = new Pair<>(target, ViewCompat.getTransitionName(target));
+        /*Pair participants = new Pair<>(target, ViewCompat.getTransitionName(target));
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(base, participants);
-        ActivityCompat.startActivity(base, data, transitionActivityOptions.toBundle());
+        ActivityCompat.startActivity(base, data, transitionActivityOptions.toBundle());*/
+        base.startActivity(data);
     }
 
     /**
@@ -231,10 +232,11 @@ public class CompatUtil {
      * @param finish true to allow the calling activity to be finished
      * @param data Intent data for the target activity to receive
      */
+    @Deprecated
     public static void startRevealAnim(final FragmentActivity activity, View target, final Intent data, final boolean finish) {
-        CircularAnim.fullActivity(activity, target)
-                .colorOrImageRes(isLightTheme(activity)?R.color.colorPrimaryDark:R.color.colorDarker)
-                .go(() -> { activity.startActivity(data);  if(finish) activity.finish(); });
+        activity.startActivity(data);
+        if (finish)
+            activity.finish();
     }
 
     /**

@@ -190,7 +190,6 @@
             android:launchMode="singleTop" />
 
         <service android:name=".service.TagGenreService" />
-        <service android:name=".service.AuthenticatorService" />
 
         <receiver android:name=".receiver.SchedulerDelegate">
             <intent-filter>

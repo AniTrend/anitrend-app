@@ -150,7 +150,8 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.action_discord:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/nqsFGgX"));
+                String invite = getString(R.string.link_anitrend_discord);
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(invite));
                 startActivity(intent);
                 break;
         }

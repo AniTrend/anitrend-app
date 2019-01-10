@@ -17,16 +17,15 @@ import com.mxt.anitrend.util.NotifyUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerManager;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZDataSource;
+import cn.jzvd.Jzvd;
 
 public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener {
 
     private String contentLink;
 
     @BindView(R.id.video_player)
-    JZVideoPlayerStandard player;
+    Jzvd player;
 
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -58,11 +57,11 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
     @Override
     public void onBackPressed() {
         try {
-            JZVideoPlayerManager.getCurrentJzvd().cancelProgressTimer();
+            player.cancelProgressTimer();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(JZVideoPlayer.backPress()) {
+        if(Jzvd.backPress()) {
             NotifyUtil.makeText(this, R.string.text_confirm_exit, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -75,13 +74,14 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
      */
     @Override
     protected void onActivityReady() {
-        player.setUp(contentLink, JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN);
-        player.backButton.setOnClickListener(this);
-        player.tinyBackImageView.setVisibility(View.INVISIBLE);
+        JZDataSource dataSource = new JZDataSource(contentLink);
+        player.setUp(dataSource, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+        // player.backButton.setOnClickListener(this);
+        // player.tinyBackImageView.setVisibility(View.INVISIBLE);
         player.fullscreenButton.setImageResource(R.drawable.jz_shrink);
         player.fullscreenButton.setOnClickListener(this);
-        player.clarity.setVisibility(View.GONE);
-        player.setSystemTimeAndBattery();
+        // player.clarity.setVisibility(View.GONE);
+        //player.setSystemTimeAndBattery();
         updateUI();
     }
 
@@ -97,7 +97,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
 
     public void onPause() {
         super.onPause();
-        JZVideoPlayer.releaseAllVideos();
+        Jzvd.releaseAllVideos();
     }
 
     /**

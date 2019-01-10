@@ -580,7 +580,7 @@
 
     <string name="text_login_error">AniTrend has failed to retrieve your login details!</string>
 
-    <string translatable="false" name="link_anitrend_discord">https://discord.gg/nqsFGgX</string>
+    <string translatable="false" name="link_anitrend_discord">https://discord.gg/nMJzbEY</string>
 
     <string name="text_search_empty">Search content cannot be empty</string>
 
@@ -984,6 +984,7 @@
         <item>Polski</item>
         <item>Português</item>
         <item>Svenska</item>
+        <item>Deutsch-Nederlands</item>
     </string-array>
 
     <string-array name="pref_selected_Language_values" translatable="false">
@@ -996,6 +997,7 @@
         <item>pl</item>
         <item>pt</item>
         <item>se</item>
+        <item>nl</item>
     </string-array>
 
     <string name="dialog_title_started_at">Start Date</string>
@@ -1003,7 +1005,7 @@
     <string name="dialog_button_clear">Clear</string>
 
     <string name="pref_header_customize">Customize</string>
-    <string name="pref_header_customize_summary">Customize application behavior</string>
+    <string name="pref_header_customize_summary">Customize the look and feel of the app</string>
     <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
 
     <!-- Image Preview strings -->

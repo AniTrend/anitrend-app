@@ -1,9 +1,10 @@
 package com.mxt.anitrend;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -23,7 +24,7 @@ import io.objectbox.android.AndroidObjectBrowser;
  * Application class
  */
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private @Nullable FirebaseAnalytics analytics;
     private BoxStore boxStore;
@@ -76,6 +77,7 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LocaleUtil.onAttach(base));
+        MultiDex.install(this);
     }
 
     /**

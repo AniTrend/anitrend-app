@@ -1,0 +1,961 @@
+<resources>
+    <string name="nav_header_discover">Ontdekken</string>
+    <string name="nav_header_manage">Beheren</string>
+    <string name="nav_header_customization">Personalisatie</string>
+
+    <string name="nav_header_support">Support</string>
+    <string name="nav_contact">Contact</string>
+    <string name="nav_about">Over ons</string>
+
+    <string name="action_search">Zoeken</string>
+    <string name="action_filter">@string/drawer_title_filter</string>
+    <string name="action_help">Help</string>
+
+    <string name="action_mode_selected">Selected: %d</string>
+
+    <string name="navigation_drawer_open">Navigatielade geopend</string>
+    <string name="navigation_drawer_close">Navigatielade gesloten</string>
+
+
+    <string name="nav_home">Thuis</string>
+    <string name="nav_history">Geschiedenis</string>
+
+    <!--
+        Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
+
+        What You'll Need:
+
+        1. A good text editor I recommend Atom (https://atom.io/), Sublime (https://www.sublimetext.com/), Brackets (http://brackets.io/) if you want to use something else no problem
+        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information https://www.w3schools.com/tags/
+        3. Know what character escaping is, because you cannot use characters like ' or , or ; or & or $ or % e.t.c without escaping them. e.g.
+           What\'s Trending should become What\'s Trending (Refer to http://www.ascii.cl/htmlcodes.htm look at the HTML Name Column for some conventions) not what i am looking for?
+           Contact me on the AniTrend Discord server (https://discord.gg/nqsFGgX) under the #translators channel
+
+        Just a quick note for translators, if you see some text that has %s or %d or %f just leave those as they are those are place holders:
+        %s - is a place holder for text most likely coming from AniList, e.g. %s liked your status post -> will be wax911 or Josh liked your status post
+        %d - is a place holder for a number, e.g. You have %d notifications -> will be You have 1 or 3 or 10 notifications
+        %f - is also a place holder for a decimal number works exactly as the others mentioned above
+
+        I know different languages have different rules like RTL so if you need to change the positions/order of %s or %d or %f you can still do so just don't remove the % sign
+
+        N.B. If any of the tags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
+        So you can just omit those fields
+
+        Special Cases:
+
+        1. There are some cases I used <![CDATA[ some text here ]]>  CDATA sections are used to escape blocks of text containing characters that would otherwise be regarded as markup.
+        The only delimiter that is recognized in a CDATA section is the "]]>" string that ends the CDATA section. CDATA sections cannot be nested.
+        Their primary purpose is for including material such as XML fragments, without needing to escape all the delimiters.
+
+        Uploading your files:
+
+        You may just upload the files in #translators and the file name should be something like strings_en.xml for english and strings_fr.xml for french respective of your locale
+
+        To All Translators I am very grateful for your help! :)
+    -->
+
+    <string name="text_popularity"> Populariteit: %d</string>
+
+    <string name="app_description">
+        <![CDATA[
+        AniTrend is een AniList android-client die je helpt met het bijhouden van je manga en anime lijsten vanaf je mobiele telefoon.
+        AniTrend bied vele functies die het makkelijker maken om anime of manga te ontdekken door inhoud toegankelijker te maken.\n\n
+        De meeste basisfuncties voor anime of mangabeheer zijn geïmporteerd naar AniTrend om de gebruikerservaring te verbeteren!
+        ]]>
+    </string>
+
+    <string name="Yes">Ja</string>
+    <string name="No">Nee</string>
+    <string name="Ok">OK</string>
+
+    <string name="Loading">Laden</string>
+    <string name="Sending">Zenden</string>
+
+    <string name="Dismiss">Ontheffen</string>
+    <string name="Cancel">Annuleren</string>
+
+    <string name="Close">Afsluiten</string>
+    <string name="Apply">Toepassen</string>
+    <string name="Reset">Reset</string>
+
+    <string name="Add">Toevoegen</string>
+    <string name="Delete">Verwijderen</string>
+    <string name="Update">Update</string>
+
+    <string name="Go_Back">Teruggaan</string>
+
+    <string name="Retry">Opnieuw proberen</string>
+
+    <string name="Watch">Kijken</string>
+
+    <!--Try to keep all titles short and do not change the order of the <item> tags-->
+    <string-array name="feed_titles">
+        <item>vooruitgaan</item>
+        <item>status</item>
+        <item>publieke status</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="seasons_titles">
+        <item>winter</item>
+        <item>lente</item>
+        <item>zomer</item>
+        <item>herfst</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="trending_title">
+        <item>worden bekeken</item>
+        <item>recentelijk toegevoegd</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="airing_title">
+        <item>opkomende afleveringen</item>
+        <item>laatste afleveringen</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="manga_title">
+        <item>manga lijst</item>
+        <item>recentelijk toegevoegd</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="search_titles_auth">
+        <item>anime</item>
+        <item>manga</item>
+        <item>studio</item>
+        <item>personeel</item>
+        <item>characters</item>
+        <item>karakters</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="search_titles">
+        <item>anime</item>
+        <item>manga</item>
+        <item>studio</item>
+        <item>personeel</item>
+        <item>karakters</item>
+    </string-array>
+
+    <!--First time usage intro screen-->
+    <string name="get_started">Begin</string>
+    <string name="app_intro_colors_title">Kleurenstaten</string>
+    <string name="app_intro_colors_text">Kleuren die Anime / Manga-status vertegenwoordigen!</string>
+    <string name="app_intro_content_title">Inhoud</string>
+    <string name="app_intro_content_text">Multiple Anime &amp; Manga Vermeldingen!</string>
+    <string name="app_intro_search_title">Searching</string>
+    <string name="app_intro_search_text">Anime, Manga &amp; Meer zoekfunctionaliteiten!</string>
+    <string name="app_intro_videos_title">Videos</string>
+    <string name="app_intro_videos_text">Gebruikt een ingebouwde Youtube Video Player!</string>
+    <string name="app_greeting">Welcome to AniTrend!</string>
+
+    <!--Filter menu entry these are the dialog titles-->
+    <string name="app_filter_sort">Sorteer op?</string>
+    <string name="app_filter_order">Volgorde op?</string>
+    <string name="app_filter_genres">Series Genres?</string>
+    <string name="app_filter_show_type">Type Serie?</string>
+    <string name="app_filter_year">Serie jaar?</string>
+    <string name="app_filter_status">Alleen weergeven?</string>
+
+    <!--Splash Screen-->
+    <string name="app_splash_api_unavailable">Kan geen verbinding maken met de server :( Veeg omlaag om opnieuw te proberen!</string>
+    <string name="app_splash_authentication_failed">Auth. Gefaald. Veeg Omlaag Om Opnieuw Te Proberen!</string>
+    <string name="app_splash_authenticating">Valideren..</string>
+    <string name="app_splash_fetching">Extra Data Opvragen..</string>
+    <string name="app_splash_profile">Profiel Aanvragen..</string>
+    <string name="app_splash_loading">Applicatie Initialiseren..</string>
+
+    <string name="app_splash_authenticating_message">
+        <![CDATA[
+        <p>
+        <b>AniTrend</b> heeft meerdere keren gefaald om te authenticeren met de server!
+        Controleer of je internet connectie werkt en check ook of de<a href="https://anilist.co"><b>AniList Website</b></a> beschikbaar is voor je op JA klikt!
+        </p>
+
+        Als de website beschikbaar is, wil je dan bij <b>AniTrend</b> uitloggen om te resetten, ervan uitgaan dat je eerst ingelogd was?
+        Je hoeft daarna alleen maar weer opnieuw in te loggen.
+        ]]>
+    </string>
+
+    <!--Do not Translate, native anilist strings-->
+    <string-array name="order_by_types">
+        <item>Oplopend</item>
+        <item>Aflopend</item>
+    </string-array>
+
+    <!--You can translate this just try to keep the meaning consistent :)-->
+    <string name="campaign_link">
+        <![CDATA[
+        Volg al je favoriete Anime & Manga met AniTrend\n\n
+        Check het op Play Store:\n
+        https://play.google.com/store/apps/details?id=com.mxt.anitrend
+        ]]>
+    </string>
+
+    <!--N.B. When using CDATA a new line can either be /n or </p> or </br>
+    Indentation will not affect how the text appears it just makes it easier for me and others to read the text-->
+    <string name="login_message">
+        <![CDATA[
+        <p>Om toegang te krijgen tot meer functies zoals het bewerken, Toevoegen &
+        Verwijderen van Anime of Manga items van je lijst, kan je een item lang in gedrukt houden om meer opties te krijgen.</p>
+
+        Je kan ook items toevoegen/verwijderen van je favorieten op je lijst door op het Hart icoontje te klikken.
+        ]]>
+    </string>
+
+    <string name="app_intro_guide">
+        <![CDATA[
+        <p>Je kan de details bekijken van alle bovenstaande lijsten door op de afbeelding of kader te klikken.
+        Je kan ook inloggen op de aplicatie met je Anilist account om extra fucncties te ontgrendelen!</p>
+
+        Als je nog geen Anilist account hebt zal de applicatie je de optie geven om in te loggen vanuit het loginscherm.
+        ]]>
+    </string>
+    <string name="app_intro_title">Hoe te gebruiken?</string>
+
+    <string name="login_welcome_title">Welkom %s</string>
+
+    <string name="login_welcome_text">Het inloggen is gelukt!</string>
+
+    <!--Anything with drawer_title is the titles for the navigation drawer-->
+    <string name="drawer_title_home">Status Feeds</string>
+    <string name="drawer_title_anime">Anime Ontdekken</string>
+    <string name="drawer_title_manga">Manga Ontdekken</string>
+    <string name="drawer_title_trending">Wat is populair</string>
+    <string name="drawer_title_airing">Draaiende Anime</string>
+
+    <string name="drawer_title_myanime">Mijn Animne Lijst</string>
+    <string name="drawer_title_mymanga">Mijn Manga Lijst</string>
+    <string name="drawer_title_reviews">Series Reviews</string>
+
+    <string name="drawer_title_hub">AniTrend Hub</string>
+
+    <string name="drawer_section_configuration">Configuratie</string>
+    <string name="drawer_title_filter">Filter</string>
+    <string name="drawer_light_theme">Wissel Thema</string>
+    <string name="drawer_title_style">Toggle Style</string>
+
+    <string name="drawer_section_account">Account</string>
+    <string name="drawer_title_sign_in">Inloggen</string>
+    <string name="drawer_title_profile">Profiel</string>
+    <string name="drawer_title_sign_out">Uitloggen</string>
+
+    <string name="drawer_section_extras">Extras</string>
+    <string name="drawer_title_share">Delen</string>
+    <string name="drawer_title_update">Update</string>
+    <string name="layout_empty_response">Geen data</string>
+
+    <!-- Application Tips-->
+    <string name="tip_options_text">Krijg toegang tot applicatie instellinngen, help, wijzigingslogboek en post activiteitenstatus. \n\nKlik hier om te annuleren</string>
+    <string name="tip_options_title">Optie Menu</string>
+    <string name="tip_search_title">Zoekbalk</string>
+    <string name="tip_search_message">Zoek naar verschillende Anime &amp; manga lijsten, vindbaar op naam sleutelwoorden. \n\nklik hier om te annuleren</string>
+    <string name="tip_navigation_title">Navigation</string>
+    <string name="tip_navigation_text">Open de navigatielade om verschillende inhoud te bekijken binnen de applicatie. \n\nKlik hier om te annuleren</string>
+    <string name="tip_series_options_message">Maak favoriet, voeg toe aan je lijst en deel dit de huidige lijst met vrienden. \n\nKlik hier om te annuleren</string>
+    <string name="tip_series_options_title">Opties Beschikbaar</string>
+    <string name="tip_character_options_title">Maar favoriet</string>
+    <string name="tip_character_options_message">Maak dit Karakter je favoriet. \n\nKlik hier om te annuleren</string>
+    <string name="tip_messages_title">Messages</string>
+    <string name="tip_messages_text">Bekijk al je binnenkomende en uitgaande berichten. \n\nKlik hier om te annuleren</string>
+    <string name="tip_status_post_title">Maak een status post</string>
+    <string name="tip_status_post_text">Post je status bericht zodat iedereen het kan zien. \n\nKlik hier om te annuleren</string>
+    <string name="tip_notifications_title">Notifications</string>
+    <string name="tip_notifications_text">Beheer al je berichten op één plek. \n\nKlik hier om te annuleren</string>
+    <string name="tip_more_actions_title">Meer Acties</string>
+    <string name="tip_more_actions_text">Klik hier voor meer opties, zoals het bekijken van je likes. \n\nKlik hier om te annuleren</string>
+    <string name="tip_compose_message_title">Compose Message</string>
+    <string name="tip_compose_message_text">Verzend een bericht naar de huidige gebruiker. \n\nKlik hier om te annuleren</string>
+
+    <!--Media attachments on the reply activity-->
+    <string name="attach_media">Voeg Media Toe</string>
+    <string name="attach_link_title">Voeg Een Weblink Toe</string>
+    <string name="attach_link_text">Voer web url in e.g: https://anilist.co/forum/thread/2459/1</string>
+    <string name="attach_image_title">Voeg Afbeelding Link Toe</string>
+    <string name="attach_image_text">Voer afbeeldings url in e.g: https://media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
+    <string name="attach_youtube_title">Plaats je Youtube Id</string>
+    <string name="attach_youtube_text">Voer het YouTube-id in van de video die je wilt delen e.g: https://www.youtube.com/watch?v=izdhszFZy-c or https://youtu.be/izdhszFZy-c Only Leave: izdhszFZy-c</string>
+    <string name="attach_webm_title">Voer Video Link In</string>
+    <string name="attach_webm_text">Voer een link van de video in waar het gevonden kan worden e.g: http://dl1.webmfiles.org/big-buck-bunny_trailer.webm</string>
+
+    <!--Activity / Screen Names-->
+    <string name="title_activity_notification">Notificatie Hub</string>
+    <string name="title_activity_message">Berichten Hub</string>
+    <string name="title_activity_user_list_view">User Lijst</string>
+    <string name="title_activity_studio">Studio</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="title_activity_reply">Antwoord schrijver</string>
+
+    <string name="notification_default">Onbepaade Activiteit</string>
+    <string name="notification_series">Nieuwe aflevering uitgezonden</string>
+    <string name="notification_user_follow_activity">Nieuwe volger</string>
+    <string name="notification_user_like_forum">Forum Like</string>
+    <string name="notification_user_like_activity">Activiteiten Like</string>
+    <string name="notification_user_like_reply">Antwoord Like</string>
+    <string name="notification_user_comment_forum">Commentaar op Forum</string>
+    <string name="notification_user_reply_forum">Antwoord op Forum</string>
+    <string name="notification_user_reply_activity">Commentaar op Activiteit</string>
+    <string name="notification_user_activity_message">Direct Bericht</string>
+    <string name="notification_user_activity_mention">Noemt jou</string>
+    <string name="notification_user_like_comment">Commentaar op like</string>
+
+    <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
+    <string name="notification_episode" formatted="false">Aflevering %s van %s is zojuist uitgezonden!</string>
+    <string name="notification_episode_short" formatted="false">Afl. %s of %s is uitgezonden!</string>
+
+
+    <!-- Settings for Application -->
+    <string name="pref_header_general">Algemeen</string>
+    <string name="pref_header_general_summary">Beheer de basisfuncties van de applicatie</string>
+
+    <string name="pref_title_auto_increment">Snel toenemende vooruitgang</string>
+
+    <string name="pref_summary_auto_increment">
+        <![CDATA[
+        Automatically increment the episode or chapter number when you
+        tap on it using new list styles on your airing, anime & manga lists,
+        rather than opening a dialog.
+        ]]>
+    </string>
+
+    <string name="pref_title_startup_page">Startup Page</string>
+
+    <string-array name="pref_titles_menu_entries">
+        <item>Thuis</item>
+        <item>Anime Ontdekken</item>
+        <item>Manga Ontdekken</item>
+        <item>Wat Is Populair</item>
+        <item>Draaiende Anime</item>
+        <item>Mijn Anime Lijst</item>
+        <item>Mijn Manga Lijst</item>
+        <item>AniTrend Hub</item>
+        <item>Serie Reviews</item>
+    </string-array>
+
+    <string-array name="pref_values_menu_entries">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string name="pref_title_update_channel">Kanaal updaten</string>
+
+    <string-array name="pref_titles_channel_entries">
+        <item>Stable</item>
+        <item>Beta (Experimenteel)</item>
+    </string-array>
+
+    <!-- Do Not Translate This -->
+    <string-array name="pref_values_channel_entries">
+        <item>master</item>
+        <item>develop</item>
+    </string-array>
+
+    <!-- Settings for Notifications -->
+    <string name="pref_header_notifications">Notificaties</string>
+    <string name="pref_header_notifications_summary">Beheer hoe notificaties worden behandeld</string>
+
+    <string name="pref_title_new_message_notifications">Nieuw berichten notificatie</string>
+    <string name="pref_key_new_message_notifications">notifications_new_message</string>
+
+    <string name="pref_title_ringtone">Notificatie Ringtone</string>
+
+    <string name="pref_ringtone_silent">Stil</string>
+
+
+    <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync_summary">De meldingscontrolefrequentie configureren</string>
+
+    <string name="pref_title_sync_frequency">Sync frequentie</string>
+
+    <string name="pref_title_system_sync_settings">Systeem sync instellingen</string>
+
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minuten</item>
+        <item>30 minuten</item>
+        <item>1 uur</item>
+        <item>3 uur</item>
+        <item>6 uur</item>
+    </string-array>
+
+    <!--These are the actual value of the titles above, obviously no translation required here-->
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+    </string-array>
+
+    <!--Another message using a bit of html the p tags represent new paragraphs-->
+
+    <string name="create_account">Wil je een nieuw account aanmaken?</string>
+
+    <string name="dialog_confirm_delete">Verwijderen bevestigen!</string>
+    <string name="dialog_delete_message">Weet je zeker dat je wilt doorgaan met deze actie? Je kan dit niet terugdraaien!</string>
+
+    <string name="title_bottom_sheet_likes">Totale Likes: %d</string>
+
+    <string name="dialog_unfollow_message">Je staat op het punt om deze gebruiker te ontvolgen, weet je zeker dat je deze persoon wilt laten huilen?</string>
+
+    <string name="info_login_req">Je moet ingelogd zijn om dit object te ontgrendelen!</string>
+    <string name="button_try_again">Probeer opnieuw</string>
+
+    <string name="dialog_add_title">
+        <![CDATA[
+        <small>Add: %s</small>
+        ]]>
+    </string>
+
+    <string name="dialog_edit_title">
+        <![CDATA[
+        <small>Update: %s</small>
+        ]]>
+    </string>
+
+    <string name="title_view_likes">Likes bekijken</string>
+    <string name="input_empty_warning">Veld kan niet leeg zijn!</string>
+    <string name="completed_success">Actie met succes voltooid</string>
+
+    <string name="drawer_update_title">AniTrend updaten?</string>
+
+    <string name="drawer_update_text">
+        <![CDATA[
+        Controleerd of je de nieuwste versie hebt. zo niet, dan wordt er een nieuwere versie gedownload via <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
+        <br/><br/>
+        <b>N.B.</b> Als je deze app hebt gedownload van de <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        is er geen reden om deze functie te gebruiken. wil je toch doorgaan met het checken van &amp; van de laatste Build-versie?
+        ]]>
+    </string>
+
+    <string name="drawer_signout_title">Uitloggen bevestigen!</string>
+    <string name="drawer_signout_text">Weet je zeker dat je wilt uiloggen? Je zal hierna weer moeten inloggen.</string>
+    <string name="login_title">Laten we beginnen!</string>
+
+    <string name="login_error_title">onverwachte Staat!</string>
+
+    <string name="login_error_text">
+        <![CDATA[
+        <p>Het lijkt erop dat de app is gestart vanuit een onverwachte staat terwijl data werd opgehaald. Dit kan voorkomen op apparaten met laag vermogen, bijv. 1GB RAM of minder.</p>
+
+        De applicatie zal opnieuw opgestart worden in de hoop dit probleem te verhelpen. Probeer opnieuw in te loggen na de restart en als het probleem zich nog steeds voordoet, neem dan contact op met
+        <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> voor meer assistentie.
+        ]]>
+    </string>
+
+    <string name="app_update">
+        <![CDATA[
+        <b>Get: <i>v%s</i></b>
+        ]]>
+    </string>
+
+    <string name="app_no_date">Je hebt de laatste versie van Anitrend!</string>
+
+    <string name="title_permission_write">Toestemming nodig</string>
+
+    <string name="text_permission_write">AniTrend heeft toestemming nodig om bestanden op te slaan op de download locatie van het apparaat. Doorgaan?</string>
+
+    <string name="init_youtube_missing">Wellicht wil je de YouTube App downloaden als je trailers wilt zien!</string>
+
+    <string name="text_confirm_exit">Druk nogmaals terug om terug te gaan</string>
+
+    <string name="text_filter_applying">Veranderingen Doorvoeren..</string>
+
+    <string name="text_filter_restriction">Filters niet van toepassing op deze pagina</string>
+
+    <string name="text_quality_changed">Kwaliteit Inhoudslijst gewijzigd!</string>
+
+    <string name="text_review_changed">Review type gewijzigd!</string>
+
+    <string name="text_auth_unknown">Onverwachte applicatiestaat, Start a.u.b. de applicatie opnieuw op!</string>
+
+
+    <string name="title_bottom_sheet_followers">Volgers: %d</string>
+    <string name="title_bottom_sheet_following">volgend: %d</string>
+
+    <string name="text_no_likes">Geen likes om te laten zien</string>
+
+    <string name="text_user_anime_time">Heeft %s Anime gekeken</string>
+
+    <string name="text_user_manga_chapters">Heeft %s Hoofdstukken Manga gelezen</string>
+
+    <string name="text_notification">%d Notificatie</string>
+    <string name="text_notifications">%d Notificaties</string>
+
+    <string name="alerter_notification_title">Notificaties beschikbaar</string>
+    <string name="alerter_notification_text">Je hebt één of meer ongelezen notificaties!</string>
+
+    <string name="title_new_features">Nieuwe Functies!</string>
+
+    <string name="text_new_features">
+        <![CDATA[
+        Volgend en volgers zijn toegankelijk door te klikken op de labels onder de descriptie van de gebruiker.
+        je kan ook tikken onder de Anime, Anime Tijd & Manga labels voor meer content!
+        ]]>
+     </string>
+
+    <string name="text_reply_action_feedback">Tag ingevoerd in de invoer!</string>
+
+    <string name="busy_please_wait">Bezig, even geduld graag!</string>
+
+    <string name="warning_empty_input">Lege invoer is niet toegestaan.</string>
+
+    <string name="text_experimental_feature">Dit is een experimentele functie!</string>
+
+    <string name="text_premium_show">Premium show. Link niet beschikbaar!</string>
+
+    <string name="text_link_unavailable">Link voor de aflevering is niet beschikbaar</string>
+    <string name="error_episode_fetch">Error code ondervonden: %d</string>
+
+    <string name="waring_missing_episode_links">Huidige serie heeft geen Crunchyroll links!</string>
+
+    <string name="text_play_video">Video Afspelen</string>
+    <string name="text_multiple_images">Meerdere Afbeeldingen</string>
+    <string name="text_multiple_videos">Meerdere Videos</string>
+
+    <string name="text_insufficient_genres">Te weinig genres op dit moment!</string>
+
+    <string name="text_checking_collection">Zoeken in je mapjes..</string>
+
+    <string name="text_processing_request">Verzoek verwerken..</string>
+    <string name="text_permission_required">AniTrend heeft geen toestemming gekregen!</string>
+
+    <string name="text_read_more">Meer lezen</string>
+
+    <string name="text_reviewed_by">Door: %s</string>
+
+    <string name="Help">Help!</string>
+
+    <string name="Sync_Changes">Sync Veranderingen</string>
+
+    <string name="title_anitrend_help">AniTrend Help</string>
+
+    <string name="text_waiting_for_response">Wachten op een reactie</string>
+
+    <string name="text_operation_unsuccessful">Operatie was een succes!</string>
+
+    <string name="text_almost_finished">Bijna klaar!</string>
+
+    <string name="canceled_by_user">geannuleerd door gebruiker!</string>
+
+    <string name="text_processing">Verwerken..</string>
+
+    <string name="text_already_authenticated">Je bent al ingelogd!</string>
+
+    <string name="text_please_sign_in">Inloggen a.u.b.</string>
+
+    <string name="text_login_error">AniTrend kon je login details niet achterhalen!</string>
+
+    <string name="text_search_empty">zoekinhoud kan niet leeg zijn</string>
+
+    <string name="text_user_model">Gebruiker Model Error!</string>
+
+
+    <string name="text_signed_out">Uitgelogd E(104) Swipe naar beneden om opnieuw te laden</string>
+    <string name="text_unknown_error">Niet mogelijk om informtie te achterhalen van de error, probeer opnieuw!</string>
+    <string name="text_error_auth_login">Iets is misgegaan en de applicatie was niet in staat om je aanvraag te autoriseren.</string>
+    <string name="text_error_capture_login">Kan reactie van server niet oplsaan! Probeer later opnieuw</string>
+    <string name="text_login_success_with_error">Login gelukt, maar je account heeft geen inhoud! AniTrend heeft je uitgelogd. dit is gedaan om error 104 te vermijden. voeg tenminste één Anime toe van Anilist.</string>
+    <string name="text_error_login">Iets is misgegaan tijdens het inloggen!</string>
+    <string name="text_login_canceled">Login compleet, maar geannuleerd. </string>
+
+    <string name="text_emoticons_scroll">Emoticons: Scroll zijwaarts</string>
+
+    <string name="text_post_information">Post Informatie</string>
+
+    <string name="text_sending_request">Aanvraag verzenden..</string>
+
+    <string name="text_activity_loading">Activiteit kan nog steeds geladen worden of er is geen data present!</string>
+
+    <string name="text_removed_from_favourites">Verwijderd uit je Favorieten</string>
+
+    <string name="text_add_to_favourites">Toegevoegd aan je Favorieten!</string>
+
+    <string name="text_feature_on_hold">Functie op hold wegens technische redenen!</string>
+
+    <string name="text_share_series" formatted="false">
+        <![CDATA[
+            Check deze series eens: %s %s \n\n
+            https://anilist.co/anime/%d \n\n
+            Vind al je favoriete Anime & Manga met AniTrend \n\n
+            verkrijg het op de Play Store: \n
+            %s
+        ]]>
+    </string>
+
+    <string name="text_item_in_favourites">Staat al in je favorieten</string>
+    <string name="text_item_not_in_favourites">Niet in je favorieten</string>
+
+    <string name="text_error_request">Kon aanvraag niet voltooien</string>
+
+    <string name="text_what_is_new">Wat is nieuw!</string>
+    <string name="text_enter_text">Enter some text here</string>
+    <string name="text_unable_set_text">tekstinvoer niet beschikbaar..</string>
+    <string name="edit_status_title">Edit Activity Status</string>
+    <string name="edit_status_text">Alter your previously created activity status post!</string>
+    <string name="create_status_title">Create Activity Status</string>
+    <string name="create_status_text">Compose your status post, what\'s on your mind?</string>
+    <string name="text_changes_saved">Changes saved!</string>
+
+    <string name="dialog_action_null">Het item dat werd doorgegeven aan de Dialog Manager was leeg!</string>
+
+    <string name="text_unable_to_increment_episodes">Toename van afleveringen van maximaal aantal afleveringen niet toegestaan!</string>
+    <string name="text_unable_to_increment_chapters">Toename van maximaal aantal hoofdstukken niet toegestaan!</string>
+
+    <string name="title_anime_list">Gebruikerslijst Anime</string>
+    <string name="title_manga_list">Gebruikerslijst Manga</string>
+    <string name="title_favourites_list">Favorieten van gebruiker</string>
+    <string name="text_anime_episodes">%d afleveringen</string>
+    <string name="text_anime_length">%d Minuten</string>
+    <string name="text_anime_score">%d%% Mean</string>
+
+    <string name="text_message_to">Verzend een bericht naar %s</string>
+    <string name="title_bottom_sheet_favourites">Favorieten van gebruiker</string>
+    <string name="warning_anime_is_airing">Anime is nog steeds aan het zenden!</string>
+    <string name="warning_anime_not_airing">Anime is nog niet gestart!</string>
+    <string name="warning_manga_publishing">Manga wordt nog steeds geschreven!</string>
+    <string name="warning_manga_not_publishing">Manga is nog niet gepubliceerd!</string>
+
+    <string name="text_update_check_failed">Niet mogelijk om te checken voor updates!</string>
+    <string name="text_downloading_update">Downloaden van de laatste versie van AniTrend!</string>
+
+    <string name="title_new_feature">Nieuwe functie!</string>
+
+    <!--
+        End of strings used in Antrend v0.9.9r7
+        All new strings will be appended after this line,
+        so it's easier for everyone to update thier respective translation files :)
+    -->
+
+    <!--Start of Menu labels-->
+    <string name="menu_title_notifications">Notificaties</string>
+    <string name="menu_title_messages">Berichten</string>
+    <string name="menu_title_create_status">Status schrijven</string>
+    <string name="menu_title_compose_message">Bericht schrijven</string>
+
+    <string name="menu_title_sorting">Sorteren</string>
+    <string name="menu_title_order">Orderen</string>
+    <string name="menu_title_genres">Genres</string>
+    <string name="menu_title_formats">Types</string>
+    <string name="menu_title_year">Jaar</string>
+    <string name="menu_title_status">Status</string>
+
+    <string name="menu_title_new_activity_post">Nieuwe Activiteiten Post</string>
+    <string name="menu_title_changelog">Veranderingenlog</string>
+    <string name="menu_title_about">Over</string>
+    <string name="menu_title_help">Help</string>
+    <!--End of Menu labels-->
+
+    <!--Reply or comment page when you tap the attach icon-->
+    <string name="text_attach_link">Link vastmaken</string>
+    <string name="text_attach_image">Afbeelding vastmaken</string>
+    <string name="text_youtube_link">Youtube Link</string>
+    <string name="text_webm_link">WebM Link</string>
+
+    <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
+    <string name="series_favourite_this">Maak favoriet</string>
+    <string name="series_add_to_list">Toevoegen aan lijst</string>
+    <string name="series_write_a_review">Schrijf een Review</string>
+    <string name="series_share">Delen</string>
+
+    <!--Start of Dialog you use to add, remove or update anime or manga listings-->
+    <string name="dialog_title_status">Status</string>
+    <string name="dialog_title_episodes">Afleveringen</string>
+    <string name="dialog_title_rewatched">Opnieuw Bekeken</string>
+    <string name="dialog_title_score">Score</string>
+    <string name="dialog_title_private">Privé</string>
+    <string name="dialog_title_increment_episodes">Toenemen van afleveringen</string>
+    <string name="dialog_hint_enter_your_notes">Noteer wat onzin</string>
+
+    <string name="dialog_title_volumes_read">Delen Gelezen</string>
+    <string name="dialog_title_chapters_read">Hoofdstukken Gelezen</string>
+    <string name="dialog_title_reread">Herlezen</string>
+
+    <!--More labels from profiles-->
+    <string name="text_top_genres">Top Genres:</string>
+    <string name="text_tap_on_item_below_to_view_stats">Tik op het item hieronder om statistieken te bekijken!</string>
+
+    <string name="follow">Volgen</string>
+
+    <string name="following">Volgend</string>
+    <string name="followers">Volgers</string>
+    <string name="favourites">Favorieten</string>
+
+    <string name="anime">Anime</string>
+    <string name="anime_time">Anime Tijd</string>
+    <string name="manga">Manga</string>
+    <string name="chapters">Hoofdstukken</string>
+
+
+    <!--Profile page titles-->
+    <string-array name="profile_page_titles">
+        <item>overzicht</item>
+        <item>vooruitgang</item>
+        <item>status</item>
+    </string-array>
+
+    <!--Staff page titles-->
+    <string-array name="staff_page_titles">
+        <item>overzicht</item>
+        <item>anime rollen</item>
+        <item>manga rollen</item>
+        <item>Staff rollen</item>
+    </string-array>
+
+    <!--Anime page titles-->
+    <string-array name="anime_page_titles">
+        <item>overzicht</item>
+        <item>@string/title_relation</item>
+        <item>stats</item>
+        <item>afleveringen</item>
+        <item>karakters</item>
+        <item>personeel</item>
+        <item>@string/title_social</item>
+        <item>reviews</item>
+    </string-array>
+
+    <!--Manga page titles-->
+    <string-array name="manga_page_titles">
+        <item>overzicht</item>
+        <item>@string/title_relation</item>
+        <item>stats</item>
+        <item>karakters</item>
+        <item>personeel</item>
+        <item>@string/title_social</item>
+        <item>reviews</item>
+    </string-array>
+
+    <!--Favourites page titles-->
+    <string-array name="favorites_page_titles">
+        <item>anime</item>
+        <item>karakters</item>
+        <item>manga</item>
+        <item>personeel</item>
+        <item>studios</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>overzicht</item>
+        <item>anime rollen</item>
+        <item>manga rollen</item>
+        <item>acteur rollen</item>
+    </string-array>
+
+    <string-array name="hub_title">
+        <item>suggesties</item>
+        <item>meest populair</item>
+    </string-array>
+
+    <!-- Menu title for text composer -->
+    <string name="action_attach">Vastmaken</string>
+    <string name="action_send">Zenden</string>
+    <string name="action_preview">Voorvertoning</string>
+
+    <!-- Some text for comments or composer -->
+    <string name="text_hint_comment">Schrijf hier je onzin</string>
+    <string name="text_edit_mode">Bewerkingsmode actief!</string>
+    <string name="text_preview_mode">vertoningsmode actief!</string>
+
+    <!-- Menu title for text composer -->
+    <string name="text_compose_success">Success. Vergeet niet je feed te verversen!</string>
+
+    <!-- Some controls will be shown even though they will be disabled -->
+    <string name="text_feature_disabled">Feature is uitgezet in deze context!</string>
+
+    <!-- Dialogs for check updates, etc -->
+    <string name="title_download_info">Download Info!</string>
+    <string name="text_download_info">Het update bestand zal worden opgeslagen in je download folder.</string>
+    <string name="title_update_infodadat">Update Info!</string>
+
+    <!-- Sliding dialog that helps you select content type -->
+    <string name="sheet_share_hint">Informatie om te delen</string>
+    <string name="sheet_share_title">formatteer je statuspost!</string>
+    <string name="sheet_share_body">Bescrijf de inhoud van de link hieronder.</string>
+
+    <!--Only replace the first item the others are already provided in this file-->
+    <string-array name="post_share_types">
+        <item>Lege Tekst</item>
+        <item>Website</item>
+        <item>Afbeelding</item>
+        <item>YouTube</item>
+        <item>Video</item>
+    </string-array>
+
+    <!--These are the anime time labels in your profile-->
+    <string name="anime_time_hours">%.1f Uren</string>
+    <string name="anime_time_days">%.1f Dagen</string>
+    <string name="anime_time_years">%.1f Jaren</string>
+
+    <string-array name="media_status">
+        <item>Alles</item>
+        <item>Voltooid</item>
+        <item>vrijgeven</item>
+        <item>Nog Niet Vrijgegeven</item>
+        <item>geannuleerd</item>
+    </string-array>
+
+    <string-array name="media_formats">
+        <item>Alles</item>
+        <item>TV</item>
+        <item>TV Mini</item>
+        <item>Film</item>
+        <item>Speciaal</item>
+        <item>OVA</item>
+        <item>ONA</item>
+        <item>Muziek</item>
+        <item>Manga</item>
+        <item>Roman</item>
+        <item>Één Opname</item>
+    </string-array>
+
+    <string-array name="reviews_title">
+        <item>@string/anime</item>
+        <item>@string/manga</item>
+    </string-array>
+
+    <string-array name="media_list_status">
+        <item>Kijkend</item>
+        <item>Gepland</item>
+        <item>Voltooid</item>
+        <item>Gedropt</item>
+        <item>Gepauzeerd</item>
+        <item>Herhaling</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>Inbox</item>
+        <item>Uitgaand</item>
+    </string-array>
+
+    <string name="series_type">Type Serie:</string>
+    <string name="series_episodes">Afleveringen:</string>
+    <string name="series_next_ep">Volgende aflevering:</string>
+    <string name="series_chapters">Hoofdstukken:</string>
+    <string name="series_volumes">Delen:</string>
+    <string name="logged_in_as">Ingelogd als</string>
+
+    <string name="sign_into_anilist">Inloggen Op Anilist</string>
+
+    <string name="anitrend_sign_in">AniTrend Log-In</string>
+    <string name="please_sing_in">Log Alstublieft In</string>
+
+    <string name="action_donate">Doneren</string>
+
+    <string name="dialog_title_increment_chapters">Toenemen van Hoofdstukken</string>
+
+    <string name="title_activity_staff">Staff</string>
+    <string name="title_activity_character">Karakters</string>
+    <string name="title_activity_series">Series</string>
+
+    <string name="More">More</string>
+
+    <string name="title_bottom_sheet_giphy">Ondersteund door Giphy</string>
+
+    <string name="title_bookmark">Bladwijzer</string>
+
+    <string name="series_share_complete">Gedetailleerd</string>
+    <string name="series_share_summary">Samenvatting</string>
+
+    <string name="text_giphy_feature">Strooi wat pepers over je post. Tik om te selecteren en houd lang ingedrukt om een voorbeeld te bekijken.</string>
+
+    <string name="text_manga_volumes">%d Delen</string>
+    <string name="text_manga_chapters">%d Hoofdstukken</string>
+
+    <string name="title_series_status">Series Status</string>
+    <string name="title_series_season">Series Seizoen</string>
+    <string name="title_series_score">Series Score</string>
+    <string name="title_series_origin">Series Oorsprong</string>
+
+    <string name="title_total_chapters">Totaal Aantal Hoofdstukken</string>
+    <string name="title_total_volumes">Totaal Aantal Delen</string>
+
+    <string name="title_total_episodes">Totaal Aantal Afleveringen</string>
+    <string name="title_episode_duration">Afleveringen Looptijd</string>
+    <string name="title_next_episode">Volgende Aflevering</string>
+
+    <string name="title_hash_tag">Hash Tag</string>
+    <string name="title_main_studio">Huidige Studio</string>
+
+    <string name="create_new_account"><![CDATA[Nog geen account? <a href="https://anilist.co/register">Maak een account aan!</a>]]></string>
+
+    <string name="title_select_all">Alles selecteren</string>
+
+    <string name="title_relation">Relaties</string>
+
+    <string name="title_social">Sociaal</string>
+
+    <string name="title_website">Website</string>
+    <string name="title_summary">Samenvatting</string>
+
+    <string name="title_date_of_birth">Geboortedatum:</string>
+    <string name="title_language">Taal:</string>
+
+    <string name="title_series_japanese_name">Japanse Titel</string>
+    <string name="title_series_description">Serie Descriptie</string>
+
+    <string name="title_series_english_name">Engelse naam van de serie:</string>
+    <string name="title_series_type">Type serie:</string>
+    <string name="title_native_name">Oorspronkelijke naam:</string>
+
+    <string name="title_alternative_names">Alternatieve namen</string>
+    <string name="text_unable_to_load_next_page">Error: Laden van meer resultaten!</string>
+    <string name="menu_title_mark_all_as_read">Markeer Alles Als Gelezen</string>
+    <string name="title_score_distribution">Scoren Distributie</string>
+
+    <string name="title_score">Scoren</string>
+    <string name="title_watching">Aan het kijken</string>
+    <string name="title_series_stats">Serie Stats</string>
+    <string name="error_unresolved_type">Kan Inhoud Niet Achterhalen</string>
+
+    <string name="menu_title_tags">Tags</string>
+    <string name="app_filter_tags">Serie Tags?</string>
+
+    <string name="anitrend_sign_in_browser">Google Chrome Aanbevolen</string>
+
+    <!-- Privacy Settings -->
+
+    <string name="pref_header_privacy">Privacy</string>
+    <string name="pref_header_privacy_summary">Configureer privacy instellingen</string>
+
+    <string name="pref_title_crash_reports">Crash Rapporten</string>
+    <string name="pref_crash_reports_summary_off">Applicatie zal geen crash rapporten verzenden. Schakel alstublieft deze optie in om bug bevindingen en oplossingen te verbeteren</string>
+    <string name="pref_crash_reports_summary_on">Applicatie zal automatisch crash rapporten verzenden</string>
+
+    <string name="pref_title_usage_analytics">Usage Analytics</string>
+    <string name="pref_usage_analytics_summary_off">Applicatie zal geen anonieme statistieken verzenden op meest gebruikte features. Overweeg alstublieft deze optie voor betere design opties in de toekomst</string>
+    <string name="pref_usage_analytics_summary_on">Applicatie zal anonieme statistieken versturen zoals meest gebruikte features</string>
+
+    <!-- Black Setting Related -->
+    <string name="pref_title_black_theme">Donker Thema</string>
+    <string name="pref_black_theme_summary">Gebruik donker thema voor apparaten die een OLED scherm hebben om energie te besparen</string>
+
+    <!--Language preferences-->
+    <string name="pref_title_language">Applicatie Taal</string>
+    <string name="pref_title_language_summary">Vervang systeemtaal en stel uw eigen applicatiespecifieke taal in</string>
+
+
+    <string name="dialog_title_started_at">Start Datum</string>
+    <string name="dialog_title_completed_at">Einde Datum</string>
+    <string name="dialog_button_clear">Clear</string>
+
+    <string name="pref_header_customize">Aanpassen</string>
+    <string name="pref_header_customize_summary">Pas applicatie gedrag aan</string>
+    <string name="text_application_restart_required">Herstart de applicatie om de wijzigingen door te voeren</string>
+
+    <!-- Image Preview strings -->
+    <string name="image_preview_title">Voorbeeld</string>
+    <string name="image_preview_download">Download</string>
+    <string name="image_preview_share">Delen</string>
+    <string name="image_preview_link">Originele Link</string>
+</resources>

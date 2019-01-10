@@ -947,7 +947,13 @@
     <string name="dialog_title_started_at">Start Date</string>
     <string name="dialog_title_completed_at">Finish Date</string>
     <string name="pref_header_customize">Customize</string>
-    <string name="pref_header_customize_summary">Customize application behavior</string>
+    <string name="pref_header_customize_summary">Customize the look and feel of the app</string>
     <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
     <string name="dialog_button_clear">Clear</string>
+
+    <!-- Image Preview strings -->
+    <string name="image_preview_title">Preview</string>
+    <string name="image_preview_download">Download</string>
+    <string name="image_preview_share">Share</string>
+    <string name="image_preview_link">Original Link</string>
 </resources>
