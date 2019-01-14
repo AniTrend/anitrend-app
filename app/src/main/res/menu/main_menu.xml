@@ -52,7 +52,7 @@
                 android:id="@+id/action_report"
                 android:orderInCategory="106"
                 android:title="Report a bug"
-                android:icon="@drawable/ic_patreon_logo"
+                android:icon="@drawable/ic_bug_report_grey_600_24dp"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>
