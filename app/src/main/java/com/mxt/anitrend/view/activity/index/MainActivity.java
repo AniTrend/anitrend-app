@@ -50,6 +50,7 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
+import com.mxt.anitrend.view.activity.base.ReportActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetMessage;
@@ -152,7 +153,10 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
             case R.id.action_discord:
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/nqsFGgX"));
                 startActivity(intent);
-                break;
+                return true;
+            case R.id.action_report:
+                startActivity(new Intent(MainActivity.this, ReportActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
