@@ -5,54 +5,57 @@
 
     <item
         android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_grey_600_24dp"
         android:orderInCategory="100"
         android:title="@string/action_search"
-        android:icon="@drawable/ic_search_grey_600_24dp"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
+        android:icon="@drawable/ic_build_grey_600_24dp"
         android:orderInCategory="101"
         android:title="@string/title_activity_settings"
-        android:icon="@drawable/ic_build_grey_600_24dp"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_grey_600_24dp"
         android:orderInCategory="102"
         android:title="@string/drawer_title_share"
-        android:icon="@drawable/ic_share_grey_600_24dp"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_extra" android:orderInCategory="102" android:title="@string/drawer_section_extras">
+    <item
+        android:id="@+id/action_extra"
+        android:orderInCategory="102"
+        android:title="@string/drawer_section_extras">
         <menu>
 
             <item
                 android:id="@+id/action_about"
+                android:icon="@drawable/ic_help_grey_600_24dp"
                 android:orderInCategory="103"
                 android:title="@string/nav_about"
-                android:icon="@drawable/ic_help_grey_600_24dp"
                 app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/action_discord"
+                android:icon="@drawable/ic_discord"
                 android:orderInCategory="104"
                 android:title="@string/title_discord"
-                android:icon="@drawable/ic_discord"
                 app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/action_donate"
+                android:icon="@drawable/ic_patreon_logo"
                 android:orderInCategory="105"
                 android:title="@string/action_donate"
-                android:icon="@drawable/ic_patreon_logo"
                 app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/action_report"
-                android:orderInCategory="106"
-                android:title="Report a bug"
                 android:icon="@drawable/ic_bug_report_grey_600_24dp"
+                android:orderInCategory="106"
+                android:title="@string/report_bug"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>

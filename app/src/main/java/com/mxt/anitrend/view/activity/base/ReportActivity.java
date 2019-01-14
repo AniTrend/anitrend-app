@@ -23,7 +23,7 @@ public class ReportActivity extends ActivityBase<Void, BasePresenter> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report_test);
+        setContentView(R.layout.activity_report);
         StringBuilder log = new StringBuilder();
         try {
             Process process = Runtime.getRuntime().exec("logcat -d");
@@ -51,18 +51,19 @@ public class ReportActivity extends ActivityBase<Void, BasePresenter> {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }});
-        }
-
-        @Override
-        protected void onActivityReady () {
-        }
-
-        @Override
-        protected void updateUI () {
-        }
-
-        @Override
-        protected void makeRequest () {
-        }
+            }
+        });
     }
+
+    @Override
+    protected void onActivityReady() {
+    }
+
+    @Override
+    protected void updateUI() {
+    }
+
+    @Override
+    protected void makeRequest() {
+    }
+}

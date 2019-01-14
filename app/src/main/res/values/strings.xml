@@ -1011,4 +1011,6 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+    <string name="report_bug">Report a bug</string>
+    <string name="save_bug_report">Save Bug Report</string>
 </resources>

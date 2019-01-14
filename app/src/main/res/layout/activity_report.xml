@@ -8,7 +8,7 @@
         android:id="@+id/save_logcat_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save LogCat" />
+        android:text="@string/save_bug_report" />
 
     <ScrollView
         android:layout_width="match_parent"
