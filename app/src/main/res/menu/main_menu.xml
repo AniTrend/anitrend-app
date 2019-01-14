@@ -47,6 +47,13 @@
                 android:title="@string/action_donate"
                 android:icon="@drawable/ic_patreon_logo"
                 app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/action_report"
+                android:orderInCategory="106"
+                android:title="Report a bug"
+                android:icon="@drawable/ic_patreon_logo"
+                app:showAsAction="ifRoom" />
         </menu>
     </item>
 
