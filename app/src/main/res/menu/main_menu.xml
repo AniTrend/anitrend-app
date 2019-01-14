@@ -55,7 +55,7 @@
                 android:id="@+id/action_report"
                 android:icon="@drawable/ic_bug_report_grey_600_24dp"
                 android:orderInCategory="106"
-                android:title="@string/report_bug"
+                android:title="@string/app_log"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>
