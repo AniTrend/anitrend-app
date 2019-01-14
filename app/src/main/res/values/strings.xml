@@ -1013,4 +1013,5 @@
     <string name="image_preview_link">Original Link</string>
     <string name="report_bug">Report a bug</string>
     <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
 </resources>

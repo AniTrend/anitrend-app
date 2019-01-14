@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.activity.base;
 
 import android.Manifest;
+import android.content.Context;
 import android.os.Bundle;
 
 import com.mxt.anitrend.R;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,6 +50,7 @@ public class ReportActivity extends ActivityBase<Void, BasePresenter> {
                     writer.append(log.toString());
                     writer.flush();
                     writer.close();
+                    Toast.makeText(getApplicationContext(), R.string.bug_report_saved, Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
