@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.activity.index;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -113,6 +114,9 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            mNavigationView.setItemBackground(
+                    CompatUtil.getDrawable(this, R.drawable.nav_background));
         mNavigationView.setNavigationItemSelectedListener(this);
         mViewPager.setOffscreenPageLimit(offScreenLimit);
         mPageIndex = DateUtil.getMenuSelect();
