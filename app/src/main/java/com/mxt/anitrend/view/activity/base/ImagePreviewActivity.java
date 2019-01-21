@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -22,6 +23,7 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
@@ -50,6 +52,8 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("");
 
         mImageView.setOnClickListener(view -> mToolbar.animate()
                 .alpha(mToolbar.getAlpha() == 1 ? 0: 1)
@@ -78,16 +82,19 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.image_preview_download:
-                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Uri imageUri = Uri.parse(mImageUri);
-                    DownloadManager.Request r = new DownloadManager.Request(imageUri);
-                    r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.getLastPathSegment());
-                    r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-                    // Start download
-                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                    dm.enqueue(r);
-                }
+                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    downloadAttachment();
+                else if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    DialogUtil.createMessage(this, R.string.title_permission_write, R.string.text_permission_write, (dialog, which) -> {
+                        switch (which) {
+                            case POSITIVE:
+                                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+                                break;
+                            case NEGATIVE:
+                                NotifyUtil.makeText(this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    });
                 return true;
             case R.id.image_preview_share:
             case R.id.action_share:
@@ -125,5 +132,34 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
     @Override
     protected void makeRequest() {
 
+    }
+
+    private void downloadAttachment() {
+        Uri imageUri = Uri.parse(mImageUri);
+        DownloadManager.Request r = new DownloadManager.Request(imageUri);
+        r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.getLastPathSegment());
+        r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+        // Start download
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        if (dm != null) {
+            dm.enqueue(r);
+            NotifyUtil.createAlerter(this, R.string.title_download_info, R.string.text_download_info,
+                    R.drawable.ic_cloud_download_white_24dp, R.color.colorStateGreen, KeyUtil.DURATION_SHORT);
+        } else
+            NotifyUtil.createAlerter(this, R.string.title_download_info, R.string.text_unknown_error,
+                    R.drawable.ic_cloud_download_white_24dp, R.color.colorStateRed, KeyUtil.DURATION_SHORT);
+    }
+
+    /**
+     * Called for each of the requested permissions as they are granted
+     *
+     * @param permission the current permission granted
+     */
+    @Override
+    protected void onPermissionGranted(@NonNull String permission) {
+        super.onPermissionGranted(permission);
+        if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            downloadAttachment();
     }
 }
