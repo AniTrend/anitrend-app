@@ -22,26 +22,19 @@ import java.io.InputStreamReader;
 
 public class ReportActivity extends ActivityBase<Void, BasePresenter> {
 
+    private StringBuilder log;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        StringBuilder log = new StringBuilder();
-        try {
-            Process process = Runtime.getRuntime().exec("logcat -d");
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+        log = new StringBuilder();
+    }
 
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                log.append(line).append("\n");
-            }
-            ((TextView) findViewById(R.id.report_display)).setText(log.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Button saveLogcat = findViewById(R.id.save_logcat_button);
-        saveLogcat.setOnClickListener(view -> {
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        findViewById(R.id.save_logcat_button).setOnClickListener(view -> {
             if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 try {
                     File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
@@ -56,14 +49,29 @@ public class ReportActivity extends ActivityBase<Void, BasePresenter> {
                 }
             }
         });
+        onActivityReady();
     }
 
     @Override
     protected void onActivityReady() {
+        updateUI();
     }
 
     @Override
     protected void updateUI() {
+        try {
+            Process process = Runtime.getRuntime().exec("logcat -d -v threadtime com.mxt.anitrend:*");
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.append(line).append("\n");
+            }
+            ((TextView) findViewById(R.id.report_display)).setText(log.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
