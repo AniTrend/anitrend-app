@@ -24,6 +24,6 @@ _Translators (minna arigato) & all of you lovely weebs <3_
 __Admins, Devs & Cutie Pies:__
 _Mittens, Senpai, Kuji, Moka, Flare, Silver, Mrspits4ever_
 
-__Awesome Detonators:__
+__Awesome Donators:__
 _Bas, Golumpa, artemisthemp, Trivernis_
 
