@@ -86,9 +86,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     /**
      * Some activities may have custom themes and if that's the case
-     * override this method and set your own theme style, also if you wish
-     * to apply the default navigation bar style for light themes
-     * @see ActivityBase#setNavigationStyle()
+     * override this method and set your own theme style.
      */
     protected void configureActivity() {
         ApplicationPref applicationPref = new ApplicationPref(this);
@@ -96,7 +94,6 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
-        setNavigationStyle();
     }
 
     @Override
@@ -121,24 +118,6 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             mSearchView.setOnSearchViewListener(this);
             mSearchView.setCursorDrawable(R.drawable.material_search_cursor);
         }
-    }
-
-    /**
-     * Changes the navigation bar color depending on the selected theme
-     */
-    protected void setNavigationStyle() {
-        if(!disableNavigationStyle && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (style == R.style.AppThemeLight)
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-            else
-                getWindow().clearFlags(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        }
-    }
-
-    public App getApplicationBase() {
-        if(application == null)
-            application = ((App)getApplication());
-        return application;
     }
 
     /**

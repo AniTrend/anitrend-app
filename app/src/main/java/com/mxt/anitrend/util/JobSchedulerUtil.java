@@ -26,12 +26,12 @@ public final class JobSchedulerUtil {
             PeriodicWorkRequest periodicWorkRequest =
                     new PeriodicWorkRequest.Builder(JobDispatcherService.class,
                             applicationPref.getSyncTime(), TimeUnit.MINUTES)
-                            .addTag(KeyUtil.WorkTag)
+                            .addTag(KeyUtil.WorkNotificationTag)
                             .build();
 
             WorkManager.getInstance()
-                    .enqueueUniquePeriodicWork(KeyUtil.UniqueWorkId,
-                            ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
+                    .enqueueUniquePeriodicWork(KeyUtil.WorkNotificationId,
+                            ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest);
         }
     }
 
@@ -39,6 +39,6 @@ public final class JobSchedulerUtil {
      * Cancels any scheduled jobs.
      */
     public static void cancelJob() {
-        WorkManager.getInstance().cancelUniqueWork(KeyUtil.UniqueWorkId);
+        WorkManager.getInstance().cancelUniqueWork(KeyUtil.WorkNotificationId);
     }
 }

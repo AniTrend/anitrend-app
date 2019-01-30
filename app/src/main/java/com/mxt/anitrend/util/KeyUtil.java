@@ -21,8 +21,14 @@ public interface KeyUtil {
     String CHANNEL_ID = "anitrend_app";
     String CHANNEL_TITLE = "AniTrend Notifications";
 
-    String WorkTag = "anitrend_notification_job";
-    String UniqueWorkId = "periodic_notification_sync";
+    /** Work Manager Ids & Keys */
+    String WorkNotificationTag = "anitrend_notification_job";
+    String WorkNotificationId = "periodic_notification_sync";
+
+    String WorkAuthenticatorTag = "anitrend_notification_job";
+    String WorkAuthenticatorId = "one_notification_sync";
+
+
 
 
     // ------------------------------------------------------------------------------------
@@ -123,6 +129,10 @@ public interface KeyUtil {
     String arg_message_type = "arg_message_type";
     String arg_shortcut_used = "arg_shortcut_used";
     String arg_deep_link_type = "arg_deep_link_type";
+    String arg_exception_error = "arg_exception_error";
+
+    String arg_uri_error = "error";
+    String arg_uri_error_description = "error_description";
 
     String arg_media_util = "arg_media_util";
 

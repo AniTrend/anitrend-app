@@ -56,9 +56,10 @@ public class JobDispatcherService extends Worker {
             Call<GraphContainer<User>> request = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false));
             try {
                 Response<GraphContainer<User>> response = request.execute();
-                GraphContainer<User> userGraphContainer = response.body();
+                Object userGraphContainer = response.body();
                 if (response.isSuccessful() && userGraphContainer != null) {
-                    User currentUser = userGraphContainer.getData().getResult();
+                    @SuppressWarnings("ConstantConditions")
+                    User currentUser = (User)userGraphContainer;
                     User previousUserData = presenter.getDatabase().getCurrentUser();
                     presenter.getDatabase().saveCurrentUser(currentUser);
                     if (previousUserData.getUnreadNotificationCount() != currentUser.getUnreadNotificationCount()) {

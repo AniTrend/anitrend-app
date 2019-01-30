@@ -19,7 +19,6 @@
             tools:src="@drawable/reg_bg" />
 
         <android.support.v7.widget.Toolbar
-            app:title="@string/image_preview_title"
             android:id="@+id/toolbar_preview_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

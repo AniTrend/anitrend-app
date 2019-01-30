@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.activity.index;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
+import com.mxt.anitrend.view.activity.base.ReportActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetMessage;
@@ -112,6 +114,9 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            mNavigationView.setItemBackground(
+                    CompatUtil.getDrawable(this, R.drawable.nav_background));
         mNavigationView.setNavigationItemSelectedListener(this);
         mViewPager.setOffscreenPageLimit(offScreenLimit);
         mPageIndex = DateUtil.getMenuSelect();
@@ -150,9 +155,13 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             case R.id.action_discord:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/nqsFGgX"));
+                String invite = getString(R.string.link_anitrend_discord);
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(invite));
                 startActivity(intent);
-                break;
+                return true;
+            case R.id.action_report:
+                startActivity(new Intent(MainActivity.this, ReportActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

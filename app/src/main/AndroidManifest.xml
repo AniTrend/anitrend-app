@@ -153,6 +153,10 @@
             android:label="@string/nav_about"
             android:launchMode="singleTop" />
 
+        <activity android:name=".view.activity.base.ReportActivity"
+            android:label="@string/nav_about"
+            android:launchMode="singleTop" />
+
         <activity android:name=".view.activity.index.SearchActivity"
             android:label="@string/action_search"
             android:launchMode="singleTop" />
@@ -190,7 +194,6 @@
             android:launchMode="singleTop" />
 
         <service android:name=".service.TagGenreService" />
-        <service android:name=".service.AuthenticatorService" />
 
         <receiver android:name=".receiver.SchedulerDelegate">
             <intent-filter>

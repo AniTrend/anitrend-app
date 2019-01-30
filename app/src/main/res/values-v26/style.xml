@@ -32,7 +32,8 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorLineDark</item>
 
         <item name="android:popupMenuStyle">@style/PopupThemeLight</item>
     </style>
@@ -108,7 +109,7 @@
         <item name="android:windowSharedElementsUseOverlay">true</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorLineDark</item>
 
         <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
         <!--actionOverflowMenuStyle controls the state of the overflow popup window-->

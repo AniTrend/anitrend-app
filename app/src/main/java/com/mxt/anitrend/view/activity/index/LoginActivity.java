@@ -1,10 +1,14 @@
 package com.mxt.anitrend.view.activity.index;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,8 +21,7 @@ import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.databinding.ActivityLoginBinding;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.User;
-import com.mxt.anitrend.model.entity.base.MessageBase;
-import com.mxt.anitrend.presenter.activity.LoginPresenter;
+import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.ApplicationPref;
@@ -27,13 +30,22 @@ import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.ShortcutUtil;
+import com.mxt.anitrend.worker.AuthenticatorWorker;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 /**
  * Created by max on 2017/11/03.
  * Authentication activity
  */
 
-public class LoginActivity extends ActivityBase<User, LoginPresenter> implements View.OnClickListener {
+public class LoginActivity extends ActivityBase<User, BasePresenter> implements View.OnClickListener {
 
     private ActivityLoginBinding binding;
     private User model;
@@ -54,7 +66,7 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        setPresenter(new LoginPresenter(getApplicationContext()));
+        setPresenter(new BasePresenter(getApplicationContext()));
         setViewModel(true);
     }
 
@@ -80,7 +92,6 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
 
     @Override
     protected void updateUI() {
-        // startService(new Intent(LoginActivity.this, AuthenticatorService.class));
         if(getPresenter().getApplicationPref().isNotificationEnabled())
             JobSchedulerUtil.scheduleJob(getApplicationContext());
         createApplicationShortcuts();
@@ -185,27 +196,46 @@ public class LoginActivity extends ActivityBase<User, LoginPresenter> implements
 
     private void checkNewIntent(Intent intent) {
         if (intent != null && intent.getData() != null) {
-            MessageBase messageBase = new MessageBase(intent.getData());
-            if (isAlive() && messageBase.isValid()) {
+            if (isAlive()) {
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE)
                     binding.widgetFlipper.showNext();
-                if (getPresenter().handleIntentCallback(messageBase)) {
+
+                Data workerInputData = new Data.Builder()
+                        .putString(KeyUtil.arg_model, intent.getData().toString())
+                        .build();
+
+                OneTimeWorkRequest authenticatorWorker = new OneTimeWorkRequest.Builder(AuthenticatorWorker.class)
+                        .addTag(KeyUtil.WorkAuthenticatorTag)
+                        .setInputData(workerInputData)
+                        .build();
+                WorkManager.getInstance().enqueue(authenticatorWorker);
+                WorkManager.getInstance().getWorkInfoByIdLiveData(authenticatorWorker.getId())
+                        .observe(this, workInfoObserver);
+            }
+        }
+    }
+
+    private final Observer<WorkInfo> workInfoObserver = new Observer<WorkInfo>() {
+        @Override
+        public void onChanged(@Nullable WorkInfo workInfo) {
+            if (workInfo != null && workInfo.getState().isFinished()) {
+                Data outputData = workInfo.getOutputData();
+                if (outputData.getBoolean(KeyUtil.arg_model, false)) {
                     getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false));
                     getViewModel().requestData(KeyUtil.USER_CURRENT_REQ, getApplicationContext());
                 }
                 else {
-                    // intent://com.mxt.anitrend?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.
-                    if (!TextUtils.isEmpty(messageBase.getQueryParam("error")) && !TextUtils.isEmpty(messageBase.getQueryParam("error_description")))
-                        NotifyUtil.createAlerter(this, messageBase.getQueryParam("error"),
-                                messageBase.getQueryParam("error_description"), R.drawable.ic_warning_white_18dp,
+                    if (!TextUtils.isEmpty(outputData.getString(KeyUtil.arg_uri_error)) && !TextUtils.isEmpty(outputData.getString(KeyUtil.arg_uri_error_description)))
+                        NotifyUtil.createAlerter(LoginActivity.this, outputData.getString(KeyUtil.arg_uri_error),
+                                outputData.getString(KeyUtil.arg_uri_error_description), R.drawable.ic_warning_white_18dp,
                                 R.color.colorStateOrange, KeyUtil.DURATION_LONG);
                     else
-                        NotifyUtil.createAlerter(this, R.string.login_error_title,
+                        NotifyUtil.createAlerter(LoginActivity.this, R.string.login_error_title,
                                 R.string.text_error_auth_login, R.drawable.ic_warning_white_18dp,
                                 R.color.colorStateRed, KeyUtil.DURATION_LONG);
                     binding.widgetFlipper.showPrevious();
                 }
             }
         }
-    }
+    };
 }

@@ -34,21 +34,6 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
-        setNavigationStyle(style);
-    }
-
-    /**
-     * Changes the navigation bar color depending on the selected theme
-     */
-    protected void setNavigationStyle(int style) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (CompatUtil.isLightTheme(style)) {
-                getWindow().setNavigationBarColor(CompatUtil.getColor(getApplicationContext(), R.color.colorPrimary));
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-            }
-            else
-                getWindow().clearFlags(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        }
     }
 
     @Override
