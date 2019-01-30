@@ -1,14 +1,19 @@
 package com.mxt.anitrend;
 
-import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.android.gms.security.ProviderInstaller;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mxt.anitrend.model.entity.MyObjectBox;
 import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.LocaleUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,7 +27,7 @@ import io.objectbox.android.AndroidObjectBrowser;
  * Application class
  */
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private @Nullable FirebaseAnalytics analytics;
     private BoxStore boxStore;
@@ -60,6 +65,20 @@ public class App extends Application {
             analytics.setAnalyticsCollectionEnabled(pref.isUsageAnalyticsEnabled());
             analytics.setMinimumSessionDuration(5000L);
         }
+        JobSchedulerUtil.scheduleJob(getApplicationContext());
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+            ProviderInstaller.installIfNeededAsync(getApplicationContext(),
+                    new ProviderInstaller.ProviderInstallListener() {
+                        @Override
+                        public void onProviderInstalled() {
+
+                        }
+
+                        @Override
+                        public void onProviderInstallFailed(int i, Intent intent) {
+
+                        }
+                    });
     }
 
     @Override
@@ -74,6 +93,7 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LocaleUtil.onAttach(base));
+        MultiDex.install(this);
     }
 
     /**

@@ -21,6 +21,15 @@ public interface KeyUtil {
     String CHANNEL_ID = "anitrend_app";
     String CHANNEL_TITLE = "AniTrend Notifications";
 
+    /** Work Manager Ids & Keys */
+    String WorkNotificationTag = "anitrend_notification_job";
+    String WorkNotificationId = "periodic_notification_sync";
+
+    String WorkAuthenticatorTag = "anitrend_notification_job";
+    String WorkAuthenticatorId = "one_notification_sync";
+
+
+
 
     // ------------------------------------------------------------------------------------
     // GraphQL Variable Params Keys
@@ -120,6 +129,10 @@ public interface KeyUtil {
     String arg_message_type = "arg_message_type";
     String arg_shortcut_used = "arg_shortcut_used";
     String arg_deep_link_type = "arg_deep_link_type";
+    String arg_exception_error = "arg_exception_error";
+
+    String arg_uri_error = "error";
+    String arg_uri_error_description = "error_description";
 
     String arg_media_util = "arg_media_util";
 
@@ -419,12 +432,13 @@ public interface KeyUtil {
     // ------------------------------------------------------------------------------------
 
     String ACTIVITY_MESSAGE = "ACTIVITY_MESSAGE", FOLLOWING = "FOLLOWING", ACTIVITY_MENTION = "ACTIVITY_MENTION",
+            ACTIVITY_REPLY_SUBSCRIBED = "ACTIVITY_REPLY_SUBSCRIBED",
             THREAD_COMMENT_MENTION = "THREAD_COMMENT_MENTION", THREAD_SUBSCRIBED = "THREAD_SUBSCRIBED",
             THREAD_COMMENT_REPLY = "THREAD_COMMENT_REPLY", AIRING = "AIRING", ACTIVITY_LIKE = "ACTIVITY_LIKE",
             ACTIVITY_REPLY_LIKE = "ACTIVITY_REPLY_LIKE", THREAD_LIKE = "THREAD_LIKE", THREAD_COMMENT_LIKE = "THREAD_COMMENT_LIKE";
 
 
-    @StringDef({ACTIVITY_MESSAGE, ACTIVITY_REPLY, FOLLOWING,  ACTIVITY_MENTION,
+    @StringDef({ACTIVITY_MESSAGE, ACTIVITY_REPLY, ACTIVITY_REPLY_SUBSCRIBED, FOLLOWING,  ACTIVITY_MENTION,
             THREAD_COMMENT_MENTION, THREAD_SUBSCRIBED, THREAD_COMMENT_REPLY,
             AIRING, ACTIVITY_LIKE, ACTIVITY_REPLY_LIKE, THREAD_LIKE, THREAD_COMMENT_LIKE
     })

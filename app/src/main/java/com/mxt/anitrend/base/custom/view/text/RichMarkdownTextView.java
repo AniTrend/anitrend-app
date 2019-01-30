@@ -11,13 +11,15 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.RegexUtil;
-import com.zzhoujay.richtext.RichText;
-import com.zzhoujay.richtext.RichType;
-import com.zzhoujay.richtext.ig.DefaultImageGetter;
+
+import ru.noties.markwon.Markwon;
+import ru.noties.markwon.SpannableConfiguration;
+import ru.noties.markwon.il.AsyncDrawableLoader;
 
 public class RichMarkdownTextView extends AppCompatTextView implements CustomView {
 
@@ -82,10 +84,15 @@ public class RichMarkdownTextView extends AppCompatTextView implements CustomVie
 
     @BindingAdapter("richMarkDown")
     public static void richMarkDown(RichMarkdownTextView richMarkdownTextView, String markdown) {
-        RichText.from(RegexUtil.convertToStandardMarkdown(markdown))
-                .imageGetter(new DefaultImageGetter())
-                .bind(richMarkdownTextView.getContext())
-                .type(RichType.markdown).into(richMarkdownTextView);
+        final Context context = richMarkdownTextView.getContext();
+
+        final SpannableConfiguration configuration = SpannableConfiguration.builder(context)
+                .asyncDrawableLoader(AsyncDrawableLoader.create())
+                .htmlAllowNonClosedTags(false)
+                .softBreakAddsNewLine(false)
+                .build();
+
+        Markwon.setMarkdown(richMarkdownTextView, configuration, RegexUtil.convertToStandardMarkdown(markdown));
     }
 
     public void setMarkDownText(String markDownText) {

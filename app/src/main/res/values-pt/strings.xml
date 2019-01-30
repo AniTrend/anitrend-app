@@ -952,4 +952,10 @@
     <string name="pref_header_customize">Customizar</string>
     <string name="pref_header_customize_summary">Personalizar o comportamento do aplicativo</string>
     <string name="text_application_restart_required">Por favor, reinicie o aplicativo para que as alterações entrem em vigor</string>
+
+    <!-- Image Preview strings -->
+    <string name="image_preview_title">Preview</string>
+    <string name="image_preview_download">Download</string>
+    <string name="image_preview_share">Share</string>
+    <string name="image_preview_link">Original Link</string>
 </resources>
