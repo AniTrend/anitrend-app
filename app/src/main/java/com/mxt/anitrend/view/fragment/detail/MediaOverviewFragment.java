@@ -227,9 +227,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
         Intent intent;
         switch (v.getId()) {
             case R.id.series_image:
-                intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getCoverImage().getLarge());
-                CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
+                CompatUtil.imagePreview(getActivity(), v, model.getCoverImage().getLarge(), R.string.image_preview_error_series_cover);
             break;
             case R.id.anime_main_studio_container:
                 StudioBase studioBase = getPresenter().getMainStudioObject(model);

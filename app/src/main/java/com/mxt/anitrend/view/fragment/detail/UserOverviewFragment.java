@@ -181,15 +181,13 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     /**
      * Called when a view has been clicked.
      *
-     * @param v The view that was clicked.
+     * @param view The view that was clicked.
      */
     @Override @OnClick({R.id.user_avatar, R.id.user_stats_container})
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.user_avatar:
-                Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getAvatar().getLarge());
-                CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
+                CompatUtil.imagePreview(getActivity(), view, model.getAvatar().getLarge(), R.string.image_preview_error_user_avatar);
                 break;
             case R.id.user_stats_container:
                 List<StatsRing> ringList = generateStatsData();
