@@ -804,7 +804,7 @@
         <item>ملغاة</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>الكل</item>
         <item>تلفزيوني</item>
         <item>تلفزيوني قصير</item>
@@ -813,6 +813,10 @@
         <item>اوفا</item>
         <item>اونا</item>
         <item>موسيقى</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>الكل</item>
         <item>مانغا</item>
         <item>رواية</item>
         <item>ون شوت</item>

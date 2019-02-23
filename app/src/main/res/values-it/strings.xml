@@ -803,7 +803,7 @@
         <item>Cancellati</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>Tutti</item>
         <item>TV</item>
         <item>Corti TV</item>
@@ -812,6 +812,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Musica</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>Tutti</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
