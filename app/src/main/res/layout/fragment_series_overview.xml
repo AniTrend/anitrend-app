@@ -56,6 +56,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
+                <android.widget.Button
+                    android:id="@+id/show_spoiler_tags"
+                    android:text="@string/show_spoiler_tags"
+                    android:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

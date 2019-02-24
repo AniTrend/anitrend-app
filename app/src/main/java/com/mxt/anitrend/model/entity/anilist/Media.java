@@ -9,6 +9,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.util.KeyUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,6 +91,17 @@ public class Media extends MediaBase {
 
     public List<MediaTag> getTags() {
         return tags;
+    }
+
+    public List<MediaTag> getTagsNoSpoilers() {
+        ArrayList<MediaTag> _tags = new ArrayList<>();
+        for (MediaTag tag: tags) {
+            if(!tag.isMediaSpoiler()) {
+                _tags.add(tag);
+            }
+        }
+
+        return _tags;
     }
 
     public MediaTrailer getTrailer() {

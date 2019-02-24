@@ -1030,4 +1030,6 @@
     <string name="app_log">App Logs</string>
     <string name="save_bug_report">Save Bug Report</string>
     <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
 </resources>

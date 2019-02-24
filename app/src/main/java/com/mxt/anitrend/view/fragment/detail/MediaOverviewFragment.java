@@ -28,7 +28,6 @@ import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaBrowseUtil;
-import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment;
@@ -150,13 +149,13 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
 
         if(tagAdapter == null) {
             tagAdapter = new TagAdapter(getContext());
-            tagAdapter.onItemsInserted(model.getTags());
+            tagAdapter.onItemsInserted(model.getTagsNoSpoilers());
             tagAdapter.setClickListener(new ItemClickListener<MediaTag>() {
                 @Override
                 public void onItemClick(View target, IntPair<MediaTag> data) {
                     switch (target.getId()) {
                         case R.id.container:
-                            DialogUtil.createMessage(getActivity(), data.getSecond().getName(), data.getSecond().getDescription(),
+                            DialogUtil.createTagMessage(getActivity(), data.getSecond().getName(), data.getSecond().getDescription(), data.getSecond().isMediaSpoiler(),
                                     R.string.More, R.string.Close, (dialog, which) -> {
                                         switch (which) {
                                             case POSITIVE:
@@ -222,7 +221,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
      *
      * @param v The view that was clicked.
      */
-    @Override @OnClick({R.id.series_image, R.id.anime_main_studio_container})
+    @Override @OnClick({R.id.series_image, R.id.anime_main_studio_container, R.id.show_spoiler_tags})
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
@@ -236,6 +235,11 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                     intent.putExtra(KeyUtil.arg_id, studioBase.getId());
                     startActivity(intent);
                 }
+                break;
+            case R.id.show_spoiler_tags:
+                tagAdapter.onItemRangeChanged(model.getTags());
+                tagAdapter.notifyDataSetChanged();
+                v.setVisibility(View.INVISIBLE);
                 break;
             default:
                 super.onClick(v);
