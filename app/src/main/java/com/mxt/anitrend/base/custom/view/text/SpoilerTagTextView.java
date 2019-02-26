@@ -4,7 +4,7 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-
+import com.mxt.util.CompatUtil;
 import com.mxt.anitrend.R;
 
 public class SpoilerTagTextView extends SingleLineTextView {
