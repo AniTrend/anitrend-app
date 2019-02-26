@@ -38,6 +38,8 @@ public class ApplicationPref {
     private static final String _sortOrder = "_sortOrder";
     private static final String _mediaStatus = "_mediaStatus";
     private static final String _mediaFormat = "_mediaFormat";
+    private static final String _animeFormat = "_animeFormat";
+    private static final String _mangaFormat = "_mangaFormat";
     private static final String _mediaSource = "_mediaSource";
     private static final String _airingSort = "_airingSort";
     private static final String _characterSort = "_characterSort";
@@ -192,9 +194,29 @@ public class ApplicationPref {
         return sharedPreferences.getString(_mediaFormat, null);
     }
 
+    public @Nullable @KeyUtil.AnimeFormat String getAnimeFormat() {
+        return sharedPreferences.getString(_animeFormat, null);
+    }
+
+    public @Nullable @KeyUtil.MangaFormat String getMangaFormat() {
+        return sharedPreferences.getString(_mangaFormat, null);
+    }
+
     public void setMediaFormat(@KeyUtil.MediaFormat String mediaFormat) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(_mediaFormat, mediaFormat);
+        editor.apply();
+    }
+
+    public void setAnimeFormat(@KeyUtil.AnimeFormat String animeFormat) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_animeFormat, animeFormat);
+        editor.apply();
+    }
+
+    public void setMangaFormat(@KeyUtil.MangaFormat String mangaFormat) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(_mangaFormat, mangaFormat);
         editor.apply();
     }
 

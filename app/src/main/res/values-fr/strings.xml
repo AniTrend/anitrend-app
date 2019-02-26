@@ -808,7 +808,7 @@
         <item>Canceled</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>All</item>
         <item>TV</item>
         <item>TV Short</item>
@@ -817,6 +817,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Music</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>All</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>

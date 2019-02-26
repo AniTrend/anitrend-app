@@ -805,7 +805,7 @@
         <item>geannuleerd</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>Alles</item>
         <item>TV</item>
         <item>TV Mini</item>
@@ -814,6 +814,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Muziek</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>Alles</item>
         <item>Manga</item>
         <item>Roman</item>
         <item>Één Opname</item>

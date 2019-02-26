@@ -88,18 +88,16 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
     /**
      * Called when a view has been clicked.
      *
-     * @param v The view that was clicked.
+     * @param view The view that was clicked.
      */
     @Override @OnClick(R.id.staff_img)
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.staff_img:
-                Intent intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getImage().getLarge());
-                CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
+                CompatUtil.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_staff_image);
                 break;
             default:
-                super.onClick(v);
+                super.onClick(view);
                 break;
         }
     }

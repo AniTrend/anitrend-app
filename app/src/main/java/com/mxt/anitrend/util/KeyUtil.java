@@ -359,6 +359,12 @@ public interface KeyUtil {
     @StringDef({TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT})
     @interface MediaFormat {}
 
+    @StringDef({TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC})
+    @interface AnimeFormat {}
+
+    @StringDef({MANGA, NOVEL, ONE_SHOT})
+    @interface MangaFormat {}
+
 
     String RATED = "RATED", POPULAR = "POPULAR";
     @StringDef({RATED, POPULAR})
@@ -369,6 +375,8 @@ public interface KeyUtil {
     String[] MediaStatus = {null, FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED};
     String[] MediaSource = {null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER};
     String[] MediaFormat = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT};
+    String[] AnimeFormat = {null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC};
+    String[] MangaFormat = {null, MANGA, NOVEL, ONE_SHOT};
     String[] MediaRankType = {RATED, POPULAR};
 
     // ------------------------------------------------------------------------------------

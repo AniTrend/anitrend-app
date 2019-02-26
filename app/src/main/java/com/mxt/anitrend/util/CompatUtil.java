@@ -33,12 +33,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase;
+import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 
 import java.io.File;
 import java.util.Arrays;
@@ -82,6 +85,16 @@ public class CompatUtil {
             e.printStackTrace();
         }
         return cache;
+    }
+
+    public static void imagePreview(FragmentActivity activity, View view, String imageUri, int errorMessage) {
+        if (imageUri != null && !imageUri.isEmpty()) {
+            Intent intent = new Intent(activity, ImagePreviewActivity.class);
+            intent.putExtra(KeyUtil.arg_model, imageUri);
+            CompatUtil.startSharedImageTransition(activity, view, intent, R.string.transition_image_preview);
+        } else {
+            NotifyUtil.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

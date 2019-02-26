@@ -188,6 +188,20 @@ public class DialogUtil {
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
 
+    public static void createTagMessage(Context context, String title, String content, Boolean isSpoiler, @StringRes int positive, @StringRes int negative, MaterialDialog.SingleButtonCallback singleButtonCallback) {
+        MaterialDialog.Builder builder = createDefaultDialog(context).title(title)
+                .positiveText(positive)
+                .negativeText(negative)
+                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .content(MarkDownUtil.convert(content))
+                .autoDismiss(true).onAny(singleButtonCallback);
+
+        if (isSpoiler) builder.icon(CompatUtil.getDrawable(context, R.drawable.ic_spoiler_tag));
+        else builder.icon(CompatUtil.getDrawable(context, R.drawable.ic_loyalty_white_24dp));
+
+        builder.show();
+    }
+
     public static <T> void createCheckList(Context context, @StringRes int title, Collection<T> selectableItems, Integer[] selectedIndices, MaterialDialog.ListCallbackMultiChoice listCallbackMultiChoice, MaterialDialog.SingleButtonCallback singleButtonCallback) {
         createDefaultDialog(context).title(title)
                 .items(selectableItems)

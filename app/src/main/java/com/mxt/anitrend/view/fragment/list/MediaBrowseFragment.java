@@ -180,12 +180,21 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     }
                     return true;
                 case R.id.action_type:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.getIndexOf(KeyUtil.MediaFormat,
-                            getPresenter().getApplicationPref().getMediaFormat()), CompatUtil.getStringList(getContext(), R.array.media_formats),
-                            (dialog, which) -> {
-                                if(which == DialogAction.POSITIVE)
-                                    getPresenter().getApplicationPref().setMediaFormat(KeyUtil.MediaFormat[dialog.getSelectedIndex()]);
-                            });
+                    if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.ANIME)) {
+                        DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.getIndexOf(KeyUtil.AnimeFormat,
+                                getPresenter().getApplicationPref().getAnimeFormat()), CompatUtil.getStringList(getContext(), R.array.anime_formats),
+                                (dialog, which) -> {
+                                    if(which == DialogAction.POSITIVE)
+                                        getPresenter().getApplicationPref().setAnimeFormat(KeyUtil.AnimeFormat[dialog.getSelectedIndex()]);
+                                });
+                    } else {
+                        DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.getIndexOf(KeyUtil.MangaFormat,
+                                getPresenter().getApplicationPref().getMangaFormat()), CompatUtil.getStringList(getContext(), R.array.manga_formats),
+                                (dialog, which) -> {
+                                    if(which == DialogAction.POSITIVE)
+                                        getPresenter().getApplicationPref().setMangaFormat(KeyUtil.MangaFormat[dialog.getSelectedIndex()]);
+                                });
+                    }
                     return true;
                 case R.id.action_year:
                     final List<Integer> yearRanges = DateUtil.getYearRanges(1950, 1);
@@ -220,16 +229,18 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
         if(isFilterable) {
             if(!mediaBrowseUtil.isBasicFilter()) {
-                if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
+                if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA)) {
                     queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
-                            "%d%%", getPresenter().getApplicationPref().getSeasonYear()));
-                else
-                    queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+                            "%d%%", getPresenter().getApplicationPref().getSeasonYear()))
+                            .putVariable(KeyUtil.arg_format, pref.getMangaFormat());
+                } else {
+                    queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear())
+                            .putVariable(KeyUtil.arg_format, pref.getAnimeFormat());
+                }
 
                 queryContainer.putVariable(KeyUtil.arg_status, pref.getMediaStatus())
                         .putVariable(KeyUtil.arg_genres, GenreTagUtil.getMappedValues(pref.getSelectedGenres()))
-                        .putVariable(KeyUtil.arg_tags, GenreTagUtil.getMappedValues(pref.getSelectedTags()))
-                        .putVariable(KeyUtil.arg_format, pref.getMediaFormat());
+                        .putVariable(KeyUtil.arg_tags, GenreTagUtil.getMappedValues(pref.getSelectedTags()));
             }
             queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder());
         }

@@ -73,7 +73,8 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.image_preview_menu, menu);
+        if (mImageUri != null && !mImageUri.isEmpty())
+            getMenuInflater().inflate(R.menu.image_preview_menu, menu);
         return true;
     }
 

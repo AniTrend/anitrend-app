@@ -31,4 +31,8 @@
         <attr name="ringSweepAngle" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="SpoilerTagTextView">
+        <attr name="isSpoiler" format="boolean" />
+    </declare-styleable>
+
 </resources>
