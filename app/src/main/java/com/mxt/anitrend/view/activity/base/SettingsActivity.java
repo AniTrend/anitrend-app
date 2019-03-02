@@ -51,13 +51,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     applicationPref.toggleTheme();
             Toast.makeText(getApplicationContext(), R.string.text_application_restart_required, Toast.LENGTH_LONG).show();
         } else if (CompatUtil.equals(key, getString(R.string.pref_key_sync_frequency))) {
-            JobSchedulerUtil.cancelJob();
-            JobSchedulerUtil.scheduleJob(getApplicationContext());
+            JobSchedulerUtil.INSTANCE.cancelJob();
+            JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
         } else if (CompatUtil.equals(key, getString(R.string.pref_key_new_message_notifications))) {
             if (applicationPref.isNotificationEnabled())
-                JobSchedulerUtil.scheduleJob(getApplicationContext());
+                JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
             else
-                JobSchedulerUtil.cancelJob();
+                JobSchedulerUtil.INSTANCE.cancelJob();
         }
     };
 

@@ -75,7 +75,7 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
                     binding.feedPlayBack.setVisibility(View.GONE);
                     break;
                 case RegexUtil.KEY_YOU:
-                    targetModel = RegexUtil.getYoutubeThumb(model);
+                    targetModel = RegexUtil.INSTANCE.getYoutubeThumb(model);
                     binding.feedPlayBack.setVisibility(View.VISIBLE);
                     requestOptions = RequestOptions.centerCropTransform();
                     break;

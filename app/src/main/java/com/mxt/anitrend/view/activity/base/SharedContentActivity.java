@@ -203,16 +203,16 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         @KeyUtil.ShareType int position = sharedResourceType.getSelectedItemPosition();
         switch (position) {
             case KeyUtil.IMAGE_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertImage(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertImage(text));
                 break;
             case KeyUtil.LINK_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertLink(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertLink(text));
                 break;
             case KeyUtil.WEBM_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertVideo(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertVideo(text));
                 break;
             case KeyUtil.YOUTUBE_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertYoutube(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertYoutube(text));
                 break;
             case KeyUtil.PLAIN_TYPE:
                 binding.composerWidget.setText(text);

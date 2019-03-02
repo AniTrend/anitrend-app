@@ -185,7 +185,7 @@ final class MediaDialogUtil extends DialogUtil {
     private static MaterialDialog.Builder createSeriesManageDialog(Context context, boolean isNewEntry, String title) {
         MaterialDialog.Builder materialBuilder = createDefaultDialog(context)
                 .icon(CompatUtil.getDrawableTintAttr(context, isNewEntry ? R.drawable.ic_fiber_new_white_24dp : R.drawable.ic_border_color_white_24dp, R.attr.colorAccent))
-                .title(MarkDownUtil.convert(context.getString(isNewEntry? R.string.dialog_add_title : R.string.dialog_edit_title, title)))
+                .title(MarkDownUtil.INSTANCE.convert(context.getString(isNewEntry? R.string.dialog_add_title : R.string.dialog_edit_title, title)))
                 .positiveText(isNewEntry? R.string.Add: R.string.Update)
                 .neutralText(R.string.Cancel)
                 .autoDismiss(false);

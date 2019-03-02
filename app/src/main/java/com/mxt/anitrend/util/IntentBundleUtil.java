@@ -105,7 +105,7 @@ public class IntentBundleUtil {
             sharedIntent = ShareCompat.IntentReader.from(context);
         else
             if ((INTENT_DATA = hasData(intent)) != null)
-                if((deepLinkMatcher = RegexUtil.findIntentKeys(INTENT_DATA.getPath())) != null)
+                if((deepLinkMatcher = RegexUtil.INSTANCE.findIntentKeys(INTENT_DATA.getPath())) != null)
                     injectIntentParams(intent);
     }
 

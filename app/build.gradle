@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.objectbox'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
@@ -112,15 +113,15 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    implementation "com.squareup.okhttp3:logging-interceptor:3.11.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.12.1"
 
     /** Glide Libraries */
     implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glide}"
+    kapt "com.github.bumptech.glide:compiler:${rootProject.glide}"
 
     /** Butter Knife Libraries */
     implementation "com.jakewharton:butterknife:${rootProject.butterKnife}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${rootProject.butterKnife}"
+    kapt "com.jakewharton:butterknife-compiler:${rootProject.butterKnife}"
 
     /** State Layout Library */
     implementation 'com.github.nguyenhoanglam:ProgressLayout:1.0.1'
@@ -133,7 +134,7 @@ dependencies {
 
     /** Object Box */
     implementation "io.objectbox:objectbox-android:${rootProject.objectBox}"
-    annotationProcessor "io.objectbox:objectbox-processor:${rootProject.objectBox}"
+    kapt "io.objectbox:objectbox-processor:${rootProject.objectBox}"
 
     /** Pretty Time */
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
@@ -154,8 +155,15 @@ dependencies {
     implementation 'com.tapadoo.android:alerter:2.0.4'
 
     /** Rich Text Markdown Parser */
-    implementation "ru.noties:markwon:2.0.1"
-    implementation "ru.noties:markwon-image-loader:2.0.1"
+    implementation "ru.noties.markwon:core:$rootProject.markwon"
+    implementation "ru.noties.markwon:ext-strikethrough:$rootProject.markwon"
+    implementation "ru.noties.markwon:ext-tables:$rootProject.markwon"
+    implementation "ru.noties.markwon:ext-tasklist:$rootProject.markwon"
+    implementation "ru.noties.markwon:html:$rootProject.markwon"
+    implementation "ru.noties.markwon:image-gif:$rootProject.markwon"
+    implementation "ru.noties.markwon:image-okhttp:$rootProject.markwon"
+    implementation "ru.noties.markwon:image-svg:$rootProject.markwon"
+    implementation "ru.noties.markwon:recycler:$rootProject.markwon"
 
     /** Tap Target Prompt */
     implementation 'uk.co.samuelwall:material-tap-target-prompt:2.12.1'
@@ -170,13 +178,15 @@ dependencies {
     implementation'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     /** About Library */
-    implementation 'com.github.medyo:android-about-page:1.2.4'
+    implementation 'com.github.medyo:android-about-page:1.2.5'
 
     /** Multi Dex */
     implementation 'com.android.support:multidex:1.0.3'
 
     /** Material Search View */
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+
+    implementation "com.github.wax911:android-emojify:$rootProject.emojify"
 }
 
 apply plugin: 'com.google.gms.google-services'
