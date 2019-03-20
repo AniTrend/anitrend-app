@@ -322,7 +322,7 @@
     </string>
 
 
-    <string name="pref_title_startup_page">Página de inicio</string>
+    <string name="pref_title_startup_page">Startsida</string>
 
     <string-array name="pref_titles_menu_entries">
         <item>Hem</item>
