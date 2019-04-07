@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_manage">Manage</string>
-    <string name="nav_header_customization">Customization</string>
-
-    <string name="nav_header_support">Support</string>
-    <string name="nav_contact">Contact</string>
-    <string name="nav_about">About</string>
-
-    <string name="action_search">Search</string>
     <string name="action_filter">@string/drawer_title_filter</string>
     <string name="action_help">Help</string>
 
     <string name="action_mode_selected">Selected: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
 
-
-    <string name="nav_home">Home</string>
-    <string name="nav_history">History</string>
     <!--
         Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
 
@@ -144,14 +130,12 @@
     </string-array>
 
     <!--First time usage intro screen-->
-    <string name="get_started">Tutorial</string>
     <string name="app_intro_colors_title">Bedeutung der Farben</string>
     <string name="app_intro_colors_text">Farben zeigen den Anime/Manga Status!</string>
     <string name="app_intro_content_title">Inhalt</string>
     <string name="app_intro_content_text">Mehrere Anime &amp; Manga Listen!</string>
     <string name="app_intro_search_title">Suche</string>
     <string name="app_intro_search_text">Anime, Manga &amp; Weitere Suchfunktionen!</string>
-    <string name="app_intro_videos_title">Videos</string>
     <string name="app_intro_videos_text">Verwendet eingebauten Youtube Video Player!</string>
     <string name="app_greeting">Wilkommen bei AniTrend!</string>
 
@@ -231,10 +215,8 @@
     <string name="drawer_title_myanime">Meine Anime Liste</string>
     <string name="drawer_title_mymanga">Meine Manga Liste</string>
     <string name="drawer_title_reviews">Serien Reviews</string>
-    <string name="drawer_title_hub">AniTrend Hub</string>
 
     <string name="drawer_section_configuration">Einstellungen</string>
-    <string name="drawer_title_filter">Filter</string>
     <string name="drawer_light_theme">Helles Design</string>
     <string name="drawer_title_style">Neue Listenansicht</string>
 
@@ -243,7 +225,6 @@
     <string name="drawer_title_profile">Profil</string>
     <string name="drawer_title_sign_out">Ausloggen</string>
 
-    <string name="drawer_section_extras">Extras</string>
     <string name="drawer_title_share">Teilen</string>
     <string name="drawer_title_update">Aktualisieren</string>
     <string name="layout_empty_response">Nichts zum Anzeigen gefunden</string>
@@ -285,7 +266,6 @@
     <string name="title_activity_notification">Benachrichtigungen</string>
     <string name="title_activity_message">Nachrichten</string>
     <string name="title_activity_user_list_view">Liste des Benutzers</string>
-    <string name="title_activity_studio">Studio</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_reply">Antwort verfassen</string>
 
@@ -294,7 +274,6 @@
     <string name="notification_user_follow_activity">Neuer Follower</string>
     <string name="notification_user_like_forum">Like im Forum</string>
     <string name="notification_user_like_activity">Like eines Status</string>
-    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_comment_forum">Kommentar im Forum</string>
     <string name="notification_user_reply_forum">Antwort im Forum</string>
     <string name="notification_user_reply_activity">Kommentar zum Status</string>
@@ -932,7 +911,6 @@
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
