@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -324,12 +325,18 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
      */
     @Override
     public void onChanged(@Nullable Rss content) {
-        if(content != null) {
-            copyright = content.getChannel().getCopyright();
-            mAdapter.onItemsInserted(content.getChannel().getEpisode());
-            updateUI();
-        } else
+        try {
+            if(content != null && content.getChannel().getEpisode() != null) {
+                copyright = content.getChannel().getCopyright();
+                mAdapter.onItemsInserted(content.getChannel().getEpisode());
+                updateUI();
+            } else
+                showEmpty(getString(R.string.layout_empty_response));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("onChanged(Rss content)", e.getLocalizedMessage());
             showEmpty(getString(R.string.layout_empty_response));
+        }
     }
 
     protected ItemClickListener<Episode> clickListener = new ItemClickListener<Episode>() {

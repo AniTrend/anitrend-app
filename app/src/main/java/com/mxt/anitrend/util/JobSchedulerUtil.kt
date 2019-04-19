@@ -29,6 +29,9 @@ object JobSchedulerUtil {
         if (applicationPref.isAuthenticated && applicationPref.isNotificationEnabled) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(JobDispatcherService::class.java,
                     applicationPref.syncTime.toLong(), TimeUnit.MINUTES)
+                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL,
+                            5, TimeUnit.MINUTES
+                    )
                     .addTag(KeyUtil.WorkNotificationTag)
                     .setConstraints(constraints)
                     .build()

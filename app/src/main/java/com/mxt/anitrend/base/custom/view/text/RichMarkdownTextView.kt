@@ -12,6 +12,7 @@ import android.text.util.Linkify
 import android.util.AttributeSet
 import android.widget.TextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.util.MarkDownUtil
 import com.mxt.anitrend.util.RegexUtil
@@ -23,6 +24,7 @@ import ru.noties.markwon.Markwon
 import ru.noties.markwon.MarkwonConfiguration
 import ru.noties.markwon.core.CorePlugin
 import ru.noties.markwon.ext.tasklist.TaskListPlugin
+import ru.noties.markwon.html.HtmlPlugin
 import ru.noties.markwon.html.MarkwonHtmlParserImpl
 import ru.noties.markwon.image.AsyncDrawableScheduler
 import ru.noties.markwon.image.ImagesPlugin
@@ -50,6 +52,7 @@ class RichMarkdownTextView : AppCompatTextView, CustomView {
                         GifPlugin.create(),
                         OkHttpImagesPlugin.create(),
                         TaskListPlugin.create(context),
+                        HtmlPlugin.create(),
                         object: AbstractMarkwonPlugin() {
                             @Override
                             override fun configureParser(builder: Parser.Builder) {
@@ -94,6 +97,7 @@ class RichMarkdownTextView : AppCompatTextView, CustomView {
     fun setMarkDownText(markDownText: String) {
         val strippedText = RegexUtil.removeTags(markDownText)
         val markdownSpan = MarkDownUtil.convert(strippedText, context, this)
-        setText(markdownSpan, TextView.BufferType.SPANNABLE)
+        setText(markdownSpan, BufferType.SPANNABLE)
+        //richMarkDown(this, markDownText)
     }
 }

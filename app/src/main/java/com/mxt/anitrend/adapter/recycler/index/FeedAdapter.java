@@ -181,7 +181,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
             // TODO: Temporarily disabled widget status to try out rich markdown rendering
-            //binding.widgetStatus.setModel(model);
+            binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
@@ -213,7 +213,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             Glide.with(getContext()).clear(binding.userAvatar);
             binding.widgetFavourite.onViewRecycled();
             // TODO: Temporarily disabled widget status to try out rich markdown rendering
-            // binding.widgetStatus.onViewRecycled();
+            binding.widgetStatus.onViewRecycled();
             binding.widgetDelete.onViewRecycled();
             binding.unbind();
         }

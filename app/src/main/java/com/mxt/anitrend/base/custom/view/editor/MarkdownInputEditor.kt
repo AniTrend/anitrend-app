@@ -155,7 +155,7 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
      */
     private fun getSelectionEnd(@IdRes selection: Int): Int {
         var end = selectionEnd
-        val init_end = selectionEnd
+        val initialEnd = selectionEnd
         when (selection) {
             R.id.menu_bold -> end += MD_BOLD.length
             R.id.menu_italic -> end += MD_ITALIC.length
@@ -168,9 +168,11 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
             R.id.menu_code -> end += MD_CODE.length
         }
         // Rare case but if it ever happens reduce end by 1
-        val text_length = text.length
-        if (end > text_length + (end - init_end))
-            end -= end - init_end - 1
+        val textLength = text?.length
+        if (textLength != null) {
+            if (end > textLength + (end - initialEnd))
+                end -= end - initialEnd - 1
+        }
         return end
     }
 
@@ -187,52 +189,52 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         val end = getSelectionEnd(item.itemId)
         when (item.itemId) {
             R.id.menu_bold -> {
-                text.insert(start, MD_BOLD)
-                text.insert(end, MD_BOLD, 0, MD_BOLD.length)
+                text?.insert(start, MD_BOLD)
+                text?.insert(end, MD_BOLD, 0, MD_BOLD.length)
                 mode.finish()
                 return true
             }
             R.id.menu_italic -> {
-                text.insert(start, MD_ITALIC)
-                text.insert(end, MD_ITALIC, 0, MD_ITALIC.length)
+                text?.insert(start, MD_ITALIC)
+                text?.insert(end, MD_ITALIC, 0, MD_ITALIC.length)
                 mode.finish()
                 return true
             }
             R.id.menu_strike -> {
-                text.insert(start, MD_STRIKE)
-                text.insert(end, MD_STRIKE, 0, MD_STRIKE.length)
+                text?.insert(start, MD_STRIKE)
+                text?.insert(end, MD_STRIKE, 0, MD_STRIKE.length)
                 mode.finish()
                 return true
             }
             R.id.menu_list -> {
-                text.insert(start, MD_NUMBER)
+                text?.insert(start, MD_NUMBER)
                 mode.finish()
                 return true
             }
             R.id.menu_bullet -> {
-                text.insert(start, MD_BULLET)
+                text?.insert(start, MD_BULLET)
                 mode.finish()
                 return true
             }
             R.id.menu_heading -> {
-                text.insert(start, MD_HEADING)
+                text?.insert(start, MD_HEADING)
                 mode.finish()
                 return true
             }
             R.id.menu_center -> {
-                text.insert(start, MD_CENTER_ALIGN)
-                text.insert(end, MD_CENTER_ALIGN, 0, MD_CENTER_ALIGN.length)
+                text?.insert(start, MD_CENTER_ALIGN)
+                text?.insert(end, MD_CENTER_ALIGN, 0, MD_CENTER_ALIGN.length)
                 mode.finish()
                 return true
             }
             R.id.menu_quote -> {
-                text.insert(start, MD_QUOTE)
+                text?.insert(start, MD_QUOTE)
                 mode.finish()
                 return true
             }
             R.id.menu_code -> {
-                text.insert(start, MD_CODE)
-                text.insert(end, MD_CODE, 0, MD_CODE.length)
+                text?.insert(start, MD_CODE)
+                text?.insert(end, MD_CODE, 0, MD_CODE.length)
                 mode.finish()
                 return true
             }
@@ -273,7 +275,7 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
             val linkUri = inputContentInfo.linkUri
             if (linkUri != null) {
                 val link = MarkDownUtil.convertImage(linkUri.toString())
-                text.insert(selectionStart, link)
+                text?.insert(selectionStart, link)
                 inputContentInfo.releasePermission()
                 return true
             }

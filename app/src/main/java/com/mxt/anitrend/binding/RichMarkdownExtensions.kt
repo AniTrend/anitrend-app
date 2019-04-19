@@ -16,13 +16,13 @@ fun markDown(richMarkdownTextView: RichMarkdownTextView, markdown: String?) {
 }
 
 @BindingAdapter("textHtml")
-fun htmlText(richMarkdownTextView: RichMarkdownTextView, html: String) {
+fun htmlText(richMarkdownTextView: RichMarkdownTextView, html: String?) {
     val markdownSpan = MarkDownUtil.convert(html, richMarkdownTextView.context, richMarkdownTextView)
     richMarkdownTextView.setText(markdownSpan, TextView.BufferType.SPANNABLE)
 }
 
 @BindingAdapter("basicHtml")
-fun basicText(richMarkdownTextView: RichMarkdownTextView, html: String) {
+fun basicText(richMarkdownTextView: RichMarkdownTextView, html: String?) {
     val htmlSpan = Html.fromHtml(html)
     richMarkdownTextView.text = htmlSpan
 }
@@ -37,6 +37,9 @@ fun htmlText(richMarkdownTextView: RichMarkdownTextView, @StringRes resId: Int) 
 @BindingAdapter("richMarkDown")
 fun richMarkDown(richMarkdownTextView: RichMarkdownTextView, markdown: String?) {
     richMarkdownTextView.also {
-        it.markwon.setMarkdown(it, RegexUtil.convertToStandardMarkdown(markdown))
+        val tagsStripped = RegexUtil.removeTags(markdown)
+        val userTagsConverted = RegexUtil.findUserTags(tagsStripped)
+        val standardMarkdown = RegexUtil.convertToStandardMarkdown(userTagsConverted)
+        it.markwon.setMarkdown(it, standardMarkdown)
     }
 }

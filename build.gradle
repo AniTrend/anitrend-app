@@ -1,26 +1,26 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-     ext {
-         compileSdk = 28
-         targetSdk = 28
-         minSdk = 17
-         versionCode = 103
-         versionName = '1.4.0'
-         butterKnife = '8.8.1'
-         glide = '4.8.0'
-         retrofit = '2.4.0'
-         supportLibrary = '27.1.1'
-         firebase = '16.0.7'
-         objectBox = '2.3.3'
-         architecture = '1.1.1'
-         workManager = '1.0.0-rc02'
-         emojify = '1.4'
-         kotlin = '1.3.21'
-         // testing libraries
-         mockito = '2.18.3'
-         hemcrest = '1.3'
-         markwon = '3.0.0-SNAPSHOT'
+    ext {
+        compileSdk = 28
+        targetSdk = 28
+        minSdk = 17
+        versionCode = 103
+        versionName = '1.4.0'
+        butterKnife = '8.8.1'
+        glide = '4.9.0'
+        retrofit = '2.4.0'
+        supportLibrary = '27.1.1'
+        firebase = '16.0.8'
+        objectBox = '2.3.3'
+        architecture = '1.1.1'
+        workManager = '1.0.1'
+        emojify = '1.4'
+        kotlin = '1.3.30'
+        // testing libraries
+        mockito = '2.18.3'
+        hemcrest = '1.3'
+        markwon = '3.0.0'
     }
     repositories {
         google()
@@ -30,7 +30,7 @@ buildscript {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.kotlin}"
         // Google Play Services
@@ -39,6 +39,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.27.1'
         // Object Box
         classpath "io.objectbox:objectbox-gradle-plugin:${rootProject.objectBox}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.kotlin}"
     }
 }
 

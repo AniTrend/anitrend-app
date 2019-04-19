@@ -99,7 +99,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     protected void updateUI() {
         binding.setModel(model);
         binding.stateLayout.showContent();
-        //binding.widgetStatus.setTextData(model.getAbout());
+        binding.widgetStatus.setTextData(model.getAbout());
 
         binding.userFollowStateWidget.setUserModel(model);
         binding.userAboutPanelWidget.setFragmentActivity(getActivity());

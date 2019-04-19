@@ -92,7 +92,6 @@ dependencies {
     /** Android Support Libraries */
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation "com.android.support:appcompat-v7:${rootProject.supportLibrary}"
-    implementation "com.android.support:support-v4:${rootProject.supportLibrary}"
     implementation "com.android.support:design:${rootProject.supportLibrary}"
     implementation "com.android.support:cardview-v7:${rootProject.supportLibrary}"
     implementation "com.android.support:support-vector-drawable:${rootProject.supportLibrary}"
@@ -140,7 +139,7 @@ dependencies {
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 
     /** Smart Tab Layout */
-    implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    implementation 'com.ogaclejapan.smarttablayout:library:1.7.0'
 
     /** Java Streams Port */
     implementation 'com.annimon:stream:1.2.1'
@@ -163,7 +162,6 @@ dependencies {
     implementation "ru.noties.markwon:image-gif:$rootProject.markwon"
     implementation "ru.noties.markwon:image-okhttp:$rootProject.markwon"
     implementation "ru.noties.markwon:image-svg:$rootProject.markwon"
-    implementation "ru.noties.markwon:recycler:$rootProject.markwon"
 
     /** Tap Target Prompt */
     implementation 'uk.co.samuelwall:material-tap-target-prompt:2.12.1'

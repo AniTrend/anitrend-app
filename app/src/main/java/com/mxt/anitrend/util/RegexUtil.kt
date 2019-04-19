@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util
 
 import android.text.TextUtils
+import com.github.rjeschke.txtmark.Processor
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -59,16 +60,16 @@ object RegexUtil {
         return if (param.isBlank()) null else Pattern.compile(PATTERN_TRAILING_SPACES).matcher(param).replaceAll("")
     }
 
-    internal fun findUserTags(text: String): String {
+    internal fun findUserTags(text: String?): String {
         var newText = text
-        if (text.isBlank())
+        if (text.isNullOrBlank())
             return "<b>No content available</b>"
         val matcher = Pattern.compile(PATTERN_USER_TAGS).matcher(text)
         while (matcher.find()) {
             val match = matcher.group()
             newText = text.replace(match, String.format(USER_URL_LINK, match, match.replace("@", "")))
         }
-        return newText
+        return newText ?: "<b>No content available</b>"
     }
 
     /**
@@ -130,9 +131,9 @@ object RegexUtil {
             else -> findImages(findMedia(value)
                     .replaceAll(""))
                     .replaceAll("")
-                    .replace("!~", "<spoiler>")
-                    .replace("~!", "</spoiler>")
-                    .replace("~", "")
+                    .replace("!~","")
+                    .replace("~!","")
+                    .replace("~","")
         }
     }
 
@@ -140,9 +141,10 @@ object RegexUtil {
         var substitute = "<b>No content available</b>"
         return value?.let {
             if (!it.isBlank()) {
-                substitute = value.replace("!~", "<spoiler>")
-                        .replace("~!", "</spoiler>")
-                        .replace("~", "")
+                substitute = value/*
+                        .replace("!~","")
+                        .replace("~!","")
+                        .replace("~","")*/
 
                 val matcher = findMedia(it)
 
