@@ -120,7 +120,7 @@ public class ActionModeUtil<T> {
                 viewHolder.itemView.setBackgroundResource(R.drawable.selection_frame);
         } else {
             if (viewHolder.itemView instanceof CardView)
-                ((CardView)viewHolder.itemView).setCardBackgroundColor(CompatUtil.getColorFromAttr(viewHolder.getContext(), R.attr.cardColor));
+                ((CardView)viewHolder.itemView).setCardBackgroundColor(CompatUtil.INSTANCE.getColorFromAttr(viewHolder.getContext(), R.attr.cardColor));
             else if (viewHolder.itemView instanceof CheckBox)
                 ((CheckBox) viewHolder.itemView).setChecked(false);
             else

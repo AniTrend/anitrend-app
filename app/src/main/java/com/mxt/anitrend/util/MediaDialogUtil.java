@@ -92,7 +92,7 @@ final class MediaDialogUtil extends DialogUtil {
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, responseBody), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.e(this.toString(), ErrorUtil.getError(response));
+                        Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                         NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -147,7 +147,7 @@ final class MediaDialogUtil extends DialogUtil {
                             NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.e(this.toString(), ErrorUtil.getError(response));
+                        Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                         NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -175,7 +175,7 @@ final class MediaDialogUtil extends DialogUtil {
      * @param context from a fragment activity derived class
      */
     private static CustomSeriesManageBase buildManagerType(Context context, @KeyUtil.MediaType String seriesType) {
-        if(CompatUtil.equals(seriesType, KeyUtil.ANIME))
+        if(CompatUtil.INSTANCE.equals(seriesType, KeyUtil.ANIME))
             return new CustomSeriesAnimeManage(context);
         return new CustomSeriesMangaManage(context);
     }
@@ -185,7 +185,7 @@ final class MediaDialogUtil extends DialogUtil {
      */
     private static MaterialDialog.Builder createSeriesManageDialog(Context context, boolean isNewEntry, String title) {
         MaterialDialog.Builder materialBuilder = createDefaultDialog(context)
-                .icon(CompatUtil.getDrawableTintAttr(context, isNewEntry ? R.drawable.ic_fiber_new_white_24dp : R.drawable.ic_border_color_white_24dp, R.attr.colorAccent))
+                .icon(CompatUtil.INSTANCE.getDrawableTintAttr(context, isNewEntry ? R.drawable.ic_fiber_new_white_24dp : R.drawable.ic_border_color_white_24dp, R.attr.colorAccent))
                 .title(Html.fromHtml(context.getString(isNewEntry ? R.string.dialog_add_title : R.string.dialog_edit_title, title)))
                 .positiveText(isNewEntry? R.string.Add: R.string.Update)
                 .neutralText(R.string.Cancel)

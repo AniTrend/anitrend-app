@@ -105,16 +105,16 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         if (getContext() != null)
             switch (item.getItemId()) {
                 case R.id.action_sort:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.MediaListSortType,
-                            getPresenter().getApplicationPref().getMediaListSort()), CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MediaListSortType,
+                            getPresenter().getApplicationPref().getMediaListSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaListSortType),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().setMediaListSort(KeyUtil.MediaListSortType[dialog.getSelectedIndex()]);
                             });
                     return true;
                 case R.id.action_order:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
-                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.INSTANCE.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
@@ -160,9 +160,9 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(getPresenter() != null && isFilterable && GraphUtil.isKeyFilter(key)) {
+        if(getPresenter() != null && isFilterable && GraphUtil.INSTANCE.isKeyFilter(key)) {
             @KeyUtil.MediaListSort String mediaListSort = getPresenter().getApplicationPref().getMediaListSort();
-            if(CompatUtil.equals(key, ApplicationPref._mediaListSort) && MediaListUtil.isTitleSort(mediaListSort)) {
+            if(CompatUtil.INSTANCE.equals(key, ApplicationPref._mediaListSort) && MediaListUtil.isTitleSort(mediaListSort)) {
                 swipeRefreshLayout.setRefreshing(true);
                 sortMediaListByTitle(mAdapter.getData());
             }
@@ -177,12 +177,12 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         if(consumer.getRequestMode() == KeyUtil.MUT_SAVE_MEDIA_LIST || consumer.getRequestMode() == KeyUtil.MUT_DELETE_MEDIA_LIST) {
             int pairIndex;
             if (getPresenter().isCurrentUser(userId, userName)) {
-                Optional<IntPair<MediaList>> pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
+                Optional<IntPair<MediaList>> pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if (pairOptional.isPresent()) {
                     switch (consumer.getRequestMode()) {
                         case KeyUtil.MUT_SAVE_MEDIA_LIST:
                             pairIndex = pairOptional.get().getFirst();
-                            if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
+                            if (mediaListCollectionBase == null || CompatUtil.INSTANCE.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
                                 mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
                             else
                                 mAdapter.onItemRemoved(pairIndex);
@@ -192,7 +192,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                             mAdapter.onItemRemoved(pairIndex);
                             break;
                     }
-                } else if (mediaListCollectionBase == null || CompatUtil.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
+                } else if (mediaListCollectionBase == null || CompatUtil.INSTANCE.equals(mediaListCollectionBase.getStatus(), consumer.getChangeModel().getStatus()))
                     onRefresh();
             }
         }
@@ -239,7 +239,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getMediaId());
                 intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }
@@ -272,7 +272,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 .sorted((first, second) -> {
                     String firstTitle = MediaUtil.getMediaTitle(first.getMedia());
                     String secondTitle = MediaUtil.getMediaTitle(second.getMedia());
-                    return CompatUtil.equals(sortOrder, KeyUtil.ASC) ?
+                    return CompatUtil.INSTANCE.equals(sortOrder, KeyUtil.ASC) ?
                             firstTitle.compareTo(secondTitle) : secondTitle.compareTo(firstTitle);
                 }).toList());
         updateUI();

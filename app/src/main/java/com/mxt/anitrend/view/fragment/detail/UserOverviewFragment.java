@@ -112,7 +112,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_userName, userName);
         if(userId > 0)
             queryContainer.putVariable(KeyUtil.arg_id, userId);
@@ -131,7 +131,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
             this.model = model;
             updateUI();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            binding.stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 
@@ -153,7 +153,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
 
     private List<StatsRing> generateStatsData() {
         List<StatsRing> userGenreStats = new ArrayList<>();
-        if(model.getStats() != null && !CompatUtil.isEmpty(model.getStats().getFavouredGenres())) {
+        if(model.getStats() != null && !CompatUtil.INSTANCE.isEmpty(model.getStats().getFavouredGenres())) {
             int highestValue = Stream.of(model.getStats().getFavouredGenres())
                     .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
                     .get().getAmount();
@@ -171,7 +171,7 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     private void showRingStats() {
         List<StatsRing> ringList = generateStatsData();
         if(ringList.size() > 1) {
-            binding.userStats.setDrawBg(CompatUtil.isLightTheme(getContext()), CompatUtil.getColorFromAttr(getContext(), R.attr.subtitleColor));
+            binding.userStats.setDrawBg(CompatUtil.INSTANCE.isLightTheme(getContext()), CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.subtitleColor));
             binding.userStats.setData(ringList, 500);
         }
     }
@@ -185,12 +185,12 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.user_avatar:
-                CompatUtil.imagePreview(getActivity(), view, model.getAvatar().getLarge(), R.string.image_preview_error_user_avatar);
+                CompatUtil.INSTANCE.imagePreview(getActivity(), view, model.getAvatar().getLarge(), R.string.image_preview_error_user_avatar);
                 break;
             case R.id.user_stats_container:
                 List<StatsRing> ringList = generateStatsData();
                 if(ringList.size() > 1) {
-                    binding.userStats.setDrawBg(CompatUtil.isLightTheme(getContext()), CompatUtil.getColorFromAttr(getContext(), R.attr.subtitleColor));
+                    binding.userStats.setDrawBg(CompatUtil.INSTANCE.isLightTheme(getContext()), CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.subtitleColor));
                     binding.userStats.setData(ringList, 500);
                 }
                 else

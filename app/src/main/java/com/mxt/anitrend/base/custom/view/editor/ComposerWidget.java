@@ -107,7 +107,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetComposerBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = WidgetComposerBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         binding.setOnClickListener(this);
     }
 
@@ -174,7 +174,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
             binding.widgetFlipper.showNext();
 
-            QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
+            QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false);
 
             switch (requestType) {
                 case KeyUtil.MUT_SAVE_TEXT_FEED:
@@ -267,7 +267,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
                 }
             }
             else
-                NotifyUtil.makeText(getContext(), ErrorUtil.getError(response), Toast.LENGTH_SHORT).show();
+                NotifyUtil.makeText(getContext(), ErrorUtil.INSTANCE.getError(response), Toast.LENGTH_SHORT).show();
             presenter.onDestroy();
         }
     }

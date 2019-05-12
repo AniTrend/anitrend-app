@@ -46,7 +46,7 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     public RecyclerViewAdapter(Context context) {
         this.context = context.getApplicationContext();
         this.presenter = new BasePresenter(this.context);
-        this.isLowRamDevice = CompatUtil.isLowRamDevice(this.context);
+        this.isLowRamDevice = CompatUtil.INSTANCE.isLowRamDevice(this.context);
         this.data = new ArrayList<>();
     }
 

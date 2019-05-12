@@ -36,7 +36,7 @@ public class GlideAppModule extends AppGlideModule {
 
     @Override
     public void applyOptions(@NonNull Context context, @NonNull GlideBuilder builder) {
-        boolean isLowRamDevice = CompatUtil.isLowRamDevice(context);
+        boolean isLowRamDevice = CompatUtil.INSTANCE.isLowRamDevice(context);
 
         MemorySizeCalculator calculator = new MemorySizeCalculator.Builder(context)
                 .setMemoryCacheScreens(isLowRamDevice? 1 : 2).build();
@@ -59,7 +59,7 @@ public class GlideAppModule extends AppGlideModule {
                 .format(isLowRamDevice ? DecodeFormat.PREFER_RGB_565 : DecodeFormat.PREFER_ARGB_8888)
                 .timeout(KeyUtil.GLIDE_REQUEST_TIMEOUT)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .error(CompatUtil.getDrawable(context, R.drawable.ic_emoji_sweat));
+                .error(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_emoji_sweat));
 
         builder.setDefaultRequestOptions(options);
     }

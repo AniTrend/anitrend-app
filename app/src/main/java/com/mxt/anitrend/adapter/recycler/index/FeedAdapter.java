@@ -74,11 +74,11 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         FeedList model = data.get(position);
         if(model == null || TextUtils.isEmpty(model.getType()))
             return -1;
-        if(CompatUtil.equals(model.getType(), KeyUtil.TEXT))
+        if(CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
-        else if(CompatUtil.equals(model.getType(), KeyUtil.MESSAGE))
+        else if(CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.MESSAGE))
             return FEED_MESSAGE;
-        else if(CompatUtil.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
+        else if(CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
             return FEED_LIST;
         return FEED_PROGRESS;
     }

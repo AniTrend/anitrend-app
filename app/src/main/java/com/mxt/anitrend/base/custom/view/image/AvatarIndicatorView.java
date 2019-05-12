@@ -55,7 +55,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetAvatarIndicatorBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = WidgetAvatarIndicatorBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         binding.setOnClickListener(this);
         checkLastSyncTime();
     }
@@ -83,7 +83,7 @@ public class AvatarIndicatorView extends FrameLayout implements CustomView, View
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<User> consumer) {
         if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ) {
-            if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 15))
+            if (DateUtil.INSTANCE.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 15))
                 mLastSynced = System.currentTimeMillis();
             checkLastSyncTime();
         }

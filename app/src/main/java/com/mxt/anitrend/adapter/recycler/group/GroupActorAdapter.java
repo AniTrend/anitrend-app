@@ -42,8 +42,8 @@ public class GroupActorAdapter extends RecyclerViewAdapter<RecyclerItem> {
     @Override
     public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
-            return new GroupMediaViewHolder(AdapterMediaHeaderBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false), mediaClickListener);
-        return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+            return new GroupMediaViewHolder(AdapterMediaHeaderBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false), mediaClickListener);
+        return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

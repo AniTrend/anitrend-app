@@ -19,6 +19,6 @@ public class EdgeContainer<T extends Edge> extends Container {
 
     @Override
     public boolean isEmpty() {
-        return CompatUtil.isEmpty(edges);
+        return CompatUtil.INSTANCE.isEmpty(edges);
     }
 }

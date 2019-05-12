@@ -116,10 +116,10 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         super.onPostCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             mNavigationView.setItemBackground(
-                    CompatUtil.getDrawable(this, R.drawable.nav_background));
+                    CompatUtil.INSTANCE.getDrawable(this, R.drawable.nav_background));
         mNavigationView.setNavigationItemSelectedListener(this);
         mViewPager.setOffscreenPageLimit(offScreenLimit);
-        mPageIndex = DateUtil.getMenuSelect();
+        mPageIndex = DateUtil.INSTANCE.getMenuSelect();
         menuItems = mNavigationView.getMenu();
         onActivityReady();
     }
@@ -352,7 +352,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                                     public void onPositiveButton() {
                                         VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
                                         if(versionBase != null && versionBase.isNewerVersion())
-                                            DownloaderService.downloadNewVersion(MainActivity.this, versionBase);
+                                            DownloaderService.INSTANCE.downloadNewVersion(MainActivity.this, versionBase);
                                         else
                                             NotifyUtil.createAlerter(MainActivity.this, getString(R.string.title_update_infodadat),
                                                     getString(R.string.app_no_date), R.drawable.ic_cloud_done_white_24dp, R.color.colorStateGreen);
@@ -495,7 +495,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                     if(user != null) {
                         Intent intent = new Intent(this, ProfileActivity.class);
                         intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                        CompatUtil.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
+                        CompatUtil.INSTANCE.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
                     } else
                         NotifyUtil.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
                 }

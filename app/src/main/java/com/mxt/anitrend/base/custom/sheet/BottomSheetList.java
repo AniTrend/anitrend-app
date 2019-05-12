@@ -93,7 +93,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
             recyclerView.setAdapter(mAdapter);
         }
         if (mAdapter.getItemCount() < 1)
-            stateLayout.showEmpty(CompatUtil.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
+            stateLayout.showEmpty(CompatUtil.INSTANCE.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
         else
             stateLayout.showContent();
     }
@@ -159,7 +159,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     public void showError(String error) {
         super.showError(error);
         stateLayout.showLoading();
-        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
+        stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                 error, getString(R.string.try_again), stateLayoutOnClick);
     }
 
@@ -167,7 +167,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     public void showEmpty(String message) {
         super.showEmpty(message);
         stateLayout.showLoading();
-        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+        stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                 message, getString(R.string.try_again) , stateLayoutOnClick);
     }
 }

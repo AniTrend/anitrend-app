@@ -66,7 +66,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     }
 
     private void setParameters(@KeyUtil.ReviewRating String ratingType) {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, model.getId())
                 .putVariable(KeyUtil.arg_rating, ratingType);
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -80,14 +80,14 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 case R.id.widget_thumb_up_flipper:
                     if (binding.widgetThumbUpFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext();
-                        setParameters(CompatUtil.equals(model.getUserRating(), KeyUtil.UP_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.UP_VOTE);
+                        setParameters(CompatUtil.INSTANCE.equals(model.getUserRating(), KeyUtil.UP_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.UP_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.widget_thumb_down_flipper:
                     if (binding.widgetThumbDownFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext();
-                        setParameters(CompatUtil.equals(model.getUserRating(), KeyUtil.DOWN_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.DOWN_VOTE);
+                        setParameters(CompatUtil.INSTANCE.equals(model.getUserRating(), KeyUtil.DOWN_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.DOWN_VOTE);
                     } else
                         NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
@@ -132,28 +132,28 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
 
     public void applyColorStyleTo(SingleLineTextView singleLineTextView, @DrawableRes int drawableItem) {
         if(colorStyle != 0) {
-            singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+            singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                     drawableItem, colorStyle), null, null, null);
-            singleLineTextView.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
+            singleLineTextView.setTextColor(CompatUtil.INSTANCE.getColor(getContext(), colorStyle));
         } else {
-            singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+            singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                     drawableItem, R.color.colorGrey600), null, null, null);
         }
     }
 
     public void setReviewStatus() {
         if(colorStyle != 0) {
-            binding.widgetThumbUp.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
-            binding.widgetThumbDown.setTextColor(CompatUtil.getColor(getContext(), colorStyle));
+            binding.widgetThumbUp.setTextColor(CompatUtil.INSTANCE.getColor(getContext(), colorStyle));
+            binding.widgetThumbDown.setTextColor(CompatUtil.INSTANCE.getColor(getContext(), colorStyle));
         }
         switch (model.getUserRating()) {
             case KeyUtil.UP_VOTE:
-                binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                         R.drawable.ic_thumb_up_grey_600_18dp, R.color.colorStateGreen), null, null, null);
                 applyColorStyleTo(binding.widgetThumbDown, R.drawable.ic_thumb_down_grey_600_18dp);
                 break;
             case KeyUtil.DOWN_VOTE:
-                binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                     R.drawable.ic_thumb_down_grey_600_18dp, R.color.colorStateOrange), null, null, null);
                 applyColorStyleTo(binding.widgetThumbUp, R.drawable.ic_thumb_up_grey_600_18dp);
                 break;
@@ -188,7 +188,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 this.model.setUserRating(model.getUserRating());
                 setReviewStatus();
             } else {
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                 resetFlipperState();
             }
         } catch (Exception e) {

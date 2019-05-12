@@ -63,7 +63,7 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        binding = BottomSheetListBinding.inflate(CompatUtil.getLayoutInflater(getActivity()));
+        binding = BottomSheetListBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
         unbinder = ButterKnife.bind(this, dialog);
         createBottomSheetBehavior(binding.getRoot());

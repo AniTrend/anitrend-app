@@ -60,14 +60,20 @@ object RegexUtil {
         return if (param.isBlank()) null else Pattern.compile(PATTERN_TRAILING_SPACES).matcher(param).replaceAll("")
     }
 
-    internal fun findUserTags(text: String?): String {
+    fun findUserTags(text: String?): String {
         var newText = text
-        if (text.isNullOrBlank())
+        if (newText.isNullOrBlank())
             return "<b>No content available</b>"
-        val matcher = Pattern.compile(PATTERN_USER_TAGS).matcher(text)
+        val matcher = Pattern.compile(PATTERN_USER_TAGS).matcher(newText)
         while (matcher.find()) {
             val match = matcher.group()
-            newText = text.replace(match, String.format(USER_URL_LINK, match, match.replace("@", "")))
+            val replacement = String.format(
+                    USER_URL_LINK, match,
+                    match.replace("@", "")
+            )
+            if (newText?.contains(replacement, ignoreCase = false) == true)
+                continue
+            newText = newText?.replace(match, replacement)
         }
         return newText ?: "<b>No content available</b>"
     }
@@ -75,9 +81,12 @@ object RegexUtil {
     /**
      * Returns either an Id of anime listing or user name
      */
-    fun findIntentKeys(path: String): Matcher? {
-        val deepLinkMatcher = Pattern.compile(PATTERN_DEEP_LINKS).matcher(path)
-        return if (deepLinkMatcher.find()) deepLinkMatcher else null
+    fun findIntentKeys(path: String?): Matcher? {
+        if (path != null) {
+            val deepLinkMatcher = Pattern.compile(PATTERN_DEEP_LINKS).matcher(path)
+            return if (deepLinkMatcher.find()) deepLinkMatcher else null
+        }
+        return null
     }
 
     /**

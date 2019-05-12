@@ -33,10 +33,10 @@ public class MangaPageAdapter extends BaseStatePageAdapter {
         switch (position)
         {
             case 0:
-                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.MANGA));
             case 1:
-                return MediaLatestList.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaLatestList.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.MANGA)
                         .putVariable(KeyUtil.arg_sort, KeyUtil.ID + KeyUtil.DESC));
         }

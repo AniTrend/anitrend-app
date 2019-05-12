@@ -56,15 +56,15 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetDeleteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
-        binding.widgetDelete.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+        binding = WidgetDeleteBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
+        binding.widgetDelete.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                 R.drawable.ic_delete_red_600_18dp),null, null, null);
         binding.setOnClickEvent(this);
     }
 
     private void setParameters(long feedId, @KeyUtil.RequestType int requestType) {
         this.requestType = requestType;
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, feedId);
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
     }
@@ -133,7 +133,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
                 } else
                     NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             } else
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }

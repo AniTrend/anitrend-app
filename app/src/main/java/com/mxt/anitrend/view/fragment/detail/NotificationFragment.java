@@ -113,8 +113,13 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
         if(content != null) {
             if(content.hasPageInfo())
                 getPresenter().setPageInfo(content.getPageInfo());
-            if(!content.isEmpty())
-                onPostProcessed(content.getPageData());
+            if(!content.isEmpty()) {
+                List<Notification> notifications = GraphUtil.INSTANCE.filterNotificationList(
+                        getPresenter(),
+                        content.getPageData()
+                );
+                onPostProcessed(notifications);
+            }
             else
                 onPostProcessed(Collections.emptyList());
         } else
@@ -128,7 +133,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_resetNotificationCount, true);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -150,7 +155,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                                 .map(item -> new NotificationHistory(item.getId()))
                                 .toList();
 
-                        if (!CompatUtil.isEmpty(dismissibleNotifications))
+                        if (!CompatUtil.INSTANCE.isEmpty(dismissibleNotifications))
                             getPresenter().getDatabase().getBoxStore(NotificationHistory.class)
                                     .put(dismissibleNotifications);
                         else
@@ -192,27 +197,27 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
     public void onItemClick(View target, IntPair<Notification> data) {
         Intent intent;
         setItemAsRead(data.getSecond());
-        if(target.getId() == R.id.notification_img && !CompatUtil.equals(data.getSecond().getType(), KeyUtil.AIRING)) {
+        if(target.getId() == R.id.notification_img && !CompatUtil.INSTANCE.equals(data.getSecond().getType(), KeyUtil.AIRING)) {
             intent = new Intent(getActivity(), ProfileActivity.class);
             intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
-            CompatUtil.startRevealAnim(getActivity(), target, intent);
+            CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
         }
         else
             switch (data.getSecond().getType()) {
                 case KeyUtil.ACTIVITY_MESSAGE:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.FOLLOWING:
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_MENTION:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.THREAD_COMMENT_MENTION:
                     DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
@@ -228,23 +233,23 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getMedia().getId());
                     intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getMedia().getType());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_REPLY:
                 case KeyUtil.ACTIVITY_REPLY_SUBSCRIBED:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.ACTIVITY_REPLY_LIKE:
                     intent = new Intent(getActivity(), CommentActivity.class);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getActivityId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                     break;
                 case KeyUtil.THREAD_LIKE:
                     DialogUtil.createMessage(getContext(), data.getSecond().getUser().getName(), data.getSecond().getContext());
@@ -264,7 +269,7 @@ public class NotificationFragment extends FragmentBaseList<Notification, PageCon
      */
     @Override
     public void onItemLongClick(View target, IntPair<Notification> data) {
-        if(CompatUtil.equals(data.getSecond().getType(), KeyUtil.AIRING)) {
+        if(CompatUtil.INSTANCE.equals(data.getSecond().getType(), KeyUtil.AIRING)) {
             setItemAsRead(data.getSecond());
             if(getPresenter().getApplicationPref().isAuthenticated()) {
                 mediaActionUtil = new MediaActionUtil.Builder()

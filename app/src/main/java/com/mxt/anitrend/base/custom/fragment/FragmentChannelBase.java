@@ -94,7 +94,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             isPopular = getArguments().getBoolean(KeyUtil.arg_popular);
             externalLinks = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
             if(externalLinks != null)
-                targetLink = EpisodeUtil.episodeSupport(externalLinks);
+                targetLink = EpisodeUtil.INSTANCE.episodeSupport(externalLinks);
         }
         mColumnSize = R.integer.single_list_x1;
     }
@@ -114,7 +114,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         recyclerView.setLayoutManager(mLayoutManager);
 
         swipeRefreshLayout.setOnRefreshAndLoadListener(this);
-        CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
+        CompatUtil.INSTANCE.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
 
         return root;
     }
@@ -222,7 +222,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                     error, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -243,7 +243,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     message, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -365,7 +365,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtil.arg_search, EpisodeUtil.getActualTile(data.getSecond().getTitle()));
+                                            intent.putExtra(KeyUtil.arg_search, EpisodeUtil.INSTANCE.getActualTile(data.getSecond().getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;

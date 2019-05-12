@@ -44,7 +44,7 @@ public class UserAdapter extends RecyclerViewAdapter<UserBase> {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
-                if(CompatUtil.isEmpty(clone))
+                if(CompatUtil.INSTANCE.isEmpty(clone))
                     clone = data;
                 String filter = constraint.toString();
                 if(TextUtils.isEmpty(filter)) {

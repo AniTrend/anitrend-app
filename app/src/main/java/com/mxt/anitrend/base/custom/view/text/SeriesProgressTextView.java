@@ -34,7 +34,7 @@ public class SeriesProgressTextView extends SingleLineTextView {
     public void setSeriesModel(MediaList mediaList, boolean isCurrentUser) {
         MediaBase model = mediaList.getMedia();
         if (MediaUtil.isAnimeType(model)) {
-            if(CompatUtil.equals(model.getStatus(), KeyUtil.NOT_YET_RELEASED))
+            if(CompatUtil.INSTANCE.equals(model.getStatus(), KeyUtil.NOT_YET_RELEASED))
                 setText(R.string.TBA);
             else {
                 if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))
@@ -45,7 +45,7 @@ public class SeriesProgressTextView extends SingleLineTextView {
                             model.getEpisodes() < 1 ? "?" : model.getEpisodes()));
             }
         } else if (MediaUtil.isMangaType(model)) {
-            if(CompatUtil.equals(model.getStatus(), KeyUtil.NOT_YET_RELEASED))
+            if(CompatUtil.INSTANCE.equals(model.getStatus(), KeyUtil.NOT_YET_RELEASED))
                 setText(R.string.TBA);
             else {
                 if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))

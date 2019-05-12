@@ -30,7 +30,7 @@ public class TagAdapter extends RecyclerViewAdapter<MediaTag> {
     @NonNull
     @Override
     public RecyclerViewHolder<MediaTag> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TagViewHolder(AdapterTagBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new TagViewHolder(AdapterTagBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

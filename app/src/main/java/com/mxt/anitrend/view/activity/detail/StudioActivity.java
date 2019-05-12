@@ -122,7 +122,7 @@ public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
 
     @Override
     protected void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, id);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.STUDIO_BASE_REQ, getApplicationContext());

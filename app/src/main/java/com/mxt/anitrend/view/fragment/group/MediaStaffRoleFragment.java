@@ -63,7 +63,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, Conne
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, id)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -87,7 +87,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, Conne
                 if (edgeContainer.hasPageInfo())
                     getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupMediaByStaffRole(edgeContainer.getEdges(), mAdapter.getData()));
+                    onPostProcessed(GroupingUtil.INSTANCE.groupMediaByStaffRole(edgeContainer.getEdges(), mAdapter.getData()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
@@ -111,7 +111,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, Conne
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((MediaBase)data.getSecond()).getId());
                 intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase)data.getSecond()).getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

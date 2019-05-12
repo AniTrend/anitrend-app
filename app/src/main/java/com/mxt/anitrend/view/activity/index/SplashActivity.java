@@ -39,7 +39,7 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        giphyCitation.setImageResource(!CompatUtil.isLightTheme(this) ? R.drawable.powered_by_giphy_light : R.drawable.powered_by_giphy_dark);
+        giphyCitation.setImageResource(!CompatUtil.INSTANCE.isLightTheme(this) ? R.drawable.powered_by_giphy_light : R.drawable.powered_by_giphy_dark);
         onActivityReady();
     }
 
@@ -68,7 +68,7 @@ public class SplashActivity extends ActivityBase<VersionBase, BasePresenter> {
     protected void makeRequest() {
         VersionBase versionBase = getPresenter().getDatabase().getRemoteVersion();
         // How frequent the application checks for updates on startup
-        if(versionBase == null || DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_HOURS, versionBase.getLastChecked(), 2)) {
+        if(versionBase == null || DateUtil.INSTANCE.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_HOURS, versionBase.getLastChecked(), 2)) {
             getViewModel().getParams().putString(KeyUtil.arg_branch_name, getPresenter().getApplicationPref().getUpdateChannel());
             getViewModel().requestData(KeyUtil.UPDATE_CHECKER_REQ, getApplicationContext());
         }

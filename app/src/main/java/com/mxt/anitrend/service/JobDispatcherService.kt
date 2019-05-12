@@ -7,7 +7,6 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.body.GraphContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.GraphUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -16,8 +15,7 @@ import com.mxt.anitrend.util.NotificationUtil
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import retrofit2.Call
-import retrofit2.Response
+import java.util.*
 
 /**
  * Created by Maxwell on 1/22/2017.
@@ -26,6 +24,10 @@ class JobDispatcherService(context: Context, workerParams: WorkerParameters) : W
 
     private val presenter by lazy {
         BasePresenter(context)
+    }
+
+    private val notificationUtil by lazy {
+        NotificationUtil(applicationContext)
     }
 
     /**
@@ -45,24 +47,26 @@ class JobDispatcherService(context: Context, workerParams: WorkerParameters) : W
      * dependent work will not execute if you use
      * [Result.failure]
      */
-    override fun doWork(): ListenableWorker.Result {
+    override fun doWork(): Result {
         if (presenter.applicationPref.isAuthenticated) {
             val userModel = WebFactory.createService(UserModel::class.java, applicationContext)
-            val request = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false))
+            val userRequest = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false))
             try {
-                val response = request.execute()
-                val userGraphContainer: Any? = response.body()
-                if (response.isSuccessful && userGraphContainer != null) {
+                val userResponse = userRequest.execute()
+                val userGraphContainer: Any? = userResponse.body()
+                if (userResponse.isSuccessful && userGraphContainer != null) {
                     val currentUser = userGraphContainer as User?
-                    val previousUserData = presenter.database.currentUser
-                    presenter.database.saveCurrentUser(currentUser)
-                    if (previousUserData.unreadNotificationCount != currentUser!!.unreadNotificationCount) {
-                        if (currentUser.unreadNotificationCount > 0) {
-                            presenter.notifyAllListeners(BaseConsumer(KeyUtil.USER_CURRENT_REQ, currentUser), false)
-                            NotificationUtil.createNotification(applicationContext, currentUser)
+                    if (currentUser != null) {
+                        val previousUserData = presenter.database.currentUser
+                        presenter.database.saveCurrentUser(currentUser)
+                        if (previousUserData.unreadNotificationCount != currentUser.unreadNotificationCount) {
+                            if (currentUser.unreadNotificationCount != 0) {
+                                presenter.notifyAllListeners(BaseConsumer(KeyUtil.USER_CURRENT_REQ, currentUser), false)
+                                notificationUtil.createNotification(currentUser)
+                            }
                         }
                     }
-                    return ListenableWorker.Result.success()
+                    return Result.success()
                 }
             } catch (e: Exception) {
                 e.message?.apply {
@@ -72,6 +76,6 @@ class JobDispatcherService(context: Context, workerParams: WorkerParameters) : W
             }
 
         }
-        return ListenableWorker.Result.retry()
+        return Result.retry()
     }
 }

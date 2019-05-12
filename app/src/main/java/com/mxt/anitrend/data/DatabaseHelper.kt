@@ -21,9 +21,11 @@ import io.objectbox.BoxStore
  * Database helper class
  */
 
-class DatabaseHelper(private val context: Context) : BoxQuery {
+class DatabaseHelper(context: Context) : BoxQuery {
 
-    private var boxStore: BoxStore? = null
+    private val boxStore: BoxStore by lazy {
+        (context.applicationContext as App).boxStore
+    }
 
     // Frequently used instance variables
     private var user: User? = null
@@ -35,11 +37,8 @@ class DatabaseHelper(private val context: Context) : BoxQuery {
      * @param classType Type of class which must not be a list instance
      * @return Box of type class requested
      */
-    override fun <S> getBoxStore(classType: Class<S>): Box<S> {
-        if (boxStore == null)
-            boxStore = (context.applicationContext as App).boxStore
-        return boxStore!!.boxFor(classType)
-    }
+    override fun <S> getBoxStore(classType: Class<S>): Box<S> =
+            boxStore.boxFor(classType)
 
     /**
      * Used when the application is logging out a user preferably
@@ -67,40 +66,50 @@ class DatabaseHelper(private val context: Context) : BoxQuery {
      * Get default authentication code
      */
     override fun getAuthCode(): AuthBase? {
-        return getBoxStore(AuthBase::class.java).query()
-                .build().findFirst()
+        return getBoxStore(AuthBase::class.java)
+                .query()
+                .build()
+                .findFirst()
     }
 
     /**
      * Get web token
      */
     override fun getWebToken(): WebToken? {
-        return getBoxStore(WebToken::class.java).query()
-                .build().findFirst()
+        return getBoxStore(WebToken::class.java)
+                .query()
+                .build()
+                .findFirst()
     }
 
     /**
      * Get the application version on github
      */
     override fun getRemoteVersion(): VersionBase? {
-        return getBoxStore(VersionBase::class.java).query()
-                .build().findFirst()
+        return getBoxStore(VersionBase::class.java)
+                .query()
+                .build()
+                .findFirst()
     }
 
     /**
      * Gets all saved tags
      */
     override fun getMediaTags(): List<MediaTag> {
-        return getBoxStore(MediaTag::class.java).query()
-                .build().findLazy()
+        return getBoxStore(MediaTag::class.java)
+                .query()
+                .build()
+                .findLazy()
     }
 
     /**
      * Gets all saved genres
      */
     override fun getGenreCollection(): List<Genre> {
-        return getBoxStore(Genre::class.java).query()
-                .build().findLazy()
+        return getBoxStore(Genre::class.java)
+                .query()
+                .build()
+                .findLazy()
     }
 
     /**
@@ -141,7 +150,7 @@ class DatabaseHelper(private val context: Context) : BoxQuery {
      */
     override fun saveRemoteVersion(versionBase: VersionBase) {
         val versionBox = getBoxStore(VersionBase::class.java)
-        if (versionBox.count() > 0)
+        if (versionBox.count() != 0L)
             versionBox.removeAll()
         versionBase.lastChecked = System.currentTimeMillis()
         versionBox.put(versionBase)

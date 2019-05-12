@@ -21,7 +21,7 @@ public class SuggestionListFragment extends MediaBrowseFragment {
 
     public static SuggestionListFragment newInstance(Bundle params) {
         Bundle args = new Bundle(params);
-        args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+        args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.INSTANCE.getDefaultQuery(true)
                 .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                 .putVariable(KeyUtil.arg_onList, false));
         SuggestionListFragment fragment = new SuggestionListFragment();
@@ -56,16 +56,16 @@ public class SuggestionListFragment extends MediaBrowseFragment {
         if (getContext() != null)
             switch (item.getItemId()) {
                 case R.id.action_sort:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.MediaSortType,
-                            getPresenter().getApplicationPref().getMediaSort()), CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MediaSortType,
+                            getPresenter().getApplicationPref().getMediaSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaSortType),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().setMediaSort(KeyUtil.MediaSortType[dialog.getSelectedIndex()]);
                             });
                     return true;
                 case R.id.action_order:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
-                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.INSTANCE.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);

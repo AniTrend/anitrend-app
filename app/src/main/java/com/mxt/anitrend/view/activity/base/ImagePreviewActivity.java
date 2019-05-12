@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -106,10 +107,15 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
                 startActivity(Intent.createChooser(intent, getResources().getText(R.string.image_preview_share)));
                 return true;
             case R.id.image_preview_link:
-                intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(mImageUri));
-                startActivity(intent);
+                try {
+                    intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(mImageUri));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e(toString(), e.getLocalizedMessage());
+                    NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show();
+                }
                 return true;
         }
 

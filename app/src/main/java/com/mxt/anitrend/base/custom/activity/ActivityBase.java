@@ -79,8 +79,9 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     private boolean isClosing;
 
-    private App application;
     private CommonPresenter presenter;
+
+    private ApplicationPref applicationPref;
 
     private @StyleRes int style;
 
@@ -89,8 +90,10 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      * override this method and set your own theme style.
      */
     protected void configureActivity() {
-        ApplicationPref applicationPref = new ApplicationPref(this);
-        if(!CompatUtil.isLightTheme((style = applicationPref.getTheme())) && applicationPref.isBlackThemeEnabled())
+        if (applicationPref == null)
+            applicationPref = ((App)getApplicationContext()).getApplicationPref();
+        style = applicationPref.getTheme();
+        if(!CompatUtil.INSTANCE.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
@@ -98,14 +101,17 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleUtil.onAttach(base));
+        if (applicationPref == null)
+            applicationPref = new ApplicationPref(base);
+        super.attachBaseContext(LocaleUtil.INSTANCE.onAttach(base, applicationPref));
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = this.toString(); configureActivity();
         super.onCreate(savedInstanceState);
-        intentBundleUtil = new IntentBundleUtil(getIntent(), this);
+        intentBundleUtil = new IntentBundleUtil(getIntent());
+        intentBundleUtil.checkIntentData(this);
         AnalyticsUtil.logCurrentScreen(this, TAG);
     }
 
@@ -414,7 +420,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             Intent intent = new Intent(this, SearchActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(KeyUtil.arg_search, query);
-            CompatUtil.startRevealAnim(this, mSearchView, intent);
+            CompatUtil.INSTANCE.startRevealAnim(this, mSearchView, intent);
             return true;
         }
         NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();

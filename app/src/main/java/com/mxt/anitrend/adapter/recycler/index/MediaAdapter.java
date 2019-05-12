@@ -41,7 +41,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
     @Override
     public RecyclerViewHolder<MediaBase> onCreateViewHolder(@NonNull ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if(isCompatType)
-            return new MediaViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+            return new MediaViewHolder(AdapterSeriesBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
         if(viewType == KeyUtil.RECYCLER_TYPE_ANIME)
             return new AnimeViewHolder(AdapterAnimeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         return new MangaViewHolder(AdapterMangaBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
@@ -49,7 +49,7 @@ public class MediaAdapter extends RecyclerViewAdapter<MediaBase> {
 
     @Override
     public @KeyUtil.RecyclerViewType int getItemViewType(int position) {
-        if(CompatUtil.equals(data.get(position).getType(), KeyUtil.ANIME))
+        if(CompatUtil.INSTANCE.equals(data.get(position).getType(), KeyUtil.ANIME))
             return KeyUtil.RECYCLER_TYPE_ANIME;
         return KeyUtil.RECYCLER_TYPE_MANGA;
     }

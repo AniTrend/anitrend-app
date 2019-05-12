@@ -32,8 +32,8 @@ public class NotifyUtil {
     public static void createAlerter(FragmentActivity activity, String title, String text, @DrawableRes int icon,
                               @ColorRes int backgroundColor, @KeyUtil.AlerterDuration long duration) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
-                .setProgressColorInt(CompatUtil.getColor(activity, R.color.white))
+                .setIcon(CompatUtil.INSTANCE.getDrawable(activity, icon, R.color.white))
+                .setProgressColorInt(CompatUtil.INSTANCE.getColor(activity, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(duration == 0 ? KeyUtil.DURATION_SHORT : duration)
@@ -47,8 +47,8 @@ public class NotifyUtil {
     public static void createAlerter(FragmentActivity activity, @StringRes int title, @StringRes int text, @DrawableRes int icon,
                               @ColorRes int backgroundColor, @KeyUtil.AlerterDuration long duration) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
-                .setProgressColorInt(CompatUtil.getColor(activity, R.color.white))
+                .setIcon(CompatUtil.INSTANCE.getDrawable(activity, icon, R.color.white))
+                .setProgressColorInt(CompatUtil.INSTANCE.getColor(activity, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(duration == 0 ? KeyUtil.DURATION_SHORT : duration)
@@ -61,7 +61,7 @@ public class NotifyUtil {
      */
     public static void createAlerter(FragmentActivity activity, String title, String text, @DrawableRes int icon, @ColorRes int backgroundColor) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
+                .setIcon(CompatUtil.INSTANCE.getDrawable(activity, icon, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
@@ -73,7 +73,7 @@ public class NotifyUtil {
      */
     public static void createAlerter(FragmentActivity activity, @StringRes int title, @StringRes int text, @DrawableRes int icon, @ColorRes int backgroundColor) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
+                .setIcon(CompatUtil.INSTANCE.getDrawable(activity, icon, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
@@ -85,7 +85,7 @@ public class NotifyUtil {
      */
     public static void createAlerter(FragmentActivity activity, @StringRes int title, @StringRes int text, @DrawableRes int icon, @ColorRes int backgroundColor, View.OnClickListener clickListener) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(CompatUtil.getDrawable(activity, icon, R.color.white))
+                .setIcon(CompatUtil.INSTANCE.getDrawable(activity, icon, R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
@@ -98,7 +98,7 @@ public class NotifyUtil {
      */
     public static void createLoginToast(FragmentActivity context, User user) {
         Toast notification = new Toast(context);
-        CustomAuthToastBinding binding = CustomAuthToastBinding.inflate(CompatUtil.getLayoutInflater(context));
+        CustomAuthToastBinding binding = CustomAuthToastBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(context));
         binding.setModel(user);
         notification.setView(binding.getRoot());
         notification.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0);
@@ -108,44 +108,44 @@ public class NotifyUtil {
 
     public static Toast makeText(Context context, @StringRes int stringRes, @DrawableRes int drawableRes, int duration) {
         Toast toast = new Toast(context);
-        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.getLayoutInflater(context));
+        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(context));
         binding.toastText.setText(context.getString(stringRes));
-        binding.toastIcon.setImageDrawable(CompatUtil.getTintedDrawable(context, drawableRes));
+        binding.toastIcon.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(context, drawableRes));
         toast.setView(binding.getRoot());
-        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.dipToPx(32));
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.INSTANCE.dipToPx(32));
         toast.setDuration(duration);
         return toast;
     }
 
     public static Toast makeText(Context context, @StringRes int stringRes, int duration) {
         Toast toast = new Toast(context);
-        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.getLayoutInflater(context));
+        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(context));
         binding.toastText.setText(context.getString(stringRes));
-        binding.toastIcon.setImageDrawable(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp));
+        binding.toastIcon.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp));
         toast.setView(binding.getRoot());
-        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.dipToPx(32));
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.INSTANCE.dipToPx(32));
         toast.setDuration(duration);
         return toast;
     }
 
     public static Toast makeText(Context context, String stringRes, @DrawableRes int drawableRes, int duration) {
         Toast toast = new Toast(context);
-        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.getLayoutInflater(context));
+        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(context));
         binding.toastText.setText(stringRes);
-        binding.toastIcon.setImageDrawable(CompatUtil.getTintedDrawable(context, drawableRes));
+        binding.toastIcon.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(context, drawableRes));
         toast.setView(binding.getRoot());
-        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.dipToPx(32));
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.INSTANCE.dipToPx(32));
         toast.setDuration(duration);
         return toast;
     }
 
     public static Toast makeText(Context context, String stringRes, int duration) {
         Toast toast = new Toast(context);
-        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.getLayoutInflater(context));
+        CustomToastBinding binding = CustomToastBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(context));
         binding.toastText.setText(stringRes);
-        binding.toastIcon.setImageDrawable(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp));
+        binding.toastIcon.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp));
         toast.setView(binding.getRoot());
-        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.dipToPx(32));
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, CompatUtil.INSTANCE.dipToPx(32));
         toast.setDuration(duration);
         return toast;
     }
@@ -153,11 +153,11 @@ public class NotifyUtil {
     public static Snackbar make(View parent, String stringRes, int duration) {
         Snackbar snackbar = Snackbar.make(parent, stringRes, duration);
         View snackBarContainer = snackbar.getView();
-        snackBarContainer.setBackgroundColor(CompatUtil.getColorFromAttr(parent.getContext(), R.attr.colorPrimaryDark));
+        snackBarContainer.setBackgroundColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorPrimaryDark));
         TextView mainTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_text);
         TextView actionTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_action);
-        mainTextView.setTextColor(CompatUtil.getColorFromAttr(parent.getContext(), R.attr.titleColor));
-        actionTextView.setTextColor(CompatUtil.getColorFromAttr(parent.getContext(), R.attr.colorAccent));
+        mainTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.titleColor));
+        actionTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorAccent));
         actionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         return snackbar;
     }
@@ -165,11 +165,11 @@ public class NotifyUtil {
     public static Snackbar make(View parent, @StringRes int stringRes, int duration) {
         Snackbar snackbar = Snackbar.make(parent, stringRes, duration);
         View snackBarContainer = snackbar.getView();
-        snackBarContainer.setBackgroundColor(CompatUtil.getColorFromAttr(parent.getContext(), R.attr.colorPrimaryDark));
+        snackBarContainer.setBackgroundColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorPrimaryDark));
         TextView mainTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_text);
         TextView actionTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_action);
-        mainTextView.setTextColor(CompatUtil.getColorFromAttr(parent.getContext(), R.attr.titleColor));
-        actionTextView.setTextColor(CompatUtil.getColorFromAttr(parent.getContext(), R.attr.colorAccent));
+        mainTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.titleColor));
+        actionTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorAccent));
         actionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         return snackbar;
     }

@@ -57,7 +57,7 @@ public class BottomReviewReader extends BottomSheetBase {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        binding = BottomSheetReviewBinding.inflate(CompatUtil.getLayoutInflater(getActivity()));
+        binding = BottomSheetReviewBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
         unbinder = ButterKnife.bind(this, dialog);
         createBottomSheetBehavior(binding.getRoot());

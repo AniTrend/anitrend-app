@@ -58,7 +58,7 @@ public class RatingTextView extends LinearLayout implements CustomView {
      */
     @Override
     public void onInit() {
-        binding = CustomRatingWidgetBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = CustomRatingWidgetBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         BasePresenter basePresenter = new BasePresenter(getContext());
         if(basePresenter.getApplicationPref().isAuthenticated())
             mediaListOptions = basePresenter.getDatabase().getCurrentUser().getMediaListOptions();
@@ -66,7 +66,7 @@ public class RatingTextView extends LinearLayout implements CustomView {
 
     private void setFavourState(boolean isFavourite) {
         @ColorRes int colorTint = isFavourite ? R.color.colorStateYellow : R.color.white;
-        Drawable drawable = CompatUtil.getDrawable(getContext(), R.drawable.ic_star_grey_600_24dp, colorTint);
+        Drawable drawable = CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_star_grey_600_24dp, colorTint);
         binding.ratingFavourState.setImageDrawable(drawable);
     }
 
@@ -124,19 +124,19 @@ public class RatingTextView extends LinearLayout implements CustomView {
                         int score = (int)mediaList.getScore();
                         switch (score) {
                             case 0:
-                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                         R.drawable.ic_face_white_18dp), null, null, null);
                                 break;
                             case 1:
-                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                         R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null);
                                 break;
                             case 2:
-                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                         R.drawable.ic_sentiment_neutral_white_18dp), null, null, null);
                                 break;
                             case 3:
-                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                                binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                         R.drawable.ic_sentiment_satisfied_white_18dp), null, null, null);
                                 break;
                         }
@@ -167,16 +167,16 @@ public class RatingTextView extends LinearLayout implements CustomView {
                 case KeyUtil.POINT_3:
                     binding.ratingValue.setText("");
                         if(mediaBase.getMeanScore() == 0)
-                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_face_white_18dp), null, null, null);
                         if(mediaBase.getMeanScore() > 0 && mediaBase.getMeanScore() <= 33)
-                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null);
                         else if (mediaBase.getMeanScore() >= 34 && mediaBase.getMeanScore() <= 66)
-                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_neutral_white_18dp), null, null, null);
                         else if (mediaBase.getMeanScore() >= 67 && mediaBase.getMeanScore() <= 100)
-                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_satisfied_white_18dp), null, null, null);
                     break;
             }

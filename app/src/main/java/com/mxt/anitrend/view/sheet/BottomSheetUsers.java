@@ -47,7 +47,7 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
         mAdapter = new UserAdapter(getActivity());
         if(getArguments() != null) {
             List<UserBase> baseList = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
-            if(!CompatUtil.isEmpty(baseList))
+            if(!CompatUtil.INSTANCE.isEmpty(baseList))
                 mAdapter.onItemsInserted(baseList);
         }
     }
@@ -62,7 +62,7 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        binding = BottomSheetListBinding.inflate(CompatUtil.getLayoutInflater(getActivity()));
+        binding = BottomSheetListBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
         unbinder = ButterKnife.bind(this, dialog);
         createBottomSheetBehavior(binding.getRoot());

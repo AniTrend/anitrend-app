@@ -48,7 +48,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
     @Override
     public void onInit() {
         super.onInit();
-        binding = CustomActionMangaBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = CustomActionMangaBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
     }
 
     /**
@@ -85,9 +85,9 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         binding.diaCurrentStatus.setAdapter(getIconArrayAdapter());
 
         if(!TextUtils.isEmpty(model.getStatus()))
-            binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));
+            binding.diaCurrentStatus.setSelection(CompatUtil.INSTANCE.constructListFrom(KeyUtil.MediaListStatus).indexOf(model.getStatus()));
         else
-            binding.diaCurrentStatus.setSelection(CompatUtil.constructListFrom(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
+            binding.diaCurrentStatus.setSelection(CompatUtil.INSTANCE.constructListFrom(KeyUtil.MediaListStatus).indexOf(KeyUtil.PLANNING));
 
         binding.diaCurrentPrivacy.setChecked(model.isHidden());
 
@@ -123,13 +123,13 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         model.setStatus(KeyUtil.MediaListStatus[i]);
         switch (KeyUtil.MediaListStatus[i]) {
             case KeyUtil.CURRENT:
-                if (CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
                 break;
             case KeyUtil.PLANNING:
                 break;
             case KeyUtil.COMPLETED:
-                if (!CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
+                if (!CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
                     NotifyUtil.makeText(getContext(), R.string.warning_manga_publishing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getChapters();
@@ -143,7 +143,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
                 }
                 break;
             default:
-                if (CompatUtil.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
                     NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
                 break;
         }

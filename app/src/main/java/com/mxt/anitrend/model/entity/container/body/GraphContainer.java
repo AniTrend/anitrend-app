@@ -19,6 +19,6 @@ public class GraphContainer<T> {
     }
 
     public boolean isEmpty() {
-        return data == null && !CompatUtil.isEmpty(errors);
+        return data == null && !CompatUtil.INSTANCE.isEmpty(errors);
     }
 }

@@ -40,9 +40,9 @@ public class TapTargetUtil {
         return new MaterialTapTargetPrompt.Builder(context)
                 .setTarget(context.findViewById(resource))
                 .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                .setPrimaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.titleColor))
-                .setSecondaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.subtitleColor))
-                .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
+                .setPrimaryTextColour(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.titleColor))
+                .setSecondaryTextColour(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.subtitleColor))
+                .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
     }
 
     public static MaterialTapTargetPrompt.Builder buildDefault(FragmentActivity context, @StringRes int primary, @StringRes int secondary, @IdRes int resource) {
@@ -50,18 +50,18 @@ public class TapTargetUtil {
                 .setTarget(context.findViewById(resource))
                 .setPrimaryText(primary).setSecondaryText(secondary)
                 .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                .setPrimaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.titleColor))
-                .setSecondaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.subtitleColor))
-                .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
+                .setPrimaryTextColour(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.titleColor))
+                .setSecondaryTextColour(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.subtitleColor))
+                .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
     }
 
     public static MaterialTapTargetPrompt.Builder buildDefault(FragmentActivity context, @StringRes int primary, @StringRes int secondary, View target) {
         return new MaterialTapTargetPrompt.Builder(context).setTarget(target)
                 .setPrimaryText(primary).setSecondaryText(secondary)
                 .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                .setPrimaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.titleColor))
-                .setSecondaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.subtitleColor))
-                .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
+                .setPrimaryTextColour(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.titleColor))
+                .setSecondaryTextColour(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.subtitleColor))
+                .setBackgroundColour(ColorUtils.setAlphaComponent(CompatUtil.INSTANCE.getColorFromAttr(context, R.attr.colorPrimaryDark), 0xF2));
     }
 
     /**

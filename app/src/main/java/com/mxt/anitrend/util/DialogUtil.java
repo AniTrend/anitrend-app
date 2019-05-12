@@ -157,7 +157,7 @@ public class DialogUtil {
         createDefaultDialog(context).title(title)
                 .positiveText(R.string.Ok)
                 .negativeText(R.string.Cancel)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .content(new SpannedString(context.getString(content)))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
@@ -165,7 +165,7 @@ public class DialogUtil {
     public static void createMessage(Context context, String title, String content) {
         createDefaultDialog(context).title(title)
                 .positiveText(R.string.Close)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).show();
     }
@@ -175,7 +175,7 @@ public class DialogUtil {
                 .positiveText(positive)
                 .negativeText(negative)
                 .neutralText(neutral)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
@@ -184,7 +184,7 @@ public class DialogUtil {
         createDefaultDialog(context).title(title)
                 .positiveText(positive)
                 .negativeText(negative)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
@@ -193,12 +193,12 @@ public class DialogUtil {
         MaterialDialog.Builder builder = createDefaultDialog(context).title(title)
                 .positiveText(positive)
                 .negativeText(negative)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback);
 
-        if (isSpoiler) builder.icon(CompatUtil.getDrawable(context, R.drawable.ic_spoiler_tag));
-        else builder.icon(CompatUtil.getDrawable(context, R.drawable.ic_loyalty_white_24dp));
+        if (isSpoiler) builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_spoiler_tag));
+        else builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_loyalty_white_24dp));
 
         builder.show();
     }
@@ -209,7 +209,7 @@ public class DialogUtil {
                 .positiveText(R.string.Ok)
                 .negativeText(R.string.Reset)
                 .neutralText(R.string.Cancel)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .itemsCallbackMultiChoice(selectedIndices,listCallbackMultiChoice)
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
@@ -252,6 +252,6 @@ public class DialogUtil {
                 .positiveColorRes(R.color.colorStateGreen)
                 .negativeColorRes(R.color.colorStateOrange)
                 .neutralColorRes(R.color.colorStateBlue)
-                .theme(CompatUtil.isLightTheme(context)?Theme.LIGHT:Theme.DARK);
+                .theme(CompatUtil.INSTANCE.isLightTheme(context)?Theme.LIGHT:Theme.DARK);
     }
 }

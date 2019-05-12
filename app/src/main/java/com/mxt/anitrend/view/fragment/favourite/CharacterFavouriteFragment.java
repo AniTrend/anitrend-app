@@ -59,7 +59,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<RecyclerItem, C
 
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, userId)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -73,7 +73,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<RecyclerItem, C
                 PageContainer<CharacterBase> pageContainer = content.getConnection().getCharacters();
                 if(pageContainer.hasPageInfo())
                     getPresenter().setPageInfo(pageContainer.getPageInfo());
-                onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.getPageData()));
+                onPostProcessed(GroupingUtil.INSTANCE.wrapInGroup(pageContainer.getPageData()));
             }
             else
                 onPostProcessed(Collections.emptyList());
@@ -96,7 +96,7 @@ public class CharacterFavouriteFragment extends FragmentBaseList<RecyclerItem, C
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((CharacterBase)data.getSecond()).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }
