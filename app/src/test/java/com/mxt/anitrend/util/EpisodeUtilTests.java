@@ -28,7 +28,7 @@ public class EpisodeUtilTests {
 
         List<ExternalLink> links = Collections.singletonList(link);
 
-        assertThat(EpisodeUtil.episodeSupport(links), equalTo(show + ".rss"));
+        assertThat(EpisodeUtil.INSTANCE.episodeSupport(links), equalTo(show + ".rss"));
 
     }
 
@@ -40,7 +40,7 @@ public class EpisodeUtilTests {
         when(link.getUrl()).thenReturn(url);
         List<ExternalLink> links = Collections.singletonList(link);
 
-        assertThat(EpisodeUtil.episodeSupport(links), equalTo(url));
+        assertThat(EpisodeUtil.INSTANCE.episodeSupport(links), equalTo(url));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class EpisodeUtilTests {
         when(link2.getUrl()).thenReturn(feedUrl);
         List<ExternalLink> links = Arrays.asList(link1, link2);
 
-        assertThat(EpisodeUtil.episodeSupport(links),
+        assertThat(EpisodeUtil.INSTANCE.episodeSupport(links),
                 is(anyOf(
                         equalTo(show + ".rss"),
                         equalTo(feedUrl)
@@ -75,6 +75,6 @@ public class EpisodeUtilTests {
         when(link2.getUrl()).thenReturn(twitter);
         List<ExternalLink> links = Arrays.asList(link1, link2);
 
-        assertThat(EpisodeUtil.episodeSupport(links), nullValue());
+        assertThat(EpisodeUtil.INSTANCE.episodeSupport(links), nullValue());
     }
 }

@@ -91,6 +91,31 @@ public class RegexUtilTests {
         assertEquals(expected, result);
 
         result = RegexUtil.INSTANCE.getYoutubeThumb("https://data.whicdn.com/images/107659661/original.gif");
-        assertEquals(RegexUtil.INSTANCE.getNO_THUMBNAIL(), result);
+        assertEquals(RegexUtil.NO_THUMBNAIL, result);
+    }
+
+    @Test
+    public void findUserTags() {
+        String input = "img(https://cdn.discordapp.com/attachments/317768562620235776/525201025393754112/Anitrend.png)\n" +
+                "\n" +
+                "__The AniTrend Family__ by @Signi58\n" +
+                "\n" +
+                "Top Left -> @YouseffHabri | Top Right -> @Lionirdeadman \n" +
+                "Middle Left -> @Swap | Middle _who else??_ | Middle Right -> @Mokacchi\n" +
+                "Bottom Left -> @Signi58 | Bottom Right @Taichikuji\n" +
+                "\n" +
+                "Feel jealous yet <3";
+        String actual = RegexUtil.INSTANCE.findUserTags(input);
+
+        String expected = "img(https://cdn.discordapp.com/attachments/317768562620235776/525201025393754112/Anitrend.png)\n" +
+                "\n" +
+                "__The AniTrend Family__ by __[@Signi58](https://anilist.co/user/Signi58)__\n" +
+                "\n" +
+                "Top Left -> __[@YouseffHabri](https://anilist.co/user/YouseffHabri)__ | Top Right -> __[@Lionirdeadman](https://anilist.co/user/Lionirdeadman)__ \n" +
+                "Middle Left -> __[@Swap](https://anilist.co/user/Swap)__ | Middle _who else??_ | Middle Right -> __[@Mokacchi](https://anilist.co/user/Mokacchi)__\n" +
+                "Bottom Left -> __[@Signi58](https://anilist.co/user/Signi58)__ | Bottom Right __[@Taichikuji](https://anilist.co/user/Taichikuji)__\n" +
+                "\n" +
+                "Feel jealous yet <3";
+        assertEquals(expected, actual);
     }
 }

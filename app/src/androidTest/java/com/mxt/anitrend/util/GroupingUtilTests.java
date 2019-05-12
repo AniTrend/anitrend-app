@@ -189,7 +189,7 @@ public class GroupingUtilTests {
 
     @Test
     public void groupMediaByFormat_ifTheMediaListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupMediaByFormat(Collections.emptyList(), null), empty());
+        assertThat(GroupingUtil.INSTANCE.groupMediaByFormat(Collections.emptyList(), null), empty());
     }
 
     @Test
@@ -208,7 +208,7 @@ public class GroupingUtilTests {
 
 
         List<RecyclerItem> results =
-                GroupingUtil.groupMediaByFormat(mediaOfAllFormats, null);
+                GroupingUtil.INSTANCE.groupMediaByFormat(mediaOfAllFormats, null);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -243,7 +243,7 @@ public class GroupingUtilTests {
                         .collect(Collectors.toList());
 
         List<RecyclerItem> results =
-                GroupingUtil.groupMediaByFormat(mediaOfAllFormats, existingItems);
+                GroupingUtil.INSTANCE.groupMediaByFormat(mediaOfAllFormats, existingItems);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -253,7 +253,7 @@ public class GroupingUtilTests {
     //region groupStaffByLanguage
     @Test
     public void groupStaffByLanguage_ifTheMediaListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupStaffByLanguage(Collections.emptyList(), null), empty());
+        assertThat(GroupingUtil.INSTANCE.groupStaffByLanguage(Collections.emptyList(), null), empty());
     }
 
     @Test
@@ -272,7 +272,7 @@ public class GroupingUtilTests {
 
 
         List<RecyclerItem> results =
-                GroupingUtil.groupStaffByLanguage(staffOfAllLanguages, null);
+                GroupingUtil.INSTANCE.groupStaffByLanguage(staffOfAllLanguages, null);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -307,7 +307,7 @@ public class GroupingUtilTests {
                         .collect(Collectors.toList());
 
         List<RecyclerItem> results =
-                GroupingUtil.groupStaffByLanguage(staffOfAllLanguages, existingItems);
+                GroupingUtil.INSTANCE.groupStaffByLanguage(staffOfAllLanguages, existingItems);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -317,7 +317,7 @@ public class GroupingUtilTests {
     //region groupActorMediaEdge
     @Test
     public void groupActorMediaEdge_ifEdgeListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupActorMediaEdge(Collections.emptyList()), empty());
+        assertThat(GroupingUtil.INSTANCE.groupActorMediaEdge(Collections.emptyList()), empty());
     }
 
     @Test
@@ -347,7 +347,7 @@ public class GroupingUtilTests {
                             return items.stream();
                         }).collect(Collectors.toList());
 
-        List<RecyclerItem> result = GroupingUtil.groupActorMediaEdge(mediaEdges);
+        List<RecyclerItem> result = GroupingUtil.INSTANCE.groupActorMediaEdge(mediaEdges);
 
         assertThat(result, hasSize(required.size()));
         assertThat(result, containsItemsOf(required));
@@ -370,7 +370,7 @@ public class GroupingUtilTests {
     //region groupMediaByRelationType
     @Test
     public void groupMediaByRelationType_ifEdgeListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupMediaByRelationType(Collections.emptyList()), empty());
+        assertThat(GroupingUtil.INSTANCE.groupMediaByRelationType(Collections.emptyList()), empty());
     }
 
     @Test
@@ -382,7 +382,7 @@ public class GroupingUtilTests {
                         .collect(Collectors.toList());
 
         List<RecyclerItem> results =
-                GroupingUtil.groupMediaByRelationType(mediaOfAllRelations);
+                GroupingUtil.INSTANCE.groupMediaByRelationType(mediaOfAllRelations);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -393,7 +393,7 @@ public class GroupingUtilTests {
 
     @Test
     public void groupCharactersByRole_ifTheCharacterEdgeListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupCharactersByRole(Collections.emptyList(), null), empty());
+        assertThat(GroupingUtil.INSTANCE.groupCharactersByRole(Collections.emptyList(), null), empty());
     }
 
     @Test
@@ -412,7 +412,7 @@ public class GroupingUtilTests {
 
 
         List<RecyclerItem> results =
-                GroupingUtil.groupCharactersByRole(charactersOfAllRoles, null);
+                GroupingUtil.INSTANCE.groupCharactersByRole(charactersOfAllRoles, null);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -445,7 +445,7 @@ public class GroupingUtilTests {
                         .collect(Collectors.toList());
 
         List<RecyclerItem> results =
-                GroupingUtil.groupCharactersByRole(charactersOfAllRoles, existingItems);
+                GroupingUtil.INSTANCE.groupCharactersByRole(charactersOfAllRoles, existingItems);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -455,7 +455,7 @@ public class GroupingUtilTests {
     //region groupStaffByRole
     @Test
     public void groupStaffByRole_ifTheStaffEdgeListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupStaffByRole(Collections.emptyList(), null), empty());
+        assertThat(GroupingUtil.INSTANCE.groupStaffByRole(Collections.emptyList(), null), empty());
     }
 
     @Test
@@ -474,7 +474,7 @@ public class GroupingUtilTests {
 
 
         List<RecyclerItem> results =
-                GroupingUtil.groupStaffByRole(staffOfAllRoles, null);
+                GroupingUtil.INSTANCE.groupStaffByRole(staffOfAllRoles, null);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -507,7 +507,7 @@ public class GroupingUtilTests {
                         .collect(Collectors.toList());
 
         List<RecyclerItem> results =
-                GroupingUtil.groupStaffByRole(staffOfAllRoles, existingItems);
+                GroupingUtil.INSTANCE.groupStaffByRole(staffOfAllRoles, existingItems);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -517,7 +517,7 @@ public class GroupingUtilTests {
     //region groupMediaByStaffRole
     @Test
     public void groupMediaByStaffRole_ifTheMediaEdgeListIsEmpty_shouldReturnAnEmptyList() {
-        assertThat(GroupingUtil.groupMediaByStaffRole(Collections.emptyList(), null), empty());
+        assertThat(GroupingUtil.INSTANCE.groupMediaByStaffRole(Collections.emptyList(), null), empty());
     }
 
     @Test
@@ -536,7 +536,7 @@ public class GroupingUtilTests {
 
 
         List<RecyclerItem> results =
-                GroupingUtil.groupMediaByStaffRole(mediaOfAllStaffRoles, null);
+                GroupingUtil.INSTANCE.groupMediaByStaffRole(mediaOfAllStaffRoles, null);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));
@@ -569,7 +569,7 @@ public class GroupingUtilTests {
                         .collect(Collectors.toList());
 
         List<RecyclerItem> results =
-                GroupingUtil.groupMediaByStaffRole(mediaOfAllStaffRoles, existingItems);
+                GroupingUtil.INSTANCE.groupMediaByStaffRole(mediaOfAllStaffRoles, existingItems);
 
         assertThat(results, hasSize(required.size()));
         assertThat(results, containsItemsOf(required));

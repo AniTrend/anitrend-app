@@ -30,7 +30,7 @@ public class EpisodeUtil_GetActualTitleTest {
 
     @Test
     public void getActualTile() {
-        assertThat(EpisodeUtil.getActualTile(inputTitle), equalTo(actualTitle));
+        assertThat(EpisodeUtil.INSTANCE.getActualTile(inputTitle), equalTo(actualTitle));
     }
 
 }
