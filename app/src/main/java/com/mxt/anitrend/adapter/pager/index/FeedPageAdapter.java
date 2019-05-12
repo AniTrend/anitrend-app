@@ -37,11 +37,13 @@ public class FeedPageAdapter extends BaseStatePageAdapter {
             case 1:
                 return FeedListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_isFollowing, true)
-                        .putVariable(KeyUtil.arg_type, KeyUtil.TEXT));
+                        .putVariable(KeyUtil.arg_type, KeyUtil.TEXT)
+                        .putVariable(KeyUtil.arg_asHtml, false));
             case 2:
                 return FeedListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_isFollowing, false)
-                        .putVariable(KeyUtil.arg_isMixed, true));
+                        .putVariable(KeyUtil.arg_isMixed, true)
+                        .putVariable(KeyUtil.arg_asHtml, false));
         }
         return null;
     }

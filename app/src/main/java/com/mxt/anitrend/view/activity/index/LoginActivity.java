@@ -93,7 +93,7 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
     @Override
     protected void updateUI() {
         if(getPresenter().getApplicationPref().isNotificationEnabled())
-            JobSchedulerUtil.scheduleJob(getApplicationContext());
+            JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
         createApplicationShortcuts();
         finish();
     }

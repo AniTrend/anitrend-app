@@ -286,7 +286,6 @@
     <string name="title_activity_notification">Centrum Powiadomień</string>
     <string name="title_activity_message">Centrum wiadomości</string>
     <string name="title_activity_user_list_view">Lista użytkowników</string>
-    <string name="title_activity_studio">Studio</string>
     <string name="title_activity_settings">Ustawienia</string>
     <string name="title_activity_reply">Odpowiedz</string>
 
@@ -934,7 +933,6 @@
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>

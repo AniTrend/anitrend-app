@@ -149,7 +149,6 @@
     <string name="app_intro_content_text">¡Cuenta con un extenso inventario de anime y mangas categorizados!</string>
     <string name="app_intro_search_title">Encuentra</string>
     <string name="app_intro_search_text"> ¡Anime y Manga gracias a su motor de búsqueda eficiente y lleno de características!</string>
-    <string name="app_intro_videos_title">Vídeos</string>
     <string name="app_intro_videos_text">¡Facilita la visualización de vídeos de Youtube a través del reproductor integrado!</string>
     <string name="app_greeting">¡Bienvenido/a a AniTrend!</string>
 
@@ -243,7 +242,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="drawer_title_profile">Perfil</string>
     <string name="drawer_title_sign_out">Cerrar sesión</string>
 
-    <string name="drawer_section_extras">Extras</string>
     <string name="drawer_title_share">Compartir</string>
     <string name="drawer_title_update">Actualización</string>
     <string name="layout_empty_response">Nada para mostrar</string>
@@ -309,7 +307,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
 
     <!-- Settings for Application -->
-    <string name="pref_header_general">General</string>
     <string name="pref_header_general_summary">Ajusta el comportamiento de la aplicación</string>
 
     <string name="pref_title_auto_increment">Progreso Inteligente</string>
@@ -932,7 +929,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>

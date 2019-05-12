@@ -21,7 +21,7 @@ public class SpoilerTagTextView extends SingleLineTextView {
         super(context, attrs, defStyleAttr);
     }
 
-    @BindingAdapter("app:isSpoiler")
+    @BindingAdapter({"isSpoiler"})
     public static void setIsSpoiler(SingleLineTextView view, Boolean isSpoiler) {
         if (isSpoiler) view.setTextColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
     }
