@@ -69,16 +69,16 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
             @KeyUtil.MediaStatus String mediaStatus = !TextUtils.isEmpty(model.getStatus()) ? model.getStatus() : KeyUtil.NOT_YET_RELEASED;
             switch (mediaStatus) {
                 case KeyUtil.RELEASING:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateBlue));
+                    view.setBackgroundColor(CompatUtil.INSTANCE.getColor(view.getContext(), R.color.colorStateBlue));
                     break;
                 case KeyUtil.FINISHED:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateGreen));
+                    view.setBackgroundColor(CompatUtil.INSTANCE.getColor(view.getContext(), R.color.colorStateGreen));
                     break;
                 case KeyUtil.NOT_YET_RELEASED:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateOrange));
+                    view.setBackgroundColor(CompatUtil.INSTANCE.getColor(view.getContext(), R.color.colorStateOrange));
                     break;
                 default:
-                    view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateRed));
+                    view.setBackgroundColor(CompatUtil.INSTANCE.getColor(view.getContext(), R.color.colorStateRed));
                     break;
             }
         }
@@ -103,7 +103,7 @@ public class SeriesStatusWidget extends FrameLayout implements CustomView {
     public static void setAiringStatus(SeriesStatusWidget view, MediaList mediaList) {
         if(mediaList != null && mediaList.getMedia() != null && mediaList.getMedia().getNextAiringEpisode() != null) {
             if(mediaList.getMedia().getNextAiringEpisode().getEpisode() - mediaList.getProgress() > 1) {
-                view.setBackgroundColor(CompatUtil.getColor(view.getContext(), R.color.colorStateYellow));
+                view.setBackgroundColor(CompatUtil.INSTANCE.getColor(view.getContext(), R.color.colorStateYellow));
                 return;
             }
         }

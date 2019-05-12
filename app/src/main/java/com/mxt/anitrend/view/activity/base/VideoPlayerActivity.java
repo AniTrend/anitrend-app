@@ -97,7 +97,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
 
     public void onPause() {
         super.onPause();
-        Jzvd.releaseAllVideos();
+        Jzvd.resetAllVideos();
     }
 
     /**

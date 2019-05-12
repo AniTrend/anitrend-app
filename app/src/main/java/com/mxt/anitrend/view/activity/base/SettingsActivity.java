@@ -43,17 +43,17 @@ import java.util.List;
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener = (sharedPreferences, key) -> {
-        if (CompatUtil.equals(key, getString(R.string.pref_key_crash_reports)) || CompatUtil.equals(key, getString(R.string.pref_key_usage_analytics)) ||
-                CompatUtil.equals(key, getString(R.string.pref_key_selected_Language)) || CompatUtil.equals(key, getString(R.string.pref_key_black_theme))) {
+        if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_crash_reports)) || CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_usage_analytics)) ||
+                CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_selected_Language)) || CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_black_theme))) {
             // Change the application theme if the current theme is not in dark mode
-            if (CompatUtil.equals(key, getString(R.string.pref_key_black_theme)))
-                if(CompatUtil.isLightTheme(getApplicationContext()))
+            if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_black_theme)))
+                if(CompatUtil.INSTANCE.isLightTheme(getApplicationContext()))
                     applicationPref.toggleTheme();
             Toast.makeText(getApplicationContext(), R.string.text_application_restart_required, Toast.LENGTH_LONG).show();
-        } else if (CompatUtil.equals(key, getString(R.string.pref_key_sync_frequency))) {
+        } else if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_sync_frequency))) {
             JobSchedulerUtil.INSTANCE.cancelJob();
             JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
-        } else if (CompatUtil.equals(key, getString(R.string.pref_key_new_message_notifications))) {
+        } else if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_new_message_notifications))) {
             if (applicationPref.isNotificationEnabled())
                 JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
             else

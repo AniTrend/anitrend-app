@@ -70,7 +70,7 @@ public class MediaCharacterFragment extends FragmentBaseList<RecyclerItem, Conne
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_type, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
@@ -87,7 +87,7 @@ public class MediaCharacterFragment extends FragmentBaseList<RecyclerItem, Conne
                 if (edgeContainer.hasPageInfo())
                     getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupCharactersByRole(edgeContainer.getEdges(), mAdapter.getData()));
+                    onPostProcessed(GroupingUtil.INSTANCE.groupCharactersByRole(edgeContainer.getEdges(), mAdapter.getData()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
@@ -110,7 +110,7 @@ public class MediaCharacterFragment extends FragmentBaseList<RecyclerItem, Conne
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((CharacterBase)data.getSecond()).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

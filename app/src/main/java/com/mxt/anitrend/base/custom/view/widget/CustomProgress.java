@@ -54,7 +54,7 @@ public class CustomProgress extends ProgressBar implements CustomView {
      */
     @Override
     public void onInit() {
-        mColorFilter = new PorterDuffColorFilter(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), PorterDuff.Mode.SRC_IN);
+        mColorFilter = new PorterDuffColorFilter(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.colorAccent), PorterDuff.Mode.SRC_IN);
         applyColorFilter(getProgressDrawable());
         applyColorFilter(getIndeterminateDrawable());
     }

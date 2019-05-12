@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:visibility="@{model.language != null? View.VISIBLE : View.GONE}"
-                    android:text="@{CompatUtil.capitalizeWords(model.language)}"
+                    android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.language)}"
                     tools:text="Japanese" />
 
             </LinearLayout>

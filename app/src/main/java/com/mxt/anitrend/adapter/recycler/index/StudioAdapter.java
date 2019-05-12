@@ -29,7 +29,7 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
     @NonNull
     @Override
     public RecyclerViewHolder<StudioBase> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new StudioViewHolder(AdapterStudioBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new StudioViewHolder(AdapterStudioBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

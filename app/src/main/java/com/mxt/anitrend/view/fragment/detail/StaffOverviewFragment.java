@@ -63,7 +63,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
             binding.setModel(model);
             binding.stateLayout.showContent();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            binding.stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), (view) -> makeRequest());
     }
 
@@ -78,7 +78,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
 
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, id);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.STAFF_OVERVIEW_REQ, getContext());
@@ -94,7 +94,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.staff_img:
-                CompatUtil.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_staff_image);
+                CompatUtil.INSTANCE.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_staff_image);
                 break;
             default:
                 super.onClick(view);

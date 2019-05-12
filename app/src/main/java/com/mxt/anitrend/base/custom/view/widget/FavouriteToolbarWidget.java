@@ -73,8 +73,8 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetToolbarFavouriteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
-        queryContainer = GraphUtil.getDefaultQuery(false)
+        binding = WidgetToolbarFavouriteBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
+        queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_page_limit, KeyUtil.SINGLE_ITEM_LIMIT);
         binding.setOnClickEvent(this);
     }
@@ -166,11 +166,11 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
             isFavourite = characterBase.isFavourite();
 
         if(isFavourite)
-            binding.widgetLike.setImageDrawable(requiresTint ? CompatUtil.getTintedDrawable(getContext(),
-                    R.drawable.ic_favorite_white_24dp) : CompatUtil.getDrawable(getContext(), R.drawable.ic_favorite_white_24dp));
+            binding.widgetLike.setImageDrawable(requiresTint ? CompatUtil.INSTANCE.getTintedDrawable(getContext(),
+                    R.drawable.ic_favorite_white_24dp) : CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_favorite_white_24dp));
         else
-            binding.widgetLike.setImageDrawable(requiresTint ? CompatUtil.getTintedDrawable(getContext(),
-                    R.drawable.ic_favorite_border_white_24dp) : CompatUtil.getDrawable(getContext(), R.drawable.ic_favorite_border_white_24dp));
+            binding.widgetLike.setImageDrawable(requiresTint ? CompatUtil.INSTANCE.getTintedDrawable(getContext(),
+                    R.drawable.ic_favorite_border_white_24dp) : CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_favorite_border_white_24dp));
 
         resetFlipperState();
     }
@@ -189,7 +189,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                     characterBase.toggleFavourite();
                 setIconType();
             } else {
-                Log.e(toString(), ErrorUtil.getError(response));
+                Log.e(toString(), ErrorUtil.INSTANCE.getError(response));
                 NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {

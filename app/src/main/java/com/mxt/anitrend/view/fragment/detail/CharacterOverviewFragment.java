@@ -63,7 +63,7 @@ public class CharacterOverviewFragment extends FragmentBase<MediaCharacter, Base
             binding.setModel(model);
             binding.stateLayout.showContent();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
+            binding.stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), (view) -> makeRequest());
     }
 
@@ -78,7 +78,7 @@ public class CharacterOverviewFragment extends FragmentBase<MediaCharacter, Base
 
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, id);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.CHARACTER_OVERVIEW_REQ, getContext());
@@ -93,7 +93,7 @@ public class CharacterOverviewFragment extends FragmentBase<MediaCharacter, Base
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.character_img:
-                CompatUtil.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_character_image);
+                CompatUtil.INSTANCE.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_character_image);
                 break;
             default:
                 super.onClick(view);

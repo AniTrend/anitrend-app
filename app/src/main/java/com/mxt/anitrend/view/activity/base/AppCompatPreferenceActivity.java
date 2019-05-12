@@ -30,7 +30,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     protected void configureActivity() {
         @StyleRes int style = applicationPref.getTheme();
-        if(!CompatUtil.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
+        if(!CompatUtil.INSTANCE.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);

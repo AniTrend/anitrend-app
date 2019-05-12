@@ -64,7 +64,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_search, searchQuery)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);
@@ -105,7 +105,7 @@ public class StaffSearchFragment extends FragmentBaseList<StaffBase, PageContain
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

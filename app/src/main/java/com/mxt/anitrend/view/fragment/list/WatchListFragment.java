@@ -92,7 +92,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
             bundle.putBoolean(KeyUtil.arg_feed, feed);
             getViewModel().requestData(getRequestMode(feed), getContext());
         } else {
-            QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+            QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                     .putVariable(KeyUtil.arg_id, mediaId)
                     .putVariable(KeyUtil.arg_type, mediaType);
             getPresenter().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -114,14 +114,14 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
                 if(!connectionContainer.isEmpty()) {
                     externalLinks = connectionContainer.getConnection();
                     if(mAdapter.getItemCount() < 1 && externalLinks != null)
-                        targetLink = EpisodeUtil.episodeSupport(externalLinks);
+                        targetLink = EpisodeUtil.INSTANCE.episodeSupport(externalLinks);
                     if (targetLink == null)
                         showEmpty(getString(R.string.waring_missing_episode_links));
                     else
                         makeRequest();
                 }
             } else
-                Log.e(TAG, ErrorUtil.getError(response));
+                Log.e(TAG, ErrorUtil.INSTANCE.getError(response));
         }
     }
 

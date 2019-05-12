@@ -60,7 +60,7 @@ public class AspectImageView extends android.support.v7.widget.AppCompatImageVie
     public void onInit() {
         defaultMargin = getResources().getDimensionPixelSize(R.dimen.md_margin);
         spanSize = getResources().getInteger(R.integer.grid_list_x2);
-        CompatUtil.getScreenDimens(deviceDimens, getContext());
+        CompatUtil.INSTANCE.getScreenDimens(deviceDimens, getContext());
     }
 
     /**

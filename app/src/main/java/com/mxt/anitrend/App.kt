@@ -24,6 +24,10 @@ import org.greenrobot.eventbus.EventBus
 
 class App : MultiDexApplication() {
 
+    val applicationPref by lazy {
+        ApplicationPref(this)
+    }
+
     /**
      * @return Application global registered firebase analytics
      *
@@ -36,7 +40,7 @@ class App : MultiDexApplication() {
      *
      * @see com.mxt.anitrend.data.DatabaseHelper
      */
-    var boxStore: BoxStore? = null
+    lateinit var boxStore: BoxStore
         private set
     /**
      * Get application global registered fabric instance, depending on
@@ -54,9 +58,9 @@ class App : MultiDexApplication() {
                 .build()
     }
 
-    private fun setCrashAnalytics(pref: ApplicationPref) {
+    private fun setCrashAnalytics() {
         if (!BuildConfig.DEBUG)
-            if (pref.isCrashReportsEnabled!!) {
+            if (applicationPref.isCrashReportsEnabled!!) {
                 val crashlyticsCore = CrashlyticsCore.Builder()
                         .build()
 
@@ -67,15 +71,15 @@ class App : MultiDexApplication() {
             }
     }
 
-    private fun initApp(pref: ApplicationPref) {
+    private fun initApp() {
         EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
                 .sendNoSubscriberEvent(BuildConfig.DEBUG)
                 .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .installDefaultEventBus()
-        if (pref.isUsageAnalyticsEnabled!!) {
+        if (applicationPref.isUsageAnalyticsEnabled == true) {
             analytics = FirebaseAnalytics.getInstance(this).apply {
-                setAnalyticsCollectionEnabled(pref.isUsageAnalyticsEnabled!!)
+                setAnalyticsCollectionEnabled(applicationPref.isUsageAnalyticsEnabled!!)
             }
         }
         JobSchedulerUtil.scheduleJob(applicationContext)
@@ -99,14 +103,14 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        val pref = ApplicationPref(this)
-        setCrashAnalytics(pref)
+        setCrashAnalytics()
         setupBoxStore()
-        initApp(pref)
+        initApp()
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleUtil.onAttach(base))
+        val appPrefs = ApplicationPref(base)
+        super.attachBaseContext(LocaleUtil.onAttach(base, appPrefs))
         MultiDex.install(this)
     }
 }

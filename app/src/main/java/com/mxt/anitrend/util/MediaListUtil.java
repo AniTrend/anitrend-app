@@ -23,7 +23,7 @@ public class MediaListUtil {
      * @param model the current media list item
      */
     public static Bundle getMediaListParams(@NonNull MediaList model, @KeyUtil.ScoreFormat String scoreFormat) {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_scoreFormat, scoreFormat);
 
         if (model.getId() > 0)
@@ -41,7 +41,7 @@ public class MediaListUtil {
         if (model.getAdvancedScores() != null)
             queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.getAdvancedScores());
 
-        if (!CompatUtil.isEmpty(model.getCustomLists())) {
+        if (!CompatUtil.INSTANCE.isEmpty(model.getCustomLists())) {
             List<String> enabledCustomLists = Stream.of(model.getCustomLists())
                     .filter(CustomList::isEnabled)
                     .map(CustomList::getName)
@@ -62,7 +62,7 @@ public class MediaListUtil {
      * Checks if the sorting should be done on titles
      */
     public static boolean isTitleSort(@KeyUtil.MediaListSort String mediaSort) {
-        return CompatUtil.equals(mediaSort, KeyUtil.TITLE);
+        return CompatUtil.INSTANCE.equals(mediaSort, KeyUtil.TITLE);
     }
 
     /**

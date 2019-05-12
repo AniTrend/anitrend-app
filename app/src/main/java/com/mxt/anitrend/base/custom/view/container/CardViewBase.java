@@ -51,7 +51,7 @@ public class CardViewBase extends CardView implements CustomView {
         setUseCompatPadding(true);
         setPreventCornerOverlap(false);
         setContentPadding(contentPadding, contentPadding, contentPadding, contentPadding);
-        setCardBackgroundColor(CompatUtil.getColorFromAttr(getContext(), R.attr.cardColor));
+        setCardBackgroundColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.cardColor));
         requestLayout();
     }
 

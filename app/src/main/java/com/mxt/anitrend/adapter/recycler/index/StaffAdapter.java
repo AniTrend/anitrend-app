@@ -30,7 +30,7 @@ public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
     @NonNull
     @Override
     public RecyclerViewHolder<StaffBase> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new StaffViewHolder(AdapterStaffBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

@@ -31,7 +31,7 @@ public class RecyclerHeaderItem extends RecyclerItem {
     }
 
     public String getTitle() {
-        return CompatUtil.capitalizeWords(title);
+        return CompatUtil.INSTANCE.capitalizeWords(title);
     }
 
     public void setTitle(String title) {
@@ -41,7 +41,7 @@ public class RecyclerHeaderItem extends RecyclerItem {
     @Override
     public boolean equals(Object o) {
         if(o instanceof RecyclerHeaderItem)
-            return CompatUtil.equals(((RecyclerHeaderItem) o).title, title);
+            return CompatUtil.INSTANCE.equals(((RecyclerHeaderItem) o).title, title);
         return super.equals(o);
     }
 }

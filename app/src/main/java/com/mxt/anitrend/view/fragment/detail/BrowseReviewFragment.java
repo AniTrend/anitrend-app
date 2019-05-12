@@ -80,16 +80,16 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
         if (getContext() != null)
             switch (item.getItemId()) {
                 case R.id.action_sort:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.ReviewSortType,
-                            getPresenter().getApplicationPref().getReviewSort()), CompatUtil.capitalizeWords(KeyUtil.ReviewSortType),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.INSTANCE.getIndexOf(KeyUtil.ReviewSortType,
+                            getPresenter().getApplicationPref().getReviewSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.ReviewSortType),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().setReviewSort(KeyUtil.ReviewSortType[dialog.getSelectedIndex()]);
                             });
                     return true;
                 case R.id.action_order:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
-                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.INSTANCE.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
@@ -113,7 +113,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
     @Override
     public void makeRequest() {
         ApplicationPref pref = getPresenter().getApplicationPref();
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(true)
                 .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, pref.getReviewSort() + pref.getSortOrder());
@@ -152,7 +152,7 @@ public class BrowseReviewFragment extends FragmentBaseList<Review, PageContainer
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
                 intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.review_read_more:
                 mBottomSheet = new BottomReviewReader.Builder()

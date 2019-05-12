@@ -57,7 +57,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
      */
     @Override
     public void onInit() {
-        binding = WidgetButtonStateBinding.inflate(CompatUtil.getLayoutInflater(getContext()),this, true);
+        binding = WidgetButtonStateBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()),this, true);
         presenter = new WidgetPresenter<>(getContext());
         binding.setOnClickListener(this);
     }
@@ -75,10 +75,10 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
 
     private void setControlText() {
         if (model.isFollowing()) {
-            binding.buttonStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccentDark));
+            binding.buttonStateContainer.setCardBackgroundColor(CompatUtil.INSTANCE.getColor(getContext(), R.color.colorAccentDark));
             binding.buttonStateText.setText(R.string.following);
         } else {
-            binding.buttonStateContainer.setCardBackgroundColor(CompatUtil.getColor(getContext(), R.color.colorAccent));
+            binding.buttonStateContainer.setCardBackgroundColor(CompatUtil.INSTANCE.getColor(getContext(), R.color.colorAccent));
             binding.buttonStateText.setText(R.string.follow);
         }
         resetFlipperState();
@@ -106,7 +106,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
             case R.id.widget_flipper:
                 if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+                    QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                             .putVariable(KeyUtil.arg_userId, model.getId());
                     presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
                     presenter.requestData(KeyUtil.MUT_TOGGLE_FOLLOW, getContext(), this);
@@ -134,7 +134,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
                 presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.MUT_TOGGLE_FOLLOW, model), false);
                 setControlText();
             } else {
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                 setControlText();
             }
         } catch (Exception e) {

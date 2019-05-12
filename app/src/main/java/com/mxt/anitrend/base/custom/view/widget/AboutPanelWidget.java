@@ -93,11 +93,11 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
 
     public void setUserId(long userId, Lifecycle lifecycle) {
         this.userId = userId; this.lifecycle = lifecycle;
-        queryContainer = GraphUtil.getDefaultQuery(false)
+        queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, userId)
                 .putVariable(KeyUtil.arg_page_limit, 1);
 
-        if(DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 5)) {
+        if(DateUtil.INSTANCE.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 5)) {
             binding.userFavouritesCount.setText(placeHolder);
             binding.userFollowersCount.setText(placeHolder);
             binding.userFollowingCount.setText(placeHolder);

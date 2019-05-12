@@ -90,7 +90,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
         findMediaAttachments(model.getReply());
     }
 
-    public void setTextData(String textData) {
+    public void setTextData(@Nullable String textData) {
         binding.widgetStatusText.setMarkDownText(textData);
         findMediaAttachments(textData);
     }
@@ -123,7 +123,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
     }
 
     private void constructAdditionalViews() {
-        if(!CompatUtil.isEmpty(contentLinks)) {
+        if(!CompatUtil.INSTANCE.isEmpty(contentLinks)) {
             RecyclerViewAdapter<String> previewAdapter = new ImagePreviewAdapter(contentTypes,  getContext());
             previewAdapter.onItemsInserted(contentLinks);
             previewAdapter.setClickListener(this);

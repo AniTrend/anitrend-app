@@ -26,7 +26,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/links_recycler"
-                    android:visibility="@{!CompatUtil.isEmpty(model.externalLinks) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.externalLinks) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -35,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/lg_margin"
-                    android:visibility="@{model.stats != null &amp; !CompatUtil.isEmpty(model.stats.scoreDistribution) ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{model.stats != null &amp; !CompatUtil.INSTANCE.isEmpty(model.stats.scoreDistribution) ? View.VISIBLE : View.GONE}">
 
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/series_score_dist"
@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/lg_margin"
-                    android:visibility="@{model.stats != null &amp; !CompatUtil.isEmpty(model.stats.statusDistribution) ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{model.stats != null &amp; !CompatUtil.INSTANCE.isEmpty(model.stats.statusDistribution) ? View.VISIBLE : View.GONE}">
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/series_stats"
@@ -59,7 +59,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/ranking_recycler"
-                    android:visibility="@{!CompatUtil.isEmpty(model.rankings) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.rankings) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

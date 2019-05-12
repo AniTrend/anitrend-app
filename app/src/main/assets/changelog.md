@@ -5,6 +5,7 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Enhancements
 - Reintroduced emoji support
+- Spoiler tags support (Mittens)
 
 #### Bug Fixes
 - Multiple translations fixed

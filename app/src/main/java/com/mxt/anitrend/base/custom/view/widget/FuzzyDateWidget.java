@@ -49,7 +49,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
 
     @Override
     public void onInit() {
-        binding = WidgetFuzzyDateBinding.inflate(CompatUtil.getLayoutInflater(getContext()),this, true);
+        binding = WidgetFuzzyDateBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()),this, true);
         binding.setOnClick(this);
     }
 
@@ -59,7 +59,7 @@ public class FuzzyDateWidget extends FrameLayout implements CustomView, View.OnC
     }
 
     private void updateDate() {
-        String convertedDate = DateUtil.convertDate(fuzzyDate);
+        String convertedDate = DateUtil.INSTANCE.convertDate(fuzzyDate);
         binding.setModel(convertedDate);
         binding.executePendingBindings();
     }

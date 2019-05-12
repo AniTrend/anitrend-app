@@ -30,7 +30,7 @@ public class GenreAdapter extends RecyclerViewAdapter<Genre> {
     @NonNull
     @Override
     public RecyclerViewHolder<Genre> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new GenreViewHolder(AdapterGenreBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new GenreViewHolder(AdapterGenreBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

@@ -30,19 +30,19 @@ public class SeasonPageAdapter extends BaseStatePageAdapter {
         switch (position)
         {
             case 0:
-                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                         .putVariable(KeyUtil.arg_season, KeyUtil.WINTER));
             case 1:
-                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                         .putVariable(KeyUtil.arg_season, KeyUtil.SPRING));
             case 2:
-                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                         .putVariable(KeyUtil.arg_season, KeyUtil.SUMMER));
             case 3:
-                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaBrowseFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                         .putVariable(KeyUtil.arg_season, KeyUtil.FALL));
         }

@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:textAlignment="viewEnd"
-                android:text="@{DateUtil.convertDate(model.createdAt)}"
+                android:text="@{DateUtil.INSTANCE.convertDate(model.createdAt)}"
                 tools:text="Oct 28 2017" />
 
         </LinearLayout>

@@ -77,7 +77,7 @@ public class MediaPresenter extends BasePresenter {
                     .map(st -> new PieEntry(
                             (float) ((st.getAmount()*100) / highestStatus),
                             String.format(Locale.getDefault(), "%s: %s",
-                            CompatUtil.capitalizeWords(st.getStatus()), MediaUtil.getFormattedCount(st.getAmount()))))
+                            CompatUtil.INSTANCE.capitalizeWords(st.getStatus()), MediaUtil.getFormattedCount(st.getAmount()))))
                     .sorted((p1, p2) -> p1.getLabel().compareTo(p2.getLabel()))
                     .toList();
         return Collections.emptyList();
@@ -98,19 +98,19 @@ public class MediaPresenter extends BasePresenter {
 
     public String getMediaSeason(Media media) {
         if(media != null && media.getStartDate() != null && media.getStartDate().isValidDate())
-            return DateUtil.getMediaSeason(media.getStartDate());
+            return DateUtil.INSTANCE.getMediaSeason(media.getStartDate());
         return getContext().getString(R.string.TBA);
     }
 
     public String getMediaSource(Media media) {
         if(media != null && !TextUtils.isEmpty(media.getSource()))
-            return CompatUtil.capitalizeWords(media.getSource());
+            return CompatUtil.INSTANCE.capitalizeWords(media.getSource());
         return getContext().getString(R.string.TBA);
     }
 
     public String getMediaStatus(Media media) {
         if(media != null && (!TextUtils.isEmpty(media.getStatus())))
-            return CompatUtil.capitalizeWords(media.getStatus());
+            return CompatUtil.INSTANCE.capitalizeWords(media.getStatus());
         return getContext().getString(R.string.TBA);
     }
 
@@ -147,7 +147,7 @@ public class MediaPresenter extends BasePresenter {
 
     public String getMediaFormat(MediaBase media) {
         if(media != null && !TextUtils.isEmpty(media.getFormat()))
-            return CompatUtil.capitalizeWords(media.getFormat());
+            return CompatUtil.INSTANCE.capitalizeWords(media.getFormat());
         return getContext().getString(R.string.tba_placeholder);
     }
 

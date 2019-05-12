@@ -41,7 +41,7 @@ public class BasePresenter extends CommonPresenter {
     }
 
     public String getThumbnail(List<Thumbnail> thumbnails) {
-        if(CompatUtil.isEmpty(thumbnails))
+        if(CompatUtil.INSTANCE.isEmpty(thumbnails))
             return null;
         return thumbnails.get(0).getUrl();
     }
@@ -57,10 +57,10 @@ public class BasePresenter extends CommonPresenter {
     }
 
     public List<String> getTopFavouriteGenres(int limit) {
-        if(CompatUtil.isEmpty(favouriteGenres)) {
+        if(CompatUtil.INSTANCE.isEmpty(favouriteGenres)) {
             UserStats userStats;
             if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
-                if (!CompatUtil.isEmpty(userStats.getFavouredGenres())) {
+                if (!CompatUtil.INSTANCE.isEmpty(userStats.getFavouredGenres())) {
                     favouriteGenres = Stream.of(userStats.getFavouredGenres())
                             .sortBy(genreStat -> - genreStat.getAmount())
                             .map(GenreStats::getGenre)
@@ -73,10 +73,10 @@ public class BasePresenter extends CommonPresenter {
     }
 
     public List<String> getTopFavouriteTags(int limit) {
-        if(CompatUtil.isEmpty(favouriteTags)) {
+        if(CompatUtil.INSTANCE.isEmpty(favouriteTags)) {
             UserStats userStats;
             if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
-                if (!CompatUtil.isEmpty(userStats.getFavouredTags())) {
+                if (!CompatUtil.INSTANCE.isEmpty(userStats.getFavouredTags())) {
                     favouriteTags = Stream.of(userStats.getFavouredTags())
                             .sortBy(mediaTagStats -> - mediaTagStats.getAmount())
                             .map(s -> s.getTag().getName())
@@ -89,10 +89,10 @@ public class BasePresenter extends CommonPresenter {
     }
 
     public List<String> getTopFavouriteYears(int limit) {
-        if(CompatUtil.isEmpty(favouriteYears)) {
+        if(CompatUtil.INSTANCE.isEmpty(favouriteYears)) {
             UserStats userStats;
             if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
-                if (!CompatUtil.isEmpty(userStats.getFavouredTags())) {
+                if (!CompatUtil.INSTANCE.isEmpty(userStats.getFavouredTags())) {
                     favouriteYears = Stream.of(userStats.getFavouredYears())
                             .sortBy(yearStats -> - yearStats.getAmount())
                             .map(y -> String.valueOf(y.getYear()))
@@ -105,10 +105,10 @@ public class BasePresenter extends CommonPresenter {
     }
 
     public List<String> getTopFormats(int limit) {
-        if(CompatUtil.isEmpty(favouriteFormats)) {
+        if(CompatUtil.INSTANCE.isEmpty(favouriteFormats)) {
             UserStats userStats;
             if (getDatabase().getCurrentUser() != null && (userStats = getDatabase().getCurrentUser().getStats()) != null) {
-                if (!CompatUtil.isEmpty(userStats.getFavouredFormats())) {
+                if (!CompatUtil.INSTANCE.isEmpty(userStats.getFavouredFormats())) {
                     favouriteFormats = Stream.of(userStats.getFavouredFormats())
                             .sortBy(formatStats -> - formatStats.getAmount())
                             .map(FormatStats::getFormat)
