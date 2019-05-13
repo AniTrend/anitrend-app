@@ -5,10 +5,12 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Enhancements
 - Reintroduced emoji support
-- Spoiler tags support (Mittens)
+- Spoiler tags in media pages (Mittens)
+- New notification type for media the user may be interested in
 
 #### Bug Fixes
 - Multiple translations fixed
+- Scores not matching sorted order
 - Crashes on some device related to crunchyroll feeds
 
 #### Current Issues

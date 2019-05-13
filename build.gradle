@@ -5,8 +5,8 @@ buildscript {
         compileSdk = 28
         targetSdk = 28
         minSdk = 17
-        versionCode = 104
-        versionName = '1.4.1'
+        versionCode = 105
+        versionName = '1.4.2'
         butterKnife = '8.8.1'
         glide = '4.9.0'
         retrofit = '2.5.0'
