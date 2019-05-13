@@ -147,18 +147,18 @@ public class RatingTextView extends LinearLayout implements CustomView {
     }
 
     private void setRating(MediaBase mediaBase) {
-        float mediaScoreDefault = (float) mediaBase.getMeanScore() * 5 / 100f;
+        float mediaScoreDefault = (float) mediaBase.getAverageScore() * 5 / 100f;
         if(mediaListOptions != null)
             switch (mediaListOptions.getScoreFormat()) {
                 case KeyUtil.POINT_10_DECIMAL:
-                    mediaScoreDefault = (mediaBase.getMeanScore() / 10f);
+                    mediaScoreDefault = (mediaBase.getAverageScore() / 10f);
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%.1f", mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_100:
-                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getMeanScore()));
+                    binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getAverageScore()));
                     break;
                 case KeyUtil.POINT_10:
-                    mediaScoreDefault = (mediaBase.getMeanScore() / 10);
+                    mediaScoreDefault = (mediaBase.getAverageScore() / 10f);
                     binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", (int) mediaScoreDefault));
                     break;
                 case KeyUtil.POINT_5:
@@ -166,22 +166,22 @@ public class RatingTextView extends LinearLayout implements CustomView {
                     break;
                 case KeyUtil.POINT_3:
                     binding.ratingValue.setText("");
-                        if(mediaBase.getMeanScore() == 0)
+                        if(mediaBase.getAverageScore() == 0)
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_face_white_18dp), null, null, null);
-                        if(mediaBase.getMeanScore() > 0 && mediaBase.getMeanScore() <= 33)
+                        if(mediaBase.getAverageScore() > 0 && mediaBase.getAverageScore() <= 33)
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null);
-                        else if (mediaBase.getMeanScore() >= 34 && mediaBase.getMeanScore() <= 66)
+                        else if (mediaBase.getAverageScore() >= 34 && mediaBase.getAverageScore() <= 66)
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_neutral_white_18dp), null, null, null);
-                        else if (mediaBase.getMeanScore() >= 67 && mediaBase.getMeanScore() <= 100)
+                        else if (mediaBase.getAverageScore() >= 67 && mediaBase.getAverageScore() <= 100)
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                                     R.drawable.ic_sentiment_satisfied_white_18dp), null, null, null);
                     break;
             }
         else
-            binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getMeanScore()));
+            binding.ratingValue.setText(String.format(Locale.getDefault(),"%d", mediaBase.getAverageScore()));
     }
 
     @BindingAdapter("rating")
