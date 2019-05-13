@@ -63,10 +63,10 @@ public class BrandImageView extends AppCompatImageView implements CustomView {
     public void onInit() {
         badge = new GifBadge(getContext());
         badgeGravity = Gravity.END | Gravity.TOP;
-        CompatUtil.getScreenDimens(deviceDimens, getContext());
+        CompatUtil.INSTANCE.getScreenDimens(deviceDimens, getContext());
         spanSize = getResources().getInteger(R.integer.grid_giphy_x3);
         badgePadding = getContext().getResources().getDimensionPixelSize(R.dimen.lg_margin);
-        badge.setColorFilter(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor), PorterDuff.Mode.SRC_IN);
+        badge.setColorFilter(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.titleColor), PorterDuff.Mode.SRC_IN);
     }
 
     @Override

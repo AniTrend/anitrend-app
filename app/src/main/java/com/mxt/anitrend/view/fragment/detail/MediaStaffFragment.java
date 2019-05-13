@@ -70,7 +70,7 @@ public class MediaStaffFragment extends FragmentBaseList<RecyclerItem, Connectio
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_type, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
@@ -87,7 +87,7 @@ public class MediaStaffFragment extends FragmentBaseList<RecyclerItem, Connectio
                 if (edgeContainer.hasPageInfo())
                     getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupStaffByRole(edgeContainer.getEdges(), mAdapter.getData()));
+                    onPostProcessed(GroupingUtil.INSTANCE.groupStaffByRole(edgeContainer.getEdges(), mAdapter.getData()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
@@ -110,7 +110,7 @@ public class MediaStaffFragment extends FragmentBaseList<RecyclerItem, Connectio
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((StaffBase)data.getSecond()).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

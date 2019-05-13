@@ -74,11 +74,11 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         FeedList model = data.get(position);
         if(model == null || TextUtils.isEmpty(model.getType()))
             return -1;
-        if(CompatUtil.equals(model.getType(), KeyUtil.TEXT))
+        if(CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.TEXT))
             return FEED_STATUS;
-        else if(CompatUtil.equals(model.getType(), KeyUtil.MESSAGE))
+        else if(CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.MESSAGE))
             return FEED_MESSAGE;
-        else if(CompatUtil.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
+        else if(CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.MEDIA_LIST) && model.getLikes() == null)
             return FEED_LIST;
         return FEED_PROGRESS;
     }
@@ -180,6 +180,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
+            // TODO: Temporarily disabled widget status to try out rich markdown rendering
             binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
@@ -211,6 +212,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public void onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar);
             binding.widgetFavourite.onViewRecycled();
+            // TODO: Temporarily disabled widget status to try out rich markdown rendering
             binding.widgetStatus.onViewRecycled();
             binding.widgetDelete.onViewRecycled();
             binding.unbind();

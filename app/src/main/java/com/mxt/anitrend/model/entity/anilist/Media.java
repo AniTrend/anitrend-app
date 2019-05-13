@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
-
+import com.annimon.stream.Stream;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaStats;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer;
 import com.mxt.anitrend.model.entity.base.MediaBase;
@@ -90,6 +90,12 @@ public class Media extends MediaBase {
 
     public List<MediaTag> getTags() {
         return tags;
+    }
+
+    public List<MediaTag> getTagsNoSpoilers() {
+        return Stream.of(tags)
+                .filterNot(MediaTag::isMediaSpoiler)
+                .toList();
     }
 
     public MediaTrailer getTrailer() {

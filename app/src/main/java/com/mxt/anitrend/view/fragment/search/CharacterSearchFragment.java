@@ -66,7 +66,7 @@ public class CharacterSearchFragment extends FragmentBaseList<RecyclerItem, Page
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_search, searchQuery)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);
@@ -85,7 +85,7 @@ public class CharacterSearchFragment extends FragmentBaseList<RecyclerItem, Page
             if(content.hasPageInfo())
                 getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
-                onPostProcessed(GroupingUtil.wrapInGroup(content.getPageData()));
+                onPostProcessed(GroupingUtil.INSTANCE.wrapInGroup(content.getPageData()));
             else
                 onPostProcessed(Collections.emptyList());
         } else
@@ -107,7 +107,7 @@ public class CharacterSearchFragment extends FragmentBaseList<RecyclerItem, Page
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((CharacterBase)data.getSecond()).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

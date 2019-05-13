@@ -26,6 +26,6 @@ public class PageContainer<T> extends Container {
 
     @Override
     public boolean isEmpty() {
-        return CompatUtil.isEmpty(pageData);
+        return CompatUtil.INSTANCE.isEmpty(pageData);
     }
 }

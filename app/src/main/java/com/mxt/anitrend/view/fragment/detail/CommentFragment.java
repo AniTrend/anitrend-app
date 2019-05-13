@@ -125,7 +125,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                         showBottomSheet();
                         break;
                     case R.id.widget_flipper:
-                        CompatUtil.hideKeyboard(getActivity());
+                        CompatUtil.INSTANCE.hideKeyboard(getActivity());
                         break;
                     default:
                         DialogUtil.createDialogAttachMedia(target.getId(), composerWidget.getEditor(), getContext());
@@ -159,7 +159,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
             initExtraComponents();
         }
 
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, userActivityId);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.FEED_LIST_REPLY_REQ, getContext());
@@ -191,7 +191,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                             intent = new Intent(getActivity(), MediaActivity.class);
                             intent.putExtra(KeyUtil.arg_id, data.getSecond().getMedia().getId());
                             intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getMedia().getType());
-                            CompatUtil.startRevealAnim(getActivity(), target, intent);
+                            CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.widget_users:
                             List<UserBase> likes = data.getSecond().getLikes();
@@ -208,19 +208,19 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
-                            CompatUtil.startRevealAnim(getActivity(), target, intent);
+                            CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.recipient_avatar:
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra(KeyUtil.arg_id, data.getSecond().getRecipient().getId());
-                            CompatUtil.startRevealAnim(getActivity(), target, intent);
+                            CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                             break;
                         case R.id.messenger_avatar:
                             intent = new Intent(getActivity(), ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra(KeyUtil.arg_id, data.getSecond().getMessenger().getId());
-                            CompatUtil.startRevealAnim(getActivity(), target, intent);
+                            CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                             break;
                     }
                 }
@@ -255,7 +255,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                         swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
                 } else {
-                    pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
+                    pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                     if(pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
@@ -263,7 +263,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                 }
                 break;
             case KeyUtil.MUT_DELETE_FEED_REPLY:
-                pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
+                pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
                     mAdapter.onItemRemoved(pairIndex);
@@ -313,7 +313,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                 intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
                 intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_mention:
                 composerWidget.mentionUserFrom(data.getSecond());
@@ -337,7 +337,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                 intent = new Intent(getActivity(), ProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

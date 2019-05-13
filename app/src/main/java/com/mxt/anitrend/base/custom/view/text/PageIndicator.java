@@ -41,10 +41,10 @@ public class PageIndicator extends AppCompatTextView implements CustomView {
      */
     @Override
     public void onInit() {
-        int padding = CompatUtil.dipToPx(8);
+        int padding = CompatUtil.INSTANCE.dipToPx(8);
 
-        setTextColor(CompatUtil.getColor(getContext(), R.color.colorTextLight));
-        setBackground(CompatUtil.getDrawable(getContext(), R.drawable.bubble_background));
+        setTextColor(CompatUtil.INSTANCE.getColor(getContext(), R.color.colorTextLight));
+        setBackground(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.bubble_background));
 
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         setPadding(padding, padding, padding, padding);

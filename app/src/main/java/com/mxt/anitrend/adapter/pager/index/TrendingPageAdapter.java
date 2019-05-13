@@ -30,11 +30,11 @@ public class TrendingPageAdapter extends BaseStatePageAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MediaLatestList.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaLatestList.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                         .putVariable(KeyUtil.arg_sort, KeyUtil.TRENDING + KeyUtil.DESC));
             case 1:
-                return MediaLatestList.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaLatestList.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                         .putVariable(KeyUtil.arg_sort, KeyUtil.ID + KeyUtil.DESC));
         }

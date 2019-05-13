@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{CompatUtil.capitalizeWords(model.subGroupTitle)}"
+                    android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.subGroupTitle)}"
                     tools:text="Supporting" />
 
                 <android.support.v4.widget.Space
@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{CompatUtil.capitalizeWords(model.format)}"
+                    android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.format)}"
                     tools:text="OVA" />
 
             </LinearLayout>

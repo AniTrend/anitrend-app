@@ -75,7 +75,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
     public void makeRequest() {
         if(mediaId == 0)
             return;
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_mediaId, mediaId)
                 .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
@@ -114,14 +114,14 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
                 intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, mediaBase.getId());
                 intent.putExtra(KeyUtil.arg_mediaType, mediaBase.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.user_avatar:
                 if(getPresenter().getApplicationPref().isAuthenticated()) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 } else
                     NotifyUtil.makeText(getActivity(), R.string.info_login_req, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 break;

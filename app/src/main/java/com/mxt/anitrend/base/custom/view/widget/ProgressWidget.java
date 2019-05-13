@@ -52,8 +52,8 @@ public class ProgressWidget extends FrameLayout implements CustomView, View.OnCl
      */
     @Override
     public void onInit() {
-        binding = WidgetProgressBinding.inflate(CompatUtil.getLayoutInflater(getContext()),this, true);
-        binding.progressCurrent.setTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.contentColor));
+        binding = WidgetProgressBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()),this, true);
+        binding.progressCurrent.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.contentColor));
         binding.progressMaximum.setVisibility(GONE);
         binding.setOnClick(this);
         setDefaultDeltaFactor();

@@ -93,7 +93,7 @@ public class ScoreWidget extends ProgressWidget {
 
     private void setScoreMaximum() {
         binding.progressMaximum.setVisibility(VISIBLE);
-        if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
+        if (CompatUtil.INSTANCE.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
             binding.progressMaximum.setText(String.format(Locale.getDefault(), "/ %.1f", scoreMaximum));
         else
             binding.progressMaximum.setText(String.format(Locale.getDefault(), "/ %d", (int) scoreMaximum));
@@ -101,7 +101,7 @@ public class ScoreWidget extends ProgressWidget {
 
     public void setScoreCurrent(float scoreCurrent) {
         this.scoreCurrent = scoreCurrent;
-        if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
+        if (CompatUtil.INSTANCE.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
             binding.progressCurrent.setText(String.format(Locale.getDefault(), "%.1f", scoreCurrent));
         else
             binding.progressCurrent.setText(String.format(Locale.getDefault(), "%d", (int) scoreCurrent));
@@ -120,7 +120,7 @@ public class ScoreWidget extends ProgressWidget {
     private void scoreChange(float delta) {
         if (boundCheck(delta)) {
             scoreCurrent = delta;
-            if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
+            if (CompatUtil.INSTANCE.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
                 binding.progressCurrent.setText(String.format(Locale.getDefault(), "%.1f", scoreCurrent));
             else
                 binding.progressCurrent.setText(String.format(Locale.getDefault(), "%d", (int) scoreCurrent));

@@ -108,7 +108,7 @@ public class WebFactory {
                 .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
                 .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.BASIC)
                         .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
-                        .cache(CompatUtil.cacheProvider(context)).build())
+                        .cache(CompatUtil.INSTANCE.cacheProvider(context)).build())
                 .build();
         return retrofit.create(EpisodeModel.class);
     }
@@ -119,7 +119,7 @@ public class WebFactory {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.BASIC)
                             .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
-                            .cache(CompatUtil.cacheProvider(context)).build())
+                            .cache(CompatUtil.INSTANCE.cacheProvider(context)).build())
                     .build();
         }
         return mGiphy.create(GiphyModel.class);
@@ -147,7 +147,7 @@ public class WebFactory {
 
             Response<WebToken> response = refreshTokenCall.execute();
             if(!response.isSuccessful())
-                Log.e("requestCodeTokenSync", ErrorUtil.getError(response));
+                Log.e("requestCodeTokenSync", ErrorUtil.INSTANCE.getError(response));
             return response.body();
         } catch (Exception ex) {
             ex.printStackTrace();

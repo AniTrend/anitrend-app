@@ -36,7 +36,7 @@ public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
     @NonNull
     @Override
     public RecyclerViewHolder<Giphy> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new GiphyViewHolder(AdapterGiphyBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new GiphyViewHolder(AdapterGiphyBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

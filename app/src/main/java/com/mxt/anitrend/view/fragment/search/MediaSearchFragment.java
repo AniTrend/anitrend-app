@@ -72,7 +72,7 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_search, searchQuery)
                 .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
@@ -115,7 +115,7 @@ public class MediaSearchFragment extends FragmentBaseList<MediaBase, PageContain
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
                 intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

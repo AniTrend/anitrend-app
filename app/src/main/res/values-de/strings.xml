@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_manage">Manage</string>
-    <string name="nav_header_customization">Customization</string>
-
-    <string name="nav_header_support">Support</string>
-    <string name="nav_contact">Contact</string>
-    <string name="nav_about">About</string>
-
-    <string name="action_search">Search</string>
     <string name="action_filter">@string/drawer_title_filter</string>
     <string name="action_help">Help</string>
 
     <string name="action_mode_selected">Selected: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
 
-
-    <string name="nav_home">Home</string>
-    <string name="nav_history">History</string>
     <!--
         Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
 
@@ -144,14 +130,12 @@
     </string-array>
 
     <!--First time usage intro screen-->
-    <string name="get_started">Tutorial</string>
     <string name="app_intro_colors_title">Bedeutung der Farben</string>
     <string name="app_intro_colors_text">Farben zeigen den Anime/Manga Status!</string>
     <string name="app_intro_content_title">Inhalt</string>
     <string name="app_intro_content_text">Mehrere Anime &amp; Manga Listen!</string>
     <string name="app_intro_search_title">Suche</string>
     <string name="app_intro_search_text">Anime, Manga &amp; Weitere Suchfunktionen!</string>
-    <string name="app_intro_videos_title">Videos</string>
     <string name="app_intro_videos_text">Verwendet eingebauten Youtube Video Player!</string>
     <string name="app_greeting">Wilkommen bei AniTrend!</string>
 
@@ -231,10 +215,8 @@
     <string name="drawer_title_myanime">Meine Anime Liste</string>
     <string name="drawer_title_mymanga">Meine Manga Liste</string>
     <string name="drawer_title_reviews">Serien Reviews</string>
-    <string name="drawer_title_hub">AniTrend Hub</string>
 
     <string name="drawer_section_configuration">Einstellungen</string>
-    <string name="drawer_title_filter">Filter</string>
     <string name="drawer_light_theme">Helles Design</string>
     <string name="drawer_title_style">Neue Listenansicht</string>
 
@@ -243,7 +225,6 @@
     <string name="drawer_title_profile">Profil</string>
     <string name="drawer_title_sign_out">Ausloggen</string>
 
-    <string name="drawer_section_extras">Extras</string>
     <string name="drawer_title_share">Teilen</string>
     <string name="drawer_title_update">Aktualisieren</string>
     <string name="layout_empty_response">Nichts zum Anzeigen gefunden</string>
@@ -285,7 +266,6 @@
     <string name="title_activity_notification">Benachrichtigungen</string>
     <string name="title_activity_message">Nachrichten</string>
     <string name="title_activity_user_list_view">Liste des Benutzers</string>
-    <string name="title_activity_studio">Studio</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_reply">Antwort verfassen</string>
 
@@ -294,7 +274,6 @@
     <string name="notification_user_follow_activity">Neuer Follower</string>
     <string name="notification_user_like_forum">Like im Forum</string>
     <string name="notification_user_like_activity">Like eines Status</string>
-    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_comment_forum">Kommentar im Forum</string>
     <string name="notification_user_reply_forum">Antwort im Forum</string>
     <string name="notification_user_reply_activity">Kommentar zum Status</string>
@@ -804,7 +783,7 @@
         <item>Canceled</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>All</item>
         <item>TV</item>
         <item>TV Short</item>
@@ -813,6 +792,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Music</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>All</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
@@ -928,7 +911,6 @@
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -954,4 +936,20 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+
+    <!-- Image Preview error strings -->
+    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
+    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
+    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
+    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
+    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
+    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+
+    <!-- App Log strings -->
+    <string name="app_log">App Logs</string>
+    <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
+    <string name="notification_media_added">New Related Media Added</string>
 </resources>

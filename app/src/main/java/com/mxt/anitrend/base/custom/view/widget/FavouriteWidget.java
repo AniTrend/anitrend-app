@@ -58,7 +58,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetFavouriteBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = WidgetFavouriteBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         binding.setOnClickEvent(this);
     }
 
@@ -84,7 +84,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     }
 
     public void setRequestParams(@KeyUtil.LikeType String likeType, long modelId) {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, modelId)
                 .putVariable(KeyUtil.arg_type, likeType);
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -105,13 +105,13 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     }
 
     private void setIconType() {
-        if(!CompatUtil.isEmpty(model) && model.contains(presenter.getDatabase().getCurrentUser()))
-            binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+        if(!CompatUtil.INSTANCE.isEmpty(model) && model.contains(presenter.getDatabase().getCurrentUser()))
+            binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                     R.drawable.ic_favorite_grey_600_18dp, R.color.colorStateRed), null, null, null);
         else
-            binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+            binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                     R.drawable.ic_favorite_grey_600_18dp), null, null, null);
-        binding.widgetLike.setText(WidgetPresenter.convertToText(CompatUtil.sizeOf(model)));
+        binding.widgetLike.setText(WidgetPresenter.convertToText(CompatUtil.INSTANCE.sizeOf(model)));
         resetFlipperState();
     }
 
@@ -128,13 +128,13 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     public void onResponse(@NonNull Call<List<UserBase>> call, @NonNull Response<List<UserBase>> response) {
         try {
             if(response.isSuccessful()) {
-                if(!CompatUtil.isEmpty(model) && model.contains(presenter.getDatabase().getCurrentUser()))
+                if(!CompatUtil.INSTANCE.isEmpty(model) && model.contains(presenter.getDatabase().getCurrentUser()))
                     model.remove(presenter.getDatabase().getCurrentUser());
                 else
                     model.add(presenter.getDatabase().getCurrentUser());
                 setIconType();
             } else {
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                 resetFlipperState();
             }
         } catch (Exception e) {

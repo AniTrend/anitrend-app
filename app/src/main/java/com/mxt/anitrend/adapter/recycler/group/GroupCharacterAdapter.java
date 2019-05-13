@@ -35,8 +35,8 @@ public class GroupCharacterAdapter extends RecyclerViewAdapter<RecyclerItem> {
     @Override
     public RecyclerViewHolder<RecyclerItem> onCreateViewHolder(ViewGroup parent, @KeyUtil.RecyclerViewType int viewType) {
         if (viewType == KeyUtil.RECYCLER_TYPE_HEADER)
-            return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
-        return new CharacterViewHolder(AdapterCharacterBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+            return new GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
+        return new CharacterViewHolder(AdapterCharacterBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

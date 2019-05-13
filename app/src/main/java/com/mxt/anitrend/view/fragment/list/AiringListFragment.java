@@ -34,7 +34,7 @@ public class AiringListFragment extends MediaListFragment {
         UserBase userBase = getPresenter().getDatabase().getCurrentUser();
         userId = userBase.getId(); userName = userBase.getName(); mediaType = KeyUtil.ANIME;
         ((MediaListAdapter)mAdapter).setCurrentUser(userName);
-        queryContainer = GraphUtil.getDefaultQuery(false)
+        queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_statusIn, KeyUtil.CURRENT);
     }
 
@@ -57,7 +57,7 @@ public class AiringListFragment extends MediaListFragment {
                     MediaListCollection mediaListCollection = mediaOptional.get();
 
                     List<MediaList> mediaList = Stream.of(mediaListCollection.getEntries())
-                            .filter(media -> CompatUtil.equals(media.getMedia().getStatus(), KeyUtil.RELEASING))
+                            .filter(media -> CompatUtil.INSTANCE.equals(media.getMedia().getStatus(), KeyUtil.RELEASING))
                             .toList();
 
                     if(MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))

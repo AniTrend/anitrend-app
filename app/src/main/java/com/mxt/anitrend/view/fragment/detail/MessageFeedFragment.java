@@ -52,7 +52,7 @@ public class MessageFeedFragment extends FeedListFragment {
 
     @Override
     public void makeRequest() {
-        queryContainer = GraphUtil.getDefaultQuery(true);
+        queryContainer = GraphUtil.INSTANCE.getDefaultQuery(true);
         queryContainer.putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(messageType == KeyUtil.MESSAGE_TYPE_INBOX ? KeyUtil.arg_userId : KeyUtil.arg_messengerId, userId);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -68,7 +68,7 @@ public class MessageFeedFragment extends FeedListFragment {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getMessenger().getId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
             case R.id.recipient_avatar:
@@ -76,7 +76,7 @@ public class MessageFeedFragment extends FeedListFragment {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getRecipient().getId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
             case R.id.widget_edit:

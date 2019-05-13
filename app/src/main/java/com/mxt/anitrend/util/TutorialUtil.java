@@ -109,7 +109,7 @@ public class TutorialUtil {
         if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
             return TapTargetUtil.buildDefault(context, resource)
                     .setPromptStateChangeListener(defaultStateChangeListener)
-                    .setFocalColour(CompatUtil.getColor(context, focalColour));
+                    .setFocalColour(CompatUtil.INSTANCE.getColor(context, focalColour));
         return null;
     }
 
@@ -129,7 +129,7 @@ public class TutorialUtil {
         if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
             return TapTargetUtil.buildDefault(context, primary, secondary, resource)
                     .setPromptStateChangeListener(defaultStateChangeListener)
-                    .setFocalColour(CompatUtil.getColor(context, focalColour));
+                    .setFocalColour(CompatUtil.INSTANCE.getColor(context, focalColour));
         return null;
     }
 
@@ -149,7 +149,7 @@ public class TutorialUtil {
         if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
             return TapTargetUtil.buildDefault(context, primary, secondary, resource)
                     .setPromptStateChangeListener(defaultStateChangeListener)
-                    .setFocalColour(CompatUtil.getColor(context, focalColour));
+                    .setFocalColour(CompatUtil.INSTANCE.getColor(context, focalColour));
         return null;
     }
 
@@ -167,7 +167,7 @@ public class TutorialUtil {
         if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
             TapTargetUtil.buildDefault(context, resource)
                     .setPromptStateChangeListener(defaultStateChangeListener)
-                    .setFocalColour(CompatUtil.getColor(context, focalColour))
+                    .setFocalColour(CompatUtil.INSTANCE.getColor(context, focalColour))
                     .show();
     }
 
@@ -187,7 +187,7 @@ public class TutorialUtil {
         if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
             TapTargetUtil.buildDefault(context, primary, secondary, resource)
                     .setPromptStateChangeListener(defaultStateChangeListener)
-                    .setFocalColour(CompatUtil.getColor(context, focalColour))
+                    .setFocalColour(CompatUtil.INSTANCE.getColor(context, focalColour))
                     .show();
     }
 
@@ -207,7 +207,7 @@ public class TutorialUtil {
         if (!TapTargetUtil.isActive(tapTarget) && applicationPref.shouldShowTipFor(tapTarget))
             TapTargetUtil.buildDefault(context, primary, secondary, resource)
                     .setPromptStateChangeListener(defaultStateChangeListener)
-                    .setFocalColour(CompatUtil.getColor(context, focalColour))
+                    .setFocalColour(CompatUtil.INSTANCE.getColor(context, focalColour))
                     .show();
     }
 

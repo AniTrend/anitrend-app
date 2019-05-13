@@ -57,7 +57,7 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
 
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, userId)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -94,7 +94,7 @@ public class StaffFavouriteFragment extends FragmentBaseList<StaffBase, Connecti
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

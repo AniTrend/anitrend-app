@@ -64,7 +64,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mActionBar.setHomeAsUpIndicator(CompatUtil.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
+        mActionBar.setHomeAsUpIndicator(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
         ProfilePageAdapter profilePageAdapter = new ProfilePageAdapter(getSupportFragmentManager(), getApplicationContext());
         profilePageAdapter.setParams(getIntent().getExtras());
         viewPager.setAdapter(profilePageAdapter);
@@ -150,7 +150,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
 
     @Override
     protected void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_userName, userName);
         if(id > 0)
             queryContainer.putVariable(KeyUtil.arg_id, id);
@@ -179,9 +179,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_banner:
-                Intent intent = new Intent(this, ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getBannerImage());
-                CompatUtil.startSharedImageTransition(this, view, intent, R.string.transition_image_preview);
+                CompatUtil.INSTANCE.imagePreview(this, view, model.getBannerImage(), R.string.image_preview_error_profile_banner);
                 break;
         }
     }

@@ -102,16 +102,16 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
         if (getContext() != null)
             switch (item.getItemId()) {
                 case R.id.action_sort:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.getIndexOf(KeyUtil.MediaSortType,
-                            getPresenter().getApplicationPref().getMediaSort()), CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MediaSortType,
+                            getPresenter().getApplicationPref().getMediaSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaSortType),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().setMediaSort(KeyUtil.MediaSortType[dialog.getSelectedIndex()]);
                             });
                     return true;
                 case R.id.action_order:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.getIndexOf(KeyUtil.SortOrderType,
-                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.getStringList(getContext(), R.array.order_by_types),
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.INSTANCE.getIndexOf(KeyUtil.SortOrderType,
+                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
@@ -119,7 +119,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     return true;
                 case R.id.action_genre:
                     List<Genre> genres = getPresenter().getDatabase().getGenreCollection();
-                    if(CompatUtil.isEmpty(genres)) {
+                    if(CompatUtil.INSTANCE.isEmpty(genres)) {
                         NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                         getPresenter().checkGenresAndTags(getActivity());
                     } else {
@@ -150,7 +150,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     return true;
                 case R.id.action_tag:
                     List<MediaTag> tagList = getPresenter().getDatabase().getMediaTags();
-                    if(CompatUtil.isEmpty(tagList)) {
+                    if(CompatUtil.INSTANCE.isEmpty(tagList)) {
                         NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                         getPresenter().checkGenresAndTags(getActivity());
                     } else {
@@ -180,24 +180,33 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     }
                     return true;
                 case R.id.action_type:
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.getIndexOf(KeyUtil.MediaFormat,
-                            getPresenter().getApplicationPref().getMediaFormat()), CompatUtil.getStringList(getContext(), R.array.media_formats),
-                            (dialog, which) -> {
-                                if(which == DialogAction.POSITIVE)
-                                    getPresenter().getApplicationPref().setMediaFormat(KeyUtil.MediaFormat[dialog.getSelectedIndex()]);
-                            });
+                    if (CompatUtil.INSTANCE.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.ANIME)) {
+                        DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.INSTANCE.getIndexOf(KeyUtil.AnimeFormat,
+                                getPresenter().getApplicationPref().getAnimeFormat()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.anime_formats),
+                                (dialog, which) -> {
+                                    if(which == DialogAction.POSITIVE)
+                                        getPresenter().getApplicationPref().setAnimeFormat(KeyUtil.AnimeFormat[dialog.getSelectedIndex()]);
+                                });
+                    } else {
+                        DialogUtil.createSelection(getContext(), R.string.app_filter_show_type, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MangaFormat,
+                                getPresenter().getApplicationPref().getMangaFormat()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.manga_formats),
+                                (dialog, which) -> {
+                                    if(which == DialogAction.POSITIVE)
+                                        getPresenter().getApplicationPref().setMangaFormat(KeyUtil.MangaFormat[dialog.getSelectedIndex()]);
+                                });
+                    }
                     return true;
                 case R.id.action_year:
-                    final List<Integer> yearRanges = DateUtil.getYearRanges(1950, 1);
-                    DialogUtil.createSelection(getContext(), R.string.app_filter_year, CompatUtil.getIndexOf(yearRanges, getPresenter().getApplicationPref().getSeasonYear()),
+                    final List<Integer> yearRanges = DateUtil.INSTANCE.getYearRanges(1950, 1);
+                    DialogUtil.createSelection(getContext(), R.string.app_filter_year, CompatUtil.INSTANCE.getIndexOf(yearRanges, getPresenter().getApplicationPref().getSeasonYear()),
                             yearRanges, (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().saveSeasonYear(yearRanges.get(dialog.getSelectedIndex()));
                             });
                     return true;
                 case R.id.action_status:
-                    DialogUtil.createSelection(getContext(), R.string.anime, CompatUtil.getIndexOf(KeyUtil.MediaStatus,
-                            getPresenter().getApplicationPref().getMediaStatus()), CompatUtil.getStringList(getContext(), R.array.media_status),
+                    DialogUtil.createSelection(getContext(), R.string.anime, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MediaStatus,
+                            getPresenter().getApplicationPref().getMediaStatus()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.media_status),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
                                     getPresenter().getApplicationPref().setMediaStatus(KeyUtil.MediaStatus[dialog.getSelectedIndex()]);
@@ -220,16 +229,18 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
         if(isFilterable) {
             if(!mediaBrowseUtil.isBasicFilter()) {
-                if (CompatUtil.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA))
+                if (CompatUtil.INSTANCE.equals(queryContainer.getVariable(KeyUtil.arg_mediaType), KeyUtil.MANGA)) {
                     queryContainer.putVariable(KeyUtil.arg_startDateLike, String.format(Locale.getDefault(),
-                            "%d%%", getPresenter().getApplicationPref().getSeasonYear()));
-                else
-                    queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear());
+                            "%d%%", getPresenter().getApplicationPref().getSeasonYear()))
+                            .putVariable(KeyUtil.arg_format, pref.getMangaFormat());
+                } else {
+                    queryContainer.putVariable(KeyUtil.arg_seasonYear, getPresenter().getApplicationPref().getSeasonYear())
+                            .putVariable(KeyUtil.arg_format, pref.getAnimeFormat());
+                }
 
                 queryContainer.putVariable(KeyUtil.arg_status, pref.getMediaStatus())
                         .putVariable(KeyUtil.arg_genres, GenreTagUtil.getMappedValues(pref.getSelectedGenres()))
-                        .putVariable(KeyUtil.arg_tags, GenreTagUtil.getMappedValues(pref.getSelectedTags()))
-                        .putVariable(KeyUtil.arg_format, pref.getMediaFormat());
+                        .putVariable(KeyUtil.arg_tags, GenreTagUtil.getMappedValues(pref.getSelectedTags()));
             }
             queryContainer.putVariable(KeyUtil.arg_sort, pref.getMediaSort() + pref.getSortOrder());
         }
@@ -266,7 +277,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
                 intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

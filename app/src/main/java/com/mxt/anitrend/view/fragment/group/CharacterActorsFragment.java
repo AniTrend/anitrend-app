@@ -49,7 +49,7 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            queryContainer = GraphUtil.getDefaultQuery(true)
+            queryContainer = GraphUtil.INSTANCE.getDefaultQuery(true)
                     .putVariable(KeyUtil.arg_id, getArguments().getLong(KeyUtil.arg_id));
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
@@ -72,7 +72,7 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
                         Intent intent = new Intent(getActivity(), MediaActivity.class);
                         intent.putExtra(KeyUtil.arg_id, ((MediaBase) data.getSecond()).getId());
                         intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase) data.getSecond()).getType());
-                        CompatUtil.startRevealAnim(getActivity(), target, intent);
+                        CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                         break;
                 }
             }
@@ -121,7 +121,7 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
                 if (edgeContainer.hasPageInfo())
                     getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupActorMediaEdge(edgeContainer.getEdges()));
+                    onPostProcessed(GroupingUtil.INSTANCE.groupActorMediaEdge(edgeContainer.getEdges()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
@@ -144,7 +144,7 @@ public class CharacterActorsFragment extends FragmentBaseList<RecyclerItem, Conn
             case R.id.container:
                 Intent intent = new Intent(getActivity(), StaffActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((StaffBase)data.getSecond()).getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

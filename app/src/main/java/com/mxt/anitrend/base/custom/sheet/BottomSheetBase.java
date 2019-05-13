@@ -110,9 +110,9 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
         super.onStart();
         toolbarTitle.setText(mTitle);
         if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-            toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(getContext(), R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
+            toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(getContext(), R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
         else
-            toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(getContext(), R.drawable.ic_close_grey_600_24dp));
+            toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(getContext(), R.drawable.ic_close_grey_600_24dp));
         toolbarState.setOnClickListener(view -> {
             switch (bottomSheetBehavior.getState()) {
                 case BottomSheetBehavior.STATE_EXPANDED:
@@ -123,7 +123,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
                     break;
             }
         });
-        toolbarSearch.setImageDrawable(CompatUtil.getTintedDrawable(getContext(), R.drawable.ic_search_grey_600_24dp));
+        toolbarSearch.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(getContext(), R.drawable.ic_search_grey_600_24dp));
         toolbarSearch.setOnClickListener(view -> searchView.showSearch(true));
         searchView.setCursorDrawable(R.drawable.material_search_cursor);
     }
@@ -159,7 +159,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
         if (coordinatorBehavior instanceof BottomSheetBehavior) {
             bottomSheetBehavior = (BottomSheetBehavior) coordinatorBehavior;
-            bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
+            bottomSheetBehavior.setPeekHeight(CompatUtil.INSTANCE.dipToPx(KeyUtil.PEEK_HEIGHT));
             bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         }
     }
@@ -185,12 +185,12 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
     @Override
     public void onStateCollapsed() {
-        toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(getContext(), R.drawable.ic_close_grey_600_24dp));
+        toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(getContext(), R.drawable.ic_close_grey_600_24dp));
     }
 
     @Override
     public void onStateExpanded() {
-        toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(getContext(), R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
+        toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(getContext(), R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
     }
 
     /**

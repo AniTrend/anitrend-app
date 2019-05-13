@@ -63,7 +63,7 @@ public class StudioSearchFragment extends FragmentBaseList<StudioBase, PageConta
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_search, searchQuery)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);

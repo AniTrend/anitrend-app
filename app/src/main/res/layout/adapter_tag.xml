@@ -38,12 +38,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                <com.mxt.anitrend.base.custom.view.text.SpoilerTagTextView
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                     android:text="@{model.name}"
+                    app:isSpoiler="@{model.mediaSpoiler}"
                     tools:text="High School"/>
 
                 <android.support.v4.widget.Space

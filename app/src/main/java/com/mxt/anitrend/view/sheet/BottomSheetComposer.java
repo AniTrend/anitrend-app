@@ -146,7 +146,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
                     mBottomSheet.show(getActivity().getSupportFragmentManager(), mBottomSheet.getTag());
                 break;
             case R.id.widget_flipper:
-                CompatUtil.hideKeyboard(getActivity());
+                CompatUtil.INSTANCE.hideKeyboard(getActivity());
                 break;
             default:
                 DialogUtil.createDialogAttachMedia(target.getId(), composerWidget.getEditor(), getContext());

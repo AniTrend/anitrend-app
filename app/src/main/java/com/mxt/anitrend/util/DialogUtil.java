@@ -17,6 +17,7 @@ import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
+import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +50,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDownUtil.convertLink(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertLink(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -74,7 +75,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDownUtil.convertImage(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertImage(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -99,7 +100,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDownUtil.convertYoutube(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertYoutube(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -124,7 +125,7 @@ public class DialogUtil {
                                     if(editText != null) {
                                         if(!TextUtils.isEmpty(editText.getText())) {
                                             int start = editor.getSelectionStart();
-                                            editor.getEditableText().insert(start, MarkDownUtil.convertVideo(editText.getText()));
+                                            editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertVideo(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
                                             NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
@@ -156,7 +157,7 @@ public class DialogUtil {
         createDefaultDialog(context).title(title)
                 .positiveText(R.string.Ok)
                 .negativeText(R.string.Cancel)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .content(new SpannedString(context.getString(content)))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
@@ -164,8 +165,8 @@ public class DialogUtil {
     public static void createMessage(Context context, String title, String content) {
         createDefaultDialog(context).title(title)
                 .positiveText(R.string.Close)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDownUtil.convert(content))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).show();
     }
 
@@ -174,8 +175,8 @@ public class DialogUtil {
                 .positiveText(positive)
                 .negativeText(negative)
                 .neutralText(neutral)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDownUtil.convert(content))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
 
@@ -183,9 +184,23 @@ public class DialogUtil {
         createDefaultDialog(context).title(title)
                 .positiveText(positive)
                 .negativeText(negative)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
-                .content(MarkDownUtil.convert(content))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback).show();
+    }
+
+    public static void createTagMessage(Context context, String title, String content, Boolean isSpoiler, @StringRes int positive, @StringRes int negative, MaterialDialog.SingleButtonCallback singleButtonCallback) {
+        MaterialDialog.Builder builder = createDefaultDialog(context).title(title)
+                .positiveText(positive)
+                .negativeText(negative)
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .content(MarkDownUtil.INSTANCE.convert(content))
+                .autoDismiss(true).onAny(singleButtonCallback);
+
+        if (isSpoiler) builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_spoiler_tag));
+        else builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_loyalty_white_24dp));
+
+        builder.show();
     }
 
     public static <T> void createCheckList(Context context, @StringRes int title, Collection<T> selectableItems, Integer[] selectedIndices, MaterialDialog.ListCallbackMultiChoice listCallbackMultiChoice, MaterialDialog.SingleButtonCallback singleButtonCallback) {
@@ -194,7 +209,7 @@ public class DialogUtil {
                 .positiveText(R.string.Ok)
                 .negativeText(R.string.Reset)
                 .neutralText(R.string.Cancel)
-                .icon(CompatUtil.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
+                .icon(CompatUtil.INSTANCE.getTintedDrawable(context, R.drawable.ic_new_releases_white_24dp))
                 .itemsCallbackMultiChoice(selectedIndices,listCallbackMultiChoice)
                 .autoDismiss(true).onAny(singleButtonCallback).show();
     }
@@ -215,7 +230,7 @@ public class DialogUtil {
             while ((buffer = inputStream.read()) != -1)
                 stringBuilder.append((char)buffer);
             RichMarkdownTextView richMarkdownTextView = (RichMarkdownTextView) materialDialog.findViewById(R.id.changelog_information);
-            RichMarkdownTextView.richMarkDown(richMarkdownTextView, stringBuilder.toString());
+            RichMarkdownExtensionsKt.richMarkDown(richMarkdownTextView, stringBuilder.toString());
 
             materialDialog.show();
         } catch (IOException e) {
@@ -237,6 +252,6 @@ public class DialogUtil {
                 .positiveColorRes(R.color.colorStateGreen)
                 .negativeColorRes(R.color.colorStateOrange)
                 .neutralColorRes(R.color.colorStateBlue)
-                .theme(CompatUtil.isLightTheme(context)?Theme.LIGHT:Theme.DARK);
+                .theme(CompatUtil.INSTANCE.isLightTheme(context)?Theme.LIGHT:Theme.DARK);
     }
 }

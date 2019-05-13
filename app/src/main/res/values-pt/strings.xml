@@ -18,7 +18,6 @@
     <string name="navigation_drawer_close">Gaveta de navegação fechada</string>
 
 
-    <string name="nav_home">Home</string>
     <string name="nav_history">Histórico</string>
 
     <!--
@@ -149,7 +148,6 @@
     <string name="app_intro_content_text">Múltiplas Listas de Anime &amp; Mangá!</string>
     <string name="app_intro_search_title">Pesquisando</string>
     <string name="app_intro_search_text">Anime, Mangá &amp; Mais Opções de Pesquisa!</string>
-    <string name="app_intro_videos_title">Vídeos</string>
     <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
     <string name="app_greeting">Bem-vindo ao AniTrend!</string>
 
@@ -244,7 +242,6 @@
     <string name="drawer_title_profile">Perfil</string>
     <string name="drawer_title_sign_out">Sair</string>
 
-    <string name="drawer_section_extras">Extras</string>
     <string name="drawer_title_share">Compartilhar</string>
     <string name="drawer_title_update">Atualizar</string>
     <string name="layout_empty_response">Nenhum dado para exibir</string>
@@ -260,7 +257,6 @@
     <string name="tip_series_options_title">Opções Disponíveis</string>
     <string name="tip_character_options_title">Favorito</string>
     <string name="tip_character_options_message">Altera o estado favorito deste personagem. \n\nToque Aqui Para Dispensar</string>
-    <string name="tip_messages_title">Messages</string>
     <string name="tip_messages_text">Veja todas as mensagens enviadas para você e as que você enviou. \n\nToque Aqui Para Dispensar</string>
     <string name="tip_status_post_title">Criar Postagem de Status</string>
     <string name="tip_status_post_text">Poste uma mensagem de status para todos verem. \n\nToque Aqui Para Dispensar</string>
@@ -806,7 +802,7 @@
         <item>Cancelado</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>Todos</item>
         <item>TV</item>
         <item>Curta</item>
@@ -815,6 +811,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Música</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>Todos</item>
         <item>Mangá</item>
         <item>Novel</item>
         <item>One Shot</item>
@@ -958,4 +958,20 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+
+    <!-- Image Preview error strings -->
+    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
+    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
+    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
+    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
+    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
+    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+
+    <!-- App Log strings -->
+    <string name="app_log">App Logs</string>
+    <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
+    <string name="notification_media_added">New Related Media Added</string>
 </resources>

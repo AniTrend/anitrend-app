@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             isPopular = getArguments().getBoolean(KeyUtil.arg_popular);
             externalLinks = getArguments().getParcelableArrayList(KeyUtil.arg_list_model);
             if(externalLinks != null)
-                targetLink = EpisodeUtil.episodeSupport(externalLinks);
+                targetLink = EpisodeUtil.INSTANCE.episodeSupport(externalLinks);
         }
         mColumnSize = R.integer.single_list_x1;
     }
@@ -113,7 +114,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         recyclerView.setLayoutManager(mLayoutManager);
 
         swipeRefreshLayout.setOnRefreshAndLoadListener(this);
-        CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
+        CompatUtil.INSTANCE.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
 
         return root;
     }
@@ -221,7 +222,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                     error, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -242,7 +243,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     message, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -324,12 +325,18 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
      */
     @Override
     public void onChanged(@Nullable Rss content) {
-        if(content != null) {
-            copyright = content.getChannel().getCopyright();
-            mAdapter.onItemsInserted(content.getChannel().getEpisode());
-            updateUI();
-        } else
+        try {
+            if(content != null && content.getChannel().getEpisode() != null) {
+                copyright = content.getChannel().getCopyright();
+                mAdapter.onItemsInserted(content.getChannel().getEpisode());
+                updateUI();
+            } else
+                showEmpty(getString(R.string.layout_empty_response));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("onChanged(Rss content)", e.getLocalizedMessage());
             showEmpty(getString(R.string.layout_empty_response));
+        }
     }
 
     protected ItemClickListener<Episode> clickListener = new ItemClickListener<Episode>() {
@@ -358,7 +365,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                                     case NEUTRAL:
                                         if(getActivity() != null) {
                                             intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtil.arg_search, EpisodeUtil.getActualTile(data.getSecond().getTitle()));
+                                            intent.putExtra(KeyUtil.arg_search, EpisodeUtil.INSTANCE.getActualTile(data.getSecond().getTitle()));
                                             getActivity().startActivity(intent);
                                         }
                                         break;

@@ -84,8 +84,8 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
      */
     @Override
     protected void updateUI() {
-        String youtubeLink = RegexUtil.buildYoutube(mediaTrailer.getId());
-        String thumbnailUrl =RegexUtil.getYoutubeThumb(youtubeLink);
+        String youtubeLink = RegexUtil.INSTANCE.buildYoutube(mediaTrailer.getId());
+        String thumbnailUrl = RegexUtil.INSTANCE.getYoutubeThumb(youtubeLink);
         if (getActivity() != null)
             Glide.with(getActivity()).load(thumbnailUrl)
                     .transition(DrawableTransitionOptions.withCrossFade(250))
@@ -100,7 +100,7 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
     public void makeRequest() {
         binding.setOnClickListener((v) -> {
             try {
-                String youtubeLink = RegexUtil.buildYoutube(mediaTrailer.getId());
+                String youtubeLink = RegexUtil.INSTANCE.buildYoutube(mediaTrailer.getId());
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(youtubeLink));
                 startActivity(intent);

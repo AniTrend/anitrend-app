@@ -63,7 +63,7 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContaine
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_search, searchQuery)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
                 .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH);
@@ -105,7 +105,7 @@ public class UserSearchFragment  extends FragmentBaseList<UserBase, PageContaine
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

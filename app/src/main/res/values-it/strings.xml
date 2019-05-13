@@ -6,7 +6,6 @@
 
     <string name="nav_header_support">Supporto</string>
     <string name="nav_contact">Contatti</string>
-    <string name="nav_about">Info</string>
 
     <string name="action_search">Cerca</string>
     <string name="action_filter">@string/drawer_title_filter</string>
@@ -14,11 +13,7 @@
 
     <string name="action_mode_selected">Selezioni: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
 
-
-    <string name="nav_home">Home</string>
     <string name="nav_history">Cronologia</string>
 
     <!--
@@ -77,7 +72,6 @@
 
     <string name="Close">Chiudi</string>
     <string name="Apply">Applica</string>
-    <string name="Reset">Reset</string>
 
     <string name="Add">Aggiungi</string>
     <string name="Delete">Cancella</string>
@@ -151,7 +145,6 @@
     <string name="app_intro_content_text">Svariate liste anime &amp; manga!</string>
     <string name="app_intro_search_title">Cerca</string>
     <string name="app_intro_search_text">Anime, manga &amp; ed altre funzioni di ricerca!</string>
-    <string name="app_intro_videos_title">Video</string>
     <string name="app_intro_videos_text">Usa il Player Video di Youtube integrato!</string>
     <string name="app_greeting">Benvenuto su AniTrend!</string>
 
@@ -224,7 +217,6 @@
     <string name="login_welcome_text">Login effettuato con successo</string>
 
     <!--Anything with drawer_title is the titles for the navigation drawer-->
-    <string name="drawer_title_home">Home</string>
     <string name="drawer_title_anime">Scopri anime</string>
     <string name="drawer_title_manga">Scopri manga</string>
     <string name="drawer_title_trending">Di tendenza</string>
@@ -232,14 +224,12 @@
     <string name="drawer_title_myanime">Lista anime</string>
     <string name="drawer_title_mymanga">Lista manga</string>
     <string name="drawer_title_reviews">Recensioni</string>
-    <string name="drawer_title_hub">AniTrend Hub</string>
 
     <string name="drawer_section_configuration">Configurazione</string>
     <string name="drawer_title_filter">Filtri</string>
     <string name="drawer_light_theme">Modalità notturna</string>
     <string name="drawer_title_style">Stile della lista</string>
 
-    <string name="drawer_section_account">Account</string>
     <string name="drawer_title_sign_in">Accedi</string>
     <string name="drawer_title_profile">Profilo</string>
     <string name="drawer_title_sign_out">Esci</string>
@@ -286,7 +276,6 @@
     <string name="title_activity_notification">Centro notifiche</string>
     <string name="title_activity_message">Centro messaggi</string>
     <string name="title_activity_user_list_view">Lista utenti</string>
-    <string name="title_activity_studio">Studio</string>
     <string name="title_activity_settings">Impostazioni</string>
     <string name="title_activity_reply">Rispondi</string>
 
@@ -803,7 +792,7 @@
         <item>Cancellati</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>Tutti</item>
         <item>TV</item>
         <item>Corti TV</item>
@@ -812,6 +801,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Musica</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>Tutti</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
@@ -927,7 +920,6 @@
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -953,4 +945,20 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+
+    <!-- Image Preview error strings -->
+    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
+    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
+    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
+    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
+    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
+    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+
+    <!-- App Log strings -->
+    <string name="app_log">App Logs</string>
+    <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
+    <string name="notification_media_added">New Related Media Added</string>
 </resources>

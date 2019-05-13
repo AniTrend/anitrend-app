@@ -32,7 +32,7 @@ public class UsersWidget extends SingleLineTextView implements CustomView {
     public void onInit() {
         final int padding = getResources().getDimensionPixelSize(R.dimen.spacing_small);
         setPadding(padding, padding, padding, padding);
-        setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawableTintAttr(getContext(),
+        setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawableTintAttr(getContext(),
                 R.drawable.ic_people_grey_600_18dp, R.attr.colorAccent), null, null, null);
     }
 

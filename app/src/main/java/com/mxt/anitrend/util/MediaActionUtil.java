@@ -50,7 +50,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
 
         // No need to add the parameter onList otherwise we'd have to handle an error code 404,
         // Instead we'd rather check if the the media has a non null mediaList item
-        QueryContainerBuilder queryContainerBuilder = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainerBuilder = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
 
@@ -94,7 +94,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
             if(response.isSuccessful() && (mediaBase = response.body()) != null) {
                 showActionDialog(mediaBase);
             } else {
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                 NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
             dismissProgress();

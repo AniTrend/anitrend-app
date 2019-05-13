@@ -129,7 +129,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                     swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
                 } else {
-                    pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
+                    pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                     if(pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
@@ -141,7 +141,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                     swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
                 } else {
-                    pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
+                    pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                     if (pairOptional.isPresent()) {
                         pairIndex = pairOptional.get().getFirst();
                         mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
@@ -149,7 +149,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                 }
                 break;
             case KeyUtil.MUT_DELETE_FEED:
-                pairOptional = CompatUtil.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
+                pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
                     mAdapter.onItemRemoved(pairIndex);
@@ -169,7 +169,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
             if(content.hasPageInfo())
                 getPresenter().setPageInfo(content.getPageInfo());
             if(!content.isEmpty())
-                onPostProcessed(GraphUtil.filterFeedList(getPresenter(), content.getPageData()));
+                onPostProcessed(GraphUtil.INSTANCE.filterFeedList(getPresenter(), content.getPageData()));
             else
                 onPostProcessed(Collections.emptyList());
         } else
@@ -194,12 +194,12 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                 intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, series.getId());
                 intent.putExtra(KeyUtil.arg_mediaType, series.getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_comment:
                 intent = new Intent(getActivity(), CommentActivity.class);
                 intent.putExtra(KeyUtil.arg_model, data.getSecond());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.widget_edit:
                 mBottomSheet = new BottomSheetComposer.Builder().setUserActivity(data.getSecond())
@@ -224,7 +224,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
-                    CompatUtil.startRevealAnim(getActivity(), target, intent);
+                    CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 }
                 break;
         }

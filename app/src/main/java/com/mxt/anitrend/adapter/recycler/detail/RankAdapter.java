@@ -31,7 +31,7 @@ public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
     @NonNull
     @Override
     public RecyclerViewHolder<MediaRank> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RankViewHolder(AdapterRankingBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new RankViewHolder(AdapterRankingBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
         @Override
         public void onBindViewHolder(MediaRank model) {
             binding.setModel(model);
-            binding.rankingType.setImageDrawable(CompatUtil.getDrawable(getContext(), CompatUtil.equals(model.getType(), KeyUtil.RATED) ?
+            binding.rankingType.setImageDrawable(CompatUtil.INSTANCE.getDrawable(getContext(), CompatUtil.INSTANCE.equals(model.getType(), KeyUtil.RATED) ?
                     R.drawable.ic_star_yellow_700_24dp : R.drawable.ic_favorite_red_700_24dp ));
             binding.executePendingBindings();
         }

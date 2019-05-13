@@ -54,7 +54,7 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(bundle != null)
-            setTitle(CompatUtil.equals(mediaType, KeyUtil.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
+            setTitle(CompatUtil.INSTANCE.equals(mediaType, KeyUtil.ANIME) ? R.string.title_anime_list: R.string.title_manga_list);
         onActivityReady();
     }
 

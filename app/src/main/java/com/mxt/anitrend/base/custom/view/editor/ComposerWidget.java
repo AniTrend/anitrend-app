@@ -42,6 +42,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Locale;
 
+import io.wax911.emojify.EmojiManager;
+import io.wax911.emojify.parser.EmojiParser;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -105,7 +107,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetComposerBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = WidgetComposerBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         binding.setOnClickListener(this);
     }
 
@@ -172,7 +174,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
             binding.widgetFlipper.showNext();
 
-            QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false);
+            QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false);
 
             switch (requestType) {
                 case KeyUtil.MUT_SAVE_TEXT_FEED:
@@ -265,7 +267,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
                 }
             }
             else
-                NotifyUtil.makeText(getContext(), ErrorUtil.getError(response), Toast.LENGTH_SHORT).show();
+                NotifyUtil.makeText(getContext(), ErrorUtil.INSTANCE.getError(response), Toast.LENGTH_SHORT).show();
             presenter.onDestroy();
         }
     }
@@ -293,7 +295,7 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
         EditText editor = binding.comment;
         int start = editor.getSelectionStart();
         Gif gif = pair.getSecond().getImages().get(index);
-        editor.getEditableText().insert(start, MarkDownUtil.convertImage(gif.getUrl()));
+        editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertImage(gif.getUrl()));
     }
 
     public void appendText(String textValue) {
@@ -303,10 +305,22 @@ public class ComposerWidget extends FrameLayout implements CustomView, View.OnCl
     }
 
     public void setText(String textValue) {
-        if(TextUtils.isEmpty(binding.comment.getText()))
-            binding.comment.setText(textValue);
-        else
-            appendText(textValue);
+        // TODO: Added emojify on text edit
+        String emojified;
+        if(TextUtils.isEmpty(binding.comment.getText())) {
+            emojified = EmojiParser.INSTANCE.parseToUnicode(textValue);
+            if (!TextUtils.isEmpty(emojified))
+                binding.comment.setText(emojified);
+            else
+                binding.comment.setText(textValue);
+        }
+        else {
+            emojified = EmojiParser.INSTANCE.parseToUnicode(textValue);
+            if (!TextUtils.isEmpty(emojified))
+                appendText(emojified);
+            else
+                appendText(textValue);
+        }
     }
 
     public void mentionUserFrom(FeedReply feedReply) {

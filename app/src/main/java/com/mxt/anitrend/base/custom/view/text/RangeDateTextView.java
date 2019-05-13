@@ -28,11 +28,11 @@ public class RangeDateTextView extends SingleLineTextView {
 
     @BindingAdapter("startDate")
     public static void setStartDate(RangeDateTextView view, FuzzyDate fuzzyDate) {
-        view.setText(String.format("%s: %s", DateUtil.getStartTitle(fuzzyDate), DateUtil.convertDate(fuzzyDate)));
+        view.setText(String.format("%s: %s", DateUtil.INSTANCE.getStartTitle(fuzzyDate), DateUtil.INSTANCE.convertDate(fuzzyDate)));
     }
 
     @BindingAdapter("endDate")
     public static void setEndDate(RangeDateTextView view, FuzzyDate fuzzyDate) {
-        view.setText(String.format("%s: %s", DateUtil.getEndTitle(fuzzyDate), DateUtil.convertDate(fuzzyDate)));
+        view.setText(String.format("%s: %s", DateUtil.INSTANCE.getEndTitle(fuzzyDate), DateUtil.INSTANCE.convertDate(fuzzyDate)));
     }
 }
