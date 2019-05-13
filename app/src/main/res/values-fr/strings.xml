@@ -1,25 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_manage">Manage</string>
-    <string name="nav_header_customization">Customization</string>
 
-    <string name="nav_header_support">Support</string>
-    <string name="nav_contact">Contact</string>
-    <string name="nav_about">About</string>
-
-    <string name="action_search">Search</string>
     <string name="action_filter">@string/drawer_title_filter</string>
-    <string name="action_help">Help</string>
 
     <string name="action_mode_selected">Selected: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
-
-
-    <string name="nav_home">Home</string>
-    <string name="nav_history">History</string>
 
     <!--
         Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
@@ -234,7 +219,6 @@
     <string name="drawer_title_reviews">Critiques</string>
     <string name="drawer_title_hub">HUB AniTrend</string>
 
-    <string name="drawer_section_configuration">Configuration</string>
     <string name="drawer_title_filter">Filtres</string>
     <string name="drawer_light_theme">Thème Graphique</string>
     <string name="drawer_title_style">Nouveau style de Liste</string>
@@ -255,17 +239,14 @@
     <string name="tip_options_title">Menu des Options</string>
     <string name="tip_search_title">Barre de Recherche</string>
     <string name="tip_search_message">D\'ici, recherchez divers entrées animes ou mangas par mots clées contenus dans leur titre. \n\nAppuyez ici pour Fermer</string>
-    <string name="tip_navigation_title">Navigation</string>
     <string name="tip_navigation_text">Ouvrez le panel de Navigation pour accéder aux différents contenus de l\'application. \n\nAppuyez ici pour Fermer</string>
     <string name="tip_series_options_message">Ajoute à votre liste, met en favoris et partage à vos amis cette entrée. \n\nAppuyez ici pour Fermer</string>
     <string name="tip_series_options_title">Options Disponibles</string>
     <string name="tip_character_options_title">Favoris</string>
     <string name="tip_character_options_message">Ajoute ou Retire ce personnage de vos Favoris. \n\nAppuyez ici pour Fermer</string>
-    <string name="tip_messages_title">Messages</string>
     <string name="tip_messages_text">Affiche tout les messages qui vous ont été envoyés et ceux que vous avez envoyés. \n\nAppuyez ici pour Fermer</string>
     <string name="tip_status_post_title">Créer une publication</string>
     <string name="tip_status_post_text">Publiez un message que tout le monde peut voir ! \n\nAppuyez ici pour Fermer</string>
-    <string name="tip_notifications_title">Notifications</string>
     <string name="tip_notifications_text">Accédez à toutes les notifications au même endroit. \n\nAppuyez ici pour Fermer</string>
     <string name="tip_more_actions_title">Plus de Fonctionnalités</string>
     <string name="tip_more_actions_text">Appuyez ici pour plus d\'options comme afficher les "j\'aime". \n\nAppuyez ici pour Fermer</string>
@@ -288,14 +269,12 @@
     <string name="title_activity_notification">HUB de Notification</string>
     <string name="title_activity_message">HUB des Messages</string>
     <string name="title_activity_user_list_view">Listes de l\'Utilisateur</string>
-    <string name="title_activity_studio">Studio</string>
     <string name="title_activity_settings">Paramètres</string>
     <string name="title_activity_reply">Réponse</string>
 
     <string name="notification_default">Activité non Identifiée</string>
     <string name="notification_series">Nouvel Épisode</string>
     <string name="notification_user_follow_activity">Nouvel Abonné</string>
-    <string name="notification_user_like_reply">Reply Like</string>
     <string name="notification_user_like_forum">"J\'aime" sur le Forum</string>
     <string name="notification_user_like_activity">"J\'aime" sur une Activité</string>
     <string name="notification_user_comment_forum">Commentaire sur le Forum</string>
@@ -808,7 +787,7 @@
         <item>Canceled</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>All</item>
         <item>TV</item>
         <item>TV Short</item>
@@ -817,6 +796,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Music</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>All</item>
         <item>Manga</item>
         <item>Novel</item>
         <item>One Shot</item>
@@ -932,7 +915,6 @@
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -958,4 +940,20 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+
+    <!-- Image Preview error strings -->
+    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
+    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
+    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
+    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
+    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
+    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+
+    <!-- App Log strings -->
+    <string name="app_log">App Logs</string>
+    <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
+    <string name="notification_media_added">New Related Media Added</string>
 </resources>

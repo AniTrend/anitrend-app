@@ -286,7 +286,6 @@
     <string name="title_activity_notification">Centrum Powiadomień</string>
     <string name="title_activity_message">Centrum wiadomości</string>
     <string name="title_activity_user_list_view">Lista użytkowników</string>
-    <string name="title_activity_studio">Studio</string>
     <string name="title_activity_settings">Ustawienia</string>
     <string name="title_activity_reply">Odpowiedz</string>
 
@@ -806,7 +805,7 @@
         <item>Anulowane</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>Wszystko</item>
         <item>TV</item>
         <item>TV Short</item>
@@ -815,6 +814,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Muzyka</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>Wszystko</item>
         <item>Manga</item>
         <item>Novelka</item>
         <item>One Shot</item>
@@ -930,7 +933,6 @@
 
     <!-- Black Setting Related -->
     <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that LED displays to save power</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -956,4 +958,20 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+
+    <!-- Image Preview error strings -->
+    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
+    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
+    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
+    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
+    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
+    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+
+    <!-- App Log strings -->
+    <string name="app_log">App Logs</string>
+    <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
+    <string name="notification_media_added">New Related Media Added</string>
 </resources>

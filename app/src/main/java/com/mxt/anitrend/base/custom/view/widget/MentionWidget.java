@@ -32,7 +32,7 @@ public class MentionWidget extends AppCompatImageView implements CustomView {
     public void onInit() {
         final int padding = getResources().getDimensionPixelSize(R.dimen.spacing_small);
         setPadding(padding, padding, padding, padding);
-        setImageDrawable(CompatUtil.getDrawable(getContext(), R.drawable.ic_reply_blue_600_18dp));
+        setImageDrawable(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_reply_blue_600_18dp));
     }
 
     /**

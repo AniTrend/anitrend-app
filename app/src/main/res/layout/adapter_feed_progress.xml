@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
-                    android:text="@{DateUtil.getPrettyDateUnix(model.createdAt)}"
+                    android:text="@{DateUtil.INSTANCE.getPrettyDateUnix(model.createdAt)}"
                     tools:text="25 minutes ago" />
 
             </LinearLayout>

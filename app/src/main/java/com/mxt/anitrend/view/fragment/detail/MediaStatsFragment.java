@@ -111,7 +111,7 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
                 public void onItemClick(View target, IntPair<MediaRank> data) {
                     Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
                     Bundle args = new Bundle();
-                    QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(true)
+                    QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(true)
                             .putVariable(KeyUtil.arg_type, mediaType)
                             .putVariable(KeyUtil.arg_format, data.getSecond().getFormat());
 
@@ -180,7 +180,7 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_type, mediaType);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -197,9 +197,9 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             configureScoreDistribution(model.getStats().getScoreDistribution());
 
             if (getContext() != null)
-                barDataSet.setColor(CompatUtil.getColorFromAttr(getContext(), R.attr.colorAccent), 200);
+                barDataSet.setColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.colorAccent), 200);
 
-            barDataSet.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
+            barDataSet.setValueTextColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.titleColor));
             BarData barData = new BarData(barDataSet);
             barData.setBarWidth(0.6f);
 
@@ -229,13 +229,13 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
 
             PieData pieData = new PieData(pieDataSet);
             if (getContext() != null)
-                pieData.setValueTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
+                pieData.setValueTextColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.titleColor));
 
             pieData.setValueTextSize(9f);
             pieData.setValueFormatter(new PercentFormatter());
 
-            binding.seriesStats.getLegend().setTextColor(CompatUtil.getColorFromAttr(getContext(), R.attr.titleColor));
-            binding.seriesStats.setHoleColor(CompatUtil.getColorFromAttr(getContext(), R.attr.color));
+            binding.seriesStats.getLegend().setTextColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.titleColor));
+            binding.seriesStats.setHoleColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.color));
             binding.seriesStats.setData(pieData);
             binding.seriesStats.invalidate();
         }
@@ -252,7 +252,7 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             this.model = model;
             updateUI();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            binding.stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 

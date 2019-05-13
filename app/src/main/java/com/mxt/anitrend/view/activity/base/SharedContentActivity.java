@@ -116,12 +116,12 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        bottomSheetBehavior.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT));
+        bottomSheetBehavior.setPeekHeight(CompatUtil.INSTANCE.dipToPx(KeyUtil.PEEK_HEIGHT));
         bottomSheetBehavior.setBottomSheetCallback(bottomSheetCallback);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         IconArrayAdapter iconArrayAdapter = new IconArrayAdapter(this,
                 R.layout.adapter_spinner_item, R.id.spinner_text,
-                CompatUtil.getStringList(this, R.array.post_share_types));
+                CompatUtil.INSTANCE.getStringList(this, R.array.post_share_types));
         iconArrayAdapter.setIndexIconMap(indexIconMap);
         sharedResourceType.setAdapter(iconArrayAdapter);
         onActivityReady();
@@ -143,9 +143,9 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         toolbarSearch.setVisibility(View.GONE);
         toolbarTitle.setText(R.string.menu_title_new_activity_post);
         if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-            toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
+            toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
         else
-            toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
+            toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
         toolbarState.setOnClickListener(view -> {
             switch (bottomSheetBehavior.getState()) {
                 case BottomSheetBehavior.STATE_EXPANDED:
@@ -181,12 +181,12 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
 
     @Override
     public void onStateCollapsed() {
-        toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
+        toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
     }
 
     @Override
     public void onStateExpanded() {
-        toolbarState.setImageDrawable(CompatUtil.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
+        toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
@@ -203,16 +203,16 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         @KeyUtil.ShareType int position = sharedResourceType.getSelectedItemPosition();
         switch (position) {
             case KeyUtil.IMAGE_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertImage(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertImage(text));
                 break;
             case KeyUtil.LINK_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertLink(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertLink(text));
                 break;
             case KeyUtil.WEBM_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertVideo(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertVideo(text));
                 break;
             case KeyUtil.YOUTUBE_TYPE:
-                binding.composerWidget.setText(MarkDownUtil.convertYoutube(text));
+                binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertYoutube(text));
                 break;
             case KeyUtil.PLAIN_TYPE:
                 binding.composerWidget.setText(text);
@@ -239,7 +239,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
                 mBottomSheet.show(getSupportFragmentManager(), mBottomSheet.getTag());
                 break;
             case R.id.widget_flipper:
-                CompatUtil.hideKeyboard(this);
+                CompatUtil.INSTANCE.hideKeyboard(this);
                 break;
             default:
                 DialogUtil.createDialogAttachMedia(target.getId(), binding.composerWidget.getEditor(), this);

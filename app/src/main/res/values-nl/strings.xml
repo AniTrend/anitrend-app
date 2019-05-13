@@ -3,13 +3,10 @@
     <string name="nav_header_manage">Beheren</string>
     <string name="nav_header_customization">Personalisatie</string>
 
-    <string name="nav_header_support">Support</string>
-    <string name="nav_contact">Contact</string>
     <string name="nav_about">Over ons</string>
 
     <string name="action_search">Zoeken</string>
     <string name="action_filter">@string/drawer_title_filter</string>
-    <string name="action_help">Help</string>
 
     <string name="action_mode_selected">Selected: %d</string>
 
@@ -76,11 +73,9 @@
 
     <string name="Close">Afsluiten</string>
     <string name="Apply">Toepassen</string>
-    <string name="Reset">Reset</string>
 
     <string name="Add">Toevoegen</string>
     <string name="Delete">Verwijderen</string>
-    <string name="Update">Update</string>
 
     <string name="Go_Back">Teruggaan</string>
 
@@ -141,21 +136,16 @@
     </string-array>
 
     <!--First time usage intro screen-->
-    <string name="get_started">Begin</string>
     <string name="app_intro_colors_title">Kleurenstaten</string>
     <string name="app_intro_colors_text">Kleuren die Anime / Manga-status vertegenwoordigen!</string>
     <string name="app_intro_content_title">Inhoud</string>
     <string name="app_intro_content_text">Multiple Anime &amp; Manga Vermeldingen!</string>
-    <string name="app_intro_search_title">Searching</string>
     <string name="app_intro_search_text">Anime, Manga &amp; Meer zoekfunctionaliteiten!</string>
-    <string name="app_intro_videos_title">Videos</string>
     <string name="app_intro_videos_text">Gebruikt een ingebouwde Youtube Video Player!</string>
-    <string name="app_greeting">Welcome to AniTrend!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sorteer op?</string>
     <string name="app_filter_order">Volgorde op?</string>
-    <string name="app_filter_genres">Series Genres?</string>
     <string name="app_filter_show_type">Type Serie?</string>
     <string name="app_filter_year">Serie jaar?</string>
     <string name="app_filter_status">Alleen weergeven?</string>
@@ -221,7 +211,6 @@
     <string name="login_welcome_text">Het inloggen is gelukt!</string>
 
     <!--Anything with drawer_title is the titles for the navigation drawer-->
-    <string name="drawer_title_home">Status Feeds</string>
     <string name="drawer_title_anime">Anime Ontdekken</string>
     <string name="drawer_title_manga">Manga Ontdekken</string>
     <string name="drawer_title_trending">Wat is populair</string>
@@ -229,23 +218,15 @@
 
     <string name="drawer_title_myanime">Mijn Animne Lijst</string>
     <string name="drawer_title_mymanga">Mijn Manga Lijst</string>
-    <string name="drawer_title_reviews">Series Reviews</string>
-
-    <string name="drawer_title_hub">AniTrend Hub</string>
 
     <string name="drawer_section_configuration">Configuratie</string>
-    <string name="drawer_title_filter">Filter</string>
     <string name="drawer_light_theme">Wissel Thema</string>
-    <string name="drawer_title_style">Toggle Style</string>
 
-    <string name="drawer_section_account">Account</string>
     <string name="drawer_title_sign_in">Inloggen</string>
     <string name="drawer_title_profile">Profiel</string>
     <string name="drawer_title_sign_out">Uitloggen</string>
 
-    <string name="drawer_section_extras">Extras</string>
     <string name="drawer_title_share">Delen</string>
-    <string name="drawer_title_update">Update</string>
     <string name="layout_empty_response">Geen data</string>
 
     <!-- Application Tips-->
@@ -253,21 +234,17 @@
     <string name="tip_options_title">Optie Menu</string>
     <string name="tip_search_title">Zoekbalk</string>
     <string name="tip_search_message">Zoek naar verschillende Anime &amp; manga lijsten, vindbaar op naam sleutelwoorden. \n\nklik hier om te annuleren</string>
-    <string name="tip_navigation_title">Navigation</string>
     <string name="tip_navigation_text">Open de navigatielade om verschillende inhoud te bekijken binnen de applicatie. \n\nKlik hier om te annuleren</string>
     <string name="tip_series_options_message">Maak favoriet, voeg toe aan je lijst en deel dit de huidige lijst met vrienden. \n\nKlik hier om te annuleren</string>
     <string name="tip_series_options_title">Opties Beschikbaar</string>
     <string name="tip_character_options_title">Maar favoriet</string>
     <string name="tip_character_options_message">Maak dit Karakter je favoriet. \n\nKlik hier om te annuleren</string>
-    <string name="tip_messages_title">Messages</string>
     <string name="tip_messages_text">Bekijk al je binnenkomende en uitgaande berichten. \n\nKlik hier om te annuleren</string>
     <string name="tip_status_post_title">Maak een status post</string>
     <string name="tip_status_post_text">Post je status bericht zodat iedereen het kan zien. \n\nKlik hier om te annuleren</string>
-    <string name="tip_notifications_title">Notifications</string>
     <string name="tip_notifications_text">Beheer al je berichten op één plek. \n\nKlik hier om te annuleren</string>
     <string name="tip_more_actions_title">Meer Acties</string>
     <string name="tip_more_actions_text">Klik hier voor meer opties, zoals het bekijken van je likes. \n\nKlik hier om te annuleren</string>
-    <string name="tip_compose_message_title">Compose Message</string>
     <string name="tip_compose_message_text">Verzend een bericht naar de huidige gebruiker. \n\nKlik hier om te annuleren</string>
 
     <!--Media attachments on the reply activity-->
@@ -292,7 +269,6 @@
     <string name="notification_default">Onbepaade Activiteit</string>
     <string name="notification_series">Nieuwe aflevering uitgezonden</string>
     <string name="notification_user_follow_activity">Nieuwe volger</string>
-    <string name="notification_user_like_forum">Forum Like</string>
     <string name="notification_user_like_activity">Activiteiten Like</string>
     <string name="notification_user_like_reply">Antwoord Like</string>
     <string name="notification_user_comment_forum">Commentaar op Forum</string>
@@ -805,7 +781,7 @@
         <item>geannuleerd</item>
     </string-array>
 
-    <string-array name="media_formats">
+    <string-array name="anime_formats">
         <item>Alles</item>
         <item>TV</item>
         <item>TV Mini</item>
@@ -814,6 +790,10 @@
         <item>OVA</item>
         <item>ONA</item>
         <item>Muziek</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>Alles</item>
         <item>Manga</item>
         <item>Roman</item>
         <item>Één Opname</item>
@@ -958,4 +938,20 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Delen</string>
     <string name="image_preview_link">Originele Link</string>
+
+    <!-- Image Preview error strings -->
+    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
+    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
+    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
+    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
+    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
+    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+
+    <!-- App Log strings -->
+    <string name="app_log">App Logs</string>
+    <string name="save_bug_report">Save Bug Report</string>
+    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+
+    <string name="show_spoiler_tags">Show Spoiler Tags</string>
+    <string name="notification_media_added">New Related Media Added</string>
 </resources>

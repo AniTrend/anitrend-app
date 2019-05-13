@@ -93,7 +93,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
         mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         swipeRefreshLayout.setOnRefreshAndLoadListener(this);
-        CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
+        CompatUtil.INSTANCE.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
         return root;
     }
 
@@ -216,7 +216,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                     error, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -237,7 +237,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     message, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -272,7 +272,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(getPresenter() != null && isFilterable && GraphUtil.isKeyFilter(key)) {
+        if(getPresenter() != null && isFilterable && GraphUtil.INSTANCE.isKeyFilter(key)) {
             showLoading();
             if(mAdapter != null)
                 mAdapter.clearDataSet();
@@ -305,7 +305,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearch(String query) {
         if(isAlive() && mAdapter != null && mAdapter.getFilter() != null && !isPager) {
-            if(!CompatUtil.equals(this.query, query)) {
+            if(!CompatUtil.INSTANCE.equals(this.query, query)) {
                 this.query = query;
                 mAdapter.getFilter().filter(query);
             }
@@ -346,7 +346,7 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
      * @param content The main data model for the class
      */
     protected void onPostProcessed(@Nullable List<M> content) {
-        if(!CompatUtil.isEmpty(content)) {
+        if(!CompatUtil.INSTANCE.isEmpty(content)) {
             if(isPager && !swipeRefreshLayout.isRefreshing()) {
                 if (mAdapter.getItemCount() < 1)
                     mAdapter.onItemsInserted(content);

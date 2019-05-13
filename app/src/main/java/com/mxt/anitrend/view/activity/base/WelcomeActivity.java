@@ -35,7 +35,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ahoyPages = new ArrayList<>(CompatUtil.constructListFrom(
+            ahoyPages = new ArrayList<>(CompatUtil.INSTANCE.constructListFrom(
                     applyStyle(new AhoyOnboarderCard(getString(R.string.app_name),
                             getString(R.string.app_greeting) + " " + getString(R.string.app_provider),
                             R.mipmap.ic_launcher)),
@@ -53,7 +53,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
                             R.drawable.ic_slow_motion_video_white_24dp))
             ));
         } else {
-            ahoyPages = new ArrayList<>(CompatUtil.constructListFrom(
+            ahoyPages = new ArrayList<>(CompatUtil.INSTANCE.constructListFrom(
                     applyStyle(new AhoyOnboarderCard(getString(R.string.app_name),
                             getString(R.string.app_greeting) + " " + getString(R.string.app_provider),
                             R.mipmap.ic_launcher)),
@@ -87,7 +87,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
     @Override
     public void onFinishButtonPressed() {
         View target = findViewById(com.codemybrainsout.onboarder.R.id.btn_skip);
-        CompatUtil.startRevealAnim(this, target, new Intent(WelcomeActivity.this, MainActivity.class), true);
+        CompatUtil.INSTANCE.startRevealAnim(this, target, new Intent(WelcomeActivity.this, MainActivity.class), true);
     }
 
     @Override

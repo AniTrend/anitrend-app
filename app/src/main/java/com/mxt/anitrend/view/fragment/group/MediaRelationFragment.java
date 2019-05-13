@@ -74,7 +74,7 @@ public class MediaRelationFragment extends FragmentBaseList<RecyclerItem, Connec
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_type, mediaType);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -89,7 +89,7 @@ public class MediaRelationFragment extends FragmentBaseList<RecyclerItem, Connec
                 if (edgeContainer.hasPageInfo())
                     getPresenter().setPageInfo(edgeContainer.getPageInfo());
                 if (!edgeContainer.isEmpty())
-                    onPostProcessed(GroupingUtil.groupMediaByRelationType(edgeContainer.getEdges()));
+                    onPostProcessed(GroupingUtil.INSTANCE.groupMediaByRelationType(edgeContainer.getEdges()));
                 else
                     onPostProcessed(Collections.emptyList());
             }
@@ -113,7 +113,7 @@ public class MediaRelationFragment extends FragmentBaseList<RecyclerItem, Connec
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, ((MediaBase) data.getSecond()).getId());
                 intent.putExtra(KeyUtil.arg_mediaType, ((MediaBase) data.getSecond()).getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

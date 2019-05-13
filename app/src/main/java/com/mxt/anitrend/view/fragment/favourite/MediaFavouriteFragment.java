@@ -66,11 +66,11 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, userId)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
-        getViewModel().requestData(CompatUtil.equals(mediaType, KeyUtil.ANIME) ?
+        getViewModel().requestData(CompatUtil.INSTANCE.equals(mediaType, KeyUtil.ANIME) ?
                 KeyUtil.USER_ANIME_FAVOURITES_REQ : KeyUtil.USER_MANGA_FAVOURITES_REQ, getContext());
     }
 
@@ -78,7 +78,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
     public void onChanged(@Nullable ConnectionContainer<Favourite> content) {
         if(content != null) {
             if(!content.isEmpty()) {
-                PageContainer<MediaBase> pageContainer = CompatUtil.equals(mediaType, KeyUtil.ANIME) ?
+                PageContainer<MediaBase> pageContainer = CompatUtil.INSTANCE.equals(mediaType, KeyUtil.ANIME) ?
                         content.getConnection().getAnime() : content.getConnection().getManga();
                 if(pageContainer.hasPageInfo())
                     getPresenter().setPageInfo(pageContainer.getPageInfo());
@@ -106,7 +106,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
                 Intent intent = new Intent(getActivity(), MediaActivity.class);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
                 intent.putExtra(KeyUtil.arg_mediaType, data.getSecond().getType());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }

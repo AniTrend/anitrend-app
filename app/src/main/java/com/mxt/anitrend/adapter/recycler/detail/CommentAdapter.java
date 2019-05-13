@@ -31,7 +31,7 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
     @NonNull
     @Override
     public RecyclerViewHolder<FeedReply> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CommentViewHolder(AdapterCommentBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new CommentViewHolder(AdapterCommentBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

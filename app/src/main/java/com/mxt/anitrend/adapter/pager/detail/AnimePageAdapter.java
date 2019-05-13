@@ -58,7 +58,7 @@ public class AnimePageAdapter extends BaseStatePageAdapter {
             case 5:
                 return MediaStaffFragment.newInstance(getParams());
             case 6:
-                return MediaFeedFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(true)
+                return MediaFeedFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaId, getParams().getLong(KeyUtil.arg_id))
                         .putVariable(KeyUtil.arg_type, KeyUtil.ANIME_LIST)
                         .putVariable(KeyUtil.arg_isFollowing, true));

@@ -30,7 +30,7 @@ public class LinkAdapter extends RecyclerViewAdapter<ExternalLink> {
     @NonNull
     @Override
     public RecyclerViewHolder<ExternalLink> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new LinkViewHolder(AdapterLinkBinding.inflate(CompatUtil.getLayoutInflater(parent.getContext()), parent, false));
+        return new LinkViewHolder(AdapterLinkBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(parent.getContext()), parent, false));
     }
 
     @Override

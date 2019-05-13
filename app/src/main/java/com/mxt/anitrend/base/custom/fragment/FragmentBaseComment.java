@@ -217,7 +217,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                     error, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -239,7 +239,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         }
         else {
             showLoading();
-            stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     message, getString(R.string.try_again), stateLayoutOnClick);
         }
     }
@@ -324,7 +324,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
      */
     @Override
     public void onChanged(@Nullable FeedList content) {
-        if(content != null && !CompatUtil.isEmpty(content.getReplies())) {
+        if(content != null && !CompatUtil.INSTANCE.isEmpty(content.getReplies())) {
             if(isPager && !swipeRefreshLayout.isRefreshing()) {
                 if (mAdapter.getItemCount() < 1)
                     mAdapter.onItemsInserted(content.getReplies());

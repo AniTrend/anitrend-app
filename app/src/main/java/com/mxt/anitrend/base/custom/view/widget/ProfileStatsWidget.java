@@ -81,7 +81,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        queryContainer = GraphUtil.getDefaultQuery(false);
+        queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false);
         binding = WidgetProfileStatsBinding.inflate(LayoutInflater.from(getContext()), this, true);
         // loading place holder data
         binding.userAnimeTime.setText(placeHolder);
@@ -165,7 +165,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     updateUI();
                 }
             } else
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -204,7 +204,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
     public String getCount(List<StatusDistribution> statusDistributions) {
         int totalCount = 0;
-        if(!CompatUtil.isEmpty(statusDistributions))
+        if(!CompatUtil.INSTANCE.isEmpty(statusDistributions))
             totalCount = Stream.of(statusDistributions)
                     .mapToInt(StatusDistribution::getAmount)
                     .sum();

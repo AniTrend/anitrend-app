@@ -41,7 +41,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/genre_recycler"
-                    android:visibility="@{!CompatUtil.isEmpty(model.genres) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.genres) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -51,10 +51,28 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/tags_recycler"
-                    android:visibility="@{!CompatUtil.isEmpty(model.tags) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.tags) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+
+                <com.mxt.anitrend.base.custom.view.container.CardViewBase
+                    android:id="@+id/show_spoiler_tags"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:foreground="?selectableItemBackground"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/lg_margin">
+
+                    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                        android:text="@string/show_spoiler_tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold" />
+
+                </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
             </LinearLayout>
 

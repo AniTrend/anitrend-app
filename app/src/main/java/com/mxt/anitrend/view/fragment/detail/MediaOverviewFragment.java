@@ -28,7 +28,6 @@ import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaBrowseUtil;
-import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment;
@@ -99,7 +98,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
      */
     @Override
     protected void updateUI() {
-        if(getActivity() != null && model.getTrailer() != null && CompatUtil.equals(model.getTrailer().getSite(), "youtube")) {
+        if(getActivity() != null && model.getTrailer() != null && CompatUtil.INSTANCE.equals(model.getTrailer().getSite(), "youtube")) {
             if(YouTubeIntents.canResolvePlayVideoIntent(getActivity())) {
                 if (youtubePlayerFragment == null)
                     youtubePlayerFragment = YoutubePlayerFragment.newInstance(model.getTrailer());
@@ -116,6 +115,14 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
         binding.setPresenter(getPresenter());
         binding.setModel(model);
 
+
+        if (model.getTags() != null && model.getTagsNoSpoilers() != null) {
+            if (model.getTagsNoSpoilers().size() == model.getTags().size())
+                binding.showSpoilerTags.setVisibility(View.GONE);
+            else
+                binding.showSpoilerTags.setVisibility(View.VISIBLE);
+        }
+
         if(genreAdapter == null) {
             genreAdapter = new GenreAdapter(getContext());
             genreAdapter.onItemsInserted(getPresenter().buildGenres(model));
@@ -126,7 +133,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                         case R.id.container:
                             Bundle args = new Bundle();
                             Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                            args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                            args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.INSTANCE.getDefaultQuery(true)
                                     .putVariable(KeyUtil.arg_type, mediaType)
                                     .putVariable(KeyUtil.arg_genres, data.getSecond().getGenre()));
                             args.putString(KeyUtil.arg_activity_tag, data.getSecond().getGenre());
@@ -150,19 +157,19 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
 
         if(tagAdapter == null) {
             tagAdapter = new TagAdapter(getContext());
-            tagAdapter.onItemsInserted(model.getTags());
+            tagAdapter.onItemsInserted(model.getTagsNoSpoilers());
             tagAdapter.setClickListener(new ItemClickListener<MediaTag>() {
                 @Override
                 public void onItemClick(View target, IntPair<MediaTag> data) {
                     switch (target.getId()) {
                         case R.id.container:
-                            DialogUtil.createMessage(getActivity(), data.getSecond().getName(), data.getSecond().getDescription(),
+                            DialogUtil.createTagMessage(getActivity(), data.getSecond().getName(), data.getSecond().getDescription(), data.getSecond().isMediaSpoiler(),
                                     R.string.More, R.string.Close, (dialog, which) -> {
                                         switch (which) {
                                             case POSITIVE:
                                                 Bundle args = new Bundle();
                                                 Intent intent = new Intent(getActivity(), MediaBrowseActivity.class);
-                                                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
+                                                args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.INSTANCE.getDefaultQuery(true)
                                                         .putVariable(KeyUtil.arg_type, mediaType)
                                                         .putVariable(KeyUtil.arg_tags, data.getSecond().getName()));
                                                 args.putString(KeyUtil.arg_activity_tag, data.getSecond().getName());
@@ -195,7 +202,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
      */
     @Override
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_type, mediaType);
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -213,7 +220,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
             this.model = model;
             updateUI();
         } else
-            binding.stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+            binding.stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again), view -> { binding.stateLayout.showLoading(); makeRequest(); });
     }
 
@@ -222,14 +229,12 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
      *
      * @param v The view that was clicked.
      */
-    @Override @OnClick({R.id.series_image, R.id.anime_main_studio_container})
+    @Override @OnClick({R.id.series_image, R.id.anime_main_studio_container, R.id.show_spoiler_tags})
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.series_image:
-                intent = new Intent(getActivity(), ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getCoverImage().getLarge());
-                CompatUtil.startSharedImageTransition(getActivity(), v, intent, R.string.transition_image_preview);
+                CompatUtil.INSTANCE.imagePreview(getActivity(), v, model.getCoverImage().getLarge(), R.string.image_preview_error_series_cover);
             break;
             case R.id.anime_main_studio_container:
                 StudioBase studioBase = getPresenter().getMainStudioObject(model);
@@ -238,6 +243,11 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
                     intent.putExtra(KeyUtil.arg_id, studioBase.getId());
                     startActivity(intent);
                 }
+                break;
+            case R.id.show_spoiler_tags:
+                tagAdapter.onItemRangeChanged(model.getTags());
+                tagAdapter.notifyDataSetChanged();
+                v.setVisibility(View.GONE);
                 break;
             default:
                 super.onClick(v);

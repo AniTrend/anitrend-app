@@ -41,9 +41,9 @@ public class AiringTextView extends SingleLineTextView {
     public static void setAiring(AiringTextView view, @Nullable MediaBase mediaBase) {
         if(mediaBase != null) {
             if (mediaBase.getNextAiringEpisode() != null)
-                view.setText(DateUtil.getNextEpDate(mediaBase.getNextAiringEpisode()));
+                view.setText(DateUtil.INSTANCE.getNextEpDate(mediaBase.getNextAiringEpisode()));
             else
-                view.setText(CompatUtil.capitalizeWords(mediaBase.getStatus()));
+                view.setText(CompatUtil.INSTANCE.capitalizeWords(mediaBase.getStatus()));
             view.setVisibility(VISIBLE);
         } else {
             view.setVisibility(GONE);

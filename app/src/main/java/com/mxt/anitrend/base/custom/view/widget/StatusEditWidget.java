@@ -32,7 +32,7 @@ public class StatusEditWidget extends SingleLineTextView implements CustomView {
     public void onInit() {
         final int padding = getResources().getDimensionPixelSize(R.dimen.spacing_small);
         setPadding(padding, padding, padding, padding);
-        setCompoundDrawablesWithIntrinsicBounds(CompatUtil.getDrawable(getContext(),
+        setCompoundDrawablesWithIntrinsicBounds(CompatUtil.INSTANCE.getDrawable(getContext(),
                 R.drawable.ic_edit_green_600_18dp), null, null, null);
     }
 

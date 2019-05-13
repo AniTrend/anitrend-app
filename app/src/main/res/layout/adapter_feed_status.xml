@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
-                    android:text="@{DateUtil.getPrettyDateUnix(model.createdAt)}"
+                    android:text="@{DateUtil.INSTANCE.getPrettyDateUnix(model.createdAt)}"
                     tools:text="5 days ago" />
 
             </LinearLayout>
@@ -64,6 +64,11 @@
                 android:id="@+id/widget_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <!--<com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:richMarkDown="@{model.text}"/>-->
 
             <android.support.v4.widget.Space
                 android:layout_width="wrap_content"

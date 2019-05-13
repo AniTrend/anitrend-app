@@ -68,7 +68,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     @Override
     public void onInit() {
         presenter = new WidgetPresenter<>(getContext());
-        binding = WidgetAutoIncrementerBinding.inflate(CompatUtil.getLayoutInflater(getContext()), this, true);
+        binding = WidgetAutoIncrementerBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         binding.setOnClickEvent(this);
     }
 
@@ -116,7 +116,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
             MediaList mediaList;
             final MediaList modelClone = model.clone();
             if(response.isSuccessful() && (mediaList = response.body()) != null) {
-                boolean isModelCategoryChanged = !CompatUtil.equals(mediaList.getStatus(), status);
+                boolean isModelCategoryChanged = !CompatUtil.INSTANCE.equals(mediaList.getStatus(), status);
                 mediaList.setMedia(modelClone.getMedia()); model = mediaList.clone();
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
                 if(isModelCategoryChanged || MediaListUtil.isProgressUpdatable(modelClone)) {
@@ -127,7 +127,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
                     resetFlipperState();
             } else {
                 resetFlipperState();
-                Log.e(this.toString(), ErrorUtil.getError(response));
+                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
                 NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
@@ -148,14 +148,14 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
 
 
     private void updateModelState() {
-        if(model.getProgress() < 1 && CompatUtil.equals(model.getStatus(), KeyUtil.PLANNING)) {
+        if(model.getProgress() < 1 && CompatUtil.INSTANCE.equals(model.getStatus(), KeyUtil.PLANNING)) {
             model.setStatus(KeyUtil.CURRENT);
-            model.setStartedAt(DateUtil.getCurrentDate());
+            model.setStartedAt(DateUtil.INSTANCE.getCurrentDate());
         }
         model.setProgress(model.getProgress() + 1);
         if(MediaUtil.isIncrementLimitReached(model)) {
             model.setStatus(KeyUtil.COMPLETED);
-            model.setCompletedAt(DateUtil.getCurrentDate());
+            model.setCompletedAt(DateUtil.INSTANCE.getCurrentDate());
         }
         presenter.setParams(MediaListUtil.getMediaListParams(model, presenter.getDatabase()
                 .getCurrentUser().getMediaListOptions().getScoreFormat()));

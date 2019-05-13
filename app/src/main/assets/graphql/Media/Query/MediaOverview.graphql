@@ -42,6 +42,7 @@ query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isM
           category
           rank
           isGeneralSpoiler
+          isMediaSpoiler
           isAdult
         }
       }

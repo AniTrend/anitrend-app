@@ -43,20 +43,20 @@ public class SeriesYearTypeTextView extends SingleLineTextView {
         String year = startDate.isValidDate() ? String.format(Locale.getDefault(), "%d", startDate.getYear()) : context.getString(R.string.tba_placeholder);
         switch (mediaBase.getType()) {
             case KeyUtil.ANIME:
-                if(CompatUtil.equals(mediaBase.getFormat(), KeyUtil.MOVIE))
-                    seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, CompatUtil.capitalizeWords(mediaBase.getFormat())));
+                if(CompatUtil.INSTANCE.equals(mediaBase.getFormat(), KeyUtil.MOVIE))
+                    seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, CompatUtil.INSTANCE.capitalizeWords(mediaBase.getFormat())));
                 else {
                     if(mediaBase.getEpisodes() > 0)
                         seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, context.getString(R.string.text_anime_episodes, mediaBase.getEpisodes())));
                     else
-                        seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, CompatUtil.capitalizeWords(mediaBase.getFormat())));
+                        seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, CompatUtil.INSTANCE.capitalizeWords(mediaBase.getFormat())));
                 }
                 break;
             case KeyUtil.MANGA:
                 if(mediaBase.getChapters() > 0)
                     seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, context.getString(R.string.text_manga_chapters, mediaBase.getChapters())));
                 else
-                    seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, CompatUtil.capitalizeWords(mediaBase.getFormat())));
+                    seriesYearTypeTextView.setText(String.format(Locale.getDefault(), "%s - %s", year, CompatUtil.INSTANCE.capitalizeWords(mediaBase.getFormat())));
                 break;
         }
     }

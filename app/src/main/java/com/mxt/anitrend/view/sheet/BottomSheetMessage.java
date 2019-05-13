@@ -10,6 +10,7 @@ import android.view.View;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
+import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
 import com.mxt.anitrend.util.KeyUtil;
 
 import butterknife.BindView;
@@ -53,7 +54,7 @@ public class BottomSheetMessage extends BottomSheetBase implements View.OnClickL
     @Override
     public void onStart() {
         super.onStart();
-        RichMarkdownTextView.basicText(bottom_text, getString(mText));
+        RichMarkdownExtensionsKt.basicText(bottom_text, getString(mText));
         if(mPositive != 0)
             bottom_positive.setText(mPositive);
         else

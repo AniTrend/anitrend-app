@@ -33,7 +33,7 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         type
         createdAt
         context
-		activityId
+        activityId
         user {
           ...userBase
         }
@@ -58,16 +58,6 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
           ...userBase
         }
       }
-      ... on ActivityReplySubscribedNotification {
-          id
-          type
-          createdAt
-          context
-          activityId
-          user {
-            ...userBase
-          }
-        }
       ... on ActivityLikeNotification {
         id
         type
@@ -131,6 +121,15 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
         context
         user {
           ...userBase
+        }
+      }
+      ... on RelatedMediaAdditionNotification {
+        id
+        type
+        createdAt
+        context
+        media {
+          ...mediaBase
         }
       }
     }

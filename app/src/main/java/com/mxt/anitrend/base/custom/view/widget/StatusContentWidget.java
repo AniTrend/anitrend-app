@@ -90,7 +90,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
         findMediaAttachments(model.getReply());
     }
 
-    public void setTextData(String textData) {
+    public void setTextData(@Nullable String textData) {
         binding.widgetStatusText.setMarkDownText(textData);
         findMediaAttachments(textData);
     }
@@ -105,7 +105,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
 
     private void findMediaAttachments(@Nullable String value) {
         if(!TextUtils.isEmpty(value)) {
-            Matcher matcher = RegexUtil.findMedia(value);
+            Matcher matcher = RegexUtil.INSTANCE.findMedia(value);
             contentLinks = new ArrayList<>();
             contentTypes = new ArrayList<>();
             while (matcher.find()) {
@@ -114,7 +114,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
                 String media = matcher.group(gc);
                 contentTypes.add(tag);
                 if (tag.equals(RegexUtil.KEY_YOU))
-                    contentLinks.add(RegexUtil.buildYoutube(media.replace("(", "").replace(")", "")));
+                    contentLinks.add(RegexUtil.INSTANCE.buildYoutube(media.replace("(", "").replace(")", "")));
                 else
                     contentLinks.add(media.replace("(", "").replace(")", ""));
             }
@@ -123,7 +123,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
     }
 
     private void constructAdditionalViews() {
-        if(!CompatUtil.isEmpty(contentLinks)) {
+        if(!CompatUtil.INSTANCE.isEmpty(contentLinks)) {
             RecyclerViewAdapter<String> previewAdapter = new ImagePreviewAdapter(contentTypes,  getContext());
             previewAdapter.onItemsInserted(contentLinks);
             previewAdapter.setClickListener(this);

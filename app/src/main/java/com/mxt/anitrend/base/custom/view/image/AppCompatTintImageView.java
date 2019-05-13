@@ -32,7 +32,7 @@ public class AppCompatTintImageView extends AppCompatImageView implements Custom
 
     @BindingAdapter({"imageSrc"})
     public static void setTintDrawable(AppCompatTintImageView imageView, @DrawableRes int drawable) {
-        imageView.setImageDrawable(CompatUtil.getDrawableTintAttr(imageView.getContext(), drawable, R.attr.colorAccent));
+        imageView.setImageDrawable(CompatUtil.INSTANCE.getDrawableTintAttr(imageView.getContext(), drawable, R.attr.colorAccent));
     }
 
     /**
@@ -52,10 +52,10 @@ public class AppCompatTintImageView extends AppCompatImageView implements Custom
     }
 
     public void setTintDrawable(@DrawableRes int drawable, @ColorRes int colorTint) {
-        setImageDrawable(CompatUtil.getDrawable(getContext(), drawable, colorTint));
+        setImageDrawable(CompatUtil.INSTANCE.getDrawable(getContext(), drawable, colorTint));
     }
 
     public void setTintDrawableAttr(@DrawableRes int drawable, @AttrRes int colorAttribute) {
-        setImageDrawable(CompatUtil.getDrawableTintAttr(getContext(), drawable, colorAttribute));
+        setImageDrawable(CompatUtil.INSTANCE.getDrawableTintAttr(getContext(), drawable, colorAttribute));
     }
 }

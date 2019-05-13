@@ -70,7 +70,7 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     protected IconArrayAdapter getIconArrayAdapter() {
         IconArrayAdapter iconArrayAdapter = new IconArrayAdapter(getContext(),
                 R.layout.adapter_spinner_item, R.id.spinner_text,
-                CompatUtil.getStringList(getContext(), R.array.media_list_status));
+                CompatUtil.INSTANCE.getStringList(getContext(), R.array.media_list_status));
         iconArrayAdapter.setIndexIconMap(indexIconMap);
         return iconArrayAdapter;
     }

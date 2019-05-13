@@ -93,7 +93,7 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
     @Override
     protected void updateUI() {
         if(getPresenter().getApplicationPref().isNotificationEnabled())
-            JobSchedulerUtil.scheduleJob(getApplicationContext());
+            JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
         createApplicationShortcuts();
         finish();
     }
@@ -221,7 +221,7 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
             if (workInfo != null && workInfo.getState().isFinished()) {
                 Data outputData = workInfo.getOutputData();
                 if (outputData.getBoolean(KeyUtil.arg_model, false)) {
-                    getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false));
+                    getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, GraphUtil.INSTANCE.getDefaultQuery(false));
                     getViewModel().requestData(KeyUtil.USER_CURRENT_REQ, getApplicationContext());
                 }
                 else {

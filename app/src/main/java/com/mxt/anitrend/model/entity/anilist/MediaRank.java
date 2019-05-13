@@ -68,30 +68,30 @@ public class MediaRank implements Parcelable {
         if(year == 0)
             if(season != null)
                 return String.format(Locale.getDefault(), "<b>#%d %s <small>%s<small/></b> <small>(%s)</small>",
-                        rank, context.toUpperCase(), season.toUpperCase(), CompatUtil.capitalizeWords(format));
+                        rank, context.toUpperCase(), season.toUpperCase(), CompatUtil.INSTANCE.capitalizeWords(format));
             else
                 return String.format(Locale.getDefault(), "<b>#%d %s</b> <small>(%s)</small>",
-                        rank, context.toUpperCase(), CompatUtil.capitalizeWords(format));
+                        rank, context.toUpperCase(), CompatUtil.INSTANCE.capitalizeWords(format));
         if(season != null)
             return String.format(Locale.getDefault(), "<b>#%d %s <small>%s %d</small></b> <small>(%s)</small>",
-                    rank, context.toUpperCase(), season.toUpperCase(), year, CompatUtil.capitalizeWords(format));
+                    rank, context.toUpperCase(), season.toUpperCase(), year, CompatUtil.INSTANCE.capitalizeWords(format));
         return String.format(Locale.getDefault(), "<b>#%d %s <small>%d</small></b> <small>(%s)</small>",
-                rank, context.toUpperCase(), year, CompatUtil.capitalizeWords(format));
+                rank, context.toUpperCase(), year, CompatUtil.INSTANCE.capitalizeWords(format));
     }
 
     public String getTypeHtmlPlainTitle() {
         if(year == 0)
             if(season != null)
                 return String.format(Locale.getDefault(), "%s <small>%s<small/> <small>(%s)</small>",
-                        context.toUpperCase(), season, CompatUtil.capitalizeWords(format));
+                        context.toUpperCase(), season, CompatUtil.INSTANCE.capitalizeWords(format));
             else
                 return String.format(Locale.getDefault(), "%s <small>(%s)</small>",
-                        context.toUpperCase(), CompatUtil.capitalizeWords(format));
+                        context.toUpperCase(), CompatUtil.INSTANCE.capitalizeWords(format));
         if(season != null)
             return String.format(Locale.getDefault(), "%s <small>%s %d</small> <small>(%s)</small>",
-                    context.toUpperCase(), season, year, CompatUtil.capitalizeWords(format));
+                    context.toUpperCase(), season, year, CompatUtil.INSTANCE.capitalizeWords(format));
         return String.format(Locale.getDefault(), "%s <small>%d</small> <small>(%s)</small>",
-                context.toUpperCase(), year, CompatUtil.capitalizeWords(format));
+                context.toUpperCase(), year, CompatUtil.INSTANCE.capitalizeWords(format));
     }
 
     public int getId() {

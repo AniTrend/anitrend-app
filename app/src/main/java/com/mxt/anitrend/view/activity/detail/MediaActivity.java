@@ -75,7 +75,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mActionBar.setHomeAsUpIndicator(CompatUtil.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
+        mActionBar.setHomeAsUpIndicator(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
         onActivityReady();
     }
 
@@ -128,7 +128,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     protected void onActivityReady() {
         if(mediaType != null) {
             BaseStatePageAdapter baseStatePageAdapter = new AnimePageAdapter(getSupportFragmentManager(), getApplicationContext());
-            if (!CompatUtil.equals(mediaType, KeyUtil.ANIME))
+            if (!CompatUtil.INSTANCE.equals(mediaType, KeyUtil.ANIME))
                 baseStatePageAdapter = new MangaPageAdapter(getSupportFragmentManager(), getApplicationContext());
             baseStatePageAdapter.setParams(getIntent().getExtras());
             viewPager.setAdapter(baseStatePageAdapter);
@@ -168,7 +168,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
     @Override
     protected void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(false)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_id, id);
 
@@ -192,9 +192,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.series_banner:
-                Intent intent = new Intent(this, ImagePreviewActivity.class);
-                intent.putExtra(KeyUtil.arg_model, model.getBannerImage());
-                CompatUtil.startSharedImageTransition(this, view, intent, R.string.transition_image_preview);
+                CompatUtil.INSTANCE.imagePreview(this, view, model.getBannerImage(), R.string.image_preview_error_series_banner);
                 break;
         }
     }
@@ -208,7 +206,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
     private void setManageMenuItemIcon() {
         if(model != null && model.getMediaListEntry() != null && manageMenuItem != null)
-            manageMenuItem.setIcon(CompatUtil.getDrawable(this, R.drawable.ic_mode_edit_white_24dp));
+            manageMenuItem.setIcon(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_mode_edit_white_24dp));
     }
 
     private void setFavouriteWidgetMenuItemIcon() {

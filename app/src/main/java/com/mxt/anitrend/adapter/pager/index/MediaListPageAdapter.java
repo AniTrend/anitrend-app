@@ -29,7 +29,7 @@ public class MediaListPageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        return MediaListFragment.newInstance(getParams(), GraphUtil.getDefaultQuery(false)
+        return MediaListFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_statusIn, KeyUtil.MediaListStatus[position]));
     }
 }

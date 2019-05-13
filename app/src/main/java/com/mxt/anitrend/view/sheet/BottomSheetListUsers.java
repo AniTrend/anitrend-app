@@ -90,7 +90,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        BottomSheetListBinding binding = BottomSheetListBinding.inflate(CompatUtil.getLayoutInflater(getActivity()));
+        BottomSheetListBinding binding = BottomSheetListBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
         unbinder = ButterKnife.bind(this, dialog);
         createBottomSheetBehavior(binding.getRoot());
@@ -148,7 +148,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
             recyclerView.setAdapter(mAdapter);
         }
         if (mAdapter.getItemCount() < 1)
-            stateLayout.showEmpty(CompatUtil.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
+            stateLayout.showEmpty(CompatUtil.INSTANCE.getDrawable(getContext(),  R.drawable.ic_new_releases_white_24dp, R.color.colorStateBlue), getString(R.string.layout_empty_response));
         else
             stateLayout.showContent();
     }
@@ -201,7 +201,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
      * All new or updated network requests should be handled in this method
      */
     public void makeRequest() {
-        QueryContainerBuilder queryContainer = GraphUtil.getDefaultQuery(isPager)
+        QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, userId)
                 .putVariable(KeyUtil.arg_page, presenter.getCurrentPage());
 
@@ -214,7 +214,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
      * @param content The main data model for the class
      */
     protected void onPostProcessed(@Nullable List<UserBase> content) {
-        if(!CompatUtil.isEmpty(content)) {
+        if(!CompatUtil.INSTANCE.isEmpty(content)) {
             if(isPager) {
                 if (mAdapter.getItemCount() < 1)
                     mAdapter.onItemsInserted(content);
@@ -256,7 +256,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
     public void showError(String error) {
         super.showError(error);
         stateLayout.showLoading();
-        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_cry),
+        stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_cry),
                 error, getString(R.string.try_again), stateLayoutOnClick);
     }
 
@@ -264,7 +264,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
     public void showEmpty(String message) {
         super.showEmpty(message);
         stateLayout.showLoading();
-        stateLayout.showError(CompatUtil.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
+        stateLayout.showError(CompatUtil.INSTANCE.getDrawable(getContext(), R.drawable.ic_emoji_sweat),
                 message, getString(R.string.try_again) , stateLayoutOnClick);
     }
 
@@ -282,7 +282,7 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(KeyUtil.arg_id, data.getSecond().getId());
-                CompatUtil.startRevealAnim(getActivity(), target, intent);
+                CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
     }
