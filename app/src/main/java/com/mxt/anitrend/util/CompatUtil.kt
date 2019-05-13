@@ -467,14 +467,16 @@ object CompatUtil {
     /**
      * Capitalize words for text view consumption
      */
-    fun capitalizeWords(input: String): String {
-        if (!TextUtils.isEmpty(input)) {
+    fun capitalizeWords(input: String?): String {
+        if (!input.isNullOrBlank()) {
             val exceptions = constructListFrom(KeyUtil.TV, KeyUtil.ONA, KeyUtil.OVA)
             val result = StringBuilder(input.length)
-            val words = input.split("_|\\s".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            var index = 0
-            for (word in words) {
-                if (!TextUtils.isEmpty(word)) {
+            val words = input.split("_|\\s".toRegex())
+                    .dropLastWhile {
+                        it.isEmpty()
+                    }.toTypedArray()
+            for ((index, word) in words.withIndex()) {
+                if (word.isNotEmpty()) {
                     if (exceptions.contains(word))
                         result.append(word)
                     else {
@@ -484,7 +486,6 @@ object CompatUtil {
                 }
                 if (index != word.length - 1)
                     result.append(" ")
-                index++
             }
             return result.toString()
         }
@@ -495,10 +496,8 @@ object CompatUtil {
      * Get a list from a given array of strings
      * @return list of capitalized strings
      */
-    fun capitalizeWords(vararg strings: String): List<String> {
-        return Stream.of(*strings)
-                .map<String> { capitalizeWords(it) }
-                .toList()
+    fun capitalizeWords(strings: Array<String>): List<String> {
+        return strings.map { capitalizeWords(it)  }
     }
 
     fun <T : Collection<*>> isEmpty(collection: T?): Boolean {
