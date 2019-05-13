@@ -24,8 +24,14 @@ import org.greenrobot.eventbus.EventBus
 
 class App : MultiDexApplication() {
 
-    val applicationPref by lazy {
-        ApplicationPref(this)
+    val applicationPref = ApplicationPref(this)
+
+    init {
+        EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
+                .sendNoSubscriberEvent(BuildConfig.DEBUG)
+                .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
+                .throwSubscriberException(BuildConfig.DEBUG)
+                .installDefaultEventBus()
     }
 
     /**
@@ -42,6 +48,7 @@ class App : MultiDexApplication() {
      */
     lateinit var boxStore: BoxStore
         private set
+
     /**
      * Get application global registered fabric instance, depending on
      * the current application preferences the application may have
@@ -60,7 +67,7 @@ class App : MultiDexApplication() {
 
     private fun setCrashAnalytics() {
         if (!BuildConfig.DEBUG)
-            if (applicationPref.isCrashReportsEnabled!!) {
+            if (applicationPref.isCrashReportsEnabled == true) {
                 val crashlyticsCore = CrashlyticsCore.Builder()
                         .build()
 
@@ -72,17 +79,11 @@ class App : MultiDexApplication() {
     }
 
     private fun initApp() {
-        EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
-                .sendNoSubscriberEvent(BuildConfig.DEBUG)
-                .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
-                .throwSubscriberException(BuildConfig.DEBUG)
-                .installDefaultEventBus()
         if (applicationPref.isUsageAnalyticsEnabled == true) {
             analytics = FirebaseAnalytics.getInstance(this).apply {
                 setAnalyticsCollectionEnabled(applicationPref.isUsageAnalyticsEnabled!!)
             }
         }
-        JobSchedulerUtil.scheduleJob(applicationContext)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
             ProviderInstaller.installIfNeededAsync(applicationContext,
                     object : ProviderInstaller.ProviderInstallListener {

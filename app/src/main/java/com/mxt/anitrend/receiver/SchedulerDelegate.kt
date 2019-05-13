@@ -13,8 +13,10 @@ import com.mxt.anitrend.util.JobSchedulerUtil
 
 class SchedulerDelegate : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != null && intent.action == Intent.ACTION_BOOT_COMPLETED)
-            JobSchedulerUtil.scheduleJob(context)
+    override fun onReceive(context: Context, intent: Intent?) {
+        when (intent?.action) {
+            Intent.ACTION_BOOT_COMPLETED ->
+                JobSchedulerUtil.scheduleJob(context)
+        }
     }
 }
