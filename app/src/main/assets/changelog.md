@@ -11,6 +11,7 @@ which can result in authentication errors [read more](https://github.com/square/
 #### Bug Fixes
 - Multiple translations fixed
 - Scores not matching sorted order
+- Crashes on pre-lollipop with v1.4.2
 - Crashes on some device related to crunchyroll feeds
 
 #### Current Issues
