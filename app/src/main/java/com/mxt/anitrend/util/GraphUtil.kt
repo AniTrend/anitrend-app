@@ -48,12 +48,13 @@ object GraphUtil {
     /**
      * Remove empty json object responses, to resolve undefined content errors
      */
+    @Deprecated("Will be deprecated once AL sorts out their notification issues")
     fun filterNotificationList(presenter: BasePresenter, notifications: List<Notification>): List<Notification> {
         val filteredList = Stream.of(notifications)
-                .filter { f -> f != null && f.activityId != 0L }
+                .filter { f -> !f?.type.isNullOrBlank() }
                 .toList()
         if (presenter.pageInfo != null)
-            presenter.pageInfo!!.perPage = filteredList.size
+            presenter.pageInfo?.perPage = filteredList.size
         return filteredList
     }
 }
