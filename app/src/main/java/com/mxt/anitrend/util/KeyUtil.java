@@ -231,10 +231,10 @@ public interface KeyUtil {
     // Deep link types
     String DEEP_LINK_USER = "user", DEEP_LINK_MANGA = "manga", DEEP_LINK_ANIME = "anime",
             DEEP_LINK_CHARACTER = "character", DEEP_LINK_STAFF = "staff", DEEP_LINK_ACTOR = "actor",
-            DEEP_LINK_STUDIO = "studio";
+            DEEP_LINK_STUDIO = "studio", DEEP_LINK_ACTIVITY = "activity";
 
     @StringDef({ DEEP_LINK_USER, DEEP_LINK_MANGA, DEEP_LINK_ANIME, DEEP_LINK_CHARACTER,
-            DEEP_LINK_STAFF, DEEP_LINK_ACTOR, DEEP_LINK_STUDIO })
+            DEEP_LINK_STAFF, DEEP_LINK_ACTOR, DEEP_LINK_STUDIO, DEEP_LINK_ACTIVITY })
     @interface DeepLinkType {}
 
 

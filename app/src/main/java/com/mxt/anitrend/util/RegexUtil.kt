@@ -24,7 +24,7 @@ object RegexUtil {
 
     private val pattern: Pattern
     private const val PATTERN_MEDIA = "(img|webm|youtube).*?(\\([^)]+\\))"
-    private const val PATTERN_DEEP_LINKS = "(user|manga|anime|character|staff|studio)\\/(.*)"
+    private const val PATTERN_DEEP_LINKS = "(activity|user|manga|anime|character|actor|staff|studio)\\/(.*)"
 
     private const val USER_URL_LINK = "__[%s](https://anilist.co/user/%s)__"
     private const val PATTERN_USER_TAGS = "(@[A-Za-z]\\w+)"
