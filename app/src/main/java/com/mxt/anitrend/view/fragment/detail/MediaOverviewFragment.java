@@ -101,7 +101,7 @@ public class MediaOverviewFragment extends FragmentBase<Media, MediaPresenter, M
         if(getActivity() != null && model.getTrailer() != null && CompatUtil.INSTANCE.equals(model.getTrailer().getSite(), "youtube")) {
             if(YouTubeIntents.canResolvePlayVideoIntent(getActivity())) {
                 if (youtubePlayerFragment == null)
-                    youtubePlayerFragment = YoutubePlayerFragment.newInstance(model.getTrailer());
+                    youtubePlayerFragment = YoutubePlayerFragment.Companion.newInstance(model.getTrailer());
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.youtube_view, youtubePlayerFragment)
                         .commit();

@@ -84,18 +84,20 @@ class App : MultiDexApplication() {
                 setAnalyticsCollectionEnabled(applicationPref.isUsageAnalyticsEnabled!!)
             }
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            ProviderInstaller.installIfNeededAsync(applicationContext,
-                    object : ProviderInstaller.ProviderInstallListener {
-                        override fun onProviderInstalled() {
-
-                        }
-
-                        override fun onProviderInstallFailed(i: Int, intent: Intent) {
-
-                        }
-                    })
         try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                ProviderInstaller.installIfNeededAsync(
+                        applicationContext,
+                        object : ProviderInstaller.ProviderInstallListener {
+                            override fun onProviderInstalled() {
+
+                            }
+
+                            override fun onProviderInstallFailed(i: Int, intent: Intent) {
+
+                            }
+                        }
+                )
             EmojiManager.initEmojiData(this)
         } catch (e: Exception) {
             e.printStackTrace()

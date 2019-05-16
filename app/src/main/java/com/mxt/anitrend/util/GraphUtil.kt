@@ -1,7 +1,5 @@
 package com.mxt.anitrend.util
 
-import android.text.TextUtils
-
 import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Notification
@@ -30,7 +28,8 @@ object GraphUtil {
      * Used to check if the newly applied preference key is a should trigger an application refresh
      */
     fun isKeyFilter(preferenceKey: String): Boolean {
-        return !CompatUtil.equals(preferenceKey, ApplicationPref._isLightTheme) && !CompatUtil.equals(preferenceKey, ApplicationPref._updateChannel)
+        return !CompatUtil.equals(preferenceKey, ApplicationPref._isLightTheme) &&
+                !CompatUtil.equals(preferenceKey, ApplicationPref._updateChannel)
     }
 
     /**
@@ -38,10 +37,9 @@ object GraphUtil {
      */
     fun filterFeedList(presenter: BasePresenter, feedLists: List<FeedList>): List<FeedList> {
         val filteredList = Stream.of(feedLists)
-                .filter { f -> f != null && !TextUtils.isEmpty(f.type) }
+                .filter { f -> !f?.type.isNullOrBlank() }
                 .toList()
-        if (presenter.pageInfo != null)
-            presenter.pageInfo!!.perPage = filteredList.size
+        presenter.pageInfo?.perPage = filteredList.size
         return filteredList
     }
 
