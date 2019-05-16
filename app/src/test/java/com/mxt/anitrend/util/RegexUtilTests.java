@@ -60,6 +60,11 @@ public class RegexUtilTests {
         type = matcher.group(1);
         assertEquals(KeyUtil.DEEP_LINK_STUDIO, type);
 
+        matcher = RegexUtil.INSTANCE.findIntentKeys("https://anilist.co/activity/38932001");
+        assertNotNull(matcher);
+        type = matcher.group(1);
+        assertEquals(KeyUtil.DEEP_LINK_ACTIVITY, type);
+
         matcher = RegexUtil.INSTANCE.findIntentKeys("https://anilist.co/user/wax911/");
         assertNotNull(matcher);
         type = matcher.group(1);
