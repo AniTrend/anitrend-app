@@ -43,7 +43,9 @@ public class RegexUtilTests {
 
         /* This is deprecated in the new front end */
         matcher = RegexUtil.INSTANCE.findIntentKeys("https://anilist.co/actor/102263/Youko-Hikasa");
-        assertNull(matcher);
+        assertNotNull(matcher);
+        type = matcher.group(1);
+        assertEquals(KeyUtil.DEEP_LINK_ACTOR, type);
 
         matcher = RegexUtil.INSTANCE.findIntentKeys("https://anilist.co/character/88573/Subaru-Natsuki");
         assertNotNull(matcher);
