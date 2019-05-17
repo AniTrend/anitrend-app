@@ -56,7 +56,7 @@ public class WebFactory {
     /**
      * Creates a standard HttpBuilder with most common likely used configuration and optionally
      * will include http logging based off a given log level.
-     * @see HttpLoggingInterceptor#level
+     * @see HttpLoggingInterceptor#setLevel(HttpLoggingInterceptor.Level)
      * <br/>
      *
      * @param interceptor Optional interceptor of your own implementation

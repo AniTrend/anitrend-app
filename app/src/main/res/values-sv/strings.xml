@@ -452,11 +452,7 @@
         ]]>
     </string>
 
-    <string name="app_update">
-        <![CDATA[
-        <b>Hämta: <i>v%s</i></b>
-        ]]>
-    </string>
+    <string name="app_update">Hämta: v%s</string>
 
     <string name="app_no_date">Du har den senaste versionen av AniTrend!</string>
 

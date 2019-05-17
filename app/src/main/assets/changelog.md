@@ -12,7 +12,9 @@ which can result in authentication errors [read more](https://github.com/square/
 - Multiple translations fixed
 - Scores not matching sorted order
 - Crashes on pre-lollipop with v1.4.2
+- Missing related media notifications in v1.4.3
 - Crashes on some device related to crunchyroll feeds
+- Deep linking for user, anime, manga, staff, activities
 
 #### Current Issues
 - Clicking on @username shows mixed feed
@@ -25,5 +27,5 @@ __Admins, Devs & Cutie Pies:__
 _Mittens, Senpai, Kuji, Moka, Flare, Silver, Mrspits4ever_
 
 __Awesome Donators:__
-_Bas, Golumpa, artemisthemp, Trivernis, PeakZer0, KorenTeam_
+_Bas, Golumpa, artemisthemp, Trivernis, PeakZer0, KorenTeam, keiggard_
 

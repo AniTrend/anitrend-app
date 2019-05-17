@@ -22,6 +22,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
+import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.MediaListCollectionBase;
@@ -137,25 +138,30 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
      */
     @Override
     public void makeRequest() {
-        mediaListOptions = getPresenter().getDatabase().getCurrentUser().getMediaListOptions();
+        User user;
+        if ((user = getPresenter().getDatabase().getCurrentUser()) != null) {
+            mediaListOptions = user.getMediaListOptions();
+        }
         if (userId != 0)
             queryContainer.putVariable(KeyUtil.arg_userId, userId);
         else
             queryContainer.putVariable(KeyUtil.arg_userName, userName);
 
         queryContainer.putVariable(KeyUtil.arg_mediaType, mediaType)
-                .putVariable(KeyUtil.arg_forceSingleCompletedList, true)
-                .putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
+                .putVariable(KeyUtil.arg_forceSingleCompletedList, true);
+        if (mediaListOptions != null)
+            queryContainer.putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
 
         // since anilist doesn't support sorting by title we set a temporary sorting key
-        if(!MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
+        if (!MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
             queryContainer.putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaListSort() +
-                            getPresenter().getApplicationPref().getSortOrder());
+                    getPresenter().getApplicationPref().getSortOrder());
         else
             queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.MEDIA_ID + getPresenter().getApplicationPref().getSortOrder());
 
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_COLLECTION_REQ, getContext());
+
     }
 
     @Override

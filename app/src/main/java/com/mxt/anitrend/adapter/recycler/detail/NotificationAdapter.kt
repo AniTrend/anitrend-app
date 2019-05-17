@@ -114,7 +114,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
 
             binding.notificationTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
 
-            if (!CompatUtil.equals(model.type, KeyUtil.AIRING)) {
+            if (!CompatUtil.equals(model.type, KeyUtil.AIRING) && !CompatUtil.equals(model.type, KeyUtil.RELATED_MEDIA_ADDITION)) {
                 if (model.user != null && model.user.avatar != null)
                     AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
             } else
