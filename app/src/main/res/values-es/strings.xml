@@ -452,11 +452,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
         ]]>
     </string>
 
-    <string name="app_update">
-        <![CDATA[
-        <b>Obtener Actualización: <i>v%s</i></b>
-        ]]>
-    </string>
+    <string name="app_update">Obtener Actualización: v%s</string>
 
     <string name="app_no_date">¡Tienes la versión más reciente de Anitrend!</string>
 

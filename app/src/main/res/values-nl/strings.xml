@@ -429,11 +429,7 @@
         ]]>
     </string>
 
-    <string name="app_update">
-        <![CDATA[
-        <b>Get: <i>v%s</i></b>
-        ]]>
-    </string>
+    <string name="app_update">Get: v%s</string>
 
     <string name="app_no_date">Je hebt de laatste versie van Anitrend!</string>
 

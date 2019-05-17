@@ -443,11 +443,7 @@
         ]]>
     </string>
 
-    <string name="app_update">
-        <![CDATA[
-        <b>Ricevi: <i>v%s</i></b>
-        ]]>
-    </string>
+    <string name="app_update">Ricevi: v%s</string>
 
 
     <string name="app_no_date">Possiedi già l\'ultima versione di AniTrend!</string>
