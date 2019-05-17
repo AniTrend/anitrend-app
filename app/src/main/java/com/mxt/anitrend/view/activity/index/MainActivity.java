@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -431,7 +432,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
         if(versionBase != null && versionBase.isNewerVersion()) {
             // If a new version of the application is available on GitHub
             TextView mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update).getActionView().findViewById(R.id.app_update_info);
-            mAppUpdateWidget.setText(MarkDownUtil.INSTANCE.convert(getString(R.string.app_update, versionBase.getVersion())));
+            mAppUpdateWidget.setText(getString(R.string.app_update, versionBase.getVersion()));
             mAppUpdateWidget.setVisibility(View.VISIBLE);
         }
         checkNewInstallation();

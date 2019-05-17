@@ -108,7 +108,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        TAG = this.toString(); configureActivity();
+        TAG = getClass().getSimpleName(); configureActivity();
         super.onCreate(savedInstanceState);
         intentBundleUtil = new IntentBundleUtil(getIntent());
         intentBundleUtil.checkIntentData(this);

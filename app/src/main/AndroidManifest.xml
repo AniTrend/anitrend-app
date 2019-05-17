@@ -164,7 +164,17 @@
         <activity
             android:name=".view.activity.detail.CommentActivity"
             android:label="@string/title_activity_reply"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop">
+            <intent-filter>
+                <data
+                    android:scheme="https"
+                    android:host="anilist.co"
+                    android:pathPattern="/activity.*" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".view.activity.base.SharedContentActivity"
             android:label="@string/menu_title_new_activity_post"

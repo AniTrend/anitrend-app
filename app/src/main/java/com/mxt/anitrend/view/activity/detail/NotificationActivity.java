@@ -44,7 +44,7 @@ public class NotificationActivity extends ActivityBase<Void, BasePresenter> {
      */
     @Override
     protected void onActivityReady() {
-        mFragment = NotificationFragment.newInstance();
+        mFragment = NotificationFragment.Companion.newInstance();
         updateUI();
     }
 

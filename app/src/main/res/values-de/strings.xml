@@ -433,11 +433,7 @@
         ]]>
     </string>
 
-    <string name="app_update">
-        <![CDATA[
-        <b>Neu: <i>v%s</i></b>
-        ]]>
-    </string>
+    <string name="app_update">Neu: v%s</string>
 
     <string name="app_no_date">Du besitzt bereits die neueste Version von AniTrend!</string>
 

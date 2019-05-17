@@ -1,19 +1,21 @@
 package com.mxt.anitrend.view.activity.index;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
@@ -32,14 +34,6 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.ShortcutUtil;
 import com.mxt.anitrend.worker.AuthenticatorWorker;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
-
 /**
  * Created by max on 2017/11/03.
  * Authentication activity
@@ -54,7 +48,7 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style, also if you wish
      * to apply the default navigation bar style for light themes
-     * @see ActivityBase#setNavigationStyle() if running android Oreo +
+     * @see ActivityBase#configureActivity() () if running android Oreo +
      */
     @Override
     protected void configureActivity() {
@@ -149,7 +143,13 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
             case R.id.auth_sign_in:
                 if(binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext();
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WebFactory.API_AUTH_LINK)));
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(WebFactory.API_AUTH_LINK)));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e(TAG, e.getLocalizedMessage());
+                        NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show();
+                    }
                 } else NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.container:
@@ -190,6 +190,7 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         if(!getPresenter().getApplicationPref().isAuthenticated())
             checkNewIntent(intent);
     }

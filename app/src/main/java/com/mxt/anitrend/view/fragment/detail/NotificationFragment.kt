@@ -1,0 +1,267 @@
+package com.mxt.anitrend.view.fragment.detail
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+
+import com.annimon.stream.IntPair
+import com.annimon.stream.Stream
+import com.mxt.anitrend.R
+import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter
+import com.mxt.anitrend.base.custom.async.ThreadPool
+import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.model.entity.anilist.Notification
+import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.base.NotificationHistory
+import com.mxt.anitrend.model.entity.base.NotificationHistory_
+import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
+import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.GraphUtil
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.MediaActionUtil
+import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.view.activity.detail.CommentActivity
+import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.view.activity.detail.ProfileActivity
+
+import java.util.Collections
+
+/**
+ * Created by max on 2017/12/06.
+ * NotificationFragment
+ */
+
+class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notification>, BasePresenter>() {
+
+    /**
+     * Override and set presenter, mColumnSize, and fetch argument/s
+     *
+     * @param savedInstanceState
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mColumnSize = R.integer.single_list_x1
+        isPager = true
+        setInflateMenu(R.menu.notification_menu)
+        mAdapter = NotificationAdapter(context!!)
+        setPresenter(BasePresenter(context))
+        setViewModel(true)
+    }
+
+    /**
+     * Is automatically called in the @onStart Method if overridden in list implementation
+     */
+    override fun updateUI() {
+        val historyItems = presenter.database.getBoxStore(NotificationHistory::class.java).count()
+        if (historyItems < 1)
+            markAllNotificationsAsRead()
+        injectAdapter()
+
+        val currentUser = presenter.database.currentUser
+        currentUser.unreadNotificationCount = 0
+        presenter.database.saveCurrentUser(currentUser)
+
+        //Testing notifications by forcing the notification dispatcher
+        /*for (int i = 0; i < 3; i++)
+            NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(i, i + 1)));*/
+        // NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(5, 6)));
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu!!.findItem(R.id.action_mark_all).isVisible = true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.action_mark_all -> {
+                if (mAdapter.itemCount > 0) {
+                    ThreadPool.Builder()
+                            .build().execute { this.markAllNotificationsAsRead() }
+                } else
+                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (mAdapter != null)
+            mAdapter.notifyDataSetChanged()
+    }
+
+    override fun onChanged(content: PageContainer<Notification>?) {
+        if (content != null) {
+            if (content.hasPageInfo())
+                presenter.pageInfo = content.pageInfo
+            if (!content.isEmpty) {
+                val notifications = GraphUtil.filterNotificationList(
+                        presenter,
+                        content.pageData
+                )
+                onPostProcessed(notifications)
+            } else
+                onPostProcessed(emptyList())
+        } else
+            onPostProcessed(emptyList())
+        if (mAdapter.itemCount < 1)
+            onPostProcessed(null)
+    }
+
+    /**
+     * All new or updated network requests should be handled in this method
+     */
+    override fun makeRequest() {
+        val queryContainer = GraphUtil.getDefaultQuery(isPager)
+                .putVariable(KeyUtil.arg_page, presenter.currentPage)
+                .putVariable(KeyUtil.arg_resetNotificationCount, true)
+
+        getViewModel().params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        getViewModel().requestData(KeyUtil.USER_NOTIFICATION_REQ, context!!)
+    }
+
+    /**
+     * Ran on a background thread to assure we don't skip frames
+     * @see ThreadPool
+     */
+    private fun setItemAsRead(data: Notification) {
+        ThreadPool.Builder().build()
+                .execute {
+                    val isNotificationRead = presenter.database.getBoxStore(NotificationHistory::class.java)
+                            .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
+                    if (!isNotificationRead) {
+                        val dismissibleNotifications = Stream.of(mAdapter.data)
+                                .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
+                                .map { item -> NotificationHistory(item.id) }
+                                .toList()
+
+                        if (!CompatUtil.isEmpty(dismissibleNotifications))
+                            presenter.database.getBoxStore(NotificationHistory::class.java)
+                                    .put(dismissibleNotifications)
+                        else
+                            presenter.database.getBoxStore(NotificationHistory::class.java)
+                                    .put(NotificationHistory(data.id))
+                    }
+                }
+    }
+
+    /**
+     * Ran on a background thread to assure we don't skip frames
+     * @see ThreadPool
+     */
+    private fun markAllNotificationsAsRead() {
+        val notificationHistories = Stream.of(mAdapter.data)
+                .map { notification -> NotificationHistory(notification.id) }
+                .toList()
+
+        presenter.database.getBoxStore(NotificationHistory::class.java)
+                .put(notificationHistories)
+
+        activity?.runOnUiThread {
+            if (mAdapter != null)
+                mAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    /**
+     * When the target view from [View.OnClickListener]
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been clicked
+     * @param data   the model that at the click index
+     */
+    override fun onItemClick(target: View, data: IntPair<Notification>) {
+        val intent: Intent
+        setItemAsRead(data.second)
+        if (target.id == R.id.notification_img &&
+                !CompatUtil.equals(data.second.type, KeyUtil.AIRING) &&
+                !CompatUtil.equals(data.second.type, KeyUtil.RELATED_MEDIA_ADDITION)
+        ) {
+            intent = Intent(activity, ProfileActivity::class.java)
+            intent.putExtra(KeyUtil.arg_id, data.second.user.id)
+            CompatUtil.startRevealAnim(activity, target, intent)
+        } else
+            when (data.second.type) {
+                KeyUtil.ACTIVITY_MESSAGE -> {
+                    intent = Intent(activity, CommentActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.FOLLOWING -> {
+                    intent = Intent(activity, ProfileActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.user.id)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.ACTIVITY_MENTION -> {
+                    intent = Intent(activity, CommentActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.THREAD_COMMENT_MENTION -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
+                KeyUtil.THREAD_SUBSCRIBED -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
+                KeyUtil.THREAD_COMMENT_REPLY -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
+                KeyUtil.AIRING, KeyUtil.RELATED_MEDIA_ADDITION -> {
+                    intent = Intent(activity, MediaActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.media.id)
+                    intent.putExtra(KeyUtil.arg_mediaType, data.second.media.type)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.ACTIVITY_LIKE -> {
+                    intent = Intent(activity, CommentActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
+                    intent = Intent(activity, CommentActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.ACTIVITY_REPLY_LIKE -> {
+                    intent = Intent(activity, CommentActivity::class.java)
+                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    CompatUtil.startRevealAnim(activity, target, intent)
+                }
+                KeyUtil.THREAD_LIKE ->
+                    DialogUtil.createMessage(context, data.second.user.name, data.second.context)
+                KeyUtil.THREAD_COMMENT_LIKE ->
+                    DialogUtil.createMessage(context, data.second.user.name, data.second.context)
+            }
+    }
+
+    /**
+     * When the target view from [View.OnLongClickListener]
+     * is clicked from a view holder this method will be called
+     *
+     * @param target view that has been long clicked
+     * @param data   the model that at the long click index
+     */
+    override fun onItemLongClick(target: View, data: IntPair<Notification>) {
+        if (CompatUtil.equals(data.second.type, KeyUtil.AIRING)) {
+            setItemAsRead(data.second)
+            if (presenter.applicationPref.isAuthenticated) {
+                mediaActionUtil = MediaActionUtil.Builder()
+                        .setId(data.second.media.id).build(activity)
+                mediaActionUtil.startSeriesAction()
+            } else
+                NotifyUtil.makeText(context, R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    companion object {
+
+        fun newInstance(): NotificationFragment {
+            return NotificationFragment()
+        }
+    }
+}
