@@ -52,6 +52,7 @@ query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean = false, $isM
           site
         }
       }
+	  duration
       season
       episodes
       chapters
