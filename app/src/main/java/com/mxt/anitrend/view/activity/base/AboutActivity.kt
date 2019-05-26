@@ -17,7 +17,6 @@ class AboutActivity : ActivityBase<Void, BasePresenter>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_frame_generic)
-        ButterKnife.bind(this)
         setSupportActionBar(toolbar)
     }
 
