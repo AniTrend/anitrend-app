@@ -91,9 +91,8 @@ public class MediaPresenter extends BasePresenter {
     }
 
     public String getEpisodeDuration(Media media) {
-        if(media != null && media.getDuration() > 0){
+        if(media != null && media.getDuration() > 0)
             return getContext().getString(R.string.text_anime_length, media.getDuration());
-        }
         return getContext().getString(R.string.TBA);
     }
 
