@@ -18,7 +18,7 @@
         app:cardPreventCornerOverlap="false"
         app:cardBackgroundColor="?cardColor"
         app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/xl_margin">
+        app:cardCornerRadius="@dimen/lg_margin">
 
         <LinearLayout
         android:orientation="horizontal"

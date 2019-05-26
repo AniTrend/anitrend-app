@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedSlideBinding;
@@ -88,11 +91,23 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
             if(requestOptions == null)
                 Glide.with(getContext()).load(targetModel)
                         .transition(DrawableTransitionOptions.withCrossFade(250))
+                        .transform(
+                                new RoundedCorners(
+                                        context.getResources().
+                                                getDimensionPixelSize(R.dimen.md_margin)
+                                )
+                        )
                         .into(binding.feedStatusImage);
             else
                 Glide.with(getContext()).load(targetModel)
                         .transition(DrawableTransitionOptions.withCrossFade(250))
-                        .apply(RequestOptions.centerCropTransform())
+                        .transform(
+                                new RoundedCorners(
+                                        context.getResources().
+                                                getDimensionPixelSize(R.dimen.md_margin)
+                                ),
+                                new CenterCrop()
+                        )
                         .into(binding.feedStatusImage);
             binding.executePendingBindings();
         }
