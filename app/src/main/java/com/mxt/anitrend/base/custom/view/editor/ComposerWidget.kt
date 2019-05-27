@@ -54,39 +54,38 @@ import retrofit2.Response
 class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallback<ResponseBody> {
 
     private val binding by lazy {
-        WidgetComposerBinding.inflate(CompatUtil.getLayoutInflater(context), this, true)
+        WidgetComposerBinding.inflate(
+                CompatUtil.getLayoutInflater(context),
+                this, true
+        )
     }
-    
-    @KeyUtil.RequestType
-    private var requestType: Int = 0
-    private var presenter: WidgetPresenter<ResponseBody>? = null
-    private var itemClickListener: ItemClickListener<Any>? = null
+
+    private val presenter by lazy {
+        WidgetPresenter<ResponseBody>(context)
+    }
 
     private var recipient: UserBase? = null
     private var feedList: FeedList? = null
     private var feedReply: FeedReply? = null
 
-    private var lifecycle: Lifecycle? = null
+    @KeyUtil.RequestType
+    var requestType: Int = 0
+    var lifecycle: Lifecycle? = null
+    var itemClickListener: ItemClickListener<Any>? = null
 
     val editor: EditText
         get() = binding.comment
 
-    constructor(context: Context) : super(context) {
-        onInit()
-    }
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        onInit()
-    }
-
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        onInit()
-    }
-
+    constructor(context: Context) :
+            super(context) { onInit() }
+    constructor(context: Context, attrs: AttributeSet?) :
+            super(context, attrs) { onInit() }
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
+            super(context, attrs, defStyleAttr) { onInit() }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        onInit()
-    }
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
+            super(context, attrs, defStyleAttr, defStyleRes) { onInit() }
+
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -104,25 +103,12 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding.onClickListener = this
     }
 
     private fun resetFlipperState() {
         if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
             binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
-    }
-
-    fun setItemClickListener(itemClickListener: ItemClickListener<Any>) {
-        this.itemClickListener = itemClickListener
-    }
-
-    fun setLifecycle(lifecycle: Lifecycle) {
-        this.lifecycle = lifecycle
-    }
-
-    fun setRequestType(@KeyUtil.RequestType requestType: Int) {
-        this.requestType = requestType
     }
 
     fun setModel(feedList: FeedList, @KeyUtil.RequestType requestType: Int) {
@@ -160,8 +146,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
     override fun onViewRecycled() {
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this)
-        if (presenter != null)
-            presenter?.onDestroy()
+            presenter.onDestroy()
         itemClickListener = null
     }
 
@@ -198,8 +183,8 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
                 }
             }
 
-            presenter?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
-            presenter?.requestData(requestType, context, this)
+            presenter.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+            presenter.requestData(requestType, context, this)
         } else
             NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
     }
@@ -235,27 +220,27 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
      * @param response the response from the network
      */
     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-        if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.DESTROYED) != true) {
+        if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.RESUMED) == true) {
             resetFlipperState()
             if (response.isSuccessful) {
                 binding.comment.text.clear()
                 when (requestType) {
                     KeyUtil.MUT_SAVE_TEXT_FEED -> if (feedList != null)
-                        presenter?.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
+                        presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
                     else
-                        presenter?.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
+                        presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
                     KeyUtil.MUT_SAVE_FEED_REPLY -> if (feedReply != null)
-                        presenter?.notifyAllListeners(BaseConsumer<FeedReply>(requestType, feedReply), false)
+                        presenter.notifyAllListeners(BaseConsumer<FeedReply>(requestType, feedReply), false)
                     else
-                        presenter?.notifyAllListeners(BaseConsumer<FeedReply>(requestType), false)
+                        presenter.notifyAllListeners(BaseConsumer<FeedReply>(requestType), false)
                     KeyUtil.MUT_SAVE_MESSAGE_FEED -> if (feedList != null)
-                        presenter?.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
+                        presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
                     else
-                        presenter?.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
+                        presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
                 }
             } else
                 NotifyUtil.makeText(context, ErrorUtil.getError(response), Toast.LENGTH_SHORT).show()
-            presenter?.onDestroy()
+            presenter.onDestroy()
         }
     }
 
@@ -267,7 +252,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
      * @param throwable contains information about the error
      */
     override fun onFailure(call: Call<ResponseBody>, throwable: Throwable) {
-        if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.DESTROYED) != true) {
+        if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.RESUMED) == true) {
             resetFlipperState()
             throwable.printStackTrace()
             NotifyUtil.makeText(context, throwable.localizedMessage, Toast.LENGTH_SHORT).show()
