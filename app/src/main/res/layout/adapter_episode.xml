@@ -38,7 +38,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:background="@color/colorTransparent">
+            android:layout_margin="@dimen/lg_margin"
+            android:background="@drawable/bubble_background">
 
             <TextView
                 android:id="@+id/series_duration"
@@ -61,7 +62,7 @@
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:id="@+id/series_title"
-            android:background="@color/colorTransparent"
+            android:background="@drawable/gradient_shadow"
             android:layout_gravity="bottom|center_horizontal"
             android:textColor="@color/white"
             android:fontFamily="sans-serif-condensed"
