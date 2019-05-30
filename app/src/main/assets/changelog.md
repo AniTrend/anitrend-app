@@ -9,6 +9,7 @@ which can result in authentication errors [read more](https://github.com/square/
 #### Bug Fixes
 - About page crashes
 - Episode duration always displaying TBA (Swap)
+- Missing notification type for subscribed activities (Mittens, Taichi)
 
 #### Current Issues
 - Clicking on @username shows mixed feed
@@ -18,7 +19,7 @@ which can result in authentication errors [read more](https://github.com/square/
 _Translators (minna arigato) & all of you lovely weebs <3_
 
 __Admins, Devs & Cutie Pies:__
-_Mittens, Senpai, Kuji, Moka, Flare, Silver, Mrspits4ever_
+_Mittens, Switchums, Kuji, Moka, Flare, Silver, Mrspits4ever_
 
 __Awesome Donators:__
 _Bas, Golumpa, artemisthemp, Trivernis, PeakZer0, KorenTeam, keiggard_
