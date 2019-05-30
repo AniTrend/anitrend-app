@@ -970,4 +970,8 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+    <string name="tip_messages_title">Messages</string>
+    <string name="nav_home">Home</string>
+    <string name="drawer_section_extras">Extras</string>
+    <string name="app_intro_videos_title">Videos</string>
 </resources>

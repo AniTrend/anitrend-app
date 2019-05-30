@@ -957,4 +957,15 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+    <string name="Reset">Reset</string>
+    <string name="title_activity_studio">Studio</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
+    <string name="navigation_drawer_open">Navigation drawer opened</string>
+    <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_about">About</string>
+    <string name="drawer_title_hub">AniTrend Hub</string>
+    <string name="drawer_title_home">Status Feeds</string>
+    <string name="drawer_section_account">Account</string>
+    <string name="app_intro_videos_title">Videos</string>
 </resources>
