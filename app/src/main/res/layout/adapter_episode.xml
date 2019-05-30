@@ -8,19 +8,27 @@
         <variable name="presenter" type="com.mxt.anitrend.presenter.base.BasePresenter" />
     </data>
 
-    <FrameLayout
-        android:layout_margin="@dimen/sm_margin"
+    <android.support.v7.widget.CardView
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:layout_margin="@dimen/lg_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="false"
+        app:cardBackgroundColor="?cardColor"
+        app:cardElevation="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/lg_margin">
 
         <com.mxt.anitrend.base.custom.view.image.WideImageView
             android:id="@+id/series_image"
             android:clickable="true"
             android:focusable="true"
-            android:foreground="?selectableItemBackground"
+            android:background="?selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:imageUrl="@{presenter.getThumbnail(model.thumbnail)}"
+            tools:layout_height="@dimen/app_bar_height"
             tools:scaleType="centerCrop"
             tools:src="@drawable/sample_banner" />
 
@@ -30,7 +38,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:background="@color/colorTransparent">
+            android:layout_margin="@dimen/lg_margin"
+            android:background="@drawable/bubble_background">
 
             <TextView
                 android:id="@+id/series_duration"
@@ -53,7 +62,7 @@
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:id="@+id/series_title"
-            android:background="@color/colorTransparent"
+            android:background="@drawable/gradient_shadow"
             android:layout_gravity="bottom|center_horizontal"
             android:textColor="@color/white"
             android:fontFamily="sans-serif-condensed"
@@ -65,6 +74,6 @@
             android:text="@{model.title}"
             tools:text="Boku no Hero Accademia"/>
 
-    </FrameLayout>
+    </android.support.v7.widget.CardView>
 
 </layout>

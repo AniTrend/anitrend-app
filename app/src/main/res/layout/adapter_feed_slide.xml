@@ -19,7 +19,7 @@
             android:clickable="true"
             android:focusable="true"
             android:onClickListener="@{onClickListener}"
-            android:foreground="?selectableItemBackground"
+            android:background="?selectableItemBackground"
             tools:layout_height="@dimen/wide_image_md"
             tools:scaleType="centerCrop"
             tools:src="@drawable/sample_banner"/>

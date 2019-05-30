@@ -93,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textStyle="italic"
-                        android:maxLines="3"
+                        android:maxLines="2"
                         app:markDown="@{model.summary}"
                         tools:text="Amazing show with a well thought out plot" />
 
@@ -110,27 +110,27 @@
 
                 </LinearLayout>
 
-                    <FrameLayout
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                <FrameLayout
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                            android:id="@+id/review_read_more"
-                            android:padding="6dp"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_read_more" />
+                    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                        android:id="@+id/review_read_more"
+                        android:padding="6dp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_read_more" />
 
-                        <com.mxt.anitrend.base.custom.view.widget.VoteWidget
-                            android:id="@+id/review_vote"
-                            android:layout_gravity="end|bottom"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                    <com.mxt.anitrend.base.custom.view.widget.VoteWidget
+                        android:id="@+id/review_vote"
+                        android:layout_gravity="end|bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
-                    </FrameLayout>
+                </FrameLayout>
 
                 </RelativeLayout>
 

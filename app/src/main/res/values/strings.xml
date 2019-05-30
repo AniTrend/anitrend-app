@@ -29,7 +29,7 @@
         2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information https://www.w3schools.com/tags/
         3. Know what character escaping is, because you cannot use characters like ' or , or ; or & or $ or % e.t.c without escaping them. e.g.
            What\'s Trending should become What\'s Trending (Refer to http://www.ascii.cl/htmlcodes.htm look at the HTML Name Column for some conventions) not what i am looking for?
-           Contact me on the AniTrend Discord server (https://discord.gg/nqsFGgX) under the #translators channel
+           Contact me on the AniTrend Discord server (https://discord.gg/2wzTqnF) under the #translators channel
 
         Just a quick note for translators, if you see some text that has %s or %d or %f just leave those as they are those are place holders:
         %s - is a place holder for text most likely coming from AniList, e.g. %s liked your status post -> will be wax911 or Josh liked your status post
@@ -313,9 +313,9 @@
     <string name="notification_user_activity_mention">Mention You</string>
     <string name="notification_user_like_comment">Comment Like</string>
 
-    <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
-    <string name="notification_episode" formatted="false">Episode %s of %s Has Just Been Aired!</string>
-    <string name="notification_episode_short" formatted="false">EP %s of %s Just Aired!</string>
+    <!-- This will become something like Episode 2 of One Piece has just aired! the title is set according to what the user has set on AniList -->
+    <string name="notification_episode" formatted="false">Episode %s of %s has just aired!</string>
+    <string name="notification_episode_short" formatted="false">EP %s of %s just aired!</string>
 
     <!-- Transition Names -->
     <string name="transition_user_banner" translatable="false">transition_user_banner</string>
@@ -576,7 +576,7 @@
 
     <string name="text_login_error">AniTrend has failed to retrieve your login details!</string>
 
-    <string translatable="false" name="link_anitrend_discord">https://discord.gg/nMJzbEY</string>
+    <string translatable="false" name="link_anitrend_discord">https://discord.gg/2wzTqnF</string>
 
     <string name="text_search_empty">Search content cannot be empty</string>
 
