@@ -10,13 +10,13 @@ import com.mxt.anitrend.view.fragment.detail.AboutFragment
 
 class AboutActivity : ActivityBase<Void, BasePresenter>() {
 
-    val toolbar: Toolbar? = findViewById(R.id.toolbar)
-
+    private val toolbar by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Toolbar?>(R.id.toolbar)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_frame_generic)
-        ButterKnife.bind(this)
         setSupportActionBar(toolbar)
     }
 

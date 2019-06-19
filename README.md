@@ -3,7 +3,7 @@
 
 Discover anime or manga with AniTrend which is a free [AniList](https://anilist.co) android client written in java.(AniTrend does not offer streaming capabilities, but official website links such as Hulu, Chrunchyroll, Netflix will be provided if available)
 
-Big shout out to all the testers, translators and donators on the [AniTrend Discord Server](https://discord.gg/nMJzbEY) helping me keep this project alive!
+Big shout out to all the testers, translators and donators on the [AniTrend Discord Server](https://discord.gg/2wzTqnF) helping me keep this project alive!
 
 ###### Feel free to donate the weeb cause with [Patreon](https://www.patreon.com/wax911) or [PayPal](https://www.paypal.me/mmax9)
 

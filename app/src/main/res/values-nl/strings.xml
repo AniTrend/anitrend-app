@@ -950,4 +950,27 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+    <string name="Reset">Reset</string>
+    <string name="Update">Update</string>
+    <string name="action_help">Help</string>
+    <string name="tip_notifications_title">Notifications</string>
+    <string name="tip_navigation_title">Navigation</string>
+    <string name="tip_messages_title">Messages</string>
+    <string name="tip_compose_message_title">Compose Message</string>
+    <string name="notification_user_like_forum">Forum Like</string>
+    <string name="nav_header_support">Support</string>
+    <string name="nav_contact">Contact</string>
+    <string name="drawer_title_update">Update</string>
+    <string name="drawer_title_style">Toggle Style</string>
+    <string name="drawer_title_reviews">Series Reviews</string>
+    <string name="drawer_title_hub">AniTrend Hub</string>
+    <string name="drawer_title_home">Status Feeds</string>
+    <string name="drawer_title_filter">Filter</string>
+    <string name="drawer_section_extras">Extras</string>
+    <string name="drawer_section_account">Account</string>
+    <string name="app_filter_genres">Series Genres?</string>
+    <string name="get_started">Get Started</string>
+    <string name="app_intro_videos_title">Videos</string>
+    <string name="app_intro_search_title">Searching</string>
+    <string name="app_greeting">Welcome to AniTrend!</string>
 </resources>

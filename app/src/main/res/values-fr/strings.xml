@@ -952,4 +952,23 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+    <string name="action_help">Help</string>
+    <string name="action_search">Search</string>
+    <string name="title_activity_studio">Studio</string>
+    <string name="tip_notifications_title">Notifications</string>
+    <string name="tip_navigation_title">Navigation</string>
+    <string name="tip_messages_title">Messages</string>
+    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
+    <string name="notification_user_like_reply">Reply Like</string>
+    <string name="navigation_drawer_open">Navigation drawer opened</string>
+    <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_header_support">Support</string>
+    <string name="nav_history">History</string>
+    <string name="nav_header_manage">Manage</string>
+    <string name="nav_header_discover">Discover</string>
+    <string name="nav_header_customization">Customization</string>
+    <string name="nav_contact">Contact</string>
+    <string name="nav_about">About</string>
+    <string name="drawer_section_configuration">Configuration</string>
 </resources>

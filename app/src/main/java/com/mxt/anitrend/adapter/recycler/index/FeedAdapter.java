@@ -180,7 +180,6 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
-            // TODO: Temporarily disabled widget status to try out rich markdown rendering
             binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());

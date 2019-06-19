@@ -40,30 +40,17 @@
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:layout_gravity="center"
-                    tools:text="Activity Like"
+                    tools:text="Shingeki no Kyojin 2"
                     />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/notification_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="Shingeki no Kyojin 2"
-                android:fontFamily="sans-serif-condensed"
-                android:layout_marginTop="@dimen/lg_margin"
-                android:textSize="16sp"
-                android:lineSpacingExtra="3dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                />
 
             <TextView
                 android:id="@+id/notification_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
-                tools:text="Episode 10 of Attack on Titan 2 Has Just Been Aired!"
+                tools:text="Episode 10 of Attack on Titan 2 has just aired!"
                 android:layout_marginTop="@dimen/lg_margin"
                 android:textSize="12sp"
                 android:lineSpacingExtra="3dp"
@@ -73,8 +60,8 @@
 
         <ImageView
             android:id="@+id/notification_img"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
+            android:layout_width="40dp"
+            android:layout_height="60dp"
             tools:src="@drawable/sample_img" />
 
     </LinearLayout>
