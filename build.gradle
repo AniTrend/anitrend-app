@@ -16,7 +16,7 @@ buildscript {
         architecture = '1.1.1'
         workManager = '1.0.1'
         emojify = '1.4'
-        kotlin = '1.3.31'
+        kotlin = '1.3.41'
         // testing libraries
         mockito = '2.18.3'
         hemcrest = '1.3'
