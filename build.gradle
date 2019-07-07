@@ -36,7 +36,7 @@ buildscript {
         // Google Play Services
         classpath 'com.google.gms:google-services:4.3.0'
         // Crash Analytics
-        classpath 'io.fabric.tools:gradle:1.28.1'
+        classpath 'io.fabric.tools:gradle:1.29.0'
         // Object Box
         classpath "io.objectbox:objectbox-gradle-plugin:${rootProject.objectBox}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.kotlin}"
