@@ -150,7 +150,7 @@
     <string name="app_intro_search_title">Encuentra</string>
     <string name="app_intro_search_text"> ¡Anime y Manga gracias a su motor de búsqueda eficiente y lleno de características!</string>
     <string name="app_intro_videos_text">¡Facilita la visualización de vídeos de Youtube a través del reproductor integrado!</string>
-    <string name="app_greeting">¡Bienvenido/a a AniTrend!</string>
+    <string name="app_greeting">¡Bienvenido/a a AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Ordenar Por:</string>

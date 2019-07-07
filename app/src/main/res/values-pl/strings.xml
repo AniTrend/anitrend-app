@@ -151,7 +151,7 @@
     <string name="app_intro_search_text">Anime, Manga i Więcej funkcji wyszukiwania!</string>
     <string name="app_intro_videos_title">Wideo</string>
     <string name="app_intro_videos_text">Używa wbudowanego odtwarzacza wideo Youtube!</string>
-    <string name="app_greeting">Witaj w AniTrend!</string>
+    <string name="app_greeting">Witaj w AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sortuj według</string>

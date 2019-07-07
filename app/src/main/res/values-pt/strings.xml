@@ -149,7 +149,7 @@
     <string name="app_intro_search_title">Pesquisando</string>
     <string name="app_intro_search_text">Anime, Mangá &amp; Mais Opções de Pesquisa!</string>
     <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
-    <string name="app_greeting">Bem-vindo ao AniTrend!</string>
+    <string name="app_greeting">Bem-vindo ao AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Classificar por?</string>
