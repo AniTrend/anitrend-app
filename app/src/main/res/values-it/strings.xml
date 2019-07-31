@@ -968,4 +968,5 @@
     <string name="drawer_title_home">Status Feeds</string>
     <string name="drawer_section_account">Account</string>
     <string name="app_intro_videos_title">Videos</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
 </resources>

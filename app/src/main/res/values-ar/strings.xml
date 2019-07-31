@@ -970,4 +970,5 @@
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
     <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
 </resources>

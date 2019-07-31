@@ -971,4 +971,5 @@
     <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="nav_header_support">Support</string>
     <string name="drawer_title_hub">AniTrend Hub</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
 </resources>

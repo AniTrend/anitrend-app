@@ -970,4 +970,5 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="drawer_section_extras">Extras</string>
     <string name="app_intro_videos_title">Videos</string>
     <string name="pref_header_general">General</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
 </resources>

@@ -7,9 +7,7 @@ which can result in authentication errors [read more](https://github.com/square/
 - Minor UI tweaks, specifically view radius
 
 #### Bug Fixes
-- About page crashes
-- Episode duration always displaying TBA (Swap)
-- Missing notification type for subscribed activities (Mittens, Taichi)
+- Improved error message for invalid token errors
 
 #### Current Issues
 - Clicking on @username shows mixed feed
@@ -22,5 +20,5 @@ __Admins, Devs & Cutie Pies:__
 _Mittens, Switchums, Kuji, Moka, Flare, Silver, Mrspits4ever_
 
 __Awesome Donators:__
-_Bas, Golumpa, artemisthemp, Trivernis, PeakZer0, KorenTeam, keiggard_
+_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas_
 

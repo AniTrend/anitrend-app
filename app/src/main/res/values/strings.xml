@@ -1029,4 +1029,7 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+
+    <!-- Token error -->
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
 </resources>

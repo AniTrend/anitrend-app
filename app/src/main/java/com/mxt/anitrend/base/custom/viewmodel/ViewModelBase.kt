@@ -35,6 +35,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
     private var emptyMessage: String? = null
     private var errorMessage: String? = null
+    private var tokenMessage: String? = null
 
     val params by lazy {
         Bundle()
@@ -44,6 +45,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
         context?.apply {
             emptyMessage = getString(R.string.layout_empty_response)
             errorMessage = getString(R.string.text_error_request)
+            tokenMessage = getString(R.string.text_error_auth_token)
         }
     }
 
@@ -86,8 +88,14 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
         val container: T? = response.body()
         if (response.isSuccessful && container != null)
             model.setValue(container)
-        else
-            state?.showError(ErrorUtil.getError(response))
+        else {
+            val error = ErrorUtil.getError(response)
+            // Hacky fix that I'm ashamed of
+            if (response.code() == 400 && error.contains("Invalid token"))
+                state?.showError(tokenMessage)
+            else
+                state?.showError(error)
+        }
     }
 
     /**

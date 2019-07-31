@@ -46,7 +46,7 @@ public class AnimePageAdapter extends BaseStatePageAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MediaOverviewFragment.newInstance(getParams());
+                return MediaOverviewFragment.Companion.newInstance(getParams());
             case 1:
                 return MediaRelationFragment.newInstance(getParams());
             case 2:
