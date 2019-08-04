@@ -1,8 +1,8 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
-import android.support.v7.widget.AppCompatRatingBar;
+import androidx.databinding.BindingAdapter;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;

@@ -3,8 +3,8 @@ package com.mxt.anitrend.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.support.annotation.IdRes
-import android.support.annotation.StyleRes
+import androidx.annotation.IdRes
+import androidx.annotation.StyleRes
 
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R

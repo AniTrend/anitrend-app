@@ -2,13 +2,12 @@ package com.mxt.anitrend.view.fragment.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.annimon.stream.IntPair
-import com.google.android.youtube.player.YouTubeIntents
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter
 import com.mxt.anitrend.adapter.recycler.detail.TagAdapter
@@ -18,8 +17,6 @@ import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaTag
-import com.mxt.anitrend.model.entity.base.StudioBase
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
@@ -29,7 +26,6 @@ import com.mxt.anitrend.util.MediaBrowseUtil
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
 import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
-import com.mxt.anitrend.view.fragment.youtube.YoutubePlayerFragment
 
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -42,7 +38,6 @@ import com.afollestad.materialdialogs.DialogAction
 class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
 
     private var binding: FragmentSeriesOverviewBinding? = null
-    private var youtubePlayerFragment: YoutubePlayerFragment? = null
     private var model: Media? = null
 
     private var genreAdapter: GenreAdapter? = null
@@ -91,17 +86,9 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
      */
     override fun updateUI() {
         if (activity != null && model!!.trailer != null && CompatUtil.equals(model!!.trailer.site, "youtube")) {
-            if (YouTubeIntents.canResolvePlayVideoIntent(activity!!)) {
-                if (youtubePlayerFragment == null)
-                    youtubePlayerFragment = YoutubePlayerFragment.newInstance(model!!.trailer)
-                childFragmentManager.beginTransaction()
-                        .replace(R.id.youtube_view, youtubePlayerFragment!!)
-                        .commit()
-            } else {
-                childFragmentManager.beginTransaction()
-                        .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(model!!.trailer))
-                        .commit()
-            }
+            childFragmentManager.beginTransaction()
+                    .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(model!!.trailer))
+                    .commit()
         } else
             binding!!.youtubeView.visibility = View.GONE
         binding!!.presenter = presenter

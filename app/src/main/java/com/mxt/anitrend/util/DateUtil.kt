@@ -1,6 +1,6 @@
 package com.mxt.anitrend.util
 
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 import com.annimon.stream.Collectors
 import com.annimon.stream.IntStream
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule

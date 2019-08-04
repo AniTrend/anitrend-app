@@ -8,9 +8,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT
-import android.support.v4.app.NotificationCompat.PRIORITY_HIGH
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import com.mxt.anitrend.R
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.view.activity.detail.NotificationActivity

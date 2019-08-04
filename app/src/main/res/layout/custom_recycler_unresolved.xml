@@ -8,7 +8,7 @@
         android:orientation="vertical"
         android:id="@+id/container">
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/avatar_size_xl"
             android:layout_height="@dimen/avatar_size_xl"
             android:layout_marginBottom="@dimen/lg_margin"

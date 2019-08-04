@@ -1,7 +1,7 @@
 package com.mxt.anitrend.view.fragment.list;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;

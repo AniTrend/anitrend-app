@@ -1,7 +1,7 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.model.entity.base.MediaBase;

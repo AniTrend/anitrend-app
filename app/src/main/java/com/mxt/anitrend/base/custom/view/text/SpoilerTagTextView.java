@@ -1,8 +1,8 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
-import android.text.TextUtils;
+import androidx.databinding.BindingAdapter;
+
 import android.util.AttributeSet;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.R;

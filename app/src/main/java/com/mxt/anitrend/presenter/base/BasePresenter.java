@@ -2,7 +2,7 @@ package com.mxt.anitrend.presenter.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 
 import com.annimon.stream.Stream;

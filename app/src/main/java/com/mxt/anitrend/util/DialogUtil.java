@@ -3,13 +3,15 @@ package com.mxt.anitrend.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
 import android.text.InputType;
 import android.text.SpannedString;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -243,7 +245,7 @@ public class DialogUtil {
      * <br/>
      *
      * @param context from a fragment activity derived class
-     * @see android.support.v4.app.FragmentActivity
+     * @see FragmentActivity
      */
     static MaterialDialog.Builder createDefaultDialog(Context context) {
         return new MaterialDialog.Builder(context)

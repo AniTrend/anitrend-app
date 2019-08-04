@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.activity.base;
 
 import android.Manifest;
-import android.content.Context;
 import android.os.Bundle;
 
 import com.mxt.anitrend.R;
@@ -9,8 +8,8 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.widget.Button;
+import androidx.annotation.Nullable;
+
 import android.widget.TextView;
 import android.widget.Toast;
 

@@ -1,7 +1,7 @@
 package com.mxt.anitrend.util;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.crashlytics.android.Crashlytics;
 import com.mxt.anitrend.App;

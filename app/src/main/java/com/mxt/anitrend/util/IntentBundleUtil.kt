@@ -3,9 +3,9 @@ package com.mxt.anitrend.util
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.VisibleForTesting
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.ShareCompat
+import androidx.annotation.VisibleForTesting
+import androidx.fragment.app.FragmentActivity
+import androidx.core.app.ShareCompat
 import android.text.TextUtils
 
 import java.util.regex.Matcher

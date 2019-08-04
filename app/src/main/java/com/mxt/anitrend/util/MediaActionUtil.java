@@ -1,10 +1,10 @@
 package com.mxt.anitrend.util;
 
 import android.app.ProgressDialog;
-import android.arch.lifecycle.Lifecycle;
+import androidx.lifecycle.Lifecycle;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 

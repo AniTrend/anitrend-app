@@ -3,8 +3,8 @@ package com.mxt.anitrend.view.activity.base;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 
 import com.codemybrainsout.onboarder.AhoyOnboarderActivity;

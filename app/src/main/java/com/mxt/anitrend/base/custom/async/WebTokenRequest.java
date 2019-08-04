@@ -3,7 +3,7 @@ package com.mxt.anitrend.base.custom.async;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;

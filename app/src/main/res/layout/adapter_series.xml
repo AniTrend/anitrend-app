@@ -7,7 +7,7 @@
         <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/container"
         android:clickable="true"
         android:focusable="true"
@@ -54,7 +54,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     tools:text="Gintama."/>
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/md_margin" />
 
@@ -77,6 +77,6 @@
             android:layout_margin="@dimen/lg_margin"
             app:rating="@{model}"/>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </layout>

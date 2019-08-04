@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
@@ -66,7 +66,7 @@
                                 android:text="@{model.name.fullName}"
                                 tools:text="Tomokazu Sugita"/>
 
-                            <android.support.v4.widget.Space
+                            <androidx.legacy.widget.Space
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/lg_margin" />
 
@@ -76,7 +76,7 @@
                                 android:layout_height="@dimen/md_margin"
                                 android:background="@drawable/dashed_background" />
 
-                            <android.support.v4.widget.Space
+                            <androidx.legacy.widget.Space
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/lg_margin" />
 
@@ -85,7 +85,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_language"/>
 
-                            <android.support.v7.widget.AppCompatTextView
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.language)}"
@@ -99,7 +99,7 @@
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
                 <com.mxt.anitrend.base.custom.view.container.CardViewBase
                     android:clickable="true"
@@ -119,7 +119,7 @@
                             android:text="@string/title_summary"
                             />
 
-                        <android.support.v4.widget.Space
+                        <androidx.legacy.widget.Space
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/md_margin" />
 
@@ -136,7 +136,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </com.nguyenhoanglam.progresslayout.ProgressLayout>
 

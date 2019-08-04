@@ -42,7 +42,7 @@
         android:gravity="end"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bottom_negative"
             android:textColor="?colorAccent"
             android:layout_marginEnd="@dimen/xl_margin"
@@ -50,7 +50,7 @@
             style="@style/MaterialTipButton"
             tools:text="No"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bottom_positive"
             android:layout_marginEnd="@dimen/xl_margin"
             app:backgroundTint="?colorAccent"

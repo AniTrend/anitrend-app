@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:fillViewport="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -78,7 +78,7 @@
 
                         </FrameLayout>
 
-                        <android.support.v4.widget.Space
+                        <androidx.legacy.widget.Space
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/lg_margin" />
 
@@ -93,7 +93,7 @@
                             android:layout_height="wrap_content"
                             app:richMarkDown="@{model.about}"/>-->
 
-                        <android.support.v4.widget.Space
+                        <androidx.legacy.widget.Space
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/lg_margin" />
 
@@ -102,7 +102,7 @@
                 </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/md_margin" />
 
@@ -120,7 +120,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:text="@string/text_tap_on_item_below_to_view_stats" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/md_margin" />
 
@@ -148,7 +148,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </com.nguyenhoanglam.progresslayout.ProgressLayout>
 </layout>

@@ -1,7 +1,7 @@
 package com.mxt.anitrend.view.fragment.detail;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;

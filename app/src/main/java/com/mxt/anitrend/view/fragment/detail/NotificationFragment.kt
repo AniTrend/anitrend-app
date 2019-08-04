@@ -74,13 +74,13 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         // NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(5, 6)));
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu!!.findItem(R.id.action_mark_all).isVisible = true
+        menu.findItem(R.id.action_mark_all).isVisible = true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_mark_all -> {
                 if (mAdapter.itemCount > 0) {
                     ThreadPool.Builder()

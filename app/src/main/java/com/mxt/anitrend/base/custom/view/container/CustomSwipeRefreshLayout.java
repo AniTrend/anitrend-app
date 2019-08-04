@@ -3,16 +3,16 @@ package com.mxt.anitrend.base.custom.view.container;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.NestedScrollingChildHelper;
-import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.NestedScrollingParentHelper;
-import android.support.v4.view.ViewCompat;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.NestedScrollingChild;
+import androidx.core.view.NestedScrollingChildHelper;
+import androidx.core.view.NestedScrollingParent;
+import androidx.core.view.NestedScrollingParentHelper;
+import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -24,6 +24,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.mxt.anitrend.base.custom.view.drawable.MaterialProgressDrawable;
 import com.mxt.anitrend.base.custom.view.image.CircleImageView;
 
@@ -31,7 +33,7 @@ import com.mxt.anitrend.base.custom.view.image.CircleImageView;
  * Created by max on 2017/12/05.
  * Both way swipe refresh layout.
  *
- * This is a more powerful {@link android.support.v4.widget.SwipeRefreshLayout}, it can swipe
+ * This is a more powerful {@link SwipeRefreshLayout}, it can swipe
  * to refresh and load.
  *
  * @author wangdaye MySplash

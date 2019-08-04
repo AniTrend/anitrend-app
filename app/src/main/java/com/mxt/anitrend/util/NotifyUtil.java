@@ -2,11 +2,11 @@ package com.mxt.anitrend.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.FragmentActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -154,8 +154,8 @@ public class NotifyUtil {
         Snackbar snackbar = Snackbar.make(parent, stringRes, duration);
         View snackBarContainer = snackbar.getView();
         snackBarContainer.setBackgroundColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorPrimaryDark));
-        TextView mainTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_text);
-        TextView actionTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_action);
+        TextView mainTextView = snackBarContainer.findViewById(R.id.snackbar_text);
+        TextView actionTextView = snackBarContainer.findViewById(R.id.snackbar_action);
         mainTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.titleColor));
         actionTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorAccent));
         actionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
@@ -166,8 +166,8 @@ public class NotifyUtil {
         Snackbar snackbar = Snackbar.make(parent, stringRes, duration);
         View snackBarContainer = snackbar.getView();
         snackBarContainer.setBackgroundColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorPrimaryDark));
-        TextView mainTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_text);
-        TextView actionTextView = snackBarContainer.findViewById(android.support.design.R.id.snackbar_action);
+        TextView mainTextView = snackBarContainer.findViewById(R.id.snackbar_text);
+        TextView actionTextView = snackBarContainer.findViewById(R.id.snackbar_action);
         mainTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.titleColor));
         actionTextView.setTextColor(CompatUtil.INSTANCE.getColorFromAttr(parent.getContext(), R.attr.colorAccent));
         actionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);

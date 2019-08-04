@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -39,7 +39,7 @@
                     tools:visibility="gone"
                     tools:layout_height="@dimen/lg_margin"/>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/genre_recycler"
                     android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.genres) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
@@ -49,7 +49,7 @@
                 <include layout="@layout/section_series_details" app:model="@{model}"
                     app:presenter="@{presenter}"/>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tags_recycler"
                     android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.tags) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
@@ -76,7 +76,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </com.nguyenhoanglam.progresslayout.ProgressLayout>
 

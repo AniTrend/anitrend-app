@@ -1,12 +1,12 @@
 package com.mxt.anitrend.view.activity.index;
 
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.Observer;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -209,8 +209,8 @@ public class LoginActivity extends ActivityBase<User, BasePresenter> implements 
                         .addTag(KeyUtil.WorkAuthenticatorTag)
                         .setInputData(workerInputData)
                         .build();
-                WorkManager.getInstance().enqueue(authenticatorWorker);
-                WorkManager.getInstance().getWorkInfoByIdLiveData(authenticatorWorker.getId())
+                WorkManager.getInstance(getApplicationContext()).enqueue(authenticatorWorker);
+                WorkManager.getInstance(getApplicationContext()).getWorkInfoByIdLiveData(authenticatorWorker.getId())
                         .observe(this, workInfoObserver);
             }
         }

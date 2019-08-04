@@ -3,7 +3,7 @@ package com.mxt.anitrend.view.activity.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -75,7 +75,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
     @Override
     protected void onActivityReady() {
         JZDataSource dataSource = new JZDataSource(contentLink);
-        player.setUp(dataSource, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+        player.setUp(dataSource, Jzvd.SCREEN_FULLSCREEN);
         // player.backButton.setOnClickListener(this);
         // player.tinyBackImageView.setVisibility(View.INVISIBLE);
         player.fullscreenButton.setImageResource(R.drawable.jz_shrink);
@@ -97,7 +97,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
 
     public void onPause() {
         super.onPause();
-        Jzvd.resetAllVideos();
+        Jzvd.releaseAllVideos();
     }
 
     /**

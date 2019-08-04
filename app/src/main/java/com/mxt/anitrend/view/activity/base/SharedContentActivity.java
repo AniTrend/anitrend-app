@@ -1,13 +1,13 @@
 package com.mxt.anitrend.view.activity.base;
 
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.ShareCompat;
-import android.support.v7.widget.AppCompatImageView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputEditText;
+import androidx.core.app.ShareCompat;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.Toast;

@@ -1,10 +1,10 @@
 package com.mxt.anitrend.base.custom.view.editor
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.text.Editable
 import android.text.TextUtils
 import android.util.AttributeSet
@@ -223,7 +223,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
         if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.RESUMED) == true) {
             resetFlipperState()
             if (response.isSuccessful) {
-                binding.comment.text.clear()
+                binding.comment.text?.clear()
                 when (requestType) {
                     KeyUtil.MUT_SAVE_TEXT_FEED -> if (feedList != null)
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
