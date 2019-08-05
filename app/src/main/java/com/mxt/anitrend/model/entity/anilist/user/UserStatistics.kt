@@ -42,23 +42,23 @@ import com.mxt.anitrend.model.entity.anilist.user.statistics.*
  * @param volumesRead TBA
  */
 data class UserStatistics(
-        val chaptersRead: Int,
-        val count: Int,
+        val chaptersRead: Int = 0,
+        val count: Int = 0,
         val countries: List<UserCountryStatistic>?,
-        val episodesWatched: Int,
+        val episodesWatched: Int = 0,
         val formats: List<UserFormatStatistic>?,
         val genres: List<UserGenreStatistic>?,
         val lengths: List<UserLengthStatistic>?,
-        val meanScore: Float,
-        val minutesWatched: Int,
+        val meanScore: Float = 0f,
+        val minutesWatched: Int = 0,
         val releaseYears: List<UserReleaseYearStatistic>?,
         val scores: List<UserScoreStatistic>?,
         val staff: List<UserStaffStatistic>?,
-        val standardDeviation: Float,
+        val standardDeviation: Float = 0f,
         val startYears: List<UserStartYearStatistic>?,
         val statuses: List<UserStatusStatistic>?,
         val studios: List<UserStudioStatistic>?,
         val tags: List<UserTagStatistic>?,
         val voiceActors: List<UserVoiceActorStatistic>?,
-        val volumesRead: Int
+        val volumesRead: Int = 0
 )
