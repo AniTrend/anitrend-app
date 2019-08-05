@@ -153,15 +153,15 @@ public class UserOverviewFragment extends FragmentBase<User, BasePresenter, User
 
     private List<StatsRing> generateStatsData() {
         List<StatsRing> userGenreStats = new ArrayList<>();
-        if(model.getStats() != null && !CompatUtil.INSTANCE.isEmpty(model.getStats().getFavouredGenres())) {
-            int highestValue = Stream.of(model.getStats().getFavouredGenres())
-                    .max((o1, o2) -> o1.getAmount() > o2.getAmount() ? 1 : -1)
-                    .get().getAmount();
+        if(model.getStatistics() != null && model.getStatistics().getAnime().getGenres() != null && !CompatUtil.INSTANCE.isEmpty(model.getStatistics().getAnime().getGenres())) {
+            int highestValue = Stream.of(model.getStatistics().getAnime().getGenres())
+                    .max((o1, o2) -> o1.getCount() > o2.getCount() ? 1 : -1)
+                    .get().getCount();
 
-            userGenreStats = Stream.of(model.getStats().getFavouredGenres())
-                    .sortBy(s -> - s.getAmount()).map(genreStats -> {
-                        float percentage = (((float)genreStats.getAmount()) / ((float)highestValue)) * 100f;
-                        return new StatsRing((int)percentage, genreStats.getGenre(), String.valueOf(genreStats.getAmount()));
+            userGenreStats = Stream.of(model.getStatistics().getAnime().getGenres())
+                    .sortBy(s -> - s.getCount()).map(genreStats -> {
+                        float percentage = (((float)genreStats.getCount()) / ((float)highestValue)) * 100f;
+                        return new StatsRing((int)percentage, genreStats.getGenre(), String.valueOf(genreStats.getCount()));
                     }).limit(5).toList();
         }
 
