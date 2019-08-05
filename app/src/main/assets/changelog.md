@@ -8,6 +8,7 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Bug Fixes
 - Improved error message for invalid token errors
+- User stats no updating (due to deprecated stats)
 
 #### Current Issues
 - Clicking on @username shows mixed feed
