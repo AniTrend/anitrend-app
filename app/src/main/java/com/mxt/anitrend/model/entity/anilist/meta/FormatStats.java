@@ -3,6 +3,7 @@ package com.mxt.anitrend.model.entity.anilist.meta;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@Deprecated
 public class FormatStats implements Parcelable {
 
     private String format;

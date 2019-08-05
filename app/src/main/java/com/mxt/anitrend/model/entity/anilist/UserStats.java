@@ -16,7 +16,7 @@ import java.util.List;
  * UserStats for user
  * @see User
  */
-
+@Deprecated
 public class UserStats implements Parcelable {
 
     private int watchedTime;
