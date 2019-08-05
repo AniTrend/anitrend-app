@@ -283,6 +283,8 @@ type CharacterName {
     alternative: [String]
     "The character's given name"
     first: String
+    "The character's full name"
+    full: String
     "The character's surname"
     last: String
     "The character's full name in their native language"
@@ -1224,9 +1226,9 @@ type MediaListOptions {
     "The score format the user is using for media lists"
     scoreFormat: ScoreFormat
     "The list theme options for both lists"
-    sharedTheme: Json @deprecated(reason : "This field has not yet been fully implemented and may change without warning")
+    sharedTheme: Json @deprecated(reason : "No longer used")
     "If the shared theme should be used instead of the individual list themes"
-    sharedThemeEnabled: Boolean @deprecated(reason : "This field has not yet been fully implemented and may change without warning")
+    sharedThemeEnabled: Boolean @deprecated(reason : "No longer used")
     "(Site only) If the user should be using legacy css-supporting list versions"
     useLegacyLists: Boolean
 }
@@ -2641,6 +2643,8 @@ type Query {
         #Filter by media id
         userId: Int
     ): Review
+    "Site statistics query"
+    SiteStatistics: SiteStatistics
     "Staff query"
     Staff(
         #Filter by the staff id
@@ -2823,6 +2827,79 @@ type ScoreDistribution {
     score: Int
 }
 
+type SiteStatistics {
+    anime(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+    characters(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+    manga(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+    reviews(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+    staff(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+    studios(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+    users(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [SiteTrendSort]
+    ): SiteTrendConnection
+}
+
+"Daily site statistics"
+type SiteTrend {
+    "The change from yesterday"
+    change: Int!
+    count: Int!
+    "The day the data was recorded (timestamp)"
+    date: Int!
+}
+
+type SiteTrendConnection {
+    edges: [SiteTrendEdge]
+    nodes: [SiteTrend]
+    "The pagination information"
+    pageInfo: PageInfo
+}
+
+"Site trend connection edge"
+type SiteTrendEdge {
+    node: SiteTrend
+}
+
 "Voice actors or production staff"
 type Staff {
     "Characters voiced by the actor"
@@ -2900,8 +2977,12 @@ type StaffImage {
 
 "The names of the staff member"
 type StaffName {
+    "Other names the staff member might be referred to as (pen names)"
+    alternative: [String]
     "The person's given name"
     first: String
+    "The person's full name"
+    full: String
     "The person's surname"
     last: String
     "The person's full name in their native language"
@@ -2948,6 +3029,8 @@ type Studio {
     favourites: Int
     "The id of the studio"
     id: Int!
+    "If the studio is an animation studio or a different kind of company"
+    isAnimationStudio: Boolean!
     "If the studio is marked as favourite by the currently authenticated user"
     isFavourite: Boolean!
     "The media the studio has worked on"
@@ -3261,8 +3344,10 @@ type User {
     options: UserOptions
     "The url for the user page on the AniList website"
     siteUrl: String
+    "The users anime & manga list statistics"
+    statistics: UserStatisticTypes
     "The user's statistics"
-    stats: UserStats
+    stats: UserStats @deprecated(reason : "Deprecated. Replaced with statistics field.")
     "The number of unread notifications the user has"
     unreadNotificationCount: Int
     "When the user's data was last updated"
@@ -3287,6 +3372,42 @@ type UserAvatar {
     medium: String
 }
 
+type UserCountryStatistic {
+    chaptersRead: Int!
+    count: Int!
+    country: CountryCode
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+}
+
+type UserFormatStatistic {
+    chaptersRead: Int!
+    count: Int!
+    format: MediaFormat
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+}
+
+type UserGenreStatistic {
+    chaptersRead: Int!
+    count: Int!
+    genre: String
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+}
+
+type UserLengthStatistic {
+    chaptersRead: Int!
+    count: Int!
+    length: String
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+}
+
 "A user's general options"
 type UserOptions {
     "Whether the user receives notifications when a show they are watching aires"
@@ -3299,6 +3420,69 @@ type UserOptions {
     profileColor: String
     "The language the user wants to see media titles in"
     titleLanguage: UserTitleLanguage
+}
+
+type UserReleaseYearStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    releaseYear: Int
+}
+
+type UserScoreStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    score: Int
+}
+
+type UserStaffStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    staff: Staff
+}
+
+type UserStartYearStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    startYear: Int
+}
+
+type UserStatisticTypes {
+    anime: UserStatistics
+    manga: UserStatistics
+}
+
+type UserStatistics {
+    chaptersRead: Int!
+    count: Int!
+    countries(limit: Int, sort: [UserStatisticsSort]): [UserCountryStatistic]
+    episodesWatched: Int!
+    formats(limit: Int, sort: [UserStatisticsSort]): [UserFormatStatistic]
+    genres(limit: Int, sort: [UserStatisticsSort]): [UserGenreStatistic]
+    lengths(limit: Int, sort: [UserStatisticsSort]): [UserLengthStatistic]
+    meanScore: Float!
+    minutesWatched: Int!
+    releaseYears(limit: Int, sort: [UserStatisticsSort]): [UserReleaseYearStatistic]
+    scores(limit: Int, sort: [UserStatisticsSort]): [UserScoreStatistic]
+    staff(limit: Int, sort: [UserStatisticsSort]): [UserStaffStatistic]
+    standardDeviation: Float!
+    startYears(limit: Int, sort: [UserStatisticsSort]): [UserStartYearStatistic]
+    statuses(limit: Int, sort: [UserStatisticsSort]): [UserStatusStatistic]
+    studios(limit: Int, sort: [UserStatisticsSort]): [UserStudioStatistic]
+    tags(limit: Int, sort: [UserStatisticsSort]): [UserTagStatistic]
+    voiceActors(limit: Int, sort: [UserStatisticsSort]): [UserVoiceActorStatistic]
+    volumesRead: Int!
 }
 
 "A user's statistics"
@@ -3322,6 +3506,43 @@ type UserStats {
     mangaStatusDistribution: [StatusDistribution]
     "The amount of anime the user has watched in minutes"
     watchedTime: Int
+}
+
+type UserStatusStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    status: MediaListStatus
+}
+
+type UserStudioStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    studio: Studio
+}
+
+type UserTagStatistic {
+    chaptersRead: Int!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    tag: MediaTag
+}
+
+type UserVoiceActorStatistic {
+    chaptersRead: Int!
+    characterIds: [Int]!
+    count: Int!
+    meanScore: Float!
+    mediaIds: [Int]!
+    minutesWatched: Int!
+    voiceActor: Staff
 }
 
 "User's year statistics"
@@ -3689,6 +3910,16 @@ enum ScoreFormat {
     POINT_5
 }
 
+"Site trend sort enums"
+enum SiteTrendSort {
+    CHANGE
+    CHANGE_DESC
+    COUNT
+    COUNT_DESC
+    DATE
+    DATE_DESC
+}
+
 "The primary language of the voice actor"
 enum StaffLanguage {
     #English
@@ -3782,6 +4013,18 @@ enum UserSort {
     USERNAME_DESC
     WATCHED_TIME
     WATCHED_TIME_DESC
+}
+
+"User statistics sort enum"
+enum UserStatisticsSort {
+    COUNT
+    COUNT_DESC
+    ID
+    ID_DESC
+    MEAN_SCORE
+    MEAN_SCORE_DESC
+    PROGRESS
+    PROGRESS_DESC
 }
 
 "The language the user wants to see media titles in"
@@ -3879,6 +4122,8 @@ input NotificationOptionInput {
 
 "The names of the staff member"
 input StaffNameInput {
+    "Other names the character might be referred by"
+    alternative: [String]
     "The person's given name"
     first: String
     "The person's surname"
