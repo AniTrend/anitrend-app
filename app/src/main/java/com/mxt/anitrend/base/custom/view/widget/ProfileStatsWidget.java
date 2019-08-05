@@ -22,6 +22,8 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
 import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
+import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
+import com.mxt.anitrend.model.entity.anilist.user.UserStatistics;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -42,12 +44,13 @@ import retrofit2.Response;
  * status widget
  */
 
-public class ProfileStatsWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<ConnectionContainer<UserStats>> {
+public class ProfileStatsWidget extends FrameLayout implements CustomView, View.OnClickListener, RetroCallback<ConnectionContainer<UserStatisticTypes>> {
 
     private WidgetProfileStatsBinding binding;
-    private WidgetPresenter<ConnectionContainer<UserStats>> presenter;
+    private WidgetPresenter<ConnectionContainer<UserStatisticTypes>> presenter;
 
-    private UserStats model;
+    @Nullable
+    private UserStatisticTypes model;
     private QueryContainerBuilder queryContainer;
 
     private Bundle bundle;
@@ -98,14 +101,12 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
     public void updateUI() {
         binding.setClickListener(this);
-        binding.userAnimeTime.setText(getAnimeTime(model.getWatchedTime()));
-        binding.userMangaChaps.setText(getMangaChaptersCount(model.getChaptersRead()));
-
-        if(model.getAnimeStatusDistribution() != null && !model.getAnimeStatusDistribution().isEmpty())
-            binding.userAnimeTotal.setText(getCount(model.getAnimeStatusDistribution()));
-
-        if(model.getMangaStatusDistribution() != null && !model.getMangaStatusDistribution().isEmpty())
-            binding.userMangaTotal.setText(getCount(model.getMangaStatusDistribution()));
+        if (model != null) {
+            binding.userAnimeTime.setText(getAnimeTime(model.getAnime().getMinutesWatched()));
+            binding.userMangaChaps.setText(getMangaChaptersCount(model.getManga().getChaptersRead()));
+            binding.userAnimeTotal.setText(getCount(model.getAnime().getEpisodesWatched()));
+            binding.userMangaTotal.setText(getCount(model.getManga().getChaptersRead()));
+        }
     }
 
     public void setParams(Bundle bundle) {
@@ -133,10 +134,22 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         Intent intent;
         switch (view.getId()) {
             case R.id.user_anime_time_container:
-                Snackbar.make(this, getContext().getString(R.string.text_user_anime_time, getAnimeTime(model.getWatchedTime())), Snackbar.LENGTH_LONG).show();
+                if (model != null)
+                    Snackbar.make(this,
+                            getContext().getString(
+                                    R.string.text_user_anime_time,
+                                    getAnimeTime(model.getAnime().getMinutesWatched())
+                            ), Snackbar.LENGTH_LONG
+                    ).show();
                 break;
             case R.id.user_manga_chaps_container:
-                Snackbar.make(this, getContext().getString(R.string.text_user_manga_chapters, getMangaChaptersCount(model.getChaptersRead())), Snackbar.LENGTH_LONG).show();
+                if (model != null)
+                    Snackbar.make(this,
+                            getContext().getString(
+                                    R.string.text_user_manga_chapters,
+                                    getMangaChaptersCount(model.getManga().getChaptersRead())
+                            ), Snackbar.LENGTH_LONG
+                    ).show();
                 break;
             case R.id.user_anime_total_container:
                 intent = new Intent(getContext(), MediaListActivity.class);
@@ -156,9 +169,9 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     }
 
     @Override
-    public void onResponse(@NonNull Call<ConnectionContainer<UserStats>> call, @NonNull Response<ConnectionContainer<UserStats>> response) {
+    public void onResponse(@NonNull Call<ConnectionContainer<UserStatisticTypes>> call, @NonNull Response<ConnectionContainer<UserStatisticTypes>> response) {
         try {
-            ConnectionContainer<UserStats> connectionContainer;
+            ConnectionContainer<UserStatisticTypes> connectionContainer;
             if(response.isSuccessful() && (connectionContainer = response.body()) != null) {
                 if(!connectionContainer.isEmpty()) {
                     model = connectionContainer.getConnection();
@@ -172,19 +185,20 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     }
 
     @Override
-    public void onFailure(@NonNull Call<ConnectionContainer<UserStats>> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<ConnectionContainer<UserStatisticTypes>> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            if (throwable.getLocalizedMessage() != null)
+                Log.e(toString(), throwable.getLocalizedMessage());
             throwable.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getAnimeTime(int animeTime) {
-        if(animeTime < 1)
+    public String getAnimeTime(@Nullable Integer animeTime) {
+        if(animeTime == null || animeTime < 1)
             return placeHolder;
-        float item_time = animeTime / 60;
+        float item_time = animeTime / 60f;
         if(item_time > 60) {
             item_time /= 24;
             if(item_time > 365)
@@ -194,21 +208,15 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         return getContext().getString(R.string.anime_time_hours, item_time);
     }
 
-    public String getMangaChaptersCount(long manga_chap) {
-        if(manga_chap < 1)
+    public String getMangaChaptersCount(@Nullable Integer manga_chap) {
+        if(manga_chap == null || manga_chap < 1)
             return placeHolder;
         if(manga_chap > 1000)
             return String.format(Locale.getDefault(), "%.1f K", (float)manga_chap/1000);
         return String.format(Locale.getDefault(), "%d", manga_chap);
     }
 
-    public String getCount(List<StatusDistribution> statusDistributions) {
-        int totalCount = 0;
-        if(!CompatUtil.INSTANCE.isEmpty(statusDistributions))
-            totalCount = Stream.of(statusDistributions)
-                    .mapToInt(StatusDistribution::getAmount)
-                    .sum();
-
+    public String getCount(int totalCount) {
         if(totalCount >= 1000)
             return String.format(Locale.getDefault(), "%.1f K", (float)totalCount/1000);
         return String.format(Locale.getDefault(),"%d", totalCount);
