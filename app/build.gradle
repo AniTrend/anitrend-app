@@ -1,7 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'io.objectbox'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id("com.android.application")
+    id("kotlin-kapt")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("io.objectbox")
+}
 
 android {
     compileSdkVersion compileSdk
@@ -30,12 +33,10 @@ android {
             if (rootProject.file("secrets.properties").exists()) {
                 def props = new Properties()
                 props.load(new FileInputStream(rootProject.file("secrets.properties")))
-                it.buildConfigField "String", "API_KEY", props['API_KEY']
                 it.buildConfigField "String", "CLIENT_ID", props['CLIENT_ID']
                 it.buildConfigField "String", "CLIENT_SECRET", props['CLIENT_SECRET']
                 it.buildConfigField "String", "GIPHY_KEY", props['GIPHY_KEY']
             } else {
-                it.buildConfigField "String", "API_KEY", "API_KEY"
                 it.buildConfigField "String", "CLIENT_ID", "CLIENT_ID"
                 it.buildConfigField "String", "CLIENT_SECRET", "CLIENT_SECRET"
                 it.buildConfigField "String", "GIPHY_KEY", "GIPHY_KEY"
@@ -77,6 +78,10 @@ android {
 
 configurations.all {
     resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+androidExtensions {
+    experimental = true
 }
 
 dependencies {
