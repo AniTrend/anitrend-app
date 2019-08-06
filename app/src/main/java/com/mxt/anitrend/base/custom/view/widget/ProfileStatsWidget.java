@@ -104,8 +104,8 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         if (model != null) {
             binding.userAnimeTime.setText(getAnimeTime(model.getAnime().getMinutesWatched()));
             binding.userMangaChaps.setText(getMangaChaptersCount(model.getManga().getChaptersRead()));
-            binding.userAnimeTotal.setText(getCount(model.getAnime().getEpisodesWatched()));
-            binding.userMangaTotal.setText(getCount(model.getManga().getChaptersRead()));
+            binding.userAnimeTotal.setText(getCount(model.getAnime().getCount()));
+            binding.userMangaTotal.setText(getCount(model.getManga().getCount()));
         }
     }
 
