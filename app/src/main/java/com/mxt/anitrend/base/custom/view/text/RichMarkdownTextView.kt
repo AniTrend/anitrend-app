@@ -47,7 +47,6 @@ class RichMarkdownTextView : AppCompatTextView, CustomView {
         Markwon.builder(context)
                 .usePlugin(HtmlPlugin.create())
                 .usePlugin(LinkifyPlugin.create())
-                .usePlugin(GlideImagesPlugin.create(context))
                 .usePlugin(GlideImagesPlugin.create(Glide.with(context)))
                 .usePlugin(GlideImagesPlugin.create(object : GlideImagesPlugin.GlideStore {
                     override fun cancel(target: Target<*>) {
