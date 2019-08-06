@@ -5,6 +5,7 @@ import com.mxt.anitrend.model.entity.anilist.Favourite;
 import com.mxt.anitrend.model.entity.anilist.Notification;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.anilist.UserStats;
+import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
 import com.mxt.anitrend.model.entity.anilist.user.UserStatistics;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
@@ -47,7 +48,7 @@ public interface UserModel {
     @POST("/")
     @GraphQuery("UserStats")
     @Headers("Content-Type: application/json")
-    Call<GraphContainer<ConnectionContainer<UserStatistics>>> getUserStats(@Body QueryContainerBuilder request);
+    Call<GraphContainer<ConnectionContainer<UserStatisticTypes>>> getUserStats(@Body QueryContainerBuilder request);
 
     @POST("/")
     @GraphQuery("UserFollowers")
