@@ -4,11 +4,12 @@ __N.B__ v2.0 will be dropping support for Jellybean - Kitkat, due to missing or 
 which can result in authentication errors [read more](https://github.com/square/okhttp/issues/2372)
 
 #### Enhancements
-- Minor UI tweaks, specifically view radius
+- Support for Android Q
 
 #### Bug Fixes
+- Remove embedded YoutubePlayer
 - Improved error message for invalid token errors
-- User stats no updating (due to deprecated stats)
+- User stats not updating (due to deprecated stats)
 
 #### Current Issues
 - Clicking on @username shows mixed feed
