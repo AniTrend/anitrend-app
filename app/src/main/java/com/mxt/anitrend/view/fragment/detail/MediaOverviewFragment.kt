@@ -50,8 +50,8 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mediaId = arguments!!.getLong(KeyUtil.arg_id)
-            mediaType = arguments!!.getString(KeyUtil.arg_mediaType)
+            mediaId = arguments?.getLong(KeyUtil.arg_id) ?: 0
+            mediaType = arguments?.getString(KeyUtil.arg_mediaType)
         }
         isMenuDisabled = true
         mColumnSize = R.integer.grid_list_x2
@@ -71,6 +71,14 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             tagsRecycler.layoutManager = StaggeredGridLayoutManager(resources.getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL)
             tagsRecycler.isNestedScrollingEnabled = false
             tagsRecycler.setHasFixedSize(true)
+
+            listOf(
+                    R.id.series_image,
+                    R.id.anime_main_studio_container,
+                    R.id.show_spoiler_tags
+            ).map {
+                root.findViewById<View>(it)
+            }.forEach { it?.setOnClickListener(this@MediaOverviewFragment) }
         }
 
         return binding?.root
@@ -85,27 +93,27 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     override fun updateUI() {
-        if (activity != null && model!!.trailer != null && CompatUtil.equals(model!!.trailer.site, "youtube")) {
+        if (activity != null && model?.trailer != null && CompatUtil.equals(model?.trailer?.site, "youtube")) {
             childFragmentManager.beginTransaction()
-                    .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(model!!.trailer))
+                    .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(model?.trailer))
                     .commit()
         } else
-            binding!!.youtubeView.visibility = View.GONE
-        binding!!.presenter = presenter
-        binding!!.model = model
+            binding?.youtubeView?.visibility = View.GONE
+        binding?.presenter = presenter
+        binding?.model = model
 
 
-        if (model!!.tags != null && model!!.tagsNoSpoilers != null) {
-            if (model!!.tagsNoSpoilers.size == model!!.tags.size)
-                binding!!.showSpoilerTags.visibility = View.GONE
+        if (model?.tags != null && model?.tagsNoSpoilers != null) {
+            if (model?.tagsNoSpoilers?.size == model?.tags?.size)
+                binding?.showSpoilerTags?.visibility = View.GONE
             else
-                binding!!.showSpoilerTags.visibility = View.VISIBLE
+                binding?.showSpoilerTags?.visibility = View.VISIBLE
         }
 
         if (genreAdapter == null) {
             genreAdapter = GenreAdapter(context)
-            genreAdapter!!.onItemsInserted(presenter.buildGenres(model))
-            genreAdapter!!.setClickListener(object : ItemClickListener<Genre> {
+            genreAdapter?.onItemsInserted(presenter.buildGenres(model))
+            genreAdapter?.setClickListener(object : ItemClickListener<Genre> {
                 override fun onItemClick(target: View, data: IntPair<Genre>) {
                     when (target.id) {
                         R.id.container -> {
@@ -130,18 +138,17 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                 }
             })
         }
-        binding!!.genreRecycler.adapter = genreAdapter
-
-        if (tagAdapter == null) {
-            tagAdapter = TagAdapter(context)
-            tagAdapter!!.onItemsInserted(model!!.tagsNoSpoilers)
-            tagAdapter!!.setClickListener(object : ItemClickListener<MediaTag> {
-                override fun onItemClick(target: View, data: IntPair<MediaTag>) {
-                    when (target.id) {
-                        R.id.container -> DialogUtil.createTagMessage(activity, data.second.name, data.second.description, data.second.isMediaSpoiler,
-                                R.string.More, R.string.Close) { dialog, which ->
-                            when (which) {
-                                DialogAction.POSITIVE -> {
+        binding?.genreRecycler?.adapter = genreAdapter
+        model?.tagsNoSpoilers?.also {
+            if (tagAdapter == null) {
+                tagAdapter = TagAdapter(context)
+                tagAdapter?.onItemsInserted(it)
+                tagAdapter?.setClickListener(object : ItemClickListener<MediaTag> {
+                    override fun onItemClick(target: View, data: IntPair<MediaTag>) {
+                        when (target.id) {
+                            R.id.container -> DialogUtil.createTagMessage(activity, data.second.name, data.second.description, data.second.isMediaSpoiler,
+                                    R.string.More, R.string.Close) { _, which ->
+                                if (which == DialogAction.POSITIVE) {
                                     val args = Bundle()
                                     val intent = Intent(activity, MediaBrowseActivity::class.java)
                                     args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
@@ -158,16 +165,16 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                             }
                         }
                     }
-                }
 
-                override fun onItemLongClick(target: View, data: IntPair<MediaTag>) {
+                    override fun onItemLongClick(target: View, data: IntPair<MediaTag>) {
 
-                }
-            })
+                    }
+                })
+            }
+            binding?.tagsRecycler?.adapter = tagAdapter
         }
-        binding!!.tagsRecycler.adapter = tagAdapter
 
-        binding!!.stateLayout.showContent()
+        binding?.stateLayout?.showContent()
     }
 
     /**
@@ -191,9 +198,9 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             this.model = model
             updateUI()
         } else
-            binding!!.stateLayout.showError(CompatUtil.getDrawable(context!!, R.drawable.ic_emoji_sweat),
+            binding?.stateLayout?.showError(CompatUtil.getDrawable(context!!, R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again)) { view ->
-                binding!!.stateLayout.showLoading()
+                binding?.stateLayout?.showLoading()
                 makeRequest()
             }
     }
@@ -203,11 +210,10 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
      *
      * @param v The view that was clicked.
      */
-    @OnClick(R.id.series_image, R.id.anime_main_studio_container, R.id.show_spoiler_tags)
     override fun onClick(v: View) {
         val intent: Intent
         when (v.id) {
-            R.id.series_image -> CompatUtil.imagePreview(activity, v, model!!.coverImage.large, R.string.image_preview_error_series_cover)
+            R.id.series_image -> CompatUtil.imagePreview(activity, v, model?.coverImage?.large, R.string.image_preview_error_series_cover)
             R.id.anime_main_studio_container -> {
                 val studioBase = presenter.getMainStudioObject(model)
                 if (studioBase != null) {
@@ -217,9 +223,11 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                 }
             }
             R.id.show_spoiler_tags -> {
-                tagAdapter!!.onItemRangeChanged(model!!.tags)
-                tagAdapter!!.notifyDataSetChanged()
-                v.visibility = View.GONE
+                model?.tags?.also {
+                    tagAdapter?.onItemRangeChanged(it)
+                    tagAdapter?.notifyDataSetChanged()
+                    v.visibility = View.GONE
+                }
             }
             else -> super.onClick(v)
         }
