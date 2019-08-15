@@ -6,8 +6,8 @@ buildscript {
         targetSdk = 29
         minSdk = 17
 
-        versionCode = 131
-        versionName = '1.5.2'
+        versionCode = 132
+        versionName = '1.5.3'
 
         butterKnife = '10.1.0'
 
