@@ -24,7 +24,7 @@ class ApplicationPref(private val context: Context) {
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
-    val sharedPreferences: SharedPreferences by lazy {
+    val sharedPreferences: SharedPreferences by lazy(LazyThreadSafetyMode.NONE) {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 
