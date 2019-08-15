@@ -3,17 +3,21 @@ package com.mxt.anitrend.presenter.base
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.annimon.stream.Stream
+import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
-import com.mxt.anitrend.model.entity.anilist.user.statistics.UserGenreStatistic
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.crunchy.MediaContent
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail
 import com.mxt.anitrend.service.TagGenreService
 import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.migration.MigrationUtil
+import com.mxt.anitrend.util.migration.Migrations
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -28,6 +32,14 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     private var favouriteTags: List<String>? = null
     private var favouriteYears: List<String>? = null
     private var favouriteFormats: List<String>? = null
+
+    fun checkIfMigrationIsNeeded(fragmentActivity: FragmentActivity): Boolean {
+        NotifyUtil.makeText(fragmentActivity, R.string.text_migration_in_progress, Toast.LENGTH_SHORT)
+        val migrationUtil = MigrationUtil.Builder()
+                .addMigration(Migrations.MIGRATION_109_132)
+                .build()
+        return migrationUtil.applyMigration()
+    }
 
     fun checkGenresAndTags(fragmentActivity: FragmentActivity) {
         val intent = Intent(fragmentActivity, TagGenreService::class.java)
@@ -72,7 +84,7 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
             val userStats: UserStatisticTypes? = database.currentUser.statistics
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.tags.isNullOrEmpty()) {
-                    favouriteTags = Stream.of(userStats.anime.tags!!)
+                    favouriteTags = Stream.of(userStats.anime.tags)
                             .sortBy { (_, _, count) -> -count }
                             .filter { (tag) -> tag != null }
                             .map { (tag) -> tag!!.name }
