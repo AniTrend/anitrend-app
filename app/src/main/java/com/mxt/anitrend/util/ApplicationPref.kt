@@ -2,13 +2,12 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
+import androidx.preference.PreferenceManager
 
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.util.ApplicationPref.Companion._isLightTheme
 
 import java.util.Locale
 
