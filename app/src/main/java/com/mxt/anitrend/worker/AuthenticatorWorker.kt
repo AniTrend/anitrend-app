@@ -45,17 +45,17 @@ class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Wo
      * [Result.failure] or
      * [Result.failure]
      */
-    override fun doWork(): ListenableWorker.Result {
+    override fun doWork(): Result {
         val errorDataBuilder = Data.Builder()
         try {
             val authorizationCode = authenticatorUri.getQueryParameter(BuildConfig.RESPONSE_TYPE)
             if (!TextUtils.isEmpty(authorizationCode)) {
-                val isSuccess = WebTokenRequest.getToken(applicationContext, authorizationCode)
+                val isSuccess = WebTokenRequest.getToken(authorizationCode)
                 presenter.applicationPref.isAuthenticated = isSuccess
                 val outputData = Data.Builder()
                         .putBoolean(KeyUtil.arg_model, isSuccess)
                         .build()
-                return ListenableWorker.Result.success(outputData)
+                return Result.success(outputData)
             } else
                 Log.e(toString(), "Authorization authenticatorUri was empty or null, cannot authenticate with the current state")
         } catch (e: ExecutionException) {
@@ -72,6 +72,6 @@ class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Wo
                 .putString(KeyUtil.arg_uri_error_description, authenticatorUri
                         .getQueryParameter(KeyUtil.arg_uri_error_description))
                 .build()
-        return ListenableWorker.Result.failure(workerErrorOutputData)
+        return Result.failure(workerErrorOutputData)
     }
 }
