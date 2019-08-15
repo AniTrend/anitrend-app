@@ -47,10 +47,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
                             R.drawable.ic_bubble_chart_white_24dp)),
                     applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_search_title),
                             getString(R.string.app_intro_search_text),
-                            R.drawable.ic_search_white_24dp)),
-                    applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_videos_title),
-                            getString(R.string.app_intro_videos_text),
-                            R.drawable.ic_slow_motion_video_white_24dp))
+                            R.drawable.ic_search_white_24dp))
             ));
         } else {
             ahoyPages = new ArrayList<>(CompatUtil.INSTANCE.constructListFrom(
@@ -65,10 +62,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
                             R.drawable.ic_bubble_chart_white_48dp)),
                     applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_search_title),
                             getString(R.string.app_intro_search_text),
-                            R.drawable.ic_search_white_48dp)),
-                    applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_videos_title),
-                            getString(R.string.app_intro_videos_text),
-                            R.drawable.ic_slow_motion_video_white_48dp))
+                            R.drawable.ic_search_white_48dp))
             ));
         }
 
