@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
-    id("kotlin-kapt")
     id("kotlin-android")
     id("kotlin-android-extensions")
+    id("kotlin-kapt")
     id("io.objectbox")
 }
 
@@ -101,6 +101,7 @@ dependencies {
     /** Material Design */
     implementation "com.google.android.material:material:$material"
 
+    implementation 'androidx.preference:preference:1.1.0-rc01'
     implementation "androidx.constraintlayout:constraintlayout:$constraint"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
