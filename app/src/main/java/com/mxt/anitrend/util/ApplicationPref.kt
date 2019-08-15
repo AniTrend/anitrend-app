@@ -203,6 +203,9 @@ class ApplicationPref(private val context: Context) {
     val isUpdated: Boolean
         get() = sharedPreferences.getInt(_versionCode, 1) < BuildConfig.VERSION_CODE
 
+    val versionCode: Int
+        get() = sharedPreferences.getInt(_versionCode, 1)
+
     var selectedGenres: Map<Int, String>?
         get() {
             val selected = sharedPreferences.getString(_genreFilter, null)
