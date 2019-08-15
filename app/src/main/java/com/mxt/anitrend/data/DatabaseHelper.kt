@@ -1,8 +1,5 @@
 package com.mxt.anitrend.data
 
-import android.content.Context
-
-import com.mxt.anitrend.App
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
@@ -12,20 +9,19 @@ import com.mxt.anitrend.model.entity.base.AuthBase
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.base.VersionBase
-
 import io.objectbox.Box
 import io.objectbox.BoxStore
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by max on 2017/11/02.
  * Database helper class
  */
 
-class DatabaseHelper(context: Context) : BoxQuery {
+class DatabaseHelper : BoxQuery, KoinComponent {
 
-    private val boxStore: BoxStore by lazy {
-        (context.applicationContext as App).boxStore
-    }
+    private val boxStore by inject<BoxStore>()
 
     // Frequently used instance variables
     private var user: User? = null

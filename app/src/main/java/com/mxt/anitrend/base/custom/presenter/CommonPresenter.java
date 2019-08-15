@@ -45,7 +45,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
 
     public BoxQuery getDatabase() {
         if(databaseHelper == null)
-            databaseHelper = new DatabaseHelper(context);
+            databaseHelper = new DatabaseHelper();
         return databaseHelper;
     }
 

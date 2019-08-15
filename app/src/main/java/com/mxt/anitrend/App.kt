@@ -8,14 +8,16 @@ import androidx.multidex.MultiDexApplication
 import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.mxt.anitrend.model.entity.MyObjectBox
+import com.mxt.anitrend.koin.AppModule.appModule
 import com.mxt.anitrend.util.ApplicationPref
-import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.LocaleUtil
 import io.fabric.sdk.android.Fabric
-import io.objectbox.BoxStore
 import io.wax911.emojify.EmojiManager
 import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 /**
  * Created by max on 2017/10/22.
@@ -24,7 +26,7 @@ import org.greenrobot.eventbus.EventBus
 
 class App : MultiDexApplication() {
 
-    val applicationPref = ApplicationPref(this)
+    val applicationPref by inject<ApplicationPref>()
 
     init {
         EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
@@ -39,15 +41,14 @@ class App : MultiDexApplication() {
      *
      * @see com.mxt.anitrend.util.AnalyticsUtil
      */
-    var analytics: FirebaseAnalytics? = null
-        private set
-    /**
-     * @return Default application object box database instance
-     *
-     * @see com.mxt.anitrend.data.DatabaseHelper
-     */
-    lateinit var boxStore: BoxStore
-        private set
+    val analytics: FirebaseAnalytics? by lazy {
+        if (applicationPref.isUsageAnalyticsEnabled == true) {
+            FirebaseAnalytics.getInstance(this@App).apply {
+                setAnalyticsCollectionEnabled(applicationPref.isUsageAnalyticsEnabled!!)
+            }
+        }
+        null
+    }
 
     /**
      * Get application global registered fabric instance, depending on
@@ -56,35 +57,36 @@ class App : MultiDexApplication() {
      *
      * @see com.mxt.anitrend.util.AnalyticsUtil
      */
-    var fabric: Fabric? = null
-        private set
-
-    private fun setupBoxStore() {
-        boxStore = MyObjectBox.builder()
-                .androidContext(this@App)
-                .build()
-    }
-
-    private fun setCrashAnalytics() {
+    val fabric: Fabric? by lazy {
         if (!BuildConfig.DEBUG)
             if (applicationPref.isCrashReportsEnabled == true) {
                 val crashlyticsCore = CrashlyticsCore.Builder()
                         .build()
 
-                fabric = Fabric.with(Fabric.Builder(this)
+                Fabric.with(Fabric.Builder(this)
                         .kits(crashlyticsCore)
                         .appIdentifier(BuildConfig.BUILD_TYPE)
                         .build())
             }
+        null
     }
 
-    private fun initApp() {
-        if (applicationPref.isUsageAnalyticsEnabled == true) {
-            analytics = FirebaseAnalytics.getInstance(this).apply {
-                setAnalyticsCollectionEnabled(applicationPref.isUsageAnalyticsEnabled!!)
-            }
+    /** [Koin](https://insert-koin.io/docs/2.0/getting-started/)
+     * Initializes Koin dependency injection
+     */
+    private fun initializeDependencyInjection() {
+        startKoin {
+            androidLogger()
+            androidContext(applicationContext)
+            modules(listOf(appModule))
         }
-        try {
+    }
+
+    private fun initializeApplication() {
+        runCatching {
+            EmojiManager.initEmojiData(this)
+        }.exceptionOrNull()?.printStackTrace()
+        runCatching {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 ProviderInstaller.installIfNeededAsync(
                         applicationContext,
@@ -98,17 +100,13 @@ class App : MultiDexApplication() {
                             }
                         }
                 )
-            EmojiManager.initEmojiData(this)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun onCreate() {
         super.onCreate()
-        setCrashAnalytics()
-        setupBoxStore()
-        initApp()
+        initializeDependencyInjection()
+        initializeApplication()
     }
 
     override fun attachBaseContext(base: Context) {

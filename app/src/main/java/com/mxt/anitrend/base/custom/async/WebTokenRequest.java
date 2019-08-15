@@ -88,11 +88,11 @@ public class WebTokenRequest {
      * Request a new access token using access code for authenticated content,
      * and replace the current token with the new one from the server after authentication
      */
-    public static synchronized boolean getToken(Context context, String code) throws ExecutionException, InterruptedException {
+    public static synchronized boolean getToken(String code) throws ExecutionException, InterruptedException {
         WebToken authenticatedToken = new AuthenticationCodeAsync().execute(code).get();
         if(authenticatedToken != null) {
             createNewTokenReference(authenticatedToken);
-            BoxQuery boxQuery = new DatabaseHelper(context);
+            BoxQuery boxQuery = new DatabaseHelper();
             boxQuery.saveWebToken(authenticatedToken);
             boxQuery.saveAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
             return true;
