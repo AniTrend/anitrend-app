@@ -975,4 +975,7 @@
     <string name="drawer_section_extras">Extras</string>
     <string name="app_intro_videos_title">Videos</string>
     <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
 </resources>

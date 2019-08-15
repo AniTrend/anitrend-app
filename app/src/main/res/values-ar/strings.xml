@@ -154,7 +154,7 @@
     <string name="app_intro_search_text">أنيمي ومانغا وخصائص بحث أخرى!</string>
     <string name="app_intro_videos_title">فيديو</string>
     <string name="app_intro_videos_text">يستخدم مشغل مقاطع الفيديو الخاص بيوتيوب مدمج معه!</string>
-    <string name="app_greeting">أهلا بك في AniTrend</string>
+    <string name="app_greeting">أهلا بك في AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">الفرز حسب:</string>
@@ -971,4 +971,7 @@
     <string name="notification_media_added">New Related Media Added</string>
     <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
 </resources>
