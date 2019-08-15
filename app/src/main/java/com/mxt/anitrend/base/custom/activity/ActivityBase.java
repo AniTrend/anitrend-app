@@ -101,9 +101,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void attachBaseContext(Context base) {
-        if (applicationPref == null)
-            applicationPref = new ApplicationPref(base);
-        super.attachBaseContext(LocaleUtil.INSTANCE.onAttach(base, applicationPref));
+        super.attachBaseContext(LocaleUtil.INSTANCE.onAttach(base));
     }
 
     @Override

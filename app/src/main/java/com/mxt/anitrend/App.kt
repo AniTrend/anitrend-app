@@ -112,8 +112,7 @@ class App : MultiDexApplication() {
     }
 
     override fun attachBaseContext(base: Context) {
-        val appPrefs = ApplicationPref(base)
-        super.attachBaseContext(LocaleUtil.onAttach(base, appPrefs))
+        super.attachBaseContext(LocaleUtil.onAttach(base))
         MultiDex.install(this)
     }
 }
