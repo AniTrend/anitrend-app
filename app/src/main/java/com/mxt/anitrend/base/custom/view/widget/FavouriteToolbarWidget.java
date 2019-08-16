@@ -3,13 +3,13 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;

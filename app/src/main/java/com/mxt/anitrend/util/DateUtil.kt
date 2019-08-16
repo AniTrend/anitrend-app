@@ -5,15 +5,10 @@ import com.annimon.stream.Collectors
 import com.annimon.stream.IntStream
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
-
 import org.ocpsoft.prettytime.PrettyTime
-
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.GregorianCalendar
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**

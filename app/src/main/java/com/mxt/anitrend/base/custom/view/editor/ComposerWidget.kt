@@ -1,18 +1,15 @@
 package com.mxt.anitrend.base.custom.view.editor
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.Lifecycle
 import android.content.Context
 import android.os.Build
-import androidx.annotation.RequiresApi
-import android.text.Editable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
-
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
@@ -23,28 +20,17 @@ import com.mxt.anitrend.databinding.WidgetComposerBinding
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
-import com.mxt.anitrend.model.entity.giphy.Gif
 import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.ErrorUtil
-import com.mxt.anitrend.util.GraphUtil
-import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.MarkDownUtil
-import com.mxt.anitrend.util.NotifyUtil
-
+import com.mxt.anitrend.util.*
+import io.wax911.emojify.parser.EmojiParser
+import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
-import java.util.Locale
-
-import io.wax911.emojify.EmojiManager
-import io.wax911.emojify.parser.EmojiParser
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
+import java.util.*
 
 /**
  * Created by max on 2017/12/02.

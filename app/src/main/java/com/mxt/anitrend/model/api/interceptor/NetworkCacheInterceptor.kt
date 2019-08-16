@@ -1,15 +1,12 @@
 package com.mxt.anitrend.model.api.interceptor
 
 import android.content.Context
-
 import com.mxt.anitrend.util.CompatUtil
-
-import java.io.IOException
-import java.util.concurrent.TimeUnit
-
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by max on 2017/07/17.

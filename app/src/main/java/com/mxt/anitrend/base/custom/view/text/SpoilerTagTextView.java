@@ -1,11 +1,12 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.databinding.BindingAdapter;
 
-import android.util.AttributeSet;
-import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.util.CompatUtil;
 
 public class SpoilerTagTextView extends SingleLineTextView {
 

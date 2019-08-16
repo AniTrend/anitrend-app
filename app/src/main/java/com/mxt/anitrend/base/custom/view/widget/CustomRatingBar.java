@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
-import androidx.databinding.BindingAdapter;
-import androidx.appcompat.widget.AppCompatRatingBar;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatRatingBar;
+import androidx.databinding.BindingAdapter;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 

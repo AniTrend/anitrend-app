@@ -2,6 +2,7 @@ package com.mxt.anitrend.base.custom.pager;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.ArrayRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

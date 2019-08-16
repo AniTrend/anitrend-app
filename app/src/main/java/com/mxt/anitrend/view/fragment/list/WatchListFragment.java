@@ -1,11 +1,11 @@
 package com.mxt.anitrend.view.fragment.list;
 
-import androidx.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
+import androidx.lifecycle.Lifecycle;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;

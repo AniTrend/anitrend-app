@@ -4,36 +4,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.annimon.stream.Stream;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
-import com.mxt.anitrend.model.entity.anilist.UserStats;
-import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution;
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
-import com.mxt.anitrend.model.entity.anilist.user.UserStatistics;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 
-import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;

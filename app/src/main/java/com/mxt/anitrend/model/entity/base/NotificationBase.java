@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.entity.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.group.RecyclerItem;

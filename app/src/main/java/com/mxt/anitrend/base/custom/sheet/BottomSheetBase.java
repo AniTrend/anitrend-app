@@ -2,16 +2,16 @@ package com.mxt.anitrend.base.custom.sheet;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.appcompat.widget.AppCompatImageView;
-import android.util.Log;
-import android.view.View;
-
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;

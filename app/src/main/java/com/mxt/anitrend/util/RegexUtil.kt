@@ -1,8 +1,5 @@
 package com.mxt.anitrend.util
 
-import android.text.TextUtils
-import com.github.rjeschke.txtmark.Processor
-
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

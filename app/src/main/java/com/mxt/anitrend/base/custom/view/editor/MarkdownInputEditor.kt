@@ -4,12 +4,6 @@ import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.IdRes
-import com.google.android.material.textfield.TextInputEditText
-import androidx.core.view.inputmethod.EditorInfoCompat
-import androidx.core.view.inputmethod.InputConnectionCompat
-import androidx.core.view.inputmethod.InputContentInfoCompat
-import androidx.core.content.ContextCompat
 import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextUtils
@@ -19,24 +13,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
-
+import androidx.annotation.IdRes
+import androidx.core.content.ContextCompat
+import androidx.core.view.inputmethod.EditorInfoCompat
+import androidx.core.view.inputmethod.InputConnectionCompat
+import androidx.core.view.inputmethod.InputContentInfoCompat
+import com.google.android.material.textfield.TextInputEditText
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.KeyUtil.*
 import com.mxt.anitrend.util.MarkDownUtil
-
 import io.wax911.emojify.parser.EmojiParser
-
-import com.mxt.anitrend.util.KeyUtil.MD_BOLD
-import com.mxt.anitrend.util.KeyUtil.MD_BULLET
-import com.mxt.anitrend.util.KeyUtil.MD_CENTER_ALIGN
-import com.mxt.anitrend.util.KeyUtil.MD_CODE
-import com.mxt.anitrend.util.KeyUtil.MD_HEADING
-import com.mxt.anitrend.util.KeyUtil.MD_ITALIC
-import com.mxt.anitrend.util.KeyUtil.MD_NUMBER
-import com.mxt.anitrend.util.KeyUtil.MD_QUOTE
-import com.mxt.anitrend.util.KeyUtil.MD_STRIKE
 
 /**
  * Created by max on 2017/08/14.

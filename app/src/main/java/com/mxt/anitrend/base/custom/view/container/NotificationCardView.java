@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.view.container;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
 
 public class NotificationCardView extends CardViewBase {
 

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.adapter.pager.index;
 
 import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 

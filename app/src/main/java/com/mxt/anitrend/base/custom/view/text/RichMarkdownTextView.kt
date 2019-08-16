@@ -1,38 +1,17 @@
 package com.mxt.anitrend.base.custom.view.text
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import androidx.core.text.util.LinkifyCompat
-import androidx.appcompat.widget.AppCompatTextView
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.AttributeSet
-import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.target.Target
-import com.mxt.anitrend.R
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.text.util.LinkifyCompat
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.util.MarkDownUtil
 import com.mxt.anitrend.util.RegexUtil
-import org.commonmark.parser.Parser
-import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
-import io.noties.markwon.MarkwonConfiguration
-import io.noties.markwon.core.CorePlugin
-import io.noties.markwon.html.HtmlPlugin
-import io.noties.markwon.html.MarkwonHtmlParserImpl
-import io.noties.markwon.image.AsyncDrawable
-import io.noties.markwon.image.AsyncDrawableScheduler
-import io.noties.markwon.image.glide.GlideImagesPlugin
-import io.noties.markwon.linkify.LinkifyPlugin
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.util.Arrays.asList
 
 class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
 

@@ -2,10 +2,7 @@ package com.mxt.anitrend.service
 
 import android.app.IntentService
 import android.content.Intent
-import android.util.Log
-
 import com.annimon.stream.Stream
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
@@ -14,7 +11,6 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.ErrorUtil
 import com.mxt.anitrend.util.GraphUtil
 import com.mxt.anitrend.util.KeyUtil
-
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber

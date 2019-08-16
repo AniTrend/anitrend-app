@@ -1,8 +1,8 @@
 package com.mxt.anitrend.model.api.converter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

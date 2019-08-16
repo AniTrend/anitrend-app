@@ -7,11 +7,11 @@ import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.Settings;
 
 /**
  * Created by max on 2017/11/04.

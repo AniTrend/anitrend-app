@@ -17,8 +17,8 @@
 
 package com.mxt.anitrend.model.entity.anilist.user.statistics
 
-import com.mxt.anitrend.model.entity.anilist.user.statistics.contract.IUserStatistic
 import com.mxt.anitrend.model.entity.anilist.MediaTag
+import com.mxt.anitrend.model.entity.anilist.user.statistics.contract.IUserStatistic
 
 /** [UserTagStatistic](https://anilist.github.io/ApiV2-GraphQL-Docs/usertagstatistic.doc.html)
  *

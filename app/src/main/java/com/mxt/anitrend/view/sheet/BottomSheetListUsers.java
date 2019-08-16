@@ -1,14 +1,15 @@
 package com.mxt.anitrend.view.sheet;
 
 import android.app.Dialog;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.view.View;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;

@@ -17,11 +17,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import androidx.core.app.NavUtils;
-import androidx.appcompat.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.NavUtils;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.CompatUtil;

@@ -1,14 +1,15 @@
 package com.mxt.anitrend.adapter.pager.detail;
 
 import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
-import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaStaffFragment;

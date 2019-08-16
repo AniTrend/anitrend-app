@@ -1,12 +1,10 @@
 package com.mxt.anitrend.util
 
 import android.content.Context
-
 import com.github.mikephil.charting.charts.BarLineChartBase
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.mxt.anitrend.R
 

@@ -1,14 +1,15 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import androidx.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.AttributeSet;
+import android.widget.LinearLayout;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import androidx.databinding.BindingAdapter;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;

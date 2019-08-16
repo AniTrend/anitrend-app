@@ -2,10 +2,11 @@ package com.mxt.anitrend.view.sheet;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatButton;
-import android.view.View;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;

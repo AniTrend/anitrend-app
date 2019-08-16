@@ -3,12 +3,13 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionMangaBinding;

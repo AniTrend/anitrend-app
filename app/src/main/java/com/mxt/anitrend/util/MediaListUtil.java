@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 
 import com.annimon.stream.Stream;

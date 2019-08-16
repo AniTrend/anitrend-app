@@ -3,11 +3,12 @@ package com.mxt.anitrend.view.activity.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;

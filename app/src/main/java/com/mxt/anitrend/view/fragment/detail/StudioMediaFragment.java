@@ -2,12 +2,13 @@ package com.mxt.anitrend.view.fragment.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.annimon.stream.IntPair;
@@ -19,13 +20,13 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
-import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;

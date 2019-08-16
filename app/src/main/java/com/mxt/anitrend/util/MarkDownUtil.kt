@@ -2,11 +2,10 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import android.os.Build
-import androidx.appcompat.widget.AppCompatTextView
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.util.Log
+import androidx.appcompat.widget.AppCompatTextView
 import com.github.rjeschke.txtmark.Processor
 import timber.log.Timber
 

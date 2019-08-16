@@ -1,7 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 
 import com.mxt.anitrend.R;

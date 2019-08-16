@@ -1,10 +1,11 @@
 package com.mxt.anitrend.adapter.recycler.group;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;

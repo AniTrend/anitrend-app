@@ -1,18 +1,19 @@
 package com.mxt.anitrend.view.activity.base;
 
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.textfield.TextInputEditText;
-import androidx.core.app.ShareCompat;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ShareCompat;
+import androidx.databinding.DataBindingUtil;
+
 import com.annimon.stream.IntPair;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputEditText;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
@@ -24,12 +25,12 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.ActivityShareContentBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 
 import org.greenrobot.eventbus.EventBus;

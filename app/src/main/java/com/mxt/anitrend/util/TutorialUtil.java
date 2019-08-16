@@ -1,13 +1,13 @@
 package com.mxt.anitrend.util;
 
+import android.view.View;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
-import android.util.Log;
-import android.view.View;
 
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 

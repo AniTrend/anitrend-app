@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 

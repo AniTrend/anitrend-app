@@ -1,20 +1,16 @@
 package com.mxt.anitrend.base.custom.viewmodel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
-
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.RequestHandler
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.util.ErrorUtil
 import com.mxt.anitrend.util.KeyUtil
-
-import io.objectbox.android.ObjectBoxLiveData
-import io.objectbox.query.Query
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response

@@ -6,11 +6,9 @@ import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by max on 2017/09/16.

@@ -1,15 +1,16 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter;

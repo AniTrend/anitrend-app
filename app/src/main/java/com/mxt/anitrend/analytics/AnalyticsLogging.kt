@@ -11,7 +11,6 @@ import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.extension.empty
 import com.mxt.anitrend.util.Settings
 import io.fabric.sdk.android.Fabric
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinComponent
 import timber.log.Timber
 

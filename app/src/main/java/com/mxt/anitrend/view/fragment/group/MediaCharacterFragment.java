@@ -2,8 +2,9 @@ package com.mxt.anitrend.view.fragment.group;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;

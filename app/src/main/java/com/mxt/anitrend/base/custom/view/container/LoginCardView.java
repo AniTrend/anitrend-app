@@ -1,11 +1,10 @@
 package com.mxt.anitrend.base.custom.view.container;
 
 import android.content.Context;
+import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import android.util.AttributeSet;
 
 import com.mxt.anitrend.R;
 

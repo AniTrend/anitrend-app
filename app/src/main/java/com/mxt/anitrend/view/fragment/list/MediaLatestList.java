@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.fragment.list;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;

@@ -1,9 +1,8 @@
 package com.mxt.anitrend.util
 
+import android.view.View
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-
 import com.mxt.anitrend.base.interfaces.view.CustomView
 
 /**

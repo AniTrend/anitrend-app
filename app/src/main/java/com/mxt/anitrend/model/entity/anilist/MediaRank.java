@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.mxt.anitrend.util.CompatUtil;

@@ -3,21 +3,20 @@ package com.mxt.anitrend.base.custom.async;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
-import android.util.Log;
 
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.data.DatabaseHelper;
-import com.mxt.anitrend.extension.AppExtKt;
 import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.JobSchedulerUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.ShortcutUtil;
 
 import java.util.concurrent.ExecutionException;

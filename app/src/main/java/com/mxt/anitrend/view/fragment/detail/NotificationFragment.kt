@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-
 import com.annimon.stream.IntPair
 import com.annimon.stream.Stream
 import com.mxt.anitrend.R
@@ -19,12 +18,7 @@ import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
-import com.mxt.anitrend.util.GraphUtil
-import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.MediaActionUtil
-import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.*
 import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity

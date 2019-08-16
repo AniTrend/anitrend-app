@@ -2,13 +2,14 @@ package com.mxt.anitrend.base.custom.view.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import androidx.databinding.BindingAdapter;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.BindingAdapter;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;

@@ -1,12 +1,13 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter;

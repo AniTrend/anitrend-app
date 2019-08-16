@@ -1,7 +1,6 @@
 package com.mxt.anitrend.base.custom.annotation.processor;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.mxt.anitrend.base.custom.annotation.GraphQuery;
 

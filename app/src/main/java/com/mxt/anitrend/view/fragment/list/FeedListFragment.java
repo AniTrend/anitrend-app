@@ -2,12 +2,13 @@ package com.mxt.anitrend.view.fragment.list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Optional;

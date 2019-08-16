@@ -1,12 +1,13 @@
 package com.mxt.anitrend.util;
 
+import android.view.View;
+
 import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.FragmentActivity;
 import androidx.core.graphics.ColorUtils;
+import androidx.fragment.app.FragmentActivity;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import android.view.View;
 
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.R;

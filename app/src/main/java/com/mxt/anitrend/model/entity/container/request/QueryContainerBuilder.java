@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.entity.container.request;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
 import com.annimon.stream.Collectors;

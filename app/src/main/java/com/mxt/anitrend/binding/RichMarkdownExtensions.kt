@@ -1,10 +1,9 @@
 package com.mxt.anitrend.binding
 
-import androidx.databinding.BindingAdapter
-import androidx.annotation.StringRes
 import android.text.Html
 import android.widget.TextView
-import com.mxt.anitrend.R
+import androidx.annotation.StringRes
+import androidx.databinding.BindingAdapter
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
 import com.mxt.anitrend.util.MarkDownUtil
 import com.mxt.anitrend.util.RegexUtil

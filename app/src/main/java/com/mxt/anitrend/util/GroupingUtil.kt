@@ -1,10 +1,6 @@
 package com.mxt.anitrend.util
 
-import android.text.TextUtils
-
-import com.annimon.stream.Collectors
 import com.annimon.stream.Stream
-import com.annimon.stream.function.Function
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
@@ -14,8 +10,7 @@ import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem
 import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by max on 2018/02/18.

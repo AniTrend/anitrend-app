@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.recycler;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
 
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 

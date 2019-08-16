@@ -1,17 +1,13 @@
 package com.mxt.anitrend.model.api.interceptor
 
 import android.content.Context
-import android.util.Log
-
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.util.Settings
-
-import java.io.IOException
-
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
+import java.io.IOException
 
 /**
  * Created by max on 2017/06/14.

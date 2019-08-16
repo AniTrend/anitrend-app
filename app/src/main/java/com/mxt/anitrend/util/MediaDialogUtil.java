@@ -3,10 +3,10 @@ package com.mxt.anitrend.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.text.Html;
-import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mxt.anitrend.R;

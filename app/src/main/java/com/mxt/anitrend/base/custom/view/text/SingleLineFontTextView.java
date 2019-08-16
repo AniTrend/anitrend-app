@@ -2,9 +2,10 @@ package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import androidx.databinding.BindingAdapter;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+
+import androidx.databinding.BindingAdapter;
 
 /**
  * Created by max on 2017/12/24.

@@ -1,10 +1,11 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.widget.Toolbar;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;

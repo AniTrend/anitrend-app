@@ -3,22 +3,18 @@ package com.mxt.anitrend.worker
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
-
-import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.KeyUtil
-
-import java.util.concurrent.ExecutionException
-
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.mxt.anitrend.BuildConfig
+import com.mxt.anitrend.base.custom.async.WebTokenRequest
+import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.KeyUtil
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
+import java.util.concurrent.ExecutionException
 
 class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
 

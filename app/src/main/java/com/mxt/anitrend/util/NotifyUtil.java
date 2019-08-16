@@ -2,17 +2,18 @@ package com.mxt.anitrend.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.FragmentActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomAuthToastBinding;
 import com.mxt.anitrend.databinding.CustomToastBinding;

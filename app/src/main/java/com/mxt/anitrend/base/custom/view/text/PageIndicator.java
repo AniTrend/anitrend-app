@@ -2,10 +2,11 @@ package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;

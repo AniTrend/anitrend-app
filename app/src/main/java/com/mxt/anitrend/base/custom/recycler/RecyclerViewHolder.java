@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.recycler;
 
 import android.content.Context;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;

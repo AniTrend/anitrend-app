@@ -2,13 +2,14 @@ package com.mxt.anitrend.base.custom.recycler;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.view.ViewGroup;
+import android.widget.Filterable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.view.ViewGroup;
-import android.widget.Filterable;
 
 import com.mxt.anitrend.base.custom.animation.ScaleAnimation;
 import com.mxt.anitrend.base.custom.animation.SlideInAnimation;

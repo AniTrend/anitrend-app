@@ -1,12 +1,12 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;

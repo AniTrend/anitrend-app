@@ -2,11 +2,12 @@ package com.mxt.anitrend.view.fragment.detail
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import butterknife.ButterKnife
+import com.afollestad.materialdialogs.DialogAction
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter
@@ -18,18 +19,10 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
-import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
-import com.mxt.anitrend.util.GraphUtil
-import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.MediaBrowseUtil
+import com.mxt.anitrend.util.*
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
 import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
-
-import butterknife.ButterKnife
-import butterknife.OnClick
-import com.afollestad.materialdialogs.DialogAction
 
 /**
  * Created by max on 2017/12/31.

@@ -3,38 +3,13 @@ package com.mxt.anitrend.base.custom.async
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
-
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.BaseModel
-import com.mxt.anitrend.model.api.retro.anilist.BrowseModel
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
-import com.mxt.anitrend.model.api.retro.anilist.FeedModel
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
-import com.mxt.anitrend.model.api.retro.anilist.SearchModel
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
+import com.mxt.anitrend.model.api.retro.anilist.*
 import com.mxt.anitrend.util.KeyUtil
-
+import com.mxt.anitrend.util.KeyUtil.*
 import retrofit2.Call
 import retrofit2.Callback
-
-import com.mxt.anitrend.util.KeyUtil.EPISODE_FEED_REQ
-import com.mxt.anitrend.util.KeyUtil.EPISODE_LATEST_REQ
-import com.mxt.anitrend.util.KeyUtil.EPISODE_POPULAR_REQ
-import com.mxt.anitrend.util.KeyUtil.GENRE_COLLECTION_REQ
-import com.mxt.anitrend.util.KeyUtil.GIPHY_SEARCH_REQ
-import com.mxt.anitrend.util.KeyUtil.GIPHY_TRENDING_REQ
-import com.mxt.anitrend.util.KeyUtil.MEDIA_TAG_REQ
-import com.mxt.anitrend.util.KeyUtil.PAGING_LIMIT
-import com.mxt.anitrend.util.KeyUtil.RequestType
-import com.mxt.anitrend.util.KeyUtil.UPDATE_CHECKER_REQ
-import com.mxt.anitrend.util.KeyUtil.arg_branch_name
-import com.mxt.anitrend.util.KeyUtil.arg_feed
-import com.mxt.anitrend.util.KeyUtil.arg_graph_params
-import com.mxt.anitrend.util.KeyUtil.arg_page_offset
-import com.mxt.anitrend.util.KeyUtil.arg_search
 
 /**
  * Created by max on 2017/09/16.

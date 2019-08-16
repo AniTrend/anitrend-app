@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.view.image;
 
 import android.content.Context;
-import androidx.databinding.BindingAdapter;
 import android.graphics.Point;
 import android.util.AttributeSet;
+
+import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;

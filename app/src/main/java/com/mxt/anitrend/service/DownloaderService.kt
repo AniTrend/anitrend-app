@@ -5,12 +5,10 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.webkit.MimeTypeMap
-
 import com.mxt.anitrend.R
 import com.mxt.anitrend.model.api.retro.base.RepositoryModel
 import com.mxt.anitrend.model.entity.base.VersionBase
-
-import java.util.Locale
+import java.util.*
 
 object DownloaderService {
 

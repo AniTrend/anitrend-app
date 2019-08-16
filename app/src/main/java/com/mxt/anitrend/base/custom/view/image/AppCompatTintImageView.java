@@ -1,12 +1,13 @@
 package com.mxt.anitrend.base.custom.view.image;
 
 import android.content.Context;
-import androidx.databinding.BindingAdapter;
+import android.util.AttributeSet;
+
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.AppCompatImageView;
-import android.util.AttributeSet;
+import androidx.databinding.BindingAdapter;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;

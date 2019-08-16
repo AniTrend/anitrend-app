@@ -3,19 +3,20 @@ package com.mxt.anitrend.view.activity.base;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.Settings;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls

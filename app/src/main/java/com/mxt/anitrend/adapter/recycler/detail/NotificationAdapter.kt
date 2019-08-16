@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.Filter
-
+import butterknife.OnClick
+import butterknife.OnLongClick
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder
@@ -20,9 +21,6 @@ import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DateUtil
 import com.mxt.anitrend.util.KeyUtil
-
-import butterknife.OnClick
-import butterknife.OnLongClick
 import io.objectbox.Box
 
 /**

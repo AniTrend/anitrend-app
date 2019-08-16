@@ -1,20 +1,9 @@
 package com.mxt.anitrend.base.custom.fragment;
 
 import android.app.Activity;
-
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.IntegerRes;
-import androidx.annotation.MenuRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.IntegerRes;
+import androidx.annotation.MenuRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.annimon.stream.IntPair;
+import com.google.android.material.snackbar.Snackbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
@@ -32,7 +31,6 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
-import com.mxt.anitrend.extension.AppExtKt;
 import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.ActionModeUtil;
 import com.mxt.anitrend.util.MediaActionUtil;

@@ -3,14 +3,14 @@ package com.mxt.anitrend.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import androidx.annotation.IdRes;
-import androidx.annotation.StringRes;
 import android.text.InputType;
 import android.text.SpannedString;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;

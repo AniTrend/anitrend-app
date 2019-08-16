@@ -2,7 +2,6 @@ package com.mxt.anitrend.util.migration
 
 import android.os.Build
 import androidx.core.content.edit
-import com.mxt.anitrend.App
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.extension.appContext
