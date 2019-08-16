@@ -22,6 +22,7 @@ import com.nguyenhoanglam.progresslayout.ProgressLayout;
 import java.util.List;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetBase<List<T>> implements ItemClickListener<T>, Observer<List<T>>, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
@@ -152,7 +153,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
      */
     @Override
     public void onChanged(@Nullable List<T> data) {
-        Log.d(TAG, "onChanged(@Nullable List<T> data) invoked");
+        Timber.tag(TAG).d("onChanged(@Nullable List<T> data) invoked");
     }
 
     @Override

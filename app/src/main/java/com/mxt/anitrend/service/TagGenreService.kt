@@ -17,6 +17,7 @@ import com.mxt.anitrend.util.KeyUtil
 
 import retrofit2.Call
 import retrofit2.Response
+import timber.log.Timber
 
 /**
  * Created by max on 2017/10/24.
@@ -34,13 +35,13 @@ class TagGenreService : IntentService(ServiceName) {
                     val responseBody: List<MediaTag>? = response.body()
                     if (response.isSuccessful && responseBody != null)
                         if (!CompatUtil.isEmpty(responseBody))
-                            widgetPresenter.database.saveMediaTags(responseBody)
+                            widgetPresenter.database.mediaTags = responseBody
                         else
-                            Log.e(ServiceName, ErrorUtil.getError(response))
+                            Timber.tag(ServiceName).e(ErrorUtil.getError(response))
                 }
 
                 override fun onFailure(call: Call<List<MediaTag>>, throwable: Throwable) {
-                    Log.e("fetchAllMediaTags", throwable.message)
+                    Timber.tag("fetchAllMediaTags").e(throwable)
                     throwable.printStackTrace()
                 }
             })
@@ -56,17 +57,17 @@ class TagGenreService : IntentService(ServiceName) {
                     val responseBody: List<String>? = response.body()
                     if (response.isSuccessful && responseBody != null) {
                         if (!CompatUtil.isEmpty(responseBody)) {
-                            val genreList = Stream.of(responseBody!!)
-                                    .map<Genre> { Genre(it) }
+                            val genreList = Stream.of(responseBody)
+                                    .map { Genre(it) }
                                     .toList()
-                            widgetPresenter.database.saveGenreCollection(genreList)
+                            widgetPresenter.database.genreCollection = genreList
                         }
                     } else
-                        Log.e(ServiceName, ErrorUtil.getError(response))
+                        Timber.tag(ServiceName).e(ErrorUtil.getError(response))
                 }
 
                 override fun onFailure(call: Call<List<String>>, throwable: Throwable) {
-                    Log.e("fetchAllMediaGenres", throwable.message)
+                    Timber.tag("fetchAllMediaGenres").e(throwable)
                     throwable.printStackTrace()
                 }
             })

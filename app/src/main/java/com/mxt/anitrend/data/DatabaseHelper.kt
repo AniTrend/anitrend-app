@@ -13,6 +13,7 @@ import io.objectbox.Box
 import io.objectbox.BoxStore
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.util.*
 
 /**
  * Created by max on 2017/11/02.
@@ -22,9 +23,6 @@ import org.koin.core.inject
 class DatabaseHelper : BoxQuery, KoinComponent {
 
     private val boxStore by inject<BoxStore>()
-
-    // Frequently used instance variables
-    private var user: User? = null
 
     /**
      * Gets the object box from a requested class type.
@@ -51,126 +49,93 @@ class DatabaseHelper : BoxQuery, KoinComponent {
     /**
      * Gets current authenticated user
      */
-    override fun getCurrentUser(): User? {
-        if (user == null)
-            user = getBoxStore(User::class.java).query()
+    override var currentUser: User? = null
+        get() {
+            return getBoxStore(User::class.java).query()
                     .build().findFirst()
-        return user
-    }
-
+        }
+        set(value) {
+            field = value
+            if (value != null)
+                getBoxStore(User::class.java).put(value)
+        }
     /**
      * Get default authentication code
      */
-    override fun getAuthCode(): AuthBase? {
-        return getBoxStore(AuthBase::class.java)
+    override var authCode: AuthBase? = null
+        get() = getBoxStore(AuthBase::class.java)
                 .query()
                 .build()
                 .findFirst()
-    }
+        set(value) {
+            field = value
+            if (value != null) {
+                getBoxStore(AuthBase::class.java).removeAll()
+                getBoxStore(AuthBase::class.java).put(value)
+            }
+        }
 
     /**
      * Get web token
      */
-    override fun getWebToken(): WebToken? {
-        return getBoxStore(WebToken::class.java)
+    override var webToken: WebToken? = null
+        get() = getBoxStore(WebToken::class.java)
                 .query()
                 .build()
                 .findFirst()
-    }
-
+        set(value) {
+            field = value
+            if (value != null) {
+                getBoxStore(WebToken::class.java).removeAll()
+                getBoxStore(WebToken::class.java).put(value)
+            }
+        }
     /**
      * Get the application version on github
      */
-    override fun getRemoteVersion(): VersionBase? {
-        return getBoxStore(VersionBase::class.java)
-                .query()
-                .build()
-                .findFirst()
-    }
-
+    override var remoteVersion: VersionBase? = null
+        get() = getBoxStore(VersionBase::class.java)
+                .query().build().findFirst()
+        set(value) {
+            field = value
+            if (value != null) {
+                val versionBox = getBoxStore(VersionBase::class.java)
+                if (versionBox.count() != 0L)
+                    versionBox.removeAll()
+                value.lastChecked = System.currentTimeMillis()
+                versionBox.put(value)
+            }
+        }
     /**
      * Gets all saved tags
      */
-    override fun getMediaTags(): List<MediaTag> {
-        return getBoxStore(MediaTag::class.java)
+    override var mediaTags: List<MediaTag> = Collections.emptyList()
+        get() = getBoxStore(MediaTag::class.java)
                 .query()
                 .build()
                 .findLazy()
-    }
-
+        set(value) {
+            field = value
+            if (value.isNotEmpty()) {
+                val tagBox = getBoxStore(MediaTag::class.java)
+                if (tagBox.count() < value.size)
+                    tagBox.put(value)
+            }
+        }
     /**
      * Gets all saved genres
      */
-    override fun getGenreCollection(): List<Genre> {
-        return getBoxStore(Genre::class.java)
+    override var genreCollection: List<Genre> = Collections.emptyList()
+        get() = getBoxStore(Genre::class.java)
                 .query()
                 .build()
                 .findLazy()
-    }
-
-    /**
-     * Saves current authenticated user
-     *
-     * @param user
-     */
-    override fun saveCurrentUser(user: User) {
-        this.user = user
-        getBoxStore(User::class.java).put(user)
-    }
-
-    /**
-     * Get default authentication code
-     *
-     * @param authBase
-     */
-    override fun saveAuthCode(authBase: AuthBase) {
-        getBoxStore(AuthBase::class.java).removeAll()
-        getBoxStore(AuthBase::class.java).put(authBase)
-    }
-
-    /**
-     * Get web token
-     *
-     * @param webToken
-     */
-    override fun saveWebToken(webToken: WebToken) {
-        getBoxStore(WebToken::class.java).removeAll()
-        val tokenBox = getBoxStore(WebToken::class.java)
-        tokenBox.put(webToken)
-    }
-
-    /**
-     * Save the application version on github
-     *
-     * @param versionBase
-     */
-    override fun saveRemoteVersion(versionBase: VersionBase) {
-        val versionBox = getBoxStore(VersionBase::class.java)
-        if (versionBox.count() != 0L)
-            versionBox.removeAll()
-        versionBase.lastChecked = System.currentTimeMillis()
-        versionBox.put(versionBase)
-    }
-
-    /**
-     * Saves all saved mediaTags
-     *
-     * @param mediaTags
-     */
-    override fun saveMediaTags(mediaTags: List<MediaTag>) {
-        val tagBox = getBoxStore(MediaTag::class.java)
-        if (tagBox.count() < mediaTags.size)
-            tagBox.put(mediaTags)
-    }
-
-    /**
-     * Saves all saved genres
-     *
-     * @param genres
-     */
-    override fun saveGenreCollection(genres: List<Genre>) {
-        val genreBox = getBoxStore(Genre::class.java)
-        if (genreBox.count() < genres.size)
-            genreBox.put(genres)
-    }
+        set(value) {
+            field = value
+            if (value.isNotEmpty()) {
+                val genreBox = getBoxStore(Genre::class.java)
+                if (genreBox.count() < value.size)
+                    genreBox.put(value)
+            }
+        }
 }

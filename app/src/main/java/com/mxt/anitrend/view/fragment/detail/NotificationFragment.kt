@@ -15,11 +15,9 @@ import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter
 import com.mxt.anitrend.base.custom.async.ThreadPool
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
@@ -30,8 +28,6 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
-
-import java.util.Collections
 
 /**
  * Created by max on 2017/12/06.
@@ -59,14 +55,17 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     override fun updateUI() {
-        val historyItems = presenter.database.getBoxStore(NotificationHistory::class.java).count()
-        if (historyItems < 1)
-            markAllNotificationsAsRead()
-        injectAdapter()
+        with (presenter.database) {
+            val historyItems = getBoxStore(NotificationHistory::class.java).count()
+            if (historyItems < 1)
+                markAllNotificationsAsRead()
+            injectAdapter()
 
-        val currentUser = presenter.database.currentUser
-        currentUser.unreadNotificationCount = 0
-        presenter.database.saveCurrentUser(currentUser)
+            currentUser?.also {
+                it.unreadNotificationCount = 0
+                currentUser = it
+            }
+        }
 
         //Testing notifications by forcing the notification dispatcher
         /*for (int i = 0; i < 3; i++)
@@ -83,8 +82,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         when (item.itemId) {
             R.id.action_mark_all -> {
                 if (mAdapter.itemCount > 0) {
-                    ThreadPool.Builder()
-                            .build().execute { this.markAllNotificationsAsRead() }
+                    ThreadPool.execute { markAllNotificationsAsRead() }
                 } else
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT)
                 return true
@@ -105,8 +103,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 presenter.pageInfo = content.pageInfo
             if (!content.isEmpty) {
                 val notifications = GraphUtil.filterNotificationList(
-                        presenter,
-                        content.pageData
+                        presenter, content.pageData
                 )
                 onPostProcessed(notifications)
             } else
@@ -134,24 +131,23 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * @see ThreadPool
      */
     private fun setItemAsRead(data: Notification) {
-        ThreadPool.Builder().build()
-                .execute {
-                    val isNotificationRead = presenter.database.getBoxStore(NotificationHistory::class.java)
-                            .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
-                    if (!isNotificationRead) {
-                        val dismissibleNotifications = Stream.of(mAdapter.data)
-                                .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
-                                .map { item -> NotificationHistory(item.id) }
-                                .toList()
+        ThreadPool.execute {
+            val isNotificationRead = presenter.database.getBoxStore(NotificationHistory::class.java)
+                    .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
+            if (!isNotificationRead) {
+                val dismissibleNotifications = Stream.of(mAdapter.data)
+                        .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
+                        .map { item -> NotificationHistory(item.id) }
+                        .toList()
 
-                        if (!CompatUtil.isEmpty(dismissibleNotifications))
-                            presenter.database.getBoxStore(NotificationHistory::class.java)
-                                    .put(dismissibleNotifications)
-                        else
-                            presenter.database.getBoxStore(NotificationHistory::class.java)
-                                    .put(NotificationHistory(data.id))
-                    }
-                }
+                if (!CompatUtil.isEmpty(dismissibleNotifications))
+                    presenter.database.getBoxStore(NotificationHistory::class.java)
+                            .put(dismissibleNotifications)
+                else
+                    presenter.database.getBoxStore(NotificationHistory::class.java)
+                            .put(NotificationHistory(data.id))
+            }
+        }
     }
 
     /**
@@ -249,7 +245,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
     override fun onItemLongClick(target: View, data: IntPair<Notification>) {
         if (CompatUtil.equals(data.second.type, KeyUtil.AIRING)) {
             setItemAsRead(data.second)
-            if (presenter.applicationPref.isAuthenticated) {
+            if (presenter.settings.isAuthenticated) {
                 mediaActionUtil = MediaActionUtil.Builder()
                         .setId(data.second.media.id).build(activity)
                 mediaActionUtil.startSeriesAction()

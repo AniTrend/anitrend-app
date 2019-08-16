@@ -199,7 +199,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             updateUI()
         } else
             binding?.stateLayout?.showError(CompatUtil.getDrawable(context!!, R.drawable.ic_emoji_sweat),
-                    getString(R.string.layout_empty_response), getString(R.string.try_again)) { view ->
+                    getString(R.string.layout_empty_response), getString(R.string.try_again)) { _ ->
                 binding?.stateLayout?.showLoading()
                 makeRequest()
             }

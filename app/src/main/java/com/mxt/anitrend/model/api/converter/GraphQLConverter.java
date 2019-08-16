@@ -21,6 +21,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/10/22.
@@ -61,6 +62,7 @@ public final class GraphQLConverter extends Converter.Factory {
      */
     private class GraphResponseConverter<T> implements Converter<ResponseBody, T> {
         private Type type;
+        private final String TAG = GraphRequestConverter.class.getSimpleName();
 
         GraphResponseConverter(Type type) {
             this.type = type;
@@ -78,10 +80,10 @@ public final class GraphQLConverter extends Converter.Factory {
                     targetResult = dataContainer.getResult();
                 } else
                     for (GraphError error: container.getErrors())
-                        Log.e(this.toString(), error.toString());
+                        Timber.tag(TAG).e(error.toString());
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Log.e("GraphQLConverter", jsonResponse);
+                Timber.tag(TAG).e(jsonResponse);
             } finally {
                 responseBody.close();
             }
@@ -94,6 +96,7 @@ public final class GraphQLConverter extends Converter.Factory {
      */
     private class GraphRequestConverter implements Converter<QueryContainerBuilder, RequestBody> {
         private Annotation[] methodAnnotations;
+        private final String TAG = GraphRequestConverter.class.getSimpleName();
 
         GraphRequestConverter(Annotation[] methodAnnotations) {
             this.methodAnnotations = methodAnnotations;
@@ -105,7 +108,7 @@ public final class GraphQLConverter extends Converter.Factory {
                     .setQuery(graphProcessor.getQuery(methodAnnotations))
                     .build();
             String queryJson = gson.toJson(queryContainer);
-            Log.d("GraphRequestConverter", queryJson);
+            Timber.tag(TAG).i(queryJson);
             return RequestBody.create(MediaType.parse("application/graphql"), queryJson);
         }
     }

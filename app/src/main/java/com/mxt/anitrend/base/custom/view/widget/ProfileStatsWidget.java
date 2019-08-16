@@ -38,6 +38,7 @@ import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/26.
@@ -54,6 +55,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     private QueryContainerBuilder queryContainer;
 
     private Bundle bundle;
+    private final String TAG = ProfileStatsWidget.class.getSimpleName();
 
     private final String placeHolder = "..";
 
@@ -178,7 +180,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     updateUI();
                 }
             } else
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +190,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     public void onFailure(@NonNull Call<ConnectionContainer<UserStatisticTypes>> call, @NonNull Throwable throwable) {
         try {
             if (throwable.getLocalizedMessage() != null)
-                Log.e(toString(), throwable.getLocalizedMessage());
+                Timber.tag(TAG).e(throwable.getLocalizedMessage());
             throwable.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

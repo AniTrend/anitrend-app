@@ -24,6 +24,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/16.
@@ -36,6 +37,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
     private UserBase model;
     private WidgetButtonStateBinding binding;
     private WidgetPresenter<UserBase> presenter;
+    private final String TAG = FollowStateWidget.class.getSimpleName();
 
     public FollowStateWidget(Context context) {
         super(context);
@@ -64,7 +66,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
 
     public void setUserModel(UserBase model) {
         this.model = model;
-        if(presenter.getApplicationPref().isAuthenticated())
+        if(presenter.getSettings().isAuthenticated())
             if(!presenter.isCurrentUser(model))
                 setControlText();
             else
@@ -134,7 +136,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
                 presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.MUT_TOGGLE_FOLLOW, model), false);
                 setControlText();
             } else {
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
                 setControlText();
             }
         } catch (Exception e) {

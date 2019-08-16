@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.activity.index
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
@@ -13,7 +12,6 @@ import com.mxt.anitrend.view.activity.base.WelcomeActivity
 
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.afollestad.materialdialogs.MaterialDialog
 import com.mxt.anitrend.util.*
 
 /**
@@ -52,8 +50,8 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
 
     override fun updateUI() {
         if (isAlive) {
-            if(presenter.checkIfMigrationIsNeeded(this)) {
-                val freshInstall = presenter.applicationPref.isFreshInstall
+            if(presenter.checkIfMigrationIsNeeded()) {
+                val freshInstall = presenter.settings.isFreshInstall
                 val intent = Intent(
                         this@SplashActivity,
                         if (freshInstall)
@@ -64,14 +62,16 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
                 startActivity(intent)
                 finish()
             } else {
-                DialogUtil.createMessage(
-                        this,
-                        R.string.title_migration_failed,
-                        R.string.text_migration_failed
-                ) { dialog, _ ->
-                    dialog.dismiss()
-                    finish()
-                }
+                DialogUtil.createDefaultDialog(this).autoDismiss(false)
+                        .icon(CompatUtil.getTintedDrawable(this,
+                                R.drawable.ic_system_update_grey_600_24dp)
+                        ).positiveText(R.string.Ok)
+                        .title(R.string.title_migration_failed)
+                        .content(R.string.text_migration_failed)
+                        .onAny { dialog, _ ->
+                            dialog.dismiss()
+                            finish()
+                        }.show()
             }
         }
     }
@@ -80,7 +80,7 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
         val versionBase = presenter.database.remoteVersion
         // How frequent the application checks for updates on startup
         if (versionBase == null || DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_HOURS, versionBase.lastChecked, 2)) {
-            viewModel.params.putString(KeyUtil.arg_branch_name, presenter.applicationPref.updateChannel)
+            viewModel.params.putString(KeyUtil.arg_branch_name, presenter.settings.updateChannel)
             viewModel.requestData(KeyUtil.UPDATE_CHECKER_REQ, applicationContext)
         } else
             updateUI()
@@ -94,7 +94,7 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
     override fun onChanged(model: VersionBase?) {
         super.onChanged(model)
         if (model != null)
-            presenter.database.saveRemoteVersion(model)
+            presenter.database.remoteVersion = model
         updateUI()
     }
 

@@ -2,11 +2,8 @@ package com.mxt.anitrend.presenter.base
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.annimon.stream.Stream
-import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
@@ -15,9 +12,9 @@ import com.mxt.anitrend.model.entity.crunchy.MediaContent
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail
 import com.mxt.anitrend.service.TagGenreService
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.migration.MigrationUtil
 import com.mxt.anitrend.util.migration.Migrations
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -33,12 +30,20 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     private var favouriteYears: List<String>? = null
     private var favouriteFormats: List<String>? = null
 
-    fun checkIfMigrationIsNeeded(fragmentActivity: FragmentActivity): Boolean {
-        NotifyUtil.makeText(fragmentActivity, R.string.text_migration_in_progress, Toast.LENGTH_SHORT)
-        val migrationUtil = MigrationUtil.Builder()
-                .addMigration(Migrations.MIGRATION_109_132)
-                .build()
-        return migrationUtil.applyMigration()
+    fun checkIfMigrationIsNeeded(): Boolean {
+        if (!settings.isFreshInstall) {
+            val migrationUtil = MigrationUtil.Builder()
+                    .addMigration(Migrations.MIGRATION_90_94)
+                    .addMigration(Migrations.MIGRATION_95_100)
+                    .addMigration(Migrations.MIGRATION_101_108)
+                    .addMigration(Migrations.MIGRATION_109_132)
+                    .addMigration(Migrations.MIGRATION_133_135)
+                    .addMigration(Migrations.MIGRATION_136_140)
+                    .addMigration(Migrations.MIGRATION_141_145)
+                    .build()
+            return migrationUtil.applyMigration()
+        }
+        return true
     }
 
     fun checkGenresAndTags(fragmentActivity: FragmentActivity) {
@@ -62,7 +67,7 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
 
     fun getTopFavouriteGenres(limit: Int): List<String>? {
         if (CompatUtil.isEmpty(favouriteGenres)) {
-            val userStats: UserStatisticTypes? = database.currentUser.statistics
+            val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.genres.isNullOrEmpty()) {
                     favouriteGenres = userStats.anime.genres
@@ -81,7 +86,7 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
 
     fun getTopFavouriteTags(limit: Int): List<String>? {
         if (CompatUtil.isEmpty(favouriteTags)) {
-            val userStats: UserStatisticTypes? = database.currentUser.statistics
+            val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.tags.isNullOrEmpty()) {
                     favouriteTags = Stream.of(userStats.anime.tags)
@@ -104,7 +109,7 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
 
     fun getTopFavouriteYears(limit: Int): List<String>? {
         if (CompatUtil.isEmpty(favouriteYears)) {
-            val userStats: UserStatisticTypes? = database.currentUser.statistics
+            val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.releaseYears.isNullOrEmpty()) {
                     favouriteYears = userStats.anime.releaseYears
@@ -123,7 +128,7 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
 
     fun getTopFormats(limit: Int): List<String>? {
         if (CompatUtil.isEmpty(favouriteFormats)) {
-            val userStats: UserStatisticTypes? = database.currentUser.statistics
+            val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.formats.isNullOrEmpty()) {
                     favouriteFormats = userStats.anime.formats
@@ -141,13 +146,13 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     }
 
     fun isCurrentUser(userId: Long): Boolean {
-        return applicationPref.isAuthenticated && database.currentUser != null &&
-                userId != 0L && database.currentUser.id == userId
+        return settings.isAuthenticated && database.currentUser != null &&
+                userId != 0L && database.currentUser?.id == userId
     }
 
     fun isCurrentUser(userName: String?): Boolean {
-        return applicationPref.isAuthenticated && database.currentUser != null &&
-                userName != null && database.currentUser.name == userName
+        return settings.isAuthenticated && database.currentUser != null &&
+                userName != null && database.currentUser?.name == userName
     }
 
     fun isCurrentUser(userId: Long, userName: String?): Boolean {
@@ -159,12 +164,15 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     }
 
     fun checkValidAuth() {
-        if (applicationPref.isAuthenticated) {
-            val boxQuery = database
-            if (boxQuery.currentUser == null) {
-                Log.e("checkValidAuth", "Last attempt to authenticate failed, refreshing session!")
+        if (settings.isAuthenticated) {
+            if (database.currentUser == null) {
+                Timber.tag(TAG).w("Last attempt to authenticate failed, refreshing session!")
                 WebTokenRequest.invalidateInstance(context)
             }
         }
+    }
+
+    companion object {
+        private val TAG = BasePresenter::class.java.simpleName
     }
 }

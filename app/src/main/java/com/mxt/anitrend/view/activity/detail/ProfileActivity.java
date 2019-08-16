@@ -134,14 +134,14 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
             new TutorialUtil().setContext(this)
                     .setFocalColour(R.color.colorGrey600)
                     .setTapTarget(KeyUtil.KEY_NOTIFICATION_TIP)
-                    .setApplicationPref(getPresenter().getApplicationPref())
+                    .setSettings(getPresenter().getSettings())
                     .showTapTarget(R.string.tip_notifications_title,
                             R.string.tip_notifications_text, R.id.action_notification);
         } else {
             new TutorialUtil().setContext(this)
                     .setFocalColour(R.color.colorGrey600)
                     .setTapTarget(KeyUtil.KEY_MESSAGE_TIP)
-                    .setApplicationPref(getPresenter().getApplicationPref())
+                    .setSettings(getPresenter().getSettings())
                     .showTapTarget(R.string.tip_compose_message_title,
                             R.string.tip_compose_message_text, R.id.action_message);
         }

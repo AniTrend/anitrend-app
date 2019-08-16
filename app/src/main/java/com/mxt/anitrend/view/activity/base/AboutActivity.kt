@@ -1,12 +1,16 @@
 package com.mxt.anitrend.view.activity.base
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import butterknife.ButterKnife
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.detail.AboutFragment
+import org.koin.android.ext.android.inject
 
 class AboutActivity : ActivityBase<Void, BasePresenter>() {
 

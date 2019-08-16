@@ -30,6 +30,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/14.
@@ -113,7 +114,7 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
                     intent.setData(Uri.parse(mImageUri));
                     startActivity(intent);
                 } catch (Exception e) {
-                    Log.e(toString(), e.getLocalizedMessage());
+                    Timber.tag(TAG).e(e.getLocalizedMessage());
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show();
                 }
                 return true;

@@ -13,12 +13,14 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
+import timber.log.Timber;
+
 /**
  * Created by max on 2018/03/12.
  * GraphQL annotation processor
  */
 public class GraphProcessor {
-
+    private final String TAG = GraphProcessor.class.getSimpleName();
     private static GraphProcessor ourInstance;
     private final static Object lock = new Object();
     private final static String defaultExtension = ".graphql", defaultDirectory = "graphql";
@@ -31,16 +33,16 @@ public class GraphProcessor {
 
     private GraphProcessor(Context context) {
         synchronized (lock) {
-            Log.d("GraphProcessor", Thread.currentThread().getName() + ": has obtained a synchronized lock on the object");
+            Timber.tag(TAG).i("%s: has obtained a synchronized lock on the object", Thread.currentThread().getName());
             if(this.graphFiles == null)
                 this.graphFiles = new HashMap<>();
             if(isEmpty()) {
-                Log.d("GraphProcessor", Thread.currentThread().getName() + ": is initializing query files");
+                Timber.tag(TAG).i("%s: is initializing query files", Thread.currentThread().getName());
                 initialize(defaultDirectory, context);
-                Log.d("GraphProcessor", Thread.currentThread().getName() + ": has completed initializing all files");
-                Log.d("GraphProcessor", Thread.currentThread().getName() + ": Total count of graphFiles -> size: "+ graphFiles.size());
+                Timber.tag(TAG).i("%s: has completed initializing all files", Thread.currentThread().getName());
+                Timber.tag(TAG).i(Thread.currentThread().getName() + ": Total count of graphFiles -> size: " + graphFiles.size());
             } else
-                Log.d("GraphProcessor", Thread.currentThread().getName() + ": skipped initialization of graphFiles -> size: "+ graphFiles.size());
+                Timber.tag(TAG).i(Thread.currentThread().getName() + ": skipped initialization of graphFiles -> size: " + graphFiles.size());
         }
     }
 
@@ -57,11 +59,11 @@ public class GraphProcessor {
 
         if(graphFiles != null && graphQuery != null) {
             String fileName = String.format("%s%s", graphQuery.value(), defaultExtension);
-            Log.d("GraphProcessor", fileName);
+            Timber.tag(TAG).i(fileName);
             if(graphFiles.containsKey(fileName))
                 return graphFiles.get(fileName);
-            Log.e(this.toString(), String.format("The request query %s could not be found!", graphQuery.value()));
-            Log.e(this.toString(), String.format("Current size of graphFiles -> size: %d", graphFiles.size()));
+            Timber.tag(TAG).e("The request query %s could not be found!", graphQuery.value());
+            Timber.tag(TAG).e("Current size of graphFiles -> size: %d", graphFiles.size());
         }
         return null;
     }
@@ -84,6 +86,7 @@ public class GraphProcessor {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Timber.tag(TAG).e(e);
         }
     }
 

@@ -28,6 +28,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/02/22.
@@ -43,6 +44,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     private MediaList model;
 
     private String currentUser;
+    private final String TAG = AutoIncrementWidget.class.getSimpleName();
 
     public AutoIncrementWidget(Context context) {
         super(context);
@@ -127,7 +129,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
                     resetFlipperState();
             } else {
                 resetFlipperState();
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
                 NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
@@ -138,7 +140,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     @Override
     public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            Timber.tag(TAG).e(throwable);
             throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {

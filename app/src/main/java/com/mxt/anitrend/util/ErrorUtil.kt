@@ -1,10 +1,10 @@
 package com.mxt.anitrend.util
 
-import android.util.Log
 import com.google.gson.reflect.TypeToken
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.entity.container.body.GraphContainer
 import retrofit2.Response
+import timber.log.Timber
 
 /**
  * Created by max on 2017/06/15.
@@ -53,7 +53,7 @@ object ErrorUtil {
 
     private fun getGraphQLError(errorJson: String?): String? {
         return errorJson?.let {
-            Log.e(TAG, it)
+            Timber.tag(TAG).e(it)
             val tokenType = object : TypeToken<GraphContainer<*>>() {}.type
             val graphContainer = WebFactory.gson.fromJson<GraphContainer<*>>(it, tokenType)
             val errors = graphContainer.errors

@@ -117,7 +117,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
                 CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.user_avatar:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
@@ -146,7 +146,7 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
     public void onItemLongClick(View target, IntPair<Review> data) {
         switch (target.getId()) {
             case R.id.series_image:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(data.getSecond().getMedia().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();

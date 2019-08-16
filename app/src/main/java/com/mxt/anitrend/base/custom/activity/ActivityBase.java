@@ -1,22 +1,12 @@
 package com.mxt.anitrend.base.custom.activity;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StyleRes;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,22 +14,32 @@ import android.view.Window;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.mxt.anitrend.App;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
-import com.mxt.anitrend.util.AnalyticsUtil;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.LocaleUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 
@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 
 /**
@@ -81,22 +82,21 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     private CommonPresenter presenter;
 
-    private ApplicationPref applicationPref;
-
-    private @StyleRes int style;
-
     /**
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style.
      */
     protected void configureActivity() {
-        if (applicationPref == null)
-            applicationPref = ((App)getApplicationContext()).getApplicationPref();
-        style = applicationPref.getTheme();
-        if(!CompatUtil.INSTANCE.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
+        final Settings settings = KoinExt.get(Settings.class);
+        final @StyleRes int style = settings.getTheme();
+        if(!CompatUtil.INSTANCE.isLightTheme(style) && settings.isBlackThemeEnabled()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             setTheme(R.style.AppThemeBlack);
-        else
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             setTheme(style);
+        }
     }
 
     @Override
@@ -106,11 +106,11 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        TAG = getClass().getSimpleName(); configureActivity();
+        TAG = getClass().getSimpleName();
+        configureActivity();
         super.onCreate(savedInstanceState);
         intentBundleUtil = new IntentBundleUtil(getIntent());
         intentBundleUtil.checkIntentData(this);
-        AnalyticsUtil.logCurrentScreen(this, TAG);
     }
 
     @Override
@@ -249,7 +249,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      * @param permission the current permission granted
      */
     protected void onPermissionGranted(@NonNull String permission) {
-        Log.i(TAG, "Granted " + permission);
+        Timber.tag(TAG).i("Granted %s", permission);
     }
 
     /**
@@ -369,16 +369,14 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     @Override
     public void onChanged(@Nullable M model) {
-        Log.i(TAG, "onChanged() from view model has received data");
+        Timber.tag(TAG).i("onChanged() from view model has received data");
     }
 
     @Override
     public void showError(String error) {
         if(!TextUtils.isEmpty(error))
-            Log.e(TAG, error);
+            Timber.tag(TAG).d(error);
         if(isAlive()) {
-            if (getPresenter() != null && getPresenter().getApplicationPref().isCrashReportsEnabled())
-                AnalyticsUtil.reportException(TAG, error);
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request), error,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange,
                     KeyUtil.DURATION_MEDIUM);
@@ -389,7 +387,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @Override
     public void showEmpty(String message) {
         if(!TextUtils.isEmpty(message))
-            Log.d(TAG, message);
+            Timber.tag(TAG).i(message);
         if (isAlive()) {
             NotifyUtil.createAlerter(this, getString(R.string.text_error_request), message,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateBlue,

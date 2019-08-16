@@ -1,8 +1,9 @@
 package com.mxt.anitrend.service
 
 import android.content.Context
-import android.util.Log
-
+import androidx.work.ListenableWorker
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
@@ -11,23 +12,21 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.GraphUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotificationUtil
-
-import androidx.work.ListenableWorker
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import java.util.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import timber.log.Timber
 
 /**
  * Created by Maxwell on 1/22/2017.
  */
-class JobDispatcherService(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+class JobDispatcherService(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
 
-    private val presenter by lazy {
-        BasePresenter(context)
-    }
+    private val presenter by inject<BasePresenter>()
 
-    private val notificationUtil by lazy {
-        NotificationUtil(applicationContext)
+    private val notificationUtil by inject<NotificationUtil>()
+
+    private val userEndpoint by lazy(LazyThreadSafetyMode.NONE) {
+        WebFactory.createService(UserModel::class.java, applicationContext)
     }
 
     /**
@@ -48,34 +47,46 @@ class JobDispatcherService(context: Context, workerParams: WorkerParameters) : W
      * [Result.failure]
      */
     override fun doWork(): Result {
-        if (presenter.applicationPref.isAuthenticated) {
-            val userModel = WebFactory.createService(UserModel::class.java, applicationContext)
-            val userRequest = userModel.getCurrentUser(GraphUtil.getDefaultQuery(false))
+        if (presenter.settings.isAuthenticated) {
             try {
-                val userResponse = userRequest.execute()
-                val userGraphContainer: Any? = userResponse.body()
-                if (userResponse.isSuccessful && userGraphContainer != null) {
-                    val currentUser = userGraphContainer as User?
-                    if (currentUser != null) {
-                        val previousUserData = presenter.database.currentUser
-                        presenter.database.saveCurrentUser(currentUser)
-                        if (previousUserData.unreadNotificationCount != currentUser.unreadNotificationCount) {
-                            if (currentUser.unreadNotificationCount != 0) {
-                                presenter.notifyAllListeners(BaseConsumer(KeyUtil.USER_CURRENT_REQ, currentUser), false)
-                                notificationUtil.createNotification(currentUser)
-                            }
-                        }
+                requestUser()?.apply {
+                    if (unreadNotificationCount != 0) {
+                        presenter.notifyAllListeners(
+                                BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
+                                false
+                        )
+                        requestNotifications(this)
                     }
-                    return Result.success()
                 }
+                return Result.success()
             } catch (e: Exception) {
-                e.message?.apply {
-                    Log.e(toString(), this)
-                }
+                Timber.tag(TAG).e(e)
                 e.printStackTrace()
             }
-
+            return Result.retry()
         }
-        return Result.retry()
+        return Result.failure()
+    }
+
+    private fun requestUser(): User? {
+        val userGraphContainer = userEndpoint.getCurrentUser(
+                GraphUtil.getDefaultQuery(false)
+        ).execute().body() as User?
+
+        return (userGraphContainer).let {
+            it?.also { user ->
+                presenter.database.currentUser = user
+            }
+            it
+        }
+    }
+
+    private fun requestNotifications(user: User) {
+        if (user.unreadNotificationCount > 0)
+            notificationUtil.createNotification(user)
+    }
+
+    companion object {
+        private val TAG = JobDispatcherService::class.java.simpleName
     }
 }

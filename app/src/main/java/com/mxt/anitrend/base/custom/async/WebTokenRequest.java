@@ -6,19 +6,23 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
+import com.mxt.anitrend.analytics.contract.ISupportAnalytics;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.data.DatabaseHelper;
+import com.mxt.anitrend.extension.AppExtKt;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.api.retro.WebFactory;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.model.entity.base.AuthBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.AnalyticsUtil;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.JobSchedulerUtil;
 import com.mxt.anitrend.util.ShortcutUtil;
 
 import java.util.concurrent.ExecutionException;
+
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/10/14.
@@ -29,6 +33,7 @@ public class WebTokenRequest {
 
     private static final Object lock = new Object();
 
+    private final static String TAG = "WebTokenRequest";
     private static volatile WebToken token;
 
     public static WebToken getInstance() {
@@ -41,14 +46,14 @@ public class WebTokenRequest {
      */
     public static void invalidateInstance(Context context) {
         CommonPresenter presenter = new BasePresenter(context);
-        presenter.getApplicationPref().setAuthenticated(false);
+        presenter.getSettings().setAuthenticated(false);
         presenter.getDatabase().invalidateBoxStores();
         JobSchedulerUtil.INSTANCE.cancelJob();
         WebFactory.invalidate();
         token = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
             ShortcutUtil.removeAllDynamicShortcuts(context);
-        AnalyticsUtil.clearSession();
+        KoinExt.get(ISupportAnalytics.class).clearUserSession();
     }
 
     /**
@@ -60,10 +65,11 @@ public class WebTokenRequest {
             WebToken response = WebFactory.requestCodeTokenSync(presenter.getDatabase().getAuthCode().getCode());
             if(response != null) {
                 createNewTokenReference(response);
-                presenter.getDatabase().saveWebToken(response);
-                Log.d("WebTokenRequest", "Token refreshed & saved at time stamp: " + System.currentTimeMillis()/1000L);
+                presenter.getDatabase().setWebToken(response);
+                Timber.tag(TAG).d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L);
             }
-            else Log.e("WebTokenRequest", "Token had an invalid instance from context: "+context);
+            else
+                Timber.tag(TAG).e("Token had an invalid instance from context: %s", context);
         }
     }
 
@@ -74,7 +80,7 @@ public class WebTokenRequest {
      */
     public static void getToken(Context context) {
         synchronized (lock) {
-            if(new ApplicationPref(context).isAuthenticated()) {
+            if(new Settings(context).isAuthenticated()) {
                 BasePresenter presenter = new BasePresenter(context);
                 if (token == null || token.getExpires() < (System.currentTimeMillis() / 1000L)) {
                     token = presenter.getDatabase().getWebToken();
@@ -93,8 +99,8 @@ public class WebTokenRequest {
         if(authenticatedToken != null) {
             createNewTokenReference(authenticatedToken);
             BoxQuery boxQuery = new DatabaseHelper();
-            boxQuery.saveWebToken(authenticatedToken);
-            boxQuery.saveAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
+            boxQuery.setWebToken(authenticatedToken);
+            boxQuery.setAuthCode(new AuthBase(code, authenticatedToken.getRefresh_token()));
             return true;
         }
         return false;
@@ -109,7 +115,7 @@ public class WebTokenRequest {
             webToken.calculateExpires();
             token = webToken.clone();
         } catch (CloneNotSupportedException e) {
-            Log.e("createNewTokenReference", e.getMessage());
+            Timber.tag(TAG).e(e,"createNewTokenReference failed");
         }
     }
 

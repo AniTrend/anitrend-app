@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.appcompat.content.res.AppCompatResources
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -32,6 +31,8 @@ import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import okhttp3.Cache
 import java.io.File
 import java.util.*
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Created by max on 2017/09/16.
@@ -46,6 +47,7 @@ object CompatUtil {
             inputMethodManager?.hideSoftInputFromWindow(activity?.window?.decorView?.windowToken, 0)
     }
 
+    @Suppress("DEPRECATION")
     fun isOnline(context: Context?): Boolean {
         val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         val networkInfo: NetworkInfo? = connectivityManager?.activeNetworkInfo
@@ -230,23 +232,12 @@ object CompatUtil {
      * @param finish true to allow the calling activity to be finished
      * @param data Intent data for the target activity to receive
      */
-    @Deprecated("")
-    fun startRevealAnim(activity: FragmentActivity?, target: View, data: Intent, finish: Boolean) {
+    @Deprecated("Please use standard startActivity calls", level = DeprecationLevel.WARNING)
+    @JvmOverloads
+    fun startRevealAnim(activity: FragmentActivity?, target: View, data: Intent, finish: Boolean = false) {
         activity?.startActivity(data)
         if (finish)
             activity?.finish()
-    }
-
-    /**
-     * Starts a reveal animation for a target view from an activity without
-     * closing the calling activity
-     *
-     * @param activity Typically a fragment activity descendant
-     * @param target View which the reveal transition show be anchored to
-     * @param data Intent data for the target activity to receive
-     */
-    fun startRevealAnim(activity: FragmentActivity?, target: View, data: Intent) {
-        startRevealAnim(activity, target, data, false)
     }
 
     fun isLightTheme(@StyleRes theme: Int): Boolean {
@@ -254,7 +245,7 @@ object CompatUtil {
     }
 
     fun isLightTheme(context: Context): Boolean {
-        return ApplicationPref(context).theme == R.style.AppThemeLight
+        return Settings(context).theme == R.style.AppThemeLight
     }
 
     fun dipToPx(dpValue: Float): Int {
@@ -269,7 +260,7 @@ object CompatUtil {
 
     fun spToPx(spValue: Float): Int {
         val scaledDensity = Resources.getSystem().displayMetrics.scaledDensity
-        return Math.round(spValue * scaledDensity)
+        return (spValue * scaledDensity).roundToInt()
     }
 
     /**
@@ -280,7 +271,7 @@ object CompatUtil {
         val displayMetrics = Resources.getSystem().displayMetrics
         val widthDp = displayMetrics.widthPixels / displayMetrics.density
         val heightDp = displayMetrics.heightPixels / displayMetrics.density
-        val screenSw = Math.min(widthDp, heightDp)
+        val screenSw = min(widthDp, heightDp)
         return screenSw >= swDp
     }
 

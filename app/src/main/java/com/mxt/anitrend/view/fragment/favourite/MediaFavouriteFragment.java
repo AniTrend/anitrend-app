@@ -122,7 +122,7 @@ public class MediaFavouriteFragment extends FragmentBaseList<MediaBase, Connecti
     public void onItemLongClick(View target, IntPair<MediaBase> data) {
         switch (target.getId()) {
             case R.id.container:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(data.getSecond().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();

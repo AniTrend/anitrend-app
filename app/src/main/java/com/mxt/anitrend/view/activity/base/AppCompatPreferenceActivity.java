@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
 
 /**
@@ -25,11 +25,11 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
-    protected ApplicationPref applicationPref;
+    protected Settings settings;
 
     protected void configureActivity() {
-        @StyleRes int style = applicationPref.getTheme();
-        if(!CompatUtil.INSTANCE.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
+        @StyleRes int style = settings.getTheme();
+        if(!CompatUtil.INSTANCE.isLightTheme(style) && settings.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
@@ -39,7 +39,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
-        applicationPref = new ApplicationPref(this);
+        settings = new Settings(this);
         configureActivity();
         super.onCreate(savedInstanceState);
     }

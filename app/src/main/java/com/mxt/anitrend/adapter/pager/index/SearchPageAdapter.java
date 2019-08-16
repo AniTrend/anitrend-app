@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.search.CharacterSearchFragment;
 import com.mxt.anitrend.view.fragment.search.MediaSearchFragment;
@@ -22,7 +22,7 @@ public class SearchPageAdapter extends BaseStatePageAdapter {
 
     public SearchPageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
-        setPagerTitles(new ApplicationPref(context).isAuthenticated()? R.array.search_titles_auth : R.array.search_titles);
+        setPagerTitles(new Settings(context).isAuthenticated()? R.array.search_titles_auth : R.array.search_titles);
     }
 
     /**

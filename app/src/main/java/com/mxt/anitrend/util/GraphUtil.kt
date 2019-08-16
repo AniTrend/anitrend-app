@@ -5,13 +5,13 @@ import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
 import com.mxt.anitrend.presenter.base.BasePresenter
+import org.koin.core.KoinComponent
 
 /**
  * Created by max on 2018/03/22.
  * Graph request helper class
  */
-
-object GraphUtil {
+object GraphUtil : KoinComponent {
 
     /**
      * Builder provider helper method, that provides a default GraphQL Query and Variable Builder
@@ -28,8 +28,8 @@ object GraphUtil {
      * Used to check if the newly applied preference key is a should trigger an application refresh
      */
     fun isKeyFilter(preferenceKey: String): Boolean {
-        return !CompatUtil.equals(preferenceKey, ApplicationPref._isLightTheme) &&
-                !CompatUtil.equals(preferenceKey, ApplicationPref._updateChannel)
+        return !CompatUtil.equals(preferenceKey, Settings._isLightTheme) &&
+                !CompatUtil.equals(preferenceKey, Settings._updateChannel)
     }
 
     /**

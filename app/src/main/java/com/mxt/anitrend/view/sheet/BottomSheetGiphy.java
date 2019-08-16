@@ -81,10 +81,10 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
         searchView.setOnSearchViewListener(this);
         searchView.setOnQueryTextListener(this);
         injectAdapter();
-        if(presenter.getApplicationPref().shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
+        if(presenter.getSettings().shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
             NotifyUtil.createAlerter(getActivity(), R.string.title_new_feature, R.string.text_giphy_feature,
                     R.drawable.ic_gif_white_24dp, R.color.colorStateBlue, KeyUtil.DURATION_LONG);
-            presenter.getApplicationPref().disableTipFor(KeyUtil.KEY_GIPHY_TIP);
+            presenter.getSettings().disableTipFor(KeyUtil.KEY_GIPHY_TIP);
         }
     }
 

@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/02.
@@ -230,11 +231,11 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
     @Override
     public void showError(String error) {
-        Log.e(TAG, error);
+        Timber.tag(TAG).e(error);
     }
 
     @Override
     public void showEmpty(String message) {
-        Log.d(TAG, message);
+        Timber.tag(TAG).d(message);
     }
 }

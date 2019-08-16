@@ -30,9 +30,11 @@ import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.AsyncDrawableScheduler
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.Arrays.asList
 
-class RichMarkdownTextView : AppCompatTextView, CustomView {
+class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
 
     constructor(context: Context) :
             super(context) { onInit() }
@@ -43,26 +45,7 @@ class RichMarkdownTextView : AppCompatTextView, CustomView {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr) { onInit() }
 
-    val markwon by lazy {
-        Markwon.builder(context)
-                .usePlugin(HtmlPlugin.create())
-                .usePlugin(LinkifyPlugin.create())
-                .usePlugin(GlideImagesPlugin.create(Glide.with(context)))
-                .usePlugin(GlideImagesPlugin.create(object : GlideImagesPlugin.GlideStore {
-                    override fun cancel(target: Target<*>) {
-                        Glide.with(context).clear(target)
-                    }
-
-                    override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
-                        return Glide.with(context).load(drawable.destination)
-                                .transition(DrawableTransitionOptions.withCrossFade(250))
-                                .transform(
-                                        CenterCrop(),
-                                        RoundedCorners(context.resources.getDimensionPixelSize(R.dimen.md_margin))
-                                )
-                    }
-                })).build()
-    }
+    val markwon by inject<Markwon>()
 
     /**
      * Optionally included when constructing custom views

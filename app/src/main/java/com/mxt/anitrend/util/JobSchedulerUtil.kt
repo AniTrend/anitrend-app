@@ -25,7 +25,7 @@ object JobSchedulerUtil {
      * @param context any valid application context
      */
     fun scheduleJob(context: Context) {
-        val applicationPref = ApplicationPref(context)
+        val applicationPref = Settings(context)
         if (applicationPref.isAuthenticated && applicationPref.isNotificationEnabled) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(JobDispatcherService::class.java,
                     applicationPref.syncTime.toLong(), TimeUnit.MINUTES)

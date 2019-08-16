@@ -22,6 +22,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/01/20.
@@ -29,6 +30,8 @@ import retrofit2.Response;
  */
 
 final class MediaDialogUtil extends DialogUtil {
+
+    private static final String TAG = MediaDialogUtil.class.getSimpleName();
 
     /**
      * General series managing template dialog builder which sets the text and icon based on the criteria,
@@ -92,12 +95,12 @@ final class MediaDialogUtil extends DialogUtil {
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, responseBody), false);
                         NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                        Timber.tag(TAG).w(ErrorUtil.INSTANCE.getError(response));
                         NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e(this.toString(), e.getLocalizedMessage());
+                    Timber.tag(TAG).e(e.getLocalizedMessage());
                 }
             }
 
@@ -109,7 +112,7 @@ final class MediaDialogUtil extends DialogUtil {
                     NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e(this.toString(), e.getLocalizedMessage());
+                    Timber.e(e.getLocalizedMessage());
                 }
             }
         });
@@ -147,11 +150,12 @@ final class MediaDialogUtil extends DialogUtil {
                             NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                        Timber.tag(TAG).w(ErrorUtil.INSTANCE.getError(response));
                         NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Timber.tag(TAG).e(e);
                 }
             }
 
@@ -163,6 +167,7 @@ final class MediaDialogUtil extends DialogUtil {
                     NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Timber.tag(TAG).e(e);
                 }
             }
         });

@@ -26,6 +26,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class StatusDeleteWidget extends FrameLayout implements CustomView, RetroCallback<DeleteState>, View.OnClickListener {
 
@@ -34,6 +35,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
     private @KeyUtil.RequestType int requestType;
     private FeedList feedList;
     private FeedReply feedReply;
+    private final String TAG = StatusDeleteWidget.class.getSimpleName();
 
     public StatusDeleteWidget(Context context) {
         super(context);
@@ -133,7 +135,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
                 } else
                     NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             } else
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +151,7 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
     @Override
     public void onFailure(@NonNull Call<DeleteState> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            Timber.tag(TAG).e(throwable.getLocalizedMessage());
             throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {

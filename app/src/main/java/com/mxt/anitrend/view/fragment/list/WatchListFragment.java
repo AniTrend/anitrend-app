@@ -26,6 +26,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/03.
@@ -36,6 +37,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
 
     private long mediaId;
     private @KeyUtil.MediaType String mediaType;
+    private final String TAG = WatchListFragment.class.getSimpleName();
 
     public static FragmentChannelBase newInstance(Bundle params, boolean popular) {
         Bundle args = new Bundle(params);
@@ -121,7 +123,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
                         makeRequest();
                 }
             } else
-                Log.e(TAG, ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).w(ErrorUtil.INSTANCE.getError(response));
         }
     }
 
@@ -129,7 +131,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
     public void onFailure(@NonNull Call<ConnectionContainer<List<ExternalLink>>> call, @NonNull Throwable throwable) {
         if(isAlive() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             throwable.printStackTrace();
-            Log.e(TAG, throwable.getMessage());
+            Timber.tag(TAG).e(throwable);
         }
     }
 }

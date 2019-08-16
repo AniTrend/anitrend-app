@@ -64,7 +64,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean isAuth = getPresenter().getApplicationPref().isAuthenticated();
+        boolean isAuth = getPresenter().getSettings().isAuthenticated();
         getMenuInflater().inflate(R.menu.custom_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
         if(isAuth) {

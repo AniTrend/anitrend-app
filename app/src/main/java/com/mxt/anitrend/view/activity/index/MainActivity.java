@@ -34,24 +34,25 @@ import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter;
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter;
+import com.mxt.anitrend.analytics.contract.ISupportAnalytics;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView;
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.entity.anilist.User;
 import com.mxt.anitrend.model.entity.base.VersionBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.service.DownloaderService;
-import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.AboutActivity;
-import com.mxt.anitrend.view.activity.base.ReportActivity;
+import com.mxt.anitrend.view.activity.base.LoggingActivity;
 import com.mxt.anitrend.view.activity.base.SettingsActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetMessage;
@@ -160,7 +161,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                 startActivity(intent);
                 return true;
             case R.id.action_report:
-                startActivity(new Intent(MainActivity.this, ReportActivity.class));
+                startActivity(new Intent(MainActivity.this, LoggingActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -173,8 +174,8 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     @Override
     protected void onActivityReady() {
         if(selectedItem == 0)
-            selectedItem = getPresenter().getApplicationPref().isAuthenticated()?
-                    (redirectShortcut == 0? getPresenter().getApplicationPref().getStartupPage() : redirectShortcut)
+            selectedItem = getPresenter().getSettings().isAuthenticated()?
+                    (redirectShortcut == 0? getPresenter().getSettings().getStartupPage() : redirectShortcut)
                     : (redirectShortcut == 0? R.id.nav_anime : redirectShortcut);
         mNavigationView.setCheckedItem(selectedItem);
         onNavigate(selectedItem);
@@ -383,7 +384,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                 }
                 break;
             case R.id.nav_light_theme:
-                getPresenter().getApplicationPref().toggleTheme();
+                getPresenter().getSettings().toggleTheme();
                 recreate();
                 break;
             default:
@@ -423,7 +424,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
 
         HeaderContainer.findViewById(R.id.banner_clickable).setOnClickListener(this);
 
-        if(getPresenter().getApplicationPref().isAuthenticated())
+        if(getPresenter().getSettings().isAuthenticated())
             setupUserItems();
         else
             mHeaderView.setImageResource(R.drawable.reg_bg);
@@ -448,9 +449,9 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
             mUserName.setText(user.getName());
             mUserAvatar.onInit();
             HeaderImageView.setImage(mHeaderView, user.getBannerImage());
-            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
+            if (getPresenter().getSettings().shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(MainActivity.this, user);
-                getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_LOGIN_TIP);
+                getPresenter().getSettings().disableTipFor(KeyUtil.KEY_LOGIN_TIP);
                 mBottomSheet = new BottomSheetMessage.Builder()
                         .setText(R.string.login_message)
                         .setTitle(R.string.login_title)
@@ -458,7 +459,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                         .build();
                 showBottomSheet();
             }
-            AnalyticsUtil.setCrashAnalyticsUser(this, user.getName());
+            KoinExt.get(ISupportAnalytics.class).setCrashAnalyticUser(user.getName());
         }
 
         mAccountLogin.setVisible(false);
@@ -472,12 +473,12 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
      * Checks to see if this instance is a new installation
      */
     private void checkNewInstallation() {
-        if (getPresenter().getApplicationPref().isUpdated()) {
+        if (getPresenter().getSettings().isUpdated()) {
             DialogUtil.createChangeLog(this);
-            getPresenter().getApplicationPref().setUpdated();
+            getPresenter().getSettings().setUpdated();
         }
-        if(getPresenter().getApplicationPref().isFreshInstall()) {
-            getPresenter().getApplicationPref().setFreshInstall();
+        if(getPresenter().getSettings().isFreshInstall()) {
+            getPresenter().getSettings().setFreshInstall(false);
             mBottomSheet = new BottomSheetMessage.Builder()
                     .setText(R.string.app_intro_guide)
                     .setTitle(R.string.app_intro_title)
@@ -488,20 +489,17 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.banner_clickable:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
-                    User user = getPresenter().getDatabase().getCurrentUser();
-                    if(user != null) {
-                        Intent intent = new Intent(this, ProfileActivity.class);
-                        intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
-                        CompatUtil.INSTANCE.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
-                    } else
-                        NotifyUtil.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
-                }
-                else
-                    onNavigate(R.id.nav_sign_in);
-                break;
+        if (view.getId() == R.id.banner_clickable) {
+            if (getPresenter().getSettings().isAuthenticated()) {
+                User user = getPresenter().getDatabase().getCurrentUser();
+                if (user != null) {
+                    Intent intent = new Intent(this, ProfileActivity.class);
+                    intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
+                    CompatUtil.INSTANCE.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
+                } else
+                    NotifyUtil.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
+            } else
+                onNavigate(R.id.nav_sign_in);
         }
     }
 

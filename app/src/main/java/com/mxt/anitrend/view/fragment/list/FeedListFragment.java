@@ -96,11 +96,11 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
     protected void updateUI() {
         injectAdapter();
         if(!TapTargetUtil.isActive(KeyUtil.KEY_POST_TYPE_TIP) && isFeed) {
-            if (getPresenter().getApplicationPref().shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
+            if (getPresenter().getSettings().shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
                 TapTargetUtil.buildDefault(getActivity(), R.string.tip_status_post_title, R.string.tip_status_post_text, R.id.action_post)
                         .setPromptStateChangeListener((prompt, state) -> {
                             if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                getPresenter().getApplicationPref().disableTipFor(KeyUtil.KEY_POST_TYPE_TIP);
+                                getPresenter().getSettings().disableTipFor(KeyUtil.KEY_POST_TYPE_TIP);
                             if (state == MaterialTapTargetPrompt.STATE_DISMISSED)
                                 TapTargetUtil.setActive(KeyUtil.KEY_POST_TYPE_TIP, true);
                         }).show();
@@ -241,7 +241,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
     public void onItemLongClick(View target, IntPair<FeedList> data) {
         switch (target.getId()) {
             case R.id.series_image:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(data.getSecond().getMedia().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();

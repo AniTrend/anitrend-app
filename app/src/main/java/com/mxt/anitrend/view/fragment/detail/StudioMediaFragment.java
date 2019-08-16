@@ -19,7 +19,7 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.GraphUtil;
@@ -73,18 +73,18 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
             switch (item.getItemId()) {
                 case R.id.action_sort:
                     DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MediaSortType,
-                            getPresenter().getApplicationPref().getMediaSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaSortType),
+                            getPresenter().getSettings().getMediaSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaSortType),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
-                                    getPresenter().getApplicationPref().setMediaSort(KeyUtil.MediaSortType[dialog.getSelectedIndex()]);
+                                    getPresenter().getSettings().setMediaSort(KeyUtil.MediaSortType[dialog.getSelectedIndex()]);
                             });
                     return true;
                 case R.id.action_order:
                     DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.INSTANCE.getIndexOf(KeyUtil.SortOrderType,
-                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
+                            getPresenter().getSettings().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
-                                    getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
+                                    getPresenter().getSettings().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
                             });
                     return true;
             }
@@ -99,7 +99,7 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
 
     @Override
     public void makeRequest() {
-        ApplicationPref pref = getPresenter().getApplicationPref();
+        Settings pref = getPresenter().getSettings();
         QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, id)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage())
@@ -156,7 +156,7 @@ public class StudioMediaFragment extends FragmentBaseList<MediaBase, ConnectionC
     public void onItemLongClick(View target, IntPair<MediaBase> data) {
         switch (target.getId()) {
             case R.id.container:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(data.getSecond().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();

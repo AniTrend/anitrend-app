@@ -30,6 +30,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/05.
@@ -41,7 +42,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     private WidgetPresenter<Review> presenter;
     private WidgetVoteBinding binding;
     private Review model;
-
+    private final String TAG = VoteWidget.class.getSimpleName();
     private @ColorRes int colorStyle;
 
     public VoteWidget(@NonNull Context context) {
@@ -75,7 +76,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
 
     @Override
     public void onClick(View view) {
-        if(presenter.getApplicationPref().isAuthenticated()) {
+        if(presenter.getSettings().isAuthenticated()) {
             switch (view.getId()) {
                 case R.id.widget_thumb_up_flipper:
                     if (binding.widgetThumbUpFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
@@ -188,7 +189,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 this.model.setUserRating(model.getUserRating());
                 setReviewStatus();
             } else {
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.w(ErrorUtil.INSTANCE.getError(response));
                 resetFlipperState();
             }
         } catch (Exception e) {
@@ -206,7 +207,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     @Override
     public void onFailure(@NonNull Call<Review> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            Timber.tag(TAG).e(throwable);
             throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {

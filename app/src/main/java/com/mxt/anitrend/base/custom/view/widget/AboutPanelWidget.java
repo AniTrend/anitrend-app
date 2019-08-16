@@ -1,18 +1,18 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
-import androidx.lifecycle.Lifecycle;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/27.
@@ -51,6 +52,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     private WidgetProfileAboutPanelBinding binding;
     private Lifecycle lifecycle;
     private long userId;
+
+    private final String TAG = AboutPanelWidget.class.getSimpleName();
 
     private long mLastSynced;
 
@@ -127,7 +130,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
                     throwable.printStackTrace();
-                    Log.e(this.toString(), throwable.getMessage());
+                    Timber.tag(TAG).e(throwable);
                 }
             }
         });
@@ -154,7 +157,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
                     throwable.printStackTrace();
-                    Log.e(this.toString(), throwable.getMessage());
+                    Timber.tag(TAG).e(throwable);
                 }
             }
         });
@@ -196,7 +199,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             public void onFailure(@NonNull Call<ConnectionContainer<Favourite>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
                     throwable.printStackTrace();
-                    Log.e(this.toString(), throwable.getMessage());
+                    Timber.tag(TAG).e(throwable);
                 }
             }
         });

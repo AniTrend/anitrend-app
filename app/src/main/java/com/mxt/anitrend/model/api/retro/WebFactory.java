@@ -33,6 +33,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/10/14.
@@ -93,7 +94,7 @@ public class WebFactory {
         GraphProcessor.getInstance(context);
         if(mRetrofit == null) {
             OkHttpClient.Builder httpClient = createHttpClient(new AuthInterceptor(context),
-                    HttpLoggingInterceptor.Level.NONE);
+                    HttpLoggingInterceptor.Level.HEADERS);
 
             mRetrofit = new Retrofit.Builder().client(httpClient.build())
                     .addConverterFactory(GraphQLConverter.create(context))
@@ -106,7 +107,7 @@ public class WebFactory {
     public static EpisodeModel createCrunchyService(boolean feeds, Context context) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(feeds?BuildConfig.FEEDS_LINK:BuildConfig.CRUNCHY_LINK)
                 .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
-                .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.BASIC)
+                .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.HEADERS)
                         .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
                         .cache(CompatUtil.INSTANCE.cacheProvider(context)).build())
                 .build();
@@ -117,7 +118,7 @@ public class WebFactory {
         if(mGiphy == null) {
             mGiphy = new Retrofit.Builder().baseUrl(BuildConfig.GIPHY_LINK)
                     .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.BASIC)
+                    .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.HEADERS)
                             .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
                             .cache(CompatUtil.INSTANCE.cacheProvider(context)).build())
                     .build();
@@ -127,7 +128,7 @@ public class WebFactory {
 
     public static RepositoryModel createRepositoryService() {
         return new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson))
-                .client(createHttpClient(null, HttpLoggingInterceptor.Level.BODY).build())
+                .client(createHttpClient(null, HttpLoggingInterceptor.Level.HEADERS).build())
                 .baseUrl(BuildConfig.APP_REPO).build().create(RepositoryModel.class);
     }
 
@@ -137,7 +138,7 @@ public class WebFactory {
     public static @Nullable WebToken requestCodeTokenSync(String code) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .client(createHttpClient(null, HttpLoggingInterceptor.Level.NONE)
+                    .client(createHttpClient(null, HttpLoggingInterceptor.Level.HEADERS)
                     .build()).addConverterFactory(GsonConverterFactory.create(gson))
                     .baseUrl(BuildConfig.API_AUTH_LINK)
                     .build();
@@ -147,7 +148,7 @@ public class WebFactory {
 
             Response<WebToken> response = refreshTokenCall.execute();
             if(!response.isSuccessful())
-                Log.e("requestCodeTokenSync", ErrorUtil.INSTANCE.getError(response));
+                Timber.tag("requestCodeTokenSync").e(ErrorUtil.INSTANCE.getError(response));
             return response.body();
         } catch (Exception ex) {
             ex.printStackTrace();

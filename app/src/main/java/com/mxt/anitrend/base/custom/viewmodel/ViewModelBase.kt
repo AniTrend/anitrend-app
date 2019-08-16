@@ -15,15 +15,19 @@ import com.mxt.anitrend.util.KeyUtil
 
 import io.objectbox.android.ObjectBoxLiveData
 import io.objectbox.query.Query
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by max on 2017/10/14.
  * View model abstraction contains the generic data model
  */
 
-class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
+class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
+
+    private val job: Job = SupervisorJob()
 
     val model by lazy {
         MutableLiveData<T>()
@@ -67,6 +71,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * prevent a leak of this ViewModel.
      */
     override fun onCleared() {
+        cancel()
         if (mLoader?.status != AsyncTask.Status.FINISHED)
             mLoader?.cancel(true)
         mLoader = null
@@ -93,6 +98,8 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
             // Hacky fix that I'm ashamed of
             if (response.code() == 400 && error.contains("Invalid token"))
                 state?.showError(tokenMessage)
+            else if (response.code() == 401)
+                state?.showError(tokenMessage)
             else
                 state?.showError(error)
         }
@@ -109,4 +116,13 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
         state?.showEmpty(throwable.message)
         throwable.printStackTrace()
     }
+
+    /**
+     * The context of this scope.
+     * Context is encapsulated by the scope and used for implementation of coroutine builders that are extensions on the scope.
+     * Accessing this property in general code is not recommended for any purposes except accessing the [Job] instance for advanced usages.
+     *
+     * By convention, should contain an instance of a [job][Job] to enforce structured concurrency.
+     */
+    override val coroutineContext: CoroutineContext = Dispatchers.IO + job
 }

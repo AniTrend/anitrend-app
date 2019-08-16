@@ -31,6 +31,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/01/31.
@@ -48,6 +49,8 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private CharacterBase characterBase;
 
     private QueryContainerBuilder queryContainer;
+
+    private final String TAG = FavouriteToolbarWidget.class.getSimpleName();
 
     public FavouriteToolbarWidget(@NonNull Context context) {
         super(context);
@@ -133,19 +136,16 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
 
     @Override
     public void onClick(View view) {
-        if(presenter.getApplicationPref().isAuthenticated())
-            switch (view.getId()) {
-                case R.id.widget_flipper:
-                    if (isModelSet()) {
-                        if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
-                            binding.widgetFlipper.showNext();
-                            presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
-                        }
-                        else
-                            NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+        if(presenter.getSettings().isAuthenticated())
+            if (view.getId() == R.id.widget_flipper) {
+                if (isModelSet()) {
+                    if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
+                        binding.widgetFlipper.showNext();
+                        presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
                     } else
-                        NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
-                    break;
+                        NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                } else
+                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
             }
             else
                 NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
@@ -189,7 +189,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                     characterBase.toggleFavourite();
                 setIconType();
             } else {
-                Log.e(toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
                 NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
@@ -200,7 +200,7 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     @Override
     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            Timber.tag(TAG).e(throwable.getLocalizedMessage());
             throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {

@@ -18,6 +18,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/01/05.
@@ -34,6 +35,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
     private Lifecycle lifecycle;
 
     private long mediaId;
+    private final String TAG = MediaActionUtil.class.getSimpleName();
 
     MediaActionUtil(FragmentActivity context) {
         this.context = context;
@@ -74,7 +76,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
             MediaDialogUtil.createSeriesManage(context, mediaBase);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(this.toString(), e.getLocalizedMessage());
+            Timber.tag(TAG).e(e.getLocalizedMessage());
         }
     }
 
@@ -94,7 +96,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
             if(response.isSuccessful() && (mediaBase = response.body()) != null) {
                 showActionDialog(mediaBase);
             } else {
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
                 NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
             dismissProgress();

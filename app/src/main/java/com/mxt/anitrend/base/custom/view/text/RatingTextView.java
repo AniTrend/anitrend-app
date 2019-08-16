@@ -60,7 +60,7 @@ public class RatingTextView extends LinearLayout implements CustomView {
     public void onInit() {
         binding = CustomRatingWidgetBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getContext()), this, true);
         BasePresenter basePresenter = new BasePresenter(getContext());
-        if(basePresenter.getApplicationPref().isAuthenticated())
+        if(basePresenter.getSettings().isAuthenticated())
             mediaListOptions = basePresenter.getDatabase().getCurrentUser().getMediaListOptions();
     }
 

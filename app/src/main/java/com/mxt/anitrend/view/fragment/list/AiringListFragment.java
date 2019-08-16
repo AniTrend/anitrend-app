@@ -60,7 +60,7 @@ public class AiringListFragment extends MediaListFragment {
                             .filter(media -> CompatUtil.INSTANCE.equals(media.getMedia().getStatus(), KeyUtil.RELEASING))
                             .toList();
 
-                    if(MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
+                    if(MediaListUtil.isTitleSort(getPresenter().getSettings().getMediaListSort()))
                         sortMediaListByTitle(mediaList);
                     else
                         onPostProcessed(mediaList);

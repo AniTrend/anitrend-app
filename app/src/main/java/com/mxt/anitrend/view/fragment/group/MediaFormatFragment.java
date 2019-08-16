@@ -136,7 +136,7 @@ public class MediaFormatFragment extends FragmentBaseList<RecyclerItem, Connecti
     public void onItemLongClick(View target, IntPair<RecyclerItem> data) {
         switch (target.getId()) {
             case R.id.container:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(((MediaBase)data.getSecond()).getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();

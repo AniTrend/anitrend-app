@@ -247,7 +247,7 @@ public class DialogUtil {
      * @param context from a fragment activity derived class
      * @see FragmentActivity
      */
-    static MaterialDialog.Builder createDefaultDialog(Context context) {
+    public static MaterialDialog.Builder createDefaultDialog(Context context) {
         return new MaterialDialog.Builder(context)
                 .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
                 .buttonRippleColorRes(R.color.colorAccentDark)

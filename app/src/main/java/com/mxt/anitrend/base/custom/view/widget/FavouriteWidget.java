@@ -26,6 +26,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/10/29.
@@ -36,6 +37,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     private WidgetPresenter<List<UserBase>> presenter;
     private WidgetFavouriteBinding binding;
     private @Nullable List<UserBase> model;
+    private final String TAG = FavouriteWidget.class.getSimpleName();
 
     public FavouriteWidget(Context context) {
         super(context);
@@ -134,7 +136,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
                     model.add(presenter.getDatabase().getCurrentUser());
                 setIconType();
             } else {
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
                 resetFlipperState();
             }
         } catch (Exception e) {
@@ -152,7 +154,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     @Override
     public void onFailure(@NonNull Call<List<UserBase>> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            Timber.tag(TAG).e(throwable.getLocalizedMessage());
             throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {

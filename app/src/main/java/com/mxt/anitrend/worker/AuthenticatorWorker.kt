@@ -16,13 +16,15 @@ import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import timber.log.Timber
 
-class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
 
-    private val presenter by lazy {
-        BasePresenter(context)
-    }
-    private val authenticatorUri: Uri by lazy {
+    private val presenter by inject<BasePresenter>()
+
+    private val authenticatorUri: Uri by lazy(LazyThreadSafetyMode.NONE) {
         Uri.parse(workerParams.inputData
                 .getString(KeyUtil.arg_model))
     }
@@ -51,13 +53,13 @@ class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Wo
             val authorizationCode = authenticatorUri.getQueryParameter(BuildConfig.RESPONSE_TYPE)
             if (!TextUtils.isEmpty(authorizationCode)) {
                 val isSuccess = WebTokenRequest.getToken(authorizationCode)
-                presenter.applicationPref.isAuthenticated = isSuccess
+                presenter.settings.isAuthenticated = isSuccess
                 val outputData = Data.Builder()
                         .putBoolean(KeyUtil.arg_model, isSuccess)
                         .build()
                 return Result.success(outputData)
             } else
-                Log.e(toString(), "Authorization authenticatorUri was empty or null, cannot authenticate with the current state")
+                Timber.tag(TAG).e("Authorization authenticatorUri was empty or null, cannot authenticate with the current state")
         } catch (e: ExecutionException) {
             e.printStackTrace()
             errorDataBuilder.putString(KeyUtil.arg_exception_error, e.message)
@@ -73,5 +75,9 @@ class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Wo
                         .getQueryParameter(KeyUtil.arg_uri_error_description))
                 .build()
         return Result.failure(workerErrorOutputData)
+    }
+
+    companion object {
+        private val TAG = AuthenticatorWorker::class.java.simpleName
     }
 }

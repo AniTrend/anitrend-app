@@ -229,7 +229,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                 public void onItemLongClick(View target, IntPair<FeedList> data) {
                     switch (target.getId()) {
                         case R.id.series_image:
-                            if(getPresenter().getApplicationPref().isAuthenticated()) {
+                            if(getPresenter().getSettings().isAuthenticated()) {
                                 mediaActionUtil = new MediaActionUtil.Builder()
                                         .setId(data.getSecond().getMedia().getId()).build(getActivity());
                                 mediaActionUtil.startSeriesAction();

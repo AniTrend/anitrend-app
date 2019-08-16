@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment;
@@ -29,7 +29,7 @@ public class AnimePageAdapter extends BaseStatePageAdapter {
     public AnimePageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager, context);
         setPagerTitles(R.array.anime_page_titles);
-        isAuthenticated = new ApplicationPref(context).isAuthenticated();
+        isAuthenticated = new Settings(context).isAuthenticated();
     }
 
     @Override

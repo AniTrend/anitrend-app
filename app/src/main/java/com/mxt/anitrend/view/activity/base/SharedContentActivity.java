@@ -24,7 +24,7 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.ActivityShareContentBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
@@ -99,7 +99,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
      */
     @Override
     protected void configureActivity() {
-        setTheme(new ApplicationPref(this).getTheme() == R.style.AppThemeLight ?
+        setTheme(new Settings(this).getTheme() == R.style.AppThemeLight ?
                 R.style.AppThemeLight_Translucent: R.style.AppThemeDark_Translucent);
     }
 

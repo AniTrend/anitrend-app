@@ -80,7 +80,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean isAuth = getPresenter().getApplicationPref().isAuthenticated();
+        boolean isAuth = getPresenter().getSettings().isAuthenticated();
         getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
 
@@ -153,11 +153,11 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             binding.setOnClickListener(this);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
             setFavouriteWidgetMenuItemIcon(); setManageMenuItemIcon();
-            if(getPresenter().getApplicationPref().isAuthenticated()) {
+            if(getPresenter().getSettings().isAuthenticated()) {
                 MaterialTapTargetPrompt.Builder favouritesPrompt = new TutorialUtil().setContext(this)
                         .setFocalColour(R.color.colorGrey600)
                         .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
-                        .setApplicationPref(getPresenter().getApplicationPref())
+                        .setSettings(getPresenter().getSettings())
                         .createTapTarget(R.string.tip_series_options_title,
                                 R.string.tip_series_options_message, R.id.action_manage);
                 TapTargetUtil.showMultiplePrompts(favouritesPrompt);

@@ -43,7 +43,7 @@ public class UserFeedFragment extends FeedListFragment {
 
     @Override
     public void makeRequest() {
-        if(getPresenter().getApplicationPref().isAuthenticated() && getPresenter().isCurrentUser(userId, userName))
+        if(getPresenter().getSettings().isAuthenticated() && getPresenter().isCurrentUser(userId, userName))
             userId = getPresenter().getDatabase().getCurrentUser().getId();
 
         if (userId > 0)
