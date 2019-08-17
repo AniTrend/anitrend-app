@@ -44,7 +44,7 @@ class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
 
     fun setMarkDownText(markDownText: String?) {
         val strippedText = RegexUtil.removeTags(markDownText)
-        val markdownSpan = MarkDownUtil.convert(strippedText, context, this)
+        val markdownSpan = MarkDownUtil.convert(strippedText)
         setText(markdownSpan, BufferType.SPANNABLE)
         //richMarkDown(this, markDownText)
     }
