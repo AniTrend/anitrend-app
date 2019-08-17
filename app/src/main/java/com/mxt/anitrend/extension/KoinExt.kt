@@ -38,8 +38,6 @@ inline fun <reified T> Scope.getWdigetPresenter(
             ?: error("$this is not registered - Koin is null")
 }
 
-fun String.Companion.empty() = ""
-
 object KoinExt : KoinComponent {
 
     /**
