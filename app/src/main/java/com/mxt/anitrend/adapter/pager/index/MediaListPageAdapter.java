@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.list.MediaListFragment;
 
