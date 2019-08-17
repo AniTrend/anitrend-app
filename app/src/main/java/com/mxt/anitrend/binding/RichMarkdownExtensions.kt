@@ -11,13 +11,13 @@ import com.mxt.anitrend.util.RegexUtil
 @BindingAdapter("markDown")
 fun RichMarkdownTextView.markDown(markdown: String?) {
     val strippedText = RegexUtil.removeTags(markdown)
-    val markdownSpan = MarkDownUtil.convert(strippedText, context, this)
+    val markdownSpan = MarkDownUtil.convert(strippedText)
     setText(markdownSpan, TextView.BufferType.SPANNABLE)
 }
 
 @BindingAdapter("textHtml")
 fun RichMarkdownTextView.htmlText(html: String?) {
-    val markdownSpan = MarkDownUtil.convert(html, context, this)
+    val markdownSpan = MarkDownUtil.convert(html)
     setText(markdownSpan, TextView.BufferType.SPANNABLE)
 }
 
@@ -30,7 +30,7 @@ fun RichMarkdownTextView.basicText(html: String?) {
 @BindingAdapter("textHtml")
 fun RichMarkdownTextView.htmlText(@StringRes resId: Int) {
     val text = context.getString(resId)
-    val markdownSpan = MarkDownUtil.convert(text, context, this)
+    val markdownSpan = MarkDownUtil.convert(text)
     setText(markdownSpan, TextView.BufferType.SPANNABLE)
 }
 

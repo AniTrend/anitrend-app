@@ -1,11 +1,9 @@
 package com.mxt.anitrend.util
 
-import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import androidx.appcompat.widget.AppCompatTextView
 import com.github.rjeschke.txtmark.Processor
 import timber.log.Timber
 
@@ -43,26 +41,6 @@ object MarkDownUtil {
         } catch (e: Exception) {
             e.printStackTrace()
             Timber.tag("convert(input)").w(e)
-        }
-
-        return result
-    }
-
-    fun convert(input: String?, context: Context, source: AppCompatTextView): Spanned {
-        var result: SpannableStringBuilder
-        result = when {
-            input.isNullOrBlank() -> fromMD("<b>No content available</b>")
-            else -> fromMD(RegexUtil.findUserTags(input))
-        }
-        // result = fromMD(RegexUtil.findUserTags(input), context, source);
-
-        try {
-            if (result.isNotEmpty())
-                while (result[result.length - 1] == '\n')
-                    result = result.delete(result.length - 1, result.length)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Timber.tag("convert(input...)").w(e)
         }
 
         return result
