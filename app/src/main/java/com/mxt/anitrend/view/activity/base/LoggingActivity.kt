@@ -18,6 +18,7 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.extension.launchCatching
 import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.nguyenhoanglam.progresslayout.ProgressLayout
 import kotlinx.coroutines.*
@@ -36,7 +37,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     lateinit var reportLogTextView: AppCompatTextView
 
     @BindView(R.id.application_version)
-    lateinit var applicationVersionTextViwe: SingleLineTextView
+    lateinit var applicationVersionTextView: SingleLineTextView
 
     @BindView(R.id.stateLayout)
     lateinit var progressLayout: ProgressLayout
@@ -54,7 +55,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        applicationVersionTextViwe.text = getString(
+        applicationVersionTextView.text = getString(
                 R.string.text_about_appication_version,
                 BuildConfig.VERSION_NAME
         )
@@ -68,18 +69,35 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_save_log -> {
-                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    try {
-                        val root = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                "AniTrend Logcat.txt")
-                        FileWriter(root).use {
-                            it.append(log.toString())
+                if (!progressLayout.isLoading) {
+                    progressLayout.showLoading()
+                    if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        async (Dispatchers.IO) {
+                            val root = File(
+                                    Environment.getExternalStoragePublicDirectory(
+                                            Environment.DIRECTORY_DOWNLOADS
+                                    ),
+                                    "AniTrend Logcat.txt"
+                            )
+                            FileWriter(root).use {
+                                it.write(log.toString())
+                            }
+                            withContext(Dispatchers.Main) {
+                                progressLayout.showContent()
+                                NotifyUtil.makeText(applicationContext, R.string.bug_report_saved, Toast.LENGTH_SHORT).show()
+                            }
+                        }.invokeOnCompletion {
+                            it?.printStackTrace()
                         }
-                        NotifyUtil.makeText(applicationContext, R.string.bug_report_saved, Toast.LENGTH_SHORT).show()
-                    } catch (e: IOException) {
-                        Timber.tag(TAG).e(e)
-                        e.printStackTrace()
                     }
+                } else {
+                    NotifyUtil.createAlerter(this,
+                            R.string.title_activity_logging,
+                            R.string.busy_please_wait,
+                            R.drawable.ic_bug_report_grey_600_24dp,
+                            R.color.colorStateBlue,
+                            KeyUtil.DURATION_SHORT
+                    )
                 }
             }
             R.id.action_share_log -> {
@@ -115,20 +133,26 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     override fun updateUI() {
         progressLayout.showContent()
-        reportLogTextView.text = log.toString()
+    }
+
+    private fun printLog(logHistory: String) {
+        updateUI()
+        reportLogTextView.text = logHistory
     }
 
     override fun makeRequest() {
-        launchCatching (coroutineContext = Dispatchers.IO) {
+        async (Dispatchers.IO) {
             val process = Runtime.getRuntime().exec("logcat -d -v threadtime com.mxt.anitrend:*")
-            InputStreamReader(process.inputStream).useLines { sequence ->
-                sequence.iterator().forEach {
-                    log.append(it).append("\n")
-                }
+            InputStreamReader(process.inputStream).use { inputStream ->
+                log.append(inputStream.readText())
+                        .append("\n")
             }
+            val logHistory = log.toString()
             withContext(Dispatchers.Main) {
-                updateUI()
+                printLog(logHistory)
             }
+        }.invokeOnCompletion {
+            it?.printStackTrace()
         }
     }
 

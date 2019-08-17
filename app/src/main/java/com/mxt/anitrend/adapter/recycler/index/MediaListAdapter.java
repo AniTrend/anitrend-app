@@ -58,7 +58,7 @@ public class MediaListAdapter extends RecyclerViewAdapter<MediaList> {
                     clone = null;
                 } else {
                     results.values = Stream.of(clone)
-                            .filter(c -> MediaListUtil.isFilterMatch(c, filter))
+                            .filter(c -> MediaListUtil.INSTANCE.isFilterMatch(c, filter))
                             .toList();
                 }
                 return results;

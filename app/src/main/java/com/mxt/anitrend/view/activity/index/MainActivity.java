@@ -355,7 +355,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                                         if(versionBase != null && versionBase.isNewerVersion())
                                             DownloaderService.INSTANCE.downloadNewVersion(MainActivity.this, versionBase);
                                         else
-                                            NotifyUtil.createAlerter(MainActivity.this, getString(R.string.title_update_infodadat),
+                                            NotifyUtil.INSTANCE.createAlerter(MainActivity.this, getString(R.string.title_update_infodadat),
                                                     getString(R.string.app_no_date), R.drawable.ic_cloud_done_white_24dp, R.color.colorStateGreen);
                                     }
 
@@ -374,7 +374,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                                                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
                                                 break;
                                             case NEGATIVE:
-                                                NotifyUtil.makeText(MainActivity.this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
+                                                NotifyUtil.INSTANCE.makeText(MainActivity.this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
                                                 break;
                                         }
                                     });
@@ -450,7 +450,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
             mUserAvatar.onInit();
             HeaderImageView.setImage(mHeaderView, user.getBannerImage());
             if (getPresenter().getSettings().shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
-                NotifyUtil.createLoginToast(MainActivity.this, user);
+                NotifyUtil.INSTANCE.createLoginToast(MainActivity.this, user);
                 getPresenter().getSettings().disableTipFor(KeyUtil.KEY_LOGIN_TIP);
                 mBottomSheet = new BottomSheetMessage.Builder()
                         .setText(R.string.login_message)
@@ -497,7 +497,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
                     intent.putExtra(KeyUtil.arg_userName, getPresenter().getDatabase().getCurrentUser().getName());
                     CompatUtil.INSTANCE.startSharedImageTransition(MainActivity.this, mHeaderView, intent, R.string.transition_user_banner);
                 } else
-                    NotifyUtil.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getApplicationContext(), R.string.text_error_login, Toast.LENGTH_SHORT).show();
             } else
                 onNavigate(R.id.nav_sign_in);
         }
@@ -513,7 +513,7 @@ public class MainActivity extends ActivityBase<Void, BasePresenter> implements V
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<User> consumer) {
         if(consumer.getRequestMode() == KeyUtil.USER_CURRENT_REQ && consumer.getChangeModel() != null && consumer.getChangeModel().getUnreadNotificationCount() > 0)
-            NotifyUtil.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
+            NotifyUtil.INSTANCE.createAlerter(this, R.string.alerter_notification_title, R.string.alerter_notification_text,
                     R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent);
     }
 }

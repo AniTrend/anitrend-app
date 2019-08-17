@@ -19,6 +19,7 @@ import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
@@ -77,8 +78,9 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
             R.id.action_mark_all -> {
                 if (mAdapter.itemCount > 0) {
                     ThreadPool.execute { markAllNotificationsAsRead() }
-                } else
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT)
+                } else context?.also {
+                    NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT)
+                }
                 return true
             }
         }
@@ -179,23 +181,23 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         ) {
             intent = Intent(activity, ProfileActivity::class.java)
             intent.putExtra(KeyUtil.arg_id, data.second.user.id)
-            CompatUtil.startRevealAnim(activity, target, intent)
+            startActivity(intent)
         } else
             when (data.second.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
                     intent = Intent(activity, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.FOLLOWING -> {
                     intent = Intent(activity, ProfileActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.user.id)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
                     intent = Intent(activity, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.THREAD_COMMENT_MENTION -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
                 KeyUtil.THREAD_SUBSCRIBED -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
@@ -205,22 +207,22 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     intent.putExtra(KeyUtil.arg_id, data.second.media.id)
                     intent.putExtra(KeyUtil.arg_mediaType, data.second.media.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     intent = Intent(activity, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
                     intent = Intent(activity, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
                     intent = Intent(activity, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
-                    CompatUtil.startRevealAnim(activity, target, intent)
+                    startActivity(intent)
                 }
                 KeyUtil.THREAD_LIKE ->
                     DialogUtil.createMessage(context, data.second.user.name, data.second.context)
@@ -244,7 +246,9 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                         .setId(data.second.media.id).build(activity)
                 mediaActionUtil.startSeriesAction()
             } else
-                NotifyUtil.makeText(context, R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show()
+                context?.also {
+                    NotifyUtil.makeText(it, R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show()
+                }
         }
     }
 

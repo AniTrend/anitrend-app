@@ -22,6 +22,7 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.worker.AuthenticatorWorker
 import timber.log.Timber
 
@@ -43,8 +44,8 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
                 viewModel.requestData(KeyUtil.USER_CURRENT_REQ, applicationContext)
             } else {
                 if (!TextUtils.isEmpty(outputData.getString(KeyUtil.arg_uri_error)) && !TextUtils.isEmpty(outputData.getString(KeyUtil.arg_uri_error_description)))
-                    NotifyUtil.createAlerter(this@LoginActivity, outputData.getString(KeyUtil.arg_uri_error),
-                            outputData.getString(KeyUtil.arg_uri_error_description), R.drawable.ic_warning_white_18dp,
+                    NotifyUtil.createAlerter(this@LoginActivity, outputData.getString(KeyUtil.arg_uri_error)!!,
+                            outputData.getString(KeyUtil.arg_uri_error_description)!!, R.drawable.ic_warning_white_18dp,
                             R.color.colorStateOrange, KeyUtil.DURATION_LONG)
                 else
                     NotifyUtil.createAlerter(this@LoginActivity, R.string.login_error_title,
@@ -165,27 +166,23 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
         }
     }
 
-    override fun showError(error: String?) {
-        var errorMessage = error
+    override fun showError(error: String) {
         if (isAlive) {
             WebTokenRequest.invalidateInstance(applicationContext)
-            if (errorMessage == null) errorMessage = getString(R.string.text_error_auth_login)
-            NotifyUtil.createAlerter(this, getString(R.string.login_error_title),
-                    errorMessage, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG)
+            NotifyUtil.createAlerter(this, getString(R.string.text_error_auth_login),
+                    error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG)
             binding.widgetFlipper.showPrevious()
-            Timber.tag(TAG).e(errorMessage)
+            Timber.tag(TAG).e(error)
         }
     }
 
-    override fun showEmpty(message: String?) {
-        var emptyMessage = message
+    override fun showEmpty(message: String) {
         if (isAlive) {
             WebTokenRequest.invalidateInstance(applicationContext)
-            if (emptyMessage == null) emptyMessage = getString(R.string.text_error_auth_login)
-            NotifyUtil.createAlerter(this, getString(R.string.text_error_request),
-                    emptyMessage, R.drawable.ic_warning_white_18dp, R.color.colorStateOrange, KeyUtil.DURATION_LONG)
+            NotifyUtil.createAlerter(this, getString(R.string.text_error_auth_login),
+                    message, R.drawable.ic_warning_white_18dp, R.color.colorStateOrange, KeyUtil.DURATION_LONG)
             binding.widgetFlipper.showPrevious()
-            Timber.tag(TAG).w(emptyMessage)
+            Timber.tag(TAG).w(message)
         }
     }
 

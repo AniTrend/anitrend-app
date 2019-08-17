@@ -28,11 +28,11 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.MediaListCollectionBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.MediaListUtil;
@@ -154,7 +154,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             queryContainer.putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
 
         // since anilist doesn't support sorting by title we set a temporary sorting key
-        if (!MediaListUtil.isTitleSort(getPresenter().getSettings().getMediaListSort()))
+        if (!MediaListUtil.INSTANCE.isTitleSort(getPresenter().getSettings().getMediaListSort()))
             queryContainer.putVariable(KeyUtil.arg_sort, getPresenter().getSettings().getMediaListSort() +
                     getPresenter().getSettings().getSortOrder());
         else
@@ -169,7 +169,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(getPresenter() != null && isFilterable && GraphUtil.INSTANCE.isKeyFilter(key)) {
             @KeyUtil.MediaListSort String mediaListSort = getPresenter().getSettings().getMediaListSort();
-            if(CompatUtil.INSTANCE.equals(key, Settings._mediaListSort) && MediaListUtil.isTitleSort(mediaListSort)) {
+            if(CompatUtil.INSTANCE.equals(key, Settings._mediaListSort) && MediaListUtil.INSTANCE.isTitleSort(mediaListSort)) {
                 swipeRefreshLayout.setRefreshing(true);
                 sortMediaListByTitle(mAdapter.getData());
             }
@@ -214,7 +214,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 Optional<MediaListCollection> mediaOptional = Stream.of(content.getPageData()).findFirst();
                 if(mediaOptional.isPresent()) {
                     MediaListCollection mediaListCollection = mediaOptional.get();
-                    if(MediaListUtil.isTitleSort(getPresenter().getSettings().getMediaListSort()))
+                    if(MediaListUtil.INSTANCE.isTitleSort(getPresenter().getSettings().getMediaListSort()))
                         sortMediaListByTitle(mediaListCollection.getEntries());
                     else
                         onPostProcessed(mediaListCollection.getEntries());
@@ -268,7 +268,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                             .setId(data.getSecond().getMediaId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

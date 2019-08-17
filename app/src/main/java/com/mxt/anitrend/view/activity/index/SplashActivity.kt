@@ -7,6 +7,7 @@ import butterknife.ButterKnife
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.image.WideImageView
+import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
@@ -63,16 +64,19 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
                 startActivity(intent)
                 finish()
             } else {
-                DialogUtil.createDefaultDialog(this).autoDismiss(false)
-                        .icon(CompatUtil.getTintedDrawable(this,
-                                R.drawable.ic_system_update_grey_600_24dp)
-                        ).positiveText(R.string.Ok)
+                val drawable = getCompatTintedDrawable(R.drawable.ic_system_update_grey_600_24dp)
+                val dialog = DialogUtil.createDefaultDialog(this)
+                        .autoDismiss(false)
+                        .positiveText(R.string.Ok)
                         .title(R.string.title_migration_failed)
                         .content(R.string.text_migration_failed)
                         .onAny { dialog, _ ->
                             dialog.dismiss()
                             finish()
-                        }.show()
+                        }
+                if (drawable != null)
+                    dialog.icon(drawable)
+                dialog.show()
             }
         }
     }

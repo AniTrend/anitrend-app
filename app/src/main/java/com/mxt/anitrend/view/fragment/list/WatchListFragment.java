@@ -14,11 +14,11 @@ import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.EpisodeUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.ArrayList;
@@ -123,15 +123,15 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
                         makeRequest();
                 }
             } else
-                Timber.tag(TAG).w(ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
         }
     }
 
     @Override
     public void onFailure(@NonNull Call<ConnectionContainer<List<ExternalLink>>> call, @NonNull Throwable throwable) {
-        if(isAlive() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+        if(isAlive()) {
+            Timber.tag(TAG).w(throwable);
             throwable.printStackTrace();
-            Timber.tag(TAG).e(throwable);
         }
     }
 }

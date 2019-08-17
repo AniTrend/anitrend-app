@@ -122,7 +122,7 @@ object RegexUtil {
      */
     fun getYoutubeThumb(link: String): String {
         val matcher = Pattern.compile(PATTERN_YOUTUBE_EXTRACT).matcher(link)
-        val temp: String
+        val temp: String?
 
         if (matcher.find())
             temp = matcher.group(matcher.groupCount())
@@ -159,8 +159,8 @@ object RegexUtil {
                     val match = matcher.group() // the full match e.g. img%(http://git.raw.sample.jpg)
                     val tag = matcher.group(gc - 1) // returns the first match group tag of the regex match img|IMG|Img
                     val media = matcher.group(gc) // contains the second match group e.g. (http://git.raw.sample.jpg) brackets included
-                    val mediaWithoutBrackets = media.removeSurrounding("(", ")")
-                    substitute = when (tag.toLowerCase()) {
+                    val mediaWithoutBrackets = media?.removeSurrounding("(", ")")
+                    substitute = when (tag?.toLowerCase()) {
                         KEY_IMG ->
                             substitute.replace(match, "![image]$media")
                         KEY_WEB ->

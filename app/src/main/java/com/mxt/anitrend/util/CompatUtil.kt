@@ -27,6 +27,8 @@ import com.annimon.stream.Optional
 import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
+import com.mxt.anitrend.extension.getCompatColor
+import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import okhttp3.Cache
 import java.io.File
@@ -42,6 +44,13 @@ object CompatUtil {
 
     private const val CACHE_LIMIT = 1024 * 1024 * 250
 
+    @Deprecated(
+            message = "Use extension functions present in [AppExt]",
+            replaceWith = ReplaceWith(
+                    expression = "activity.hideKeyboard()",
+                    imports = ["com.mxt.extension.AppExt.hideKeyboard"]),
+            level = DeprecationLevel.ERROR
+    )
     fun hideKeyboard(activity: FragmentActivity?) {
             val inputMethodManager = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager?
             inputMethodManager?.hideSoftInputFromWindow(activity?.window?.decorView?.windowToken, 0)
@@ -71,7 +80,8 @@ object CompatUtil {
             intent.putExtra(KeyUtil.arg_model, imageUri)
             startSharedImageTransition(activity, view, intent, R.string.transition_image_preview)
         } else {
-            NotifyUtil.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
+            if (activity != null)
+                NotifyUtil.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -89,6 +99,13 @@ object CompatUtil {
      * @return Drawable
      * @see Drawable
      */
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getCompatDrawable(resource)",
+                    imports = ["com.mxt.extension.getCompatDrawable"]),
+            level = DeprecationLevel.ERROR
+    )
     fun getDrawable(context: Context, @DrawableRes resource: Int): Drawable? {
         return AppCompatResources.getDrawable(context, resource)
     }
@@ -110,6 +127,13 @@ object CompatUtil {
      * @return Drawable
      * @see Drawable
      */
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getCompatTintedDrawable(resource)",
+                    imports = ["com.mxt.extension.getCompatTintedDrawable"]),
+            level = DeprecationLevel.ERROR
+    )
     fun getTintedDrawable(context: Context, @DrawableRes resource: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
         DrawableCompat.setTint(drawable, getColorFromAttr(context, R.attr.titleColor))
@@ -134,10 +158,18 @@ object CompatUtil {
      * @return Drawable
      * @see Drawable
      */
+
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getCompatDrawable(resource, tint)",
+                    imports = ["com.mxt.extension.getCompatDrawable"]),
+            level = DeprecationLevel.WARNING
+    )
     fun getDrawable(context: Context, @DrawableRes resource: Int, @ColorRes tint: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
         if (tint != 0)
-            DrawableCompat.setTint(drawable, getColor(context, tint))
+            DrawableCompat.setTint(drawable, context.getCompatColor(tint))
         return drawable
     }
 
@@ -159,6 +191,13 @@ object CompatUtil {
      * @return Drawable
      * @see Drawable
      */
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getCompatTintedDrawable(resource)",
+                    imports = ["com.mxt.extension.getCompatTintedDrawable"]),
+            level = DeprecationLevel.WARNING
+    )
     fun getDrawableTintAttr(context: Context, @DrawableRes resource: Int, @AttrRes attribute: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
         DrawableCompat.setTint(drawable, getColorFromAttr(context, attribute))
@@ -176,6 +215,13 @@ object CompatUtil {
      *
      * @return Color Integer
      */
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getCompatColorAttr(attr)",
+                    imports = ["com.mxt.extension.getCompatColorAttr"]),
+            level = DeprecationLevel.WARNING
+    )
     @ColorInt
     fun getColorFromAttr(context: Context, @AttrRes attribute: Int): Int {
         val colorAttribute = context.obtainStyledAttributes(intArrayOf(attribute))
@@ -244,8 +290,11 @@ object CompatUtil {
         return theme == R.style.AppThemeLight
     }
 
-    fun isLightTheme(context: Context): Boolean {
-        return Settings(context).theme == R.style.AppThemeLight
+    fun isLightTheme(context: Context?): Boolean {
+        return if (context != null)
+            Settings(context).theme == R.style.AppThemeLight
+        else
+            true
     }
 
     fun dipToPx(dpValue: Float): Int {
@@ -284,10 +333,26 @@ object CompatUtil {
         return screenWidth >= widthDp
     }
 
+
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getCompatColor(color)",
+                    imports = ["com.mxt.extension.getCompatColor"]),
+            level = DeprecationLevel.WARNING
+    )
     fun getColor(context: Context, @ColorRes color: Int): Int {
         return ContextCompat.getColor(context, color)
     }
 
+
+    @Deprecated(
+            message = "Use extension functions present in [ContextExt]",
+            replaceWith = ReplaceWith(
+                    expression = "context.getLayoutInflater()",
+                    imports = ["com.mxt.extension.getLayoutInflater"]),
+            level = DeprecationLevel.WARNING
+    )
     fun getLayoutInflater(context: Context): LayoutInflater {
         return context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
@@ -338,8 +403,8 @@ object CompatUtil {
     fun configureSwipeRefreshLayout(swipeRefreshLayout: CustomSwipeRefreshLayout, fragmentActivity: FragmentActivity?) {
         fragmentActivity?.also {
             swipeRefreshLayout.setDragTriggerDistance(CustomSwipeRefreshLayout.DIRECTION_BOTTOM, getNavigationBarHeight(it.resources) + dipToPx(16f))
-            swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getColorFromAttr(it, R.attr.rootColor))
-            swipeRefreshLayout.setColorSchemeColors(getColorFromAttr(it, R.attr.contentColor))
+            swipeRefreshLayout.setProgressBackgroundColorSchemeColor(it.getCompatColorAttr(R.attr.rootColor))
+            swipeRefreshLayout.setColorSchemeColors(it.getCompatColorAttr(R.attr.contentColor))
             swipeRefreshLayout.visibility = View.GONE
             swipeRefreshLayout.setPermitRefresh(true)
             swipeRefreshLayout.setPermitLoad(false)
@@ -362,9 +427,7 @@ object CompatUtil {
      * @return list of the array
      */
     @SafeVarargs
-    fun <T> constructListFrom(vararg array: T): List<T> =
-            Arrays.asList(*array)
-
+    fun <T> constructListFrom(vararg array: T): List<T> = listOf(*array)
 
     /**
      * Gets the index of any type of collection guaranteed that an equals override for the class

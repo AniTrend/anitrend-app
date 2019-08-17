@@ -57,7 +57,7 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
             Glide.with(this).load(getIntent().getStringExtra(KeyUtil.arg_model))
                     .listener(this).into(previewImage);
         else
-            NotifyUtil.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
         onActivityReady();
     }
 

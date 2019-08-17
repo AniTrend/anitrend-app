@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 
@@ -52,7 +52,7 @@ public class UserFeedFragment extends FeedListFragment {
         else
             queryContainer.putVariable(KeyUtil.arg_userName, userName);
 
-        if (queryContainer.containsVariable(KeyUtil.arg_userId) || queryContainer.containsVariable(KeyUtil.arg_userName))
+        if (queryContainer.containsKey(KeyUtil.arg_userId) || queryContainer.containsKey(KeyUtil.arg_userName))
             super.makeRequest();
     }
 

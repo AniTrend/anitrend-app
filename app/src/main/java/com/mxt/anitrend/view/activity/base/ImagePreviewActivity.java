@@ -70,7 +70,7 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
             mImageUri = getIntent().getStringExtra(KeyUtil.arg_model);
             Glide.with(this).load(mImageUri).into(mImageView);
         } else
-            NotifyUtil.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
                                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
                                 break;
                             case NEGATIVE:
-                                NotifyUtil.makeText(this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
+                                NotifyUtil.INSTANCE.makeText(this, R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     });
@@ -115,7 +115,7 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
                     startActivity(intent);
                 } catch (Exception e) {
                     Timber.tag(TAG).e(e.getLocalizedMessage());
-                    NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show();
                 }
                 return true;
         }
@@ -152,10 +152,10 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         if (dm != null) {
             dm.enqueue(r);
-            NotifyUtil.createAlerter(this, R.string.title_download_info, R.string.text_download_info,
+            NotifyUtil.INSTANCE.createAlerter(this, R.string.title_download_info, R.string.text_download_info,
                     R.drawable.ic_cloud_download_white_24dp, R.color.colorStateGreen, KeyUtil.DURATION_SHORT);
         } else
-            NotifyUtil.createAlerter(this, R.string.title_download_info, R.string.text_unknown_error,
+            NotifyUtil.INSTANCE.createAlerter(this, R.string.title_download_info, R.string.text_unknown_error,
                     R.drawable.ic_cloud_download_white_24dp, R.color.colorStateRed, KeyUtil.DURATION_SHORT);
     }
 

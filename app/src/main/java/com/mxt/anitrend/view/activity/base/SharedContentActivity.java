@@ -23,6 +23,7 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.ActivityShareContentBinding;
+import com.mxt.anitrend.extension.AppExtKt;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -193,7 +194,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<FeedList> consumer) {
         if(consumer.getRequestMode() == KeyUtil.MUT_SAVE_TEXT_FEED) {
-            NotifyUtil.makeText(this, R.string.text_compose_success, R.drawable.ic_insert_emoticon_white_24dp, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.text_compose_success, R.drawable.ic_insert_emoticon_white_24dp, Toast.LENGTH_SHORT).show();
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
@@ -240,7 +241,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
                 mBottomSheet.show(getSupportFragmentManager(), mBottomSheet.getTag());
                 break;
             case R.id.widget_flipper:
-                CompatUtil.INSTANCE.hideKeyboard(this);
+                AppExtKt.hideKeyboard(this);
                 break;
             default:
                 DialogUtil.createDialogAttachMedia(target.getId(), binding.composerWidget.getEditor(), this);

@@ -15,6 +15,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.databinding.AdapterNotificationBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
@@ -37,9 +38,9 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
     override fun onCreateViewHolder(parent: ViewGroup, @KeyUtil.RecyclerViewType viewType: Int): RecyclerViewHolder<Notification> {
         return when (viewType) {
             KeyUtil.RECYCLER_TYPE_CONTENT ->
-                NotificationHolder(AdapterNotificationBinding.inflate(CompatUtil.getLayoutInflater(parent.context), parent, false))
+                NotificationHolder(AdapterNotificationBinding.inflate(parent.context.getLayoutInflater(), parent, false))
             else ->
-                UnresolvedViewHolder(CustomRecyclerUnresolvedBinding.inflate(CompatUtil.getLayoutInflater(parent.context), parent, false))
+                UnresolvedViewHolder(CustomRecyclerUnresolvedBinding.inflate(parent.context.getLayoutInflater(), parent, false))
         }
     }
 
@@ -116,7 +117,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 if (model.user != null && model.user.avatar != null)
                     AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
             } else
-                AspectImageView.setImage(binding.notificationImg, model.media.coverImage.large)
+                AspectImageView.setImage(binding.notificationImg, model.media.coverImage.extraLarge)
 
             when (model.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {

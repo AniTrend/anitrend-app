@@ -13,7 +13,7 @@ import java.util.*
 object LocaleUtil {
 
     fun onAttach(context: Context): Context {
-        val language = Settings(context).userLanguage ?: Locale.getDefault().language
+        val language = Settings(context).userLanguage
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             updateResources(context, Locale(language))

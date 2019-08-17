@@ -15,11 +15,13 @@ import com.mxt.anitrend.adapter.recycler.detail.TagAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
 import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
@@ -191,7 +193,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             this.model = model
             updateUI()
         } else
-            binding?.stateLayout?.showError(CompatUtil.getDrawable(context!!, R.drawable.ic_emoji_sweat),
+            binding?.stateLayout?.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again)) { _ ->
                 binding?.stateLayout?.showLoading()
                 makeRequest()
@@ -206,7 +208,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
     override fun onClick(v: View) {
         val intent: Intent
         when (v.id) {
-            R.id.series_image -> CompatUtil.imagePreview(activity, v, model?.coverImage?.large, R.string.image_preview_error_series_cover)
+            R.id.series_image -> CompatUtil.imagePreview(activity, v, model?.coverImage?.extraLarge, R.string.image_preview_error_series_cover)
             R.id.anime_main_studio_container -> {
                 val studioBase = presenter.getMainStudioObject(model)
                 if (studioBase != null) {

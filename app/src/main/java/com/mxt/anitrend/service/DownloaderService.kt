@@ -21,7 +21,6 @@ object DownloaderService {
         val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
         val request = DownloadManager.Request(Uri.parse(downloadLink))
         request.setTitle(String.format(Locale.getDefault(), "anitrend_v%s_rc_%d.apk", versionBase.version, versionBase.code))
-        request.allowScanningByMediaScanner()
         val ext = MimeTypeMap.getFileExtensionFromUrl(RepositoryModel.DOWNLOAD_LINK)
         request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext))
         request.setDescription(context?.getString(R.string.text_downloading_update))

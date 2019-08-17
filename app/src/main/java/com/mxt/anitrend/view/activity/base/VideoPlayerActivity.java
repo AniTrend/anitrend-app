@@ -39,7 +39,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
             contentLink = getIntent().getStringExtra(KeyUtil.arg_model);
             onActivityReady();
         } else {
-            NotifyUtil.makeText(this, R.string.text_error_request, R.drawable.ic_warning_white_18dp, Toast.LENGTH_LONG).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.text_error_request, R.drawable.ic_warning_white_18dp, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -63,7 +63,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
             e.printStackTrace();
         }
         if(Jzvd.backPress()) {
-            NotifyUtil.makeText(this, R.string.text_confirm_exit, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.text_confirm_exit, Toast.LENGTH_SHORT).show();
             return;
         }
         super.onBackPressed();

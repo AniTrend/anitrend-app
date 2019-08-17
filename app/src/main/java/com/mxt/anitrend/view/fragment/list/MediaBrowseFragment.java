@@ -20,7 +20,7 @@ import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DateUtil;
@@ -121,7 +121,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                 case R.id.action_genre:
                     List<Genre> genres = getPresenter().getDatabase().getGenreCollection();
                     if(CompatUtil.INSTANCE.isEmpty(genres)) {
-                        NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                         getPresenter().checkGenresAndTags(getActivity());
                     } else {
                         Map<Integer, String> genresIndexMap = getPresenter()
@@ -152,7 +152,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                 case R.id.action_tag:
                     List<MediaTag> tagList = getPresenter().getDatabase().getMediaTags();
                     if(CompatUtil.INSTANCE.isEmpty(tagList)) {
-                        NotifyUtil.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                         getPresenter().checkGenresAndTags(getActivity());
                     } else {
                         Map<Integer, String> tagsIndexMap = getPresenter()
@@ -299,7 +299,7 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                             .setId(data.getSecond().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
