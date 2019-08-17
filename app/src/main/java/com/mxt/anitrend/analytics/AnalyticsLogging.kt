@@ -49,9 +49,11 @@ class AnalyticsLogging(
         if (priority < Log.INFO)
             return
 
-        Crashlytics.setInt(PRIORITY, priority)
-        Crashlytics.setString(TAG, tag)
-        Crashlytics.setString(MESSAGE, message)
+        runCatching {
+            Crashlytics.setInt(PRIORITY, priority)
+            Crashlytics.setString(TAG, tag)
+            Crashlytics.setString(MESSAGE, message)
+        }.exceptionOrNull()?.printStackTrace()
 
         when (throwable) {
             null -> log(priority, tag, message)
