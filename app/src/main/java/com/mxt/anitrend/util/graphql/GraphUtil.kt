@@ -1,10 +1,13 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.graphql
 
 import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
 import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
+import io.github.wax911.library.model.request.QueryContainerBuilder
 import org.koin.core.KoinComponent
 
 /**
@@ -21,6 +24,7 @@ object GraphUtil : KoinComponent {
         val queryContainer = QueryContainerBuilder()
         if (includePaging)
             queryContainer.putVariable(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+
         return queryContainer
     }
 

@@ -9,8 +9,8 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.RequestHandler
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
-import com.mxt.anitrend.util.ErrorUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response
@@ -33,13 +33,11 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
 
     private var mLoader: RequestHandler<T>? = null
 
-    private var emptyMessage: String? = null
-    private var errorMessage: String? = null
-    private var tokenMessage: String? = null
+    private lateinit var emptyMessage: String
+    private lateinit var errorMessage: String
+    private lateinit var tokenMessage: String
 
-    val params by lazy {
-        Bundle()
-    }
+    val params = Bundle()
 
     fun setContext(context: Context?) {
         context?.apply {
@@ -90,7 +88,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
         if (response.isSuccessful && container != null)
             model.setValue(container)
         else {
-            val error = ErrorUtil.getError(response)
+            val error = response.apiError()
             // Hacky fix that I'm ashamed of
             if (response.code() == 400 && error.contains("Invalid token"))
                 state?.showError(tokenMessage)
@@ -109,7 +107,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
      * @param throwable contains information about the error
      */
     override fun onFailure(call: Call<T>, throwable: Throwable) {
-        state?.showEmpty(throwable.message)
+        state?.showEmpty(throwable.message ?: errorMessage)
         throwable.printStackTrace()
     }
 

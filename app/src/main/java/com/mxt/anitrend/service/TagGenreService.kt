@@ -8,9 +8,9 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.ErrorUtil
-import com.mxt.anitrend.util.GraphUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.graphql.apiError
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -33,7 +33,7 @@ class TagGenreService : IntentService(ServiceName) {
                         if (!CompatUtil.isEmpty(responseBody))
                             widgetPresenter.database.mediaTags = responseBody
                         else
-                            Timber.tag(ServiceName).e(ErrorUtil.getError(response))
+                            Timber.tag(ServiceName).e(response.apiError())
                 }
 
                 override fun onFailure(call: Call<List<MediaTag>>, throwable: Throwable) {
@@ -59,7 +59,7 @@ class TagGenreService : IntentService(ServiceName) {
                             widgetPresenter.database.genreCollection = genreList
                         }
                     } else
-                        Timber.tag(ServiceName).e(ErrorUtil.getError(response))
+                        Timber.tag(ServiceName).e(response.apiError())
                 }
 
                 override fun onFailure(call: Call<List<String>>, throwable: Throwable) {

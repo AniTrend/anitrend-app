@@ -8,9 +8,8 @@ import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
-import com.mxt.anitrend.base.custom.annotation.processor.GraphProcessor;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
-import com.mxt.anitrend.model.api.converter.GraphQLConverter;
+import com.mxt.anitrend.model.api.converter.AniGraphConverter;
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor;
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor;
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor;
@@ -20,8 +19,8 @@ import com.mxt.anitrend.model.api.retro.base.RepositoryModel;
 import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 
 import java.util.concurrent.TimeUnit;
 
@@ -91,13 +90,12 @@ public class WebFactory {
      */
     public static <S> S createService(@NonNull Class<S> serviceClass, Context context) {
         WebTokenRequest.getToken(context);
-        GraphProcessor.getInstance(context);
         if(mRetrofit == null) {
             OkHttpClient.Builder httpClient = createHttpClient(new AuthInterceptor(context),
                     HttpLoggingInterceptor.Level.HEADERS);
 
             mRetrofit = new Retrofit.Builder().client(httpClient.build())
-                    .addConverterFactory(GraphQLConverter.create(context))
+                    .addConverterFactory(AniGraphConverter.Companion.create(context))
                     .baseUrl(BuildConfig.API_LINK)
                     .build();
         }
@@ -148,9 +146,10 @@ public class WebFactory {
 
             Response<WebToken> response = refreshTokenCall.execute();
             if(!response.isSuccessful())
-                Timber.tag("requestCodeTokenSync").e(ErrorUtil.INSTANCE.getError(response));
+                Timber.tag("requestCodeTokenSync").w(AniGraphErrorUtilKt.apiError(response));
             return response.body();
         } catch (Exception ex) {
+            Timber.tag("requestCodeTokenSync").e(ex);
             ex.printStackTrace();
             return null;
         }
