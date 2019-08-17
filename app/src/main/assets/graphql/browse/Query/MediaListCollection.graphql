@@ -1,0 +1,98 @@
+query MediaListCollection($userId: Int, $userName: String, $type: MediaType, $forceSingleCompletedList: Boolean, $sort: [MediaListSort], $statusIn: [MediaListStatus], $scoreFormat: ScoreFormat = POINT_100) {
+  MediaListCollection(userId: $userId, userName: $userName, type: $type, forceSingleCompletedList: $forceSingleCompletedList, sort: $sort, status_in: $statusIn) {
+    ... on MediaListCollection {
+      lists {
+        ... on MediaListGroup {
+          entries {
+            ... on MediaList {
+              id
+              mediaId
+              status
+              score(format: $scoreFormat)
+              progress
+              progressVolumes
+              repeat
+              priority
+              private
+              hiddenFromStatusLists
+              advancedScores
+              customLists(asArray: true)
+              notes
+              startedAt {
+                ... on FuzzyDate {
+                  year
+                  month
+                  day
+                }
+              }
+              completedAt {
+                ... on FuzzyDate {
+                  year
+                  month
+                  day
+                }
+              }
+              media {
+                ... on Media {
+                  id
+                  title {
+                    ... on MediaTitle {
+                      english
+                      romaji
+                      native
+                      userPreferred
+                    }
+                  }
+                  coverImage {
+                    ... on MediaCoverImage {
+                      large
+                      medium
+                      extraLarge
+                    }
+                  }
+                  type
+                  format
+                  season
+                  status
+                  meanScore
+                  averageScore
+                  startDate {
+                    ... on FuzzyDate {
+                      day
+                      month
+                      year
+                    }
+                  }
+                  endDate {
+                    ... on FuzzyDate {
+                      day
+                      month
+                      year
+                    }
+                  }
+                  episodes
+                  chapters
+                  volumes
+                  isAdult
+                  isFavourite
+                  nextAiringEpisode {
+                    ... on AiringSchedule {
+                      id
+                      airingAt
+                      timeUntilAiring
+                      episode
+                    }
+                  }
+                }
+              }
+            }
+          }
+          name
+          isCustomList
+          isSplitCompletedList
+          status
+        }
+      }
+    }
+  }
+}
