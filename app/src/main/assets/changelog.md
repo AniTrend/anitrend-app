@@ -1,18 +1,21 @@
-__Anitrend v2.0 Coming Soon [W.I.P]__ All v1.X updates will focus on major bug fixes as all resources are being moved to v2.0
+__Anitrend v2.0 Coming Soon [W.I.P]__ All __v1.x.x__ updates will focus on major bug fixes as all resources are being moved to __v2.0__
 
 __N.B__ v2.0 will be dropping support for Jellybean - Kitkat, due to missing or disabled _(TLS v1.2)_
 which can result in authentication errors [read more](https://github.com/square/okhttp/issues/2372)
 
 #### Enhancements
 - Support for Android Q
+- Support for higher quality posters
+- Minor optimizations throughout the application
 
 #### Bug Fixes
-- Remove embedded YoutubePlayer
+- Replaced embedded YoutubePlayer
 - Improved error message for invalid token errors
 - User stats not updating (due to deprecated stats)
 
 #### Current Issues
 - Clicking on @username shows mixed feed
+- Application logs are officially broken in **v1.5.4**
 - Sometimes image slide count doesn't change when you slowly scroll horizontally in feeds
 
 #### Special Thanks
