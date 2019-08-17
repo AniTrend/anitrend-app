@@ -33,13 +33,9 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     fun checkIfMigrationIsNeeded(): Boolean {
         if (!settings.isFreshInstall) {
             val migrationUtil = MigrationUtil.Builder()
-                    .addMigration(Migrations.MIGRATION_90_94)
-                    .addMigration(Migrations.MIGRATION_95_100)
                     .addMigration(Migrations.MIGRATION_101_108)
                     .addMigration(Migrations.MIGRATION_109_132)
                     .addMigration(Migrations.MIGRATION_133_135)
-                    .addMigration(Migrations.MIGRATION_136_140)
-                    .addMigration(Migrations.MIGRATION_141_145)
                     .build()
             return migrationUtil.applyMigration()
         }

@@ -17,21 +17,15 @@ object Migrations : KoinComponent {
 
     private val supportAnalytics by inject<ISupportAnalytics>()
 
-    val MIGRATION_90_94 = object : Migration(90, 94) {
-        override fun applyMigration(settings: Settings) {
-            Timber.i("Applying test migration from 90 - 94")
-        }
-    }
-
-    val MIGRATION_95_100 = object : Migration(95, 100) {
-        override fun applyMigration(settings: Settings) {
-            Timber.i("Applying test migration from 95 - 100")
-        }
-    }
-
     val MIGRATION_101_108 = object : Migration(101, 108) {
         override fun applyMigration(settings: Settings) {
             Timber.i("Applying test migration from 101 - 109")
+            settings.sharedPreferences.edit {
+                clear()
+                apply()
+            }
+            DatabaseHelper().invalidateBoxStores()
+            JobSchedulerUtil.cancelJob()
         }
     }
 
@@ -54,18 +48,6 @@ object Migrations : KoinComponent {
     val MIGRATION_133_135 = object : Migration(133, 135) {
         override fun applyMigration(settings: Settings) {
             Timber.i("Applying migration from 133 - 135")
-        }
-    }
-
-    val MIGRATION_136_140 = object : Migration(136, 140) {
-        override fun applyMigration(settings: Settings) {
-            Timber.i("Applying migration from 136 - 140")
-        }
-    }
-
-    val MIGRATION_141_145 = object : Migration(141, 145) {
-        override fun applyMigration(settings: Settings) {
-            Timber.i("Applying migration from 141 - 145")
         }
     }
 }
