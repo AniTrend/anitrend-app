@@ -19,11 +19,11 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -143,12 +143,12 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                         binding.widgetFlipper.showNext();
                         presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
                     } else
-                        NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 } else
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
             }
             else
-                NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
     }
 
     private void setIconType() {
@@ -189,10 +189,11 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                     characterBase.toggleFavourite();
                 setIconType();
             } else {
-                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
-                NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -200,10 +201,10 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     @Override
     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
         try {
-            Timber.tag(TAG).e(throwable.getLocalizedMessage());
-            throwable.printStackTrace();
+            Timber.tag(TAG).e(throwable);
             resetFlipperState();
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             e.printStackTrace();
         }
     }

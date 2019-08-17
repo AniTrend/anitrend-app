@@ -10,6 +10,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.WidgetAvatarIndicatorBinding
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.CompatUtil
@@ -50,7 +51,7 @@ class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseC
     private var mLastSynced: Long = 0
 
     override fun onInit() {
-        binding = WidgetAvatarIndicatorBinding.inflate(CompatUtil.getLayoutInflater(context), this, true)
+        binding = WidgetAvatarIndicatorBinding.inflate(context.getLayoutInflater(), this, true)
         binding.onClickListener = this
         checkLastSyncTime()
     }

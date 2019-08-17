@@ -212,7 +212,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         if(getPresenter() != null && getPresenter().getCurrentPage() > 1 && isPager) {
             if(stateLayout.isLoading())
                 stateLayout.showContent();
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+            snackbar = NotifyUtil.INSTANCE.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.try_again, snackBarOnClick);
             snackbar.show();
         }
@@ -234,7 +234,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         if(getPresenter() != null && getPresenter().getCurrentPage() > 1 && isPager) {
             if(stateLayout.isLoading())
                 stateLayout.showContent();
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+            snackbar = NotifyUtil.INSTANCE.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.try_again, snackBarOnClick);
             snackbar.show();
         }

@@ -17,12 +17,15 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetComposerBinding
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.graphql.GraphUtil
+import com.mxt.anitrend.util.graphql.apiError
 import io.wax911.emojify.parser.EmojiParser
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
@@ -41,7 +44,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
 
     private val binding by lazy {
         WidgetComposerBinding.inflate(
-                CompatUtil.getLayoutInflater(context),
+                getLayoutInflater(),
                 this, true
         )
     }
@@ -225,7 +228,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
                 }
             } else
-                NotifyUtil.makeText(context, ErrorUtil.getError(response), Toast.LENGTH_SHORT).show()
+                NotifyUtil.makeText(context, response.apiError(), Toast.LENGTH_SHORT).show()
             presenter.onDestroy()
         }
     }

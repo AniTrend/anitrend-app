@@ -107,7 +107,7 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
-                NotifyUtil.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
             }
         });
         updateUI();

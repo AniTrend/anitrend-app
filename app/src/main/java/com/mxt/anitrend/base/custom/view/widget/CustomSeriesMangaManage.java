@@ -71,7 +71,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
-        return MediaListUtil.getMediaListParams(model, getMediaListOptions().getScoreFormat());
+        return MediaListUtil.INSTANCE.getMediaListParams(model, getMediaListOptions().getScoreFormat());
     }
 
     @Override
@@ -125,13 +125,13 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
         switch (KeyUtil.MediaListStatus[i]) {
             case KeyUtil.CURRENT:
                 if (CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
-                    NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
                 break;
             case KeyUtil.PLANNING:
                 break;
             case KeyUtil.COMPLETED:
                 if (!CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
-                    NotifyUtil.makeText(getContext(), R.string.warning_manga_publishing, Toast.LENGTH_LONG).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.warning_manga_publishing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getChapters();
                     model.setProgress(total);
@@ -145,7 +145,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
                 break;
             default:
                 if (CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
-                    NotifyUtil.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show();
                 break;
         }
     }

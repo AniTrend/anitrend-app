@@ -21,10 +21,10 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 
@@ -174,8 +174,9 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     updateUI();
                 }
             } else
-                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -183,10 +184,9 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     @Override
     public void onFailure(@NonNull Call<ConnectionContainer<UserStatisticTypes>> call, @NonNull Throwable throwable) {
         try {
-            if (throwable.getLocalizedMessage() != null)
-                Timber.tag(TAG).e(throwable.getLocalizedMessage());
-            throwable.printStackTrace();
+            Timber.tag(TAG).w(throwable);
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             e.printStackTrace();
         }
     }

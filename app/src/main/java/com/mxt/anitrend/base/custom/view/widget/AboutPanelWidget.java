@@ -25,10 +25,10 @@ import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity;
@@ -223,7 +223,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
         switch (view.getId()) {
             case R.id.user_favourites_container:
                 if(favourites < 1)
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else {
                     Intent intent = new Intent(getContext(), FavouriteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -233,7 +233,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 break;
             case R.id.user_followers_container:
                 if(followers == null || followers.getTotal() < 1)
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else if (fragmentManager != null){
                     mBottomSheet = new BottomSheetListUsers.Builder().setUserId(userId)
                             .setModelCount(followers.getTotal())
@@ -245,7 +245,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 break;
             case R.id.user_following_container:
                 if(following == null || following.getTotal() < 1)
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else if (fragmentManager != null){
                     mBottomSheet = new BottomSheetListUsers.Builder().setUserId(userId)
                             .setModelCount(following.getTotal())

@@ -238,7 +238,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
                     onPermissionGranted(permissions[i]);
                 else
-                    NotifyUtil.makeText(this, R.string.text_permission_required, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(this, R.string.text_permission_required, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -305,7 +305,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             mSearchView.closeSearch();
             return;
         } if(this instanceof MainActivity && !isClosing) {
-            NotifyUtil.makeText(this, R.string.text_confirm_exit, R.drawable.ic_home_white_24dp, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.text_confirm_exit, R.drawable.ic_home_white_24dp, Toast.LENGTH_SHORT).show();
             isClosing = true;
             return;
         }
@@ -377,7 +377,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(error))
             Timber.tag(TAG).d(error);
         if(isAlive()) {
-            NotifyUtil.createAlerter(this, getString(R.string.text_error_request), error,
+            NotifyUtil.INSTANCE.createAlerter(this, getString(R.string.text_error_request), error,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange,
                     KeyUtil.DURATION_MEDIUM);
         }
@@ -389,7 +389,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if(!TextUtils.isEmpty(message))
             Timber.tag(TAG).i(message);
         if (isAlive()) {
-            NotifyUtil.createAlerter(this, getString(R.string.text_error_request), message,
+            NotifyUtil.INSTANCE.createAlerter(this, getString(R.string.text_error_request), message,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateBlue,
                     KeyUtil.DURATION_MEDIUM);
         }
@@ -419,7 +419,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             CompatUtil.INSTANCE.startRevealAnim(this, mSearchView, intent);
             return true;
         }
-        NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();
+        NotifyUtil.INSTANCE.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show();
         return false;
     }
 

@@ -20,6 +20,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
+import com.mxt.anitrend.extension.ContextExtKt;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +56,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertLink(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -80,7 +81,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertImage(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -105,7 +106,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertYoutube(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -130,7 +131,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertVideo(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -199,8 +200,8 @@ public class DialogUtil {
                 .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback);
 
-        if (isSpoiler) builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_spoiler_tag));
-        else builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_loyalty_white_24dp));
+        if (isSpoiler) builder.icon(ContextExtKt.getCompatDrawable(context, R.drawable.ic_spoiler_tag));
+        else builder.icon(ContextExtKt.getCompatDrawable(context, R.drawable.ic_loyalty_white_24dp));
 
         builder.show();
     }

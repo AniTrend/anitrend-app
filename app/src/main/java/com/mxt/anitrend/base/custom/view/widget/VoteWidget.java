@@ -20,11 +20,11 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetVoteBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
@@ -83,18 +83,18 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                         binding.widgetThumbUpFlipper.showNext();
                         setParameters(CompatUtil.INSTANCE.equals(model.getUserRating(), KeyUtil.UP_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.UP_VOTE);
                     } else
-                        NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.widget_thumb_down_flipper:
                     if (binding.widgetThumbDownFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext();
                         setParameters(CompatUtil.INSTANCE.equals(model.getUserRating(), KeyUtil.DOWN_VOTE) ? KeyUtil.NO_VOTE : KeyUtil.DOWN_VOTE);
                     } else
-                        NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                     break;
             }
         } else
-            NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -189,10 +189,11 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 this.model.setUserRating(model.getUserRating());
                 setReviewStatus();
             } else {
-                Timber.w(ErrorUtil.INSTANCE.getError(response));
+                Timber.w(AniGraphErrorUtilKt.apiError(response));
                 resetFlipperState();
             }
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -208,9 +209,9 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
     public void onFailure(@NonNull Call<Review> call, @NonNull Throwable throwable) {
         try {
             Timber.tag(TAG).e(throwable);
-            throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {
+            Timber.tag(TAG).e(throwable);
             e.printStackTrace();
         }
     }

@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.cache.MemorySizeCalculator
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.mxt.anitrend.R
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 
@@ -55,7 +56,7 @@ class GlideAppModule : AppGlideModule() {
                 .format(if (isLowRamDevice) DecodeFormat.PREFER_RGB_565 else DecodeFormat.PREFER_ARGB_8888)
                 .timeout(KeyUtil.GLIDE_REQUEST_TIMEOUT)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .error(CompatUtil.getDrawable(context, R.drawable.ic_emoji_sweat))
+                .error(context.getCompatDrawable(R.drawable.ic_emoji_sweat))
 
         builder.setDefaultRequestOptions(options)
     }

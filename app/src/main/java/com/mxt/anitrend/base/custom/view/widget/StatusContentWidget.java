@@ -177,7 +177,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
                     getContext().startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
-                    NotifyUtil.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

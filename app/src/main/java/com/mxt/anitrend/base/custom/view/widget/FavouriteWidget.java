@@ -14,11 +14,11 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFavouriteBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 
@@ -101,7 +101,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
                     presenter.requestData(KeyUtil.MUT_TOGGLE_LIKE, getContext(), this);
                 }
                 else
-                    NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -136,10 +136,11 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
                     model.add(presenter.getDatabase().getCurrentUser());
                 setIconType();
             } else {
-                Timber.tag(TAG).e(ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
                 resetFlipperState();
             }
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -154,10 +155,10 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     @Override
     public void onFailure(@NonNull Call<List<UserBase>> call, @NonNull Throwable throwable) {
         try {
-            Timber.tag(TAG).e(throwable.getLocalizedMessage());
-            throwable.printStackTrace();
+            Timber.tag(TAG).e(throwable);
             resetFlipperState();
         } catch (Exception e) {
+            Timber.tag(TAG).e(throwable);
             e.printStackTrace();
         }
     }

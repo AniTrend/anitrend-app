@@ -19,6 +19,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -74,7 +75,7 @@ final class MediaDialogUtil extends DialogUtil {
     private static void onDialogPositive(Context context, CustomSeriesManageBase seriesManageBase, MaterialDialog dialog) {
         dialog.dismiss();
 
-        ProgressDialog progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request);
+        ProgressDialog progressDialog = NotifyUtil.INSTANCE.createProgressDialog(context, R.string.text_processing_request);
         progressDialog.show();
 
         WidgetPresenter<MediaList> presenter = new WidgetPresenter<>(context);
@@ -93,14 +94,14 @@ final class MediaDialogUtil extends DialogUtil {
                     if(response.isSuccessful() && (responseBody = response.body()) != null) {
                         responseBody.setMedia(modelClone.getMedia());
                         presenter.notifyAllListeners(new BaseConsumer<>(requestType, responseBody), false);
-                        NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     } else {
-                        Timber.tag(TAG).w(ErrorUtil.INSTANCE.getError(response));
-                        NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                        Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                        NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
+                    Timber.tag(TAG).w(e);
                     e.printStackTrace();
-                    Timber.tag(TAG).e(e.getLocalizedMessage());
                 }
             }
 
@@ -109,10 +110,10 @@ final class MediaDialogUtil extends DialogUtil {
                 throwable.printStackTrace();
                 try {
                     progressDialog.dismiss();
-                    NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
+                    Timber.tag(TAG).e(e);
                     e.printStackTrace();
-                    Timber.e(e.getLocalizedMessage());
                 }
             }
         });
@@ -127,7 +128,7 @@ final class MediaDialogUtil extends DialogUtil {
     private static void onDialogNegative(Context context, CustomSeriesManageBase seriesManageBase, MaterialDialog dialog) {
         dialog.dismiss();
 
-        ProgressDialog progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request);
+        ProgressDialog progressDialog = NotifyUtil.INSTANCE.createProgressDialog(context, R.string.text_processing_request);
         progressDialog.show();
 
         seriesManageBase.persistChanges();
@@ -147,11 +148,11 @@ final class MediaDialogUtil extends DialogUtil {
                     if(response.isSuccessful() && (deleteState = response.body()) != null) {
                         if(deleteState.isDeleted()) {
                             presenter.notifyAllListeners(new BaseConsumer<>(requestType, seriesManageBase.getModel()), false);
-                            NotifyUtil.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                            NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_changes_saved), R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Timber.tag(TAG).w(ErrorUtil.INSTANCE.getError(response));
-                        NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                        Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                        NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -164,7 +165,7 @@ final class MediaDialogUtil extends DialogUtil {
                 throwable.printStackTrace();
                 try {
                     progressDialog.dismiss();
-                    NotifyUtil.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Timber.tag(TAG).e(e);
