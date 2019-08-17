@@ -101,10 +101,9 @@ dependencies {
     /** Material Design */
     implementation "com.google.android.material:material:$material"
 
-    implementation 'androidx.preference:preference-ktx:1.1.0-rc01'
     implementation "androidx.constraintlayout:constraintlayout:$constraint"
+    implementation 'androidx.preference:preference-ktx:1.1.0-rc01'
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
 
@@ -172,49 +171,49 @@ dependencies {
     implementation "com.github.wax911:android-emojify:$emojify"
 
     /** GraphQL */
-    //implementation "com.github.anitrend:retrofit-graphql:$graphql"
+    implementation "com.github.anitrend:retrofit-graphql:$graphql"
 
     /** Timber */
     implementation "com.jakewharton.timber:timber:$timber"
 
     /** Pretty Time */
-    implementation 'org.ocpsoft.prettytime:prettytime:4.0.2.Final'
+    implementation "org.ocpsoft.prettytime:prettytime:$prettyTime"
 
     /** Highly Customizable Video Player */
-    implementation 'cn.jzvd:jiaozivideoplayer:7.0.5'
+    implementation "cn.jzvd:jiaozivideoplayer:$jiaoziVideoPlayer"
 
     /** Photo View */
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation "com.github.chrisbanes:PhotoView:$photoView"
 
     /** On-boarding Experience */
-    implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
+    implementation "com.codemybrainsout.onboarding:onboarder:$onboarder"
 
     /** Charts */
-    implementation'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation"com.github.PhilJay:MPAndroidChart:v$mpAndroidChart"
 
     /** About Library */
-    implementation 'com.github.medyo:android-about-page:1.2.5'
+    implementation "com.github.medyo:android-about-page:$aboutPage"
 
     /** Multi Dex */
-    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "androidx.multidex:multidex:$multidex"
 
     /** Material Search View */
-    implementation 'com.github.ma-myair:MaterialSearchView:1.4.15'
+    implementation "com.github.ma-myair:MaterialSearchView:$materialSearchView"
 
     /** State Layout Library */
-    implementation 'com.github.nguyenhoanglam:ProgressLayout:1.0.1'
+    implementation "com.github.nguyenhoanglam:ProgressLayout:$progressLayout"
 
     /** Event Bus Library */
-    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation "org.greenrobot:eventbus:$eventBus"
 
     /** Alerter */
-    implementation "com.tapadoo.android:alerter:4.0.3"
+    implementation "com.tapadoo.android:alerter:$alerter"
 
     /** Stream */
-    implementation "com.annimon:stream:1.2.1"
+    implementation "com.annimon:stream:$stream"
 
     /** Circular Progress View */
-    implementation 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+    implementation "com.github.rahatarmanahmed:circularprogressview:$circularProgressView"
 
     /** Testing-only dependencies */
     testImplementation "junit:junit:$junit"
