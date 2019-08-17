@@ -29,9 +29,9 @@ object Migrations : KoinComponent {
         }
     }
 
-    val MIGRATION_109_132 = object : Migration(109, 132) {
+    val MIGRATION_109_134 = object : Migration(109, 134) {
         override fun applyMigration(settings: Settings) {
-            Timber.i("Applying migration from 109 - 132")
+            Timber.i("Applying migration from 109 - 134")
             settings.sharedPreferences.edit {
                 clear()
                 apply()
@@ -45,7 +45,7 @@ object Migrations : KoinComponent {
         }
     }
 
-    val MIGRATION_133_135 = object : Migration(133, 135) {
+    val MIGRATION_135_136 = object : Migration(135, 136) {
         override fun applyMigration(settings: Settings) {
             Timber.i("Applying migration from 133 - 135")
         }

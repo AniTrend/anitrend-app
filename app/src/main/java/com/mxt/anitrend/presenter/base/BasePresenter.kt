@@ -34,8 +34,8 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
         if (!settings.isFreshInstall) {
             val migrationUtil = MigrationUtil.Builder()
                     .addMigration(Migrations.MIGRATION_101_108)
-                    .addMigration(Migrations.MIGRATION_109_132)
-                    .addMigration(Migrations.MIGRATION_133_135)
+                    .addMigration(Migrations.MIGRATION_109_134)
+                    .addMigration(Migrations.MIGRATION_135_136)
                     .build()
             return migrationUtil.applyMigration()
         }
