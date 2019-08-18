@@ -89,14 +89,16 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     protected void configureActivity() {
         final Settings settings = KoinExt.get(Settings.class);
         final @StyleRes int style = settings.getTheme();
-        if(!CompatUtil.INSTANCE.isLightTheme(style) && settings.isBlackThemeEnabled()) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            setTheme(R.style.AppThemeBlack);
-        }
-        else {
+
+        if (CompatUtil.INSTANCE.isLightTheme(style))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+        if(!CompatUtil.INSTANCE.isLightTheme(style) && settings.isBlackThemeEnabled())
+            setTheme(R.style.AppThemeBlack);
+        else
             setTheme(style);
-        }
     }
 
     @Override
