@@ -1,0 +1,72 @@
+query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORMAT, $type: MediaType) {
+  Staff(id: $id) {
+    staffMedia(page: $page, perPage: $perPage, type: $type, sort: $sort) {
+      pageInfo {
+        ... on PageInfo {
+          total
+          perPage
+          currentPage
+          hasNextPage
+        }
+      }
+      nodes {
+        ... on Media {
+          id
+          title {
+            ... on MediaTitle {
+              english
+              romaji
+              native
+              userPreferred
+            }
+          }
+          coverImage {
+            ... on MediaCoverImage {
+              extraLarge
+              large
+              medium
+            }
+          }
+          type
+          format
+          season
+          status
+          meanScore
+          averageScore
+          startDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          endDate {
+            ... on FuzzyDate {
+              day
+              month
+              year
+            }
+          }
+          episodes
+          chapters
+          volumes
+          isAdult
+          isFavourite
+          nextAiringEpisode {
+            ... on AiringSchedule {
+              id
+              airingAt
+              timeUntilAiring
+              episode
+            }
+          }
+          mediaListEntry {
+            ... on MediaList {
+              status
+            }
+          }
+        }
+      }
+    }
+  }
+}

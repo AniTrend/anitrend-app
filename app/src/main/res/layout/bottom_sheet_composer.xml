@@ -9,7 +9,7 @@
 
     <include layout="@layout/custom_sheet_toolbar" />
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:padding="@dimen/xl_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -19,6 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

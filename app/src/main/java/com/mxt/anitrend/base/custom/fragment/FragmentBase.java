@@ -1,18 +1,9 @@
 package com.mxt.anitrend.base.custom.fragment;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
-import android.support.annotation.MenuRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,21 +12,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.IntegerRes;
+import androidx.annotation.MenuRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.annimon.stream.IntPair;
+import com.google.android.material.snackbar.Snackbar;
 import com.mxt.anitrend.R;
+import com.mxt.anitrend.analytics.contract.ISupportAnalytics;
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.ActionModeUtil;
-import com.mxt.anitrend.util.AnalyticsUtil;
 import com.mxt.anitrend.util.MediaActionUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fragment implements View.OnClickListener, ActionModeListener,
         SharedPreferences.OnSharedPreferenceChangeListener, CommonPresenter.AbstractPresenter<P>, Observer<VM>, ResponseCallback, ItemClickListener<M> {
@@ -53,14 +56,14 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     protected Unbinder unbinder;
     protected @IntegerRes int mColumnSize;
 
-    public String TAG;
+    public final String TAG = getClass().getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        TAG = this.toString();
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        AnalyticsUtil.logCurrentScreen(getActivity(), TAG);
+        if (getActivity() != null)
+            KoinExt.get(ISupportAnalytics.class).logCurrentScreen(getActivity(), TAG);
     }
 
     /**
@@ -105,11 +108,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
         actionMode = null;
     }
 
-    /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to {@link Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
-     */
     @Override
     public void onStart() {
         super.onStart();
@@ -119,11 +117,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
             setHasOptionsMenu(true);
     }
 
-    /**
-     * Called when the Fragment is no longer started.  This is generally
-     * tied to {@link Activity#onStop() Activity.onStop} of the containing
-     * Activity's lifecycle.
-     */
     @Override
     public void onStop() {
         if(EventBus.getDefault().isRegistered(this))
@@ -131,11 +124,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
         super.onStop();
     }
 
-    /**
-     * Called when the Fragment is no longer resumed.  This is generally
-     * tied to {@link Activity#onPause() Activity.onPause} of the containing
-     * Activity's lifecycle.
-     */
     @Override
     public void onPause() {
         super.onPause();
@@ -145,12 +133,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
             presenter.onPause(this);
     }
 
-    /**
-     * Called when the fragment is visible to the user and actively running.
-     * This is generally
-     * tied to {@link Activity#onResume() Activity.onResume} of the containing
-     * Activity's lifecycle.
-     */
     @Override
     public void onResume() {
         super.onResume();
@@ -195,8 +177,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
      * @return true if the fragment is still valid otherwise false
      */
     protected boolean isAlive() {
-        //return getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED);
-        return isVisible() || !isDetached() || !isRemoving();
+        return getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED);
+        // return isVisible() || !isDetached() || !isRemoving();
     }
 
     /**
@@ -331,22 +313,19 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
 
     @Override
     public void showError(String error) {
-        if(!TextUtils.isEmpty(error)) {
-            Log.e(TAG, error);
-            if (getPresenter() != null && getPresenter().getApplicationPref().isCrashReportsEnabled())
-                AnalyticsUtil.reportException(TAG, error);
-        }
+        if(!TextUtils.isEmpty(error))
+            Timber.tag(TAG).d(error);
     }
 
     @Override
     public void showEmpty(String message) {
         if(!TextUtils.isEmpty(message))
-            Log.d(TAG, message);
+            Timber.tag(TAG).i(message);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.i(TAG, key);
+        Timber.tag(TAG).i(key);
     }
 
     protected void showBottomSheet() {

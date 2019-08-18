@@ -1,19 +1,14 @@
 package com.mxt.anitrend.util
 
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 import com.annimon.stream.Collectors
 import com.annimon.stream.IntStream
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
-
 import org.ocpsoft.prettytime.PrettyTime
-
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.GregorianCalendar
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -92,8 +87,8 @@ object DateUtil {
         try {
             val converted = format.parse(fuzzyDate.toString())
             val calendar = GregorianCalendar(Locale.getDefault())
-            calendar.time = converted
-
+            if (converted != null)
+                calendar.time = converted
             return String.format(Locale.getDefault(), "%s %d",
                     CompatUtil.capitalizeWords(seasons[calendar.get(Calendar.MONTH)]),
                     calendar.get(Calendar.YEAR))
@@ -146,7 +141,8 @@ object DateUtil {
             if (fuzzyDate != null && fuzzyDate.isValidDate) {
                 val simpleDateFormat = SimpleDateFormat(dateInputFormat, Locale.getDefault())
                 val converted = simpleDateFormat.parse(fuzzyDate.toString())
-                return SimpleDateFormat(dateOutputFormat, Locale.getDefault()).format(converted)
+                if (converted != null)
+                    return SimpleDateFormat(dateOutputFormat, Locale.getDefault()).format(converted)
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -162,7 +158,7 @@ object DateUtil {
     private fun isNewerDate(fuzzyDate: FuzzyDate): Boolean {
         val format = SimpleDateFormat(dateInputFormat, Locale.getDefault())
         val converted = format.parse(fuzzyDate.toString())
-        return converted.time > System.currentTimeMillis()
+        return (converted?.time ?: 0) > System.currentTimeMillis()
     }
 
     /**

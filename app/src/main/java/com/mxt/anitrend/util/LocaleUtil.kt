@@ -3,9 +3,7 @@ package com.mxt.anitrend.util
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import com.mxt.anitrend.App
-
-import java.util.Locale
+import java.util.*
 
 /**
  * This class is used to change the application locale.
@@ -14,18 +12,17 @@ import java.util.Locale
  */
 object LocaleUtil {
 
-    fun onAttach(context: Context, applicationPref: ApplicationPref): Context {
-        val language = applicationPref.userLanguage
+    fun onAttach(context: Context): Context {
+        val language = Settings(context).userLanguage
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            updateResources(context, language)
-        } else updateResourcesLegacy(context, language)
+            updateResources(context, Locale(language))
+        } else updateResourcesLegacy(context, Locale(language))
 
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    private fun updateResources(context: Context, language: String?): Context {
-        val locale = Locale(language)
+    private fun updateResources(context: Context, locale: Locale): Context {
         Locale.setDefault(locale)
 
         val configuration = context.resources.configuration
@@ -35,8 +32,7 @@ object LocaleUtil {
         return context.createConfigurationContext(configuration)
     }
 
-    private fun updateResourcesLegacy(context: Context, language: String?): Context {
-        val locale = Locale(language)
+    private fun updateResourcesLegacy(context: Context, locale: Locale): Context {
         Locale.setDefault(locale)
         val resources = context.resources
 

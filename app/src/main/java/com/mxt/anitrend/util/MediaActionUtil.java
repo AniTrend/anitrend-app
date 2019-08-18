@@ -1,23 +1,26 @@
 package com.mxt.anitrend.util;
 
 import android.app.ProgressDialog;
-import android.arch.lifecycle.Lifecycle;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/01/05.
@@ -34,6 +37,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
     private Lifecycle lifecycle;
 
     private long mediaId;
+    private final String TAG = MediaActionUtil.class.getSimpleName();
 
     MediaActionUtil(FragmentActivity context) {
         this.context = context;
@@ -64,7 +68,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
     }
 
     public void startSeriesAction() {
-        progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_checking_collection);
+        progressDialog = NotifyUtil.INSTANCE.createProgressDialog(context, R.string.text_checking_collection);
         progressDialog.show();
         actionPicker();
     }
@@ -74,7 +78,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
             MediaDialogUtil.createSeriesManage(context, mediaBase);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(this.toString(), e.getLocalizedMessage());
+            Timber.tag(TAG).e(e.getLocalizedMessage());
         }
     }
 
@@ -94,8 +98,8 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
             if(response.isSuccessful() && (mediaBase = response.body()) != null) {
                 showActionDialog(mediaBase);
             } else {
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
-                NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                NotifyUtil.INSTANCE.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
             dismissProgress();
         }
@@ -112,8 +116,9 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
     public void onFailure(@NonNull Call<MediaBase> call, @NonNull Throwable throwable) {
         if (lifecycle != null && lifecycle.getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress();
+            Timber.tag(TAG).e(throwable);
             throwable.printStackTrace();
-            NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show();
         }
     }
 

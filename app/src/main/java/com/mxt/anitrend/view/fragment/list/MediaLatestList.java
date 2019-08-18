@@ -1,9 +1,10 @@
 package com.mxt.anitrend.view.fragment.list;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import androidx.annotation.Nullable;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
 
 public class MediaLatestList extends MediaBrowseFragment {

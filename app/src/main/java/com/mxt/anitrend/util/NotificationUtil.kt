@@ -8,31 +8,25 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT
-import android.support.v4.app.NotificationCompat.PRIORITY_HIGH
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import com.mxt.anitrend.R
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
+import org.koin.core.KoinComponent
 
 /**
  * Created by max on 1/22/2017.
  * NotificationUtil
  */
 
-class NotificationUtil(private val context: Context) {
+class NotificationUtil(
+        private val context: Context,
+        private val settings: Settings,
+        private val notificationManager: NotificationManager?
+): KoinComponent {
 
     private var defaultNotificationId = 0x00000011
-
-    private val applicationPref by lazy {
-        ApplicationPref(context)
-    }
-
-    private val notificationManager by lazy {
-        context.getSystemService(
-                Context.NOTIFICATION_SERVICE
-        ) as NotificationManager?
-    }
 
     private fun multiContentIntent(): PendingIntent {
         // PendingIntent.FLAG_UPDATE_CURRENT will update notification
@@ -48,15 +42,11 @@ class NotificationUtil(private val context: Context) {
         )
     }
 
-    private fun getNotificationSound(): String? {
-        return applicationPref.notificationsSound
-    }
-
     fun createNotification(userGraphContainer: User) {
 
         val notificationBuilder = NotificationCompat.Builder(context, KeyUtil.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_new_releases)
-                .setSound(Uri.parse(getNotificationSound()))
+                .setSound(Uri.parse(settings.notificationsSound))
                 .setAutoCancel(true)
                 .setPriority(PRIORITY_HIGH)
 
@@ -95,7 +85,8 @@ class NotificationUtil(private val context: Context) {
                             }, notificationCount)
                     )
 
-            notificationManager?.notify(defaultNotificationId.inc(), notificationBuilder.build())
+            defaultNotificationId = defaultNotificationId.inc()
+            notificationManager?.notify(defaultNotificationId, notificationBuilder.build())
         }
     }
 }

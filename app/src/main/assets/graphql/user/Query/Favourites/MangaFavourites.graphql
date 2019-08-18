@@ -1,0 +1,69 @@
+query MangaFavourites($id: Int, $userName: String, $page: Int, $perPage: Int) {
+  User(id: $id, name: $userName) {
+    favourites {
+      manga(page: $page, perPage: $perPage) {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
+        }
+        nodes {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            coverImage {
+              ... on MediaCoverImage {
+                large
+                medium
+                extraLarge
+              }
+            }
+            type
+            format
+            season
+            status
+            meanScore
+            averageScore
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

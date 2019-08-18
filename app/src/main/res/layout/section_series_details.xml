@@ -69,7 +69,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:visibility="@{presenter.isManga(model)}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
@@ -123,7 +123,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:visibility="@{presenter.isAnime(model)}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
@@ -177,7 +177,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -229,7 +229,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:visibility="@{presenter.isAnime(model)}"
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
@@ -289,7 +289,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 

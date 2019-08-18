@@ -1,15 +1,16 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter;
@@ -17,14 +18,13 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.databinding.ActivityProfileBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.TutorialUtil;
-import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -108,7 +108,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                         mBottomSheet.show(getSupportFragmentManager(), mBottomSheet.getTag());
                     }
                 } else
-                    NotifyUtil.makeText(this, R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(this, R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -121,7 +121,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void onActivityReady() {
         if(id == -1 && userName == null)
-            NotifyUtil.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
+            NotifyUtil.INSTANCE.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
         else
             makeRequest();
     }
@@ -135,14 +135,14 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
             new TutorialUtil().setContext(this)
                     .setFocalColour(R.color.colorGrey600)
                     .setTapTarget(KeyUtil.KEY_NOTIFICATION_TIP)
-                    .setApplicationPref(getPresenter().getApplicationPref())
+                    .setSettings(getPresenter().getSettings())
                     .showTapTarget(R.string.tip_notifications_title,
                             R.string.tip_notifications_text, R.id.action_notification);
         } else {
             new TutorialUtil().setContext(this)
                     .setFocalColour(R.color.colorGrey600)
                     .setTapTarget(KeyUtil.KEY_MESSAGE_TIP)
-                    .setApplicationPref(getPresenter().getApplicationPref())
+                    .setSettings(getPresenter().getSettings())
                     .showTapTarget(R.string.tip_compose_message_title,
                             R.string.tip_compose_message_text, R.id.action_message);
         }
@@ -172,7 +172,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
             this.model = model;
             updateUI();
         } else
-            NotifyUtil.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
+            NotifyUtil.INSTANCE.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
     }
 
     @Override

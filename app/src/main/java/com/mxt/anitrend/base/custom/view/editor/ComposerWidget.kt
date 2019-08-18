@@ -1,18 +1,15 @@
 package com.mxt.anitrend.base.custom.view.editor
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.text.Editable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
-
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
@@ -20,31 +17,23 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetComposerBinding
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder
-import com.mxt.anitrend.model.entity.giphy.Gif
 import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.ErrorUtil
-import com.mxt.anitrend.util.GraphUtil
-import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.MarkDownUtil
-import com.mxt.anitrend.util.NotifyUtil
-
+import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.graphql.GraphUtil
+import com.mxt.anitrend.util.graphql.apiError
+import io.wax911.emojify.parser.EmojiParser
+import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
-import java.util.Locale
-
-import io.wax911.emojify.EmojiManager
-import io.wax911.emojify.parser.EmojiParser
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
+import java.util.*
 
 /**
  * Created by max on 2017/12/02.
@@ -55,7 +44,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
 
     private val binding by lazy {
         WidgetComposerBinding.inflate(
-                CompatUtil.getLayoutInflater(context),
+                getLayoutInflater(),
                 this, true
         )
     }
@@ -223,7 +212,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
         if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.RESUMED) == true) {
             resetFlipperState()
             if (response.isSuccessful) {
-                binding.comment.text.clear()
+                binding.comment.text?.clear()
                 when (requestType) {
                     KeyUtil.MUT_SAVE_TEXT_FEED -> if (feedList != null)
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
@@ -239,7 +228,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
                 }
             } else
-                NotifyUtil.makeText(context, ErrorUtil.getError(response), Toast.LENGTH_SHORT).show()
+                NotifyUtil.makeText(context, response.apiError(), Toast.LENGTH_SHORT).show()
             presenter.onDestroy()
         }
     }

@@ -1,18 +1,18 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
-import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -25,10 +25,10 @@ import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity;
@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/27.
@@ -51,6 +52,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     private WidgetProfileAboutPanelBinding binding;
     private Lifecycle lifecycle;
     private long userId;
+
+    private final String TAG = AboutPanelWidget.class.getSimpleName();
 
     private long mLastSynced;
 
@@ -127,7 +130,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
                     throwable.printStackTrace();
-                    Log.e(this.toString(), throwable.getMessage());
+                    Timber.tag(TAG).e(throwable);
                 }
             }
         });
@@ -154,7 +157,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
                     throwable.printStackTrace();
-                    Log.e(this.toString(), throwable.getMessage());
+                    Timber.tag(TAG).e(throwable);
                 }
             }
         });
@@ -196,7 +199,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             public void onFailure(@NonNull Call<ConnectionContainer<Favourite>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
                     throwable.printStackTrace();
-                    Log.e(this.toString(), throwable.getMessage());
+                    Timber.tag(TAG).e(throwable);
                 }
             }
         });
@@ -220,7 +223,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
         switch (view.getId()) {
             case R.id.user_favourites_container:
                 if(favourites < 1)
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else {
                     Intent intent = new Intent(getContext(), FavouriteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -230,7 +233,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 break;
             case R.id.user_followers_container:
                 if(followers == null || followers.getTotal() < 1)
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else if (fragmentManager != null){
                     mBottomSheet = new BottomSheetListUsers.Builder().setUserId(userId)
                             .setModelCount(followers.getTotal())
@@ -242,7 +245,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 break;
             case R.id.user_following_container:
                 if(following == null || following.getTotal() < 1)
-                    NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 else if (fragmentManager != null){
                     mBottomSheet = new BottomSheetListUsers.Builder().setUserId(userId)
                             .setModelCount(following.getTotal())

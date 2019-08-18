@@ -17,11 +17,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.NavUtils;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.CompatUtil;
@@ -48,16 +49,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // Change the application theme if the current theme is not in dark mode
             if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_black_theme)))
                 if(CompatUtil.INSTANCE.isLightTheme(getApplicationContext()))
-                    applicationPref.toggleTheme();
+                    settings.toggleTheme();
             Toast.makeText(getApplicationContext(), R.string.text_application_restart_required, Toast.LENGTH_LONG).show();
         } else if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_sync_frequency))) {
-            JobSchedulerUtil.INSTANCE.cancelJob();
+            JobSchedulerUtil.INSTANCE.cancelJob(getApplicationContext());
             JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
         } else if (CompatUtil.INSTANCE.equals(key, getString(R.string.pref_key_new_message_notifications))) {
-            if (applicationPref.isNotificationEnabled())
+            if (settings.isNotificationEnabled())
                 JobSchedulerUtil.INSTANCE.scheduleJob(getApplicationContext());
             else
-                JobSchedulerUtil.INSTANCE.cancelJob();
+                JobSchedulerUtil.INSTANCE.cancelJob(getApplicationContext());
         }
     };
 
@@ -339,15 +340,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (applicationPref != null)
-            applicationPref.getSharedPreferences()
+        if (settings != null)
+            settings.getSharedPreferences()
                     .registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
     }
 
     @Override
     protected void onPause() {
-        if (applicationPref != null)
-            applicationPref.getSharedPreferences()
+        if (settings != null)
+            settings.getSharedPreferences()
                     .unregisterOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
         super.onPause();
     }

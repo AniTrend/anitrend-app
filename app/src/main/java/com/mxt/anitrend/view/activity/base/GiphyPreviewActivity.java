@@ -2,12 +2,13 @@ package com.mxt.anitrend.view.activity.base;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -56,7 +57,7 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
             Glide.with(this).load(getIntent().getStringExtra(KeyUtil.arg_model))
                     .listener(this).into(previewImage);
         else
-            NotifyUtil.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
         onActivityReady();
     }
 

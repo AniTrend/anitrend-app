@@ -1,12 +1,11 @@
 package com.mxt.anitrend.util
 
 import android.content.Context
-
 import com.github.mikephil.charting.charts.BarLineChartBase
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.mxt.anitrend.R
 
 /**
@@ -15,7 +14,7 @@ import com.mxt.anitrend.R
 
 class ChartUtil {
 
-    class StepXAxisFormatter<K> : IAxisValueFormatter {
+    class StepXAxisFormatter<K> : ValueFormatter() {
 
         private lateinit var dataModel: List<K>
         private lateinit var chartBase: BarLineChartBase<*>
@@ -57,7 +56,7 @@ class ChartUtil {
         }
     }
 
-    class StepYAxisFormatter : IAxisValueFormatter {
+    class StepYAxisFormatter : ValueFormatter() {
 
         private lateinit var chartBase: BarLineChartBase<*>
 

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
-
+@Deprecated
 public class MediaTagStats implements Parcelable {
 
     private MediaTag tag;

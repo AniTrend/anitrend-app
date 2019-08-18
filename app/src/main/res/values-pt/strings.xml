@@ -149,7 +149,7 @@
     <string name="app_intro_search_title">Pesquisando</string>
     <string name="app_intro_search_text">Anime, Mangá &amp; Mais Opções de Pesquisa!</string>
     <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
-    <string name="app_greeting">Bem-vindo ao AniTrend!</string>
+    <string name="app_greeting">Bem-vindo ao AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Classificar por?</string>
@@ -974,4 +974,17 @@
     <string name="nav_home">Home</string>
     <string name="drawer_section_extras">Extras</string>
     <string name="app_intro_videos_title">Videos</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
+    <string name="text_about_general_information">General Information</string>
+    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_additional_information">Additional Information</string>
+    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="text_about_legal_information">Legal Information</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="text_about_code_of_conduct">Code of Conduct</string>
+    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
+    <string name="title_activity_logging">Logging</string>
 </resources>

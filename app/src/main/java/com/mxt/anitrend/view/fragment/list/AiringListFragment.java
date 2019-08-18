@@ -1,7 +1,8 @@
 package com.mxt.anitrend.view.fragment.list;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
@@ -11,7 +12,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaListUtil;
 
@@ -60,7 +61,7 @@ public class AiringListFragment extends MediaListFragment {
                             .filter(media -> CompatUtil.INSTANCE.equals(media.getMedia().getStatus(), KeyUtil.RELEASING))
                             .toList();
 
-                    if(MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
+                    if(MediaListUtil.INSTANCE.isTitleSort(getPresenter().getSettings().getMediaListSort()))
                         sortMediaListByTitle(mediaList);
                     else
                         onPostProcessed(mediaList);

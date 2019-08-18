@@ -3,13 +3,13 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
@@ -19,11 +19,11 @@ import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.base.StudioBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -31,6 +31,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/01/31.
@@ -48,6 +49,8 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     private CharacterBase characterBase;
 
     private QueryContainerBuilder queryContainer;
+
+    private final String TAG = FavouriteToolbarWidget.class.getSimpleName();
 
     public FavouriteToolbarWidget(@NonNull Context context) {
         super(context);
@@ -133,22 +136,19 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
 
     @Override
     public void onClick(View view) {
-        if(presenter.getApplicationPref().isAuthenticated())
-            switch (view.getId()) {
-                case R.id.widget_flipper:
-                    if (isModelSet()) {
-                        if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
-                            binding.widgetFlipper.showNext();
-                            presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
-                        }
-                        else
-                            NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+        if(presenter.getSettings().isAuthenticated())
+            if (view.getId() == R.id.widget_flipper) {
+                if (isModelSet()) {
+                    if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
+                        binding.widgetFlipper.showNext();
+                        presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, getContext(), this);
                     } else
-                        NotifyUtil.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
-                    break;
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                } else
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
             }
             else
-                NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
     }
 
     private void setIconType() {
@@ -189,10 +189,11 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                     characterBase.toggleFavourite();
                 setIconType();
             } else {
-                Log.e(toString(), ErrorUtil.INSTANCE.getError(response));
-                NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -200,10 +201,10 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
     @Override
     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
-            throwable.printStackTrace();
+            Timber.tag(TAG).e(throwable);
             resetFlipperState();
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             e.printStackTrace();
         }
     }

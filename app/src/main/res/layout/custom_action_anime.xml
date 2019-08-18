@@ -33,7 +33,7 @@
 
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -55,7 +55,7 @@
 
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -77,7 +77,7 @@
 
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -99,7 +99,7 @@
 
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -120,7 +120,7 @@
                 android:layout_gravity="center_vertical|end" />
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -141,7 +141,7 @@
                 android:layout_gravity="center_vertical|end" />
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
@@ -155,7 +155,7 @@
                 android:layout_gravity="center_vertical|start"
                 android:text="@string/dialog_title_private" />
 
-            <android.support.v7.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/dia_current_privacy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,11 +163,11 @@
 
         </FrameLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="match_parent"
             android:layout_height="@dimen/xl_margin" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -180,7 +180,7 @@
                 android:text="@{model.notes}"
                 android:textSize="@dimen/subtitle_text_size" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

@@ -2,7 +2,8 @@ package com.mxt.anitrend.model.entity.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule;

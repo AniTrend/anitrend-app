@@ -3,13 +3,15 @@ package com.mxt.anitrend.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
 import android.text.InputType;
 import android.text.SpannedString;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -18,6 +20,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
+import com.mxt.anitrend.extension.ContextExtKt;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +56,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertLink(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -78,7 +81,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertImage(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -103,7 +106,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertYoutube(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -128,7 +131,7 @@ public class DialogUtil {
                                             editor.getEditableText().insert(start, MarkDownUtil.INSTANCE.convertVideo(editText.getText().toString()));
                                             dialog.dismiss();
                                         } else {
-                                            NotifyUtil.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
+                                            NotifyUtil.INSTANCE.makeText(context, R.string.input_empty_warning, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     break;
@@ -197,8 +200,8 @@ public class DialogUtil {
                 .content(MarkDownUtil.INSTANCE.convert(content))
                 .autoDismiss(true).onAny(singleButtonCallback);
 
-        if (isSpoiler) builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_spoiler_tag));
-        else builder.icon(CompatUtil.INSTANCE.getDrawable(context, R.drawable.ic_loyalty_white_24dp));
+        if (isSpoiler) builder.icon(ContextExtKt.getCompatDrawable(context, R.drawable.ic_spoiler_tag));
+        else builder.icon(ContextExtKt.getCompatDrawable(context, R.drawable.ic_loyalty_white_24dp));
 
         builder.show();
     }
@@ -243,9 +246,9 @@ public class DialogUtil {
      * <br/>
      *
      * @param context from a fragment activity derived class
-     * @see android.support.v4.app.FragmentActivity
+     * @see FragmentActivity
      */
-    static MaterialDialog.Builder createDefaultDialog(Context context) {
+    public static MaterialDialog.Builder createDefaultDialog(Context context) {
         return new MaterialDialog.Builder(context)
                 .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
                 .buttonRippleColorRes(R.color.colorAccentDark)

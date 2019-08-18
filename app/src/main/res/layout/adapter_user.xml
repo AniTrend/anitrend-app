@@ -27,7 +27,7 @@
             app:avatarUrl="@{model.avatar}"
             tools:src="@drawable/avatar_placeholder"/>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="@dimen/xl_margin"
             android:layout_height="wrap_content" />
 
@@ -40,7 +40,7 @@
             android:text="@{model.name}"
             tools:text="Loath57"/>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="@dimen/xl_margin"
             android:layout_height="wrap_content" />
 

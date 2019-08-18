@@ -1,8 +1,8 @@
 package com.mxt.anitrend.util;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.LongDef;
-import android.support.annotation.StringDef;
+import androidx.annotation.IntDef;
+import androidx.annotation.LongDef;
+import androidx.annotation.StringDef;
 
 /**
  * Created by max on 2017/09/16.

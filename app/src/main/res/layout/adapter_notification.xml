@@ -51,7 +51,7 @@
 
                     </LinearLayout>
 
-                    <android.support.v4.widget.Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/xl_margin" />
 
@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         tools:text="AnukWolf" />
 
-                    <android.support.v4.widget.Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/lg_margin" />
 

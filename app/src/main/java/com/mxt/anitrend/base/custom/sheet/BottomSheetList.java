@@ -1,13 +1,13 @@
 package com.mxt.anitrend.base.custom.sheet;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
@@ -22,6 +22,7 @@ import com.nguyenhoanglam.progresslayout.ProgressLayout;
 import java.util.List;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetBase<List<T>> implements ItemClickListener<T>, Observer<List<T>>, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
@@ -152,7 +153,7 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
      */
     @Override
     public void onChanged(@Nullable List<T> data) {
-        Log.d(TAG, "onChanged(@Nullable List<T> data) invoked");
+        Timber.tag(TAG).d("onChanged(@Nullable List<T> data) invoked");
     }
 
     @Override

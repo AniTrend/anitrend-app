@@ -58,7 +58,7 @@
     },
     {
       "id": "4:2500178567314633405",
-      "lastPropertyId": "27:684903496913852672",
+      "lastPropertyId": "28:6177613386273186625",
       "name": "User",
       "properties": [
         {
@@ -101,6 +101,10 @@
         {
           "id": "27:684903496913852672",
           "name": "unreadNotificationCount"
+        },
+        {
+          "id": "28:6177613386273186625",
+          "name": "statistics"
         }
       ],
       "relations": []

@@ -8,7 +8,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.data.DatabaseHelper;
-import com.mxt.anitrend.util.ApplicationPref;
+import com.mxt.anitrend.util.Settings;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -23,7 +23,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
     private Bundle bundle;
     private Context context;
     private BoxQuery databaseHelper;
-    private ApplicationPref applicationPref;
+    private Settings settings;
     
     public CommonPresenter(Context context) {
         this.context = context;
@@ -45,7 +45,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
 
     public BoxQuery getDatabase() {
         if(databaseHelper == null)
-            databaseHelper = new DatabaseHelper(context);
+            databaseHelper = new DatabaseHelper();
         return databaseHelper;
     }
 
@@ -55,7 +55,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
     @Override
     public void onPause(SharedPreferences.OnSharedPreferenceChangeListener changeListener) {
         if(changeListener != null)
-            getApplicationPref().getSharedPreferences()
+            getSettings().getSharedPreferences()
                     .unregisterOnSharedPreferenceChangeListener(changeListener);
     }
 
@@ -65,7 +65,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
     @Override
     public void onResume(SharedPreferences.OnSharedPreferenceChangeListener changeListener) {
         if(changeListener != null)
-            getApplicationPref().getSharedPreferences()
+            getSettings().getSharedPreferences()
                     .registerOnSharedPreferenceChangeListener(changeListener);
     }
 
@@ -78,10 +78,10 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
         bundle = null;
     }
 
-    public ApplicationPref getApplicationPref() {
-        if(applicationPref == null)
-            applicationPref = new ApplicationPref(context);
-        return applicationPref;
+    public Settings getSettings() {
+        if(settings == null)
+            settings = new Settings(context);
+        return settings;
     }
 
     /**

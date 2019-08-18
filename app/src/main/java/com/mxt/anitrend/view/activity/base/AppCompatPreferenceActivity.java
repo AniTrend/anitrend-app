@@ -1,22 +1,22 @@
 package com.mxt.anitrend.view.activity.base;
 
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.Settings;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
@@ -26,11 +26,11 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
-    protected ApplicationPref applicationPref;
+    protected Settings settings;
 
     protected void configureActivity() {
-        @StyleRes int style = applicationPref.getTheme();
-        if(!CompatUtil.INSTANCE.isLightTheme(style) && applicationPref.isBlackThemeEnabled())
+        @StyleRes int style = settings.getTheme();
+        if(!CompatUtil.INSTANCE.isLightTheme(style) && settings.isBlackThemeEnabled())
             setTheme(R.style.AppThemeBlack);
         else
             setTheme(style);
@@ -40,7 +40,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
-        applicationPref = new ApplicationPref(this);
+        settings = new Settings(this);
         configureActivity();
         super.onCreate(savedInstanceState);
     }

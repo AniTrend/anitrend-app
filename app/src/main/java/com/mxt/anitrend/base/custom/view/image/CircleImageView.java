@@ -8,10 +8,11 @@ import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
+
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.view.ViewCompat;
 
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 

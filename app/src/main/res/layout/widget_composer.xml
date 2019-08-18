@@ -15,7 +15,7 @@
         android:focusable="true"
         android:isScrollContainer="false">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -30,7 +30,7 @@
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <FrameLayout
             android:layerType="software"
@@ -61,7 +61,7 @@
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_crop_original_white_24dp" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="@dimen/lg_margin"
                     android:layout_height="wrap_content" />
 
@@ -78,7 +78,7 @@
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_slow_motion_video_white_24dp" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="@dimen/lg_margin"
                     android:layout_height="wrap_content" />
 
@@ -95,7 +95,7 @@
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_link_white_24dp" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="@dimen/lg_margin"
                     android:layout_height="wrap_content" />
 
@@ -133,7 +133,7 @@
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_gif_white_24dp" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="@dimen/lg_margin"
                     android:visibility="gone"
                     android:layout_height="wrap_content" />
@@ -151,7 +151,7 @@
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_insert_emoticon_white_24dp" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="@dimen/lg_margin"
                     android:layout_height="wrap_content" />
 
