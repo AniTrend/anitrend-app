@@ -20,21 +20,18 @@ class AnalyticsLogging(
 ): Timber.Tree(), ISupportAnalytics, KoinComponent {
 
     private var fabric: Fabric? = null
+    private val analytics: FirebaseAnalytics =
+            FirebaseAnalytics.getInstance(context).apply {
+                setAnalyticsCollectionEnabled(
+                        settings.isUsageAnalyticsEnabled
+                )
+            }
 
     init {
         if (settings.isCrashReportsEnabled)
-            fabric = Fabric.with(Fabric.Builder(context)
-                    .kits(Crashlytics())
+            fabric = Fabric.Builder(context).kits(Crashlytics())
                     .appIdentifier(BuildConfig.BUILD_TYPE)
-                    .build())
-    }
-
-    private val analytics by lazy {
-        FirebaseAnalytics.getInstance(context).apply {
-            setAnalyticsCollectionEnabled(
-                    settings.isUsageAnalyticsEnabled
-            )
-        }
+                    .build().let { Fabric.with(it) }
     }
 
     /**
