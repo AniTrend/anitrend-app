@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
         <com.mxt.anitrend.base.custom.view.container.NotificationCardView
@@ -51,7 +50,7 @@
 
                     </LinearLayout>
 
-                    <android.support.v4.widget.Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/xl_margin" />
 
@@ -61,7 +60,7 @@
                         android:layout_height="wrap_content"
                         tools:text="AnukWolf" />
 
-                    <android.support.v4.widget.Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/lg_margin" />
 

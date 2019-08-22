@@ -150,7 +150,7 @@
     <string name="app_intro_search_text">Anime, Manga &amp; Mer sökfunktionalitet!</string>
     <string name="app_intro_videos_title">Videoklipp</string>
     <string name="app_intro_videos_text">Använda Inbyggd Youtube Video Player!</string>
-    <string name="app_greeting">Välkommen till AniTrend!</string>
+    <string name="app_greeting">Välkommen till AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sortera efter?</string>
@@ -232,8 +232,6 @@
 
     <string name="drawer_section_configuration">Konfiguration</string>
     <string name="drawer_title_filter">Filtrera</string>
-    <string name="drawer_light_theme">Byt tema</string>
-    <string name="drawer_title_style">Växla stil</string>
 
     <string name="drawer_section_account">Konto</string>
     <string name="drawer_title_sign_in">Logga in</string>
@@ -307,16 +305,6 @@
     <string name="pref_header_general">Allmän</string>
     <string name="pref_header_general_summary">Konfigurera grundläggande applikationsbeteende</string>
 
-    <string name="pref_title_auto_increment">Smarta framstegsökning</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Öka automatiskt avsnittet eller kapitelnumret när du
-           knacka på den med nya liststilar på dina airing-, anime- och mangalistor,
-           snarare än att öppna en dialogruta.
-        ]]>
-    </string>
-
 
     <string name="pref_title_startup_page">Startsida</string>
 
@@ -365,10 +353,6 @@
 
     <string name="pref_title_new_message_notifications">Nya meddelandemeddelanden</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Meddelande ringsignal</string>
-
-    <string name="pref_ringtone_silent">Tyst</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -924,7 +908,6 @@
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -968,7 +951,19 @@
     <string name="notification_media_added">New Related Media Added</string>
     <string name="title_activity_studio">Studio</string>
     <string name="title_activity_message">Message Hub</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="nav_header_support">Support</string>
     <string name="drawer_title_hub">AniTrend Hub</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
+    <string name="text_about_general_information">General Information</string>
+    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_additional_information">Additional Information</string>
+    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="text_about_legal_information">Legal Information</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="text_about_code_of_conduct">Code of Conduct</string>
+    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
+    <string name="title_activity_logging">Logging</string>
 </resources>

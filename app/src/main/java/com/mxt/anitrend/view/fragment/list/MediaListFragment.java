@@ -4,13 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.annimon.stream.IntPair;
@@ -27,17 +28,16 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.MediaListCollectionBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
-import com.mxt.anitrend.util.ApplicationPref;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaActionUtil;
-import com.mxt.anitrend.util.MediaListUtil;
-import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.Settings;
+import com.mxt.anitrend.util.graphql.GraphUtil;
+import com.mxt.anitrend.util.media.MediaActionUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
+import com.mxt.anitrend.util.media.MediaUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -45,6 +45,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/12/18.
@@ -107,18 +109,18 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             switch (item.getItemId()) {
                 case R.id.action_sort:
                     DialogUtil.createSelection(getContext(), R.string.app_filter_sort, CompatUtil.INSTANCE.getIndexOf(KeyUtil.MediaListSortType,
-                            getPresenter().getApplicationPref().getMediaListSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaListSortType),
+                            getPresenter().getSettings().getMediaListSort()), CompatUtil.INSTANCE.capitalizeWords(KeyUtil.MediaListSortType),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
-                                    getPresenter().getApplicationPref().setMediaListSort(KeyUtil.MediaListSortType[dialog.getSelectedIndex()]);
+                                    getPresenter().getSettings().setMediaListSort(KeyUtil.MediaListSortType[dialog.getSelectedIndex()]);
                             });
                     return true;
                 case R.id.action_order:
                     DialogUtil.createSelection(getContext(), R.string.app_filter_order, CompatUtil.INSTANCE.getIndexOf(KeyUtil.SortOrderType,
-                            getPresenter().getApplicationPref().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
+                            getPresenter().getSettings().getSortOrder()), CompatUtil.INSTANCE.getStringList(getContext(), R.array.order_by_types),
                             (dialog, which) -> {
                                 if(which == DialogAction.POSITIVE)
-                                    getPresenter().getApplicationPref().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
+                                    getPresenter().getSettings().saveSortOrder(KeyUtil.SortOrderType[dialog.getSelectedIndex()]);
                             });
                     return true;
             }
@@ -153,11 +155,11 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             queryContainer.putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.getScoreFormat());
 
         // since anilist doesn't support sorting by title we set a temporary sorting key
-        if (!MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
-            queryContainer.putVariable(KeyUtil.arg_sort, getPresenter().getApplicationPref().getMediaListSort() +
-                    getPresenter().getApplicationPref().getSortOrder());
+        if (!MediaListUtil.INSTANCE.isTitleSort(getPresenter().getSettings().getMediaListSort()))
+            queryContainer.putVariable(KeyUtil.arg_sort, getPresenter().getSettings().getMediaListSort() +
+                    getPresenter().getSettings().getSortOrder());
         else
-            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.MEDIA_ID + getPresenter().getApplicationPref().getSortOrder());
+            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.MEDIA_ID + getPresenter().getSettings().getSortOrder());
 
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.MEDIA_LIST_COLLECTION_REQ, getContext());
@@ -167,8 +169,8 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(getPresenter() != null && isFilterable && GraphUtil.INSTANCE.isKeyFilter(key)) {
-            @KeyUtil.MediaListSort String mediaListSort = getPresenter().getApplicationPref().getMediaListSort();
-            if(CompatUtil.INSTANCE.equals(key, ApplicationPref._mediaListSort) && MediaListUtil.isTitleSort(mediaListSort)) {
+            @KeyUtil.MediaListSort String mediaListSort = getPresenter().getSettings().getMediaListSort();
+            if(CompatUtil.INSTANCE.equals(key, Settings._mediaListSort) && MediaListUtil.INSTANCE.isTitleSort(mediaListSort)) {
                 swipeRefreshLayout.setRefreshing(true);
                 sortMediaListByTitle(mAdapter.getData());
             }
@@ -213,7 +215,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
                 Optional<MediaListCollection> mediaOptional = Stream.of(content.getPageData()).findFirst();
                 if(mediaOptional.isPresent()) {
                     MediaListCollection mediaListCollection = mediaOptional.get();
-                    if(MediaListUtil.isTitleSort(getPresenter().getApplicationPref().getMediaListSort()))
+                    if(MediaListUtil.INSTANCE.isTitleSort(getPresenter().getSettings().getMediaListSort()))
                         sortMediaListByTitle(mediaListCollection.getEntries());
                     else
                         onPostProcessed(mediaListCollection.getEntries());
@@ -262,18 +264,18 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
         switch (target.getId()) {
             case R.id.container:
             case R.id.series_image:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(data.getSecond().getMediaId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     protected void sortMediaListByTitle(@NonNull List<MediaList> mediaLists) {
-        @KeyUtil.SortOrderType String sortOrder = getPresenter().getApplicationPref().getSortOrder();
+        @KeyUtil.SortOrderType String sortOrder = getPresenter().getSettings().getSortOrder();
         mAdapter.onItemsInserted(Stream.of(mediaLists)
                 .sorted((first, second) -> {
                     String firstTitle = MediaUtil.getMediaTitle(first.getMedia());

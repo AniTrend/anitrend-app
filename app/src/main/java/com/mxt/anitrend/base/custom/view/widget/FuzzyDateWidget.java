@@ -5,18 +5,19 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFuzzyDateBinding;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.date.DateUtil;
 
 import java.util.Calendar;
 

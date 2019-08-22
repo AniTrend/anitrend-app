@@ -1,9 +1,10 @@
 package com.mxt.anitrend.base.custom.view.image;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.graphics.Point;
 import android.util.AttributeSet;
+
+import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -21,7 +22,7 @@ import com.mxt.anitrend.util.KeyUtil;
  * or set to wrap content to automatically get the view width at runtime
  */
 
-public class AspectImageView extends android.support.v7.widget.AppCompatImageView implements CustomView {
+public class AspectImageView extends androidx.appcompat.widget.AppCompatImageView implements CustomView {
 
     private int spanSize;
     private int defaultMargin;
@@ -81,7 +82,11 @@ public class AspectImageView extends android.support.v7.widget.AppCompatImageVie
 
     @BindingAdapter({"imageUrl"})
     public static void setImage(AspectImageView view, ImageBase imageBase) {
-        if(imageBase != null)
-            setImage(view, imageBase.getLarge());
+        if(imageBase != null) {
+            if (imageBase.getExtraLarge() != null)
+                setImage(view, imageBase.getExtraLarge());
+            else
+                setImage(view, imageBase.getLarge());
+        }
     }
 }

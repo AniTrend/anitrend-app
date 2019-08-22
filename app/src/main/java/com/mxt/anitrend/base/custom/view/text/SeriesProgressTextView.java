@@ -8,7 +8,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaUtil;
+import com.mxt.anitrend.util.media.MediaUtil;
 
 import java.util.Locale;
 

@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.Filter
-
+import butterknife.OnClick
+import butterknife.OnLongClick
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder
@@ -14,15 +15,13 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.databinding.AdapterNotificationBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DateUtil
 import com.mxt.anitrend.util.KeyUtil
-
-import butterknife.OnClick
-import butterknife.OnLongClick
+import com.mxt.anitrend.util.date.DateUtil
 import io.objectbox.Box
 
 /**
@@ -39,9 +38,9 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
     override fun onCreateViewHolder(parent: ViewGroup, @KeyUtil.RecyclerViewType viewType: Int): RecyclerViewHolder<Notification> {
         return when (viewType) {
             KeyUtil.RECYCLER_TYPE_CONTENT ->
-                NotificationHolder(AdapterNotificationBinding.inflate(CompatUtil.getLayoutInflater(parent.context), parent, false))
+                NotificationHolder(AdapterNotificationBinding.inflate(parent.context.getLayoutInflater(), parent, false))
             else ->
-                UnresolvedViewHolder(CustomRecyclerUnresolvedBinding.inflate(CompatUtil.getLayoutInflater(parent.context), parent, false))
+                UnresolvedViewHolder(CustomRecyclerUnresolvedBinding.inflate(parent.context.getLayoutInflater(), parent, false))
         }
     }
 
@@ -118,7 +117,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 if (model.user != null && model.user.avatar != null)
                     AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
             } else
-                AspectImageView.setImage(binding.notificationImg, model.media.coverImage.large)
+                AspectImageView.setImage(binding.notificationImg, model.media.coverImage.extraLarge)
 
             when (model.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {

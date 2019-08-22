@@ -1,11 +1,11 @@
 package com.mxt.anitrend.view.fragment.list;
 
-import android.arch.lifecycle.Lifecycle;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.R;
@@ -14,18 +14,19 @@ import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.util.EpisodeUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.collection.EpisodeUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/03.
@@ -36,6 +37,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
 
     private long mediaId;
     private @KeyUtil.MediaType String mediaType;
+    private final String TAG = WatchListFragment.class.getSimpleName();
 
     public static FragmentChannelBase newInstance(Bundle params, boolean popular) {
         Bundle args = new Bundle(params);
@@ -121,15 +123,15 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
                         makeRequest();
                 }
             } else
-                Log.e(TAG, ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
         }
     }
 
     @Override
     public void onFailure(@NonNull Call<ConnectionContainer<List<ExternalLink>>> call, @NonNull Throwable throwable) {
-        if(isAlive() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+        if(isAlive()) {
+            Timber.tag(TAG).w(throwable);
             throwable.printStackTrace();
-            Log.e(TAG, throwable.getMessage());
         }
     }
 }

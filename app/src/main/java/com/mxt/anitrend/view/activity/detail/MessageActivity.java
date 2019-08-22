@@ -1,10 +1,11 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.MessagePageAdapter;

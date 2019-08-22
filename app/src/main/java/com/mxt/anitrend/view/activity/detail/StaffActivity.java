@@ -2,30 +2,31 @@ package com.mxt.anitrend.view.activity.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.model.entity.base.StaffBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/12/14.
@@ -63,7 +64,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean isAuth = getPresenter().getApplicationPref().isAuthenticated();
+        boolean isAuth = getPresenter().getSettings().isAuthenticated();
         getMenuInflater().inflate(R.menu.custom_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
         if(isAuth) {
@@ -89,7 +90,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
                     break;
             }
         } else
-            NotifyUtil.makeText(getApplicationContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(getApplicationContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
 

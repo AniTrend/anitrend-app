@@ -1,29 +1,19 @@
 package com.mxt.anitrend.base.custom.view.text
 
 import android.content.Context
-import android.support.v4.text.util.LinkifyCompat
-import android.support.v7.widget.AppCompatTextView
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.text.util.LinkifyCompat
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.util.MarkDownUtil
-import com.mxt.anitrend.util.RegexUtil
-import org.commonmark.parser.Parser
-import ru.noties.markwon.AbstractMarkwonPlugin
-import ru.noties.markwon.Markwon
-import ru.noties.markwon.MarkwonConfiguration
-import ru.noties.markwon.core.CorePlugin
-import ru.noties.markwon.html.HtmlPlugin
-import ru.noties.markwon.html.MarkwonHtmlParserImpl
-import ru.noties.markwon.image.AsyncDrawableScheduler
-import ru.noties.markwon.image.ImagesPlugin
-import ru.noties.markwon.image.okhttp.OkHttpImagesPlugin
-import java.util.Arrays.asList
+import com.mxt.anitrend.util.markdown.MarkDownUtil
+import com.mxt.anitrend.util.markdown.RegexUtil
+import io.noties.markwon.Markwon
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class RichMarkdownTextView : AppCompatTextView, CustomView {
+class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
 
     constructor(context: Context) :
             super(context) { onInit() }
@@ -34,34 +24,7 @@ class RichMarkdownTextView : AppCompatTextView, CustomView {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr) { onInit() }
 
-    val markwon by lazy {
-        Markwon.builder(context)
-                .usePlugins(asList(
-                        CorePlugin.create(),
-                        ImagesPlugin.create(context),
-                        OkHttpImagesPlugin.create(),
-                        HtmlPlugin.create(),
-                        object: AbstractMarkwonPlugin() {
-                            @Override
-                            override fun configureParser(builder: Parser.Builder) {
-
-                            }
-
-                            override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
-                                builder.htmlParser(MarkwonHtmlParserImpl.create())
-                            }
-
-                            override fun beforeSetText(textView: TextView, markdown: Spanned) {
-                                AsyncDrawableScheduler.unschedule(textView)
-                            }
-
-                            override fun afterSetText(textView: TextView) {
-                                AsyncDrawableScheduler.schedule(textView)
-                            }
-                        }
-                ))
-                .build()
-    }
+    val markwon by inject<Markwon>()
 
     /**
      * Optionally included when constructing custom views
@@ -81,7 +44,7 @@ class RichMarkdownTextView : AppCompatTextView, CustomView {
 
     fun setMarkDownText(markDownText: String?) {
         val strippedText = RegexUtil.removeTags(markDownText)
-        val markdownSpan = MarkDownUtil.convert(strippedText, context, this)
+        val markdownSpan = MarkDownUtil.convert(strippedText)
         setText(markdownSpan, BufferType.SPANNABLE)
         //richMarkDown(this, markDownText)
     }

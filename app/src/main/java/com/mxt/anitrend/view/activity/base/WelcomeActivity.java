@@ -3,9 +3,10 @@ package com.mxt.anitrend.view.activity.base;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.codemybrainsout.onboarder.AhoyOnboarderActivity;
 import com.codemybrainsout.onboarder.AhoyOnboarderCard;
@@ -47,10 +48,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
                             R.drawable.ic_bubble_chart_white_24dp)),
                     applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_search_title),
                             getString(R.string.app_intro_search_text),
-                            R.drawable.ic_search_white_24dp)),
-                    applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_videos_title),
-                            getString(R.string.app_intro_videos_text),
-                            R.drawable.ic_slow_motion_video_white_24dp))
+                            R.drawable.ic_search_white_24dp))
             ));
         } else {
             ahoyPages = new ArrayList<>(CompatUtil.INSTANCE.constructListFrom(
@@ -65,10 +63,7 @@ public class WelcomeActivity extends AhoyOnboarderActivity {
                             R.drawable.ic_bubble_chart_white_48dp)),
                     applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_search_title),
                             getString(R.string.app_intro_search_text),
-                            R.drawable.ic_search_white_48dp)),
-                    applyStyle(new AhoyOnboarderCard(getString(R.string.app_intro_videos_title),
-                            getString(R.string.app_intro_videos_text),
-                            R.drawable.ic_slow_motion_video_white_48dp))
+                            R.drawable.ic_search_white_48dp))
             ));
         }
 

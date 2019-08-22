@@ -1,8 +1,7 @@
 package com.mxt.anitrend.view.activity.base
 
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
-import butterknife.ButterKnife
+import androidx.appcompat.widget.Toolbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.presenter.base.BasePresenter

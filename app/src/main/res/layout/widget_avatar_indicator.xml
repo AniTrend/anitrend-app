@@ -29,14 +29,14 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/notification_indicator"
                 android:src="@drawable/dot_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerInside" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/notification_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

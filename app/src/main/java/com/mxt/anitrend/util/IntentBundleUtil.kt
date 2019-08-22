@@ -3,11 +3,10 @@ package com.mxt.anitrend.util
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.VisibleForTesting
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.ShareCompat
 import android.text.TextUtils
-
+import androidx.core.app.ShareCompat
+import androidx.fragment.app.FragmentActivity
+import com.mxt.anitrend.util.markdown.RegexUtil
 import java.util.regex.Matcher
 
 /**
@@ -19,7 +18,7 @@ class IntentBundleUtil(private val intent: Intent) {
 
     var sharedIntent: ShareCompat.IntentReader? = null
 
-    private val deepLinkMatcher: Matcher? by lazy {
+    private val deepLinkMatcher: Matcher? by lazy(LazyThreadSafetyMode.NONE) {
         RegexUtil.findIntentKeys(intentData?.path)
     }
 
@@ -27,8 +26,8 @@ class IntentBundleUtil(private val intent: Intent) {
 
     private val intentData: Uri? = intent.data
 
-    private fun hasDepth(key: String): Array<String>? {
-        return if (key.contains("/")) 
+    private fun hasDepth(key: String?): Array<String>? {
+        return if (key?.contains("/") == true)
             key.split("/".toRegex())
                     .dropLastWhile {
                         it.isEmpty()
@@ -42,19 +41,19 @@ class IntentBundleUtil(private val intent: Intent) {
             val groupLimit = it.groupCount()
 
             var lastKey = it.group(groupLimit)
-            val splitKeys: Array<String>? = hasDepth(lastKey)
+            val splitKeys = hasDepth(lastKey)
 
             when (type) {
                 KeyUtil.DEEP_LINK_ACTIVITY -> {
                     if (splitKeys != null)
                         intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                     else
-                        intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                        intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
                 }
                 KeyUtil.DEEP_LINK_USER -> when {
-                    TextUtils.isDigitsOnly(lastKey) -> intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                    TextUtils.isDigitsOnly(lastKey) -> intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
                     else -> {
-                        if (lastKey.contains("/"))
+                        if (lastKey?.contains("/") == true)
                             lastKey = lastKey.replace("/", "")
                         intent.putExtra(KeyUtil.arg_userName, lastKey)
                     }
@@ -63,35 +62,35 @@ class IntentBundleUtil(private val intent: Intent) {
                     if (splitKeys != null)
                         intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                     else
-                        intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                        intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
                     intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
                 }
                 KeyUtil.DEEP_LINK_ANIME -> {
                     if (splitKeys != null)
                         intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                     else
-                        intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                        intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
                     intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                 }
                 KeyUtil.DEEP_LINK_CHARACTER -> if (splitKeys != null)
                     intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                 else
-                    intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                    intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
 
                 KeyUtil.DEEP_LINK_ACTOR -> if (splitKeys != null)
                     intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                 else
-                    intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                    intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
 
                 KeyUtil.DEEP_LINK_STAFF -> if (splitKeys != null)
                     intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                 else
-                    intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                    intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
 
                 KeyUtil.DEEP_LINK_STUDIO -> if (splitKeys != null)
                     intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())
                 else
-                    intent.putExtra(KeyUtil.arg_id, lastKey.toLong())
+                    intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
             }
         }
     }

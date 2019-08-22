@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
+
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaStats;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer;

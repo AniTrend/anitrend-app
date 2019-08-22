@@ -4,12 +4,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -21,7 +22,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.RegexUtil;
+import com.mxt.anitrend.util.markdown.RegexUtil;
 
 import butterknife.ButterKnife;
 
@@ -106,7 +107,7 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
-                NotifyUtil.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
             }
         });
         updateUI();

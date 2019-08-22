@@ -44,7 +44,7 @@
 
         </ViewFlipper>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="@dimen/spacing_medium"
             android:layout_height="wrap_content" />
 

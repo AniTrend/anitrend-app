@@ -7,7 +7,7 @@
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Review"/>
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
@@ -101,5 +101,5 @@
             android:textStyle="bold"
             android:text="@string/text_read_more" />
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

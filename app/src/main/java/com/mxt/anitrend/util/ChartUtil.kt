@@ -1,13 +1,13 @@
 package com.mxt.anitrend.util
 
 import android.content.Context
-
 import com.github.mikephil.charting.charts.BarLineChartBase
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.mxt.anitrend.R
+import com.mxt.anitrend.extension.getCompatColorAttr
 
 /**
  * Created by max on 2018/02/24.
@@ -15,7 +15,7 @@ import com.mxt.anitrend.R
 
 class ChartUtil {
 
-    class StepXAxisFormatter<K> : IAxisValueFormatter {
+    class StepXAxisFormatter<K> : ValueFormatter() {
 
         private lateinit var dataModel: List<K>
         private lateinit var chartBase: BarLineChartBase<*>
@@ -46,18 +46,19 @@ class ChartUtil {
         }
 
         fun build(context: Context) {
-            val xAxis = chartBase.xAxis
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.granularity = 1f
-            if (dataModel.size <= 10)
-                xAxis.labelCount = dataModel.size
-            xAxis.textColor = CompatUtil.getColorFromAttr(context, R.attr.titleColor)
-            xAxis.valueFormatter = this
+            with (chartBase.xAxis) {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                granularity = 1f
+                if (dataModel.size <= 10)
+                    labelCount = dataModel.size
+                textColor = context.getCompatColorAttr(R.attr.titleColor)
+                valueFormatter = this@StepXAxisFormatter
+            }
         }
     }
 
-    class StepYAxisFormatter : IAxisValueFormatter {
+    class StepYAxisFormatter : ValueFormatter() {
 
         private lateinit var chartBase: BarLineChartBase<*>
 
@@ -81,18 +82,18 @@ class ChartUtil {
         }
 
         fun build(context: Context) {
-            chartBase.legend.textColor = CompatUtil.getColorFromAttr(context, R.attr.titleColor)
+            chartBase.legend.textColor = context.getCompatColorAttr(R.attr.titleColor)
 
-            val leftAxis = chartBase.axisLeft
-            leftAxis.setLabelCount(5, false)
-            leftAxis.spaceTop = 15f
-            leftAxis.axisMinimum = 0f
-            leftAxis.disableGridDashedLine()
-            leftAxis.disableAxisLineDashedLine()
-            leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-            leftAxis.textColor = CompatUtil.getColorFromAttr(context, R.attr.titleColor)
-            leftAxis.valueFormatter = this
-
+            with (chartBase.axisLeft) {
+                setLabelCount(5, false)
+                spaceTop = 15f
+                axisMinimum = 0f
+                disableGridDashedLine()
+                disableAxisLineDashedLine()
+                setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+                textColor = context.getCompatColorAttr(R.attr.titleColor)
+                valueFormatter = this@StepYAxisFormatter
+            }
             chartBase.axisRight.isEnabled = false
         }
     }

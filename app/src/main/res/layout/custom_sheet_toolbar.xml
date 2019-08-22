@@ -23,7 +23,7 @@
             android:textStyle="bold"
             tools:text="Toolbar Title" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/toolbar_search"
             android:visibility="gone"
             android:clickable="true"
@@ -37,7 +37,7 @@
             tools:visibility="visible"
             tools:src="@drawable/ic_search_grey_600_24dp" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/toolbar_state"
             android:clickable="true"
             android:focusable="true"

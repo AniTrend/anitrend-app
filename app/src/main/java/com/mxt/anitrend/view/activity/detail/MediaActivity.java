@@ -1,15 +1,16 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.AnimePageAdapter;
@@ -20,22 +21,21 @@ import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.databinding.ActivitySeriesBinding;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.TapTargetUtil;
 import com.mxt.anitrend.util.TutorialUtil;
-import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
+import com.mxt.anitrend.util.graphql.GraphUtil;
+import com.mxt.anitrend.util.media.MediaActionUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
@@ -81,7 +81,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean isAuth = getPresenter().getApplicationPref().isAuthenticated();
+        boolean isAuth = getPresenter().getSettings().isAuthenticated();
         getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
 
@@ -116,7 +116,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                     break;
             }
         } else
-            NotifyUtil.makeText(getApplicationContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(getApplicationContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
 
@@ -135,7 +135,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             viewPager.setOffscreenPageLimit(offScreenLimit);
             smartTabLayout.setViewPager(viewPager);
         } else
-            NotifyUtil.createAlerter(this, R.string.text_error_request, R.string.text_unknown_error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
+            NotifyUtil.INSTANCE.createAlerter(this, R.string.text_error_request, R.string.text_unknown_error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
     }
 
     @Override
@@ -154,11 +154,11 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
             binding.setOnClickListener(this);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
             setFavouriteWidgetMenuItemIcon(); setManageMenuItemIcon();
-            if(getPresenter().getApplicationPref().isAuthenticated()) {
+            if(getPresenter().getSettings().isAuthenticated()) {
                 MaterialTapTargetPrompt.Builder favouritesPrompt = new TutorialUtil().setContext(this)
                         .setFocalColour(R.color.colorGrey600)
                         .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
-                        .setApplicationPref(getPresenter().getApplicationPref())
+                        .setSettings(getPresenter().getSettings())
                         .createTapTarget(R.string.tip_series_options_title,
                                 R.string.tip_series_options_message, R.id.action_manage);
                 TapTargetUtil.showMultiplePrompts(favouritesPrompt);

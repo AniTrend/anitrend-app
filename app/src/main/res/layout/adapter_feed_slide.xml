@@ -24,7 +24,7 @@
             tools:scaleType="centerCrop"
             tools:src="@drawable/sample_banner"/>
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/feed_play_back"
             android:layout_gravity="center"
             android:layout_width="95dp"

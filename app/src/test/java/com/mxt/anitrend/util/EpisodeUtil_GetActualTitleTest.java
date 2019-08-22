@@ -1,5 +1,7 @@
 package com.mxt.anitrend.util;
 
+import com.mxt.anitrend.util.collection.EpisodeUtil;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

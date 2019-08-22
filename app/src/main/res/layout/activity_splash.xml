@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activity_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/md_margin"
                 android:background="@color/colorStateGreen" />
 
-            <android.support.v4.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -35,7 +35,7 @@
                 android:layout_height="@dimen/md_margin"
                 android:background="@color/colorStateBlue" />
 
-            <android.support.v4.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -44,7 +44,7 @@
                 android:layout_height="@dimen/md_margin"
                 android:background="@color/colorStateOrange" />
 
-            <android.support.v4.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -127,5 +127,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

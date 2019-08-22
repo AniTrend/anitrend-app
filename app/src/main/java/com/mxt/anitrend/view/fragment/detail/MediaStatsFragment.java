@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Stream;
@@ -31,20 +32,20 @@ import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.anilist.Media;
 import com.mxt.anitrend.model.entity.anilist.MediaRank;
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.ChartUtil;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaBrowseUtil;
-import com.mxt.anitrend.util.MediaUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
+import com.mxt.anitrend.util.media.MediaBrowseUtil;
+import com.mxt.anitrend.util.media.MediaUtil;
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.ButterKnife;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/12/28.

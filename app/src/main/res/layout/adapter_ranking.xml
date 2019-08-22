@@ -28,7 +28,7 @@
                 android:layout_height="@dimen/menu_item_icon_size"
                 tools:src="@drawable/ic_star_yellow_700_24dp"/>
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="@dimen/xl_margin"
                 android:layout_height="wrap_content" />
 

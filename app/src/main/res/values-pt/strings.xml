@@ -149,7 +149,7 @@
     <string name="app_intro_search_title">Pesquisando</string>
     <string name="app_intro_search_text">Anime, Mangá &amp; Mais Opções de Pesquisa!</string>
     <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
-    <string name="app_greeting">Bem-vindo ao AniTrend!</string>
+    <string name="app_greeting">Bem-vindo ao AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Classificar por?</string>
@@ -234,8 +234,6 @@
 
     <string name="drawer_section_configuration">Configuração</string>
     <string name="drawer_title_filter">Filtro</string>
-    <string name="drawer_light_theme">Alterar Tema</string>
-    <string name="drawer_title_style">Alterar Estilo</string>
 
     <string name="drawer_section_account">Conta</string>
     <string name="drawer_title_sign_in">Entrar</string>
@@ -308,16 +306,6 @@
     <string name="pref_header_general">Geral</string>
     <string name="pref_header_general_summary">Configurar o comportamento básico do aplicativo</string>
 
-    <string name="pref_title_auto_increment">Incremento de Progresso Inteligente</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Aumenta automaticamente o número do episódio ou capítulo quando você
-        toca nele usando os novos estilos de lista nas listas de lançamento de anime
-        ou mangá, em vez de abrir um diálogo.
-        ]]>
-    </string>
-
     <string name="pref_title_startup_page">Página de Inicialização</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -363,10 +351,6 @@
 
     <string name="pref_title_new_message_notifications">Nova mensagem de notificação</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Som de notificação</string>
-
-    <string name="pref_ringtone_silent">Silencioso</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -934,8 +918,6 @@
     <string name="pref_usage_analytics_summary_on">O aplicativo só enviará estatísticas anônimas, como os recursos mais usados</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Tema Escuro</string>
-    <string name="pref_black_theme_summary">Use o tema escuro em dispositivos que tenham telas OLED para economizar energia</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Idioma do Aplicativo</string>
@@ -974,4 +956,17 @@
     <string name="nav_home">Home</string>
     <string name="drawer_section_extras">Extras</string>
     <string name="app_intro_videos_title">Videos</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
+    <string name="text_about_general_information">General Information</string>
+    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_additional_information">Additional Information</string>
+    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="text_about_legal_information">Legal Information</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="text_about_code_of_conduct">Code of Conduct</string>
+    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
+    <string name="title_activity_logging">Logging</string>
 </resources>

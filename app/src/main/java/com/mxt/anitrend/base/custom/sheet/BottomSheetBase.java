@@ -2,16 +2,16 @@ package com.mxt.anitrend.base.custom.sheet;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/02.
@@ -230,11 +231,11 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
     @Override
     public void showError(String error) {
-        Log.e(TAG, error);
+        Timber.tag(TAG).e(error);
     }
 
     @Override
     public void showEmpty(String message) {
-        Log.d(TAG, message);
+        Timber.tag(TAG).d(message);
     }
 }

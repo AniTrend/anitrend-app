@@ -2,9 +2,10 @@ package com.mxt.anitrend.view.fragment.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
@@ -13,18 +14,19 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
+import com.mxt.anitrend.util.media.MediaActionUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.sheet.BottomReviewReader;
 
 import java.util.Collections;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/12/28.
@@ -117,13 +119,13 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
                 CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
             case R.id.user_avatar:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(KeyUtil.arg_id, data.getSecond().getUser().getId());
                     CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 } else
-                    NotifyUtil.makeText(getActivity(), R.string.info_login_req, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getActivity(), R.string.info_login_req, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.review_read_more:
                 mBottomSheet = new BottomReviewReader.Builder()
@@ -146,12 +148,12 @@ public class ReviewFragment extends FragmentBaseList<Review, PageContainer<Revie
     public void onItemLongClick(View target, IntPair<Review> data) {
         switch (target.getId()) {
             case R.id.series_image:
-                if(getPresenter().getApplicationPref().isAuthenticated()) {
+                if(getPresenter().getSettings().isAuthenticated()) {
                     mediaActionUtil = new MediaActionUtil.Builder()
                             .setId(data.getSecond().getMedia().getId()).build(getActivity());
                     mediaActionUtil.startSeriesAction();
                 } else
-                    NotifyUtil.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

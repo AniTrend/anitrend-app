@@ -20,8 +20,8 @@ import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.MediaUtil;
+import com.mxt.anitrend.util.date.DateUtil;
+import com.mxt.anitrend.util.media.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

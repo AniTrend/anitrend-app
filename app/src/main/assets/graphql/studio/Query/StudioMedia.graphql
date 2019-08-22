@@ -1,0 +1,74 @@
+query StudioMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPULARITY) {
+  Studio(id: $id) {
+    media(page: $page, perPage: $perPage, sort: $sort) {
+      ... on MediaConnection {
+        pageInfo {
+          ... on PageInfo {
+            total
+            perPage
+            currentPage
+            hasNextPage
+          }
+        }
+        nodes {
+          ... on Media {
+            id
+            title {
+              ... on MediaTitle {
+                english
+                romaji
+                native
+                userPreferred
+              }
+            }
+            coverImage {
+              ... on MediaCoverImage {
+                extraLarge
+                large
+                medium
+              }
+            }
+            type
+            format
+            season
+            status
+            meanScore
+            averageScore
+            startDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            endDate {
+              ... on FuzzyDate {
+                day
+                month
+                year
+              }
+            }
+            episodes
+            chapters
+            volumes
+            isAdult
+            isFavourite
+            nextAiringEpisode {
+              ... on AiringSchedule {
+                id
+                airingAt
+                timeUntilAiring
+                episode
+              }
+            }
+            mediaListEntry {
+              ... on MediaList {
+                status
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

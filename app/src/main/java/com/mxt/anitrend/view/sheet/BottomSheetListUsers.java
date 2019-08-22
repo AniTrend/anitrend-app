@@ -1,14 +1,15 @@
 package com.mxt.anitrend.view.sheet;
 
 import android.app.Dialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
@@ -23,11 +24,10 @@ import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.databinding.BottomSheetListBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -36,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase>> implements ItemClickListener<UserBase>, Observer<PageContainer<UserBase>>,
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {

@@ -150,7 +150,7 @@
     <string name="app_intro_search_title">Encuentra</string>
     <string name="app_intro_search_text"> ¡Anime y Manga gracias a su motor de búsqueda eficiente y lleno de características!</string>
     <string name="app_intro_videos_text">¡Facilita la visualización de vídeos de Youtube a través del reproductor integrado!</string>
-    <string name="app_greeting">¡Bienvenido/a a AniTrend!</string>
+    <string name="app_greeting">¡Bienvenido/a a AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Ordenar Por:</string>
@@ -234,8 +234,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="drawer_section_configuration">Ajustes</string>
     <string name="drawer_title_filter">Filtros</string>
-    <string name="drawer_light_theme">Tema Claro</string>
-    <string name="drawer_title_style">Nuevo Estilo de Lista</string>
 
     <string name="drawer_section_account">Cuenta</string>
     <string name="drawer_title_sign_in">Ingresar</string>
@@ -309,14 +307,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <!-- Settings for Application -->
     <string name="pref_header_general_summary">Ajusta el comportamiento de la aplicación</string>
 
-    <string name="pref_title_auto_increment">Progreso Inteligente</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Aumenta el número de episodios o capítulos automáticamente al utilizar el nuevo estilo de lista con solo pulsar el número que indica tu progreso en la tarjeta.
-        ]]>
-    </string>
-
 
     <string name="pref_title_startup_page">Página de inicio</string>
 
@@ -365,10 +355,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="pref_title_new_message_notifications">Mostrar nuevas notificaciones</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Sonido de notificaciones</string>
-
-    <string name="pref_ringtone_silent">Silencio</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -924,7 +910,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -966,8 +951,20 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="drawer_section_extras">Extras</string>
     <string name="app_intro_videos_title">Videos</string>
     <string name="pref_header_general">General</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
+    <string name="text_about_general_information">General Information</string>
+    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_additional_information">Additional Information</string>
+    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="text_about_legal_information">Legal Information</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="text_about_code_of_conduct">Code of Conduct</string>
+    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
+    <string name="title_activity_logging">Logging</string>
 </resources>

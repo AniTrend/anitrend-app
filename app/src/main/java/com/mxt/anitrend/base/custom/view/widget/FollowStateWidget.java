@@ -1,12 +1,12 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -14,16 +14,17 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetButtonStateBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/16.
@@ -36,6 +37,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
     private UserBase model;
     private WidgetButtonStateBinding binding;
     private WidgetPresenter<UserBase> presenter;
+    private final String TAG = FollowStateWidget.class.getSimpleName();
 
     public FollowStateWidget(Context context) {
         super(context);
@@ -64,7 +66,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
 
     public void setUserModel(UserBase model) {
         this.model = model;
-        if(presenter.getApplicationPref().isAuthenticated())
+        if(presenter.getSettings().isAuthenticated())
             if(!presenter.isCurrentUser(model))
                 setControlText();
             else
@@ -112,7 +114,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
                     presenter.requestData(KeyUtil.MUT_TOGGLE_FOLLOW, getContext(), this);
                 }
                 else
-                    NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -134,10 +136,11 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
                 presenter.notifyAllListeners(new BaseConsumer<>(KeyUtil.MUT_TOGGLE_FOLLOW, model), false);
                 setControlText();
             } else {
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
                 setControlText();
             }
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -155,6 +158,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
             throwable.printStackTrace();
             setControlText();
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             e.printStackTrace();
         }
     }
