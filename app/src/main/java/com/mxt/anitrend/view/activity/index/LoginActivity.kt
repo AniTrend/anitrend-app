@@ -56,7 +56,6 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
         }
     }
 
-
     /**
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style, also if you wish
@@ -64,7 +63,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
      * @see ActivityBase.configureActivity
      */
     override fun configureActivity() {
-        setTheme(if (Settings(this).theme == R.style.AppThemeLight)
+        setTheme(if (CompatUtil.isLightTheme(Settings(this).theme))
             R.style.AppThemeLight_Translucent
         else
             R.style.AppThemeDark_Translucent)

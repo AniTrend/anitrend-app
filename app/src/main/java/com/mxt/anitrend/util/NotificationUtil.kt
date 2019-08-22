@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_HIGH
@@ -46,7 +45,6 @@ class NotificationUtil(
 
         val notificationBuilder = NotificationCompat.Builder(context, KeyUtil.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_new_releases)
-                .setSound(Uri.parse(settings.notificationsSound))
                 .setAutoCancel(true)
                 .setPriority(PRIORITY_HIGH)
 

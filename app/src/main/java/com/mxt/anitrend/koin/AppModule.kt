@@ -16,6 +16,7 @@ import com.mxt.anitrend.model.entity.MyObjectBox
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.util.ConfigurationUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
 import io.noties.markwon.Markwon
@@ -44,6 +45,10 @@ object AppModule : KoinComponent {
 
         factory {
             Settings(androidContext())
+        }
+
+        factory {
+            ConfigurationUtil()
         }
 
         factory {

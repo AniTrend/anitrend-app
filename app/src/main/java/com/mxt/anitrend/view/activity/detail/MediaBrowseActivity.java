@@ -14,7 +14,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDownUtil;
+import com.mxt.anitrend.util.markdown.MarkDownUtil;
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment;
 
 import butterknife.BindView;

@@ -24,11 +24,10 @@ import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
 import com.mxt.anitrend.databinding.BottomSheetListBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -37,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase>> implements ItemClickListener<UserBase>, Observer<PageContainer<UserBase>>,
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {

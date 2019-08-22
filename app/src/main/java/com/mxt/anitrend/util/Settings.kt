@@ -2,12 +2,12 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.annotation.IdRes
-import androidx.annotation.StyleRes
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
+import com.mxt.anitrend.util.collection.GenreTagUtil
+import com.mxt.anitrend.util.date.DateUtil
 import java.util.*
 
 /**
@@ -27,7 +27,7 @@ class Settings(private val context: Context) {
     }
 
     var isAuthenticated: Boolean
-        get() = sharedPreferences.getBoolean(_isAuthenticated, false)
+        get() =  sharedPreferences.getBoolean(_isAuthenticated, false)
         set(authenticated) {
             sharedPreferences.edit {
                 putBoolean(_isAuthenticated, authenticated)
@@ -35,62 +35,48 @@ class Settings(private val context: Context) {
             }
         }
 
-    val theme: Int
-        @StyleRes get() = sharedPreferences.getInt(_isLightTheme, R.style.AppThemeLight)
-
-    val isBlackThemeEnabled: Boolean
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_black_theme), false)
-
-    // Returns the IDs of the startup page
-    val startupPage: Int
-        @IdRes get() {
-            when (sharedPreferences.getString(context.getString(R.string.pref_key_startup_page), "4")) {
-                "0" -> return R.id.nav_home_feed
-                "1" -> return R.id.nav_anime
-                "2" -> return R.id.nav_manga
-                "3" -> return R.id.nav_trending
-                "4" -> return R.id.nav_airing
-                "5" -> return R.id.nav_myanime
-                "6" -> return R.id.nav_mymanga
-                "7" -> return R.id.nav_hub
-                "8" -> return R.id.nav_reviews
-            }
-            return R.id.nav_airing
-        }
-
-    var isFreshInstall: Boolean = true
-    get() = sharedPreferences.getBoolean(_freshInstall, true)
-    set(value) {
-        field = value
-        sharedPreferences.edit {
-            putBoolean(_freshInstall, field)
-            apply()
-        }
-    }
-
-    var userLanguage: String = Locale.getDefault().language
-        get() {
-            return sharedPreferences.getString(
-                    context.getString(R.string.pref_key_selected_Language),
-                    Locale.getDefault().language
-            ) ?: Locale.getDefault().language
-        }
+    @get:KeyUtil.ApplicationTheme
+    @set:KeyUtil.ApplicationTheme
+    var theme: String = KeyUtil.THEME_LIGHT
+        get() = sharedPreferences.getString(context.getString(R.string.pref_key_app_theme), KeyUtil.THEME_LIGHT) ?: KeyUtil.THEME_LIGHT
         set(value) {
             field = value
             sharedPreferences.edit {
-                putString(context.getString(R.string.pref_key_selected_Language), field)
+                putString(context.getString(R.string.pref_key_app_theme), value)
+                apply()
+            }
+        }
+
+    // Returns the IDs of the startup page
+    val startupPage: String?
+        get() = sharedPreferences.getString(
+        context.getString(R.string.pref_key_startup_page), "3")
+
+    var isFreshInstall: Boolean = true
+        get() = sharedPreferences.getBoolean(_freshInstall, true)
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putBoolean(_freshInstall, field)
+                apply()
+            }
+        }
+
+    var userLanguage: String = Locale.getDefault().language
+        get() = sharedPreferences.getString(context.getString(R.string.pref_key_selected_language),
+        Locale.getDefault().language) ?: Locale.getDefault().language
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putString(context.getString(R.string.pref_key_selected_language), field)
                 apply()
             }
         }
 
     //Returns amount of time in seconds
     var syncTime: Int = 15
-        get() {
-            return sharedPreferences.getString(
-                    context.getString(R.string.pref_key_sync_frequency),
-                    "15"
-            )?.toInt() ?: 15
-        }
+        get() = sharedPreferences.getString(
+                    context.getString(R.string.pref_key_sync_frequency), "15")?.toInt() ?: 15
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -105,21 +91,6 @@ class Settings(private val context: Context) {
             field = value
             sharedPreferences.edit {
                 putBoolean(context.getString(R.string.pref_key_new_message_notifications), field)
-                apply()
-            }
-        }
-
-    var notificationsSound: String = "DEFAULT_SOUND"
-        get() {
-            return sharedPreferences.getString(
-                    context.getString(R.string.pref_key_ringtone),
-                    "DEFAULT_SOUND"
-            ) ?: "DEFAULT_SOUND"
-        }
-        set(value) {
-            field = value
-            sharedPreferences.edit {
-                putString(context.getString(R.string.pref_key_ringtone), field)
                 apply()
             }
         }
@@ -145,12 +116,7 @@ class Settings(private val context: Context) {
         }
 
     var seasonYear: Int = 0
-        get() {
-            return sharedPreferences.getInt(
-                    KeyUtil.arg_seasonYear,
-                    DateUtil.getCurrentYear(0)
-            )
-        }
+        get() = sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear(0))
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -162,12 +128,8 @@ class Settings(private val context: Context) {
     @set:KeyUtil.SortOrderType
     @get:KeyUtil.SortOrderType
     var sortOrder: String = KeyUtil.DESC
-        get() {
-            return sharedPreferences.getString(
-                    _sortOrder,
-                    KeyUtil.DESC
-            ) ?: KeyUtil.DESC
-        }
+        get() = sharedPreferences.getString(
+                    _sortOrder, KeyUtil.DESC) ?: KeyUtil.DESC
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -321,8 +283,7 @@ class Settings(private val context: Context) {
     val isUpdated: Boolean
         get() = versionCode < BuildConfig.VERSION_CODE
 
-    var versionCode: Int = 1
-        get() = sharedPreferences.getInt(_versionCode, 1)
+    var versionCode: Int = sharedPreferences.getInt(_versionCode, 1)
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -358,13 +319,6 @@ class Settings(private val context: Context) {
                 apply()
             }
         }
-
-    fun toggleTheme() {
-        sharedPreferences.edit {
-            putInt(_isLightTheme, if (theme == R.style.AppThemeLight) R.style.AppThemeDark else R.style.AppThemeLight)
-            apply()
-        }
-    }
 
     fun saveSeasonYear(year: Int) {
         sharedPreferences.edit {
@@ -402,8 +356,8 @@ class Settings(private val context: Context) {
     companion object {
 
         /** Application Base Options  */
-        const val _isLightTheme = "_isLightTheme"
         const val _updateChannel = "_updateChannel"
+        const val _appTheme = "application_theme"
 
         /** Api Keys  */
         private const val _genreFilter = "_genreFilter"

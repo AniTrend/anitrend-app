@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.collection
 
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 

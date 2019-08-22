@@ -1,16 +1,12 @@
 package com.mxt.anitrend.base.custom.view.text
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-
 import androidx.annotation.ColorRes
 import androidx.annotation.RequiresApi
-import androidx.databinding.BindingAdapter
-
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.CustomRatingWidgetBinding
@@ -21,12 +17,10 @@ import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by max on 2018/01/27.

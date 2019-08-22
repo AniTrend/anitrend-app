@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util;
+package com.mxt.anitrend.util.media;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +19,10 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
+import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 
 import retrofit2.Call;

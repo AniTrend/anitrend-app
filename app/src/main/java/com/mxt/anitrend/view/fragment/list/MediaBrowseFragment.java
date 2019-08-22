@@ -20,17 +20,16 @@ import com.mxt.anitrend.model.entity.anilist.Genre;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.GenreTagUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaActionUtil;
-import com.mxt.anitrend.util.MediaBrowseUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.Settings;
+import com.mxt.anitrend.util.collection.GenreTagUtil;
+import com.mxt.anitrend.util.date.DateUtil;
+import com.mxt.anitrend.util.media.MediaActionUtil;
+import com.mxt.anitrend.util.media.MediaBrowseUtil;
 import com.mxt.anitrend.view.activity.detail.MediaActivity;
 
 import java.util.Collections;
@@ -38,6 +37,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2018/02/03.

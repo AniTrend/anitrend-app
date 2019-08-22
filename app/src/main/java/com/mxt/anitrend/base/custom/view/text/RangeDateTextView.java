@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import androidx.databinding.BindingAdapter;
 
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
-import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.date.DateUtil;
 
 /**
  * Created by max on 2017/10/28.

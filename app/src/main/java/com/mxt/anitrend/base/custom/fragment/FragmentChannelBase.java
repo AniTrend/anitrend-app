@@ -31,9 +31,9 @@ import com.mxt.anitrend.model.entity.crunchy.Rss;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.EpisodeUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.collection.EpisodeUtil;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 

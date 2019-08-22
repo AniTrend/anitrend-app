@@ -12,9 +12,9 @@ import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaListUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
 
 import java.util.Collections;
 import java.util.List;

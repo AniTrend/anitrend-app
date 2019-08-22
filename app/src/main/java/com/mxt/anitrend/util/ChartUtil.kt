@@ -82,7 +82,7 @@ class ChartUtil {
         }
 
         fun build(context: Context) {
-            chartBase.legend.textColor = CompatUtil.getColorFromAttr(context, R.attr.titleColor)
+            chartBase.legend.textColor = context.getCompatColorAttr(R.attr.titleColor)
 
             with (chartBase.axisLeft) {
                 setLabelCount(5, false)

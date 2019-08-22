@@ -16,16 +16,13 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-import com.mxt.anitrend.extension.launchCatching
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.nguyenhoanglam.progresslayout.ProgressLayout
 import kotlinx.coroutines.*
-import timber.log.Timber
 import java.io.File
 import java.io.FileWriter
-import java.io.IOException
 import java.io.InputStreamReader
 
 class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by MainScope() {

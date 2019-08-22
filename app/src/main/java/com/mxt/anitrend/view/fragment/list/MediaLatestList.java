@@ -4,8 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class MediaLatestList extends MediaBrowseFragment {
 

@@ -4,6 +4,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrend;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.util.media.MediaUtil;
 
 import org.junit.After;
 import org.junit.Before;

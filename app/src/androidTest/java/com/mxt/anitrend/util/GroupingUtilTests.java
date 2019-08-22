@@ -8,6 +8,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem;
 import com.mxt.anitrend.model.entity.group.RecyclerItem;
+import com.mxt.anitrend.util.collection.GroupingUtil;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;

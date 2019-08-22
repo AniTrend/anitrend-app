@@ -2,6 +2,7 @@ package com.mxt.anitrend.util;
 
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
+import com.mxt.anitrend.util.collection.EpisodeUtil;
 
 import org.junit.Test;
 

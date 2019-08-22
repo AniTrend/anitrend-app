@@ -8,9 +8,8 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import io.github.wax911.library.model.request.QueryContainerBuilder
-
 import io.github.wax911.library.annotation.GraphQuery
+import io.github.wax911.library.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers

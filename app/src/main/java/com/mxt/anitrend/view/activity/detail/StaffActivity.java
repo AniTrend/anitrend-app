@@ -16,17 +16,17 @@ import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.model.entity.base.StaffBase;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/12/14.

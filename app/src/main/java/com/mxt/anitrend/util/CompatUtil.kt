@@ -29,6 +29,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getCompatColorAttr
+import com.mxt.anitrend.util.collection.ComparatorUtil
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import okhttp3.Cache
 import java.io.File
@@ -286,13 +287,13 @@ object CompatUtil {
             activity?.finish()
     }
 
-    fun isLightTheme(@StyleRes theme: Int): Boolean {
-        return theme == R.style.AppThemeLight
+    fun isLightTheme(@KeyUtil.ApplicationTheme theme: String?): Boolean {
+        return theme == null || theme == KeyUtil.THEME_LIGHT
     }
 
     fun isLightTheme(context: Context?): Boolean {
         return if (context != null)
-            Settings(context).theme == R.style.AppThemeLight
+            isLightTheme(Settings(context).theme)
         else
             true
     }

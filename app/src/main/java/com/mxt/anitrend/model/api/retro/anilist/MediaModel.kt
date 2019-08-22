@@ -1,6 +1,5 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import io.github.wax911.library.annotation.GraphQuery
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Media
@@ -12,8 +11,8 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import io.github.wax911.library.annotation.GraphQuery
 import io.github.wax911.library.model.request.QueryContainerBuilder
-
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers

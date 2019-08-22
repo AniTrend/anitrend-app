@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.FragmentActivity
+import com.mxt.anitrend.util.markdown.RegexUtil
 import java.util.regex.Matcher
 
 /**

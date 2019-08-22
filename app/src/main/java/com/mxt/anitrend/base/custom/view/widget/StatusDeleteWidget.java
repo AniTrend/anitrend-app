@@ -16,14 +16,14 @@ import com.mxt.anitrend.databinding.WidgetDeleteBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
-import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;

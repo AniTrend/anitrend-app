@@ -32,7 +32,7 @@ object GraphUtil : KoinComponent {
      * Used to check if the newly applied preference key is a should trigger an application refresh
      */
     fun isKeyFilter(preferenceKey: String): Boolean {
-        return !CompatUtil.equals(preferenceKey, Settings._isLightTheme) &&
+        return !CompatUtil.equals(preferenceKey, Settings._appTheme) &&
                 !CompatUtil.equals(preferenceKey, Settings._updateChannel)
     }
 

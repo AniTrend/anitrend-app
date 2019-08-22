@@ -5,14 +5,12 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
-
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.util.CompatUtil
-
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by max on 2017/11/25.

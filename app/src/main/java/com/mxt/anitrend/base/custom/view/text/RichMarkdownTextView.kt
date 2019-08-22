@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.util.LinkifyCompat
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.util.MarkDownUtil
-import com.mxt.anitrend.util.RegexUtil
+import com.mxt.anitrend.util.markdown.MarkDownUtil
+import com.mxt.anitrend.util.markdown.RegexUtil
 import io.noties.markwon.Markwon
 import org.koin.core.KoinComponent
 import org.koin.core.inject

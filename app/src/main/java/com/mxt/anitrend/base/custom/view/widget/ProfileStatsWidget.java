@@ -21,15 +21,15 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding;
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 import com.mxt.anitrend.util.graphql.GraphUtil;
-import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
 
 import java.util.Locale;
 
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;

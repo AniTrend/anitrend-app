@@ -11,9 +11,9 @@ import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DateUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.view.activity.base.WelcomeActivity
 
 /**

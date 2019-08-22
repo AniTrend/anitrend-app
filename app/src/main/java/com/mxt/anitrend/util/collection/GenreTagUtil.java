@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util;
+package com.mxt.anitrend.util.collection;
 
 
 import androidx.annotation.NonNull;

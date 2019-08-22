@@ -29,7 +29,10 @@ public interface KeyUtil {
     String WorkAuthenticatorId = "one_notification_sync";
 
 
+    String THEME_LIGHT = "light", THEME_DARK = "dark", THEME_BLACK = "black";
 
+    @StringDef({THEME_LIGHT, THEME_DARK, THEME_BLACK})
+    @interface ApplicationTheme {}
 
     // ------------------------------------------------------------------------------------
     // GraphQL Variable Params Keys

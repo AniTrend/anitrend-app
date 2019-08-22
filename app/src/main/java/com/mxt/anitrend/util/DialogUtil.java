@@ -21,6 +21,7 @@ import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
 import com.mxt.anitrend.extension.ContextExtKt;
+import com.mxt.anitrend.util.markdown.MarkDownUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

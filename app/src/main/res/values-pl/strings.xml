@@ -236,8 +236,6 @@
 
     <string name="drawer_section_configuration">Konfiguracja</string>
     <string name="drawer_title_filter">Filtr</string>
-    <string name="drawer_light_theme">Przełącz motyw</string>
-    <string name="drawer_title_style">Przełącz styl</string>
 
     <string name="drawer_section_account">Konto</string>
     <string name="drawer_title_sign_in">Zaloguj</string>
@@ -311,16 +309,6 @@
     <string name="pref_header_general">Ogólne</string>
     <string name="pref_header_general_summary">Skonfiguruj podstawowe zachowanie aplikacji</string>
 
-    <string name="pref_title_auto_increment">Inteligentny przyrost postępów</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Automatycznie zwiększa liczbe odcinków albo rodziałów kiedy
-        tapniesz na nie używając nowego stylu list w twoich wychodzących, listach anime i mang,
-        zamiast otwierać okno dialogowe.
-        ]]>
-    </string>
-
     <string name="pref_title_startup_page">Strona Startowa</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -367,10 +355,6 @@
 
     <string name="pref_title_new_message_notifications">Powiadomienia o nowych wiadomościach</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Dzwięk powiadomień</string>
-
-    <string name="pref_ringtone_silent">Cichy</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -928,7 +912,6 @@
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -971,7 +954,6 @@
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
     <string name="title_activity_studio">Studio</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="text_error_auth_token">Invalid session, please log out and back in</string>
     <string name="text_migration_in_progress">Application is upgrading, please wait</string>
     <string name="title_migration_failed">Upgrade Failed</string>

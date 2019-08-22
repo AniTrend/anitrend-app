@@ -9,9 +9,9 @@ import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotificationUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
