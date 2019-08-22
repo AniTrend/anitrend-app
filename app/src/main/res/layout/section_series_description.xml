@@ -36,7 +36,7 @@
                 app:startDate="@{model.startDate}"
                 tools:text="Started: 2017/09/30"/>
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="@dimen/xl_margin"
                 android:layout_height="wrap_content" />
 
@@ -50,7 +50,7 @@
                 tools:text="Ended: 2017/10/30"/>
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/md_margin" />
 
@@ -60,11 +60,11 @@
             android:text="@string/title_series_japanese_name"
             />
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/md_margin" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
@@ -72,7 +72,7 @@
             android:textIsSelectable="true"
             tools:text="銀魂" />
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/xl_margin" />
 
@@ -82,7 +82,7 @@
             android:text="@string/title_series_description"
             />
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/md_margin" />
 

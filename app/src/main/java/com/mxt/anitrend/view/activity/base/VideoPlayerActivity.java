@@ -3,11 +3,12 @@ package com.mxt.anitrend.view.activity.base;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
@@ -38,7 +39,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
             contentLink = getIntent().getStringExtra(KeyUtil.arg_model);
             onActivityReady();
         } else {
-            NotifyUtil.makeText(this, R.string.text_error_request, R.drawable.ic_warning_white_18dp, Toast.LENGTH_LONG).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.text_error_request, R.drawable.ic_warning_white_18dp, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -62,7 +63,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
             e.printStackTrace();
         }
         if(Jzvd.backPress()) {
-            NotifyUtil.makeText(this, R.string.text_confirm_exit, Toast.LENGTH_SHORT).show();
+            NotifyUtil.INSTANCE.makeText(this, R.string.text_confirm_exit, Toast.LENGTH_SHORT).show();
             return;
         }
         super.onBackPressed();
@@ -75,7 +76,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
     @Override
     protected void onActivityReady() {
         JZDataSource dataSource = new JZDataSource(contentLink);
-        player.setUp(dataSource, Jzvd.SCREEN_WINDOW_FULLSCREEN);
+        player.setUp(dataSource, Jzvd.SCREEN_FULLSCREEN);
         // player.backButton.setOnClickListener(this);
         // player.tinyBackImageView.setVisibility(View.INVISIBLE);
         player.fullscreenButton.setImageResource(R.drawable.jz_shrink);
@@ -97,7 +98,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
 
     public void onPause() {
         super.onPause();
-        Jzvd.resetAllVideos();
+        Jzvd.releaseAllVideos();
     }
 
     /**

@@ -2,6 +2,7 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import androidx.work.*
+import com.mxt.anitrend.extension.appContext
 
 import com.mxt.anitrend.service.JobDispatcherService
 
@@ -25,7 +26,7 @@ object JobSchedulerUtil {
      * @param context any valid application context
      */
     fun scheduleJob(context: Context) {
-        val applicationPref = ApplicationPref(context)
+        val applicationPref = Settings(context)
         if (applicationPref.isAuthenticated && applicationPref.isNotificationEnabled) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(JobDispatcherService::class.java,
                     applicationPref.syncTime.toLong(), TimeUnit.MINUTES)
@@ -36,7 +37,7 @@ object JobSchedulerUtil {
                     .setConstraints(constraints)
                     .build()
 
-            WorkManager.getInstance()
+            WorkManager.getInstance(context)
                     .enqueueUniquePeriodicWork(KeyUtil.WorkNotificationId,
                             ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest)
         }
@@ -45,7 +46,7 @@ object JobSchedulerUtil {
     /**
      * Cancels any scheduled jobs.
      */
-    fun cancelJob() {
-        WorkManager.getInstance().cancelUniqueWork(KeyUtil.WorkNotificationId)
+    fun cancelJob(context: Context = appContext) {
+        WorkManager.getInstance(context).cancelUniqueWork(KeyUtil.WorkNotificationId)
     }
 }

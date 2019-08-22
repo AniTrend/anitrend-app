@@ -1,12 +1,13 @@
 package com.mxt.anitrend.base.custom.view.text;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.util.AttributeSet;
+
+import androidx.databinding.BindingAdapter;
 
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.date.DateUtil;
 
 import javax.annotation.Nullable;
 

@@ -1,11 +1,12 @@
 package com.mxt.anitrend.adapter.recycler.group;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;

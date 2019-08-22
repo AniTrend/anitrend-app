@@ -10,7 +10,7 @@ import com.mxt.anitrend.model.entity.anilist.UserStats;
  * GenreStats for userStats
  * @see UserStats
  */
-
+@Deprecated
 public class GenreStats implements Parcelable {
 
     private String genre;

@@ -2,8 +2,9 @@ package com.mxt.anitrend.view.fragment.search;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
@@ -11,13 +12,14 @@ import com.mxt.anitrend.adapter.recycler.index.StudioAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.model.entity.container.body.PageContainer;
-import com.mxt.anitrend.model.entity.container.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.activity.detail.StudioActivity;
 
 import java.util.Collections;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/12/20.

@@ -1,8 +1,8 @@
 package com.mxt.anitrend.util;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.LongDef;
-import android.support.annotation.StringDef;
+import androidx.annotation.IntDef;
+import androidx.annotation.LongDef;
+import androidx.annotation.StringDef;
 
 /**
  * Created by max on 2017/09/16.
@@ -29,7 +29,10 @@ public interface KeyUtil {
     String WorkAuthenticatorId = "one_notification_sync";
 
 
+    String THEME_LIGHT = "light", THEME_DARK = "dark", THEME_BLACK = "black";
 
+    @StringDef({THEME_LIGHT, THEME_DARK, THEME_BLACK})
+    @interface ApplicationTheme {}
 
     // ------------------------------------------------------------------------------------
     // GraphQL Variable Params Keys

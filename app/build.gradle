@@ -1,18 +1,20 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'io.objectbox'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("io.objectbox")
+}
 
 android {
-    compileSdkVersion rootProject.compileSdk
+    compileSdkVersion compileSdk
     defaultConfig {
         applicationId "com.mxt.anitrend"
-        minSdkVersion rootProject.minSdk
-        targetSdkVersion rootProject.targetSdk
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode rootProject.versionCode
         versionName rootProject.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
@@ -31,12 +33,10 @@ android {
             if (rootProject.file("secrets.properties").exists()) {
                 def props = new Properties()
                 props.load(new FileInputStream(rootProject.file("secrets.properties")))
-                it.buildConfigField "String", "API_KEY", props['API_KEY']
                 it.buildConfigField "String", "CLIENT_ID", props['CLIENT_ID']
                 it.buildConfigField "String", "CLIENT_SECRET", props['CLIENT_SECRET']
                 it.buildConfigField "String", "GIPHY_KEY", props['GIPHY_KEY']
             } else {
-                it.buildConfigField "String", "API_KEY", "API_KEY"
                 it.buildConfigField "String", "CLIENT_ID", "CLIENT_ID"
                 it.buildConfigField "String", "CLIENT_SECRET", "CLIENT_SECRET"
                 it.buildConfigField "String", "GIPHY_KEY", "GIPHY_KEY"
@@ -58,12 +58,18 @@ android {
             it.buildConfigField "String", "GIPHY_LINK", GIPHY_LINK
         }
     }
-    dataBinding {
-        enabled = true
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    dataBinding {
+        enabled = true
     }
     dexOptions {
         jumboMode true
@@ -74,112 +80,144 @@ configurations.all {
     resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    /** Testing Libraries */
-    testImplementation 'junit:junit:4.12'
-    testImplementation "org.hamcrest:hamcrest-library:${rootProject.hemcrest}"
-    testImplementation "org.mockito:mockito-core:${rootProject.mockito}"
-    androidTestImplementation "org.mockito:mockito-android:${rootProject.mockito}"
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    /** Koin AndroidX Dependency Injection */
+    implementation "org.koin:koin-core:$koin"
+    implementation "org.koin:koin-core-ext:$koin"
+    implementation "org.koin:koin-androidx-scope:$koin"
+    implementation "org.koin:koin-androidx-viewmodel:$koin"
+
+    /** Kotlin Libraries */
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCore"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
+
+    /** Material Design */
+    implementation "com.google.android.material:material:$material"
+
+    implementation "androidx.constraintlayout:constraintlayout:$constraint"
+    implementation 'androidx.preference:preference-ktx:1.1.0-rc01'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
 
     /** Architecture Components */
-    implementation "android.arch.lifecycle:extensions:${rootProject.architecture}"
-    implementation "android.arch.work:work-runtime-ktx:${rootProject.workManager}"
-
-    /** Android Support Libraries */
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation "com.android.support:appcompat-v7:${rootProject.supportLibrary}"
-    implementation "com.android.support:design:${rootProject.supportLibrary}"
-    implementation "com.android.support:cardview-v7:${rootProject.supportLibrary}"
-    implementation "com.android.support:support-vector-drawable:${rootProject.supportLibrary}"
+    implementation "androidx.core:core-ktx:$ktx"
+    implementation "androidx.fragment:fragment-ktx:$fragmentKtx"
+    implementation "androidx.work:work-runtime-ktx:$workerKtx"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidx"
 
     /** Fire-base Libraries */
-    implementation "com.google.firebase:firebase-core:${rootProject.firebase}"
+    implementation "com.google.firebase:firebase-core:$firebase"
+    implementation "com.google.firebase:firebase-analytics:$firebase"
 
     /** Crash Analytics */
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
-        transitive = true
-    }
+    implementation("com.crashlytics.sdk.android:crashlytics:$crashlytics")
+
+    /** Glide Libraries */
+    implementation "com.github.bumptech.glide:glide:$glide"
+    implementation 'androidx.preference:preference:1.1.0-rc01'
+    kapt "com.github.bumptech.glide:compiler:$glide"
+
+    /** Material Dialogs */
+    implementation "com.afollestad.material-dialogs:core:$materialDialogs"
 
     /** Retrofit Libraries */
-    implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofit}"
-    implementation "com.squareup.retrofit2:converter-gson:${rootProject.retrofit}"
-    implementation("com.squareup.retrofit2:converter-simplexml:${rootProject.retrofit}") {
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation("com.squareup.retrofit2:converter-simplexml:$retrofit") {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-
-    /** Glide Libraries */
-    implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
-    kapt "com.github.bumptech.glide:compiler:${rootProject.glide}"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpLogger"
 
     /** Butter Knife Libraries */
-    implementation "com.jakewharton:butterknife:${rootProject.butterKnife}"
-    kapt "com.jakewharton:butterknife-compiler:${rootProject.butterKnife}"
-
-    /** State Layout Library */
-    implementation 'com.github.nguyenhoanglam:ProgressLayout:1.0.1'
-
-    /** Event Bus Library */
-    implementation 'org.greenrobot:eventbus:3.1.1'
-
-    /** Material Dialogs Library*/
-    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
-
-    /** Object Box */
-    implementation "io.objectbox:objectbox-android:${rootProject.objectBox}"
-    kapt "io.objectbox:objectbox-processor:${rootProject.objectBox}"
-
-    /** Pretty Time */
-    implementation 'org.ocpsoft.prettytime:prettytime:4.0.2.Final'
-
-    /** Smart Tab Layout */
-    implementation 'com.ogaclejapan.smarttablayout:library:1.7.0'
-
-    /** Java Streams Port */
-    implementation 'com.annimon:stream:1.2.1'
-
-    /** Highly Customizable Video Player */
-    implementation 'cn.jzvd:jiaozivideoplayer:7.0_preview'
-
-    /** Photo View */
-    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
-
-    /** Alerter */
-    implementation 'com.tapadoo.android:alerter:2.0.4'
+    implementation "com.jakewharton:butterknife:$butterKnife"
+    kapt "com.jakewharton:butterknife-compiler:$butterKnife"
 
     /** Rich Text Markdown Parser */
-    implementation "ru.noties.markwon:core:$rootProject.markwon"
-    implementation "ru.noties.markwon:html:$rootProject.markwon"
-    implementation "ru.noties.markwon:image-okhttp:$rootProject.markwon"
+    implementation "io.noties.markwon:core:$markwon"
+    implementation "io.noties.markwon:html:$markwon"
+    implementation "io.noties.markwon:image-glide:$markwon"
+    implementation "io.noties.markwon:linkify:$markwon"
+
+    /** Object Box */
+    implementation "io.objectbox:objectbox-android:$objectBox"
+    kapt "io.objectbox:objectbox-processor:$objectBox"
+
+    /** Flex Box */
+    implementation "com.google.android:flexbox:$flexBox"
+
+    /** Smart Tab Layout */
+    implementation "com.ogaclejapan.smarttablayout:library:$smartTab"
 
     /** Tap Target Prompt */
-    implementation 'uk.co.samuelwall:material-tap-target-prompt:2.14.0'
+    implementation "uk.co.samuelwall:material-tap-target-prompt:$tapTarget"
 
-    /** Circular Progress View */
-    implementation 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+    /** Emojify */
+    implementation "com.github.wax911:android-emojify:$emojify"
+
+    /** GraphQL */
+    implementation "com.github.anitrend:retrofit-graphql:$graphql"
+
+    /** Timber */
+    implementation "com.jakewharton.timber:timber:$timber"
+
+    /** Pretty Time */
+    implementation "org.ocpsoft.prettytime:prettytime:$prettyTime"
+
+    /** Highly Customizable Video Player */
+    implementation "cn.jzvd:jiaozivideoplayer:$jiaoziVideoPlayer"
+
+    /** Photo View */
+    implementation "com.github.chrisbanes:PhotoView:$photoView"
 
     /** On-boarding Experience */
-    implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
+    implementation "com.codemybrainsout.onboarding:onboarder:$onboarder"
 
     /** Charts */
-    implementation'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation "com.github.PhilJay:MPAndroidChart:v$mpAndroidChart"
 
     /** About Library */
-    implementation 'com.github.medyo:android-about-page:1.2.5'
+    implementation "com.github.medyo:android-about-page:$aboutPage"
 
     /** Multi Dex */
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation "androidx.multidex:multidex:$multidex"
 
     /** Material Search View */
-    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    implementation "com.github.ma-myair:MaterialSearchView:$materialSearchView"
 
-    implementation "com.github.wax911:android-emojify:$rootProject.emojify"
+    /** State Layout Library */
+    implementation "com.github.nguyenhoanglam:ProgressLayout:$progressLayout"
+
+    /** Event Bus Library */
+    implementation "org.greenrobot:eventbus:$eventBus"
+
+    /** Alerter */
+    implementation "com.tapadoo.android:alerter:$alerter"
+
+    /** Stream */
+    implementation "com.annimon:stream:$stream"
+
+    /** Circular Progress View */
+    implementation "com.github.rahatarmanahmed:circularprogressview:$circularProgressView"
+
+    /** Testing-only dependencies */
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-core:$mockito"
+    testImplementation "org.hamcrest:hamcrest-library:$hemcrest"
+
+    androidTestImplementation "androidx.test:runner:$runner"
+    androidTestImplementation "org.mockito:mockito-android:$mockito"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
 }
 
-apply plugin: 'com.google.gms.google-services'
+if (file("google-services.json").exists()) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'io.fabric'
+}

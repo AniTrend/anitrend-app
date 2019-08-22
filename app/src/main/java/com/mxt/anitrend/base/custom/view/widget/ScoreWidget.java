@@ -1,12 +1,13 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.CompatUtil;

@@ -5,7 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Review" />
-        <import type="com.mxt.anitrend.util.DateUtil" />
+        <import type="com.mxt.anitrend.util.date.DateUtil" />
     </data>
 
     <LinearLayout
@@ -44,7 +44,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.widget.Space
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/lg_margin" />
 
@@ -73,7 +73,7 @@
                         android:ellipsize="end"
                         tools:text="Gintama." />
 
-                    <android.support.v4.widget.Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/lg_margin" />
 

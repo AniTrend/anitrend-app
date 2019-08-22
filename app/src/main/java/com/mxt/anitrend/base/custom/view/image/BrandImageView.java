@@ -14,12 +14,13 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatImageView;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;

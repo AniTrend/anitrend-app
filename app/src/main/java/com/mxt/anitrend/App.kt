@@ -3,19 +3,25 @@ package com.mxt.anitrend
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.multidex.MultiDex
-import android.support.multidex.MultiDexApplication
-import com.crashlytics.android.core.CrashlyticsCore
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.multidex.MultiDex
+import androidx.multidex.MultiDexApplication
 import com.google.android.gms.security.ProviderInstaller
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.mxt.anitrend.model.entity.MyObjectBox
-import com.mxt.anitrend.util.ApplicationPref
-import com.mxt.anitrend.util.JobSchedulerUtil
-import com.mxt.anitrend.util.LocaleUtil
-import io.fabric.sdk.android.Fabric
-import io.objectbox.BoxStore
+import com.mxt.anitrend.analytics.AnalyticsLogging
+import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.koin.AppModule.appModule
+import com.mxt.anitrend.koin.AppModule.presenterModule
+import com.mxt.anitrend.koin.AppModule.widgetModule
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.locale.LocaleUtil
 import io.wax911.emojify.EmojiManager
 import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import timber.log.Timber
 
 /**
  * Created by max on 2017/10/22.
@@ -24,9 +30,20 @@ import org.greenrobot.eventbus.EventBus
 
 class App : MultiDexApplication() {
 
-    val applicationPref = ApplicationPref(this)
+    private val supportAnalytics by inject<ISupportAnalytics>()
+    private val settings by inject<Settings>()
 
-    init {
+    /**
+     * Timber logging tree depending on the build type we plant the appropriate tree
+     */
+    private fun plantLoggingTree() {
+        when (BuildConfig.DEBUG) {
+            true -> Timber.plant(Timber.DebugTree())
+            else -> Timber.plant(supportAnalytics as AnalyticsLogging)
+        }
+    }
+
+    private fun initializeEventBus() {
         EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
                 .sendNoSubscriberEvent(BuildConfig.DEBUG)
                 .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
@@ -34,57 +51,22 @@ class App : MultiDexApplication() {
                 .installDefaultEventBus()
     }
 
-    /**
-     * @return Application global registered firebase analytics
-     *
-     * @see com.mxt.anitrend.util.AnalyticsUtil
+    /** [Koin](https://insert-koin.io/docs/2.0/getting-started/)
+     * Initializes Koin dependency injection
      */
-    var analytics: FirebaseAnalytics? = null
-        private set
-    /**
-     * @return Default application object box database instance
-     *
-     * @see com.mxt.anitrend.data.DatabaseHelper
-     */
-    lateinit var boxStore: BoxStore
-        private set
-
-    /**
-     * Get application global registered fabric instance, depending on
-     * the current application preferences the application may have
-     * disabled the current instance from sending any data
-     *
-     * @see com.mxt.anitrend.util.AnalyticsUtil
-     */
-    var fabric: Fabric? = null
-        private set
-
-    private fun setupBoxStore() {
-        boxStore = MyObjectBox.builder()
-                .androidContext(this@App)
-                .build()
-    }
-
-    private fun setCrashAnalytics() {
-        if (!BuildConfig.DEBUG)
-            if (applicationPref.isCrashReportsEnabled == true) {
-                val crashlyticsCore = CrashlyticsCore.Builder()
-                        .build()
-
-                fabric = Fabric.with(Fabric.Builder(this)
-                        .kits(crashlyticsCore)
-                        .appIdentifier(BuildConfig.BUILD_TYPE)
-                        .build())
-            }
-    }
-
-    private fun initApp() {
-        if (applicationPref.isUsageAnalyticsEnabled == true) {
-            analytics = FirebaseAnalytics.getInstance(this).apply {
-                setAnalyticsCollectionEnabled(applicationPref.isUsageAnalyticsEnabled!!)
-            }
+    private fun initializeDependencyInjection() {
+        startKoin {
+            androidLogger()
+            androidContext(applicationContext)
+            modules(listOf(appModule, widgetModule, presenterModule))
         }
-        try {
+    }
+
+    private fun initializeApplication() {
+        runCatching {
+            EmojiManager.initEmojiData(this)
+        }.exceptionOrNull()?.printStackTrace()
+        runCatching {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 ProviderInstaller.installIfNeededAsync(
                         applicationContext,
@@ -98,22 +80,27 @@ class App : MultiDexApplication() {
                             }
                         }
                 )
-            EmojiManager.initEmojiData(this)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        }.exceptionOrNull()?.printStackTrace()
+    }
+
+    fun applyTheme() {
+        if (CompatUtil.isLightTheme(settings.theme))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
 
     override fun onCreate() {
         super.onCreate()
-        setCrashAnalytics()
-        setupBoxStore()
-        initApp()
+        initializeDependencyInjection()
+        initializeApplication()
+        initializeEventBus()
+        plantLoggingTree()
+        applyTheme()
     }
 
     override fun attachBaseContext(base: Context) {
-        val appPrefs = ApplicationPref(base)
-        super.attachBaseContext(LocaleUtil.onAttach(base, appPrefs))
+        super.attachBaseContext(LocaleUtil.onAttach(base))
         MultiDex.install(this)
     }
 }

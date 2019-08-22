@@ -4,14 +4,15 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.annimon.stream.IntPair;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter;

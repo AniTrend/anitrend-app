@@ -1,20 +1,24 @@
 package com.mxt.anitrend.adapter.recycler.detail;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
+import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedSlideBinding;
-import com.mxt.anitrend.util.RegexUtil;
+import com.mxt.anitrend.util.markdown.RegexUtil;
 
 import java.util.List;
 
@@ -67,7 +71,7 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
         @Override
         public void onBindViewHolder(String model) {
             String targetModel;
-            RequestOptions requestOptions = null;
+            boolean isCenterCrop = false;
             switch (contentTypes.get(getAdapterPosition()).toLowerCase()) {
                 case RegexUtil.KEY_IMG:
                     targetModel = model;
@@ -77,22 +81,36 @@ public class ImagePreviewAdapter extends RecyclerViewAdapter<String> {
                 case RegexUtil.KEY_YOU:
                     targetModel = RegexUtil.INSTANCE.getYoutubeThumb(model);
                     binding.feedPlayBack.setVisibility(View.VISIBLE);
-                    requestOptions = RequestOptions.centerCropTransform();
+                    isCenterCrop = true;
                     break;
                 default:
                     targetModel = RegexUtil.NO_THUMBNAIL;
                     binding.feedPlayBack.setVisibility(View.VISIBLE);
+                    isCenterCrop = true;
                     break;
             }
 
-            if(requestOptions == null)
+            if(!isCenterCrop)
                 Glide.with(getContext()).load(targetModel)
                         .transition(DrawableTransitionOptions.withCrossFade(250))
+                        .transform(
+                                new CenterInside(),
+                                new RoundedCorners(
+                                        context.getResources().
+                                                getDimensionPixelSize(R.dimen.md_margin)
+                                )
+                        )
                         .into(binding.feedStatusImage);
             else
                 Glide.with(getContext()).load(targetModel)
                         .transition(DrawableTransitionOptions.withCrossFade(250))
-                        .apply(RequestOptions.centerCropTransform())
+                        .transform(
+                                new CenterCrop(),
+                                new RoundedCorners(
+                                        context.getResources().
+                                                getDimensionPixelSize(R.dimen.md_margin)
+                                )
+                        )
                         .into(binding.feedStatusImage);
             binding.executePendingBindings();
         }

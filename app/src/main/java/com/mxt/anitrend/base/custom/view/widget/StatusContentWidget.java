@@ -5,17 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SnapHelper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
@@ -30,7 +31,7 @@ import com.mxt.anitrend.util.CenterSnapUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.RegexUtil;
+import com.mxt.anitrend.util.markdown.RegexUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity;
 
@@ -176,7 +177,7 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
                     getContext().startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
-                    NotifyUtil.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

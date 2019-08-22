@@ -2,11 +2,15 @@ package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 
+import androidx.annotation.Nullable;
+
 import com.mxt.anitrend.data.converter.MediaListOptionsConverter;
 import com.mxt.anitrend.data.converter.UserOptionsConverter;
+import com.mxt.anitrend.data.converter.UserStatisticTypesConverter;
 import com.mxt.anitrend.data.converter.UserStatsConverter;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.anilist.meta.UserOptions;
+import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
 import com.mxt.anitrend.model.entity.base.UserBase;
 
 import io.objectbox.annotation.Convert;
@@ -25,7 +29,11 @@ public class User extends UserBase {
     @Convert(converter = MediaListOptionsConverter.class, dbType = String.class)
     private MediaListOptions mediaListOptions;
     @Convert(converter = UserStatsConverter.class, dbType = String.class)
+    @Deprecated
     private UserStats stats;
+    @Nullable
+    @Convert(converter = UserStatisticTypesConverter.class, dbType = String.class)
+    private UserStatisticTypes statistics;
     private int unreadNotificationCount;
 
     public User() {
@@ -104,6 +112,11 @@ public class User extends UserBase {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    @Nullable
+    public UserStatisticTypes getStatistics() {
+        return statistics;
     }
 
     public void setStats(UserStats stats) {

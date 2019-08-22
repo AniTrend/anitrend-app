@@ -1,16 +1,15 @@
 package com.mxt.anitrend.model.api.retro;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
-import com.mxt.anitrend.base.custom.annotation.processor.GraphProcessor;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
-import com.mxt.anitrend.model.api.converter.GraphQLConverter;
+import com.mxt.anitrend.model.api.converter.AniGraphConverter;
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor;
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor;
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor;
@@ -20,8 +19,8 @@ import com.mxt.anitrend.model.api.retro.base.RepositoryModel;
 import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel;
 import com.mxt.anitrend.model.entity.anilist.WebToken;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +32,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/10/14.
@@ -90,13 +90,12 @@ public class WebFactory {
      */
     public static <S> S createService(@NonNull Class<S> serviceClass, Context context) {
         WebTokenRequest.getToken(context);
-        GraphProcessor.getInstance(context);
         if(mRetrofit == null) {
             OkHttpClient.Builder httpClient = createHttpClient(new AuthInterceptor(context),
-                    HttpLoggingInterceptor.Level.NONE);
+                    HttpLoggingInterceptor.Level.HEADERS);
 
             mRetrofit = new Retrofit.Builder().client(httpClient.build())
-                    .addConverterFactory(GraphQLConverter.create(context))
+                    .addConverterFactory(AniGraphConverter.Companion.create(context))
                     .baseUrl(BuildConfig.API_LINK)
                     .build();
         }
@@ -106,7 +105,7 @@ public class WebFactory {
     public static EpisodeModel createCrunchyService(boolean feeds, Context context) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(feeds?BuildConfig.FEEDS_LINK:BuildConfig.CRUNCHY_LINK)
                 .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
-                .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.BASIC)
+                .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.HEADERS)
                         .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
                         .cache(CompatUtil.INSTANCE.cacheProvider(context)).build())
                 .build();
@@ -117,7 +116,7 @@ public class WebFactory {
         if(mGiphy == null) {
             mGiphy = new Retrofit.Builder().baseUrl(BuildConfig.GIPHY_LINK)
                     .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.BASIC)
+                    .client(createHttpClient(new CacheInterceptor(context, true), HttpLoggingInterceptor.Level.HEADERS)
                             .addNetworkInterceptor(new NetworkCacheInterceptor(context, true))
                             .cache(CompatUtil.INSTANCE.cacheProvider(context)).build())
                     .build();
@@ -127,7 +126,7 @@ public class WebFactory {
 
     public static RepositoryModel createRepositoryService() {
         return new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson))
-                .client(createHttpClient(null, HttpLoggingInterceptor.Level.BODY).build())
+                .client(createHttpClient(null, HttpLoggingInterceptor.Level.HEADERS).build())
                 .baseUrl(BuildConfig.APP_REPO).build().create(RepositoryModel.class);
     }
 
@@ -137,7 +136,7 @@ public class WebFactory {
     public static @Nullable WebToken requestCodeTokenSync(String code) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .client(createHttpClient(null, HttpLoggingInterceptor.Level.NONE)
+                    .client(createHttpClient(null, HttpLoggingInterceptor.Level.HEADERS)
                     .build()).addConverterFactory(GsonConverterFactory.create(gson))
                     .baseUrl(BuildConfig.API_AUTH_LINK)
                     .build();
@@ -147,9 +146,10 @@ public class WebFactory {
 
             Response<WebToken> response = refreshTokenCall.execute();
             if(!response.isSuccessful())
-                Log.e("requestCodeTokenSync", ErrorUtil.INSTANCE.getError(response));
+                Timber.tag("requestCodeTokenSync").w(AniGraphErrorUtilKt.apiError(response));
             return response.body();
         } catch (Exception ex) {
+            Timber.tag("requestCodeTokenSync").e(ex);
             ex.printStackTrace();
             return null;
         }

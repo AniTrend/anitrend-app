@@ -2,16 +2,17 @@ package com.mxt.anitrend.view.fragment.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import com.mxt.anitrend.view.fragment.list.FeedListFragment;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;

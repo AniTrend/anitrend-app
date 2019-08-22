@@ -1,10 +1,11 @@
 package com.mxt.anitrend.base.custom.view.container;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
@@ -47,7 +48,7 @@ public class CardViewBase extends CardView implements CustomView {
     }
 
     protected void applyStyle(int contentPadding) {
-        setRadius(getResources().getDimensionPixelSize(R.dimen.xl_margin));
+        setRadius(getResources().getDimensionPixelSize(R.dimen.lg_margin));
         setUseCompatPadding(true);
         setPreventCornerOverlap(false);
         setContentPadding(contentPadding, contentPadding, contentPadding, contentPadding);

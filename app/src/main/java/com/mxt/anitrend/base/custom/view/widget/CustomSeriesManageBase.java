@@ -3,11 +3,12 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter;
@@ -17,6 +18,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,7 +102,7 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     /**
      * Saves the current views states into the model
      * and returns a bundle of the params
-     * @see com.mxt.anitrend.util.MediaListUtil
+     * @see MediaListUtil
      */
     public abstract Bundle persistChanges();
 

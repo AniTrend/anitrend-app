@@ -28,7 +28,7 @@
                 app:srcCompat="@drawable/ic_loyalty_white_24dp"
                 app:tint="?colorAccent"/>
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="@dimen/xl_margin"
                 android:layout_height="wrap_content" />
 
@@ -47,7 +47,7 @@
                     app:isSpoiler="@{model.mediaSpoiler}"
                     tools:text="High School"/>
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="@dimen/lg_margin"
                     android:layout_height="wrap_content" />
 

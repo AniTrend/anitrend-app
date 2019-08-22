@@ -1,0 +1,216 @@
+query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typeIn: [NotificationType], $resetNotificationCount: Boolean = false) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... on PageInfo {
+        total
+        perPage
+        currentPage
+        hasNextPage
+      }
+    }
+    notifications(type: $type, type_in: $typeIn, resetNotificationCount: $resetNotificationCount) {
+      ... on AiringNotification {
+        id
+        type
+        createdAt
+        contexts
+        episode
+        media {
+          ...mediaBase
+        }
+      }
+      ... on FollowingNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityMessageNotification {
+        id
+        type
+        createdAt
+        context
+        activityId
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityMentionNotification {
+        id
+        type
+        createdAt
+        context
+        activityId
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityReplyNotification {
+        id
+        type
+        createdAt
+        context
+        activityId
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityLikeNotification {
+        id
+        type
+        createdAt
+        context
+        activityId
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityReplySubscribedNotification {
+        id
+        type
+        createdAt
+        context
+        activityId
+        user {
+          ...userBase
+        }
+      }
+      ... on ActivityReplyLikeNotification {
+        id
+        type
+        createdAt
+        context
+        activityId
+        user {
+          ...userBase
+        }
+      }
+      ... on ThreadCommentMentionNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on ThreadCommentReplyNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on ThreadCommentSubscribedNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on ThreadCommentLikeNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on ThreadLikeNotification {
+        id
+        type
+        createdAt
+        context
+        user {
+          ...userBase
+        }
+      }
+      ... on RelatedMediaAdditionNotification {
+        id
+        type
+        createdAt
+        context
+        media {
+          ...mediaBase
+        }
+      }
+    }
+  }
+}
+
+fragment mediaBase on Media {
+  ... on Media {
+    id
+    title {
+      ... on MediaTitle {
+        english
+        romaji
+        native
+        userPreferred
+      }
+    }
+    coverImage {
+      ... on MediaCoverImage {
+        large
+        medium
+        extraLarge
+      }
+    }
+    type
+    format
+    season
+    status
+    meanScore
+    averageScore
+    startDate {
+      ... on FuzzyDate {
+        day
+        month
+        year
+      }
+    }
+    endDate {
+      ... on FuzzyDate {
+        day
+        month
+        year
+      }
+    }
+    episodes
+    chapters
+    volumes
+    isAdult
+    isFavourite
+    nextAiringEpisode {
+      ... on AiringSchedule {
+        id
+        airingAt
+        timeUntilAiring
+        episode
+      }
+    }
+  }
+}
+
+fragment userBase on User {
+  ... on User {
+    id
+    name
+    avatar {
+      ... on UserAvatar {
+        large
+        medium
+      }
+    }
+    bannerImage
+    isFollowing
+  }
+}

@@ -3,9 +3,10 @@ package com.mxt.anitrend.view.sheet;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
@@ -13,9 +14,9 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
+import com.mxt.anitrend.extension.AppExtKt;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.base.UserBase;
-import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -110,7 +111,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
     @SuppressLint("SwitchIntDef")
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<FeedList> consumer) {
-        NotifyUtil.createAlerter(getActivity(), R.string.text_post_information, R.string.completed_success, R.drawable.ic_insert_emoticon_white_24dp, R.color.colorStateGreen);
+        NotifyUtil.INSTANCE.createAlerter(getActivity(), R.string.text_post_information, R.string.completed_success, R.drawable.ic_insert_emoticon_white_24dp, R.color.colorStateGreen);
         closeDialog();
     }
 
@@ -146,7 +147,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
                     mBottomSheet.show(getActivity().getSupportFragmentManager(), mBottomSheet.getTag());
                 break;
             case R.id.widget_flipper:
-                CompatUtil.INSTANCE.hideKeyboard(getActivity());
+                AppExtKt.hideKeyboard(getActivity());
                 break;
             default:
                 DialogUtil.createDialogAttachMedia(target.getId(), composerWidget.getEditor(), getContext());

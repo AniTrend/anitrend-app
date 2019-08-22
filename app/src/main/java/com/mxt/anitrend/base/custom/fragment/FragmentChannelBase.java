@@ -5,18 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.annimon.stream.IntPair;
+import com.google.android.material.snackbar.Snackbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
@@ -31,9 +31,9 @@ import com.mxt.anitrend.model.entity.crunchy.Rss;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.EpisodeUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.collection.EpisodeUtil;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
@@ -45,6 +45,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by max on 2017/11/04.
@@ -65,6 +66,8 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     protected List<ExternalLink> externalLinks;
     protected RecyclerViewAdapter<Episode> mAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
+
+    private final String TAG = FragmentBase.class.getSimpleName();
 
     private final View.OnClickListener stateLayoutOnClick = view -> {
         if(swipeRefreshLayout.isRefreshing())
@@ -216,7 +219,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         if(getPresenter() != null && getPresenter().getCurrentPage() > 1 && isPager) {
             if(stateLayout.isLoading())
                 stateLayout.showContent();
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+            snackbar = NotifyUtil.INSTANCE.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.try_again, snackBarOnClick);
             snackbar.show();
         }
@@ -237,7 +240,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         if(getPresenter() != null && getPresenter().getCurrentPage() > 1 && isPager) {
             if(stateLayout.isLoading())
                 stateLayout.showContent();
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+            snackbar = NotifyUtil.INSTANCE.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.try_again, snackBarOnClick);
             snackbar.show();
         }
@@ -334,7 +337,7 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
                 showEmpty(getString(R.string.layout_empty_response));
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("onChanged(Rss content)", e.getLocalizedMessage());
+            Timber.tag("onChanged(Rss content)").e(e);
             showEmpty(getString(R.string.layout_empty_response));
         }
     }
@@ -349,29 +352,27 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
          */
         @Override
         public void onItemClick(View target, IntPair<Episode> data) {
-            switch (target.getId()) {
-                case R.id.series_image:
-                    DialogUtil.createMessage(getActivity(), data.getSecond().getTitle(), data.getSecond().getDescription()+"<br/><br/>"+copyright,
-                            R.string.Watch, R.string.Dismiss, R.string.action_search, (dialog, which) -> {
-                                Intent intent;
-                                switch (which) {
-                                    case POSITIVE:
-                                        if(data.getSecond().getLink() != null) {
-                                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getSecond().getLink()));
-                                            startActivity(intent);
-                                        } else
-                                            NotifyUtil.makeText(getActivity(), R.string.text_premium_show, Toast.LENGTH_SHORT).show();
-                                        break;
-                                    case NEUTRAL:
-                                        if(getActivity() != null) {
-                                            intent = new Intent(getActivity(), SearchActivity.class);
-                                            intent.putExtra(KeyUtil.arg_search, EpisodeUtil.INSTANCE.getActualTile(data.getSecond().getTitle()));
-                                            getActivity().startActivity(intent);
-                                        }
-                                        break;
-                                }
-                            });
-                    break;
+            if (target.getId() == R.id.series_image) {
+                DialogUtil.createMessage(getActivity(), data.getSecond().getTitle(), data.getSecond().getDescription() + "<br/><br/>" + copyright,
+                        R.string.Watch, R.string.Dismiss, R.string.action_search, (dialog, which) -> {
+                            Intent intent;
+                            switch (which) {
+                                case POSITIVE:
+                                    if (data.getSecond().getLink() != null) {
+                                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getSecond().getLink()));
+                                        startActivity(intent);
+                                    } else
+                                        NotifyUtil.INSTANCE.makeText(getActivity(), R.string.text_premium_show, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case NEUTRAL:
+                                    if (getActivity() != null) {
+                                        intent = new Intent(getActivity(), SearchActivity.class);
+                                        intent.putExtra(KeyUtil.arg_search, EpisodeUtil.INSTANCE.getActualTile(data.getSecond().getTitle()));
+                                        getActivity().startActivity(intent);
+                                    }
+                                    break;
+                            }
+                        });
             }
         }
 

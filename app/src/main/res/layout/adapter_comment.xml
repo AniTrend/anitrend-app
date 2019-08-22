@@ -5,7 +5,7 @@
 
     <data>
         <variable name="model" type="com.mxt.anitrend.model.entity.anilist.FeedReply" />
-        <import type="com.mxt.anitrend.util.DateUtil" />
+        <import type="com.mxt.anitrend.util.date.DateUtil" />
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
@@ -56,7 +56,7 @@
 
             </LinearLayout>
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <android.support.v4.widget.Space
+            <androidx.legacy.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />
 

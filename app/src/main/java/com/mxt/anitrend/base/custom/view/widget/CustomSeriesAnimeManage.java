@@ -3,19 +3,20 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionAnimeBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
 
 /**
  * Created by max on 2018/01/03.
@@ -55,7 +56,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
      * Saves the current views states into the model
      * and returns a bundle of the params
      *
-     * @see com.mxt.anitrend.util.MediaListUtil
+     * @see MediaListUtil
      */
     @Override
     public Bundle persistChanges() {
@@ -70,7 +71,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         model.setHidden(binding.diaCurrentPrivacy.isChecked());
         model.setNotes(binding.diaCurrentNotes.getFormattedText());
         model.setStatus(KeyUtil.MediaListStatus[binding.diaCurrentStatus.getSelectedItemPosition()]);
-        return MediaListUtil.getMediaListParams(model, getMediaListOptions().getScoreFormat());
+        return MediaListUtil.INSTANCE.getMediaListParams(model, getMediaListOptions().getScoreFormat());
     }
 
     @Override
@@ -120,13 +121,13 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
         switch (KeyUtil.MediaListStatus[i]) {
             case KeyUtil.CURRENT:
                 if (CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
-                    NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
             case KeyUtil.PLANNING:
                 break;
             case KeyUtil.COMPLETED:
                 if (!CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.FINISHED))
-                    NotifyUtil.makeText(getContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show();
                 else {
                     int total = getSeriesModel().getEpisodes();
                     model.setProgress(total);
@@ -136,7 +137,7 @@ public class CustomSeriesAnimeManage extends CustomSeriesManageBase {
                 break;
             default:
                 if (CompatUtil.INSTANCE.equals(getSeriesModel().getStatus(), KeyUtil.NOT_YET_RELEASED))
-                    NotifyUtil.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show();
                 break;
         }
     }

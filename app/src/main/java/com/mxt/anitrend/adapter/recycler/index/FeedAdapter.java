@@ -1,12 +1,13 @@
 package com.mxt.anitrend.adapter.recycler.index;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.mxt.anitrend.R;
@@ -180,7 +181,6 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
-            // TODO: Temporarily disabled widget status to try out rich markdown rendering
             binding.widgetStatus.setModel(model);
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());

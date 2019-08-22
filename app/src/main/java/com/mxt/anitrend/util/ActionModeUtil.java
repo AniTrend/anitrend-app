@@ -1,10 +1,11 @@
 package com.mxt.anitrend.util;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.widget.CheckBox;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;

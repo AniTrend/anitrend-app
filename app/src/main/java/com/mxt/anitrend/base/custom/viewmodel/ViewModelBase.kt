@@ -1,29 +1,29 @@
 package com.mxt.anitrend.base.custom.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
-
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.RequestHandler
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
-import com.mxt.anitrend.util.ErrorUtil
 import com.mxt.anitrend.util.KeyUtil
-
-import io.objectbox.android.ObjectBoxLiveData
-import io.objectbox.query.Query
+import com.mxt.anitrend.util.graphql.apiError
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by max on 2017/10/14.
  * View model abstraction contains the generic data model
  */
 
-class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
+class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
+
+    private val job: Job = SupervisorJob()
 
     val model by lazy {
         MutableLiveData<T>()
@@ -33,17 +33,17 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
     private var mLoader: RequestHandler<T>? = null
 
-    private var emptyMessage: String? = null
-    private var errorMessage: String? = null
+    private lateinit var emptyMessage: String
+    private lateinit var errorMessage: String
+    private lateinit var tokenMessage: String
 
-    val params by lazy {
-        Bundle()
-    }
+    val params = Bundle()
 
     fun setContext(context: Context?) {
         context?.apply {
             emptyMessage = getString(R.string.layout_empty_response)
             errorMessage = getString(R.string.text_error_request)
+            tokenMessage = getString(R.string.text_error_auth_token)
         }
     }
 
@@ -65,6 +65,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * prevent a leak of this ViewModel.
      */
     override fun onCleared() {
+        cancel()
         if (mLoader?.status != AsyncTask.Status.FINISHED)
             mLoader?.cancel(true)
         mLoader = null
@@ -86,8 +87,16 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
         val container: T? = response.body()
         if (response.isSuccessful && container != null)
             model.setValue(container)
-        else
-            state?.showError(ErrorUtil.getError(response))
+        else {
+            val error = response.apiError()
+            // Hacky fix that I'm ashamed of
+            if (response.code() == 400 && error.contains("Invalid token"))
+                state?.showError(tokenMessage)
+            else if (response.code() == 401)
+                state?.showError(tokenMessage)
+            else
+                state?.showError(error)
+        }
     }
 
     /**
@@ -98,7 +107,16 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * @param throwable contains information about the error
      */
     override fun onFailure(call: Call<T>, throwable: Throwable) {
-        state?.showEmpty(throwable.message)
+        state?.showEmpty(throwable.message ?: errorMessage)
         throwable.printStackTrace()
     }
+
+    /**
+     * The context of this scope.
+     * Context is encapsulated by the scope and used for implementation of coroutine builders that are extensions on the scope.
+     * Accessing this property in general code is not recommended for any purposes except accessing the [Job] instance for advanced usages.
+     *
+     * By convention, should contain an instance of a [job][Job] to enforce structured concurrency.
+     */
+    override val coroutineContext: CoroutineContext = Dispatchers.IO + job
 }

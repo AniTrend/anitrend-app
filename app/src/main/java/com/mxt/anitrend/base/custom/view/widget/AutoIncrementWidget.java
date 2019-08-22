@@ -3,13 +3,13 @@ package com.mxt.anitrend.base.custom.view.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -19,15 +19,16 @@ import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
-import com.mxt.anitrend.util.ErrorUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaListUtil;
-import com.mxt.anitrend.util.MediaUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.date.DateUtil;
+import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
+import com.mxt.anitrend.util.media.MediaListUtil;
+import com.mxt.anitrend.util.media.MediaUtil;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Created by max on 2018/02/22.
@@ -43,6 +44,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     private MediaList model;
 
     private String currentUser;
+    private final String TAG = AutoIncrementWidget.class.getSimpleName();
 
     public AutoIncrementWidget(Context context) {
         super(context);
@@ -82,11 +84,11 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
                             binding.widgetFlipper.showNext();
                             updateModelState();
                         } else
-                            NotifyUtil.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                            NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
                         break;
                 }
             } else
-                NotifyUtil.makeText(getContext(), MediaUtil.isAnimeType(model.getMedia()) ?
+                NotifyUtil.INSTANCE.makeText(getContext(), MediaUtil.isAnimeType(model.getMedia()) ?
                                 R.string.text_unable_to_increment_episodes : R.string.text_unable_to_increment_chapters,
                         R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
         }
@@ -119,18 +121,19 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
                 boolean isModelCategoryChanged = !CompatUtil.INSTANCE.equals(mediaList.getStatus(), status);
                 mediaList.setMedia(modelClone.getMedia()); model = mediaList.clone();
                 binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser));
-                if(isModelCategoryChanged || MediaListUtil.isProgressUpdatable(modelClone)) {
+                if(isModelCategoryChanged || MediaListUtil.INSTANCE.isProgressUpdatable(modelClone)) {
                     if(isModelCategoryChanged)
-                        NotifyUtil.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
+                        NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show();
                     presenter.notifyAllListeners(new BaseConsumer<>(requestType, model), false);
                 } else
                     resetFlipperState();
             } else {
                 resetFlipperState();
-                Log.e(this.toString(), ErrorUtil.INSTANCE.getError(response));
-                NotifyUtil.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
+                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
+            Timber.tag(TAG).w(e);
             e.printStackTrace();
         }
     }
@@ -138,10 +141,11 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
     @Override
     public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
         try {
-            Log.e(toString(), throwable.getLocalizedMessage());
+            Timber.tag(TAG).e(throwable);
             throwable.printStackTrace();
             resetFlipperState();
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             e.printStackTrace();
         }
     }
@@ -157,7 +161,7 @@ public class AutoIncrementWidget extends LinearLayout implements CustomView, Vie
             model.setStatus(KeyUtil.COMPLETED);
             model.setCompletedAt(DateUtil.INSTANCE.getCurrentDate());
         }
-        presenter.setParams(MediaListUtil.getMediaListParams(model, presenter.getDatabase()
+        presenter.setParams(MediaListUtil.INSTANCE.getMediaListParams(model, presenter.getDatabase()
                 .getCurrentUser().getMediaListOptions().getScoreFormat()));
         presenter.requestData(requestType, getContext(), this);
     }

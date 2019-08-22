@@ -11,7 +11,7 @@ import com.mxt.anitrend.util.KeyUtil;
  * StatusDistribution for media and userStats
  * @see UserStats
  */
-
+@Deprecated
 public class StatusDistribution implements Parcelable {
 
     private @KeyUtil.MediaListStatus String status;

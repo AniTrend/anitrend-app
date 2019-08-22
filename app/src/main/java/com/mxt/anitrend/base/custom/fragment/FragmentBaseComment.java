@@ -3,17 +3,18 @@ package com.mxt.anitrend.base.custom.fragment;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.annimon.stream.IntPair;
+import com.google.android.material.snackbar.Snackbar;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
@@ -211,7 +212,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         if(getPresenter() != null && getPresenter().getCurrentPage() > 1 && isPager) {
             if(stateLayout.isLoading())
                 stateLayout.showContent();
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+            snackbar = NotifyUtil.INSTANCE.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.try_again, snackBarOnClick);
             snackbar.show();
         }
@@ -233,7 +234,7 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         if(getPresenter() != null && getPresenter().getCurrentPage() > 1 && isPager) {
             if(stateLayout.isLoading())
                 stateLayout.showContent();
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+            snackbar = NotifyUtil.INSTANCE.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.try_again, snackBarOnClick);
             snackbar.show();
         }

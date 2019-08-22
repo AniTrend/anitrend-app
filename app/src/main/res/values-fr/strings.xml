@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="action_filter">@string/drawer_title_filter</string>
@@ -138,7 +138,7 @@
     <string name="app_intro_search_text">Anime, Manga et pleins d\'autres critères de recherche !</string>
     <string name="app_intro_videos_title">Vidéos</string>
     <string name="app_intro_videos_text">Les vidéos peuvent être visionner dans l\'application !</string>
-    <string name="app_greeting">Bienvenue sur AniTrend !</string>
+    <string name="app_greeting">Bienvenue sur AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Trier par ?</string>
@@ -220,8 +220,6 @@
     <string name="drawer_title_hub">HUB AniTrend</string>
 
     <string name="drawer_title_filter">Filtres</string>
-    <string name="drawer_light_theme">Thème Graphique</string>
-    <string name="drawer_title_style">Nouveau style de Liste</string>
 
     <string name="drawer_section_account">Compte</string>
     <string name="drawer_title_sign_in">Se Connecter</string>
@@ -292,15 +290,6 @@
     <string name="pref_header_general">Général</string>
     <string name="pref_header_general_summary">Configurer les comportements basiques de l\'application</string>
 
-    <string name="pref_title_auto_increment">Compteur de Progression Intelligent</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Augmente automatiquement le compteur d\'épisode ou de chapitre quand vous appuyez sur l\'entrée
-        plutôt que d\'ouvrir une fenêtre de dialogue. Uniquement disponible en mode "Nouveau style de Liste".
-        ]]>
-    </string>
-
     <string name="pref_title_startup_page">Page de Démarrage</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -348,10 +337,6 @@
 
     <string name="pref_title_new_message_notifications">nouveau message de notification</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Sonnerie de Notification</string>
-
-    <string name="pref_ringtone_silent">Silencieux</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -910,7 +895,6 @@
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -952,4 +936,35 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+    <string name="action_help">Help</string>
+    <string name="action_search">Search</string>
+    <string name="title_activity_studio">Studio</string>
+    <string name="tip_notifications_title">Notifications</string>
+    <string name="tip_navigation_title">Navigation</string>
+    <string name="tip_messages_title">Messages</string>
+    <string name="notification_user_like_reply">Reply Like</string>
+    <string name="navigation_drawer_open">Navigation drawer opened</string>
+    <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_header_support">Support</string>
+    <string name="nav_history">History</string>
+    <string name="nav_header_manage">Manage</string>
+    <string name="nav_header_discover">Discover</string>
+    <string name="nav_header_customization">Customization</string>
+    <string name="nav_contact">Contact</string>
+    <string name="nav_about">About</string>
+    <string name="drawer_section_configuration">Configuration</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
+    <string name="text_about_general_information">General Information</string>
+    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_additional_information">Additional Information</string>
+    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="text_about_legal_information">Legal Information</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="text_about_code_of_conduct">Code of Conduct</string>
+    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
+    <string name="title_activity_logging">Logging</string>
 </resources>

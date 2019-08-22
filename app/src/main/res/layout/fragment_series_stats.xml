@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.activity.detail.MediaActivity">
 
     <data>
@@ -15,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -24,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/links_recycler"
                     android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.externalLinks) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
@@ -57,7 +56,7 @@
 
                 </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ranking_recycler"
                     android:visibility="@{!CompatUtil.INSTANCE.isEmpty(model.rankings) ? View.VISIBLE : View.GONE}"
                     android:layout_margin="@dimen/lg_margin"
@@ -66,7 +65,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </com.nguyenhoanglam.progresslayout.ProgressLayout>
 

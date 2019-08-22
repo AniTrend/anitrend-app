@@ -154,7 +154,7 @@
     <string name="app_intro_search_text">أنيمي ومانغا وخصائص بحث أخرى!</string>
     <string name="app_intro_videos_title">فيديو</string>
     <string name="app_intro_videos_text">يستخدم مشغل مقاطع الفيديو الخاص بيوتيوب مدمج معه!</string>
-    <string name="app_greeting">أهلا بك في AniTrend</string>
+    <string name="app_greeting">أهلا بك في AniTrend, this is not a streaming app!</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">الفرز حسب:</string>
@@ -238,8 +238,6 @@
 
     <string name="drawer_section_configuration">إعداد</string>
     <string name="drawer_title_filter">فلتر</string>
-    <string name="drawer_light_theme">ثيم فاتح</string>
-    <string name="drawer_title_style">نمط قوائم جديد</string>
 
     <string name="drawer_section_account">الحساب</string>
     <string name="drawer_title_sign_in">تسجيل الدخول</string>
@@ -314,14 +312,6 @@
     <string name="pref_header_general">عام</string>
     <string name="pref_header_general_summary">ضبط اساسيات التطبيق</string>
 
-    <string name="pref_title_auto_increment">الزيادة التلقائية</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        زيادة عدد الحلقات أو فصول المانغا بشكل تلقائي بدل عرض حوار للزيادة.
-        ]]>
-    </string>
-
 
     <string name="pref_title_startup_page">صفحة بدء التشغيل</string>
 
@@ -370,10 +360,6 @@
 
     <string name="pref_title_new_message_notifications">إشعارات الرسائل الجديدة</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">نغمة الإشعارات</string>
-
-    <string name="pref_ringtone_silent">صامت</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -927,7 +913,6 @@
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -969,4 +954,17 @@
 
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
+    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
+    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
+    <string name="title_migration_failed">Upgrade Failed</string>
+    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
+    <string name="text_about_general_information">General Information</string>
+    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_additional_information">Additional Information</string>
+    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="text_about_legal_information">Legal Information</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="text_about_code_of_conduct">Code of Conduct</string>
+    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
+    <string name="title_activity_logging">Logging</string>
 </resources>
