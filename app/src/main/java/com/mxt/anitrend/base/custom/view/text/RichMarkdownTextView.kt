@@ -7,13 +7,18 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.util.LinkifyCompat
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import io.noties.markwon.Markwon
+import io.noties.markwon.utils.NoCopySpannableFactory
+import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
+
+    val markwon by inject<Markwon>()
 
     constructor(context: Context) :
             super(context) { onInit() }
@@ -24,15 +29,12 @@ class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr) { onInit() }
 
-    val markwon by inject<Markwon>()
-
     /**
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        isFocusable = false
-        LinkifyCompat.addLinks(this, Linkify.WEB_URLS)
-        movementMethod = LinkMovementMethod.getInstance()
+        movementMethod = BetterLinkMovementMethod.newInstance()
+        Linkify.addLinks(this, Linkify.WEB_URLS)
     }
 
     /**
@@ -43,9 +45,9 @@ class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
     }
 
     fun setMarkDownText(markDownText: String?) {
-        val strippedText = RegexUtil.removeTags(markDownText)
-        val markdownSpan = MarkDownUtil.convert(strippedText)
-        setText(markdownSpan, BufferType.SPANNABLE)
-        //richMarkDown(this, markDownText)
+        //val strippedText = RegexUtil.removeTags(markDownText)
+        //val markdownSpan = MarkDownUtil.convert(strippedText)
+        //setText(markdownSpan, BufferType.SPANNABLE)
+        richMarkDown(markDownText)
     }
 }

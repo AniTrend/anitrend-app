@@ -24,6 +24,7 @@ object GraphUtil : KoinComponent {
         val queryContainer = QueryContainerBuilder()
         if (includePaging)
             queryContainer.putVariable(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        queryContainer.putVariable(KeyUtil.arg_asHtml, false)
 
         return queryContainer
     }
