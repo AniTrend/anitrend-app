@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.collection
 
 import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
@@ -9,6 +9,8 @@ import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment
 import java.util.*
 
@@ -125,7 +127,12 @@ object GroupingUtil {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.relationType)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.relationType }
-                        .filter { role -> CompatUtil.equals(role, edge.relationType) }
+                        .filter { role ->
+                            CompatUtil.equals(
+                                role,
+                                edge.relationType
+                            )
+                        }
                         .count()
                 recyclerHeaderItem.size = totalItems.toInt()
                 entityMap.add(recyclerHeaderItem)
@@ -200,7 +207,12 @@ object GroupingUtil {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.staffRole)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.staffRole }
-                        .filter { role -> CompatUtil.equals(role, edge.staffRole) }
+                        .filter { role ->
+                            CompatUtil.equals(
+                                role,
+                                edge.staffRole
+                            )
+                        }
                         .count()
                 recyclerHeaderItem.size = totalItems.toInt()
                 entityMap.add(recyclerHeaderItem)

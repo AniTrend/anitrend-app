@@ -2,9 +2,7 @@ package com.mxt.anitrend.model.api.converter.response
 
 import com.google.gson.Gson
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
 import io.github.wax911.library.converter.response.GraphResponseConverter
-import io.github.wax911.library.model.body.GraphContainer
 import okhttp3.ResponseBody
 import timber.log.Timber
 import java.lang.reflect.Type

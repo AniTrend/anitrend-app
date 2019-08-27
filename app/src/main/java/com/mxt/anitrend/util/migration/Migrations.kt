@@ -47,7 +47,8 @@ object Migrations : KoinComponent {
 
     val MIGRATION_135_136 = object : Migration(135, 136) {
         override fun applyMigration(settings: Settings) {
-            Timber.i("Applying migration from 133 - 135")
+            Timber.i("Applying migrations for 135 - 136")
+            settings.isCrashReportsEnabled = true
         }
     }
 }

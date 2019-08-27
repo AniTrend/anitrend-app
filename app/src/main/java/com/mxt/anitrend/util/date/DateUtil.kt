@@ -1,10 +1,12 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.date
 
 import androidx.annotation.IntRange
 import com.annimon.stream.Collectors
 import com.annimon.stream.IntStream
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.KeyUtil
 import org.ocpsoft.prettytime.PrettyTime
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -20,11 +22,18 @@ object DateUtil {
 
     private val seasons by lazy {
         arrayOf(
-                KeyUtil.WINTER, KeyUtil.WINTER,
-                KeyUtil.SPRING, KeyUtil.SPRING, KeyUtil.SPRING,
-                KeyUtil.SUMMER, KeyUtil.SUMMER, KeyUtil.SUMMER,
-                KeyUtil.FALL, KeyUtil.FALL, KeyUtil.FALL,
-                KeyUtil.WINTER
+            KeyUtil.WINTER,
+            KeyUtil.WINTER,
+            KeyUtil.SPRING,
+            KeyUtil.SPRING,
+            KeyUtil.SPRING,
+            KeyUtil.SUMMER,
+            KeyUtil.SUMMER,
+            KeyUtil.SUMMER,
+            KeyUtil.FALL,
+            KeyUtil.FALL,
+            KeyUtil.FALL,
+            KeyUtil.WINTER
         )
     }
 
@@ -52,7 +61,8 @@ object DateUtil {
     val menuSelect: Int
         @IntRange(from = 0, to = 4) get() {
             val season = seasons[Calendar.getInstance().get(Calendar.MONTH)]
-            return CompatUtil.constructListFrom(*KeyUtil.MediaSeason).indexOf(season)
+            return CompatUtil.constructListFrom(*KeyUtil.MediaSeason)
+                .indexOf(season)
         }
 
     /**
@@ -79,7 +89,10 @@ object DateUtil {
      * Get the current fuzzy date
      */
     val currentDate: FuzzyDate
-        get() = FuzzyDate(date, month + 1, year)
+        get() = FuzzyDate(
+            date, month + 1,
+            year
+        )
 
 
     fun getMediaSeason(fuzzyDate: FuzzyDate): String {
@@ -90,7 +103,11 @@ object DateUtil {
             if (converted != null)
                 calendar.time = converted
             return String.format(Locale.getDefault(), "%s %d",
-                    CompatUtil.capitalizeWords(seasons[calendar.get(Calendar.MONTH)]),
+                CompatUtil.capitalizeWords(
+                    seasons[calendar.get(
+                        Calendar.MONTH
+                    )]
+                ),
                     calendar.get(Calendar.YEAR))
 
         } catch (e: ParseException) {
@@ -227,7 +244,9 @@ object DateUtil {
      * @param endDelta End difference plus or minus the current year
      */
     fun getYearRanges(start: Int, endDelta: Int): List<Int> {
-        return IntStream.rangeClosed(start, getCurrentYear(endDelta))
+        return IntStream.rangeClosed(start,
+            getCurrentYear(endDelta)
+        )
                 .boxed().collect(Collectors.toList())
     }
 

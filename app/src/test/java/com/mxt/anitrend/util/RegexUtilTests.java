@@ -1,4 +1,6 @@
 package com.mxt.anitrend.util;
+import com.mxt.anitrend.util.markdown.RegexUtil;
+
 import org.junit.Test;
 
 import java.util.regex.Matcher;

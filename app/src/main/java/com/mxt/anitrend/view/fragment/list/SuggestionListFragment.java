@@ -9,9 +9,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
-import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.Settings;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 
 /**
  * Created by max on 2017/11/04.

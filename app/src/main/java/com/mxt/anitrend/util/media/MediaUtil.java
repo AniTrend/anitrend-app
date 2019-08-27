@@ -1,9 +1,11 @@
-package com.mxt.anitrend.util;
+package com.mxt.anitrend.util.media;
 
 import com.annimon.stream.Stream;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrend;
 import com.mxt.anitrend.model.entity.base.MediaBase;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.Collections;
 import java.util.List;

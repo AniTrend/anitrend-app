@@ -220,8 +220,6 @@
     <string name="drawer_title_hub">HUB AniTrend</string>
 
     <string name="drawer_title_filter">Filtres</string>
-    <string name="drawer_light_theme">Thème Graphique</string>
-    <string name="drawer_title_style">Nouveau style de Liste</string>
 
     <string name="drawer_section_account">Compte</string>
     <string name="drawer_title_sign_in">Se Connecter</string>
@@ -292,15 +290,6 @@
     <string name="pref_header_general">Général</string>
     <string name="pref_header_general_summary">Configurer les comportements basiques de l\'application</string>
 
-    <string name="pref_title_auto_increment">Compteur de Progression Intelligent</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Augmente automatiquement le compteur d\'épisode ou de chapitre quand vous appuyez sur l\'entrée
-        plutôt que d\'ouvrir une fenêtre de dialogue. Uniquement disponible en mode "Nouveau style de Liste".
-        ]]>
-    </string>
-
     <string name="pref_title_startup_page">Page de Démarrage</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -348,10 +337,6 @@
 
     <string name="pref_title_new_message_notifications">nouveau message de notification</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Sonnerie de Notification</string>
-
-    <string name="pref_ringtone_silent">Silencieux</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -910,7 +895,6 @@
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -958,7 +942,6 @@
     <string name="tip_notifications_title">Notifications</string>
     <string name="tip_navigation_title">Navigation</string>
     <string name="tip_messages_title">Messages</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="notification_user_like_reply">Reply Like</string>
     <string name="navigation_drawer_open">Navigation drawer opened</string>
     <string name="navigation_drawer_close">Navigation drawer closed</string>

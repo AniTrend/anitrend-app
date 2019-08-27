@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.markdown
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -65,7 +65,7 @@ object RegexUtil {
         while (matcher.find()) {
             val match = matcher.group()
             val replacement = String.format(
-                    USER_URL_LINK, match,
+                USER_URL_LINK, match,
                     match.replace("@", "")
             )
             if (newText?.contains(replacement, ignoreCase = false) == true)
@@ -91,14 +91,16 @@ object RegexUtil {
      */
     fun buildYoutube(id: String): String {
         return if (!id.contains("youtube")) {
-            if (id.contains(YoutubeShort)) Youtube + id.replace(YoutubeShort, "") else Youtube + id
+            if (id.contains(YoutubeShort)) Youtube + id.replace(
+                YoutubeShort, "") else Youtube + id
         } else id
     }
 
     fun createYoutubeStandard(link: String): String {
         if (!link.contains("youtube"))
             if (link.contains(YoutubeShort))
-                return String.format("%s(%s)", KEY_YOU, link.replace(YoutubeShort, ""))
+                return String.format("%s(%s)",
+                    KEY_YOU, link.replace(YoutubeShort, ""))
         return String.format("%s(%s)", KEY_YOU, link)
     }
 
@@ -134,8 +136,10 @@ object RegexUtil {
     fun removeTags(value: String?): String? {
         return when (value.isNullOrBlank()) {
             true -> null
-            else -> findImages(findMedia(value)
-                    .replaceAll(""))
+            else -> findImages(
+                findMedia(value)
+                    .replaceAll("")
+            )
                     .replaceAll("")
                     .replace("!~","")
                     .replace("~!","")

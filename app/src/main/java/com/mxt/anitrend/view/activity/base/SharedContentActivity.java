@@ -24,14 +24,15 @@ import com.mxt.anitrend.base.interfaces.event.BottomSheetListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.ActivityShareContentBinding;
 import com.mxt.anitrend.extension.AppExtKt;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MarkDownUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.Settings;
+import com.mxt.anitrend.util.markdown.MarkDownUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy;
 
 import org.greenrobot.eventbus.EventBus;
@@ -101,8 +102,12 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
      */
     @Override
     protected void configureActivity() {
-        setTheme(new Settings(this).getTheme() == R.style.AppThemeLight ?
-                R.style.AppThemeLight_Translucent: R.style.AppThemeDark_Translucent);
+        Settings settings = KoinExt.get(Settings.class);
+        setTheme(
+                CompatUtil.INSTANCE.isLightTheme(settings.getTheme()) ?
+                        R.style.AppThemeLight_Translucent :
+                        R.style.AppThemeDark_Translucent
+        );
     }
 
     @Override

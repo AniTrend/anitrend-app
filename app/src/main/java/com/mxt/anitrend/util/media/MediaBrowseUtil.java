@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util;
+package com.mxt.anitrend.util.media;
 
 import android.os.Parcel;
 import android.os.Parcelable;

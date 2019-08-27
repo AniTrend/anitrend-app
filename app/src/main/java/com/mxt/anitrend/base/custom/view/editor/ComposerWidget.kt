@@ -23,9 +23,11 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
+import com.mxt.anitrend.util.markdown.MarkDownUtil
 import io.wax911.emojify.parser.EmojiParser
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus

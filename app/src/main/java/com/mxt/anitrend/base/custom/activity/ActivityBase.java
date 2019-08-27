@@ -16,10 +16,8 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -34,12 +32,12 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
 import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.ConfigurationUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.LocaleUtil;
-import com.mxt.anitrend.util.MediaActionUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.Settings;
+import com.mxt.anitrend.util.locale.LocaleUtil;
+import com.mxt.anitrend.util.media.MediaActionUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
 
@@ -81,24 +79,19 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     private boolean isClosing;
 
     private CommonPresenter presenter;
+    @Nullable
+    protected ConfigurationUtil configurationUtil;
 
     /**
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style.
+     *
+     * @see ConfigurationUtil
      */
     protected void configureActivity() {
-        final Settings settings = KoinExt.get(Settings.class);
-        final @StyleRes int style = settings.getTheme();
-
-        if (CompatUtil.INSTANCE.isLightTheme(style))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
-        if(!CompatUtil.INSTANCE.isLightTheme(style) && settings.isBlackThemeEnabled())
-            setTheme(R.style.AppThemeBlack);
-        else
-            setTheme(style);
+        if (configurationUtil == null)
+            configurationUtil = KoinExt.get(ConfigurationUtil.class);
+        configurationUtil.onCreateAttach(this);
     }
 
     @Override
@@ -280,6 +273,8 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @Override
     protected void onResume() {
         super.onResume();
+        if (configurationUtil != null)
+            configurationUtil.onResumeAttach(this);
         if(mediaActionUtil != null)
             mediaActionUtil.onResume(null);
         if(presenter != null)

@@ -12,14 +12,14 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.fragment.FragmentBase;
 import com.mxt.anitrend.databinding.FragmentCharacterOverviewBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaCharacter;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.graphql.GraphUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2018/01/30.

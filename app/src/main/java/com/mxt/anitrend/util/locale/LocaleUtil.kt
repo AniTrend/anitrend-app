@@ -1,8 +1,9 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.locale
 
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
+import com.mxt.anitrend.util.Settings
 import java.util.*
 
 /**
@@ -17,7 +18,10 @@ object LocaleUtil {
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             updateResources(context, Locale(language))
-        } else updateResourcesLegacy(context, Locale(language))
+        } else updateResourcesLegacy(
+            context,
+            Locale(language)
+        )
 
     }
 

@@ -17,7 +17,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.MediaListUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
 
 import java.util.ArrayList;
 import java.util.List;

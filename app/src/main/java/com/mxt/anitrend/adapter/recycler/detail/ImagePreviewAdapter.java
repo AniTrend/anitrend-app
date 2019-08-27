@@ -18,7 +18,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterFeedSlideBinding;
-import com.mxt.anitrend.util.RegexUtil;
+import com.mxt.anitrend.util.markdown.RegexUtil;
 
 import java.util.List;
 

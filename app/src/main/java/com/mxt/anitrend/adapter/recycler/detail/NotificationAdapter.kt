@@ -20,8 +20,8 @@ import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DateUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.date.DateUtil
 import io.objectbox.Box
 
 /**

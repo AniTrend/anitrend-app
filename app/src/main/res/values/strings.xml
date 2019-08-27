@@ -246,8 +246,6 @@
 
     <string name="drawer_section_configuration">Configuration</string>
     <string name="drawer_title_filter">Filter</string>
-    <string name="drawer_light_theme">Toggle Theme</string>
-    <string name="drawer_title_style">Toggle Style</string>
 
     <string name="drawer_section_account">Account</string>
     <string name="drawer_title_sign_in">Sign In</string>
@@ -326,16 +324,6 @@
     <string name="pref_header_general">General</string>
     <string name="pref_header_general_summary">Configure basic application behavior</string>
 
-    <string name="pref_title_auto_increment">Smart Progress Increment</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Automatically increment the episode or chapter number when you
-        tap on it using new list styles on your airing, anime & manga lists,
-        rather than opening a dialog.
-        ]]>
-    </string>
-
     <!--Do not translate anything that is starts with pref_key-->
     <string name="pref_key_auto_increment" translatable="false">general_auto_increment</string>
 
@@ -389,10 +377,7 @@
     <string name="pref_title_new_message_notifications">New message notifications</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
-    <string name="pref_title_ringtone">Notification Ringtone</string>
     <string name="pref_key_ringtone" translatable="false">notifications_new_message_ringtone</string>
-
-    <string name="pref_ringtone_silent">Silent</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -576,7 +561,7 @@
 
     <string name="text_login_error">AniTrend has failed to retrieve your login details!</string>
 
-    <string translatable="false" name="link_anitrend_discord">https://discord.gg/2wzTqnF</string>
+    <string name="link_anitrend_discord" translatable="false">https://discord.gg/2wzTqnF</string>
 
     <string name="text_search_empty">Search content cannot be empty</string>
 
@@ -964,17 +949,12 @@
     <string name="pref_usage_analytics_summary_off">Application will not send any anonymous statistics on most used features, please consider enabling this option for better design choices in future</string>
     <string name="pref_usage_analytics_summary_on">Application will only send anonymous statistics like most used features</string>
 
-    <!-- Black Setting Related -->
-    <string name="pref_key_black_theme" translatable="false">_isBlackTheme</string>
-    <string name="pref_title_black_theme">Black Theme</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
-
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
     <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
-    <string name="pref_key_selected_Language" translatable="false">selected_language</string>
+    <string name="pref_key_selected_language" translatable="false">selected_language</string>
 
-    <string-array name="pref_selected_Language_titles" translatable="false">
+    <string-array name="pref_selected_language_titles" translatable="false">
         <item>English</item>
         <item>العربية</item>
         <item>Deutsch</item>
@@ -987,7 +967,7 @@
         <item>Deutsch-Nederlands</item>
     </string-array>
 
-    <string-array name="pref_selected_Language_values" translatable="false">
+    <string-array name="pref_selected_language_values" translatable="false">
         <item>en</item>
         <item>ar</item>
         <item>de</item>
@@ -1044,4 +1024,18 @@
     <string name="text_about_code_of_conduct">Code of Conduct</string>
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
+
+    <string name="pref_title_app_theme" translatable="false">Application Theme</string>
+    <string name="pref_key_app_theme" translatable="false">application_theme</string>
+
+    <string-array name="pref_selected_theme_titles">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Black</item>
+
+    </string-array><string-array name="pref_selected_theme_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>black</item>
+    </string-array>
 </resources>

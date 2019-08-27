@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util;
+package com.mxt.anitrend.util.media;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -13,11 +13,13 @@ import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
+import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 import com.mxt.anitrend.util.graphql.GraphUtil;
 
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;

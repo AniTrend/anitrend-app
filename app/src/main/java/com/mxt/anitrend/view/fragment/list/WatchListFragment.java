@@ -14,16 +14,16 @@ import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase;
 import com.mxt.anitrend.base.interfaces.event.RetroCallback;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
-import com.mxt.anitrend.util.EpisodeUtil;
+import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.collection.EpisodeUtil;
 import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 import com.mxt.anitrend.util.graphql.GraphUtil;
-import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;

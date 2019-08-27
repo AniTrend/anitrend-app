@@ -15,8 +15,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.databinding.CustomActionMangaBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.MediaListUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
 
 /**
  * Created by max on 2018/01/03.
@@ -55,7 +55,7 @@ public class CustomSeriesMangaManage extends CustomSeriesManageBase {
     /**
      * Saves the current views states into the model
      * and returns a bundle of the params
-     * @see com.mxt.anitrend.util.MediaListUtil
+     * @see MediaListUtil
      */
     @Override
     public Bundle persistChanges() {

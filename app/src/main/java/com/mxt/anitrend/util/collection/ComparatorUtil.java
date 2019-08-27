@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util;
+package com.mxt.anitrend.util.collection;
 
 import java.util.Comparator;
 import java.util.HashMap;

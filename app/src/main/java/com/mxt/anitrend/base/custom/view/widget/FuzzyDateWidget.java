@@ -17,7 +17,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.databinding.WidgetFuzzyDateBinding;
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate;
 import com.mxt.anitrend.util.CompatUtil;
-import com.mxt.anitrend.util.DateUtil;
+import com.mxt.anitrend.util.date.DateUtil;
 
 import java.util.Calendar;
 

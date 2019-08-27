@@ -13,9 +13,8 @@ import com.mxt.anitrend.databinding.WidgetAvatarIndicatorBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DateUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.activity.index.LoginActivity

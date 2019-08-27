@@ -220,7 +220,6 @@
     <string name="drawer_title_mymanga">Mijn Manga Lijst</string>
 
     <string name="drawer_section_configuration">Configuratie</string>
-    <string name="drawer_light_theme">Wissel Thema</string>
 
     <string name="drawer_title_sign_in">Inloggen</string>
     <string name="drawer_title_profile">Profiel</string>
@@ -287,16 +286,6 @@
     <string name="pref_header_general">Algemeen</string>
     <string name="pref_header_general_summary">Beheer de basisfuncties van de applicatie</string>
 
-    <string name="pref_title_auto_increment">Snel toenemende vooruitgang</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Automatically increment the episode or chapter number when you
-        tap on it using new list styles on your airing, anime & manga lists,
-        rather than opening a dialog.
-        ]]>
-    </string>
-
     <string name="pref_title_startup_page">Startup Page</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -342,10 +331,6 @@
 
     <string name="pref_title_new_message_notifications">Nieuw berichten notificatie</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_title_ringtone">Notificatie Ringtone</string>
-
-    <string name="pref_ringtone_silent">Stil</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -913,8 +898,6 @@
     <string name="pref_usage_analytics_summary_on">Applicatie zal anonieme statistieken versturen zoals meest gebruikte features</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Donker Thema</string>
-    <string name="pref_black_theme_summary">Gebruik donker thema voor apparaten die een OLED scherm hebben om energie te besparen</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Applicatie Taal</string>
@@ -961,7 +944,6 @@
     <string name="nav_header_support">Support</string>
     <string name="nav_contact">Contact</string>
     <string name="drawer_title_update">Update</string>
-    <string name="drawer_title_style">Toggle Style</string>
     <string name="drawer_title_reviews">Series Reviews</string>
     <string name="drawer_title_hub">AniTrend Hub</string>
     <string name="drawer_title_home">Status Feeds</string>

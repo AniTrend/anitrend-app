@@ -227,8 +227,6 @@
 
     <string name="drawer_section_configuration">Configurazione</string>
     <string name="drawer_title_filter">Filtri</string>
-    <string name="drawer_light_theme">Modalità notturna</string>
-    <string name="drawer_title_style">Stile della lista</string>
 
     <string name="drawer_title_sign_in">Accedi</string>
     <string name="drawer_title_profile">Profilo</string>
@@ -301,14 +299,6 @@
     <string name="pref_header_general">Generale</string>
     <string name="pref_header_general_summary">Configura funzioni base dell\'applicazione</string>
 
-    <string name="pref_title_auto_increment">Aumento rapido dell\'avanzamento</string>
-
-    <string name="pref_summary_auto_increment">
-        <![CDATA[
-        Usando la nuova lista di anime e manga in corso, segna come completato l\'episodio o il capitolo successivo cliccandoci sopra anzichè aprire la finestra di dialogo.
-        ]]>
-    </string>
-
     <string name="pref_title_startup_page">Pagina di avvio</string>
 
     <string-array name="pref_titles_menu_entries">
@@ -356,10 +346,6 @@
 
     <string name="pref_title_new_message_notifications">Notifiche di nuovo messaggio</string>
     <string name="pref_key_new_message_notifications">Notifiche di nuovo messaggio</string>
-
-    <string name="pref_title_ringtone">Suoneria notifiche</string>
-
-    <string name="pref_ringtone_silent">Silenzioso</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -915,7 +901,6 @@
     <string name="pref_header_privacy_summary">Configura le impostazioni sulla privacy</string>
 
     <!-- Black Setting Related -->
-    <string name="pref_title_black_theme">Black Theme</string>
 
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
@@ -959,7 +944,6 @@
     <string name="notification_media_added">New Related Media Added</string>
     <string name="Reset">Reset</string>
     <string name="title_activity_studio">Studio</string>
-    <string name="pref_black_theme_summary">Use black theme for devices that have OLED displays to save power</string>
     <string name="navigation_drawer_open">Navigation drawer opened</string>
     <string name="navigation_drawer_close">Navigation drawer closed</string>
     <string name="nav_home">Home</string>

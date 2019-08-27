@@ -20,8 +20,11 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
-import com.mxt.anitrend.util.*
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
+import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
 import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment

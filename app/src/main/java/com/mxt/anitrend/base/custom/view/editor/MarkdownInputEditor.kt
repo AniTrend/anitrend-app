@@ -24,7 +24,7 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.*
-import com.mxt.anitrend.util.MarkDownUtil
+import com.mxt.anitrend.util.markdown.MarkDownUtil
 import io.wax911.emojify.parser.EmojiParser
 
 /**

@@ -1,4 +1,4 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.markdown
 
 import android.os.Build
 import android.text.Html
@@ -31,7 +31,11 @@ object MarkDownUtil {
     fun convert(input: String?): Spanned {
         var result = when(input.isNullOrBlank()) {
             true -> fromMD("<b>No content available</b>")
-            else -> fromMD(RegexUtil.findUserTags(input))
+            else -> fromMD(
+                RegexUtil.findUserTags(
+                    input
+                )
+            )
         }
 
         try {
@@ -46,11 +50,15 @@ object MarkDownUtil {
         return result
     }
 
-    fun convertLink(text: String) = RegexUtil.createLinkStandard(text)
+    fun convertLink(text: String) =
+        RegexUtil.createLinkStandard(text)
 
-    fun convertImage(text: String) = RegexUtil.createImageStandard(text)
+    fun convertImage(text: String) =
+        RegexUtil.createImageStandard(text)
 
-    fun convertYoutube(text: String) = RegexUtil.createYoutubeStandard(text)
+    fun convertYoutube(text: String) =
+        RegexUtil.createYoutubeStandard(text)
 
-    fun convertVideo(text: String) = RegexUtil.createWebMStandard(text)
+    fun convertVideo(text: String) =
+        RegexUtil.createWebMStandard(text)
 }

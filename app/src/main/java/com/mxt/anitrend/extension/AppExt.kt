@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.mxt.anitrend.App
 import org.koin.core.context.GlobalContext
 import timber.log.Timber
 
@@ -21,12 +22,26 @@ val appContext by lazy {
     GlobalContext.get().koin.get<Context>()
 }
 
-fun getString(@StringRes text: Int) =
+fun getString(@StringRes text: Int): String? =
+    runCatching {
         appContext.getString(text)
+    }.also {
+        it.exceptionOrNull()?.printStackTrace()
+    }.getOrNull()
 
-fun getString(@StringRes text: Int, vararg values: String) =
+fun getString(@StringRes text: Int, vararg values: String): String? =
+    runCatching {
         appContext.getString(text, *values)
+    }.also {
+        it.exceptionOrNull()?.printStackTrace()
+    }.getOrNull()
 
+fun FragmentActivity.applyConfiguredTheme() {
+    runCatching{
+        (applicationContext as App).applyTheme()
+        recreate()
+    }.exceptionOrNull()?.printStackTrace()
+}
 
 /**
  * Request to hide the soft input window from the context of the window
@@ -46,10 +61,15 @@ fun FragmentActivity?.hideKeyboard() = this?.apply {
  * @param data Intent with bundle and or activity to start
  */
 fun FragmentActivity.startSharedTransitionActivity(target : View, data : Intent) {
-    val participants = Pair(target, ViewCompat.getTransitionName(target))
-    val transitionActivityOptions = ActivityOptionsCompat
-            .makeSceneTransitionAnimation(this, participants)
-    ActivityCompat.startActivity(this, data, transitionActivityOptions.toBundle())
+    try {
+        val participants = Pair(target, ViewCompat.getTransitionName(target))
+        val transitionActivityOptions = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this, participants)
+        ActivityCompat.startActivity(this, data, transitionActivityOptions.toBundle())
+    } catch (e: Exception) {
+        Timber.tag("SharedTransition").w(e)
+        e.printStackTrace()
+    }
 }
 
 

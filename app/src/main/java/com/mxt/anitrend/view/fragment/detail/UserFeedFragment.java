@@ -4,9 +4,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import io.github.wax911.library.model.request.QueryContainerBuilder;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.list.FeedListFragment;
+
+import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
  * Created by max on 2017/11/26.

@@ -1,7 +1,6 @@
 package com.mxt.anitrend.model.entity.anilist.meta
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 /**

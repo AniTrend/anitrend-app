@@ -2,8 +2,10 @@ package com.mxt.anitrend.presenter.base
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.annimon.stream.Stream
+import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
@@ -29,6 +31,22 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     private var favouriteTags: List<String>? = null
     private var favouriteYears: List<String>? = null
     private var favouriteFormats: List<String>? = null
+
+    @IdRes
+    fun getNavigationItem(): Int {
+        return when (settings.startupPage) {
+            "0" -> R.id.nav_home_feed
+            "1" -> R.id.nav_anime
+            "2" -> R.id.nav_manga
+            "3" -> R.id.nav_trending
+            "4" -> R.id.nav_airing
+            "5" -> R.id.nav_myanime
+            "6" -> R.id.nav_mymanga
+            "7" -> R.id.nav_hub
+            "8" -> R.id.nav_reviews
+            else -> R.id.nav_airing
+        }
+    }
 
     fun checkIfMigrationIsNeeded(): Boolean {
         if (!settings.isFreshInstall) {

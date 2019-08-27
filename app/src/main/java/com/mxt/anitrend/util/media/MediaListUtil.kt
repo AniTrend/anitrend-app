@@ -1,13 +1,14 @@
-package com.mxt.anitrend.util
+package com.mxt.anitrend.util.media
 
 import android.os.Bundle
-
 import com.annimon.stream.Stream
 import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
-import java.util.Locale
+import java.util.*
 
 object MediaListUtil {
 
@@ -57,7 +58,10 @@ object MediaListUtil {
      * Checks if the sorting should be done on titles
      */
     fun isTitleSort(@KeyUtil.MediaListSort mediaSort: String): Boolean {
-        return CompatUtil.equals(mediaSort, KeyUtil.TITLE)
+        return CompatUtil.equals(
+            mediaSort,
+            KeyUtil.TITLE
+        )
     }
 
     /**

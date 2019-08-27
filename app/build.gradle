@@ -94,7 +94,7 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koin"
 
     /** Kotlin Libraries */
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCore"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
 
@@ -103,8 +103,6 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:$constraint"
     implementation 'androidx.preference:preference-ktx:1.1.0-rc01'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
 
     /** Architecture Components */
@@ -122,6 +120,7 @@ dependencies {
 
     /** Glide Libraries */
     implementation "com.github.bumptech.glide:glide:$glide"
+    implementation 'androidx.preference:preference:1.1.0-rc01'
     kapt "com.github.bumptech.glide:compiler:$glide"
 
     /** Material Dialogs */
@@ -137,10 +136,6 @@ dependencies {
     }
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpLogger"
 
-    /** Glide Libraries */
-    implementation "com.github.bumptech.glide:glide:$glide"
-    kapt "com.github.bumptech.glide:compiler:$glide"
-
     /** Butter Knife Libraries */
     implementation "com.jakewharton:butterknife:$butterKnife"
     kapt "com.jakewharton:butterknife-compiler:$butterKnife"
@@ -154,9 +149,6 @@ dependencies {
     /** Object Box */
     implementation "io.objectbox:objectbox-android:$objectBox"
     kapt "io.objectbox:objectbox-processor:$objectBox"
-
-    /** Material Dialogs */
-    implementation "com.afollestad.material-dialogs:core:$materialDialogs"
 
     /** Flex Box */
     implementation "com.google.android:flexbox:$flexBox"
@@ -189,7 +181,7 @@ dependencies {
     implementation "com.codemybrainsout.onboarding:onboarder:$onboarder"
 
     /** Charts */
-    implementation"com.github.PhilJay:MPAndroidChart:v$mpAndroidChart"
+    implementation "com.github.PhilJay:MPAndroidChart:v$mpAndroidChart"
 
     /** About Library */
     implementation "com.github.medyo:android-about-page:$aboutPage"

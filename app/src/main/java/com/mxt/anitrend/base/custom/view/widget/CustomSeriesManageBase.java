@@ -18,6 +18,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.media.MediaListUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +102,7 @@ public abstract class CustomSeriesManageBase extends RelativeLayout implements C
     /**
      * Saves the current views states into the model
      * and returns a bundle of the params
-     * @see com.mxt.anitrend.util.MediaListUtil
+     * @see MediaListUtil
      */
     public abstract Bundle persistChanges();
 

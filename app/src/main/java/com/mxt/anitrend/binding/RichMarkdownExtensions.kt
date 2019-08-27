@@ -5,8 +5,8 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.util.MarkDownUtil
-import com.mxt.anitrend.util.RegexUtil
+import com.mxt.anitrend.util.markdown.MarkDownUtil
+import com.mxt.anitrend.util.markdown.RegexUtil
 
 @BindingAdapter("markDown")
 fun RichMarkdownTextView.markDown(markdown: String?) {

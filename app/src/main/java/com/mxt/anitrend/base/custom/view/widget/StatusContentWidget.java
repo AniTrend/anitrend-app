@@ -31,7 +31,7 @@ import com.mxt.anitrend.util.CenterSnapUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.RegexUtil;
+import com.mxt.anitrend.util.markdown.RegexUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity;
 

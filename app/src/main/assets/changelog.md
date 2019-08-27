@@ -5,6 +5,7 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Enhancements
 - Support for Android Q
+- Moved themes options to settings
 - Support for higher quality posters
 - Minor optimizations throughout the application
 
@@ -15,7 +16,7 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Current Issues
 - Clicking on @username shows mixed feed
-- Application logs are officially broken in **v1.5.4**
+- Application logs are officially broken in **v1.5.x**
 - Sometimes image slide count doesn't change when you slowly scroll horizontally in feeds
 
 #### Special Thanks
@@ -25,5 +26,5 @@ __Admins, Devs & Cutie Pies:__
 _Mittens, Switchums, Kuji, Moka, Flare, Silver, Mrspits4ever_
 
 __Awesome Donators:__
-_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas_
+_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas, Dustter_
 

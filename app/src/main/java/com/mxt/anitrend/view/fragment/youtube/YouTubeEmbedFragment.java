@@ -22,7 +22,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.RegexUtil;
+import com.mxt.anitrend.util.markdown.RegexUtil;
 
 import butterknife.ButterKnife;
 
