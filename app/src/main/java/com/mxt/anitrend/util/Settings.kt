@@ -283,7 +283,8 @@ class Settings(private val context: Context) {
     val isUpdated: Boolean
         get() = versionCode < BuildConfig.VERSION_CODE
 
-    var versionCode: Int = sharedPreferences.getInt(_versionCode, 1)
+    var versionCode: Int = 1
+        get() = sharedPreferences.getInt(_versionCode, 1)
         set(value) {
             field = value
             sharedPreferences.edit {
