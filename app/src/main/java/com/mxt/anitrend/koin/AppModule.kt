@@ -3,6 +3,7 @@ package com.mxt.anitrend.koin
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.drawable.Drawable
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -41,6 +42,10 @@ object AppModule : KoinComponent {
                     context = androidContext(),
                     settings = get()
             )
+        }
+
+        single {
+            PreferenceManager.getDefaultSharedPreferences(androidContext())
         }
 
         factory {

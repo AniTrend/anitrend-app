@@ -8,6 +8,8 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.*
 
 /**
@@ -15,16 +17,14 @@ import java.util.*
  * Application preferences
  */
 
-class Settings(private val context: Context) {
+class Settings(private val context: Context): KoinComponent {
 
     /** Base Application Values  */
     private val _versionCode = "_versionCode"
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
-    val sharedPreferences: SharedPreferences by lazy(LazyThreadSafetyMode.NONE) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-    }
+    val sharedPreferences by inject<SharedPreferences>()
 
     var isAuthenticated: Boolean
         get() =  sharedPreferences.getBoolean(_isAuthenticated, false)
