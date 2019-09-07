@@ -4,12 +4,14 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import androidx.preference.PreferenceManager
 import android.text.method.ScrollingMovementMethod
 import android.text.util.Linkify
 import co.anitrend.support.markdown.core.CoreDelimiterPlugin
 import co.anitrend.support.markdown.html.AlignTagHandler
 import co.anitrend.support.markdown.html.CenterTagHandler
 import co.anitrend.support.markdown.image.ImageRenderPlugin
+import co.anitrend.support.markdown.style.CenterPlugin
 import co.anitrend.support.markdown.text.SpoilerPlugin
 import co.anitrend.support.markdown.util.UtilityPlugin
 import co.anitrend.support.markdown.video.WebMPlugin
@@ -21,6 +23,7 @@ import com.bumptech.glide.request.target.Target
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.model.entity.MyObjectBox
@@ -28,6 +31,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.ConfigurationUtil
+import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
 import io.noties.markwon.Markwon
@@ -58,8 +62,22 @@ object AppModule : KoinComponent {
             )
         }
 
+        single {
+            JobSchedulerUtil(
+                context = androidContext(),
+                settings = get()
+            )
+        }
+
+        single {
+            PreferenceManager.getDefaultSharedPreferences(androidContext())
+        }
+
         factory {
-            Settings(androidContext())
+            Settings(
+                context = androidContext(),
+                sharedPreferences = get()
+            )
         }
 
         factory {
@@ -80,6 +98,10 @@ object AppModule : KoinComponent {
     val widgetModule = module {
         single {
             Markwon.builder(androidContext())
+                .usePlugin(HtmlPlugin.create { plugin -> plugin
+                    .addHandler(AlignTagHandler())
+                    .addHandler(CenterTagHandler())
+                })
                 .usePlugin(CoreDelimiterPlugin.create(
                     androidContext()
                         .getCompatColorAttr(
@@ -87,17 +109,17 @@ object AppModule : KoinComponent {
                         )
                 ))
                 .usePlugin(UtilityPlugin.create())
+                //.usePlugin(CenterPlugin.create())
                 .usePlugin(ImageRenderPlugin.create())
                 .usePlugin(YouTubePlugin.create())
                 .usePlugin(WebMPlugin.create())
                 .usePlugin(StrikethroughPlugin.create())
                 .usePlugin(LinkifyPlugin.create(Linkify.WEB_URLS))
                 .usePlugin(TaskListPlugin.create(androidContext()))
-                //.usePlugin(SpoilerPlugin.create(androidContext().getCompatColorAttr(R.attr.colorAccent)))
-                .usePlugin(HtmlPlugin.create { plugin -> plugin
-                    .addHandler(AlignTagHandler())
-                    .addHandler(CenterTagHandler())
-                })
+                .usePlugin(SpoilerPlugin.create(
+                    androidContext().getCompatColorAttr(R.attr.cardColor),
+                    androidContext().getCompatColorAttr(R.attr.colorAccent)
+                ))
                 .usePlugin(GlideImagesPlugin.create(
                     object : GlideImagesPlugin.GlideStore {
                         override fun cancel(target: Target<*>) {
@@ -129,6 +151,14 @@ object AppModule : KoinComponent {
         }
         factory {
             MediaPresenter(androidContext())
+        }
+    }
+
+    val networkModule = module {
+        factory {
+            AuthInterceptor(
+                settings = get()
+            )
         }
     }
 

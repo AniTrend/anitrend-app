@@ -11,42 +11,55 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by Maxwell on 12/4/2016.
  * Schedules future services via job dispatcher
+ *
+ * @param context any valid application context
  */
-object JobSchedulerUtil {
+class JobSchedulerUtil(
+    private val context: Context,
+    private val settings: Settings
+) {
 
-    private val constraints by lazy {
+    private fun getConstraints() =
         Constraints.Builder()
-                .setRequiresCharging(false)
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-    }
+            .setRequiresCharging(false)
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
     /**
      * Schedules a new job service or replaces the existing job if one exists.
-     * @param context any valid application context
      */
-    fun scheduleJob(context: Context) {
-        val applicationPref = Settings(context)
-        if (applicationPref.isAuthenticated && applicationPref.isNotificationEnabled) {
-            val periodicWorkRequest = PeriodicWorkRequest.Builder(JobDispatcherService::class.java,
-                    applicationPref.syncTime.toLong(), TimeUnit.MINUTES)
-                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL,
-                            5, TimeUnit.MINUTES
+    fun scheduleJob() {
+        if (settings.isAuthenticated && settings.isNotificationEnabled) {
+            val periodicWorkRequest = PeriodicWorkRequest.Builder(
+                JobDispatcherService::class.java,
+                settings.syncTime.toLong(),
+                TimeUnit.MINUTES
+            )
+                    .setBackoffCriteria(
+                        BackoffPolicy.EXPONENTIAL,
+                        5,
+                        TimeUnit.MINUTES
                     )
                     .addTag(KeyUtil.WorkNotificationTag)
-                    .setConstraints(constraints)
+                    .setConstraints(getConstraints())
                     .build()
 
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(KeyUtil.WorkNotificationId,
-                            ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest)
+                    .enqueueUniquePeriodicWork(
+                        KeyUtil.WorkNotificationId,
+                        ExistingPeriodicWorkPolicy.REPLACE,
+                        periodicWorkRequest
+                    )
         }
     }
 
     /**
      * Cancels any scheduled jobs.
      */
-    fun cancelJob(context: Context = appContext) {
-        WorkManager.getInstance(context).cancelUniqueWork(KeyUtil.WorkNotificationId)
+    fun cancelJob() {
+        WorkManager.getInstance(context)
+            .cancelUniqueWork(
+                KeyUtil.WorkNotificationId
+            )
     }
 }

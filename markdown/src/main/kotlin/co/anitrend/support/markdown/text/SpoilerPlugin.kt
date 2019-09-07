@@ -27,7 +27,8 @@ import java.lang.reflect.Modifier
  * @since 0.1.0
  */
 class SpoilerPlugin private constructor(
-    @ColorInt private val backgroundColor: Int
+    @ColorInt private val backgroundColor: Int,
+    @ColorInt private val textColor: Int
 ): IMarkdownPlugin, AbstractMarkwonPlugin() {
 
     /**
@@ -37,10 +38,6 @@ class SpoilerPlugin private constructor(
         pattern = PATTERN_SPOILER,
         option = RegexOption.IGNORE_CASE
     )
-
-    override fun configureVisitor(builder: MarkwonVisitor.Builder) {
-        builder.on(Text::class.java, SpoilerNode(regex))
-    }
 
     override fun configureSpansFactory(builder: MarkwonSpansFactory.Builder) {
         super.configureSpansFactory(builder)
@@ -52,7 +49,10 @@ class SpoilerPlugin private constructor(
         @VisibleForTesting(otherwise = Modifier.PRIVATE)
         const val PATTERN_SPOILER = "~!([\\s\\S]*?)!~"
 
-        fun create(@ColorInt backgroundColor: Int) =
-            SpoilerPlugin(backgroundColor)
+        fun create(
+            @ColorInt backgroundColor: Int,
+            @ColorInt textColor: Int
+        ) =
+            SpoilerPlugin(backgroundColor, textColor)
     }
 }

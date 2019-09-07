@@ -159,7 +159,10 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         context?.apply {
             val ringList = generateStatsData()
             if (ringList.size > 1) {
-                binding.userStats.setDrawBg(CompatUtil.isLightTheme(this), getCompatColorAttr(R.attr.subtitleColor))
+                binding.userStats.setDrawBg(
+                    CompatUtil.isLightTheme(presenter.settings),
+                    getCompatColorAttr(R.attr.subtitleColor)
+                )
                 binding.userStats.setData(ringList, 500)
             }
         }
@@ -178,7 +181,10 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
                 val ringList = generateStatsData()
                 if (ringList.size > 1) {
                     context?.apply {
-                        binding.userStats.setDrawBg(CompatUtil.isLightTheme(this), getCompatColorAttr(R.attr.subtitleColor))
+                        binding.userStats.setDrawBg(
+                            CompatUtil.isLightTheme(presenter.settings),
+                            getCompatColorAttr(R.attr.subtitleColor)
+                        )
                         binding.userStats.setData(ringList, 500)
                     }
                 } else

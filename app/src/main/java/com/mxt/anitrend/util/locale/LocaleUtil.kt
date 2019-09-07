@@ -3,7 +3,9 @@ package com.mxt.anitrend.util.locale
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
+import androidx.preference.PreferenceManager
 import com.mxt.anitrend.util.Settings
+import org.koin.android.ext.koin.androidContext
 import java.util.*
 
 /**
@@ -13,8 +15,8 @@ import java.util.*
  */
 object LocaleUtil {
 
-    fun onAttach(context: Context): Context {
-        val language = Settings(context).userLanguage
+    fun onAttach(context: Context, settings: Settings): Context {
+        val language = settings.userLanguage ?: Locale.getDefault().language
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             updateResources(context, Locale(language))
