@@ -48,6 +48,7 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_giphy_preview);
         ButterKnife.bind(this);
+        setPresenter(new BasePresenter(this));
     }
 
     @Override
@@ -67,7 +68,11 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
      */
     @Override
     protected void onActivityReady() {
-        previewCredits.setImageResource(!CompatUtil.INSTANCE.isLightTheme(this) ? R.drawable.powered_by_giphy_light : R.drawable.powered_by_giphy_dark);
+        previewCredits.setImageResource(
+                !CompatUtil.INSTANCE.isLightTheme(getPresenter().getSettings()) ?
+                        R.drawable.powered_by_giphy_light :
+                        R.drawable.powered_by_giphy_dark
+        );
         updateUI();
     }
 

@@ -16,7 +16,7 @@ import java.util.*
 
 /**
  * Created by max on 2018/02/18.
- * Utils for group various types of media
+ * TextUtil for group various types of media
  */
 
 object GroupingUtil {

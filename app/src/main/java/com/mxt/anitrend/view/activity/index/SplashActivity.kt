@@ -36,7 +36,12 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        giphyCitation.setImageResource(if (!CompatUtil.isLightTheme(this)) R.drawable.powered_by_giphy_light else R.drawable.powered_by_giphy_dark)
+        giphyCitation.setImageResource(
+            if (!CompatUtil.isLightTheme(presenter.settings))
+            R.drawable.powered_by_giphy_light
+        else
+            R.drawable.powered_by_giphy_dark
+        )
         onActivityReady()
     }
 

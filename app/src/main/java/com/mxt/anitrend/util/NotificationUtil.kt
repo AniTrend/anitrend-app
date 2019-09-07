@@ -23,7 +23,7 @@ class NotificationUtil(
         private val context: Context,
         private val settings: Settings,
         private val notificationManager: NotificationManager?
-): KoinComponent {
+) {
 
     private var defaultNotificationId = 0x00000011
 

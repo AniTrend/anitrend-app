@@ -3,16 +3,17 @@ package com.mxt.anitrend
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import androidx.preference.PreferenceManager
 import com.google.android.gms.security.ProviderInstaller
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.koin.AppModule.appModule
+import com.mxt.anitrend.koin.AppModule.networkModule
 import com.mxt.anitrend.koin.AppModule.presenterModule
 import com.mxt.anitrend.koin.AppModule.widgetModule
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
 import io.wax911.emojify.EmojiManager
@@ -31,7 +32,7 @@ import timber.log.Timber
 class App : MultiDexApplication() {
 
     private val supportAnalytics by inject<ISupportAnalytics>()
-    private val settings by inject<Settings>()
+    private val jobScheduler by inject<JobSchedulerUtil>()
 
     /**
      * Timber logging tree depending on the build type we plant the appropriate tree
@@ -57,8 +58,16 @@ class App : MultiDexApplication() {
     private fun initializeDependencyInjection() {
         startKoin {
             androidLogger()
-            androidContext(applicationContext)
-            modules(listOf(appModule, widgetModule, presenterModule))
+            androidContext(
+                applicationContext
+            )
+            modules(
+                listOf(
+                    appModule,
+                    widgetModule,
+                    presenterModule,
+                    networkModule)
+            )
         }
     }
 
@@ -81,13 +90,7 @@ class App : MultiDexApplication() {
                         }
                 )
         }.exceptionOrNull()?.printStackTrace()
-    }
-
-    fun applyTheme() {
-        if (CompatUtil.isLightTheme(settings.theme))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        jobScheduler.scheduleJob()
     }
 
     override fun onCreate() {
@@ -96,11 +99,19 @@ class App : MultiDexApplication() {
         initializeApplication()
         initializeEventBus()
         plantLoggingTree()
-        applyTheme()
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleUtil.onAttach(base))
+        super.attachBaseContext(
+            LocaleUtil.onAttach(base,
+                Settings(base,
+                    PreferenceManager
+                        .getDefaultSharedPreferences(
+                            base
+                        )
+                )
+            )
+        )
         MultiDex.install(this)
     }
 }

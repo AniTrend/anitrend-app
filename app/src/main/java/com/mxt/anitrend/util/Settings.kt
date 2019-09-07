@@ -17,20 +17,21 @@ import java.util.*
  * Application preferences
  */
 
-class Settings(private val context: Context): KoinComponent {
+class Settings(
+    private val context: Context,
+    val sharedPreferences: SharedPreferences
+) {
 
     /** Base Application Values  */
     private val _versionCode = "_versionCode"
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
-    val sharedPreferences by inject<SharedPreferences>()
-
     var isAuthenticated: Boolean
-        get() =  sharedPreferences.getBoolean(_isAuthenticated, false)
-        set(authenticated) {
+        get() = sharedPreferences.getBoolean(_isAuthenticated, false)
+        set(value) {
             sharedPreferences.edit {
-                putBoolean(_isAuthenticated, authenticated)
+                putBoolean(_isAuthenticated, value)
                 apply()
             }
         }
@@ -62,9 +63,9 @@ class Settings(private val context: Context): KoinComponent {
             }
         }
 
-    var userLanguage: String = Locale.getDefault().language
+    var userLanguage: String? = null
         get() = sharedPreferences.getString(context.getString(R.string.pref_key_selected_language),
-        Locale.getDefault().language) ?: Locale.getDefault().language
+        Locale.getDefault().language)
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -95,8 +96,8 @@ class Settings(private val context: Context): KoinComponent {
             }
         }
 
-    var isCrashReportsEnabled: Boolean = false
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), false)
+    var isCrashReportsEnabled: Boolean = true
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), true)
         set(value) {
             field = value
             sharedPreferences.edit {

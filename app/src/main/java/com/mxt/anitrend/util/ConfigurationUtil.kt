@@ -1,11 +1,13 @@
 package com.mxt.anitrend.util
 
 import androidx.annotation.StyleRes
+import androidx.appcompat.app.AppCompatDelegate
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.extension.applyConfiguredTheme
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.util.*
 
 class ConfigurationUtil : KoinComponent {
 
@@ -20,7 +22,7 @@ class ConfigurationUtil : KoinComponent {
      */
     fun onCreateAttach(base: ActivityBase<*, *>) {
         currentTheme = settings.theme
-        currentLocale = settings.userLanguage
+        currentLocale = settings.userLanguage ?: Locale.getDefault().language
         @StyleRes val theme = when (currentTheme) {
             KeyUtil.THEME_DARK -> R.style.AppThemeDark
             KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
@@ -43,5 +45,16 @@ class ConfigurationUtil : KoinComponent {
                 overridePendingTransition(0, 0)
             }
         }
+    }
+
+    /**
+     * Applies correct night mode depending on the selected theme, however setting the night mode
+     * off reset locale, possibly because there are no resource for string-night?
+     */
+    fun applyApplicationTheme() {
+        if (CompatUtil.isLightTheme(settings))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
 }
