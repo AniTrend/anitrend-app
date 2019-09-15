@@ -5,6 +5,7 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Enhancements
 - More hugs and head pats (>//.//<)
+- Anonymous crash reporting is now enabled by default as from __v1.5.8__ (option can be found in settings)
 
 #### Bug Fixes
 - Locale settings not being applied fully when using dark themes
@@ -21,5 +22,5 @@ __Admins, Devs & Cutie Pies:__
 _Mittens, Switchums, Kuji, Moka, Flare, Silver, Mrspits4ever_
 
 __Awesome Donators:__
-_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas, Dustter_
+_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas_
 
