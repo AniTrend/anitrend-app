@@ -104,7 +104,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     protected void configureActivity() {
         Settings settings = KoinExt.get(Settings.class);
         setTheme(
-                CompatUtil.INSTANCE.isLightTheme(settings.getTheme()) ?
+                CompatUtil.INSTANCE.isLightTheme(settings) ?
                         R.style.AppThemeLight_Translucent :
                         R.style.AppThemeDark_Translucent
         );

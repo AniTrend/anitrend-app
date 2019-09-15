@@ -14,15 +14,13 @@ import java.io.IOException
  * Auth injector interceptor
  */
 
-class AuthInterceptor(context: Context) : Interceptor {
-
-    private val applicationPref by lazy {
-        Settings(context)
-    }
+class AuthInterceptor(
+    private val settings: Settings
+) : Interceptor {
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (applicationPref.isAuthenticated) {
+        if (settings.isAuthenticated) {
             if (WebTokenRequest.getInstance() != null) {
                 val builder = chain.request().newBuilder()
                         .header(BuildConfig.HEADER_KEY, WebTokenRequest.getInstance().header)

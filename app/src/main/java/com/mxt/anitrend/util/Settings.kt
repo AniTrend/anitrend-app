@@ -8,6 +8,8 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.*
 
 /**
@@ -15,22 +17,21 @@ import java.util.*
  * Application preferences
  */
 
-class Settings(private val context: Context) {
+class Settings(
+    private val context: Context,
+    val sharedPreferences: SharedPreferences
+) {
 
     /** Base Application Values  */
     private val _versionCode = "_versionCode"
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
-    val sharedPreferences: SharedPreferences by lazy(LazyThreadSafetyMode.NONE) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-    }
-
     var isAuthenticated: Boolean
-        get() =  sharedPreferences.getBoolean(_isAuthenticated, false)
-        set(authenticated) {
+        get() = sharedPreferences.getBoolean(_isAuthenticated, false)
+        set(value) {
             sharedPreferences.edit {
-                putBoolean(_isAuthenticated, authenticated)
+                putBoolean(_isAuthenticated, value)
                 apply()
             }
         }
@@ -62,9 +63,9 @@ class Settings(private val context: Context) {
             }
         }
 
-    var userLanguage: String = Locale.getDefault().language
+    var userLanguage: String? = null
         get() = sharedPreferences.getString(context.getString(R.string.pref_key_selected_language),
-        Locale.getDefault().language) ?: Locale.getDefault().language
+        Locale.getDefault().language)
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -95,8 +96,8 @@ class Settings(private val context: Context) {
             }
         }
 
-    var isCrashReportsEnabled: Boolean = false
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), false)
+    var isCrashReportsEnabled: Boolean = true
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), true)
         set(value) {
             field = value
             sharedPreferences.edit {
@@ -283,7 +284,8 @@ class Settings(private val context: Context) {
     val isUpdated: Boolean
         get() = versionCode < BuildConfig.VERSION_CODE
 
-    var versionCode: Int = sharedPreferences.getInt(_versionCode, 1)
+    var versionCode: Int = 1
+        get() = sharedPreferences.getInt(_versionCode, 1)
         set(value) {
             field = value
             sharedPreferences.edit {

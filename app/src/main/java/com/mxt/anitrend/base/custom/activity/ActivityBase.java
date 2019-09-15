@@ -36,6 +36,7 @@ import com.mxt.anitrend.util.ConfigurationUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.locale.LocaleUtil;
 import com.mxt.anitrend.util.media.MediaActionUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
@@ -96,7 +97,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleUtil.INSTANCE.onAttach(base));
+        super.attachBaseContext(LocaleUtil.INSTANCE.onAttach(base, KoinExt.get(Settings.class)));
     }
 
     @Override

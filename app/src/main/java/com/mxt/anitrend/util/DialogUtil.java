@@ -21,6 +21,7 @@ import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
 import com.mxt.anitrend.extension.ContextExtKt;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.markdown.MarkDownUtil;
 
 import java.io.IOException;
@@ -256,6 +257,10 @@ public class DialogUtil {
                 .positiveColorRes(R.color.colorStateGreen)
                 .negativeColorRes(R.color.colorStateOrange)
                 .neutralColorRes(R.color.colorStateBlue)
-                .theme(CompatUtil.INSTANCE.isLightTheme(context)?Theme.LIGHT:Theme.DARK);
+                .theme(
+                        CompatUtil.INSTANCE.isLightTheme(
+                            KoinExt.get(Settings.class)
+                        ) ? Theme.LIGHT:Theme.DARK
+                );
     }
 }

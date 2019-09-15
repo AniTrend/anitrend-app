@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mxt.anitrend.BuildConfig;
 import com.mxt.anitrend.base.custom.async.WebTokenRequest;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.api.converter.AniGraphConverter;
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor;
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor;
@@ -91,8 +92,10 @@ public class WebFactory {
     public static <S> S createService(@NonNull Class<S> serviceClass, Context context) {
         WebTokenRequest.getToken(context);
         if(mRetrofit == null) {
-            OkHttpClient.Builder httpClient = createHttpClient(new AuthInterceptor(context),
-                    HttpLoggingInterceptor.Level.HEADERS);
+            OkHttpClient.Builder httpClient = createHttpClient(
+                    KoinExt.get(AuthInterceptor.class),
+                    HttpLoggingInterceptor.Level.HEADERS
+            );
 
             mRetrofit = new Retrofit.Builder().client(httpClient.build())
                     .addConverterFactory(AniGraphConverter.Companion.create(context))

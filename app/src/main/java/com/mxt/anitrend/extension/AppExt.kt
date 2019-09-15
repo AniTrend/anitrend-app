@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.mxt.anitrend.App
 import org.koin.core.context.GlobalContext
 import timber.log.Timber
 
@@ -38,7 +37,7 @@ fun getString(@StringRes text: Int, vararg values: String): String? =
 
 fun FragmentActivity.applyConfiguredTheme() {
     runCatching{
-        (applicationContext as App).applyTheme()
+        //ConfigurationUtil().applyApplicationTheme()
         recreate()
     }.exceptionOrNull()?.printStackTrace()
 }

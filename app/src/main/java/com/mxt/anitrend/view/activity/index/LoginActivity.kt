@@ -24,6 +24,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.*
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.worker.AuthenticatorWorker
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 /**
@@ -56,6 +57,9 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
         }
     }
 
+    private val scheduler by inject<JobSchedulerUtil>()
+    private val settings by inject<Settings>()
+
     /**
      * Some activities may have custom themes and if that's the case
      * override this method and set your own theme style, also if you wish
@@ -63,7 +67,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
      * @see ActivityBase.configureActivity
      */
     override fun configureActivity() {
-        setTheme(if (CompatUtil.isLightTheme(Settings(this).theme))
+        setTheme(if (CompatUtil.isLightTheme(settings))
             R.style.AppThemeLight_Translucent
         else
             R.style.AppThemeDark_Translucent)
@@ -94,8 +98,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     }
 
     override fun updateUI() {
-        if (presenter.settings.isNotificationEnabled)
-            JobSchedulerUtil.scheduleJob(applicationContext)
+        scheduler.scheduleJob()
         createApplicationShortcuts()
         finish()
     }

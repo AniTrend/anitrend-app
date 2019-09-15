@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity
 import com.annimon.stream.IntPair
 import com.annimon.stream.Optional
 import com.annimon.stream.Stream
+import com.mxt.anitrend.App
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.extension.getCompatColor
@@ -287,15 +288,9 @@ object CompatUtil {
             activity?.finish()
     }
 
-    fun isLightTheme(@KeyUtil.ApplicationTheme theme: String?): Boolean {
+    fun isLightTheme(settings: Settings): Boolean {
+        @KeyUtil.ApplicationTheme val theme: String? = settings.theme
         return theme == null || theme == KeyUtil.THEME_LIGHT
-    }
-
-    fun isLightTheme(context: Context?): Boolean {
-        return if (context != null)
-            isLightTheme(Settings(context).theme)
-        else
-            true
     }
 
     fun dipToPx(dpValue: Float): Int {

@@ -13,6 +13,7 @@ import timber.log.Timber
  */
 object MarkDownUtil {
 
+
     private fun fromMD(content: String): SpannableStringBuilder {
         return try {
             val processedText = Processor.process(content)
