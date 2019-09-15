@@ -7,7 +7,9 @@ import androidx.work.WorkerParameters
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
+import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotificationUtil
@@ -82,8 +84,12 @@ class JobDispatcherService(context: Context, workerParams: WorkerParameters) : W
     }
 
     private fun requestNotifications(user: User) {
-        if (user.unreadNotificationCount > 0)
-            notificationUtil.createNotification(user)
+        val notificationsContainer = userEndpoint.getUserNotifications(
+            GraphUtil.getDefaultQuery(false)
+        ).execute().body() as PageContainer<Notification>?
+
+        if (user.unreadNotificationCount > 0 && notificationsContainer != null)
+            notificationUtil.createNotification(user, notificationsContainer)
     }
 
     companion object {

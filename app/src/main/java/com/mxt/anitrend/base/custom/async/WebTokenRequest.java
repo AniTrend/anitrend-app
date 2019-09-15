@@ -47,7 +47,7 @@ public class WebTokenRequest {
         CommonPresenter presenter = new BasePresenter(context);
         presenter.getSettings().setAuthenticated(false);
         presenter.getDatabase().invalidateBoxStores();
-        JobSchedulerUtil.INSTANCE.cancelJob(context);
+        KoinExt.get(JobSchedulerUtil.class).cancelJob();
         WebFactory.invalidate();
         token = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
@@ -79,7 +79,7 @@ public class WebTokenRequest {
      */
     public static void getToken(Context context) {
         synchronized (lock) {
-            if(new Settings(context).isAuthenticated()) {
+            if(KoinExt.get(Settings.class).isAuthenticated()) {
                 BasePresenter presenter = new BasePresenter(context);
                 if (token == null || token.getExpires() < (System.currentTimeMillis() / 1000L)) {
                     token = presenter.getDatabase().getWebToken();

@@ -3,6 +3,7 @@ package com.mxt.anitrend.koin
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.drawable.Drawable
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -12,11 +13,13 @@ import com.bumptech.glide.request.target.Target
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.entity.MyObjectBox
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.ConfigurationUtil
+import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
 import io.noties.markwon.Markwon
@@ -43,8 +46,22 @@ object AppModule : KoinComponent {
             )
         }
 
+        single {
+            JobSchedulerUtil(
+                context = androidContext(),
+                settings = get()
+            )
+        }
+
+        single {
+            PreferenceManager.getDefaultSharedPreferences(androidContext())
+        }
+
         factory {
-            Settings(androidContext())
+            Settings(
+                context = androidContext(),
+                sharedPreferences = get()
+            )
         }
 
         factory {
@@ -94,6 +111,14 @@ object AppModule : KoinComponent {
         }
         factory {
             MediaPresenter(androidContext())
+        }
+    }
+
+    val networkModule = module {
+        factory {
+            AuthInterceptor(
+                settings = get()
+            )
         }
     }
 

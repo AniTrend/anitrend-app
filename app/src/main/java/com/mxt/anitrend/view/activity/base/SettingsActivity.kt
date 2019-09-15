@@ -60,6 +60,7 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
     class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
         private val settings by inject<Settings>()
+        private val scheduler by inject<JobSchedulerUtil>()
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -112,14 +113,13 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         applyConfiguredTheme()
                     }
                     getString(R.string.pref_key_sync_frequency) -> {
-                        JobSchedulerUtil.cancelJob(this)
-                        JobSchedulerUtil.scheduleJob(this)
+                        scheduler.scheduleJob()
                     }
                     getString(R.string.pref_key_new_message_notifications) -> {
                         if (settings.isNotificationEnabled)
-                            JobSchedulerUtil.scheduleJob(this)
+                            scheduler.scheduleJob()
                         else
-                            JobSchedulerUtil.cancelJob(this)
+                            scheduler.cancelJob()
                     }
                     else -> Timber.i("$key not registered in this sharedPreferenceChange listener")
                 }

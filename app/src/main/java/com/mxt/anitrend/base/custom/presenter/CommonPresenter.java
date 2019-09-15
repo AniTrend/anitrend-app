@@ -8,6 +8,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener;
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery;
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener;
 import com.mxt.anitrend.data.DatabaseHelper;
+import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.Settings;
 
 import org.greenrobot.eventbus.EventBus;
@@ -80,7 +81,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
 
     public Settings getSettings() {
         if(settings == null)
-            settings = new Settings(context);
+            settings = KoinExt.get(Settings.class);
         return settings;
     }
 
