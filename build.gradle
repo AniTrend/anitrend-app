@@ -49,7 +49,7 @@ buildscript {
         timber = '4.7.1'
 
         graphql = '0.10.1'
-        emojify = '1.4'
+        emojify = '1.5.3'
         markwon = '4.1.0'
         smartTab = '2.0.0'
         tapTarget = '2.15.0'
