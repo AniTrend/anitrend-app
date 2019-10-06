@@ -33,7 +33,7 @@ buildscript {
         multidex = '2.0.1'
 
         // mockito = '2.18.3'
-        hemcrest = '1.3'
+        hemcrest = '2.1'
         mockito = '3.0.0'
         junit = '4.12'
         runner = '1.2.0'
