@@ -48,7 +48,7 @@ buildscript {
         gson = '2.8.5'
         timber = '4.7.1'
 
-        graphql = '0.10.1'
+        graphql = '0.10.2'
         emojify = '1.5.3'
         markwon = '4.1.0'
         smartTab = '2.0.0'
