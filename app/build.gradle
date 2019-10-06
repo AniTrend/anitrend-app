@@ -103,7 +103,7 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:$constraint"
     implementation 'androidx.preference:preference-ktx:1.1.0-rc01'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
 
     /** Architecture Components */
     implementation "androidx.core:core-ktx:$ktx"
