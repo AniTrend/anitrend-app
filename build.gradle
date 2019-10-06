@@ -26,7 +26,7 @@ buildscript {
         fragmentKtx = '1.2.0-alpha01'
         workerKtx = '2.1.0'
         navigation = '2.1.0-beta02'
-        firebase = '17.0.1'
+        firebase = '17.2.0'
 
         koin = '2.0.1'
         kotlinVersion = '1.3.50'
