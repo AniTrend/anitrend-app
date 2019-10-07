@@ -5,7 +5,8 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Enhancements
 - More hugs and head pats (>//.//<)
-- Anonymous crash reporting is now enabled by default as from __v1.5.8__ (option can be found in settings)
+- Expandable notification details (thanks 95ulisse) <3
+- Anonymous crash reporting is now enabled by default as of __v1.5.8__ (option can be found in settings)
 
 #### Bug Fixes
 - Locale settings not being applied fully when using dark themes
