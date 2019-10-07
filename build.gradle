@@ -53,7 +53,7 @@ buildscript {
         markwon = '4.1.1'
         smartTab = '2.0.0'
         tapTarget = '2.15.0'
-        okHttpLogger = '3.12.1'
+        okHttpLogger = '4.2.2'
 
         prettyTime = '4.0.2.Final'
         jiaoziVideoPlayer = '7.0.5'
