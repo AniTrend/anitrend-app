@@ -82,7 +82,7 @@ buildscript {
         // Google Play Services
         classpath 'com.google.gms:google-services:4.3.2'
         // Crash Analytics
-        classpath 'io.fabric.tools:gradle:1.31.1'
+        classpath 'io.fabric.tools:gradle:1.31.2'
         // Object Box
         classpath "io.objectbox:objectbox-gradle-plugin:$objectBox"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
