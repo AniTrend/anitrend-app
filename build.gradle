@@ -64,7 +64,7 @@ buildscript {
         materialSearchView = '1.4.15'
         progressLayout = '1.0.1'
         eventBus = '3.1.1'
-        alerter = '4.1.1'
+        alerter = '5.0.0'
         stream = '1.2.1'
         circularProgressView = '2.5.0'
     }
