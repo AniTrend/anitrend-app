@@ -28,11 +28,13 @@ fragment MediaCoreFragment on Media {
         ... AiringScheduleFragment
     }
     mediaListEntry {
-        ... on MediaList {
-            id
-            status
-        }
+        ... MediaListFragmentMini
     }
     siteUrl
     updatedAt
+}
+
+fragment MediaListFragmentMini on MediaList {
+    id
+    status
 }
