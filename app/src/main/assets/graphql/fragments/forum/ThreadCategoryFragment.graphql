@@ -1,0 +1,4 @@
+fragment ThreadCategoryFragment on ThreadCategory {
+    id
+    name
+}

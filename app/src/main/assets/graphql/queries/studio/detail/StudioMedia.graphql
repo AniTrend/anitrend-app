@@ -1,0 +1,14 @@
+query StudioMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPULARITY) {
+  Studio(id: $id) {
+    media(page: $page, perPage: $perPage, sort: $sort) {
+      ... on MediaConnection {
+        pageInfo {
+          ... PageInfoFragment
+        }
+        nodes {
+          ... MediaCoreFragment
+        }
+      }
+    }
+  }
+}

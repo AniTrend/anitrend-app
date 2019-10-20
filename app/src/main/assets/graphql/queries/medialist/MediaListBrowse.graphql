@@ -1,0 +1,10 @@
+query MediaListBrowse($id: Int, $userId: Int, $userName: String, $page: Int, $perPage: Int, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort], $scoreFormat: ScoreFormat = POINT_100) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    mediaList(id: $id, userId: $userId, userName: $userName, sort: $sort, type: $type, status: $status) {
+      ... MediaListFragment
+    }
+  }
+}

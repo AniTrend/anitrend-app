@@ -1,0 +1,6 @@
+fragment MediaTitleFragment on MediaTitle {
+    english
+    romaji
+    native
+    userPreferred
+}

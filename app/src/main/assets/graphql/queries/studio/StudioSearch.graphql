@@ -1,0 +1,10 @@
+query StudioSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [StudioSort] = SEARCH_MATCH) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    studios(id: $id, search: $search, sort: $sort) {
+      ... StudioFragment
+    }
+  }
+}

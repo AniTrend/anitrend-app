@@ -1,0 +1,5 @@
+query CharacterBase($id: Int!) {
+  Character(id: $id) {
+    ... CharacterCoreFragment
+  }
+}

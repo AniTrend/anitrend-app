@@ -1,0 +1,11 @@
+mutation SaveActivityReply($id: Int, $activityId: Int, $text: String, $asHtml: Boolean = false) {
+  SaveActivityReply(id: $id, activityId: $activityId, text: $text) {
+    ... ActivityReplyFragmentMini
+  }
+}
+
+fragment ActivityReplyFragmentMini on ActivityReply {
+  id
+  text(asHtml: $asHtml)
+  createdAt
+}

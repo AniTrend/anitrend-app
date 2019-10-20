@@ -1,0 +1,11 @@
+fragment ActivityReplyFragment on ActivityReply {
+    id
+    text
+    createdAt
+    user {
+        ... UserCoreFragment
+    }    
+    likes {
+        ... UserCoreFragment
+    }
+}

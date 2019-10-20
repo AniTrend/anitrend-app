@@ -1,0 +1,5 @@
+query MediaList($id: Int, $mediaId: Int, $userName: String, $type: MediaType, $status: MediaListStatus, $sort: [MediaListSort], $scoreFormat: ScoreFormat = POINT_100) {
+  MediaList(id: $id, userName: $userName, sort: $sort, type: $type, status: $status, mediaId: $mediaId) {
+    ... MediaListFragment
+  }
+}

@@ -1,0 +1,4 @@
+fragment StaffImageFragment on StaffImage {
+    large
+    medium
+}

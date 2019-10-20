@@ -1,0 +1,10 @@
+query StaffSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [StaffSort] = SEARCH_MATCH) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    staff(id: $id, search: $search, sort: $sort) {
+      ... StaffCoreFragment
+    }
+  }
+}

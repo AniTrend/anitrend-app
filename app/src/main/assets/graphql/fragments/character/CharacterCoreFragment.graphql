@@ -1,0 +1,12 @@
+fragment CharacterCoreFragment on Character {
+    id
+    name {
+        ... CharacterNameFragment
+    }
+    image {
+        ... CharacterImageFragment
+    }
+    isFavourite
+    siteUrl
+    updatedAt
+}
