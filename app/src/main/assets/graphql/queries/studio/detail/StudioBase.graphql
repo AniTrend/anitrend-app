@@ -1,0 +1,5 @@
+query StudioBase($id: Int!) {
+  Studio(id: $id) {
+    ... StudioFragment
+  }
+}

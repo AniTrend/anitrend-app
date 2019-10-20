@@ -17,6 +17,8 @@ import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
 import io.wax911.emojify.EmojiManager
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -72,9 +74,13 @@ class App : MultiDexApplication() {
     }
 
     private fun initializeApplication() {
-        runCatching {
-            EmojiManager.initEmojiData(this)
-        }.exceptionOrNull()?.printStackTrace()
+        GlobalScope.launch {
+            runCatching {
+                EmojiManager.initEmojiData(
+                    this@App
+                )
+            }.exceptionOrNull()?.printStackTrace()
+        }
         runCatching {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 ProviderInstaller.installIfNeededAsync(

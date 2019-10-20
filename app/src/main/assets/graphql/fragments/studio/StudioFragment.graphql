@@ -1,0 +1,7 @@
+fragment StudioFragment on Studio {
+    id
+    name
+    isAnimationStudio
+    siteUrl
+    isFavourite
+}

@@ -1,0 +1,10 @@
+query CharacterSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [CharacterSort] = SEARCH_MATCH) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    characters(id: $id, search: $search, sort: $sort) {
+      ... CharacterCoreFragment
+    }
+  }
+}

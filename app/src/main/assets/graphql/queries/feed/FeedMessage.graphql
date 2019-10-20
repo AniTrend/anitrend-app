@@ -1,0 +1,10 @@
+query FeedMessage($page: Int, $perPage: Int, $messengerId: Int, $userId: Int, $asHtml: Boolean = false) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    activities(type: MESSAGE, sort: ID_DESC, messengerId: $messengerId, userId: $userId) {
+      ... MessageActivityFragment
+    }
+  }
+}

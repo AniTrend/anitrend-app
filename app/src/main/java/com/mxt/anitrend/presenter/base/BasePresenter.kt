@@ -60,17 +60,19 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
         return true
     }
 
-    fun checkGenresAndTags(fragmentActivity: FragmentActivity) {
+    fun checkGenresAndTags(fragmentActivity: FragmentActivity?) {
         val intent = Intent(fragmentActivity, TagGenreService::class.java)
-        fragmentActivity.startService(intent)
+        fragmentActivity?.startService(intent)
     }
 
-    fun getThumbnail(thumbnails: List<Thumbnail>): String? {
-        return if (CompatUtil.isEmpty(thumbnails)) null else thumbnails[0].url
+    fun getThumbnail(thumbnails: List<Thumbnail>?): String? {
+        return runCatching {
+            thumbnails?.get(0)?.url
+        }.getOrNull()
     }
 
-    fun getDuration(mediaContent: MediaContent): String {
-        if (mediaContent.duration != null) {
+    fun getDuration(mediaContent: MediaContent?): String {
+        if (mediaContent?.duration != null) {
             val timeSpan = Integer.valueOf(mediaContent.duration).toLong()
             val minutes = TimeUnit.SECONDS.toMinutes(timeSpan)
             val seconds = timeSpan - TimeUnit.MINUTES.toSeconds(minutes)

@@ -76,8 +76,13 @@ public class MediaPresenter extends BasePresenter {
             return Stream.of(statusDistribution)
                     .map(st -> new PieEntry(
                             (float) ((st.getAmount()*100) / highestStatus),
-                            String.format(Locale.getDefault(), "%s: %s",
-                            CompatUtil.INSTANCE.capitalizeWords(st.getStatus()), MediaUtil.getFormattedCount(st.getAmount()))))
+                            String.format(
+                                    Locale.getDefault(), "%s: %s",
+                                    CompatUtil.INSTANCE.capitalizeWords(
+                                            st.getStatus()
+                                    ), MediaUtil.getFormattedCount(st.getAmount())
+                            ))
+                    )
                     .sorted((p1, p2) -> p1.getLabel().compareTo(p2.getLabel()))
                     .toList();
         return Collections.emptyList();
@@ -85,9 +90,9 @@ public class MediaPresenter extends BasePresenter {
 
     public List<BarEntry> getMediaScoreDistribution(List<ScoreDistribution> scoreDistribution) {
         return Stream.of(scoreDistribution)
-                .mapIndexed(0, 1, (index, sc) ->
-                        new BarEntry(index, sc.getAmount()))
-                .toList();
+                .mapIndexed(0, 1, (i, s) -> new BarEntry(
+                        i, s.getAmount()
+                )).toList();
     }
 
     public String getEpisodeDuration(Media media) {

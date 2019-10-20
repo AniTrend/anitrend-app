@@ -1,0 +1,13 @@
+mutation SaveTextActivity($id: Int, $text: String, $asHtml: Boolean = false) {
+  SaveTextActivity(id: $id, text: $text) {
+    ... TextActivityFragmentMini
+  }
+}
+
+fragment TextActivityFragmentMini on TextActivity {
+  id
+  text(asHtml: $asHtml)
+  createdAt
+  type
+  replyCount
+}
