@@ -622,6 +622,8 @@ type InternalPage {
         licensedBy: String,
         #Filter media by sites with a online streaming or reading license
         licensedBy_in: [String],
+        #Only apply the tags filter argument to tags above this rank
+        minimumTagRank: Int,
         #Filter by the media on the authenticated user's lists
         onList: Boolean,
         #Filter by the number of users with this media on their list
@@ -698,6 +700,10 @@ type InternalPage {
         isFollowing: Boolean,
         #Filter by the media id of the list entry
         mediaId: Int,
+        #Filter by the media id of the list entry
+        mediaId_in: [Int],
+        #Filter by the media id of the list entry
+        mediaId_not_in: [Int],
         #Filter by note words and #tags
         notes: String,
         #Filter by note words and #tags
@@ -789,6 +795,7 @@ type InternalPage {
         #Filter by trending amount
         trending_not: Int
     ): [MediaTrend]
+    modActions(userId: Int): [ModAction]
     notifications(
         #Reset the unread notification count to 0 on load
         resetNotificationCount: Boolean,
@@ -907,6 +914,8 @@ type ListActivity {
     createdAt: Int!
     "The id of the activity"
     id: Int!
+    "If the activity is locked and can receive replies"
+    isLocked: Boolean
     "The users who liked the activity"
     likes: [User]
     "The associated media to the activity update"
@@ -1000,6 +1009,8 @@ type Media {
     isLicensed: Boolean
     "Locked media may not be added to lists our favorited. This may be due to the entry pending for deletion or other reasons."
     isLocked: Boolean
+    "If the media is blocked from being recommended to/from"
+    isRecommendationBlocked: Boolean
     "Mean score of all the user's scores of the media"
     meanScore: Int
     "The authenticated user's media list entry for the media"
@@ -1012,6 +1023,14 @@ type Media {
     popularity: Int
     "The ranking of the media in a particular time span and format compared to other media"
     rankings: [MediaRank]
+    "User recommendations for similar media"
+    recommendations(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [RecommendationSort]
+    ): RecommendationConnection
     "Other media in the same or connecting franchise"
     relations: MediaConnection
     "User reviews of the media"
@@ -1416,6 +1435,8 @@ type MessageActivity {
     createdAt: Int!
     "The id of the activity"
     id: Int!
+    "If the activity is locked and can receive replies"
+    isLocked: Boolean
     "The users who liked the activity"
     likes: [User]
     "The message text (Markdown)"
@@ -1439,6 +1460,18 @@ type MessageActivity {
     siteUrl: String
     "The type of the activity"
     type: ActivityType
+}
+
+type ModAction {
+    createdAt: Int!
+    data: String
+    "The id of the action"
+    id: Int!
+    mod: User
+    objectId: Int
+    objectType: String
+    type: ModActionType
+    user: User
 }
 
 type Mutation {
@@ -1495,6 +1528,13 @@ type Mutation {
         #The reply text
         text: String
     ): ActivityReply
+    "Update list activity (Mod Only)"
+    SaveListActivity(
+        #The activity's id, required for updating
+        id: Int,
+        #If the activity should be locked. (Mod Only)
+        locked: Boolean
+    ): ListActivity
     "Create or update a media list entry"
     SaveMediaListEntry(
         #Array of advanced scores
@@ -1534,11 +1574,22 @@ type Mutation {
     SaveMessageActivity(
         #The activity id, required for updating
         id: Int,
+        #If the activity should be locked. (Mod Only)
+        locked: Boolean,
         #The activity message text
         message: String,
         #The id of the user the message is being sent to
         recipientId: Int
     ): MessageActivity
+    "Recommendation a media"
+    SaveRecommendation(
+        #The id of the base media
+        mediaId: Int,
+        #The id of the media to recommend
+        mediaRecommendationId: Int,
+        #The rating to give the recommendation
+        rating: RecommendationRating
+    ): Recommendation
     "Create or update a review"
     SaveReview(
         #The main review text. Min:2200 characters
@@ -1558,6 +1609,8 @@ type Mutation {
     SaveTextActivity(
         #The activity's id, required for updating
         id: Int,
+        #If the activity should be locked. (Mod Only)
+        locked: Boolean,
         #The activity text
         text: String
     ): TextActivity
@@ -1917,6 +1970,8 @@ type Page {
         licensedBy: String,
         #Filter media by sites with a online streaming or reading license
         licensedBy_in: [String],
+        #Only apply the tags filter argument to tags above this rank
+        minimumTagRank: Int,
         #Filter by the media on the authenticated user's lists
         onList: Boolean,
         #Filter by the number of users with this media on their list
@@ -1993,6 +2048,10 @@ type Page {
         isFollowing: Boolean,
         #Filter by the media id of the list entry
         mediaId: Int,
+        #Filter by the media id of the list entry
+        mediaId_in: [Int],
+        #Filter by the media id of the list entry
+        mediaId_not_in: [Int],
         #Filter by note words and #tags
         notes: String,
         #Filter by note words and #tags
@@ -2404,6 +2463,8 @@ type Query {
         licensedBy: String,
         #Filter media by sites with a online streaming or reading license
         licensedBy_in: [String],
+        #Only apply the tags filter argument to tags above this rank
+        minimumTagRank: Int,
         #Filter by the media on the authenticated user's lists
         onList: Boolean,
         #Filter by the number of users with this media on their list
@@ -2481,6 +2542,10 @@ type Query {
         isFollowing: Boolean,
         #Filter by the media id of the list entry
         mediaId: Int,
+        #Filter by the media id of the list entry
+        mediaId_in: [Int],
+        #Filter by the media id of the list entry
+        mediaId_not_in: [Int],
         #Filter by note words and #tags
         notes: String,
         #Filter by note words and #tags
@@ -2720,6 +2785,34 @@ type Query {
     ): User
     "Get the currently authenticated user"
     Viewer: User
+}
+
+"Media recommendation"
+type Recommendation {
+    "The id of the recommendation"
+    id: Int!
+    "The media the recommendation is from"
+    media: Media
+    "The recommended media"
+    mediaRecommendation: Media
+    "Users rating of the recommendation"
+    rating: Int
+    "The user that first created the recommendation"
+    user: User
+    "The rating of the recommendation by currently authenticated user"
+    userRating: RecommendationRating
+}
+
+type RecommendationConnection {
+    edges: [RecommendationEdge]
+    nodes: [Recommendation]
+    "The pagination information"
+    pageInfo: PageInfo
+}
+
+"Recommendation connection edge"
+type RecommendationEdge {
+    node: Recommendation
 }
 
 "Notification for when new media is added to the site"
@@ -3092,6 +3185,8 @@ type TextActivity {
     createdAt: Int!
     "The id of the activity"
     id: Int!
+    "If the activity is locked and can receive replies"
+    isLocked: Boolean
     "The users who liked the activity"
     likes: [User]
     "The written replies to the activity"
@@ -3406,6 +3501,14 @@ type UserLengthStatistic {
     meanScore: Float!
     mediaIds: [Int]!
     minutesWatched: Int!
+}
+
+"User data for moderators"
+type UserModData {
+    alts: [User]
+    bans: Json
+    counts: Json
+    ip: Json
 }
 
 "A user's general options"
@@ -3837,6 +3940,16 @@ enum MediaType {
     MANGA
 }
 
+enum ModActionType {
+    BAN
+    DELETE
+    EDIT
+    EXPIRE
+    NOTE
+    REPORT
+    RESET
+}
+
 "Notification type enum"
 enum NotificationType {
     #A user has liked your activity
@@ -3867,6 +3980,21 @@ enum NotificationType {
     THREAD_LIKE
     #A user has commented in one of your subscribed forum threads
     THREAD_SUBSCRIBED
+}
+
+"Recommendation rating enums"
+enum RecommendationRating {
+    NO_RATING
+    RATE_DOWN
+    RATE_UP
+}
+
+"Recommendation sort enums"
+enum RecommendationSort {
+    ID
+    ID_DESC
+    RATING
+    RATING_DESC
 }
 
 "Review rating enums"
