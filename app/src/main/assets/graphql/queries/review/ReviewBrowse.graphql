@@ -1,0 +1,10 @@
+query ReviewBrowse($page: Int, $perPage: Int, $mediaId: Int, $type: MediaType, $sort: [ReviewSort] = CREATED_AT_DESC, $asHtml: Boolean = false) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    reviews(mediaId: $mediaId, mediaType: $type, sort: $sort) {
+      ... ReviewFragment
+    }
+  }
+}

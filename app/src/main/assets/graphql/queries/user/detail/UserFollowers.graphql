@@ -1,0 +1,10 @@
+query UserFollowers($id: Int!, $page: Int, $perPage: Int, $sort: [UserSort] = USERNAME) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    followers(userId: $id, sort: $sort) {
+      ... UserCoreFragment
+    }
+  }
+}

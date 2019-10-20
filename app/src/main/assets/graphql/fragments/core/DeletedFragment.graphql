@@ -1,0 +1,3 @@
+fragment DeletedFragment on Deleted {
+    deleted
+}

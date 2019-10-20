@@ -1,0 +1,5 @@
+mutation RateReview($id: Int, $rating: ReviewRating, $asHtml: Boolean = false) {
+  RateReview(reviewId: $id, rating: $rating) {
+    ... ReviewFragment
+  }
+}

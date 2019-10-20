@@ -1,0 +1,5 @@
+mutation ToggleLike($id: Int, $likeableType: LikeableType) {
+  ToggleLike(id: $id, type: $likeableType) {
+    ... UserCoreFragment
+  }
+}

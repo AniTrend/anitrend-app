@@ -1,0 +1,23 @@
+query ThreadCommentList(
+    $page: Int,
+    $perPage: Int,
+    $id: Int,
+    $sort: [ThreadCommentSort],
+    $threadId: Int,
+    $userId: Int,
+    $asHtlm: Boolean = false
+) {
+    Page(page: $page, perPage: $perPage) {
+        pageInfo {
+            ... PageInfoFragment
+        }
+        threadComments(
+            id: $id
+            sort: $sort
+            threadId: $threadId
+            userId: $userId
+        ) {
+            ... ThreadCommentFragment
+        }
+    }
+}

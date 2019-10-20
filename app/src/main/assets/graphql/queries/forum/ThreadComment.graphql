@@ -1,0 +1,16 @@
+query ThreadComment(
+    $id: Int,
+    $sort: [ThreadCommentSort],
+    $threadId: Int,
+    $userId: Int,
+    $asHtml: Boolean = false
+) {
+    ThreadComment(
+        id: $id
+        sort: $sort
+        threadId: $threadId
+        userId: $userId
+    ) {
+        ... ThreadCommentFragment
+    }
+}

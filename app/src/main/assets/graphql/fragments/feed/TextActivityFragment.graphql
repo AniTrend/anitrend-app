@@ -1,0 +1,18 @@
+fragment TextActivityFragment on TextActivity {
+    id
+    text(asHtml: $asHtml)
+    isLocked
+    createdAt
+    type
+    user {
+        ...UserCoreFragment
+    }
+    replyCount
+    replies {
+        ...ActivityReplyFragment
+    }
+    likes {
+        ...UserCoreFragment
+    }
+    siteUrl
+}

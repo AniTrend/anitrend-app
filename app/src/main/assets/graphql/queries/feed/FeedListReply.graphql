@@ -1,0 +1,7 @@
+query FeedListReply($id: Int, $asHtml: Boolean = false) {
+  Activity(id: $id) {
+    ... ListActivityFragment
+    ... TextActivityFragment
+    ... MessageActivityFragment
+  }
+}
