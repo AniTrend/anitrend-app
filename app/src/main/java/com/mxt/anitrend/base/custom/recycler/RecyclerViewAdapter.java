@@ -142,10 +142,12 @@ public abstract class RecyclerViewAdapter<T> extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull RecyclerViewHolder<T> holder, int position) {
         if(getItemCount() > 0) {
             animateViewHolder(holder, position);
-            T model = data.get(position);
-            holder.setActionMode(actionMode);
-            holder.onBindViewHolder(model);
-            holder.onBindSelectionState(model);
+            @Nullable T model = data.get(position);
+            if (model != null) {
+                holder.setActionMode(actionMode);
+                holder.onBindViewHolder(model);
+                holder.onBindSelectionState(model);
+            }
         }
     }
 

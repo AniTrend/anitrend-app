@@ -4,12 +4,11 @@ __N.B__ v2.0 will be dropping support for Jellybean - Kitkat, due to missing or 
 which can result in authentication errors [read more](https://github.com/square/okhttp/issues/2372)
 
 #### Enhancements
-- More hugs and head pats (>//.//<)
-- Expandable notification details (thanks 95ulisse) <3
-- Anonymous crash reporting is now enabled by default as of __v1.5.8__ (option can be found in settings)
+- Add support for new emojis
 
 #### Bug Fixes
-- Locale settings not being applied fully when using dark themes
+- Correct media statistics format
+- Crashes on when navigating to Airing navigation tab
 
 #### Current Issues
 - Clicking on @username shows mixed feed
