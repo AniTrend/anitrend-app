@@ -1,0 +1,7 @@
+query RecommendationMediaList($page: Int, $perPage: Int, $sort: [RecommendationSort] = RATING_DESC) {
+    Page(perPage: $perPage, page: $page) {
+        recommendations(sort: $sort) {
+            ... RecommendationFragment
+        }
+    }
+}
