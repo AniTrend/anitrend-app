@@ -75,9 +75,11 @@ class RequestHandler<T>(
                 KeyUtil.MEDIA_SOCIAL_REQ -> return WebFactory.createService(MediaModel::class.java, context).getMediaSocial(param.getParcelable(arg_graph_params)) as Call<T>
                 KeyUtil.MEDIA_STAFF_REQ -> return WebFactory.createService(MediaModel::class.java, context).getMediaStaff(param.getParcelable(arg_graph_params)) as Call<T>
                 KeyUtil.MEDIA_STATS_REQ -> return WebFactory.createService(MediaModel::class.java, context).getMediaStats(param.getParcelable(arg_graph_params)) as Call<T>
+                MEDIA_RECOMMENDATION_REQ -> return WebFactory.createService(MediaModel::class.java, context).getMediaRecommendations(param.getParcelable(arg_graph_params)) as Call<T>
                 /*case KeyUtils.MEDIA_TREND_REQ:
                     return (Call<T>) WebFactory.createService(BrowseModel.class, context).getMediaTrends(param.getParcelable(arg_graph_params));*/
 
+                RECOMMENDATIONS_REQ -> return WebFactory.createService(RecommendationModel::class.java, context).getRecommendationMediaList(param.getParcelable(arg_graph_params)) as Call<T>
 
                 KeyUtil.MUT_DELETE_FEED_REPLY -> return WebFactory.createService(FeedModel::class.java, context).deleteActivityReply(param.getParcelable(arg_graph_params)) as Call<T>
                 KeyUtil.MUT_DELETE_FEED -> return WebFactory.createService(FeedModel::class.java, context).deleteActivity(param.getParcelable(arg_graph_params)) as Call<T>

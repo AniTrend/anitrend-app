@@ -16,7 +16,7 @@ public class PageContainer<T> extends Container {
             "activities", "activityReplies",
             "users", "followers", "following", "notifications",
             "anime", "manga", "characters", "staff", "studios",
-            "lists"
+            "lists", "recommendations"
     })
     private List<T> pageData;
 
