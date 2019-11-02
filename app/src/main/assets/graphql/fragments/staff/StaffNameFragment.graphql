@@ -1,0 +1,7 @@
+fragment StaffNameFragment on StaffName {
+    first
+    last
+    full
+    native
+    alternative
+}

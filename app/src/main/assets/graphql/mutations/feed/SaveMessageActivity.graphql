@@ -1,0 +1,13 @@
+mutation SaveMessageActivity($id: Int, $message: String, $recipientId: Int, $asHtml: Boolean = false) {
+  SaveMessageActivity(id: $id, message: $message, recipientId: $recipientId) {
+    ... MessageActivityFragmentMini
+  }
+}
+
+fragment MessageActivityFragmentMini on MessageActivity {
+  id
+  message(asHtml: $asHtml)
+  createdAt
+  type
+  replyCount
+}

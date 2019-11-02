@@ -1,0 +1,20 @@
+fragment ReviewFragment on Review {
+    id
+    summary
+    mediaType
+    body(asHtml: $asHtml)
+    rating
+    ratingAmount
+    userRating
+    score
+    private
+    createdAt
+    user {
+        ... UserCoreFragment
+    }
+    media {
+        ... MediaCoreFragment
+    }
+    siteUrl
+    updatedAt
+}

@@ -868,7 +868,7 @@
     <string name="title_date_of_birth">Date Of Birth:</string>
     <string name="title_language">Language:</string>
 
-    <string name="title_series_japanese_name">Japanese Title</string>
+    <string name="title_series_japanese_name">Native Title</string>
     <string name="title_series_description">Series Description</string>
 
     <string name="title_series_english_name">Series English Name:</string>

@@ -1,0 +1,5 @@
+fragment CharacterNameFragment on CharacterName {
+    first
+    last
+    native
+}

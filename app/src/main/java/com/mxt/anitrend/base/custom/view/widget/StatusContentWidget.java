@@ -42,7 +42,7 @@ import java.util.regex.Matcher;
 /**
  * Created by max on 2017/11/25.
  */
-
+@Deprecated
 public class StatusContentWidget extends LinearLayout implements CustomView, ItemClickListener<String>, CenterSnapUtil.PositionChangeListener {
 
     private List<String> contentLinks, contentTypes;
@@ -177,7 +177,6 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
                     getContext().startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
-                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

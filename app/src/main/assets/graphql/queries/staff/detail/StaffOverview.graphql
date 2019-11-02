@@ -1,0 +1,6 @@
+query StaffOverview($id: Int!, $asHtml: Boolean = false) {
+  Staff(id: $id) {
+    ... StaffCoreFragment
+    description(asHtml: $asHtml)
+  }
+}

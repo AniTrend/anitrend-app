@@ -1,5 +1,0 @@
-mutation DeleteActivityReply ($id: Int) {
-	DeleteActivityReply(id: $id) {
-		deleted
-	}
-}

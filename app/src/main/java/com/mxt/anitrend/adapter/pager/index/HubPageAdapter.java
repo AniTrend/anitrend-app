@@ -31,7 +31,7 @@ public class HubPageAdapter extends BaseStatePageAdapter {
      */
     @Override
     public int getCount() {
-        return super.getCount() - 1;
+        return super.getCount();
     }
 
     /**

@@ -5,8 +5,10 @@ import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
+import com.mxt.anitrend.model.entity.anilist.edge.RecommendationEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.model.entity.base.RecommendationBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
@@ -59,6 +61,12 @@ interface MediaModel {
     @GraphQuery("MediaStaff")
     @Headers("Content-Type: application/json")
     fun getMediaStaff(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<EdgeContainer<StaffEdge>>>>
+
+
+    @POST("/")
+    @GraphQuery("RecommendationMedia")
+    @Headers("Content-Type: application/json")
+    fun getMediaRecommendations(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<EdgeContainer<RecommendationEdge>>>>
 
     @POST("/")
     @GraphQuery("MediaSocial")

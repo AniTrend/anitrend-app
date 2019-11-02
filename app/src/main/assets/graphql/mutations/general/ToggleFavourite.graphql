@@ -1,0 +1,37 @@
+mutation ToggleFavourite($animeId: Int, $mangaId: Int, $characterId: Int, $staffId: Int, $studioId: Int, $page: Int, $perPage: Int) {
+  ToggleFavourite(animeId: $animeId, mangaId: $mangaId, characterId: $characterId, staffId: $staffId, studioId: $studioId) {
+    ... FavouritesCountFragment
+  }
+}
+
+fragment PageInfoFragmentMini on PageInfo {
+  total
+}
+
+fragment FavouritesCountFragment on Favourites {
+  anime(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+  }
+  manga(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+  }
+  characters(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+  }
+  staff(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+  }
+  studios(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+  }
+}

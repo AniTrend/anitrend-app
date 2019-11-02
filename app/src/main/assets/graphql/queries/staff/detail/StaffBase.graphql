@@ -1,0 +1,5 @@
+query StaffBase($id: Int!) {
+  Staff(id: $id) {
+    ... StaffCoreFragment
+  }
+}
