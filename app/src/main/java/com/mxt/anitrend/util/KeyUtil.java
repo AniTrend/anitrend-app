@@ -564,4 +564,16 @@ public interface KeyUtil {
             KEY_STAFF_TIP, KEY_STATUS_POST_TIP, KEY_USER_PROFILE_TIP, KEY_LOGIN_TIP, KEY_GIPHY_TIP,
             KEY_POST_TYPE_TIP})
     @interface TapTargetType {}
+
+
+
+    // ------------------------------------------------------------------------------------
+    // Recommendation Type Attributes
+    // ------------------------------------------------------------------------------------
+
+    String NO_RATING = "NO_RATING", RATE_UP = "RATE_UP", RATE_DOWN = "RATE_DOWN";
+    @StringDef({NO_RATING, RATE_DOWN, RATE_UP})
+    @interface RecommendationRating {}
+
+    // ------------------------------------------------------------------------------------
 }
