@@ -806,6 +806,24 @@ type InternalPage {
     ): [NotificationUnion]
     "The pagination information"
     pageInfo: PageInfo
+    recommendations(
+        #Filter by recommendation id
+        id: Int,
+        #Filter by media id
+        mediaId: Int,
+        #Filter by media recommendation id
+        mediaRecommendationId: Int,
+        #Filter by total rating of the recommendation
+        rating: Int,
+        #Filter by total rating of the recommendation
+        rating_greater: Int,
+        #Filter by total rating of the recommendation
+        rating_lesser: Int,
+        #The order the results will be returned in
+        sort: [RecommendationSort],
+        #Filter by user who created the recommendation
+        userId: Int
+    ): [Recommendation]
     reports: [Report]
     reviews(
         #Filter by Review id
@@ -2145,6 +2163,24 @@ type Page {
     ): [NotificationUnion]
     "The pagination information"
     pageInfo: PageInfo
+    recommendations(
+        #Filter by recommendation id
+        id: Int,
+        #Filter by media id
+        mediaId: Int,
+        #Filter by media recommendation id
+        mediaRecommendationId: Int,
+        #Filter by total rating of the recommendation
+        rating: Int,
+        #Filter by total rating of the recommendation
+        rating_greater: Int,
+        #Filter by total rating of the recommendation
+        rating_lesser: Int,
+        #The order the results will be returned in
+        sort: [RecommendationSort],
+        #Filter by user who created the recommendation
+        userId: Int
+    ): [Recommendation]
     reviews(
         #Filter by Review id
         id: Int,
@@ -2695,6 +2731,25 @@ type Query {
         #The amount of entries per page, max 50
         perPage: Int
     ): Page
+    "Recommendation query"
+    Recommendation(
+        #Filter by recommendation id
+        id: Int,
+        #Filter by media id
+        mediaId: Int,
+        #Filter by media recommendation id
+        mediaRecommendationId: Int,
+        #Filter by total rating of the recommendation
+        rating: Int,
+        #Filter by total rating of the recommendation
+        rating_greater: Int,
+        #Filter by total rating of the recommendation
+        rating_lesser: Int,
+        #The order the results will be returned in
+        sort: [RecommendationSort],
+        #Filter by user who created the recommendation
+        userId: Int
+    ): Recommendation
     "Review query"
     Review(
         #Filter by Review id
