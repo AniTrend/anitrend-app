@@ -5,6 +5,7 @@ which can result in authentication errors [read more](https://github.com/square/
 
 #### Enhancements
 - Add support for new emojis
+- Re-enable most popular episodes in anitrend hub
 
 #### Bug Fixes
 - Correct media statistics format
