@@ -22,7 +22,7 @@ buildscript {
         objectBox = '2.4.1'
         paging = '2.1.0'
         pagingKtx = '2.1.0'
-        ktx = '1.2.0-beta01'
+        ktx = '1.2.0-beta02'
         fragmentKtx = '1.2.0-rc02'
         workerKtx = '2.2.0'
         navigation = '2.1.0-beta02'
