@@ -1,5 +1,6 @@
 package com.mxt.anitrend.binding
 
+import android.text.Html
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
@@ -18,24 +19,24 @@ fun RichMarkdownTextView.markDown(markdown: String?) {
 
 @BindingAdapter("textHtml")
 fun RichMarkdownTextView.htmlText(html: String?) {
-    //val markdownSpan = MarkDownUtil.convert(html)
-    //setText(markdownSpan, TextView.BufferType.SPANNABLE)
-    richMarkDown(html)
+    val markdownSpan = MarkDownUtil.convert(html)
+    setText(markdownSpan, TextView.BufferType.SPANNABLE)
+    //richMarkDown(html)
 }
 
 @BindingAdapter("basicHtml")
 fun RichMarkdownTextView.basicText(html: String?) {
-    //val htmlSpan = Html.fromHtml(html)
-    //text = htmlSpan
-    richMarkDown(html)
+    val htmlSpan = Html.fromHtml(html)
+    setText(htmlSpan, TextView.BufferType.SPANNABLE)
+    //richMarkDown(html)
 }
 
 @BindingAdapter("textHtml")
 fun RichMarkdownTextView.htmlText(@StringRes resId: Int) {
     val text = context.getString(resId)
-    //val markdownSpan = MarkDownUtil.convert(text)
-    //setText(markdownSpan, TextView.BufferType.SPANNABLE)
-    richMarkDown(text)
+    val markdownSpan = MarkDownUtil.convert(text)
+    setText(markdownSpan, TextView.BufferType.SPANNABLE)
+    //richMarkDown(text)
 }
 
 @BindingAdapter("richMarkDown")
