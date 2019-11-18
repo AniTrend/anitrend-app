@@ -71,12 +71,13 @@ public class TitleBase implements Parcelable {
 
     public String getAlternativeFormatted() {
         StringBuilder builder = new StringBuilder();
-        for (String alternate: alternative) {
-            if(TextUtils.isEmpty(builder))
-                builder.append(alternate);
-            else
-                builder.append(", ").append(alternate);
-        }
+        if (alternative != null)
+            for (String alternate: alternative) {
+                if(TextUtils.isEmpty(builder))
+                    builder.append(alternate);
+                else
+                    builder.append(", ").append(alternate);
+            }
         return builder.toString();
     }
 
