@@ -8,6 +8,10 @@ which can result in authentication errors [read more](https://github.com/square/
 - Re-enable most popular episodes in anitrend hub
 
 #### Bug Fixes
+- Reverted markdown parser
+- Stats on user profile not loading (thanks Mittens)
+- Likes and favourites not working (thanks Mittens)
+- Crashes on characters without alternative names
 - Correct media statistics format
 - Crashes on when navigating to Airing navigation tab
 
