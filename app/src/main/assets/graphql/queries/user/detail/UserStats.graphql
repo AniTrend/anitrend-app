@@ -4,10 +4,10 @@ query UserStats($id: Int, $userName: String) {
       statistics {
         ... on UserStatisticTypes {
           anime {
-            ... userStatistics
+            ... UserStatisticsFragment
           }
           manga {
-            ... userStatistics
+            ... UserStatisticsFragment
           }
         }
       }
@@ -15,7 +15,7 @@ query UserStats($id: Int, $userName: String) {
   }
 }
 
-fragment userStatistics on UserStatistics {
+fragment UserStatisticsFragment on UserStatistics {
   chaptersRead
   count
   countries {
@@ -69,16 +69,6 @@ fragment userStatistics on UserStatistics {
     mediaIds
     minutesWatched
   }
-  staff {
-    chaptersRead
-    count
-    staff {
-      ... StaffCoreFragment
-    }
-    meanScore
-    mediaIds
-    minutesWatched
-  }
   standardDeviation
   startYears {
     chaptersRead
@@ -96,11 +86,47 @@ fragment userStatistics on UserStatistics {
     mediaIds
     minutesWatched
   }
+  staff {
+    chaptersRead
+    count
+    staff {
+      ... on Staff {
+        id
+        name {
+          ... on StaffName {
+            first
+            last
+            full
+            native
+            alternative
+          }
+        }
+        image {
+          ... on StaffImage {
+            large
+            medium
+          }
+        }
+        language
+        isFavourite
+        siteUrl
+      }
+    }
+    meanScore
+    mediaIds
+    minutesWatched
+  }
   studios {
     chaptersRead
     count
     studio {
-      ... StudioFragment
+      ... on Studio {
+        id
+        name
+        isAnimationStudio
+        siteUrl
+        isFavourite
+      }
     }
     meanScore
     mediaIds
@@ -110,7 +136,15 @@ fragment userStatistics on UserStatistics {
     chaptersRead
     count
     tag {
-      ... MediaTagFragment
+      ... on MediaTag {
+        id
+        name
+        description
+        category
+        rank
+        isGeneralSpoiler
+        isAdult
+      }
     }
     meanScore
     mediaIds
@@ -120,7 +154,27 @@ fragment userStatistics on UserStatistics {
     chaptersRead
     count
     voiceActor {
-      ... StaffCoreFragment
+      ... on Staff {
+        id
+        name {
+          ... on StaffName {
+            first
+            last
+            full
+            native
+            alternative
+          }
+        }
+        image {
+          ... on StaffImage {
+            large
+            medium
+          }
+        }
+        language
+        isFavourite
+        siteUrl
+      }
     }
     meanScore
     mediaIds

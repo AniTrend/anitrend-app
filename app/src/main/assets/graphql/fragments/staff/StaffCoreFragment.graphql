@@ -9,5 +9,4 @@ fragment StaffCoreFragment on Staff {
     language
     isFavourite
     siteUrl
-    updatedAt
 }

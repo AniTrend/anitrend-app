@@ -4,10 +4,6 @@ mutation ToggleFavourite($animeId: Int, $mangaId: Int, $characterId: Int, $staff
   }
 }
 
-fragment PageInfoFragmentMini on PageInfo {
-  total
-}
-
 fragment FavouritesCountFragment on Favourites {
   anime(page: $page, perPage: $perPage) {
     pageInfo {

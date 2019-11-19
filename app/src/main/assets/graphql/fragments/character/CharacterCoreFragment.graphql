@@ -8,5 +8,4 @@ fragment CharacterCoreFragment on Character {
     }
     isFavourite
     siteUrl
-    updatedAt
 }

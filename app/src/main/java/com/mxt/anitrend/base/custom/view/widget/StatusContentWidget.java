@@ -42,7 +42,6 @@ import java.util.regex.Matcher;
 /**
  * Created by max on 2017/11/25.
  */
-@Deprecated
 public class StatusContentWidget extends LinearLayout implements CustomView, ItemClickListener<String>, CenterSnapUtil.PositionChangeListener {
 
     private List<String> contentLinks, contentTypes;
