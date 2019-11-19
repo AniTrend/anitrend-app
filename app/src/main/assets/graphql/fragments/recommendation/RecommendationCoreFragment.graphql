@@ -1,0 +1,11 @@
+fragment RecommendationCoreFragment on Recommendation {
+    id,
+    mediaRecommendation {
+        ... MediaCoreFragment
+    },
+    rating,
+    user {
+        ... UserCoreFragment
+    },
+    userRating
+}

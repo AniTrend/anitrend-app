@@ -1,0 +1,10 @@
+query UserSearch($id: Int, $page: Int, $perPage: Int, $search: String, $sort: [UserSort] = SEARCH_MATCH) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    users(id: $id, search: $search, sort: $sort) {
+      ... UserCoreFragment
+    }
+  }
+}

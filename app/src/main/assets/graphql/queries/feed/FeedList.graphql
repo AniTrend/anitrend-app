@@ -1,0 +1,11 @@
+query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $userId: Int, $type: ActivityType, $isMixed: Boolean, $asHtml: Boolean = false) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    activities(id: $id, hasRepliesOrTypeText: $isMixed, type: $type, sort: ID_DESC, isFollowing: $isFollowing, userId: $userId) {
+      ... ListActivityFragment
+      ... TextActivityFragment
+    }
+  }
+}

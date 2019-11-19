@@ -194,13 +194,23 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             List<BarEntry> barEntries = getPresenter().getMediaScoreDistribution(model.getStats().getScoreDistribution());
 
             BarDataSet barDataSet = new BarDataSet(barEntries, getString(R.string.title_score_distribution));
+            barDataSet.setValueTextColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.titleColor));
+
+            barDataSet.setColors(
+                    Color.parseColor("#c26fc1ea"),
+                    Color.parseColor("#c248c76d"),
+                    Color.parseColor("#c2f7464a"),
+                    Color.parseColor("#c29256f3"),
+                    Color.parseColor("#c2fba640"),
+                    Color.parseColor("#c26fc1ea"),
+                    Color.parseColor("#c248c76d"),
+                    Color.parseColor("#c2f7464a"),
+                    Color.parseColor("#c29256f3"),
+                    Color.parseColor("#c2fba640")
+            );
 
             configureScoreDistribution(model.getStats().getScoreDistribution());
 
-            if (getContext() != null)
-                barDataSet.setColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.colorAccent), 200);
-
-            barDataSet.setValueTextColor(CompatUtil.INSTANCE.getColorFromAttr(getContext(), R.attr.titleColor));
             BarData barData = new BarData(barDataSet);
             barData.setBarWidth(0.6f);
 
@@ -222,11 +232,13 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
             pieDataSet.setSliceSpace(3f);
 
             // Set legend and section colors with a moderate ~ 20% transparency
-            pieDataSet.setColors(Color.parseColor("#c26fc1ea"),
+            pieDataSet.setColors(
+                    Color.parseColor("#c26fc1ea"),
                     Color.parseColor("#c248c76d"),
                     Color.parseColor("#c2f7464a"),
                     Color.parseColor("#c29256f3"),
-                    Color.parseColor("#c2fba640"));
+                    Color.parseColor("#c2fba640")
+            );
 
             PieData pieData = new PieData(pieDataSet);
             if (getContext() != null)
@@ -261,12 +273,15 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
         binding.seriesScoreDist.getDescription().setEnabled(false);
         binding.seriesScoreDist.setDrawGridBackground(false);
         binding.seriesScoreDist.setDrawBarShadow(false);
+        binding.seriesScoreDist.setHighlightFullBarEnabled(true);
 
 
-        new ChartUtil.StepXAxisFormatter<Integer>()
-                .setDataModel(Stream.of(scoreDistributions)
-                        .map(ScoreDistribution::getScore)
-                        .toList())
+        new ChartUtil.StepXAxisFormatter()
+                .setDataModel(
+                        Stream.of(scoreDistributions)
+                                .map(ScoreDistribution::getScore)
+                                .toList()
+                )
                 .setChartBase(binding.seriesScoreDist)
                 .build(getContext());
 

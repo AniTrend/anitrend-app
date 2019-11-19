@@ -1,0 +1,4 @@
+fragment CharacterImageFragment on CharacterImage {
+    large
+    medium
+}

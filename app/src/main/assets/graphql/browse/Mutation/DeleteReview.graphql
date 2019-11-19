@@ -1,7 +1,0 @@
-mutation DeleteReview($id: Int) {
-  DeleteReview(id: $id) {
-    ... on Deleted {
-      deleted
-    }
-  }
-}

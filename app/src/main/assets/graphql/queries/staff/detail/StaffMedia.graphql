@@ -1,0 +1,12 @@
+query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORMAT, $type: MediaType) {
+  Staff(id: $id) {
+    staffMedia(page: $page, perPage: $perPage, type: $type, sort: $sort) {
+      pageInfo {
+        ... PageInfoFragment
+      }
+      nodes {
+        ... MediaCoreFragment
+      }
+    }
+  }
+}

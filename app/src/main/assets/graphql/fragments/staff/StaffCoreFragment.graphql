@@ -1,0 +1,12 @@
+fragment StaffCoreFragment on Staff {
+    id
+    name {
+        ... StaffNameFragment
+    }
+    image {
+        ... StaffImageFragment
+    }
+    language
+    isFavourite
+    siteUrl
+}

@@ -1,0 +1,5 @@
+mutation UpdateMediaListEntries($ids: [Int], $scoreFormat: ScoreFormat = POINT_100) {
+  UpdateMediaListEntries(ids: $ids) {
+    ... MediaListFragment
+  }
+}

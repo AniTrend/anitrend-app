@@ -94,7 +94,7 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
         @Override
         public void onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar);
-            binding.widgetStatus.onViewRecycled();
+            //binding.widgetStatus.onViewRecycled();
             binding.widgetDelete.onViewRecycled();
             binding.unbind();
         }

@@ -18,12 +18,12 @@ import retrofit2.http.POST
 interface BaseModel {
 
     @POST("/")
-    @GraphQuery("Genres")
+    @GraphQuery("GenreCollection")
     @Headers("Content-Type: application/json")
     fun getGenres(@Body request: QueryContainerBuilder?): Call<AniListContainer<List<String>>>
 
     @POST("/")
-    @GraphQuery("Tags")
+    @GraphQuery("MediaTagCollection")
     @Headers("Content-Type: application/json")
     fun getTags(@Body request: QueryContainerBuilder?): Call<AniListContainer<List<MediaTag>>>
 

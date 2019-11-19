@@ -1,0 +1,10 @@
+query MediaSocial($mediaId: Int!, $isFollowing: Boolean = true, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
+    }
+    activities(mediaId: $mediaId, type: MEDIA_LIST, sort: ID_DESC, isFollowing: $isFollowing) {
+      ... ListActivityFragment
+    }
+  }
+}

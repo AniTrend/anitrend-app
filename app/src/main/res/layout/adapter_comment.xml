@@ -65,6 +65,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!--<com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                android:id="@+id/widget_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/md_margin"
+                app:richMarkDown="@{model.reply}"
+                tools:text="@string/text_error_login" />-->
+
             <androidx.legacy.widget.Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />

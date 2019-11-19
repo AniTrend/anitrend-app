@@ -1,0 +1,22 @@
+fragment ListActivityFragment on ListActivity {
+    id
+    status
+    progress
+    isLocked
+    createdAt
+    type
+    user {
+    ... UserCoreFragment
+    }
+    replyCount
+    replies {
+    ... ActivityReplyFragment
+    }
+    likes {
+    ... UserCoreFragment
+    }
+    media {
+    ... MediaCoreFragment
+    }
+    siteUrl
+}
