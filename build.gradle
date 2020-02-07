@@ -17,14 +17,14 @@ buildscript {
         retrofit = '2.6.2'
 
         supportLibrary = '28.0.0'
-        material = '1.0.0'
+        material = '1.1.0'
         androidx = '2.2.0'
         objectBox = '2.5.0'
         paging = '2.1.0'
         pagingKtx = '2.1.0'
         ktx = '1.2.0-rc01'
         fragmentKtx = '1.2.1'
-        workerKtx = '2.3.0'
+        workerKtx = '2.3.1'
         navigation = '2.1.0-beta02'
         firebase = '17.2.2'
 
@@ -51,12 +51,12 @@ buildscript {
 
         graphql = '0.10.2'
         emojify = '1.5.3'
-        markwon = '4.2.0'
+        markwon = '4.2.1'
         smartTab = '2.0.0'
         tapTarget = '3.0.0'
         okHttpLogger = '3.12.1'
 
-        prettyTime = '4.0.2.Final'
+        prettyTime = '4.0.3.Final'
         jiaoziVideoPlayer = '7.2.0'
         photoView = '2.3.0'
         onboarder = '1.0.4'
@@ -64,8 +64,8 @@ buildscript {
         aboutPage = '1.2.5'
         materialSearchView = '1.4.15'
         progressLayout = '1.0.1'
-        eventBus = '3.1.1'
-        alerter = '5.0.0'
+        eventBus = '3.2.0'
+        alerter = '5.1.1'
         stream = '1.2.1'
         circularProgressView = '2.5.0'
     }
