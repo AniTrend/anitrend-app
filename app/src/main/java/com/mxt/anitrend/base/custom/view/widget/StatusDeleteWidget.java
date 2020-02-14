@@ -1,6 +1,5 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
-import android.Manifest;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
