@@ -1038,4 +1038,7 @@
         <item>dark</item>
         <item>black</item>
     </string-array>
+
+    <string name="dialog_title_delete_activity" translatable="true">Delete Activity</string>
+    <string name="dialog_message_delete_activity" translatable="true">Are you sure you wanna delete this activity? This is irreversible!!</string>
 </resources>

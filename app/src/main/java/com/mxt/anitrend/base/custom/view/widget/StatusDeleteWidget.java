@@ -1,5 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget;
 
+import android.Manifest;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
@@ -18,6 +20,7 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
@@ -100,16 +103,22 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.widget_flipper:
-                if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
-                    binding.widgetFlipper.showNext();
-                    presenter.requestData(requestType, getContext(), this);
-                }
-                else
-                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
-                break;
-        }
+        DialogUtil.createMessage(getContext(), R.string.dialog_title_delete_activity, R.string.dialog_message_delete_activity, (dialog, which) -> {
+            switch (which) {
+                case POSITIVE:
+                    if (view.getId() == R.id.widget_flipper) {
+                        if (binding.widgetFlipper.getDisplayedChild() == WidgetPresenter.CONTENT_STATE) {
+                            binding.widgetFlipper.showNext();
+                            presenter.requestData(requestType, getContext(), this);
+                        } else
+                            NotifyUtil.INSTANCE.makeText(getContext(), R.string.busy_please_wait, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case NEGATIVE:
+                    NotifyUtil.INSTANCE.makeText(getContext(), R.string.canceled_by_user, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
     }
 
     /**
