@@ -22,9 +22,9 @@ buildscript {
         objectBox = '2.5.1'
         paging = '2.1.0'
         pagingKtx = '2.1.0'
-        ktx = '1.2.0-rc01'
         fragmentKtx = '1.2.2'
         workerKtx = '2.3.2'
+        ktx = '1.2.0'
         navigation = '2.1.0-beta02'
         firebase = '17.2.2'
 
