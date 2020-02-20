@@ -9,12 +9,15 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import io.github.wax911.library.model.request.QueryContainerBuilder
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by max on 2018/03/22.
  * Graph request helper class
  */
 object GraphUtil : KoinComponent {
+
+    private val settings by inject<Settings>()
 
     /**
      * Builder provider helper method, that provides a default GraphQL Query and Variable Builder
@@ -24,6 +27,8 @@ object GraphUtil : KoinComponent {
         val queryContainer = QueryContainerBuilder()
         if (includePaging)
             queryContainer.putVariable(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+
+        queryContainer.putVariable(KeyUtil.arg_isAdult, settings.displayAdultContent)
         queryContainer.putVariable(KeyUtil.arg_asHtml, false)
 
         return queryContainer

@@ -6,6 +6,8 @@ plugins {
     id("io.objectbox")
 }
 
+def flavor = ''
+
 android {
     compileSdkVersion compileSdk
     defaultConfig {
@@ -73,6 +75,23 @@ android {
     }
     dexOptions {
         jumboMode true
+    }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        app {
+            flavor = 'app'
+            dimension "version"
+            resValue "string", "flavor_description", ""
+        }
+        github {
+            flavor = 'github'
+            dimension = 'version'
+            applicationIdSuffix = '.github'
+            versionNameSuffix = '-github'
+            resValue "string", "flavor_description", "Github"
+        }
     }
 }
 
@@ -228,7 +247,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
 }
 
-if (file("google-services.json").exists()) {
+if (flavor == 'app' && file("google-services.json").exists()) {
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'io.fabric'
 }
