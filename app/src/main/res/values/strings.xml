@@ -1038,4 +1038,10 @@
         <item>dark</item>
         <item>black</item>
     </string-array>
+
+    <string name="dialog_title_delete_activity" translatable="true">Delete Activity</string>
+    <string name="dialog_message_delete_activity" translatable="true">Are you sure you wanna delete this activity? This is irreversible!!</string>
+
+    <string name="pref_display_adult_content_title">Display Adult Content</string>
+    <string name="pref_display_adult_content_key">display_adult_content</string>
 </resources>

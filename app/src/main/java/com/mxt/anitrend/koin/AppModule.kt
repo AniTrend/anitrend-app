@@ -35,6 +35,7 @@ import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
 import io.noties.markwon.Markwon
+import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.noties.markwon.html.HtmlPlugin
@@ -139,6 +140,11 @@ object AppModule : KoinComponent {
                         }
                     }
                 )).build()
+        }
+        single {
+            MarkwonEditor.create(
+                get()
+            )
         }
     }
 
