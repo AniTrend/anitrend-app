@@ -26,8 +26,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "anitrend_v${defaultConfig.versionName}_rc_${defaultConfig.versionCode}.apk"
+                variant.outputs.all { output ->
+                    def code = defaultConfig.versionCode
+                    def name = defaultConfig.versionName
+                    def flavour_name = output.name
+                    outputFileName = "anitrend_v${name}_rc_${code}_${flavour_name}.apk"
                 }
             }
         }
@@ -83,7 +86,7 @@ android {
         app {
             flavor = 'app'
             dimension "version"
-            resValue "string", "flavor_description", ""
+            resValue "string", "flavor_description", "Playstore"
         }
         github {
             flavor = 'github'
