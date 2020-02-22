@@ -3,6 +3,7 @@ package com.mxt.anitrend.util
 import android.content.Context
 import androidx.work.*
 import com.mxt.anitrend.extension.appContext
+import com.mxt.anitrend.service.ClearNotificationService
 
 import com.mxt.anitrend.service.JobDispatcherService
 
@@ -50,6 +51,29 @@ class JobSchedulerUtil(
                         ExistingPeriodicWorkPolicy.REPLACE,
                         periodicWorkRequest
                     )
+        }
+    }
+
+    fun scheduleClearNotificationJob() {
+        if (settings.isAuthenticated && settings.clearNotificationOnDismiss) {
+            val workRequest = OneTimeWorkRequest.Builder(
+                ClearNotificationService::class.java
+            )
+                .setBackoffCriteria(
+                    BackoffPolicy.EXPONENTIAL,
+                    5,
+                    TimeUnit.MINUTES
+                )
+                .addTag(KeyUtil.WorkClearNotificationTag)
+                .setConstraints(getConstraints())
+                .build()
+
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork(
+                    KeyUtil.WorkClearNotificationId,
+                    ExistingWorkPolicy.REPLACE,
+                    workRequest
+                )
         }
     }
 

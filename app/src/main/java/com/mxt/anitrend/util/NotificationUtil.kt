@@ -15,6 +15,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.receiver.DismissNotification
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
 import org.koin.core.KoinComponent
 import java.lang.StringBuilder
@@ -44,6 +45,16 @@ class NotificationUtil(
                 defaultNotificationId,
                 targetActivity,
                 PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun dismissNotificationsIntent(): PendingIntent {
+        val onDismissIntent = Intent(this.context, DismissNotification::class.java)
+        return PendingIntent.getBroadcast(
+            this.context,
+            0,
+            onDismissIntent,
+            0
         )
     }
 
@@ -114,6 +125,7 @@ class NotificationUtil(
                 .setSmallIcon(R.drawable.ic_new_releases)
                 .setAutoCancel(true)
                 .setPriority(PRIORITY_HIGH)
+                .setDeleteIntent(dismissNotificationsIntent())
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
