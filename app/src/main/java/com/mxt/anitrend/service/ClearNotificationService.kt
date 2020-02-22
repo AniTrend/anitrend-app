@@ -4,10 +4,14 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.annimon.stream.Stream
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
+import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.base.NotificationHistory
+import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
@@ -78,11 +82,26 @@ class ClearNotificationService(context: Context, workerParams: WorkerParameters)
     }
 
     private fun clearNotifications(): Boolean {
-        return userEndpoint.getUserNotifications(
+        val result = userEndpoint.getUserNotifications(
             GraphUtil
                 .getDefaultQuery(false)
                 .putVariable(KeyUtil.arg_resetNotificationCount, true)
-        ).execute().isSuccessful
+        ).execute()
+
+        if (result.isSuccessful) {
+            val notifications = result.body() as PageContainer<Notification>?
+            if (notifications != null) {
+                val notificationHistories = Stream.of(notifications.pageData)
+                    .map { notification -> NotificationHistory(notification.id) }
+                    .toList()
+
+                presenter.database.getBoxStore(NotificationHistory::class.java)
+                    .put(notificationHistories)
+            }
+            return true
+        }
+
+        return false
     }
 
     companion object {
