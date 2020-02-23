@@ -1,4 +1,4 @@
-query RecommendationMedia($id: Int!, $type: MediaType, $isAdult: Boolean = false, $page: Int, $perPage: Int, $sort: [RecommendationSort] = RATING_DESC) {
+query RecommendationMedia($id: Int!, $type: MediaType, $isAdult: Boolean, $page: Int, $perPage: Int, $sort: [RecommendationSort] = RATING_DESC) {
     Media(id: $id, type: $type, isAdult: $isAdult) {
         recommendations(page: $page, perPage: $perPage, sort: $sort) {
             ... on RecommendationConnection {
