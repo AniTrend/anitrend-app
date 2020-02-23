@@ -91,7 +91,6 @@ android {
         github {
             flavor = 'github'
             dimension = 'version'
-            applicationIdSuffix = '.github'
             versionNameSuffix = '-github'
             resValue "string", "flavor_description", "Github"
         }
