@@ -377,6 +377,9 @@
     <string name="pref_title_new_message_notifications">New message notifications</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
+    <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
+    <string name="pref_key_clear_notification_on_dismiss">clear_notification_on_dismiss</string>
+
     <string name="pref_key_ringtone" translatable="false">notifications_new_message_ringtone</string>
 
 
