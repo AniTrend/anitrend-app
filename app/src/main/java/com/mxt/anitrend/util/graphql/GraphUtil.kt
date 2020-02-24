@@ -28,7 +28,9 @@ object GraphUtil : KoinComponent {
         if (includePaging)
             queryContainer.putVariable(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
 
-        queryContainer.putVariable(KeyUtil.arg_isAdult, settings.displayAdultContent)
+        if (!settings.displayAdultContent)
+            queryContainer.putVariable(KeyUtil.arg_isAdult, false)
+
         queryContainer.putVariable(KeyUtil.arg_asHtml, false)
 
         return queryContainer
