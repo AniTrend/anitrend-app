@@ -56,7 +56,7 @@ buildscript {
         tapTarget = '3.0.0'
         okHttpLogger = '3.12.1'
 
-        prettyTime = '4.0.3.Final'
+        prettyTime = '4.0.4.Final'
         jiaoziVideoPlayer = '7.2.0'
         photoView = '2.3.0'
         onboarder = '1.0.4'
