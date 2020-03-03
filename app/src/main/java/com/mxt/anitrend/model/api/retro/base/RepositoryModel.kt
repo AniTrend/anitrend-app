@@ -18,6 +18,6 @@ interface RepositoryModel {
             ) branch: String?): Call<VersionBase>
 
     companion object {
-        const val DOWNLOAD_LINK = "https://github.com/AniTrend/anitrend-app/releases/download/%s/app-release.apk"
+        const val DOWNLOAD_LINK = "https://github.com/AniTrend/anitrend-app/releases/download/%s/app-release%s.apk"
     }
 }

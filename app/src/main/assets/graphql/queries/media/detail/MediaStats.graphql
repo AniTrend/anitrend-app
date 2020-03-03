@@ -1,4 +1,4 @@
-query MediaStats($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
+query MediaStats($id: Int!, $type: MediaType, $isAdult: Boolean) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
 	type
     externalLinks {

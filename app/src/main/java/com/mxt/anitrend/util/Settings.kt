@@ -96,6 +96,16 @@ class Settings(
             }
         }
 
+    var clearNotificationOnDismiss: Boolean = false
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_clear_notification_on_dismiss), false)
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putBoolean(context.getString(R.string.pref_key_clear_notification_on_dismiss), field)
+                apply()
+            }
+        }
+
     var isCrashReportsEnabled: Boolean = true
         get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), true)
         set(value) {
@@ -122,6 +132,16 @@ class Settings(
             field = value
             sharedPreferences.edit {
                 putInt(KeyUtil.arg_seasonYear, field)
+                apply()
+            }
+        }
+
+    var displayAdultContent: Boolean = false
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_display_adult_content_key), false)
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putBoolean(context.getString(R.string.pref_display_adult_content_key), field)
                 apply()
             }
         }

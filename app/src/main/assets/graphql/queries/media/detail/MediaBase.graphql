@@ -1,4 +1,4 @@
-query MediaBase($id: Int!, $type: MediaType, $isAdult: Boolean = false) {
+query MediaBase($id: Int!, $type: MediaType, $isAdult: Boolean) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     ... on Media {
       id

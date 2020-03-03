@@ -377,6 +377,9 @@
     <string name="pref_title_new_message_notifications">New message notifications</string>
     <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
+    <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
+    <string name="pref_key_clear_notification_on_dismiss">clear_notification_on_dismiss</string>
+
     <string name="pref_key_ringtone" translatable="false">notifications_new_message_ringtone</string>
 
 
@@ -1041,4 +1044,7 @@
 
     <string name="dialog_title_delete_activity" translatable="true">Delete Activity</string>
     <string name="dialog_message_delete_activity" translatable="true">Are you sure you wanna delete this activity? This is irreversible!!</string>
+
+    <string name="pref_display_adult_content_title">Display Adult Content</string>
+    <string name="pref_display_adult_content_key">display_adult_content</string>
 </resources>

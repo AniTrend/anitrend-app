@@ -6,6 +6,8 @@ plugins {
     id("io.objectbox")
 }
 
+def flavor = ''
+
 android {
     compileSdkVersion compileSdk
     defaultConfig {
@@ -24,8 +26,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "anitrend_v${defaultConfig.versionName}_rc_${defaultConfig.versionCode}.apk"
+                variant.outputs.all { output ->
+                    def code = defaultConfig.versionCode
+                    def name = defaultConfig.versionName
+                    def flavour_name = output.name
+                    outputFileName = "anitrend_v${name}_rc_${code}_${flavour_name}.apk"
                 }
             }
         }
@@ -73,6 +78,22 @@ android {
     }
     dexOptions {
         jumboMode true
+    }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        app {
+            flavor = 'app'
+            dimension "version"
+            resValue "string", "flavor_description", "Playstore"
+        }
+        github {
+            flavor = 'github'
+            dimension = 'version'
+            versionNameSuffix = '-github'
+            resValue "string", "flavor_description", "Github"
+        }
     }
 }
 
@@ -228,7 +249,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
 }
 
-if (file("google-services.json").exists()) {
+if (flavor == 'app' && file("google-services.json").exists()) {
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'io.fabric'
 }

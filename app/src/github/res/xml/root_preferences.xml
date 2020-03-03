@@ -60,6 +60,11 @@
             app:title="@string/pref_title_update_channel"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_display_adult_content_key"
+            app:title="@string/pref_display_adult_content_title"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -71,6 +76,11 @@
             app:defaultValue="true"
             app:key="@string/pref_key_new_message_notifications"
             app:title="@string/pref_title_new_message_notifications"/>
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_key_clear_notification_on_dismiss"
+            app:title="@string/pref_title_clear_notification_on_dismiss"/>
 
     </PreferenceCategory>
 

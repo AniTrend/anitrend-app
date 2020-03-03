@@ -24,6 +24,8 @@ public interface KeyUtil {
     /** Work Manager Ids & Keys */
     String WorkNotificationTag = "anitrend_notification_job";
     String WorkNotificationId = "periodic_notification_sync";
+    String WorkClearNotificationTag = "anitrend_clear_notification_job";
+    String WorkClearNotificationId = "clear_notification_sync";
 
     String WorkAuthenticatorTag = "anitrend_notification_job";
     String WorkAuthenticatorId = "one_notification_sync";
