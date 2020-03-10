@@ -23,12 +23,12 @@ buildscript {
         paging = '2.1.0'
         pagingKtx = '2.1.0'
         fragmentKtx = '1.2.2'
-        workerKtx = '2.3.2'
+        workerKtx = '2.3.3'
         ktx = '1.2.0'
         navigation = '2.1.0-beta02'
         firebase = '17.2.3'
 
-        koin = '2.1.1'
+        koin = '2.1.3'
         kotlinVersion = '1.3.70'
         multidex = '2.0.1'
 
