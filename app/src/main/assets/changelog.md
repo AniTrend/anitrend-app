@@ -3,11 +3,16 @@ __Anitrend v2.0 Coming Soon [W.I.P]__ All __v1.x.x__ updates will focus on major
 __N.B__ v2.0 will be dropping support for Jellybean - Kitkat, due to missing or disabled _(TLS v1.2)_
 which can result in authentication errors [read more](https://github.com/square/okhttp/issues/2372)
 
+**FAQ** page has been updated. Goto **Options** -> **Extras** -> **About** -> **Frequently Asked Questions**
+
 #### Enhancements
 - Confirmation dialog when deleting activities (thanks Mittens)
+- Mark notification/s as read when dismissed the status bar, **check settings** (thanks Mittens)
+- Setting to work around notifications not working [read more](https://app.gitbook.com/@anitrend/s/project/faq#why-is-anime-or-manga-x-y-z-missing-not-listed-in-the-app)
+- Separate build to allow NFSW content [see details here](https://app.gitbook.com/@anitrend/s/project/faq#how-can-i-view-18-content) (thanks Mittens)
 
 #### Bug Fixes
-- What bugs? :D
+- Notifications getting published twice when the app is opened (Only applies to notification workaround option not being enabled)
 
 #### Current Issues
 - Clicking on @username shows mixed feed
@@ -18,8 +23,8 @@ which can result in authentication errors [read more](https://github.com/square/
 _Translators (minna arigato) & all of you lovely weebs <3_
 
 __Admins, Devs & Cutie Pies:__
-_Mittens, Switchums, Kuji, Moka, Flare, Silver, Mrspits4ever_
+_Sir Mittens, huh, yui, Moka, Flare, Silver, Mrspits4ever, SilverFS, Zephyr, Oni-chan slayer_
 
 __Awesome Donators:__
-_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas_
+_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas, SilverFS, Zephyr, Oni-chan slayer_
 
