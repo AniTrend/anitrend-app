@@ -2,7 +2,6 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import androidx.work.*
-import com.mxt.anitrend.extension.appContext
 import com.mxt.anitrend.service.ClearNotificationService
 
 import com.mxt.anitrend.service.JobDispatcherService
