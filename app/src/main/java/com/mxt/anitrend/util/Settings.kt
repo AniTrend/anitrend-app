@@ -27,6 +27,9 @@ class Settings(
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
+    val notificationWorkAround: Boolean
+        get() = sharedPreferences.getBoolean(_notificationWorkaround, false)
+
     var isAuthenticated: Boolean
         get() = sharedPreferences.getBoolean(_isAuthenticated, false)
         set(value) {
@@ -378,6 +381,7 @@ class Settings(
     companion object {
 
         /** Application Base Options  */
+        private const val _notificationWorkaround = "_notificationWorkaround"
         const val _updateChannel = "_updateChannel"
         const val _appTheme = "application_theme"
 

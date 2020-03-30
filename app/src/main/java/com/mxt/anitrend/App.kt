@@ -13,12 +13,14 @@ import com.mxt.anitrend.koin.AppModule.appModule
 import com.mxt.anitrend.koin.AppModule.networkModule
 import com.mxt.anitrend.koin.AppModule.presenterModule
 import com.mxt.anitrend.koin.AppModule.widgetModule
+import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
 import io.wax911.emojify.EmojiManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -33,6 +35,7 @@ import timber.log.Timber
 class App : MultiDexApplication() {
 
     private val supportAnalytics by inject<ISupportAnalytics>()
+    private val jobScheduler by inject<JobSchedulerUtil>()
 
     /**
      * Timber logging tree depending on the build type we plant the appropriate tree
@@ -94,6 +97,9 @@ class App : MultiDexApplication() {
                         }
                 )
         }.exceptionOrNull()?.printStackTrace()
+        val settings = get<Settings>()
+        if (settings.notificationWorkAround)
+            jobScheduler.scheduleJob()
     }
 
     override fun onCreate() {
