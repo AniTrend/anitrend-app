@@ -971,7 +971,8 @@
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
 
-    <string name="pref_display_adult_content_title">Display Adult Content</string>
+    <string name="pref_title_display_adult_content">Display Adult Content</string>
+    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
 
     <string name="pref_summary_clear_notification_on_dismiss">Clear notifications when you dismiss them from the status bar</string>
     <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
