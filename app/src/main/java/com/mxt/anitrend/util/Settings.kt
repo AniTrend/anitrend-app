@@ -27,6 +27,9 @@ class Settings(
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
+    val notificationWorkAround: Boolean
+        get() = sharedPreferences.getBoolean(_notificationWorkaround, false)
+
     var isAuthenticated: Boolean
         get() = sharedPreferences.getBoolean(_isAuthenticated, false)
         set(value) {
@@ -96,6 +99,16 @@ class Settings(
             }
         }
 
+    var clearNotificationOnDismiss: Boolean = false
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_clear_notification_on_dismiss), false)
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putBoolean(context.getString(R.string.pref_key_clear_notification_on_dismiss), field)
+                apply()
+            }
+        }
+
     var isCrashReportsEnabled: Boolean = true
         get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), true)
         set(value) {
@@ -122,6 +135,16 @@ class Settings(
             field = value
             sharedPreferences.edit {
                 putInt(KeyUtil.arg_seasonYear, field)
+                apply()
+            }
+        }
+
+    var displayAdultContent: Boolean = false
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_display_adult_content_key), false)
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putBoolean(context.getString(R.string.pref_display_adult_content_key), field)
                 apply()
             }
         }
@@ -358,6 +381,7 @@ class Settings(
     companion object {
 
         /** Application Base Options  */
+        private const val _notificationWorkaround = "_notificationWorkaround"
         const val _updateChannel = "_updateChannel"
         const val _appTheme = "application_theme"
 

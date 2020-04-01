@@ -223,6 +223,8 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.DismissNotification" />
+
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />

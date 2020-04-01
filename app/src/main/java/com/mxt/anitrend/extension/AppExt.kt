@@ -14,26 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import org.koin.core.context.GlobalContext
 import timber.log.Timber
-
-val appContext by lazy {
-    GlobalContext.get().koin.get<Context>()
-}
-
-fun getString(@StringRes text: Int): String? =
-    runCatching {
-        appContext.getString(text)
-    }.also {
-        it.exceptionOrNull()?.printStackTrace()
-    }.getOrNull()
-
-fun getString(@StringRes text: Int, vararg values: String): String? =
-    runCatching {
-        appContext.getString(text, *values)
-    }.also {
-        it.exceptionOrNull()?.printStackTrace()
-    }.getOrNull()
 
 fun FragmentActivity.applyConfiguredTheme() {
     runCatching{

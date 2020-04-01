@@ -1,19 +1,3 @@
-<!--
-  ~ Copyright 2018 The app Open Source Project
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
@@ -60,6 +44,12 @@
             app:title="@string/pref_title_update_channel"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_title_display_adult_content"
+            app:summary="@string/pref_summary_display_adult_content"
+            app:title="@string/pref_title_display_adult_content"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -71,6 +61,18 @@
             app:defaultValue="true"
             app:key="@string/pref_key_new_message_notifications"
             app:title="@string/pref_title_new_message_notifications"/>
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:summary="@string/pref_summary_clear_notification_on_dismiss"
+            app:key="@string/pref_key_clear_notification_on_dismiss"
+            app:title="@string/pref_title_clear_notification_on_dismiss"/>
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:summary="@string/pref_summary_notification_work_around"
+            app:key="@string/pref_key_notification_work_around"
+            app:title="@string/pref_title_notification_work_around"/>
 
     </PreferenceCategory>
 

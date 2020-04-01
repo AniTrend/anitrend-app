@@ -21,19 +21,26 @@ import androidx.core.view.inputmethod.InputContentInfoCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.*
 import com.mxt.anitrend.util.markdown.MarkDownUtil
+import io.noties.markwon.Markwon
+import io.noties.markwon.editor.MarkwonEditor
+import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import io.wax911.emojify.parser.EmojiParser
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by max on 2017/08/14.
  * Markdown input editor
  */
 
-class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, InputConnectionCompat.OnCommitContentListener {
+class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, InputConnectionCompat.OnCommitContentListener, KoinComponent {
 
+    @Deprecated("No longer necessary")
     private val emojiInputFilter = object: InputFilter {
         /**
          * This method is called when the buffer is going to replace the
@@ -66,6 +73,12 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
 
     }
 
+    private val editor by inject<MarkwonEditor>()
+
+    private val markwonEditorTextWatcher by lazy {
+        MarkwonEditorTextWatcher.withProcess(editor)
+    }
+
     /**
      * @return composed text as hex html entities
      */
@@ -90,6 +103,26 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         onInit()
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        addTextChangedListener(
+            markwonEditorTextWatcher
+        )
+    }
+
+    /**
+     * This is called when the view is detached from a window.  At this point it
+     * no longer has a surface for drawing.
+     *
+     * @see .onAttachedToWindow
+     */
+    override fun onDetachedFromWindow() {
+        removeTextChangedListener(
+            markwonEditorTextWatcher
+        )
+        super.onDetachedFromWindow()
+    }
+
     /**
      * Optionally included when constructing custom views
      */
@@ -102,10 +135,12 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL)
     }
 
-    override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
+    override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
         val ic = super.onCreateInputConnection(outAttrs)
         EditorInfoCompat.setContentMimeTypes(outAttrs, arrayOf("image/png", "image/gif"))
-        return InputConnectionCompat.createWrapper(ic, outAttrs, this)
+        return ic?.let {
+            InputConnectionCompat.createWrapper(ic, outAttrs, this)
+        }
     }
 
 

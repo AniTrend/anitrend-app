@@ -20,6 +20,7 @@ import io.wax911.emojify.EmojiManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -96,7 +97,9 @@ class App : MultiDexApplication() {
                         }
                 )
         }.exceptionOrNull()?.printStackTrace()
-        jobScheduler.scheduleJob()
+        val settings = get<Settings>()
+        if (settings.notificationWorkAround)
+            jobScheduler.scheduleJob()
     }
 
     override fun onCreate() {

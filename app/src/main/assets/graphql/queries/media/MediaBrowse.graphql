@@ -1,4 +1,4 @@
-query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: MediaType, $format: MediaFormat, $startDateLike: String, $endDateLike: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean = false, $sort: [MediaSort], $onList: Boolean, $status: MediaStatus, $tags: [String], $tagsExclude: [String]) {
+query MediaBrowse($id: Int, $page: Int, $perPage: Int, $seasonYear: Int, $type: MediaType, $format: MediaFormat, $startDateLike: String, $endDateLike: String, $season: MediaSeason, $genres: [String], $genresExclude: [String], $isAdult: Boolean, $sort: [MediaSort], $onList: Boolean, $status: MediaStatus, $tags: [String], $tagsExclude: [String]) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       ... PageInfoFragment

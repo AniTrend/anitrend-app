@@ -967,4 +967,16 @@
     <string name="text_about_code_of_conduct">Code of Conduct</string>
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
+
+    <string name="dialog_title_delete_activity">Delete Activity</string>
+    <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
+
+    <string name="pref_title_display_adult_content">Display Adult Content</string>
+    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
+
+    <string name="pref_summary_clear_notification_on_dismiss">Clear notifications when you dismiss them from the status bar</string>
+    <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
+
+    <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
+    <string name="pref_title_notification_work_around">Notification workaround</string>
 </resources>
