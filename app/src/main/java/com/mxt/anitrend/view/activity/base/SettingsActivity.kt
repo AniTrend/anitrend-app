@@ -98,6 +98,7 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
         override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
             activity?.apply {
                 when (key) {
+                    getString(R.string.pref_key_display_adult_content),
                     getString(R.string.pref_key_notification_work_around),
                     getString(R.string.pref_key_crash_reports),
                     getString(R.string.pref_key_usage_analytics),
