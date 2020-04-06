@@ -3,13 +3,10 @@ package com.mxt.anitrend.util
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import androidx.preference.PreferenceManager
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.util.*
 
 /**
@@ -140,11 +137,11 @@ class Settings(
         }
 
     var displayAdultContent: Boolean = false
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_display_adult_content_key), false)
+        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_display_adult_content), false)
         set(value) {
             field = value
             sharedPreferences.edit {
-                putBoolean(context.getString(R.string.pref_display_adult_content_key), field)
+                putBoolean(context.getString(R.string.pref_key_display_adult_content), field)
                 apply()
             }
         }
