@@ -8,10 +8,11 @@ which can result in authentication errors [read more](https://github.com/square/
 #### Enhancements
 - Confirmation dialog when deleting activities (thanks Mittens)
 - Mark notification/s as read when dismissed the status bar, **check settings** (thanks Mittens)
-- Setting to work around notifications not working [read more](https://app.gitbook.com/@anitrend/s/project/faq#why-is-anime-or-manga-x-y-z-missing-not-listed-in-the-app)
-- Separate build to allow NFSW content [see details here](https://app.gitbook.com/@anitrend/s/project/faq#how-can-i-view-18-content) (thanks Mittens)
+- Setting to work around notifications not working [please read more](https://anitrend.gitbook.io/project/faq#why-is-anime-or-manga-x-y-z-missing-not-listed-in-the-app)
+- Separate build to allow NFSW content [see details here](https://anitrend.gitbook.io/project/faq#how-can-i-view-18-content) (thanks Mittens)
 
 #### Bug Fixes
+- Fixed broken NSFW setting not being applied and [FAQ](https://anitrend.gitbook.io/project/faq) links above
 - Notifications getting published twice when the app is opened (Only applies to notification workaround option not being enabled)
 
 #### Current Issues
