@@ -57,7 +57,7 @@ buildscript {
         okHttpLogger = '3.12.1'
 
         prettyTime = '4.0.5.Final'
-        jiaoziVideoPlayer = '7.3.0'
+        jiaoziVideoPlayer = '7.3.1'
         photoView = '2.3.0'
         onboarder = '1.0.4'
         mpAndroidChart = '3.1.0'
