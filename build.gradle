@@ -34,7 +34,7 @@ buildscript {
 
         // mockito = '2.18.3'
         hemcrest = '2.2'
-        mockito = '3.3.3'
+        mockito = '3.4.0'
         junit = '4.13'
         runner = '1.2.0'
         espresso = '3.2.0'
