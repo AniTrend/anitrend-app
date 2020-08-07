@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaList" />
+        <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -12,8 +12,7 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
-        android:layout_marginHorizontal="@dimen/lg_margin"
-        android:layout_marginVertical="@dimen/md_margin"
+        android:layout_margin="@dimen/lg_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardPreventCornerOverlap="false"
@@ -26,14 +25,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="horizontal">
+            android:orientation="horizontal" >
 
             <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
                 android:id="@+id/series_status"
                 android:layout_width="@dimen/md_margin"
                 android:layout_height="match_parent"
-                app:airingStatus="@{model}"
-                tools:background="@color/colorStateOrange"/>
+                app:seriesStatus="@{model}"
+                tools:background="@color/colorStateBlue"/>
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -51,36 +50,18 @@
 
                 <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="0dp" />
-
-                <com.mxt.anitrend.base.custom.view.text.AiringTextView
-                    android:id="@+id/series_airing"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    app:airingDate="@{model.media}"
-                    tools:text="EP 31: 4 days from now"/>
-
-                <androidx.legacy.widget.Space
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp" />
+                    android:layout_height="@dimen/md_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    app:media="@{model.media}"
-                    tools:text="2015 - TV" />
+                    app:media="@{model}"
+                    tools:text="2015 - Novel" />
 
             </LinearLayout>
 
         </LinearLayout>
-
-        <com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
-            android:id="@+id/series_episodes"
-            android:layout_gravity="top|end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <com.mxt.anitrend.base.custom.view.text.RatingTextView
             android:id="@+id/custom_rating_widget"
