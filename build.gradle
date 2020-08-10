@@ -9,7 +9,7 @@ buildscript {
         versionCode = 148
         versionName = '1.6.8'
 
-        butterKnife = '10.2.1'
+        butterKnife = '10.2.2'
 
         constraint = '1.1.3'
 
