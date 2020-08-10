@@ -90,12 +90,14 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
         isPager = true; isFilterable = mediaBrowseUtil.isFilterEnabled();
 
-        if (getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
-            mColumnSize = R.integer.single_list_x1;
-        } else if (getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
-            mColumnSize = R.integer.grid_list_x2;
+        if (mediaBrowseUtil.isCompactType()) {
+            mColumnSize = R.integer.grid_giphy_x3;
         } else {
-            mColumnSize = mediaBrowseUtil.isCompactType() ? R.integer.grid_giphy_x3 : R.integer.grid_list_x2;
+            if (getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
+                mColumnSize = R.integer.single_list_x1;
+            } else {
+                mColumnSize = R.integer.grid_list_x2;
+            }
         }
 
         mAdapter = new MediaAdapter(getContext(), mediaBrowseUtil.isCompactType());
