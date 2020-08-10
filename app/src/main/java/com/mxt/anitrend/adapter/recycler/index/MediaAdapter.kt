@@ -27,9 +27,7 @@ import org.koin.core.inject
  * Media adapter
  */
 class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
-    RecyclerViewAdapter<MediaBase?>(context), KoinComponent {
-
-    private val settings by inject<Settings>()
+    RecyclerViewAdapter<MediaBase?>(context) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -45,7 +43,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
     }
 
     private fun createAnimeViewHolder(parent: ViewGroup) : AnimeViewHolder {
-        val adapter = when (settings.mediaListStyle) {
+        val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
                 AdapterAnimeCompactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -58,7 +56,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
     }
 
     private fun createMangaViewHolder(parent: ViewGroup) : MangaViewHolder {
-        val adapter = when (settings.mediaListStyle) {
+        val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
                 AdapterMangaCompactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -108,7 +106,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
                     binding.model = model
                     binding.seriesTitle.setTitle(model)
 
-                    if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
+                    if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
                         binding.customRatingWidget.visibility = View.GONE
                     }
                 }
@@ -174,7 +172,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
                     binding.model = model
                     binding.seriesTitle.setTitle(model)
 
-                    if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
+                    if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
                         binding.customRatingWidget.visibility = View.GONE
                     }
                 }

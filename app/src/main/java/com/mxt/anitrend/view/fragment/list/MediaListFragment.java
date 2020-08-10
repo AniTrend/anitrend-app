@@ -63,21 +63,13 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
 
     protected MediaListCollectionBase mediaListCollectionBase;
     protected QueryContainerBuilder queryContainer;
-
-    private Settings settings;
-
+    
     public static MediaListFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
         MediaListFragment fragment = new MediaListFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public Settings getSettings() {
-        if(settings == null)
-            settings = KoinExt.get(Settings.class);
-        return settings;
     }
 
     /**
@@ -95,7 +87,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
 
-        if (getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
+        if (getPresenter().getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
             mColumnSize = R.integer.single_list_x1;
         } else {
             mColumnSize = R.integer.grid_list_x2;

@@ -32,15 +32,14 @@ import java.util.*
  * adapter for series lists
  */
 class MediaListAdapter(context: Context?) :
-    RecyclerViewAdapter<MediaList?>(context), KoinComponent {
+    RecyclerViewAdapter<MediaList?>(context) {
     private var currentUser: String? = null
-    private val settings by inject<Settings>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): RecyclerViewHolder<MediaList?> {
-        val adapter = when (settings.mediaListStyle) {
+        val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
                 AdapterSeriesAiringCompactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -112,7 +111,7 @@ class MediaListAdapter(context: Context?) :
                     binding.seriesTitle.setTitle(model)
                     binding.seriesEpisodes.setModel(model, currentUser)
 
-                    if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
+                    if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
                         binding.seriesEpisodes.visibility = View.GONE
                         binding.customRatingWidget.visibility = View.GONE
                     }
