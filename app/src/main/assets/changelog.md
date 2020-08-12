@@ -6,13 +6,13 @@ which can result in authentication errors [read more](https://github.com/square/
 **FAQ** page has been updated. Goto **Options** -> **Extras** -> **About** -> **Frequently Asked Questions**
 
 #### Enhancements
-- Add new list styles for anime and manga cards, see option in settings (thanks Mittens)
+- Add new list styles for anime and manga cards, see option in settings (Thanks Mittens)
 
 #### Bug Fixes
-- Fix the followers counter being updated instead of the followers counter when (un)following someone (thanks Mittens)
+- Fixed the followers counter being updated instead of the followers counter when (un)following someone (Thanks Mittens)
+- Fixed clicking on mentioned @username showing mixed feed in profile (Thanks Mittens)
 
 #### Current Issues
-- Clicking on @username shows mixed feed
 - Application logs are officially broken in **v1.5.x**
 - Sometimes image slide count doesn't change when you slowly scroll horizontally in feeds
 
