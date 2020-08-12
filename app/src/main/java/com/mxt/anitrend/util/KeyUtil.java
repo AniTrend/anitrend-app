@@ -334,6 +334,10 @@ public interface KeyUtil {
     // String[] CharacterSortType = {ID, ROLE, SEARCH_MATCH};
     // String[] StaffSortType = {ID, ROLE, LANGUAGE, SEARCH_MATCH};
 
+    int LIST_VIEW_STYLE_DEFAULT = 0,
+            LIST_VIEW_STYLE_COMPACT_X1 = 1,
+            LIST_VIEW_STYLE_COMPACT_X2 = 2;
+
     // ------------------------------------------------------------------------------------
 
 

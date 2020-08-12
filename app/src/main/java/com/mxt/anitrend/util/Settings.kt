@@ -74,6 +74,16 @@ class Settings(
             }
         }
 
+    var mediaListStyle: Int = 0
+        get() = sharedPreferences.getString(context.getString(R.string.pref_key_list_view_style), "0")?.toInt() ?: 0
+        set(value) {
+            field = value
+            sharedPreferences.edit {
+                putInt(context.getString(R.string.pref_key_list_view_style), field)
+                apply()
+            }
+        }
+
     //Returns amount of time in seconds
     var syncTime: Int = 15
         get() = sharedPreferences.getString(

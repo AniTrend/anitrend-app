@@ -980,6 +980,23 @@
         <item>nl</item>
     </string-array>
 
+    <!--List view preferences-->
+    <string name="pref_title_list_view_style">List View Style</string>
+    <string name="pref_title_list_view_style_summary">// WIP TBA //</string>
+    <string name="pref_key_list_view_style" translatable="false">list_view_style</string>
+
+    <string-array name="pref_selected_list_view_style_titles" translatable="true">
+        <item>Default</item>
+        <item>Compact (single column)</item>
+        <item>Compact (double column)</item>
+    </string-array>
+
+    <string-array name="pref_selected_list_view_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string name="dialog_title_started_at">Start Date</string>
     <string name="dialog_title_completed_at">Finish Date</string>
     <string name="dialog_button_clear">Clear</string>
