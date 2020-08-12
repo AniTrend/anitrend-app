@@ -83,6 +83,10 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
 
         isPager = true; isFilterable = mediaBrowseUtil.isFilterEnabled();
 
+        mAdapter = new MediaAdapter(getContext(), mediaBrowseUtil.isCompactType());
+        setPresenter(new MediaPresenter(getContext()));
+        setViewModel(true);
+
         if (mediaBrowseUtil.isCompactType()) {
             mColumnSize = R.integer.grid_giphy_x3;
         } else {
@@ -92,10 +96,6 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                 mColumnSize = R.integer.grid_list_x2;
             }
         }
-
-        mAdapter = new MediaAdapter(getContext(), mediaBrowseUtil.isCompactType());
-        setPresenter(new MediaPresenter(getContext()));
-        setViewModel(true);
     }
 
     @Override
