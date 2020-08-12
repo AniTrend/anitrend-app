@@ -6,14 +6,10 @@ which can result in authentication errors [read more](https://github.com/square/
 **FAQ** page has been updated. Goto **Options** -> **Extras** -> **About** -> **Frequently Asked Questions**
 
 #### Enhancements
-- Confirmation dialog when deleting activities (thanks Mittens)
-- Mark notification/s as read when dismissed the status bar, **check settings** (thanks Mittens)
-- Setting to work around notifications not working [please read more](https://anitrend.gitbook.io/project/faq#why-is-anime-or-manga-x-y-z-missing-not-listed-in-the-app)
-- Separate build to allow NFSW content [see details here](https://anitrend.gitbook.io/project/faq#how-can-i-view-18-content) (thanks Mittens)
+- Add new list styles for anime and manga cards, see option in settings (thanks Mittens)
 
 #### Bug Fixes
-- Fixed broken NSFW setting not being applied and [FAQ](https://anitrend.gitbook.io/project/faq) links above
-- Notifications getting published twice when the app is opened (Only applies to notification workaround option not being enabled)
+- Fix the followers counter being updated instead of the followers counter when (un)following someone (thanks Mittens)
 
 #### Current Issues
 - Clicking on @username shows mixed feed
