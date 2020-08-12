@@ -65,7 +65,7 @@ public class UserFeedFragment extends FeedListFragment {
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onUserChange(BaseConsumer<UserBase> consumer) {
         if (consumer.getRequestMode() == KeyUtil.USER_BASE_REQ) {
-            if (userId != consumer.getChangeModel().getId()) {
+            if (userId == 0) {
                 userId = consumer.getChangeModel().getId();
                 makeRequest();
             }
