@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaList" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/container"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:layout_marginHorizontal="@dimen/lg_margin"
+        android:layout_marginVertical="@dimen/md_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="false"
+        app:cardBackgroundColor="?cardColor"
+        app:cardElevation="@dimen/sm_margin"
+        app:cardCornerRadius="@dimen/lg_margin"
+        tools:layout_width="@dimen/series_image_lg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+                android:id="@+id/series_status"
+                android:layout_width="@dimen/md_margin"
+                android:layout_height="match_parent"
+                app:airingStatus="@{model}"
+                tools:background="@color/colorStateOrange"/>
+
+            <LinearLayout
+                android:padding="@dimen/lg_margin"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
+                    android:id="@+id/series_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textSize="15sp"
+                    tools:text="Gintama."/>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+                <com.mxt.anitrend.base.custom.view.text.AiringTextView
+                    android:id="@+id/series_airing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:airingDate="@{model.media}"
+                    tools:text="EP 31: 4 days from now"/>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+                <com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:media="@{model.media}"
+                    tools:text="2015 - TV" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
+            android:id="@+id/series_episodes"
+            android:layout_gravity="top|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.mxt.anitrend.base.custom.view.text.RatingTextView
+            android:id="@+id/custom_rating_widget"
+            android:layout_gravity="bottom|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/md_margin"
+            app:rating="@{model}"/>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
