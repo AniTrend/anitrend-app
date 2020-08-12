@@ -56,7 +56,7 @@ class MediaListAdapter(context: Context?) :
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence): FilterResults {
                 val results = FilterResults()
-                if (CompatUtil.isEmpty(clone as List<MediaList?>)) clone = data
+                if (CompatUtil.isEmpty(clone)) clone = data
 
                 val filter = constraint.toString()
                 if (TextUtils.isEmpty(filter)) {
