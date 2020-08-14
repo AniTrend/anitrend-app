@@ -21,6 +21,14 @@
             app:title="@string/pref_title_language"
             app:useSimpleSummaryProvider="true" />
 
+        <ListPreference
+            app:defaultValue="0"
+            app:entries="@array/pref_selected_list_view_style_titles"
+            app:entryValues="@array/pref_selected_list_view_style_values"
+            app:key="@string/pref_key_list_view_style"
+            app:title="@string/pref_title_list_view_style"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
