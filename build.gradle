@@ -11,7 +11,7 @@ buildscript {
 
         butterKnife = '10.2.3'
 
-        constraint = '1.1.3'
+        constraint = '2.0.1'
 
         glide = '4.11.0'
         retrofit = '2.6.2'
@@ -19,7 +19,7 @@ buildscript {
         supportLibrary = '28.0.0'
         material = '1.2.0'
         androidx = '2.2.0'
-        objectBox = '2.7.0'
+        objectBox = '2.7.1'
         paging = '2.1.0'
         pagingKtx = '2.1.0'
         fragmentKtx = '1.2.5'
@@ -34,10 +34,10 @@ buildscript {
 
         // mockito = '2.18.3'
         hemcrest = '2.2'
-        mockito = '3.5.0'
+        mockito = '3.5.7'
         junit = '4.13'
-        runner = '1.2.0'
-        espresso = '3.2.0'
+        runner = '1.3.0'
+        espresso = '3.3.0'
         mockk = '1.10.0'
 
         flexBox = '2.0.1'
