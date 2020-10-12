@@ -11,7 +11,7 @@ buildscript {
 
         butterKnife = '10.2.3'
 
-        constraint = '2.0.1'
+        constraint = '2.0.2'
 
         glide = '4.11.0'
         retrofit = '2.6.2'
