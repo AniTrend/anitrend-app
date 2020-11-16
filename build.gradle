@@ -19,7 +19,7 @@ buildscript {
         supportLibrary = '28.0.0'
         material = '1.2.1'
         androidx = '2.2.0'
-        objectBox = '2.8.0'
+        objectBox = '2.8.1'
         paging = '2.1.0'
         pagingKtx = '2.1.0'
         fragmentKtx = '1.2.5'
