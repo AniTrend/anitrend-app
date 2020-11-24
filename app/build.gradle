@@ -9,7 +9,7 @@ plugins {
 def flavor = ''
 
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion rootProject.compileSdk
     defaultConfig {
         applicationId "com.mxt.anitrend"
         minSdkVersion minSdk
