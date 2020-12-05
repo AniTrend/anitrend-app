@@ -18,8 +18,8 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
 /**

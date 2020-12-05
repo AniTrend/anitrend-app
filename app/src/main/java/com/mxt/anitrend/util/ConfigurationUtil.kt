@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.extension.applyConfiguredTheme
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
 class ConfigurationUtil : KoinComponent {

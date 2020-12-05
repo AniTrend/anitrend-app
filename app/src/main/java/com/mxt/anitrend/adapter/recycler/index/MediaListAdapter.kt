@@ -17,14 +17,10 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding
 import com.mxt.anitrend.databinding.AdapterSeriesAiringCompactBinding
-import com.mxt.anitrend.extension.KoinExt.get
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaListUtil.isFilterMatch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.util.*
 
 /**

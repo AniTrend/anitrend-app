@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.annimon.stream.IntPair;
-import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.detail.ImagePreviewAdapter;
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
@@ -30,7 +28,6 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CenterSnapUtil;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.markdown.RegexUtil;
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity;
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity;

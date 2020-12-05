@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class DismissNotification : BroadcastReceiver(), KoinComponent {
 

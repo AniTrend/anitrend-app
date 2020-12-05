@@ -13,14 +13,10 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.databinding.*
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
-import com.mxt.anitrend.util.Settings
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 /**
  * Created by max on 2017/10/25.

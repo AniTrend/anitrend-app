@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.*
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.*
 import retrofit2.Call
 import retrofit2.Callback

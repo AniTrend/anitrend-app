@@ -1,20 +1,16 @@
 package com.mxt.anitrend.base.custom.view.text
 
 import android.content.Context
-import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.text.util.LinkifyCompat
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import io.noties.markwon.Markwon
-import io.noties.markwon.utils.NoCopySpannableFactory
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
 

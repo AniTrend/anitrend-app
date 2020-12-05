@@ -17,8 +17,6 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.receiver.DismissNotification
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
-import org.koin.core.KoinComponent
-import java.lang.StringBuilder
 import kotlin.math.min
 
 /**

@@ -3,9 +3,7 @@ package com.mxt.anitrend.util.locale
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import androidx.preference.PreferenceManager
 import com.mxt.anitrend.util.Settings
-import org.koin.android.ext.koin.androidContext
 import java.util.*
 
 /**

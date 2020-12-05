@@ -2,16 +2,13 @@ package com.mxt.anitrend.koin
 
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import androidx.preference.PreferenceManager
-import android.text.method.ScrollingMovementMethod
 import android.text.util.Linkify
+import androidx.preference.PreferenceManager
 import co.anitrend.support.markdown.core.CoreDelimiterPlugin
 import co.anitrend.support.markdown.html.AlignTagHandler
 import co.anitrend.support.markdown.html.CenterTagHandler
 import co.anitrend.support.markdown.image.ImageRenderPlugin
-import co.anitrend.support.markdown.style.CenterPlugin
 import co.anitrend.support.markdown.text.SpoilerPlugin
 import co.anitrend.support.markdown.util.UtilityPlugin
 import co.anitrend.support.markdown.video.WebMPlugin
@@ -23,9 +20,8 @@ import com.bumptech.glide.request.target.Target
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
-import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
-import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getCompatColorAttr
+import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.entity.MyObjectBox
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
@@ -42,11 +38,9 @@ import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
-import io.noties.markwon.movement.MovementMethodPlugin
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.KoinComponent
+import org.koin.core.component.KoinComponent
 import org.koin.dsl.module
-import kotlin.math.roundToInt
 
 object AppModule : KoinComponent {
     val appModule = module {
@@ -169,7 +163,7 @@ object AppModule : KoinComponent {
     }
 
     @JvmStatic
-    fun <T : Any> get(`class`: Class<T>): T = getKoin().get(
+    fun <T : Any> get(`class`: Class<T>): Class<T> = getKoin().get(
             `class`::class,
             null,
             null

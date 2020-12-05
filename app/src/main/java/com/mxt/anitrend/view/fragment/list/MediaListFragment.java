@@ -21,7 +21,6 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
-import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.entity.anilist.MediaList;
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection;
 import com.mxt.anitrend.model.entity.anilist.User;
