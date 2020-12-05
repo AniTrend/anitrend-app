@@ -12,8 +12,8 @@ android {
     compileSdkVersion rootProject.compileSdk
     defaultConfig {
         applicationId "com.mxt.anitrend"
-        minSdkVersion minSdk
-        targetSdkVersion targetSdk
+        minSdkVersion rootProject.minSdk
+        targetSdkVersion rootProject.targetSdk
         versionCode rootProject.versionCode
         versionName rootProject.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
