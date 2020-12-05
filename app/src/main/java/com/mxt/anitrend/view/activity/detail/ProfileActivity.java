@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
+import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.databinding.ActivityProfileBinding;
 import com.mxt.anitrend.model.entity.base.UserBase;
@@ -146,6 +147,8 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                     .showTapTarget(R.string.tip_compose_message_title,
                             R.string.tip_compose_message_text, R.id.action_message);
         }
+
+        getPresenter().notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_BASE_REQ, model), false);
     }
 
     @Override

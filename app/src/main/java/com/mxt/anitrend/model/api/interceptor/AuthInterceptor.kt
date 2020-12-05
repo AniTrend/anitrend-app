@@ -1,6 +1,5 @@
 package com.mxt.anitrend.model.api.interceptor
 
-import android.content.Context
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.util.Settings

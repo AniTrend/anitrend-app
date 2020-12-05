@@ -11,8 +11,8 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.base.VersionBase
 import io.objectbox.Box
 import io.objectbox.BoxStore
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 
 /**

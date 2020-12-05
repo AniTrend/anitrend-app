@@ -81,10 +81,20 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
             mediaBrowseUtil = new MediaBrowseUtil(true);
 
         isPager = true; isFilterable = mediaBrowseUtil.isFilterEnabled();
-        mColumnSize = mediaBrowseUtil.isCompactType() ? R.integer.grid_giphy_x3 : R.integer.grid_list_x2;
+
         mAdapter = new MediaAdapter(getContext(), mediaBrowseUtil.isCompactType());
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
+
+        if (mediaBrowseUtil.isCompactType()) {
+            mColumnSize = R.integer.grid_giphy_x3;
+        } else {
+            if (getPresenter().getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
+                mColumnSize = R.integer.single_list_x1;
+            } else {
+                mColumnSize = R.integer.grid_list_x2;
+            }
+        }
     }
 
     @Override

@@ -21,17 +21,15 @@ import androidx.core.view.inputmethod.InputContentInfoCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.*
 import com.mxt.anitrend.util.markdown.MarkDownUtil
-import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import io.wax911.emojify.parser.EmojiParser
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by max on 2017/08/14.

@@ -102,7 +102,8 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                     getString(R.string.pref_key_notification_work_around),
                     getString(R.string.pref_key_crash_reports),
                     getString(R.string.pref_key_usage_analytics),
-                    getString(R.string.pref_key_selected_language)-> {
+                    getString(R.string.pref_key_selected_language),
+                    getString(R.string.pref_key_list_view_style)-> {
                         requireRestartNotice(this)
                     }
                     getString(R.string.pref_key_startup_page) -> {

@@ -2,8 +2,8 @@ package com.mxt.anitrend.extension
 
 import android.content.Context
 import androidx.annotation.StringRes
-import org.koin.core.KoinComponent
-import org.koin.core.get
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 object KoinExt : KoinComponent {
 

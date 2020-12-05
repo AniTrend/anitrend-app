@@ -6,44 +6,44 @@ buildscript {
         targetSdk = 29
         minSdk = 17
 
-        versionCode = 148
-        versionName = '1.6.8'
+        versionCode = 10702
+        versionName = '1.7.0'
 
-        butterKnife = '10.2.1'
+        butterKnife = '10.2.3'
 
-        constraint = '1.1.3'
+        constraint = '2.0.4'
 
         glide = '4.11.0'
         retrofit = '2.6.2'
 
         supportLibrary = '28.0.0'
-        material = '1.1.0'
+        material = '1.2.1'
         androidx = '2.2.0'
-        objectBox = '2.5.1'
+        objectBox = '2.8.1'
         paging = '2.1.0'
         pagingKtx = '2.1.0'
-        fragmentKtx = '1.2.4'
-        workerKtx = '2.3.4'
-        ktx = '1.2.0'
+        fragmentKtx = '1.2.5'
+        workerKtx = '2.4.0'
+        ktx = '1.3.2'
         navigation = '2.1.0-beta02'
-        firebase = '17.3.0'
+        firebase = '18.0.0'
 
-        koin = '2.1.5'
-        kotlinVersion = '1.3.71'
+        koin = '2.2.1'
+        kotlinVersion = '1.4.20'
         multidex = '2.0.1'
 
         // mockito = '2.18.3'
         hemcrest = '2.2'
-        mockito = '3.3.3'
-        junit = '4.13'
-        runner = '1.2.0'
-        espresso = '3.2.0'
-        mockk = '1.9.3'
+        mockito = '3.6.28'
+        junit = '4.13.1'
+        runner = '1.3.0'
+        espresso = '3.3.0'
+        mockk = '1.10.2'
 
         flexBox = '2.0.1'
         crashlytics = '2.10.1'
-        coroutinesCore = '1.3.5'
-        coroutinesAndroid = '1.3.5'
+        coroutinesCore = '1.4.1'
+        coroutinesAndroid = '1.4.1'
         materialDialogs = '0.9.6.0'
 
         gson = '2.8.5'
@@ -51,13 +51,13 @@ buildscript {
 
         graphql = '0.10.2'
         emojify = '1.5.3'
-        markwon = '4.3.1'
+        markwon = '4.6.0'
         smartTab = '2.0.0'
-        tapTarget = '3.0.0'
+        tapTarget = '3.0.1'
         okHttpLogger = '3.12.1'
 
-        prettyTime = '4.0.4.Final'
-        jiaoziVideoPlayer = '7.2.3'
+        prettyTime = '4.0.6.Final'
+        jiaoziVideoPlayer = '7.5.0'
         photoView = '2.3.0'
         onboarder = '1.0.4'
         mpAndroidChart = '3.1.0'
@@ -65,7 +65,7 @@ buildscript {
         materialSearchView = '1.4.15'
         progressLayout = '1.0.1'
         eventBus = '3.2.0'
-        alerter = '5.1.2'
+        alerter = '6.2.1'
         stream = '1.2.1'
         circularProgressView = '2.5.0'
     }
@@ -77,11 +77,11 @@ buildscript {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
+        classpath 'com.android.tools.build:gradle:4.1.1'
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         // Google Play Services
-        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.google.gms:google-services:4.3.4'
         // Crash Analytics
         classpath 'io.fabric.tools:gradle:1.31.2'
         // Object Box

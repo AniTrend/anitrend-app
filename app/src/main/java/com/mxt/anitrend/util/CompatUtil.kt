@@ -25,7 +25,6 @@ import androidx.fragment.app.FragmentActivity
 import com.annimon.stream.IntPair
 import com.annimon.stream.Optional
 import com.annimon.stream.Stream
-import com.mxt.anitrend.App
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.extension.getCompatColor

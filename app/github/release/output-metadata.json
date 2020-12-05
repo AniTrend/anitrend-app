@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.mxt.anitrend",
+  "variantName": "processGithubReleaseResources",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 10702,
+      "versionName": "1.7.0-github",
+      "outputFile": "anitrend_v1.7.0_rc_10702_github-release.apk"
+    }
+  ]
+}

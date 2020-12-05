@@ -62,7 +62,7 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
 
     protected MediaListCollectionBase mediaListCollectionBase;
     protected QueryContainerBuilder queryContainer;
-
+    
     public static MediaListFragment newInstance(Bundle params, QueryContainerBuilder queryContainer) {
         Bundle args = new Bundle(params);
         args.putParcelable(KeyUtil.arg_graph_params, queryContainer);
@@ -85,12 +85,20 @@ public class MediaListFragment extends FragmentBaseList<MediaList, PageContainer
             queryContainer = getArguments().getParcelable(KeyUtil.arg_graph_params);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
-        mColumnSize = R.integer.grid_list_x2; isFilterable = true; isPager = false;
+
+        isFilterable = true;
+        isPager = false;
         hasSubscriber = true;
         mAdapter = new MediaListAdapter(getContext());
         ((MediaListAdapter)mAdapter).setCurrentUser(userName);
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
+
+        if (getPresenter().getSettings().getMediaListStyle() == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
+            mColumnSize = R.integer.single_list_x1;
+        } else {
+            mColumnSize = R.integer.grid_list_x2;
+        }
     }
 
     @Override

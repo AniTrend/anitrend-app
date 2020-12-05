@@ -1,11 +1,9 @@
 package com.mxt.anitrend.extension
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair

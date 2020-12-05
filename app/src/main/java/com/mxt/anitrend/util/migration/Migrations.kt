@@ -9,9 +9,9 @@ import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.ShortcutUtil
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.component.inject
 import timber.log.Timber
 
 object Migrations : KoinComponent {

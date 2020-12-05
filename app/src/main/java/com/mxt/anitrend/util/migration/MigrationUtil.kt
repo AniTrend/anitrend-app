@@ -4,8 +4,8 @@ import androidx.annotation.VisibleForTesting
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.migration.contract.IMigrationUtil
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 class MigrationUtil private constructor(
