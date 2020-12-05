@@ -137,7 +137,7 @@ class Settings(
         }
 
     var seasonYear: Int = 0
-        get() = sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear(0))
+        get() = sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear(1))
         set(value) {
             field = value
             sharedPreferences.edit {
