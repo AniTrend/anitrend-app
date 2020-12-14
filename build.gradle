@@ -29,7 +29,7 @@ buildscript {
         firebase = '18.0.0'
 
         koin = '2.2.1'
-        kotlinVersion = '1.4.20'
+        kotlinVersion = '1.4.21'
         multidex = '2.0.1'
 
         // mockito = '2.18.3'
