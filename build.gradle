@@ -28,7 +28,7 @@ buildscript {
         navigation = '2.1.0-beta02'
         firebase = '18.0.0'
 
-        koin = '2.2.1'
+        koin = '2.2.2'
         kotlinVersion = '1.4.21'
         multidex = '2.0.1'
 
