@@ -38,7 +38,7 @@ buildscript {
         junit = '4.13.1'
         runner = '1.3.0'
         espresso = '3.3.0'
-        mockk = '1.10.3-jdk8'
+        mockk = '1.10.4'
 
         flexBox = '2.0.1'
         crashlytics = '2.10.1'
