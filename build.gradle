@@ -13,7 +13,7 @@ buildscript {
 
         constraint = '2.0.4'
 
-        glide = '4.11.0'
+        glide = '4.12.0'
         retrofit = '2.6.2'
 
         supportLibrary = '28.0.0'
