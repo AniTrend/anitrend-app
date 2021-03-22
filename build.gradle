@@ -66,7 +66,7 @@ buildscript {
         progressLayout = '1.0.1'
         eventBus = '3.2.0'
         alerter = '7.0.1'
-        stream = '1.2.1'
+        stream = '1.2.2'
         circularProgressView = '2.5.0'
     }
     repositories {
