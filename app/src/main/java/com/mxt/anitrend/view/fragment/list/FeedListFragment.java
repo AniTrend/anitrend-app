@@ -126,6 +126,7 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
         int pairIndex;
         switch (consumer.getRequestMode()) {
             case KeyUtil.MUT_SAVE_TEXT_FEED:
+            case KeyUtil.MUT_SAVE_MESSAGE_FEED:
                 if(consumer.getChangeModel() == null) {
                     swipeRefreshLayout.setRefreshing(true);
                     onRefresh();
@@ -137,24 +138,14 @@ public class FeedListFragment extends FragmentBaseList<FeedList, PageContainer<F
                     }
                 }
                 break;
-            case KeyUtil.MUT_SAVE_MESSAGE_FEED:
-                if(consumer.getChangeModel() == null) {
-                    swipeRefreshLayout.setRefreshing(true);
-                    onRefresh();
-                } else {
-                    pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
-                    if (pairOptional.isPresent()) {
-                        pairIndex = pairOptional.get().getFirst();
-                        mAdapter.onItemChanged(consumer.getChangeModel(), pairIndex);
-                    }
-                }
-                break;
             case KeyUtil.MUT_DELETE_FEED:
                 pairOptional = CompatUtil.INSTANCE.findIndexOf(mAdapter.getData(), consumer.getChangeModel());
                 if(pairOptional.isPresent()) {
                     pairIndex = pairOptional.get().getFirst();
                     mAdapter.onItemRemoved(pairIndex);
                 }
+                break;
+            default:
                 break;
         }
     }
