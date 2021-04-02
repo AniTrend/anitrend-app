@@ -61,8 +61,12 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     }
 
     fun checkGenresAndTags(fragmentActivity: FragmentActivity?) {
-        val intent = Intent(fragmentActivity, TagGenreService::class.java)
-        fragmentActivity?.startService(intent)
+        runCatching {
+            val intent = Intent(fragmentActivity, TagGenreService::class.java)
+            fragmentActivity?.startService(intent)
+        }.onFailure {
+            Timber.e(it)
+        }
     }
 
     fun getThumbnail(thumbnails: List<Thumbnail>?): String? {
