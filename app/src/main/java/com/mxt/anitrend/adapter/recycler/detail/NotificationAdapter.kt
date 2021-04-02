@@ -117,7 +117,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 if (model.user != null && model.user.avatar != null)
                     AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
             } else
-                AspectImageView.setImage(binding.notificationImg, model.media.coverImage.extraLarge)
+                AspectImageView.setImage(binding.notificationImg, model.media?.coverImage?.extraLarge)
 
             when (model.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
