@@ -1,3 +1,4 @@
+
 package com.mxt.anitrend.util
 
 import android.content.Context
@@ -47,7 +48,7 @@ class JobSchedulerUtil(
             WorkManager.getInstance(context)
                     .enqueueUniquePeriodicWork(
                         KeyUtil.WorkNotificationId,
-                        ExistingPeriodicWorkPolicy.REPLACE,
+                        ExistingPeriodicWorkPolicy.KEEP,
                         periodicWorkRequest
                     )
         }
@@ -70,7 +71,7 @@ class JobSchedulerUtil(
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
                     KeyUtil.WorkClearNotificationId,
-                    ExistingWorkPolicy.REPLACE,
+                    ExistingWorkPolicy.KEEP,
                     workRequest
                 )
         }
