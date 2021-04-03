@@ -1,6 +1,10 @@
+import com.mxt.anitrend.buildSrc.Libraries
+import com.mxt.anitrend.buildsrc.common.Versions
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlinx-serialization")
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("io.objectbox")
@@ -9,13 +13,13 @@ plugins {
 def flavor = ''
 
 android {
-    compileSdkVersion rootProject.compileSdk
+    compileSdkVersion Versions.compileSdk
     defaultConfig {
         applicationId "com.mxt.anitrend"
-        minSdkVersion rootProject.minSdk
-        targetSdkVersion rootProject.targetSdk
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
+        versionCode Versions.versionCode
+        versionName Versions.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -30,7 +34,7 @@ android {
                     def code = defaultConfig.versionCode
                     def name = defaultConfig.versionName
                     def flavour_name = output.name
-                    outputFileName = "anitrend_v${name}_rc_${code}_${flavour_name}.apk"
+                    outputFileName = "anitrend_v${name}-${code}_${flavour_name}.apk"
                 }
             }
         }
@@ -72,6 +76,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = [
+            "-Xopt-in=org.koin.core.component.KoinExperimentalAPI",
+            "-Xopt-in=org.koin.core.component.KoinApiExtension",
+            "-Xopt-in=org.koin.core.KoinExperimentalAPI",
+            "-Xuse-experimental=kotlin.Experimental",
+            "-Xopt-in=kotlin.ExperimentalStdlibApi",
+            "-Xopt-in=kotlin.Experimental",
+            "-Xopt-in=kotlin.RequiresOptIn"
+        ]
     }
     dataBinding {
         enabled = true
@@ -109,147 +122,155 @@ androidExtensions {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(":markdown")
-
-    /** Koin AndroidX Dependency Injection */
-    implementation "org.koin:koin-core:$koin"
-    implementation "org.koin:koin-core-ext:$koin"
-    implementation "org.koin:koin-androidx-scope:$koin"
-    implementation "org.koin:koin-androidx-viewmodel:$koin"
-
-    /** Kotlin Libraries */
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCore"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
+    implementation(Libraries.JetBrains.Kotlin.stdlib)
+    implementation(Libraries.JetBrains.KotlinX.Serialization.json)
+    implementation(Libraries.JetBrains.KotlinX.Coroutines.android)
+    implementation(Libraries.JetBrains.KotlinX.Coroutines.core)
+    testImplementation(Libraries.JetBrains.KotlinX.Coroutines.test)
 
     /** Material Design */
-    implementation "com.google.android.material:material:$material"
-
-    implementation "androidx.constraintlayout:constraintlayout:$constraint"
-    implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation(Libraries.Google.Material.material)
+    implementation(Libraries.Google.FlexBox.flexBox)
+    implementation(Libraries.Google.Firebase.Analytics.analyticsKtx)
+    implementation(Libraries.Google.Firebase.Crashlytics.crashlytics)
 
     /** Architecture Components */
-    implementation "androidx.core:core-ktx:$ktx"
-    implementation "androidx.fragment:fragment-ktx:$fragmentKtx"
-    implementation "androidx.work:work-runtime-ktx:$workerKtx"
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidx"
+    implementation(Libraries.AndroidX.ConstraintLayout.constraintLayout)
+    implementation(Libraries.AndroidX.Collection.collectionKtx)
 
-    /** Fire-base Libraries */
-    implementation "com.google.firebase:firebase-core:$firebase"
-    implementation "com.google.firebase:firebase-analytics:$firebase"
+    implementation(Libraries.AndroidX.Core.coreKtx)
+    implementation(Libraries.AndroidX.Activity.activityKtx)
+    implementation(Libraries.AndroidX.Fragment.fragmentKtx)
+    implementation(Libraries.AndroidX.Preference.preferenceKtx)
 
-    /** Crash Analytics */
-    implementation("com.crashlytics.sdk.android:crashlytics:$crashlytics")
+    implementation(Libraries.AndroidX.Work.runtimeKtx)
+    implementation(Libraries.AndroidX.Work.multiProcess)
+    implementation(Libraries.AndroidX.StartUp.startUpRuntime)
+
+    implementation(Libraries.AndroidX.Lifecycle.liveDataCoreKtx)
+    implementation(Libraries.AndroidX.Lifecycle.runTimeKtx)
+    implementation(Libraries.AndroidX.Lifecycle.liveDataKtx)
+    implementation(Libraries.AndroidX.Lifecycle.extensions)
+
+    /** Koin AndroidX Dependency Injection */
+    implementation (Libraries.Koin.core)
+    implementation (Libraries.Koin.extension)
+    implementation (Libraries.Koin.AndroidX.scope)
+    implementation (Libraries.Koin.AndroidX.viewModel)
+    implementation (Libraries.Koin.AndroidX.workManager)
+    androidTestImplementation(Libraries.Koin.test)
 
     /** Glide Libraries */
-    implementation "com.github.bumptech.glide:glide:$glide"
-    implementation 'androidx.preference:preference:1.1.1'
-    kapt "com.github.bumptech.glide:compiler:$glide"
-
-    /** Material Dialogs */
-    implementation "com.afollestad.material-dialogs:core:$materialDialogs"
+    implementation(Libraries.Glide.glide)
+    kapt(Libraries.Glide.compiler)
 
     /** Retrofit Libraries */
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
-    implementation("com.squareup.retrofit2:converter-simplexml:$retrofit") {
+    implementation(Libraries.Square.OkHttp.logging)
+    implementation(Libraries.Square.Retrofit.retrofit)
+    implementation(Libraries.Square.Retrofit.gsonConverter)
+    implementation(Libraries.Square.Retrofit.xmlConverter) {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpLogger"
 
     /** Butter Knife Libraries */
-    implementation "com.jakewharton:butterknife:$butterKnife"
-    kapt "com.jakewharton:butterknife-compiler:$butterKnife"
+    implementation "com.jakewharton:butterknife:${Versions.butterKnife}"
+    kapt "com.jakewharton:butterknife-compiler:${Versions.butterKnife}"
 
     /** Rich Text Markdown Parser */
-    implementation "io.noties.markwon:core:$markwon"
-    implementation "io.noties.markwon:ext-strikethrough:$markwon"
-    implementation "io.noties.markwon:ext-tables:$markwon"
-    implementation "io.noties.markwon:ext-tasklist:$markwon"
-    implementation "io.noties.markwon:editor:$markwon"
-    implementation "io.noties.markwon:html:$markwon"
-    implementation "io.noties.markwon:image:$markwon"
-    implementation "io.noties.markwon:image-glide:$markwon"
-    implementation "io.noties.markwon:linkify:$markwon"
-    implementation "io.noties.markwon:simple-ext:$markwon"
-    implementation "io.noties.markwon:syntax-highlight:$markwon"
-    implementation 'me.saket:better-link-movement-method:2.2.0'
+    implementation(Libraries.Markwon.core)
+    implementation(Libraries.Markwon.editor)
+    implementation(Libraries.Markwon.html)
+    implementation(Libraries.Markwon.image)
+    implementation(Libraries.Markwon.glide)
+    implementation(Libraries.Markwon.parser)
+    implementation(Libraries.Markwon.linkify)
+    implementation(Libraries.Markwon.simpleExt)
+    implementation(Libraries.Markwon.syntaxHighlight)
+    implementation(Libraries.Markwon.Extension.taskList)
+    implementation(Libraries.Markwon.Extension.strikeThrough)
+    implementation(Libraries.Markwon.Extension.tables)
+    implementation(Libraries.Markwon.Extension.latex)
+    implementation(Libraries.betterLinkMovement)
 
     /** Object Box */
-    implementation "io.objectbox:objectbox-android:$objectBox"
-    kapt "io.objectbox:objectbox-processor:$objectBox"
+    implementation(Libraries.ObjectBox.android)
+    kapt(Libraries.ObjectBox.processor)
 
-    /** Flex Box */
-    implementation "com.google.android:flexbox:$flexBox"
+    /** Logging */
+    implementation(Libraries.timber)
+    implementation(Libraries.treessence)
+
+    /** AniTrend */
+    implementation(Libraries.AniTrend.Emojify.emojify)
+    implementation(Libraries.AniTrend.Markdown.markdown)
+    implementation(Libraries.AniTrend.Retrofit.graphQL)
 
     /** Smart Tab Layout */
-    implementation "com.ogaclejapan.smarttablayout:library:$smartTab"
+    implementation(Libraries.SmartTab.layout)
+    implementation(Libraries.SmartTab.utilities)
+
+    /** Material Dialogs */
+    implementation("com.afollestad.material-dialogs:core:${Versions.materialDialogs}")
 
     /** Tap Target Prompt */
-    implementation "uk.co.samuelwall:material-tap-target-prompt:$tapTarget"
-
-    /** Emojify */
-    implementation "com.github.wax911:android-emojify:$emojify"
-
-    /** GraphQL */
-    implementation "com.github.anitrend:retrofit-graphql:$graphql"
-
-    /** Timber */
-    implementation "com.jakewharton.timber:timber:$timber"
+    implementation("uk.co.samuelwall:material-tap-target-prompt:${Versions.tapTarget}")
 
     /** Pretty Time */
-    implementation "org.ocpsoft.prettytime:prettytime:$prettyTime"
+    implementation("org.ocpsoft.prettytime:prettytime:${Versions.prettyTime}")
 
     /** Highly Customizable Video Player */
-    implementation "cn.jzvd:jiaozivideoplayer:$jiaoziVideoPlayer"
+    implementation("cn.jzvd:jiaozivideoplayer:${Versions.jiaoziVideoPlayer}")
 
     /** Photo View */
-    implementation "com.github.chrisbanes:PhotoView:$photoView"
+    implementation("com.github.chrisbanes:PhotoView:${Versions.photoView}")
 
     /** On-boarding Experience */
-    implementation "com.codemybrainsout.onboarding:onboarder:$onboarder"
+    implementation("com.codemybrainsout.onboarding:onboarder:${Versions.onboarder}")
 
     /** Charts */
-    implementation "com.github.PhilJay:MPAndroidChart:v$mpAndroidChart"
+    implementation("com.github.PhilJay:MPAndroidChart:v${Versions.mpAndroidChart}")
 
     /** About Library */
-    implementation "com.github.medyo:android-about-page:$aboutPage"
+    implementation("com.github.medyo:android-about-page:${Versions.aboutPage}")
 
     /** Multi Dex */
-    implementation "androidx.multidex:multidex:$multidex"
+    implementation("androidx.multidex:multidex:${Versions.multidex}")
 
     /** Material Search View */
-    implementation "com.github.ma-myair:MaterialSearchView:$materialSearchView"
+    implementation("com.github.ma-myair:MaterialSearchView:${Versions.materialSearchView}")
 
     /** State Layout Library */
-    implementation "com.github.nguyenhoanglam:ProgressLayout:$progressLayout"
+    implementation("com.github.nguyenhoanglam:ProgressLayout:${Versions.progressLayout}")
 
     /** Event Bus Library */
-    implementation "org.greenrobot:eventbus:$eventBus"
+    implementation("org.greenrobot:eventbus:${Versions.eventBus}")
 
     /** Alerter */
-    implementation "com.tapadoo.android:alerter:$alerter"
+    implementation("com.tapadoo.android:alerter:${Versions.alerter}")
 
     /** Stream */
-    implementation "com.annimon:stream:$stream"
+    implementation("com.annimon:stream:${Versions.stream}")
 
     /** Circular Progress View */
-    implementation "com.github.rahatarmanahmed:circularprogressview:$circularProgressView"
+    implementation("com.github.rahatarmanahmed:circularprogressview:${Versions.circularProgressView}")
 
     /** Testing-only dependencies */
-    testImplementation "junit:junit:$junit"
-    testImplementation "org.mockito:mockito-core:$mockito"
-    testImplementation "org.hamcrest:hamcrest-library:$hemcrest"
+    testImplementation(Libraries.junit)
+    testImplementation(Libraries.Mockito.core)
 
-    androidTestImplementation "androidx.test:runner:$runner"
-    androidTestImplementation "org.mockito:mockito-android:$mockito"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
+    androidTestImplementation(Libraries.CashApp.Turbine.turbine)
+    androidTestImplementation(Libraries.AndroidX.Test.coreKtx)
+    androidTestImplementation(Libraries.AndroidX.Test.rules)
+    androidTestImplementation(Libraries.AndroidX.Test.runner)
+    androidTestImplementation(Libraries.AndroidX.Test.Espresso.core)
+    androidTestImplementation(Libraries.AndroidX.Test.Extension.junitKtx)
+    androidTestImplementation(Libraries.Mockito.android)
+    androidTestImplementation(Libraries.mockk)
 }
 
 if (flavor == 'app' && file("google-services.json").exists()) {
     apply plugin: 'com.google.gms.google-services'
-    apply plugin: 'io.fabric'
+    apply plugin: 'com.google.firebase.crashlytics'
 }
