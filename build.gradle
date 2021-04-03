@@ -1,92 +1,20 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import com.mxt.anitrend.buildSrc.Libraries
 
 buildscript {
-    ext {
-        compileSdk = 29
-        targetSdk = 29
-        minSdk = 17
-
-        versionCode = 10702
-        versionName = '1.7.0'
-
-        butterKnife = '10.2.3'
-
-        constraint = '2.0.4'
-
-        glide = '4.12.0'
-        retrofit = '2.6.2'
-
-        supportLibrary = '28.0.0'
-        material = '1.3.0'
-        androidx = '2.2.0'
-        objectBox = '2.9.1'
-        paging = '2.1.0'
-        pagingKtx = '2.1.0'
-        fragmentKtx = '1.3.2'
-        workerKtx = '2.5.0'
-        ktx = '1.3.2'
-        navigation = '2.1.0-beta02'
-        firebase = '18.0.2'
-
-        koin = '2.2.2'
-        kotlinVersion = '1.4.32'
-        multidex = '2.0.1'
-
-        // mockito = '2.18.3'
-        hemcrest = '2.2'
-        mockito = '3.8.0'
-        junit = '4.13.2'
-        runner = '1.3.0'
-        espresso = '3.3.0'
-        mockk = '1.11.0'
-
-        flexBox = '2.0.1'
-        crashlytics = '2.10.1'
-        coroutinesCore = '1.4.1'
-        coroutinesAndroid = '1.4.1'
-        materialDialogs = '0.9.6.0'
-
-        gson = '2.8.5'
-        timber = '4.7.1'
-
-        graphql = '0.10.2'
-        emojify = '1.5.3'
-        markwon = '4.6.2'
-        smartTab = '2.0.0'
-        tapTarget = '3.1.0'
-        okHttpLogger = '3.12.1'
-
-        prettyTime = '5.0.0.Final'
-        jiaoziVideoPlayer = '7.6.0'
-        photoView = '2.3.0'
-        onboarder = '1.0.4'
-        mpAndroidChart = '3.1.0'
-        aboutPage = '1.2.5'
-        materialSearchView = '1.4.15'
-        progressLayout = '1.0.1'
-        eventBus = '3.2.0'
-        alerter = '7.0.1'
-        stream = '1.2.2'
-        circularProgressView = '2.5.0'
-    }
     repositories {
         google()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url "http://objectbox.net/beta-repo/" }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.3'
-
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        // Google Play Services
-        classpath 'com.google.gms:google-services:4.3.5'
-        // Crash Analytics
-        classpath 'io.fabric.tools:gradle:1.31.2'
-        // Object Box
-        classpath "io.objectbox:objectbox-gradle-plugin:$objectBox"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath(Libraries.Android.Tools.buildGradle)
+        classpath(Libraries.JetBrains.Kotlin.Gradle.plugin)
+        classpath(Libraries.JetBrains.Kotlin.Serialization.serialization)
+        classpath(Libraries.Koin.Gradle.plugin)
+        classpath(Libraries.Google.Services.googleServices)
+        classpath(Libraries.Google.Firebase.Crashlytics.Gradle.plugin)
+        classpath(Libraries.ObjectBox.Gradle.plugin)
     }
 }
 
@@ -95,9 +23,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        maven { url "http://objectbox.net/beta-repo/" }
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url Libraries.Repositories.jitPack }
     }
 }
 
