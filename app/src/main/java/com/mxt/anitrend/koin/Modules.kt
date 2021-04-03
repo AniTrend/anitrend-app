@@ -1,0 +1,264 @@
+package com.mxt.anitrend.koin
+
+import android.app.NotificationManager
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.text.util.Linkify
+import android.util.Log
+import co.anitrend.support.markdown.center.CenterPlugin
+import co.anitrend.support.markdown.core.CorePlugin
+import co.anitrend.support.markdown.ephasis.EmphasisPlugin
+import co.anitrend.support.markdown.heading.HeadingPlugin
+import co.anitrend.support.markdown.horizontal.HorizontalLinePlugin
+import co.anitrend.support.markdown.image.ImagePlugin
+import co.anitrend.support.markdown.italics.ItalicsPlugin
+import co.anitrend.support.markdown.mention.MentionPlugin
+import co.anitrend.support.markdown.spoiler.SpoilerPlugin
+import co.anitrend.support.markdown.webm.WebMPlugin
+import co.anitrend.support.markdown.youtube.YouTubePlugin
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.target.Target
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
+import com.google.gson.GsonBuilder
+import com.mxt.anitrend.BuildConfig
+import com.mxt.anitrend.R
+import com.mxt.anitrend.analytics.AnalyticsLogging
+import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.extension.getCompatColorAttr
+import com.mxt.anitrend.model.api.converter.AniGraphConverter
+import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
+import com.mxt.anitrend.model.entity.MyObjectBox
+import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.presenter.fragment.MediaPresenter
+import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.util.ConfigurationUtil
+import com.mxt.anitrend.util.JobSchedulerUtil
+import com.mxt.anitrend.util.NotificationUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.worker.AuthenticatorWorker
+import com.mxt.anitrend.worker.ClearNotificationWorker
+import com.mxt.anitrend.worker.NotificationWorker
+import io.github.wax911.library.annotation.processor.GraphProcessor
+import io.github.wax911.library.annotation.processor.plugin.AssetManagerDiscoveryPlugin
+import io.github.wax911.library.logger.contract.ILogger
+import io.github.wax911.library.logger.core.AbstractLogger
+import io.noties.markwon.Markwon
+import io.noties.markwon.editor.MarkwonEditor
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
+import io.noties.markwon.ext.tasklist.TaskListPlugin
+import io.noties.markwon.html.HtmlPlugin
+import io.noties.markwon.image.AsyncDrawable
+import io.noties.markwon.image.glide.GlideImagesPlugin
+import io.noties.markwon.linkify.LinkifyPlugin
+import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.dsl.worker
+import org.koin.dsl.module
+import timber.log.Timber
+
+private val coreModule = module {
+    single {
+        MyObjectBox.builder()
+            .androidContext(androidContext())
+            .build()
+    }
+
+    single<ISupportAnalytics> {
+        AnalyticsLogging(
+            context = androidContext(),
+            settings = get()
+        )
+    }
+
+    single {
+        JobSchedulerUtil(
+            settings = get()
+        )
+    }
+
+    factory {
+        Settings(
+            context = androidContext()
+        )
+    }
+
+    factory {
+        ConfigurationUtil(
+            settings = get()
+        )
+    }
+
+    factory {
+        val context = androidContext()
+        NotificationUtil(
+            context = context,
+            settings = get(),
+            context.getSystemService(
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager?
+        )
+    }
+}
+
+private val widgetModule = module {
+    single {
+        val context = androidContext()
+        Markwon.builder(androidContext())
+            .usePlugin(HtmlPlugin.create())
+            .usePlugin(CorePlugin.create())
+            .usePlugin(MentionPlugin.create())
+            .usePlugin(HorizontalLinePlugin.create())
+            .usePlugin(HeadingPlugin.create())
+            .usePlugin(EmphasisPlugin.create())
+            .usePlugin(CenterPlugin.create())
+            .usePlugin(ImagePlugin.create())
+            .usePlugin(WebMPlugin.create())
+            .usePlugin(YouTubePlugin.create())
+            .usePlugin(LinkifyPlugin.create(Linkify.WEB_URLS))
+            .usePlugin(
+                SpoilerPlugin.create(
+                    context.getCompatColorAttr(R.attr.cardColor),
+                    context.getCompatColorAttr(R.attr.backgroundColor)
+                )
+            )
+            .usePlugin(StrikethroughPlugin.create())
+            .usePlugin(TaskListPlugin.create(context))
+            .usePlugin(ItalicsPlugin.create())
+            .usePlugin(GlideImagesPlugin.create(
+                object : GlideImagesPlugin.GlideStore {
+                    override fun cancel(target: Target<*>) {
+                        Glide.with(androidContext()).clear(target)
+                    }
+
+                    override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
+                        return Glide.with(androidContext())
+                            .load(drawable.destination)
+                            .transform(
+                                RoundedCorners(
+                                    context.resources
+                                        .getDimensionPixelSize(R.dimen.md_margin)
+                                )
+                            )
+                    }
+                }
+            )).build()
+    }
+    single {
+        MarkwonEditor.create(get())
+    }
+}
+
+private val workerModule = module {
+    worker { scope ->
+        AuthenticatorWorker(
+            context = androidContext(),
+            workerParams = scope.get(),
+            presenter = get()
+        )
+    }
+    worker { scope ->
+        NotificationWorker(
+            context = androidContext(),
+            workerParams = scope.get(),
+            presenter = get(),
+            notificationUtil = get()
+        )
+    }
+    worker { scope ->
+        ClearNotificationWorker(
+            context = androidContext(),
+            workerParams = scope.get()
+        )
+    }
+}
+
+private val presenterModule = module {
+    factory {
+        BasePresenter(androidContext())
+    }
+    factory {
+        WidgetPresenter<Any>(androidContext())
+    }
+    factory {
+        MediaPresenter(androidContext())
+    }
+}
+
+private val networkModule = module {
+    factory {
+        AuthInterceptor(
+            settings = get()
+        )
+    }
+    single {
+        val logLevel = if (BuildConfig.DEBUG)
+            ILogger.Level.DEBUG
+        else ILogger.Level.INFO
+
+        AniGraphConverter(
+            graphProcessor = GraphProcessor(
+                discoveryPlugin = AssetManagerDiscoveryPlugin(
+                    assetManager = androidContext().assets
+                ),
+                logger = object : AbstractLogger(logLevel) {
+                    /**
+                     * Write a log message to its destination.
+                     *
+                     * @param level Filter used to determine the verbosity level of logs.
+                     * @param tag Used to identify the source of a log message. It usually
+                     * identifies the class or activity where the log call occurs.
+                     * @param message The message you would like logged.
+                     * @param throwable An exception to log
+                     */
+                    override fun log(
+                        level: ILogger.Level,
+                        tag: String,
+                        message: String,
+                        throwable: Throwable?
+                    ) {
+                        when (level) {
+                            ILogger.Level.VERBOSE -> Timber.tag(tag).v(throwable, message)
+                            ILogger.Level.DEBUG -> Timber.tag(tag).d(throwable, message)
+                            ILogger.Level.INFO -> Timber.tag(tag).i(throwable, message)
+                            ILogger.Level.WARNING -> Timber.tag(tag).w(throwable, message)
+                            ILogger.Level.ERROR -> Timber.e(throwable, message)
+                            ILogger.Level.NONE -> { }
+                        }
+                    }
+
+                }
+            ),
+            GsonBuilder()
+                .addSerializationExclusionStrategy(object : ExclusionStrategy {
+                    /**
+                     * @param clazz the class object that is under test
+                     * @return true if the class should be ignored; otherwise false
+                     */
+                    override fun shouldSkipClass(clazz: Class<*>?) = false
+
+                    /**
+                     * @param f the field object that is under test
+                     * @return true if the field should be ignored; otherwise false
+                     */
+                    override fun shouldSkipField(f: FieldAttributes?): Boolean {
+                        return f?.name?.equals("operationName") ?: false
+                                ||
+                                f?.name?.equals("extensions") ?: false
+                    }
+                })
+                .enableComplexMapKeySerialization()
+                .setLenient()
+                .create()
+        )
+    }
+}
+
+val appModules = listOf(
+    coreModule,
+    widgetModule,
+    workerModule,
+    presenterModule,
+    networkModule
+)

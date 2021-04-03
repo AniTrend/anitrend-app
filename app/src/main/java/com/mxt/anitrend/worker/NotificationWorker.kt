@@ -1,27 +1,30 @@
-package com.mxt.anitrend.service
+package com.mxt.anitrend.worker
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.annimon.stream.Stream
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 
-class ClearNotificationService(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
-
-    private val presenter by inject<BasePresenter>()
+/**
+ * Created by Maxwell on 1/22/2017.
+ */
+class NotificationWorker(
+    context: Context,
+    workerParams: WorkerParameters,
+    private val presenter: BasePresenter,
+    private val notificationUtil: NotificationUtil
+) : CoroutineWorker(context, workerParams) {
 
     private val userEndpoint by lazy(LazyThreadSafetyMode.NONE) {
         WebFactory.createService(UserModel::class.java, applicationContext)
@@ -44,21 +47,19 @@ class ClearNotificationService(context: Context, workerParams: WorkerParameters)
      * dependent work will not execute if you use
      * [Result.failure]
      */
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         if (presenter.settings.isAuthenticated) {
             try {
                 requestUser()?.apply {
                     if (unreadNotificationCount != 0) {
                         presenter.notifyAllListeners(
-                            BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
-                            false
+                                BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
+                                false
                         )
-                        return when(clearNotifications()) {
-                            true -> Result.success()
-                            else -> Result.failure()
-                        }
+                        requestNotifications(this)
                     }
                 }
+                return Result.success()
             } catch (e: Exception) {
                 Timber.tag(TAG).e(e)
                 e.printStackTrace()
@@ -70,7 +71,7 @@ class ClearNotificationService(context: Context, workerParams: WorkerParameters)
 
     private fun requestUser(): User? {
         val userGraphContainer = userEndpoint.getCurrentUser(
-            GraphUtil.getDefaultQuery(false)
+                GraphUtil.getDefaultQuery(false)
         ).execute().body() as User?
 
         return (userGraphContainer).let {
@@ -81,30 +82,16 @@ class ClearNotificationService(context: Context, workerParams: WorkerParameters)
         }
     }
 
-    private fun clearNotifications(): Boolean {
-        val result = userEndpoint.getUserNotifications(
-            GraphUtil
-                .getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_resetNotificationCount, true)
-        ).execute()
+    private fun requestNotifications(user: User) {
+        val notificationsContainer = userEndpoint.getUserNotifications(
+            GraphUtil.getDefaultQuery(false)
+        ).execute().body() as PageContainer<Notification>?
 
-        if (result.isSuccessful) {
-            val notifications = result.body() as PageContainer<Notification>?
-            if (notifications != null) {
-                val notificationHistories = Stream.of(notifications.pageData)
-                    .map { notification -> NotificationHistory(notification.id) }
-                    .toList()
-
-                presenter.database.getBoxStore(NotificationHistory::class.java)
-                    .put(notificationHistories)
-            }
-            return true
-        }
-
-        return false
+        if (user.unreadNotificationCount > 0 && notificationsContainer != null)
+            notificationUtil.createNotification(user, notificationsContainer)
     }
 
     companion object {
-        private val TAG = ClearNotificationService::class.java.simpleName
+        private val TAG = NotificationWorker::class.java.simpleName
     }
 }
