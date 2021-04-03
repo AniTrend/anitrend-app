@@ -140,12 +140,14 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
 
     private fun generateStatsData(): List<StatsRing> {
         var userGenreStats: List<StatsRing> = ArrayList()
-        if (model?.statistics != null && model?.statistics?.anime?.genres != null && !CompatUtil.isEmpty(model?.statistics?.anime?.genres)) {
-            val highestValue = Stream.of(model?.statistics?.anime?.genres)
+        val statistics = model?.statistics
+        val genres = statistics?.anime?.genres
+        if (statistics != null && genres != null && genres.isNotEmpty()) {
+            val highestValue = Stream.of(genres)
                     .max { o1, o2 -> if (o1.count > o2.count) 1 else 0 }
                     .get().count
 
-            userGenreStats = Stream.of(model?.statistics?.anime?.genres)
+            userGenreStats = Stream.of(genres)
                     .sortBy { s -> -s.count }.map { genreStats ->
                         val percentage = genreStats.count.toFloat() / highestValue.toFloat() * 100f
                         StatsRing(percentage.toInt(), genreStats.genre, genreStats.count.toString())
