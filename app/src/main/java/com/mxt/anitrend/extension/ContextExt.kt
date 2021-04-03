@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.mxt.anitrend.R
 import timber.log.Timber
+import java.io.File
 
 /**
  * Exactly whether a device is low-RAM is ultimately up to the device configuration, but currently
@@ -172,4 +173,16 @@ fun Context.getCompatTintedDrawable(@DrawableRes resource : Int, @AttrRes colorA
         DrawableCompat.setTint(drawable, getCompatColorAttr(colorAttr))
     }
     return drawable
+}
+
+fun Context.logDirectory(): File {
+    val external = File(getExternalFilesDir(null) ?: filesDir, "logs")
+    if (!external.exists()) external.mkdirs()
+    return external
+}
+
+fun Context.logFile(): File {
+    val log = File(logDirectory(), "${packageName}.log")
+    if (!log.exists()) log.mkdirs()
+    return log
 }
