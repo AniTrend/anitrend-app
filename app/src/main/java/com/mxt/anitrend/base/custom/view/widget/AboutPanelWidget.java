@@ -266,11 +266,14 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onModelChanged(BaseConsumer<UserBase> consumer) {
         if(consumer.getRequestMode() == KeyUtil.MUT_TOGGLE_FOLLOW) {
-            if(following != null) {
-                int total = following.getTotal();
-                following.setTotal(!consumer.getChangeModel().isFollowing()? --total : ++total);
+            if(followers != null) {
+                int total = followers.getTotal();
+                boolean isFollowing = consumer.getChangeModel().isFollowing();
+                followers.setTotal(!isFollowing ? --total : ++total);
                 if(isAlive())
-                    binding.userFollowingCount.setText(WidgetPresenter.valueFormatter(following.getTotal()));
+                    binding.userFollowingCount.setText(
+                            WidgetPresenter.valueFormatter(following.getTotal())
+                    );
             } else if(isAlive())
                 requestFollowing();
         }
