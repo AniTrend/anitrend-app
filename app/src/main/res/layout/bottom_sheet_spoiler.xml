@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?cardColor">
+
+    <include layout="@layout/custom_sheet_toolbar" />
+
+    <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+        android:id="@+id/bottom_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/bottom_icon"
+        android:lineSpacingExtra="2dp"
+        android:padding="@dimen/xl_margin"
+        android:textSize="@dimen/content_text_size"
+        tools:text="@string/drawer_update_text"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

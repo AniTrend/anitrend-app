@@ -977,4 +977,5 @@
 
     <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
     <string name="pref_title_notification_work_around">Notification workaround</string>
+    <string name="title_bottom_sheet_spoiler">Spoiler</string>
 </resources>
