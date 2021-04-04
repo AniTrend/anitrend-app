@@ -1,6 +1,7 @@
 package com.mxt.anitrend.data
 
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.anilist.User
@@ -11,8 +12,6 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.base.VersionBase
 import io.objectbox.Box
 import io.objectbox.BoxStore
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.util.*
 
 /**
@@ -20,9 +19,7 @@ import java.util.*
  * Database helper class
  */
 
-class DatabaseHelper : BoxQuery, KoinComponent {
-
-    private val boxStore by inject<BoxStore>()
+class DatabaseHelper : BoxQuery {
 
     /**
      * Gets the object box from a requested class type.
@@ -32,7 +29,7 @@ class DatabaseHelper : BoxQuery, KoinComponent {
      * @return Box of type class requested
      */
     override fun <S> getBoxStore(classType: Class<S>): Box<S> =
-            boxStore.boxFor(classType)
+            koinOf<BoxStore>().boxFor(classType)
 
     /**
      * Used when the application is logging out a user preferably

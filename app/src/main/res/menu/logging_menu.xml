@@ -10,6 +10,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_clear_log"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_delete_sweep_grey_600_24dp"
+        android:title="@string/Delete"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_share_log"
         android:orderInCategory="101"
         android:icon="@drawable/ic_share_grey_600_24dp"

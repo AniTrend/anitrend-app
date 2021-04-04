@@ -3,9 +3,9 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import androidx.work.*
-import com.mxt.anitrend.service.ClearNotificationService
+import com.mxt.anitrend.worker.ClearNotificationWorker
 
-import com.mxt.anitrend.service.JobDispatcherService
+import com.mxt.anitrend.worker.NotificationWorker
 
 import java.util.concurrent.TimeUnit
 
@@ -15,10 +15,7 @@ import java.util.concurrent.TimeUnit
  *
  * @param context any valid application context
  */
-class JobSchedulerUtil(
-    private val context: Context,
-    private val settings: Settings
-) {
+class JobSchedulerUtil(private val settings: Settings) {
 
     private fun getConstraints() =
         Constraints.Builder()
@@ -29,21 +26,20 @@ class JobSchedulerUtil(
     /**
      * Schedules a new job service or replaces the existing job if one exists.
      */
-    fun scheduleJob() {
+    fun scheduleJob(context: Context) {
         if (settings.isAuthenticated && settings.isNotificationEnabled) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(
-                JobDispatcherService::class.java,
+                NotificationWorker::class.java,
                 settings.syncTime.toLong(),
                 TimeUnit.MINUTES
+            ).setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                5,
+                TimeUnit.MINUTES
             )
-                    .setBackoffCriteria(
-                        BackoffPolicy.EXPONENTIAL,
-                        5,
-                        TimeUnit.MINUTES
-                    )
-                    .addTag(KeyUtil.WorkNotificationTag)
-                    .setConstraints(getConstraints())
-                    .build()
+                .addTag(KeyUtil.WorkNotificationTag)
+                .setConstraints(getConstraints())
+                .build()
 
             WorkManager.getInstance(context)
                     .enqueueUniquePeriodicWork(
@@ -54,10 +50,10 @@ class JobSchedulerUtil(
         }
     }
 
-    fun scheduleClearNotificationJob() {
+    fun scheduleClearNotificationJob(context: Context) {
         if (settings.isAuthenticated && settings.clearNotificationOnDismiss) {
             val workRequest = OneTimeWorkRequest.Builder(
-                ClearNotificationService::class.java
+                ClearNotificationWorker::class.java
             )
                 .setBackoffCriteria(
                     BackoffPolicy.EXPONENTIAL,
@@ -80,7 +76,7 @@ class JobSchedulerUtil(
     /**
      * Cancels any scheduled jobs.
      */
-    fun cancelJob() {
+    fun cancelJob(context: Context) {
         WorkManager.getInstance(context)
             .cancelUniqueWork(
                 KeyUtil.WorkNotificationId

@@ -75,15 +75,21 @@ object CompatUtil {
         return cache
     }
 
-    fun imagePreview(activity: FragmentActivity?, view: View, imageUri: String?, errorMessage: Int) {
-        if (!imageUri.isNullOrBlank()) {
-            val intent = Intent(activity, ImagePreviewActivity::class.java)
+    fun imagePreview(view: View, imageUri: String) {
+        if (imageUri.isNotBlank()) {
+            val context = view.context
+            val intent = Intent(context, ImagePreviewActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(KeyUtil.arg_model, imageUri)
-            startSharedImageTransition(activity, view, intent, R.string.transition_image_preview)
-        } else {
-            if (activity != null)
-                NotifyUtil.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
+            if (context is FragmentActivity)
+                startSharedImageTransition(context, view, intent, R.string.transition_image_preview)
+            else context.startActivity(intent)
         }
+    }
+
+    fun imagePreview(view: View, imageUri: String?, errorMessage: Int) {
+        if (!imageUri.isNullOrBlank()) imagePreview(view, imageUri)
+        else NotifyUtil.makeText(view.context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     /**

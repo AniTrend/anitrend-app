@@ -13,6 +13,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.databinding.*
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -30,7 +31,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
         @RecyclerViewType viewType: Int
     ): RecyclerViewHolder<MediaBase?> {
         if (isCompatType)
-            return MediaViewHolder(AdapterSeriesBinding.inflate(CompatUtil.getLayoutInflater(parent.context), parent, false))
+            return MediaViewHolder(AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false))
 
         if (viewType == KeyUtil.RECYCLER_TYPE_ANIME)
             return createAnimeViewHolder(parent)

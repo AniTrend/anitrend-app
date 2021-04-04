@@ -15,7 +15,6 @@ import retrofit2.Callback
  * Handles all service creation for Retrofit Endpoints on a background task,
  * which allows us to perform heavy operations such as token refreshing on demand
  */
-
 @Suppress("UNCHECKED_CAST")
 class RequestHandler<T>(
         private val param: Bundle,

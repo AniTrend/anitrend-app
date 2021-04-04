@@ -40,8 +40,9 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fragment implements View.OnClickListener, ActionModeListener,
-        SharedPreferences.OnSharedPreferenceChangeListener, CommonPresenter.AbstractPresenter<P>, Observer<VM>, ResponseCallback, ItemClickListener<M> {
+public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fragment implements
+        View.OnClickListener, ActionModeListener, SharedPreferences.OnSharedPreferenceChangeListener,
+        CommonPresenter.AbstractPresenter<P>, Observer<VM>, ResponseCallback, ItemClickListener<M> {
 
     protected boolean isFilterable, isPager, isMenuDisabled, isFeed, hasSubscriber;
 

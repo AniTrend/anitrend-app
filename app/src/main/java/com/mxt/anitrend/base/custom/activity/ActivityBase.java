@@ -56,8 +56,9 @@ import timber.log.Timber;
  * Activity base <M type of data model, P extends CommonPresenter>
  */
 
-public abstract class ActivityBase<M, P extends CommonPresenter> extends AppCompatActivity implements Observer<M>, CommonPresenter.AbstractPresenter<P>,
-        ResponseCallback, MaterialSearchView.SearchViewListener, MaterialSearchView.OnQueryTextListener {
+public abstract class ActivityBase<M, P extends CommonPresenter> extends AppCompatActivity implements
+        Observer<M>, CommonPresenter.AbstractPresenter<P>, ResponseCallback,
+        MaterialSearchView.SearchViewListener, MaterialSearchView.OnQueryTextListener {
 
     protected String TAG;
 
@@ -229,6 +230,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION) {
             for (int i = 0; i < permissions.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED)

@@ -1,61 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.nguyenhoanglam.progresslayout.ProgressLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:showIn="@layout/activity_logging"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView2"
-        android:layout_width="@dimen/series_image_xs"
-        android:layout_height="@dimen/series_image_xs"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_round_web" />
-
-    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-        android:id="@+id/application_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="112dp"
-        android:layout_marginEnd="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Version 1.1.0" />
-
-    <com.nguyenhoanglam.progresslayout.ProgressLayout
-        android:id="@+id/stateLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/application_version">
+        android:layout_height="match_parent">
 
-        <ScrollView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/series_image_xs"
+                android:layout_height="@dimen/series_image_xs"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/ic_launcher_round_web"
+                />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/application_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                tools:text="Version 1.1.0" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/report_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_margin="@dimen/xl_margin"
+                android:textIsSelectable="true"
                 tools:text="@string/about_page_description" />
 
-        </ScrollView>
-    </com.nguyenhoanglam.progresslayout.ProgressLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
+</com.nguyenhoanglam.progresslayout.ProgressLayout>

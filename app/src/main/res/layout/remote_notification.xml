@@ -62,7 +62,7 @@
             android:id="@+id/notification_img"
             android:layout_width="40dp"
             android:layout_height="60dp"
-            tools:src="@drawable/sample_img" />
+            tools:src="@sample/gintama" />
 
     </LinearLayout>
 

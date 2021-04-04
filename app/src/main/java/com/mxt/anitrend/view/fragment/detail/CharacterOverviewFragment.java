@@ -92,7 +92,7 @@ public class CharacterOverviewFragment extends FragmentBase<MediaCharacter, Base
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.character_img:
-                CompatUtil.INSTANCE.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_character_image);
+                CompatUtil.INSTANCE.imagePreview(view, model.getImage().getLarge(), R.string.image_preview_error_character_image);
                 break;
             default:
                 super.onClick(view);

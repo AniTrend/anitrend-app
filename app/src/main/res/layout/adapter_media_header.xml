@@ -30,7 +30,7 @@
                 android:id="@+id/series_image"
                 android:layout_width="@dimen/avatar_size_xl"
                 android:layout_height="wrap_content"
-                tools:src="@drawable/sample_img"
+                tools:src="@sample/gintama"
                 app:imageUrl="@{model.coverImage}"/>
 
             <androidx.legacy.widget.Space

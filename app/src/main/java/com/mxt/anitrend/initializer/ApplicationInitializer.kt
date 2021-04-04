@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.startup.Initializer
 import com.google.android.gms.security.ProviderInstaller
-import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.initializer.logger.TimberInitializer
 import org.greenrobot.eventbus.EventBus
@@ -20,7 +18,6 @@ class ApplicationInitializer : Initializer<Unit> {
      * @param context The application context.
      */
     override fun create(context: Context) {
-        FirebaseApp.initializeApp(context)
         runCatching {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 val installerListener = object : ProviderInstaller.ProviderInstallListener {

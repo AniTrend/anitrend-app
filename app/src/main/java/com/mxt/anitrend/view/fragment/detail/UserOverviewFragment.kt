@@ -83,7 +83,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         model?.apply {
             binding.model = this
             binding.stateLayout.showContent()
-            binding.widgetStatus.setTextData(about)
+            //binding.widgetStatus.setTextData(about)
 
             binding.userFollowStateWidget.setUserModel(model)
             binding.userAboutPanelWidget.setFragmentActivity(activity)
@@ -97,7 +97,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      */
     override fun makeRequest() {
         val queryContainer = GraphUtil.getDefaultQuery(false)
-        if (!userName.isBlank())
+        if (userName.isNotBlank())
             queryContainer.putVariable(KeyUtil.arg_userName, userName)
         if (userId > 0)
             queryContainer.putVariable(KeyUtil.arg_id, userId)
@@ -178,7 +178,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
     @OnClick(R.id.user_avatar, R.id.user_stats_container)
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.user_avatar -> CompatUtil.imagePreview(activity, view, model?.avatar?.large, R.string.image_preview_error_user_avatar)
+            R.id.user_avatar -> CompatUtil.imagePreview(view, model?.avatar?.large, R.string.image_preview_error_user_avatar)
             R.id.user_stats_container -> {
                 val ringList = generateStatsData()
                 if (ringList.size > 1) {

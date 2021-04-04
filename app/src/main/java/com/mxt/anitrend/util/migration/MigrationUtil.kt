@@ -1,5 +1,6 @@
 package com.mxt.anitrend.util.migration
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.util.Settings
@@ -9,7 +10,8 @@ import org.koin.core.component.inject
 import timber.log.Timber
 
 class MigrationUtil private constructor(
-        private val migrations: List<Migration>
+    private val context: Context,
+    private val migrations: List<Migration>
 ) : IMigrationUtil, KoinComponent {
 
     private val settings by inject<Settings>()
@@ -38,21 +40,20 @@ class MigrationUtil private constructor(
      */
     override fun applyMigration(): Boolean {
         if (settings.isUpdated) {
-            Timber.tag(TAG).d("Application has been updated: from ${settings.versionCode} - ${BuildConfig.VERSION_CODE}, checking for migration scripts")
+            Timber.d("Application has been updated: from ${settings.versionCode} - ${BuildConfig.VERSION_CODE}, checking for migration scripts")
             val strategies= getMigrationStrategies()
             if (strategies.isNotEmpty())
                 return try {
                     strategies.forEach { strategy ->
-                        strategy.applyMigration(settings)
+                        strategy.applyMigration(context, settings)
                     }
                     true
                 } catch (ex: Exception) {
-                    Timber.tag(TAG).e(ex)
-                    ex.printStackTrace()
+                    Timber.e(ex)
                     false
                 }
         }
-        Timber.tag(TAG).d("No migrations to run for this version of the application")
+        Timber.d("No migrations to run for this version of the application")
         return true
     }
 
@@ -65,12 +66,8 @@ class MigrationUtil private constructor(
             return this
         }
 
-        fun build(): MigrationUtil {
-            return MigrationUtil(migrations)
+        fun build(context: Context): MigrationUtil {
+            return MigrationUtil(context, migrations)
         }
-    }
-
-    companion object {
-        private val TAG = MigrationUtil::class.java.simpleName
     }
 }

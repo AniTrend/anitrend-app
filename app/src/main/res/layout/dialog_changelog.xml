@@ -9,12 +9,12 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/series_image_lg"
+        android:layout_height="@dimen/series_image_md"
         app:srcCompat="@drawable/ic_emoji_announce"/>
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/spacing_md" />
+        android:layout_height="@dimen/spacing_xs" />
 
     <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
         android:layout_width="wrap_content"

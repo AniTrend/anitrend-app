@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util.graphql
 
 import com.annimon.stream.Stream
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -15,9 +16,7 @@ import org.koin.core.component.inject
  * Created by max on 2018/03/22.
  * Graph request helper class
  */
-object GraphUtil : KoinComponent {
-
-    private val settings by inject<Settings>()
+object GraphUtil {
 
     /**
      * Builder provider helper method, that provides a default GraphQL Query and Variable Builder
@@ -28,6 +27,7 @@ object GraphUtil : KoinComponent {
         if (includePaging)
             queryContainer.putVariable(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
 
+        val settings = koinOf<Settings>()
         if (!settings.displayAdultContent)
             queryContainer.putVariable(KeyUtil.arg_isAdult, false)
 

@@ -63,7 +63,7 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
         @Override
         public void onBindViewHolder(FeedReply model) {
             binding.setModel(model);
-            binding.widgetStatus.setModel(model);
+            //binding.widgetStatus.setModel(model);
             binding.widgetMention.setVisibility(View.GONE);
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY_REPLY, model.getId());

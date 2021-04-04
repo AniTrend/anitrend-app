@@ -33,7 +33,7 @@
             android:layout_width="@dimen/series_image_md"
             android:layout_height="wrap_content"
             app:imageUrl="@{model.coverImage}"
-            tools:src="@drawable/sample_img"/>
+            tools:src="@sample/gintama"/>
 
 
         <LinearLayout

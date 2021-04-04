@@ -1,5 +1,6 @@
 package com.mxt.anitrend.util.migration
 
+import android.content.Context
 import com.mxt.anitrend.util.Settings
 
 /**
@@ -12,7 +13,7 @@ abstract class Migration(
         val startVersion: Int,
         val endVersion: Int
 ) {
-    abstract fun applyMigration(settings: Settings)
+    abstract fun applyMigration(context: Context, settings: Settings)
 
     /**
      * Indicates whether some other object is "equal to" this one. Implementations must fulfil the following

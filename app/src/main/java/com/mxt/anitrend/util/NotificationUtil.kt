@@ -25,9 +25,9 @@ import kotlin.math.min
  */
 
 class NotificationUtil(
-        private val context: Context,
-        private val settings: Settings,
-        private val notificationManager: NotificationManager?
+    private val context: Context,
+    private val settings: Settings,
+    private val notificationManager: NotificationManager?
 ) {
 
     private var defaultNotificationId = 0x00000011

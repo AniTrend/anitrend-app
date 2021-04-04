@@ -33,7 +33,7 @@
                     android:onClickListener="@{onClickListener}"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.4"
-                    tools:src="@drawable/sample_banner" />
+                    tools:src="@sample/darling" />
 
                 <include layout="@layout/custom_toolbar_transparent" />
 

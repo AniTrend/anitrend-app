@@ -1,27 +1,21 @@
 __Anitrend v2.0 Coming Soon [W.I.P]__ All __v1.x.x__ updates will focus on major bug fixes as all resources are being moved to __v2.0__
 
-__N.B__ v2.0 will be dropping support for Jellybean - Kitkat, due to missing or disabled _(TLS v1.2)_
-which can result in authentication errors [read more](https://github.com/square/okhttp/issues/2372)
+Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -> **Extras** -> **About** -> **Frequently Asked Questions**
 
-**FAQ** page has been updated. Goto **Options** -> **Extras** -> **About** -> **Frequently Asked Questions**
+### Enhancements
+- Migrate to v2.0's markdown rendering, includes spoiler support and inline images, e.t.c (keep in mind this is an experimental feature which will be finalized in v2.0)
+- Rework application logger, logs application crashes and exports without any issues
 
-#### Enhancements
-- Add new list styles for anime and manga cards, see option in settings (Thanks Mittens)
+### Bug Fixes
+- April fools media removed causes crashes in notifications (this was an edge case)
+- Notification workaround option has been deprecated, fixed some notification edge cased
 
-#### Bug Fixes
-- Fixed the followers counter being updated instead of the followers counter when (un)following someone (Thanks Mittens)
-- Fixed clicking on mentioned @username showing mixed feed in profile (Thanks Mittens)
+### Special Thanks
+> _Translators (minna arigato) & all of you lovely weebs <3_
 
-#### Current Issues
-- Application logs are officially broken in **v1.5.x**
-- Sometimes image slide count doesn't change when you slowly scroll horizontally in feeds
+#### Awesome Supporters: __[join us](https://www.patreon.com/wax911)__
+> @artemisthemp @Bas @barbas @kdy @Golumpa @sirenondine @SilverFS @TamikoGotti @Trivernis @Reddragon7
 
-#### Special Thanks
-_Translators (minna arigato) & all of you lovely weebs <3_
-
-__Admins, Devs & Cutie Pies:__
-_Sir Mittens, huh, yui, Moka, Flare, Silver, Mrspits4ever, SilverFS, Zephyr, Oni-chan slayer_
-
-__Awesome Donators:__
-_Bas, Golumpa, artemisthemp, trivernis, keiggard, barbas, SilverFS, Zephyr, Oni-chan slayer_
+#### Admins, Devs & Cutie Pies: __[join us on discord](https://discord.gg/2wzTqnF)__
+> @YoussefHabri @Taichikuji @Mokacchi @Flarenyan @SilverFullbuster @mrspits4ever @SilverFS @Swap @Reddragon7 @flacks
 

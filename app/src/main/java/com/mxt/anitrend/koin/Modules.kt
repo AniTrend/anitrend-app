@@ -2,9 +2,7 @@ package com.mxt.anitrend.koin
 
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.text.util.Linkify
-import android.util.Log
 import co.anitrend.support.markdown.center.CenterPlugin
 import co.anitrend.support.markdown.core.CorePlugin
 import co.anitrend.support.markdown.ephasis.EmphasisPlugin
@@ -17,9 +15,6 @@ import co.anitrend.support.markdown.spoiler.SpoilerPlugin
 import co.anitrend.support.markdown.webm.WebMPlugin
 import co.anitrend.support.markdown.youtube.YouTubePlugin
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.target.Target
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
@@ -27,6 +22,9 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
+import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
+import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -47,10 +45,11 @@ import io.github.wax911.library.logger.contract.ILogger
 import io.github.wax911.library.logger.core.AbstractLogger
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
+import io.noties.markwon.editor.handler.EmphasisEditHandler
+import io.noties.markwon.editor.handler.StrongEmphasisEditHandler
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.noties.markwon.html.HtmlPlugin
-import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 import org.koin.android.ext.koin.androidContext
@@ -103,8 +102,8 @@ private val coreModule = module {
 }
 
 private val widgetModule = module {
-    single {
-        val context = androidContext()
+    single { (context: Context) ->
+        val requestManager = Glide.with(context)
         Markwon.builder(androidContext())
             .usePlugin(HtmlPlugin.create())
             .usePlugin(CorePlugin.create())
@@ -126,27 +125,23 @@ private val widgetModule = module {
             .usePlugin(StrikethroughPlugin.create())
             .usePlugin(TaskListPlugin.create(context))
             .usePlugin(ItalicsPlugin.create())
-            .usePlugin(GlideImagesPlugin.create(
-                object : GlideImagesPlugin.GlideStore {
-                    override fun cancel(target: Target<*>) {
-                        Glide.with(androidContext()).clear(target)
-                    }
-
-                    override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
-                        return Glide.with(androidContext())
-                            .load(drawable.destination)
-                            .transform(
-                                RoundedCorners(
-                                    context.resources
-                                        .getDimensionPixelSize(R.dimen.md_margin)
-                                )
-                            )
-                    }
-                }
-            )).build()
+            .usePlugin(
+                GlideImagesPlugin.create(
+                    GlideImagePlugin.create(
+                        requestManager,
+                        context.resources
+                    )
+                )
+            )
+            .usePlugin(ImageConfigurationPlugin.create(context.resources))
+            .usePlugin(TextConfigurationPlugin.create())
+            .build()
     }
     single {
-        MarkwonEditor.create(get())
+        MarkwonEditor.builder(get())
+            .useEditHandler(EmphasisEditHandler())
+            .useEditHandler(StrongEmphasisEditHandler())
+            .build()
     }
 }
 
@@ -224,7 +219,8 @@ private val networkModule = module {
                             ILogger.Level.INFO -> Timber.tag(tag).i(throwable, message)
                             ILogger.Level.WARNING -> Timber.tag(tag).w(throwable, message)
                             ILogger.Level.ERROR -> Timber.e(throwable, message)
-                            ILogger.Level.NONE -> { }
+                            ILogger.Level.NONE -> {
+                            }
                         }
                     }
 

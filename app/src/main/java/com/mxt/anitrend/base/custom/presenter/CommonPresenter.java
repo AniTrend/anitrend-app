@@ -56,8 +56,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
     @Override
     public void onPause(SharedPreferences.OnSharedPreferenceChangeListener changeListener) {
         if(changeListener != null)
-            getSettings().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener(changeListener);
+            getSettings().unregisterOnSharedPreferenceChangeListener(changeListener);
     }
 
     /**
@@ -66,8 +65,7 @@ public abstract class CommonPresenter extends RecyclerScrollListener implements 
     @Override
     public void onResume(SharedPreferences.OnSharedPreferenceChangeListener changeListener) {
         if(changeListener != null)
-            getSettings().getSharedPreferences()
-                    .registerOnSharedPreferenceChangeListener(changeListener);
+            getSettings().registerOnSharedPreferenceChangeListener(changeListener);
     }
 
     /**

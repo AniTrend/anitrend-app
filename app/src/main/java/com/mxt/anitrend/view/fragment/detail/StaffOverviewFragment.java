@@ -93,7 +93,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.staff_img:
-                CompatUtil.INSTANCE.imagePreview(getActivity(), view, model.getImage().getLarge(), R.string.image_preview_error_staff_image);
+                CompatUtil.INSTANCE.imagePreview(view, model.getImage().getLarge(), R.string.image_preview_error_staff_image);
                 break;
             default:
                 super.onClick(view);

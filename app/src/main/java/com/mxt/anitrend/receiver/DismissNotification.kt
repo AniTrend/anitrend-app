@@ -3,20 +3,17 @@ package com.mxt.anitrend.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class DismissNotification : BroadcastReceiver(), KoinComponent {
-
-    private val scheduler by inject<JobSchedulerUtil>()
-
-    private val settings by inject<Settings>()
+class DismissNotification : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
+        val settings = koinOf<Settings>()
         if (settings.clearNotificationOnDismiss) {
-            scheduler.scheduleClearNotificationJob()
+            val scheduler = koinOf<JobSchedulerUtil>()
+            scheduler.scheduleClearNotificationJob(context)
         }
     }
 }

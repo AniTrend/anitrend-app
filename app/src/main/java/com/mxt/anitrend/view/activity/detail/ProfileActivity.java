@@ -182,7 +182,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_banner:
-                CompatUtil.INSTANCE.imagePreview(this, view, model.getBannerImage(), R.string.image_preview_error_profile_banner);
+                CompatUtil.INSTANCE.imagePreview(view, model.getBannerImage(), R.string.image_preview_error_profile_banner);
                 break;
         }
     }
