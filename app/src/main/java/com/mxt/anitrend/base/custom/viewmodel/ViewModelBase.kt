@@ -23,7 +23,7 @@ import kotlin.coroutines.CoroutineContext
 
 class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
-    val model = MutableLiveData<T>()
+    val model = MutableLiveData<T?>()
 
     var state: ResponseCallback? = null
 
