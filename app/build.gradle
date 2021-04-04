@@ -1,4 +1,4 @@
-import com.mxt.anitrend.buildSrc.Libraries
+import com.mxt.anitrend.buildsrc.Libraries
 import com.mxt.anitrend.buildsrc.common.Versions
 
 plugins {
@@ -169,14 +169,14 @@ dependencies {
     implementation(Libraries.Square.Retrofit.retrofit)
     implementation(Libraries.Square.Retrofit.gsonConverter)
     implementation(Libraries.Square.Retrofit.xmlConverter) {
-        exclude group: 'xpp3', module: 'xpp3'
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'stax', module: 'stax'
+        exclude(group: "xpp3", module: "xpp3")
+        exclude(group: "stax", module: "stax-api")
+        exclude(group: "stax", module: "stax")
     }
 
     /** Butter Knife Libraries */
-    implementation "com.jakewharton:butterknife:${Versions.butterKnife}"
-    kapt "com.jakewharton:butterknife-compiler:${Versions.butterKnife}"
+    implementation("com.jakewharton:butterknife:${Versions.butterKnife}")
+    kapt("com.jakewharton:butterknife-compiler:${Versions.butterKnife}")
 
     /** Rich Text Markdown Parser */
     implementation(Libraries.Markwon.core)

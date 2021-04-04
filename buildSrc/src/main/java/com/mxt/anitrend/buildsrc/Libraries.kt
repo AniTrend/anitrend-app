@@ -1,4 +1,4 @@
-package com.mxt.anitrend.buildSrc
+package com.mxt.anitrend.buildsrc
 
 import com.mxt.anitrend.buildsrc.common.Versions
 
@@ -27,7 +27,7 @@ object Libraries {
 
         object Tools {
             private const val version = "4.1.3"
-            const val buildGradle = "com.android.tools.build:gradle:${version}"
+            const val buildGradle = "com.android.tools.build:gradle:$version"
         }
     }
 
@@ -63,8 +63,8 @@ object Libraries {
 
             object Animation {
                 private const val version = "1.0.0-alpha02"
-                const val animation = "androidx.core:core-animation:${version}"
-                const val animationTest = "androidx.core:core-animation-testing:${version}"
+                const val animation = "androidx.core:core-animation:$version"
+                const val animationTest = "androidx.core:core-animation-testing:$version"
             }
         }
 
@@ -172,12 +172,12 @@ object Libraries {
 
         object Markdown {
 			private const val version = "4b669387c7"
-            const val markdown = "com.github.anitrend:support-markdown:${version}"
+            const val markdown = "com.github.anitrend:support-markdown:$version"
         }
 
         object Retrofit {
             private const val version = "0.11.0-beta01"
-            const val graphQL = "com.github.anitrend:retrofit-graphql:${version}"
+            const val graphQL = "com.github.anitrend:retrofit-graphql:$version"
         }
     }
 
