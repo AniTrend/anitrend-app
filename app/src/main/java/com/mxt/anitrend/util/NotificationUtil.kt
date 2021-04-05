@@ -91,15 +91,15 @@ class NotificationUtil(
                 }
                 KeyUtil.AIRING -> {
                     builder.bold {
-                        builder.append(notification.media.title.userPreferred)
+                        builder.append(notification.media?.title?.userPreferred)
                     }
                     builder.append(": ")
                     builder.append(context.getString(R.string.notification_episode,
-                        notification.episode.toString(), notification.media.title.userPreferred))
+                        notification.episode.toString(), notification.media?.title?.userPreferred))
                 }
                 KeyUtil.RELATED_MEDIA_ADDITION -> {
                     builder.bold {
-                        builder.append(notification.media.title.userPreferred)
+                        builder.append(notification.media?.title?.userPreferred)
                     }
                     builder.append(": ")
                     builder.append(notification.context)
