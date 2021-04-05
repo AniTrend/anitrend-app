@@ -8,7 +8,8 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 ### Bug Fixes
 - April fools media removed causes crashes in notifications (this was an edge case)
-- Notification workaround option has been deprecated, fixed some notification edge cased
+- Notification workaround option has been deprecated, fixed some notification edge cases
+- Crash when opening activities from system notifications
 
 ### Special Thanks
 > _Translators (minna arigato) & all of you lovely weebs <3_
