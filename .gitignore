@@ -133,10 +133,4 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/androidstudio
 
-# Credentials File
-secrets.properties
-
-# Google services local configuration
-app/google-services.json
-
 .directory

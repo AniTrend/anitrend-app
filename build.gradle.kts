@@ -1,4 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
+plugins {
+    id("com.github.ben-manes.versions")
+}
+
 buildscript {
     repositories {
         google()
@@ -33,30 +39,25 @@ tasks {
     }
 }
 
-tasks.register("generateVersions") {
-    doLast {
-        val app = subprojects.firstOrNull { it.name == "app" }
-        if (app != null) {
-            println("Generate versions for ${app.name} -> ${app.projectDir}")
-            val versionMeta = File(app.projectDir, ".meta/version.json")
-            if (!versionMeta.exists()) {
-                println("Creating versions meta file in ${versionMeta.absolutePath}")
-                versionMeta.mkdirs()
-            }
-            println("Writing version information to ${versionMeta.absolutePath}")
-            java.io.FileWriter(versionMeta).use { writer ->
-                writer.write(
-                    """
-                        {
-                            "code": ${com.mxt.anitrend.buildsrc.common.Versions.versionCode},
-                            "migration": false,
-                            "minSdk": ${com.mxt.anitrend.buildsrc.common.Versions.minSdk},
-                            "releaseNotes": "",
-                            "version": "${com.mxt.anitrend.buildsrc.common.Versions.versionName}",
-                            "appId": "com.mxt.anitrend"
-                        }
-                    """.trimIndent()
-                )
+tasks.named(
+    "dependencyUpdates",
+    DependencyUpdatesTask::class.java
+).configure {
+    checkForGradleUpdate = false
+    outputFormatter = "json"
+    outputDir = "build/dependencyUpdates"
+    reportfileName = "report"
+    resolutionStrategy {
+        componentSelection {
+            all {
+                val reject = listOf("preview", "alpha", "beta", "m")
+                    .map { qualifier ->
+                        val pattern = "(?i).*[.-]$qualifier[.\\d-]*"
+                        Regex(pattern, RegexOption.IGNORE_CASE)
+                    }
+                    .any { it.matches(candidate.version) }
+                if (reject)
+                    reject("Preview releases not wanted")
             }
         }
     }
