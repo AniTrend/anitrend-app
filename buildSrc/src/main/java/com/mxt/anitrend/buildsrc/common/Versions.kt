@@ -5,7 +5,7 @@ object Versions {
     private const val major = 1
     private const val minor = 8
     private const val patch = 0
-    private const val candidate = 2
+    private const val candidate = 3
 
     const val compileSdk = 30
     const val targetSdk = 30
@@ -39,9 +39,7 @@ object Versions {
 
     const val butterKnife = "10.2.3"
     const val multidex = "2.0.1"
-    const val hemcrest = "2.2"
     const val materialDialogs = "0.9.6.0"
-    const val gson = "2.8.5"
     const val tapTarget = "3.1.0"
     const val jiaoziVideoPlayer = "7.6.0"
     const val photoView = "2.3.0"

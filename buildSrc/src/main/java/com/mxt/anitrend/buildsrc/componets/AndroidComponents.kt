@@ -31,6 +31,7 @@ import org.gradle.kotlin.dsl.exclude
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
+import java.io.FileWriter
 import java.util.*
 
 private fun Properties.applyToBuildConfigForBuild(buildType: BuildType) {
@@ -237,7 +238,7 @@ internal fun Project.applyAndroidConfiguration() {
             versionMeta.mkdirs()
         }
         println("Writing version information to ${versionMeta.absolutePath}")
-        java.io.FileWriter(versionMeta).use { writer ->
+        FileWriter(versionMeta).use { writer ->
             writer.write(
                 """
                     {

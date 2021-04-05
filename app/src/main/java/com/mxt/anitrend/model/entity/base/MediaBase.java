@@ -113,6 +113,7 @@ public class MediaBase extends RecyclerItem implements Parcelable {
         return id;
     }
 
+    @Nullable
     public MediaTitle getTitle() {
         return title;
     }

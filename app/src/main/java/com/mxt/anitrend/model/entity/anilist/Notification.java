@@ -2,6 +2,8 @@ package com.mxt.anitrend.model.entity.anilist;
 
 import android.os.Parcel;
 
+import androidx.annotation.Nullable;
+
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.NotificationBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
@@ -63,6 +65,7 @@ public class Notification extends NotificationBase {
         return contexts;
     }
 
+    @Nullable
     public MediaBase getMedia() {
         return media;
     }

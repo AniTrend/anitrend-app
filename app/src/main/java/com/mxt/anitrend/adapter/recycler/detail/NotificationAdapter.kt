@@ -152,9 +152,9 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 }
                 KeyUtil.AIRING -> {
                     binding.notificationSubject.setText(R.string.notification_series)
-                    binding.notificationHeader.text = model.media.title.userPreferred
+                    binding.notificationHeader.text = model.media?.title?.userPreferred
                     binding.notificationContent.text = context.getString(R.string.notification_episode,
-                            model.episode.toString(), model.media.title.userPreferred)
+                            model.episode.toString(), model.media?.title?.userPreferred)
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     binding.notificationSubject.setText(R.string.notification_user_like_activity)
@@ -183,7 +183,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 }
                 KeyUtil.RELATED_MEDIA_ADDITION -> {
                     binding.notificationSubject.setText(R.string.notification_media_added)
-                    binding.notificationHeader.text = model.media.title.userPreferred
+                    binding.notificationHeader.text = model.media?.title?.userPreferred
                     binding.notificationContent.text = model.context
                 }
             }
