@@ -101,7 +101,7 @@ private fun BaseAppModuleExtension.configureBuildFlavours() {
             val versionCode = defaultConfig.versionCode
             val versionName = defaultConfig.versionName
             val currentName = "app-${output.name}.apk"
-            val prefix = "anitrend_v${versionName}_rc_${versionCode}"
+            val prefix = "anitrend_v${versionName}_${versionCode}"
             val outputFileName = when (output.name) {
                 "release" -> {
                     val abi = output.getFilter("ABI") ?: "universal"
