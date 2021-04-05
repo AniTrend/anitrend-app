@@ -56,13 +56,13 @@ cache:
 
 before_script:
     - mv app/.travic-ci/google-services.json app/google-services.json
-    - mv app/.travic-ci/secrets ./secrets.properties
+    - mv app/.travic-ci/secrets app/.config/secrets.properties
   
 script:
     - ./gradlew test
 
 before_install:
  - chmod +x gradlew
- - yes | sdkmanager "platforms;android-28"
+ - yes | sdkmanager "platforms;android-30"
  - yes | sdkmanager "build-tools;28.0.3"
 
