@@ -11,6 +11,9 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Notification workaround option has been deprecated, fixed some notification edge cases
 - Crash when opening activities from system notifications
 
+### Current Issues
+- Gifs may show artifacts sometimes with the new remaindering mode
+
 ### Special Thanks
 > _Translators (minna arigato) & all of you lovely weebs <3_
 
