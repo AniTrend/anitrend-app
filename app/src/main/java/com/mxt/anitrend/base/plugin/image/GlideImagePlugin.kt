@@ -1,22 +1,18 @@
 package com.mxt.anitrend.base.plugin.image
 
-import android.content.res.Resources
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.mxt.anitrend.R
 import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.glide.GlideImagesPlugin
 
 internal class GlideImagePlugin private constructor(
-    private val requestManager: RequestManager,
-    private val resources: Resources
+    private val requestManager: RequestManager
 ) : GlideImagesPlugin.GlideStore {
 
     private val requestListener = object : RequestListener<Drawable> {
@@ -43,16 +39,9 @@ internal class GlideImagePlugin private constructor(
     }
 
     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
-
-        val request = requestManager.asDrawable()
+        return requestManager.asDrawable()
             .addListener(requestListener)
             .load(drawable.destination)
-
-        return request.transform(
-            RoundedCorners(
-                resources.getDimensionPixelSize(R.dimen.md_margin)
-            )
-        )
     }
 
     override fun cancel(target: Target<*>) {
@@ -60,7 +49,7 @@ internal class GlideImagePlugin private constructor(
     }
 
     companion object {
-        fun create(requestManager: RequestManager, resources: Resources) =
-            GlideImagePlugin(requestManager, resources)
+        fun create(requestManager: RequestManager) =
+            GlideImagePlugin(requestManager)
     }
 }

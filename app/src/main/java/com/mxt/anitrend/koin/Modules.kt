@@ -104,7 +104,6 @@ private val coreModule = module {
 private val widgetModule = module {
     single {
         val context = androidContext()
-        val requestManager = Glide.with(context)
         Markwon.builder(androidContext())
             .usePlugin(HtmlPlugin.create())
             .usePlugin(CorePlugin.create())
@@ -129,8 +128,7 @@ private val widgetModule = module {
             .usePlugin(
                 GlideImagesPlugin.create(
                     GlideImagePlugin.create(
-                        requestManager,
-                        context.resources
+                        Glide.with(context)
                     )
                 )
             )
