@@ -18,9 +18,7 @@ import org.koin.core.parameter.parametersOf
 
 class RichMarkdownTextView : AppCompatTextView, CustomView, KoinComponent {
 
-    private val markwon by inject<Markwon>(
-        parameters = { parametersOf(context) }
-    )
+    private val markwon by inject<Markwon>()
 
     constructor(context: Context) :
             super(context) { onInit() }

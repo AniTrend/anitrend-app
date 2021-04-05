@@ -102,7 +102,8 @@ private val coreModule = module {
 }
 
 private val widgetModule = module {
-    single { (context: Context) ->
+    single {
+        val context = androidContext()
         val requestManager = Glide.with(context)
         Markwon.builder(androidContext())
             .usePlugin(HtmlPlugin.create())
