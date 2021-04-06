@@ -356,6 +356,14 @@ object Libraries {
         }
     }
 
+    object Korlibs {
+
+        object Klock {
+            private const val version = "2.0.7"
+            const val klock = "com.soywiz.korlibs.klock:klock-jvm:$version"
+        }
+    }
+
     object Markwon {
         private const val version = "4.6.2"
         const val core = "io.noties.markwon:core:$version"
