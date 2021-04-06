@@ -22,7 +22,7 @@ class App : MultiDexApplication() {
 
     private fun createUncaughtExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler(
-            UncaughtExceptionHandler(this)
+            UncaughtExceptionHandler()
         )
     }
 

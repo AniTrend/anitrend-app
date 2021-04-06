@@ -17,22 +17,19 @@
 
 package com.mxt.anitrend.crash.runtime
 
-import android.content.Context
 import com.mxt.anitrend.crash.ExceptionCrashHandler
 import com.mxt.anitrend.crash.contract.IExceptionCrashHandler
 
 /**
  * An uncaught exception handler for the application
  */
-internal class UncaughtExceptionHandler(
-    context: Context,
-) : Thread.UncaughtExceptionHandler {
+internal class UncaughtExceptionHandler : Thread.UncaughtExceptionHandler {
 
     private val originalHandler: Thread.UncaughtExceptionHandler? =
         Thread.getDefaultUncaughtExceptionHandler()
 
     private val exceptionHandler: IExceptionCrashHandler =
-        ExceptionCrashHandler(context, originalHandler)
+        ExceptionCrashHandler(originalHandler)
 
     /**
      * Method invoked when the given thread terminates due to the given uncaught exception.

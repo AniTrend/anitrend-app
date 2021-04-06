@@ -18,23 +18,17 @@
 package com.mxt.anitrend.crash
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
-import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.crash.contract.IExceptionCrashHandler
 import timber.log.Timber
 import kotlin.system.exitProcess
 
 internal class ExceptionCrashHandler(
-    private val context: Context,
     private val handler: Thread.UncaughtExceptionHandler?
 ) : IExceptionCrashHandler {
 
     private fun handleUncaughtCrashException(thread: Thread, throwable: Throwable) {
         Timber.e(throwable, thread.name)
-        if (BuildConfig.DEBUG) {
-            // TODO: might add an activity to show the crash or dump logs into a file
-        }
     }
 
     /**
