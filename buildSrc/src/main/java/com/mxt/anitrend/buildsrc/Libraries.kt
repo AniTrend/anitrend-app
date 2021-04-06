@@ -166,12 +166,12 @@ object Libraries {
     object AniTrend {
 
         object Emojify {
-            private const val version = "develop-SNAPSHOT"//"1.6.0-alpha01"
+            private const val version = "1.6.0-beta01"
             const val emojify = "com.github.anitrend:android-emojify:$version"
         }
 
         object Markdown {
-			private const val version = "4b669387c7"
+			private const val version = "0.12.0-alpha02"
             const val markdown = "com.github.anitrend:support-markdown:$version"
         }
 
