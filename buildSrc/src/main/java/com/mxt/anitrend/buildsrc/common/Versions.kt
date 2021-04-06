@@ -32,7 +32,7 @@ object Versions {
     const val timber = "4.7.1"
     const val treesSence = "1.0.4"
 
-    const val prettyTime = "5.0.0.Final"
+    const val prettyTime = "4.0.4.Final"
     const val scalingImageView = "3.10.0"
 
     const val betterLinkMovement = "2.2.0"
