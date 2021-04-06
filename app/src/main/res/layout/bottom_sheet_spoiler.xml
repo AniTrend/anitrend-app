@@ -9,14 +9,17 @@
 
     <include layout="@layout/custom_sheet_toolbar" />
 
-    <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-        android:id="@+id/bottom_text"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/bottom_icon"
-        android:lineSpacingExtra="2dp"
-        android:padding="@dimen/xl_margin"
-        android:textSize="@dimen/content_text_size"
-        tools:text="@string/drawer_update_text"/>
+        android:layout_height="match_parent">
+        <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+            android:id="@+id/bottom_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="2dp"
+            android:padding="@dimen/xl_margin"
+            android:textSize="@dimen/content_text_size"
+            tools:text="@string/drawer_update_text"/>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
