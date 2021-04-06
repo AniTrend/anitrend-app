@@ -12,6 +12,7 @@ import co.anitrend.support.markdown.image.ImagePlugin
 import co.anitrend.support.markdown.italics.ItalicsPlugin
 import co.anitrend.support.markdown.mention.MentionPlugin
 import co.anitrend.support.markdown.spoiler.SpoilerPlugin
+import co.anitrend.support.markdown.strike.StrikeThroughPlugin
 import co.anitrend.support.markdown.webm.WebMPlugin
 import co.anitrend.support.markdown.youtube.YouTubePlugin
 import com.bumptech.glide.Glide
@@ -115,13 +116,9 @@ private val widgetModule = module {
             .usePlugin(ImagePlugin.create())
             .usePlugin(WebMPlugin.create())
             .usePlugin(YouTubePlugin.create())
-            .usePlugin(LinkifyPlugin.create(Linkify.WEB_URLS))
-            .usePlugin(
-                SpoilerPlugin.create(
-                    context.getCompatColorAttr(R.attr.cardColor),
-                    context.getCompatColorAttr(R.attr.backgroundColor)
-                )
-            )
+            .usePlugin(LinkifyPlugin.create())
+            .usePlugin(SpoilerPlugin.create())
+            .usePlugin(StrikeThroughPlugin.create())
             .usePlugin(StrikethroughPlugin.create())
             .usePlugin(TaskListPlugin.create(context))
             .usePlugin(ItalicsPlugin.create())
