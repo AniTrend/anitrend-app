@@ -5,7 +5,7 @@ object Versions {
     private const val major = 1
     private const val minor = 8
     private const val patch = 0
-    private const val candidate = 3
+    private const val candidate = 4
 
     const val compileSdk = 30
     const val targetSdk = 30
