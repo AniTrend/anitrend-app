@@ -271,8 +271,8 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
                 boolean isFollowing = consumer.getChangeModel().isFollowing();
                 followers.setTotal(!isFollowing ? --total : ++total);
                 if(isAlive())
-                    binding.userFollowingCount.setText(
-                            WidgetPresenter.valueFormatter(following.getTotal())
+                    binding.userFollowersCount.setText(
+                            WidgetPresenter.valueFormatter(followers.getTotal())
                     );
             } else if(isAlive())
                 requestFollowing();
