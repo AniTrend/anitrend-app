@@ -25,13 +25,13 @@ object DownloaderService {
         val downloadLink = String.format(RepositoryModel.DOWNLOAD_LINK, versionBase.version, versionSuffix)
         val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
         val request = DownloadManager.Request(Uri.parse(downloadLink))
-        request.setTitle(String.format(Locale.getDefault(), "anitrend_v%s_rc_%d.apk", versionBase.version, versionBase.code))
+        request.setTitle(String.format(Locale.getDefault(), "anitrend_v%s_%d.apk", versionBase.version, versionBase.code))
 
         val ext = MimeTypeMap.getFileExtensionFromUrl(RepositoryModel.DOWNLOAD_LINK)
         request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext))
         request.setDescription(context?.getString(R.string.text_downloading_update))
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,
-                String.format(Locale.getDefault(), "anitrend_v%s_rc_%d.apk", versionBase.version, versionBase.code))
+                String.format(Locale.getDefault(), "anitrend_v%s_%d.apk", versionBase.version, versionBase.code))
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         downloadManager?.enqueue(request)
     }
