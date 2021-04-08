@@ -4,8 +4,8 @@ object Versions {
 
     private const val major = 1
     private const val minor = 8
-    private const val patch = 0
-    private const val candidate = 4
+    private const val patch = 1
+    private const val candidate = 0
 
     const val compileSdk = 30
     const val targetSdk = 30
@@ -24,7 +24,10 @@ object Versions {
      * Naming schema: X.Y.Z-variant##
      * > **X**(Major).**Y**(Minor).**Z**(Patch)
      */
-    const val versionName = "$major.$minor.$patch-rc$candidate"
+    val versionName = when {
+        candidate > 0 -> "$major.$minor.$patch-rc$candidate"
+        else -> "$major.$minor.$patch"
+    }
 
     const val mockk = "1.11.0"
     const val junit = "4.13.2"
