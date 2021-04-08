@@ -122,7 +122,8 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
         override fun onViewRecycled() {
             if (binding is AdapterAnimeBinding)
                 Glide.with(context).clear(binding.seriesImage)
-
+            else if (binding is AdapterAnimeCompactBinding)
+                Glide.with(context).clear(binding.seriesImage)
             binding.unbind()
         }
 
@@ -187,6 +188,8 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
          */
         override fun onViewRecycled() {
             if (binding is AdapterMangaBinding)
+                Glide.with(context).clear(binding.seriesImage)
+            else if (binding is AdapterMangaCompactBinding)
                 Glide.with(context).clear(binding.seriesImage)
 
             binding.unbind()

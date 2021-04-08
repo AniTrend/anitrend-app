@@ -133,6 +133,7 @@ class MediaListAdapter(context: Context?) :
                     binding.customRatingWidget.onViewRecycled()
                 }
                 is AdapterSeriesAiringCompactBinding -> {
+                    Glide.with(context).clear(binding.seriesImage)
                     binding.seriesEpisodes.onViewRecycled()
                     binding.customRatingWidget.onViewRecycled()
                 }

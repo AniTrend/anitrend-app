@@ -18,8 +18,7 @@
         app:cardPreventCornerOverlap="false"
         app:cardBackgroundColor="?cardColor"
         app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/lg_margin"
-        tools:layout_width="@dimen/series_image_lg">
+        app:cardCornerRadius="@dimen/lg_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,6 +32,13 @@
                 android:layout_height="match_parent"
                 app:seriesStatus="@{model}"
                 tools:background="@color/colorStateBlue"/>
+
+            <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                android:id="@+id/series_image"
+                android:layout_width="@dimen/avatar_size_lg"
+                android:layout_height="wrap_content"
+                tools:src="@sample/gintama"
+                app:imageUrl="@{model.coverImage}" />
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -50,7 +56,7 @@
 
                 <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/md_margin" />
+                    android:layout_height="@dimen/lg_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
                     android:layout_width="wrap_content"
