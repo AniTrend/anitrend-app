@@ -174,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/dialog_hint_enter_your_notes"
-                android:inputType="textCapSentences|textAutoComplete|textAutoCorrect"
+                android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect"
                 android:text="@{model.notes}"
                 android:textSize="@dimen/subtitle_text_size" />
 
