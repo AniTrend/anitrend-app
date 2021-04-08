@@ -103,6 +103,11 @@ internal fun Project.configureDependencies() {
     /** AniTrend */
     dependencies.implementation(Libraries.AniTrend.Emojify.emojify)
     dependencies.implementation(Libraries.AniTrend.Markdown.markdown)
+    dependencies.implementation(Libraries.Square.Retrofit.xmlConverter) {
+        exclude("xpp3", "xpp3")
+        exclude("stax", "stax-api")
+        exclude("stax", "stax")
+    }
     dependencies.implementation(Libraries.AniTrend.Retrofit.graphQL)
 
     /** Smart Tab Layout */

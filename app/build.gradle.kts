@@ -1,4 +1,3 @@
-import com.mxt.anitrend.buildsrc.Libraries
 import com.mxt.anitrend.buildsrc.common.Versions
 
 plugins {
@@ -6,12 +5,6 @@ plugins {
 }
 
 dependencies {
-    implementation(Libraries.Square.Retrofit.xmlConverter) {
-        exclude("xpp3", "xpp3")
-        exclude("stax", "stax-api")
-        exclude("stax", "stax")
-    }
-
     /** Butter Knife Libraries */
     implementation("com.jakewharton:butterknife:${Versions.butterKnife}")
     kapt("com.jakewharton:butterknife-compiler:${Versions.butterKnife}")

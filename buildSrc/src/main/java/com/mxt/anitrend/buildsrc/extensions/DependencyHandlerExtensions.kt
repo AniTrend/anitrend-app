@@ -17,8 +17,9 @@
 
 package com.mxt.anitrend.buildsrc.extensions
 
-import groovy.lang.Closure
+import org.gradle.api.artifacts.*
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.exclude
 
 private enum class DependencyType(val configurationName: String) {
     API("api"),
@@ -33,13 +34,81 @@ private enum class DependencyType(val configurationName: String) {
     ANDROID_TEST("androidTestImplementation")
 }
 
+
+/**
+ * Adds a dependency to the given configuration, and configures the dependency using the given expression.
+ *
+ * @param configuration The name of the configuration.
+ * @param dependency The dependency.
+ * @param dependencyConfiguration The expression to use to configure the dependency.
+ * @return The dependency.
+ */
+private inline fun <T : ModuleDependency> DependencyHandler.add(
+    configuration: String,
+    dependency: T,
+    dependencyConfiguration: T.() -> Unit
+): T = dependency.apply {
+    dependencyConfiguration()
+    add(configuration, this)
+}
+
+
+/**
+ * Adds a dependency to the given configuration, and configures the dependency using the given expression.
+ *
+ * @param configuration The name of the configuration.
+ * @param dependencyNotation The dependency notation.
+ * @param dependencyConfiguration The expression to use to configure the dependency.
+ * @return The dependency.
+ */
+private inline fun DependencyHandler.add(
+    configuration: String,
+    dependencyNotation: String,
+    dependencyConfiguration: ExternalModuleDependency.() -> Unit
+): Dependency = add(
+    configuration,
+    create(dependencyNotation) as ExternalModuleDependency,
+    dependencyConfiguration
+)
+
+
+/**
+ * Adds an exclude rule to exclude transitive dependencies of this dependency.
+ *
+ * Excluding a particular transitive dependency does not guarantee that it does not show up
+ * in the dependencies of a given configuration.
+ * For example, some other dependency, which does not have any exclude rules,
+ * might pull in exactly the same transitive dependency.
+ * To guarantee that the transitive dependency is excluded from the entire configuration
+ * please use per-configuration exclude rules: [Configuration.getExcludeRules].
+ * In fact, in majority of cases the actual intention of configuring per-dependency exclusions
+ * is really excluding a dependency from the entire configuration (or classpath).
+ *
+ * If your intention is to exclude a particular transitive dependency
+ * because you don't like the version it pulls in to the configuration
+ * then consider using the forced versions feature: [ResolutionStrategy.force].
+ *
+ * @param group the optional group identifying the dependencies to be excluded.
+ * @param module the optional module name identifying the dependencies to be excluded.
+ * @return this
+ *
+ * @see [ModuleDependency.exclude]
+ */
+@Suppress("UNCHECKED_CAST")
+fun <T : ModuleDependency> T.exclude(group: String? = null, module: String? = null): T =
+    exclude(mapOf("group" to group, "module" to module)) as T
+
 private fun DependencyHandler.addDependency(
     dependencyNotation: Any,
     dependencyType: DependencyType,
-    configureClosure: Closure<*>? = null
-) = when (configureClosure) {
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = when (dependencyConfiguration) {
     null -> add(dependencyType.configurationName, dependencyNotation)
-    else -> add(dependencyType.configurationName, dependencyNotation, configureClosure)
+    else -> add(
+        configuration = dependencyType.configurationName,
+        dependencyNotation = dependencyNotation.toString(),
+        dependencyConfiguration = dependencyConfiguration
+    )
 }
 
 /**
@@ -52,8 +121,8 @@ private fun DependencyHandler.addDependency(
  */
 internal fun DependencyHandler.kapt(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.KAPT, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.KAPT, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -65,8 +134,8 @@ internal fun DependencyHandler.kapt(
  */
 internal fun DependencyHandler.api(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.API, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.API, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -78,8 +147,8 @@ internal fun DependencyHandler.api(
  */
 internal fun DependencyHandler.compile(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.COMPILE, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.COMPILE, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -91,8 +160,8 @@ internal fun DependencyHandler.compile(
  */
 internal fun DependencyHandler.debug(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.DEBUG, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.DEBUG, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -104,8 +173,8 @@ internal fun DependencyHandler.debug(
  */
 internal fun DependencyHandler.implementation(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.IMPLEMENTATION, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.IMPLEMENTATION, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -117,8 +186,8 @@ internal fun DependencyHandler.implementation(
  */
 internal fun DependencyHandler.debugImplementation(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.DEBUG_IMPLEMENTATION, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.DEBUG_IMPLEMENTATION, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -130,8 +199,8 @@ internal fun DependencyHandler.debugImplementation(
  */
 internal fun DependencyHandler.releaseImplementation(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.RELEASE_IMPLEMENTATION, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.RELEASE_IMPLEMENTATION, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -143,8 +212,8 @@ internal fun DependencyHandler.releaseImplementation(
  */
 internal fun DependencyHandler.runtime(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.RUNTIME, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.RUNTIME, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -156,8 +225,8 @@ internal fun DependencyHandler.runtime(
  */
 internal fun DependencyHandler.testImplementation(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.TEST, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.TEST, dependencyConfiguration)
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
@@ -169,5 +238,5 @@ internal fun DependencyHandler.testImplementation(
  */
 internal fun DependencyHandler.androidTestImplementation(
     dependencyNotation: Any,
-    configureClosure: Closure<*>? = null
-) = addDependency(dependencyNotation, DependencyType.ANDROID_TEST, configureClosure)
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+) = addDependency(dependencyNotation, DependencyType.ANDROID_TEST, dependencyConfiguration)
