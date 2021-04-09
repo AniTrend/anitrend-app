@@ -6,12 +6,14 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Migrate to v2.0's markdown rendering, includes spoiler support and inline images, e.t.c (keep in mind this is an experimental feature which will be finalized in v2.0 see **Current Issues** below)
 - Rework application logger, logs application crashes and exports without any issues
 - Add images to list views (applies to both single list and dual compact styles)
+- Add multi-line text support to notes on list editor. Thanks @LuK1337
 - Apply start date to anime or manga when incremented by the __+1__ widget. Thanks @SilverFullbuster
 
 ### Bug Fixes
 - April fools media removed causes crashes in notifications (this was an edge case)
 - Notification workaround option has been deprecated, fixed some notification edge cases
 - Crash when opening activities from system notifications
+- Crashes at startup on some devices
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment

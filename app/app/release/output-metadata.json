@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 18100,
-      "versionName": "1.8.1",
-      "outputFile": "anitrend_v1.8.1_18100-app-release.apk"
+      "versionCode": 18200,
+      "versionName": "1.8.2",
+      "outputFile": "anitrend_v1.8.2_18200-app-release.apk"
     }
   ]
 }
