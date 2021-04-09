@@ -50,7 +50,6 @@ class SplashActivity : ActivityBase<VersionBase, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        presenter.checkGenresAndTags(this)
         presenter.checkValidAuth()
         makeRequest()
     }

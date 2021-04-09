@@ -4,8 +4,10 @@ package com.mxt.anitrend.util
 import android.content.Context
 import androidx.work.*
 import com.mxt.anitrend.worker.ClearNotificationWorker
+import com.mxt.anitrend.worker.GenreSyncWorker
 
 import com.mxt.anitrend.worker.NotificationWorker
+import com.mxt.anitrend.worker.TagSyncWorker
 
 import java.util.concurrent.TimeUnit
 
@@ -23,10 +25,44 @@ class JobSchedulerUtil(private val settings: Settings) {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
+    fun scheduleTagJob(context: Context) {
+        val periodicWorkRequest = PeriodicWorkRequest.Builder(
+            TagSyncWorker::class.java,
+            settings.syncTime.toLong() * 8,
+            TimeUnit.MINUTES
+        ).addTag(KeyUtil.WorkTagSyncId)
+            .setConstraints(getConstraints())
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniquePeriodicWork(
+                KeyUtil.WorkTagSyncId,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicWorkRequest
+            )
+    }
+
+    fun scheduleGenreJob(context: Context) {
+        val periodicWorkRequest = PeriodicWorkRequest.Builder(
+            GenreSyncWorker::class.java,
+            settings.syncTime.toLong() * 8,
+            TimeUnit.MINUTES
+        ).addTag(KeyUtil.WorkGenreSyncId)
+            .setConstraints(getConstraints())
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniquePeriodicWork(
+                KeyUtil.WorkGenreSyncId,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicWorkRequest
+            )
+    }
+
     /**
      * Schedules a new job service or replaces the existing job if one exists.
      */
-    fun scheduleJob(context: Context) {
+    fun scheduleNotificationJob(context: Context) {
         if (settings.isAuthenticated && settings.isNotificationEnabled) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(
                 NotificationWorker::class.java,
@@ -76,10 +112,30 @@ class JobSchedulerUtil(private val settings: Settings) {
     /**
      * Cancels any scheduled jobs.
      */
-    fun cancelJob(context: Context) {
+    fun cancelNotificationJob(context: Context) {
         WorkManager.getInstance(context)
             .cancelUniqueWork(
                 KeyUtil.WorkNotificationId
+            )
+    }
+
+    /**
+     * Cancels any scheduled jobs.
+     */
+    fun cancelTagJob(context: Context) {
+        WorkManager.getInstance(context)
+            .cancelUniqueWork(
+                KeyUtil.WorkTagSyncId
+            )
+    }
+
+    /**
+     * Cancels any scheduled jobs.
+     */
+    fun cancelGenreJob(context: Context) {
+        WorkManager.getInstance(context)
+            .cancelUniqueWork(
+                KeyUtil.WorkGenreSyncId
             )
     }
 }

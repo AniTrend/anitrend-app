@@ -37,9 +37,7 @@ import com.mxt.anitrend.util.ConfigurationUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.worker.AuthenticatorWorker
-import com.mxt.anitrend.worker.ClearNotificationWorker
-import com.mxt.anitrend.worker.NotificationWorker
+import com.mxt.anitrend.worker.*
 import io.github.wax911.library.annotation.processor.GraphProcessor
 import io.github.wax911.library.annotation.processor.plugin.AssetManagerDiscoveryPlugin
 import io.github.wax911.library.logger.contract.ILogger
@@ -161,6 +159,22 @@ private val workerModule = module {
         ClearNotificationWorker(
             context = androidContext(),
             workerParams = scope.get()
+        )
+    }
+    worker { scope ->
+        val context = androidContext()
+        GenreSyncWorker(
+            context = context,
+            workerParams = scope.get(),
+            presenter = WidgetPresenter(context)
+        )
+    }
+    worker { scope ->
+        val context = androidContext()
+        TagSyncWorker(
+            context = context,
+            workerParams = scope.get(),
+            presenter = WidgetPresenter(context)
         )
     }
 }

@@ -84,7 +84,7 @@ object WebFactory {
         if (mRetrofit == null) {
             val httpClient = createHttpClient(
                 koinOf<AuthInterceptor>(),
-                HttpLoggingInterceptor.Level.HEADERS
+                HttpLoggingInterceptor.Level.BODY
             )
             mRetrofit = Retrofit.Builder().client(httpClient.build())
                 .addConverterFactory(koinOf<AniGraphConverter>())

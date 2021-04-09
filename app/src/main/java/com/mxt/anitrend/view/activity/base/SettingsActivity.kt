@@ -115,13 +115,20 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         applyConfiguredTheme()
                     }
                     getString(R.string.pref_key_sync_frequency) -> {
-                        scheduler.scheduleJob(applicationContext)
+                        scheduler.cancelNotificationJob(applicationContext)
+                        scheduler.cancelTagJob(applicationContext)
+                        scheduler.cancelGenreJob(applicationContext)
+
+                        scheduler.scheduleNotificationJob(applicationContext)
+                        scheduler.scheduleGenreJob(applicationContext)
+                        scheduler.scheduleTagJob(applicationContext)
+
                     }
                     getString(R.string.pref_key_new_message_notifications) -> {
                         if (settings.isNotificationEnabled)
-                            scheduler.scheduleJob(applicationContext)
+                            scheduler.scheduleNotificationJob(applicationContext)
                         else
-                            scheduler.cancelJob(applicationContext)
+                            scheduler.cancelNotificationJob(applicationContext)
                     }
                     else -> Timber.i("$key not registered in this sharedPreferenceChange listener")
                 }

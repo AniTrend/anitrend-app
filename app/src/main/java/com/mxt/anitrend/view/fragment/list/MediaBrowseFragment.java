@@ -133,7 +133,6 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     List<Genre> genres = getPresenter().getDatabase().getGenreCollection();
                     if(CompatUtil.INSTANCE.isEmpty(genres)) {
                         NotifyUtil.INSTANCE.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
-                        getPresenter().checkGenresAndTags(getActivity());
                     } else {
                         Map<Integer, String> genresIndexMap = getPresenter()
                                 .getSettings().getSelectedGenres();
@@ -164,7 +163,6 @@ public class MediaBrowseFragment extends FragmentBaseList<MediaBase, PageContain
                     List<MediaTag> tagList = getPresenter().getDatabase().getMediaTags();
                     if(CompatUtil.INSTANCE.isEmpty(tagList)) {
                         NotifyUtil.INSTANCE.makeText(getContext(), R.string.app_splash_loading, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
-                        getPresenter().checkGenresAndTags(getActivity());
                     } else {
                         Map<Integer, String> tagsIndexMap = getPresenter()
                                 .getSettings().getSelectedTags();

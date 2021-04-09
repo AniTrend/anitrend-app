@@ -13,6 +13,9 @@ class SchedulerInitializer : AbstractInitializer<Unit>() {
      * @param context The application context.
      */
     override fun create(context: Context) {
-        koinOf<JobSchedulerUtil>().scheduleJob(context)
+        val scheduler = koinOf<JobSchedulerUtil>()
+        scheduler.scheduleNotificationJob(context)
+        scheduler.scheduleGenreJob(context)
+        scheduler.scheduleTagJob(context)
     }
 }

@@ -5,13 +5,11 @@ import android.os.Build
 import androidx.core.content.edit
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.data.DatabaseHelper
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.ShortcutUtil
-import org.koin.core.component.get
 import timber.log.Timber
 
 object Migrations {
@@ -24,7 +22,7 @@ object Migrations {
                 apply()
             }
             DatabaseHelper().invalidateBoxStores()
-            koinOf<JobSchedulerUtil>().cancelJob(context)
+            koinOf<JobSchedulerUtil>().cancelNotificationJob(context)
         }
     }
 
