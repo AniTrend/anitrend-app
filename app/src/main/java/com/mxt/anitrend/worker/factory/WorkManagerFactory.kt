@@ -10,6 +10,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
+import timber.log.Timber
 
 internal class WorkManagerFactory : WorkerFactory(), KoinComponent {
 
@@ -44,7 +45,7 @@ internal class WorkManagerFactory : WorkerFactory(), KoinComponent {
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters
-    ): ListenableWorker = when (workerClassName) {
+    ): ListenableWorker? = when (workerClassName) {
         "com.mxt.anitrend.service.JobDispatcherService" -> resolveDependency(
             NotificationWorker::class.java.canonicalName!!,
             workerParameters
@@ -53,6 +54,11 @@ internal class WorkManagerFactory : WorkerFactory(), KoinComponent {
             ClearNotificationWorker::class.java.canonicalName!!,
             workerParameters
         )
-        else -> resolveDependency(workerClassName, workerParameters)
+        else -> runCatching {
+            Timber.d("Resolving requested worker: $workerClassName")
+            resolveDependency(workerClassName, workerParameters)
+        }.onFailure {
+            Timber.w(it, "Unable to resolve worker: $workerClassName")
+        }.getOrNull()
     }
 }
