@@ -228,8 +228,6 @@
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleTop" />
 
-        <service android:name=".service.TagGenreService" />
-
         <receiver android:name=".receiver.DismissNotification" />
 
         <!--
