@@ -61,7 +61,7 @@ class NotificationWorker(
                 }
                 return Result.success()
             } catch (e: Exception) {
-                Timber.tag(TAG).e(e)
+                Timber.e(e)
                 e.printStackTrace()
             }
             return Result.retry()
@@ -89,9 +89,5 @@ class NotificationWorker(
 
         if (user.unreadNotificationCount > 0 && notificationsContainer != null)
             notificationUtil.createNotification(user, notificationsContainer)
-    }
-
-    companion object {
-        private val TAG = NotificationWorker::class.java.simpleName
     }
 }
