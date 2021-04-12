@@ -412,10 +412,10 @@ object Libraries {
         }
 
         object OkHttp {
-            private const val version = "4.9.1"
+            private const val version = "3.12.1"
             const val okhttp = "com.squareup.okhttp3:okhttp:$version"
             /** Won't upgrade beyond this to support pre-lollipop */
-            const val logging = "com.squareup.okhttp3:logging-interceptor:3.12.1"
+            const val logging = "com.squareup.okhttp3:logging-interceptor:$version"
             const val mockServer = "com.squareup.okhttp3:mockwebserver:$version"
         }
     }

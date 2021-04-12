@@ -24,6 +24,7 @@ import com.android.build.gradle.internal.dsl.BuildType
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import com.mxt.anitrend.buildsrc.common.Versions
 import com.mxt.anitrend.buildsrc.extensions.*
+import com.mxt.anitrend.buildsrc.Libraries
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -200,7 +201,12 @@ internal fun Project.applyAndroidConfiguration() {
 
     configurations.all {
         exclude("org.jetbrains", "annotations-java5")
-        resolutionStrategy.force("com.google.code.findbugs:jsr305:3.0.2")
+        resolutionStrategy.force(
+            "com.google.code.findbugs:jsr305:3.0.2",
+            Libraries.Square.OkHttp.logging,
+            Libraries.Square.OkHttp.mockServer,
+            Libraries.Square.OkHttp.okhttp
+        )
     }
 
     tasks.withType(KotlinJvmCompile::class.java) {
