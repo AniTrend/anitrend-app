@@ -3,10 +3,7 @@ package com.mxt.anitrend.worker
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
-import androidx.work.Data
-import androidx.work.ListenableWorker
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -16,9 +13,11 @@ import org.koin.core.component.inject
 import timber.log.Timber
 import java.util.concurrent.ExecutionException
 
-class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
-
-    private val presenter by inject<BasePresenter>()
+class AuthenticatorWorker(
+    context: Context,
+    workerParams: WorkerParameters,
+    private val presenter: BasePresenter
+) : CoroutineWorker(context, workerParams) {
 
     private val authenticatorUri: Uri by lazy(LazyThreadSafetyMode.NONE) {
         Uri.parse(workerParams.inputData
@@ -43,11 +42,12 @@ class AuthenticatorWorker(context: Context, workerParams: WorkerParameters) : Wo
      * [Result.failure] or
      * [Result.failure]
      */
-    override fun doWork(): Result {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    override suspend fun doWork(): Result {
         val errorDataBuilder = Data.Builder()
         try {
             val authorizationCode = authenticatorUri.getQueryParameter(BuildConfig.RESPONSE_TYPE)
-            if (!TextUtils.isEmpty(authorizationCode)) {
+            if (!authorizationCode.isNullOrBlank()) {
                 val isSuccess = WebTokenRequest.getToken(authorizationCode)
                 presenter.settings.isAuthenticated = isSuccess
                 val outputData = Data.Builder()

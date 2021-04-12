@@ -45,7 +45,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         mColumnSize = R.integer.single_list_x1
         isPager = true
         setInflateMenu(R.menu.notification_menu)
-        mAdapter = NotificationAdapter(context!!)
+        mAdapter = NotificationAdapter(requireContext())
         setPresenter(BasePresenter(context))
         setViewModel(true)
     }
@@ -123,7 +123,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 .putVariable(KeyUtil.arg_resetNotificationCount, true)
 
         getViewModel().params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
-        getViewModel().requestData(KeyUtil.USER_NOTIFICATION_REQ, context!!)
+        getViewModel().requestData(KeyUtil.USER_NOTIFICATION_REQ, requireContext())
     }
 
     /**
@@ -208,10 +208,11 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 KeyUtil.THREAD_COMMENT_REPLY -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
                 KeyUtil.AIRING, KeyUtil.RELATED_MEDIA_ADDITION -> {
                     intent = Intent(activity, MediaActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.media.id)
-                    intent.putExtra(KeyUtil.arg_mediaType, data.second.media.type)
+                    intent.putExtra(KeyUtil.arg_id, data.second.media?.id)
+                    intent.putExtra(KeyUtil.arg_mediaType, data.second.media?.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    if (data.second.media != null)
+                        startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     intent = Intent(activity, CommentActivity::class.java)
@@ -245,11 +246,14 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
     override fun onItemLongClick(target: View, data: IntPair<Notification>) {
         if (CompatUtil.equals(data.second.type, KeyUtil.AIRING)) {
             setItemAsRead(data.second)
-            if (presenter.settings.isAuthenticated) {
-                mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(data.second.media.id).build(activity)
-                mediaActionUtil.startSeriesAction()
-            } else
+            data.second.media?.also {
+                if (presenter.settings.isAuthenticated) {
+                    mediaActionUtil = MediaActionUtil.Builder()
+                        .setId(it.id).build(activity)
+                    mediaActionUtil.startSeriesAction()
+                }
+            }
+        } else {
                 context?.also {
                     NotifyUtil.makeText(it, R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show()
                 }

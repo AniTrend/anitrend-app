@@ -192,7 +192,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.series_banner:
-                CompatUtil.INSTANCE.imagePreview(this, view, model.getBannerImage(), R.string.image_preview_error_series_banner);
+                CompatUtil.INSTANCE.imagePreview(view, model.getBannerImage(), R.string.image_preview_error_series_banner);
                 break;
         }
     }

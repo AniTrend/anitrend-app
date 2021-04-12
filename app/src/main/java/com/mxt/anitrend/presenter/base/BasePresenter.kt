@@ -8,12 +8,13 @@ import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.crunchy.MediaContent
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail
-import com.mxt.anitrend.service.TagGenreService
 import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.migration.MigrationUtil
 import com.mxt.anitrend.util.migration.Migrations
 import timber.log.Timber
@@ -54,15 +55,10 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
                     .addMigration(Migrations.MIGRATION_101_108)
                     .addMigration(Migrations.MIGRATION_109_134)
                     .addMigration(Migrations.MIGRATION_135_136)
-                    .build()
+                    .build(context)
             return migrationUtil.applyMigration()
         }
         return true
-    }
-
-    fun checkGenresAndTags(fragmentActivity: FragmentActivity?) {
-        val intent = Intent(fragmentActivity, TagGenreService::class.java)
-        fragmentActivity?.startService(intent)
     }
 
     fun getThumbnail(thumbnails: List<Thumbnail>?): String? {

@@ -56,10 +56,10 @@ class MediaListAdapter(context: Context?) :
 
                 val filter = constraint.toString()
                 if (TextUtils.isEmpty(filter)) {
-                    results.values = ArrayList<MediaList>(clone!!)
+                    results.values = ArrayList<MediaList>(clone.orEmpty())
                     clone = null
                 } else {
-                    results.values = Stream.of<MediaList>(clone)
+                    results.values = Stream.of<MediaList>(clone.orEmpty())
                         .filter { c: MediaList? ->
                             isFilterMatch(c!!, filter)
                         }
@@ -133,6 +133,7 @@ class MediaListAdapter(context: Context?) :
                     binding.customRatingWidget.onViewRecycled()
                 }
                 is AdapterSeriesAiringCompactBinding -> {
+                    Glide.with(context).clear(binding.seriesImage)
                     binding.seriesEpisodes.onViewRecycled()
                     binding.customRatingWidget.onViewRecycled()
                 }

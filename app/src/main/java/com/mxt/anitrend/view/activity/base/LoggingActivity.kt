@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.text.color
+import androidx.lifecycle.lifecycleScope
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
@@ -16,11 +18,14 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+import com.mxt.anitrend.extension.getCompatColor
+import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.nguyenhoanglam.progresslayout.ProgressLayout
 import kotlinx.coroutines.*
+import timber.log.Timber
 import java.io.File
 import java.io.FileWriter
 import java.io.InputStreamReader
@@ -41,7 +46,10 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     private var binder: Unbinder? = null
 
-    private val log = StringBuilder()
+    private val spannableLogBuilder = SpannableStringBuilder()
+    private val red by lazy { applicationContext.getCompatColor(R.color.colorStateRed) }
+    private val orange by lazy {  applicationContext.getCompatColor(R.color.colorStateOrange) }
+    private val linePattern = Regex("\\s")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,42 +73,51 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_clear_log -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    runCatching {
+                        FileWriter(applicationContext.logFile()).use { writer ->
+                            writer.write("")
+                        }
+                        spannableLogBuilder.clear()
+                        loadLogFileContents()
+                        printLog()
+                    }.onFailure {
+                        Timber.e(it)
+                    }
+                }
+            }
             R.id.action_save_log -> {
-                if (!progressLayout.isLoading) {
-                    progressLayout.showLoading()
-                    if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        async (Dispatchers.IO) {
+                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        runCatching {
                             val root = File(
-                                    Environment.getExternalStoragePublicDirectory(
-                                            Environment.DIRECTORY_DOWNLOADS
-                                    ),
-                                    "AniTrend Logcat.txt"
+                                Environment.getExternalStoragePublicDirectory(
+                                    Environment.DIRECTORY_DOWNLOADS
+                                ),
+                                "AniTrend Logcat.txt"
                             )
-                            FileWriter(root).use {
-                                it.write(log.toString())
-                            }
+                            applicationContext.logFile().copyTo(root, true)
+                        }.onFailure {
+                            Timber.e(it)
+                        }.onSuccess {
                             withContext(Dispatchers.Main) {
-                                progressLayout.showContent()
-                                NotifyUtil.makeText(applicationContext, R.string.bug_report_saved, Toast.LENGTH_SHORT).show()
+                                NotifyUtil.createAlerter(
+                                    this@LoggingActivity,
+                                    R.string.text_post_information,
+                                    R.string.bug_report_saved,
+                                    R.drawable.ic_insert_emoticon_white_24dp,
+                                    R.color.colorStateGreen
+                                )
                             }
-                        }.invokeOnCompletion {
-                            it?.printStackTrace()
                         }
                     }
-                } else {
-                    NotifyUtil.createAlerter(this,
-                            R.string.title_activity_logging,
-                            R.string.busy_please_wait,
-                            R.drawable.ic_bug_report_grey_600_24dp,
-                            R.color.colorStateBlue,
-                            KeyUtil.DURATION_SHORT
-                    )
                 }
             }
             R.id.action_share_log -> {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, log.toString())
+                    putExtra(Intent.EXTRA_TEXT, spannableLogBuilder.toString())
                     type = "text/plain"
                 }
                 startActivity(intent)
@@ -132,30 +149,56 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
         progressLayout.showContent()
     }
 
-    private fun printLog(logHistory: String) {
-        updateUI()
-        reportLogTextView.text = logHistory
+    private suspend fun printLog() {
+        withContext(Dispatchers.Main) {
+            updateUI()
+            reportLogTextView.text = spannableLogBuilder
+        }
+    }
+
+    private suspend fun loadLogFileContents() {
+        //val process = Runtime.getRuntime().exec("logcat -d -v threadtime com.mxt.anitrend:*")
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val logInputStream = applicationContext.logFile().inputStream()
+                InputStreamReader(logInputStream).use { inputStream ->
+                    inputStream.forEachLine { line ->
+                        val segments = line.split(linePattern, 4)
+                        val identifier = segments.getOrNull(2)
+                        if (identifier != null) {
+                            when {
+                                identifier.startsWith("E") -> {
+                                    spannableLogBuilder.color(red) {
+                                        spannableLogBuilder.appendLine(line)
+                                    }
+                                }
+                                identifier.startsWith("W") -> {
+                                    spannableLogBuilder.color(orange) {
+                                        spannableLogBuilder.appendLine(line)
+                                    }
+                                }
+                                else -> spannableLogBuilder.appendLine(line)
+                            }
+                        } else
+                            spannableLogBuilder.appendLine(line)
+                    }
+                    inputStream.close()
+                }
+            }.onFailure {
+                Timber.e(it)
+            }
+        }
     }
 
     override fun makeRequest() {
-        async (Dispatchers.IO) {
-            val process = Runtime.getRuntime().exec("logcat -d -v threadtime com.mxt.anitrend:*")
-            InputStreamReader(process.inputStream).use { inputStream ->
-                log.append(inputStream.readText())
-                        .append("\n")
-            }
-            val logHistory = log.toString()
-            withContext(Dispatchers.Main) {
-                printLog(logHistory)
-            }
-        }.invokeOnCompletion {
-            it?.printStackTrace()
+        lifecycleScope.launch {
+            loadLogFileContents()
+            printLog()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binder?.unbind()
-        cancel()
     }
 }

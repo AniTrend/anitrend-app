@@ -74,7 +74,7 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
          */
         override fun onResume() {
             super.onResume()
-            settings.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+            settings.registerOnSharedPreferenceChangeListener(this)
         }
 
         /**
@@ -83,7 +83,7 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
          * Activity's lifecycle.
          */
         override fun onPause() {
-            settings.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+            settings.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
         }
 
@@ -99,7 +99,6 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
             activity?.apply {
                 when (key) {
                     getString(R.string.pref_key_display_adult_content),
-                    getString(R.string.pref_key_notification_work_around),
                     getString(R.string.pref_key_crash_reports),
                     getString(R.string.pref_key_usage_analytics),
                     getString(R.string.pref_key_selected_language),
@@ -116,13 +115,20 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         applyConfiguredTheme()
                     }
                     getString(R.string.pref_key_sync_frequency) -> {
-                        scheduler.scheduleJob()
+                        scheduler.cancelNotificationJob(applicationContext)
+                        scheduler.cancelTagJob(applicationContext)
+                        scheduler.cancelGenreJob(applicationContext)
+
+                        scheduler.scheduleNotificationJob(applicationContext)
+                        scheduler.scheduleGenreJob(applicationContext)
+                        scheduler.scheduleTagJob(applicationContext)
+
                     }
                     getString(R.string.pref_key_new_message_notifications) -> {
                         if (settings.isNotificationEnabled)
-                            scheduler.scheduleJob()
+                            scheduler.scheduleNotificationJob(applicationContext)
                         else
-                            scheduler.cancelJob()
+                            scheduler.cancelNotificationJob(applicationContext)
                     }
                     else -> Timber.i("$key not registered in this sharedPreferenceChange listener")
                 }

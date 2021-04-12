@@ -1,13 +1,10 @@
 package com.mxt.anitrend.model.api.converter
 
-import android.content.Context
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
-import com.google.gson.GsonBuilder
+import com.google.gson.Gson
 import com.mxt.anitrend.model.api.converter.request.AniRequestConverter
 import com.mxt.anitrend.model.api.converter.response.AniGraphResponseConverter
+import io.github.wax911.library.annotation.processor.contract.AbstractGraphProcessor
 import io.github.wax911.library.converter.GraphConverter
-import io.github.wax911.library.model.request.QueryContainerBuilder
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -15,8 +12,9 @@ import retrofit2.Retrofit
 import java.lang.reflect.Type
 
 class AniGraphConverter(
-        context: Context?
-) : GraphConverter(context) {
+    graphProcessor: AbstractGraphProcessor,
+    gson: Gson
+) : GraphConverter(graphProcessor, gson) {
 
     /**
      * Response body converter delegates logic processing to a child class that handles
@@ -30,16 +28,15 @@ class AniGraphConverter(
      * @see AniRequestConverter
      */
     override fun requestBodyConverter(
-            type: Type?,
-            parameterAnnotations: Array<Annotation>,
-            methodAnnotations: Array<Annotation>,
-            retrofit: Retrofit?
-    ): Converter<QueryContainerBuilder, RequestBody>? =
-            AniRequestConverter(
-                    methodAnnotations = methodAnnotations,
-                    graphProcessor = graphProcessor,
-                    gson = gson
-            )
+        type: Type,
+        parameterAnnotations: Array<out Annotation>,
+        methodAnnotations: Array<out Annotation>,
+        retrofit: Retrofit
+    ): Converter<*, RequestBody> = AniRequestConverter(
+        methodAnnotations = methodAnnotations,
+        graphProcessor = graphProcessor,
+        gson = gson
+    )
 
     /**
      * Response body converter delegates logic processing to a child class that handles
@@ -55,43 +52,8 @@ class AniGraphConverter(
      * @param type The generic type declared on the Call method
      */
     override fun responseBodyConverter(
-            type: Type?,
-            annotations: Array<Annotation>,
-            retrofit: Retrofit
-    ): Converter<ResponseBody, *>? =
-            AniGraphResponseConverter<Any>(type, gson)
-
-    companion object {
-
-        /**
-         * Allows you to provide your own Gson configuration which will be used when serialize or
-         * deserialize response and request bodies.
-         *
-         * @param context any valid application context
-         */
-        fun create(context: Context?) =
-                AniGraphConverter(context).apply {
-                    gson = GsonBuilder()
-                            .addSerializationExclusionStrategy(object : ExclusionStrategy {
-                                /**
-                                 * @param clazz the class object that is under test
-                                 * @return true if the class should be ignored; otherwise false
-                                 */
-                                override fun shouldSkipClass(clazz: Class<*>?) = false
-
-                                /**
-                                 * @param f the field object that is under test
-                                 * @return true if the field should be ignored; otherwise false
-                                 */
-                                override fun shouldSkipField(f: FieldAttributes?): Boolean {
-                                    return f?.name?.equals("operationName") ?: false
-                                            ||
-                                            f?.name?.equals("extensions") ?: false
-                                }
-                            })
-                            .enableComplexMapKeySerialization()
-                            .setLenient()
-                            .create()
-                }
-    }
+        type: Type,
+        annotations: Array<out Annotation>,
+        retrofit: Retrofit
+    ): Converter<ResponseBody, *> = AniGraphResponseConverter<Any>(type, gson)
 }

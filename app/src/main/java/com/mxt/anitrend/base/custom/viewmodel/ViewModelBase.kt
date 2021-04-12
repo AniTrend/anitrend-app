@@ -21,13 +21,9 @@ import kotlin.coroutines.CoroutineContext
  * View model abstraction contains the generic data model
  */
 
-class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
+class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
-    private val job: Job = SupervisorJob()
-
-    val model by lazy {
-        MutableLiveData<T>()
-    }
+    val model = MutableLiveData<T?>()
 
     var state: ResponseCallback? = null
 
@@ -65,7 +61,6 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
      * prevent a leak of this ViewModel.
      */
     override fun onCleared() {
-        cancel()
         if (mLoader?.status != AsyncTask.Status.FINISHED)
             mLoader?.cancel(true)
         mLoader = null
@@ -110,13 +105,4 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T>, CoroutineScope {
         state?.showEmpty(throwable.message ?: errorMessage)
         throwable.printStackTrace()
     }
-
-    /**
-     * The context of this scope.
-     * Context is encapsulated by the scope and used for implementation of coroutine builders that are extensions on the scope.
-     * Accessing this property in general code is not recommended for any purposes except accessing the [Job] instance for advanced usages.
-     *
-     * By convention, should contain an instance of a [job][Job] to enforce structured concurrency.
-     */
-    override val coroutineContext: CoroutineContext = Dispatchers.IO + job
 }

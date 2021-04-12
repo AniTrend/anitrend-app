@@ -1,3 +1,9 @@
 /build
 /src/release
 /src/debug
+
+# Credentials File
+.config/secrets.properties
+
+# Google services local configuration
+google-services.json

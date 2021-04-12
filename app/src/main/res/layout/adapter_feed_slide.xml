@@ -22,7 +22,7 @@
             android:background="?selectableItemBackground"
             tools:layout_height="@dimen/wide_image_md"
             tools:scaleType="centerCrop"
-            tools:src="@drawable/sample_banner"/>
+            tools:src="@sample/darling"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/feed_play_back"

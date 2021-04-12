@@ -211,7 +211,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
     override fun onClick(v: View) {
         val intent: Intent
         when (v.id) {
-            R.id.series_image -> CompatUtil.imagePreview(activity, v, model?.coverImage?.extraLarge, R.string.image_preview_error_series_cover)
+            R.id.series_image -> CompatUtil.imagePreview(v, model?.coverImage?.extraLarge, R.string.image_preview_error_series_cover)
             R.id.anime_main_studio_container -> {
                 val studioBase = presenter.getMainStudioObject(model)
                 if (studioBase != null) {

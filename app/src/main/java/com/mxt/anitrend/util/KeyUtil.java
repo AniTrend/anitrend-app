@@ -15,7 +15,7 @@ public interface KeyUtil {
     float AspectRatio = 1.37f;
     float WideAspectRatio = 0.95f;
     float PEEK_HEIGHT = 200f;
-    int PAGING_LIMIT = 21, GLIDE_REQUEST_TIMEOUT = 10000, SINGLE_ITEM_LIMIT = 1;
+    int PAGING_LIMIT = 42, GLIDE_REQUEST_TIMEOUT = 10000, SINGLE_ITEM_LIMIT = 1;
 
     /** Notification Channels */
     String CHANNEL_ID = "anitrend_app";
@@ -24,6 +24,8 @@ public interface KeyUtil {
     /** Work Manager Ids & Keys */
     String WorkNotificationTag = "anitrend_notification_job";
     String WorkNotificationId = "periodic_notification_sync";
+    String WorkTagSyncId = "periodic_tag_sync";
+    String WorkGenreSyncId = "periodic_genre_sync";
     String WorkClearNotificationTag = "anitrend_clear_notification_job";
     String WorkClearNotificationId = "clear_notification_sync";
 

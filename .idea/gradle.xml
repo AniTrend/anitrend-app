@@ -9,9 +9,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="/media/max/External/Documents/GitHub/anitrend-app" />
-            <option value="/media/max/External/Documents/GitHub/anitrend-app/app" />
-            <option value="/media/max/External/Documents/GitHub/anitrend-app/markdown" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/buildSrc" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

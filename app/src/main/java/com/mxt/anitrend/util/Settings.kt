@@ -2,7 +2,9 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.collection.GenreTagUtil
@@ -15,22 +17,21 @@ import java.util.*
  */
 
 class Settings(
-    private val context: Context,
-    val sharedPreferences: SharedPreferences
-) {
+    context: Context,
+    private val resources: Resources = context.resources,
+    private val preferences: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
+) : SharedPreferences by preferences {
 
     /** Base Application Values  */
     private val _versionCode = "_versionCode"
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
 
-    val notificationWorkAround: Boolean
-        get() = sharedPreferences.getBoolean(_notificationWorkaround, false)
-
     var isAuthenticated: Boolean
-        get() = sharedPreferences.getBoolean(_isAuthenticated, false)
+        get() = getBoolean(_isAuthenticated, false)
         set(value) {
-            sharedPreferences.edit {
+            edit {
                 putBoolean(_isAuthenticated, value)
                 apply()
             }
@@ -39,119 +40,119 @@ class Settings(
     @get:KeyUtil.ApplicationTheme
     @set:KeyUtil.ApplicationTheme
     var theme: String = KeyUtil.THEME_LIGHT
-        get() = sharedPreferences.getString(context.getString(R.string.pref_key_app_theme), KeyUtil.THEME_LIGHT) ?: KeyUtil.THEME_LIGHT
+        get() = getString(resources.getString(R.string.pref_key_app_theme), KeyUtil.THEME_LIGHT) ?: KeyUtil.THEME_LIGHT
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putString(context.getString(R.string.pref_key_app_theme), value)
+            edit {
+                putString(resources.getString(R.string.pref_key_app_theme), value)
                 apply()
             }
         }
 
     // Returns the IDs of the startup page
     val startupPage: String?
-        get() = sharedPreferences.getString(
-        context.getString(R.string.pref_key_startup_page), "3")
+        get() = getString(
+        resources.getString(R.string.pref_key_startup_page), "3")
 
     var isFreshInstall: Boolean = true
-        get() = sharedPreferences.getBoolean(_freshInstall, true)
+        get() = getBoolean(_freshInstall, true)
         set(value) {
             field = value
-            sharedPreferences.edit {
+            edit {
                 putBoolean(_freshInstall, field)
                 apply()
             }
         }
 
     var userLanguage: String? = null
-        get() = sharedPreferences.getString(context.getString(R.string.pref_key_selected_language),
+        get() = getString(resources.getString(R.string.pref_key_selected_language),
         Locale.getDefault().language)
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putString(context.getString(R.string.pref_key_selected_language), field)
+            edit {
+                putString(resources.getString(R.string.pref_key_selected_language), field)
                 apply()
             }
         }
 
     var mediaListStyle: Int = 0
-        get() = sharedPreferences.getString(context.getString(R.string.pref_key_list_view_style), "0")?.toInt() ?: 0
+        get() = getString(resources.getString(R.string.pref_key_list_view_style), "0")?.toInt() ?: 0
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putInt(context.getString(R.string.pref_key_list_view_style), field)
+            edit {
+                putInt(resources.getString(R.string.pref_key_list_view_style), field)
                 apply()
             }
         }
 
     //Returns amount of time in seconds
     var syncTime: Int = 15
-        get() = sharedPreferences.getString(
-                    context.getString(R.string.pref_key_sync_frequency), "15")?.toInt() ?: 15
+        get() = getString(
+                    resources.getString(R.string.pref_key_sync_frequency), "15")?.toInt() ?: 15
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putInt(context.getString(R.string.pref_key_sync_frequency), field)
+            edit {
+                putInt(resources.getString(R.string.pref_key_sync_frequency), field)
                 apply()
             }
         }
 
     var isNotificationEnabled: Boolean = true
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_new_message_notifications), true)
+        get() = getBoolean(resources.getString(R.string.pref_key_new_message_notifications), true)
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putBoolean(context.getString(R.string.pref_key_new_message_notifications), field)
+            edit {
+                putBoolean(resources.getString(R.string.pref_key_new_message_notifications), field)
                 apply()
             }
         }
 
     var clearNotificationOnDismiss: Boolean = false
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_clear_notification_on_dismiss), false)
+        get() = getBoolean(resources.getString(R.string.pref_key_clear_notification_on_dismiss), false)
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putBoolean(context.getString(R.string.pref_key_clear_notification_on_dismiss), field)
+            edit {
+                putBoolean(resources.getString(R.string.pref_key_clear_notification_on_dismiss), field)
                 apply()
             }
         }
 
     var isCrashReportsEnabled: Boolean = true
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_crash_reports), true)
+        get() = getBoolean(resources.getString(R.string.pref_key_crash_reports), true)
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putBoolean(context.getString(R.string.pref_key_crash_reports), field)
+            edit {
+                putBoolean(resources.getString(R.string.pref_key_crash_reports), field)
                 apply()
             }
         }
 
     var isUsageAnalyticsEnabled: Boolean = false
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_usage_analytics), false)
+        get() = getBoolean(resources.getString(R.string.pref_key_usage_analytics), false)
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putBoolean(context.getString(R.string.pref_key_usage_analytics), field)
+            edit {
+                putBoolean(resources.getString(R.string.pref_key_usage_analytics), field)
                 apply()
             }
         }
 
     var seasonYear: Int = 0
-        get() = sharedPreferences.getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear(1))
+        get() = getInt(KeyUtil.arg_seasonYear, DateUtil.getCurrentYear(1))
         set(value) {
             field = value
-            sharedPreferences.edit {
+            edit {
                 putInt(KeyUtil.arg_seasonYear, field)
                 apply()
             }
         }
 
     var displayAdultContent: Boolean = false
-        get() = sharedPreferences.getBoolean(context.getString(R.string.pref_key_display_adult_content), false)
+        get() = getBoolean(resources.getString(R.string.pref_key_display_adult_content), false)
         set(value) {
             field = value
-            sharedPreferences.edit {
-                putBoolean(context.getString(R.string.pref_key_display_adult_content), field)
+            edit {
+                putBoolean(resources.getString(R.string.pref_key_display_adult_content), field)
                 apply()
             }
         }
@@ -159,11 +160,11 @@ class Settings(
     @set:KeyUtil.SortOrderType
     @get:KeyUtil.SortOrderType
     var sortOrder: String = KeyUtil.DESC
-        get() = sharedPreferences.getString(
+        get() = getString(
                     _sortOrder, KeyUtil.DESC) ?: KeyUtil.DESC
         set(value) {
             field = value
-            sharedPreferences.edit {
+            edit {
                 putString(_sortOrder, value)
                 apply()
             }
@@ -172,9 +173,9 @@ class Settings(
     @set:KeyUtil.MediaStatus
     @get:KeyUtil.MediaStatus
     var mediaStatus: String?
-        get() = sharedPreferences.getString(_mediaStatus, null)
+        get() = getString(_mediaStatus, null)
         set(mediaStatus) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mediaStatus, mediaStatus)
                 apply()
             }
@@ -183,9 +184,9 @@ class Settings(
     @set:KeyUtil.MediaFormat
     @get:KeyUtil.MediaFormat
     var mediaFormat: String?
-        get() = sharedPreferences.getString(_mediaFormat, null)
+        get() = getString(_mediaFormat, null)
         set(mediaFormat) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mediaFormat, mediaFormat)
                 apply()
             }
@@ -194,9 +195,9 @@ class Settings(
     @set:KeyUtil.AnimeFormat
     @get:KeyUtil.AnimeFormat
     var animeFormat: String?
-        get() = sharedPreferences.getString(_animeFormat, null)
+        get() = getString(_animeFormat, null)
         set(animeFormat) {
-            sharedPreferences.edit {
+            edit {
                 putString(_animeFormat, animeFormat)
                 apply()
             }
@@ -205,9 +206,9 @@ class Settings(
     @set:KeyUtil.MangaFormat
     @get:KeyUtil.MangaFormat
     var mangaFormat: String?
-        get() = sharedPreferences.getString(_mangaFormat, null)
+        get() = getString(_mangaFormat, null)
         set(mangaFormat) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mangaFormat, mangaFormat)
                 apply()
             }
@@ -216,9 +217,9 @@ class Settings(
     @set:KeyUtil.MediaSource
     @get:KeyUtil.MediaSource
     var mediaSource: String?
-        get() = sharedPreferences.getString(_mediaSource, null)
+        get() = getString(_mediaSource, null)
         set(mediaSource) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mediaSource, mediaSource)
                 apply()
             }
@@ -227,9 +228,9 @@ class Settings(
     @set:KeyUtil.AiringSort
     @get:KeyUtil.AiringSort
     var airingSort: String?
-        get() = sharedPreferences.getString(_airingSort, KeyUtil.EPISODE)
+        get() = getString(_airingSort, KeyUtil.EPISODE)
         set(airingSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_airingSort, airingSort)
                 apply()
             }
@@ -238,9 +239,9 @@ class Settings(
     @set:KeyUtil.CharacterSort
     @get:KeyUtil.CharacterSort
     var characterSort: String?
-        get() = sharedPreferences.getString(_characterSort, KeyUtil.ROLE)
+        get() = getString(_characterSort, KeyUtil.ROLE)
         set(characterSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_characterSort, characterSort)
                 apply()
             }
@@ -249,9 +250,9 @@ class Settings(
     @set:KeyUtil.MediaListSort
     @get:KeyUtil.MediaListSort
     var mediaListSort: String?
-        get() = sharedPreferences.getString(_mediaListSort, KeyUtil.PROGRESS)
+        get() = getString(_mediaListSort, KeyUtil.PROGRESS)
         set(mediaListSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mediaListSort, mediaListSort)
                 apply()
             }
@@ -260,9 +261,9 @@ class Settings(
     @set:KeyUtil.MediaSort
     @get:KeyUtil.MediaSort
     var mediaSort: String?
-        get() = sharedPreferences.getString(_mediaSort, KeyUtil.POPULARITY)
+        get() = getString(_mediaSort, KeyUtil.POPULARITY)
         set(mediaSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mediaSort, mediaSort)
                 apply()
             }
@@ -270,9 +271,9 @@ class Settings(
     @set:KeyUtil.MediaTrendSort
     @get:KeyUtil.MediaTrendSort
     var mediaTrendSort: String?
-        get() = sharedPreferences.getString(_mediaTrendSort, KeyUtil.TRENDING)
+        get() = getString(_mediaTrendSort, KeyUtil.TRENDING)
         set(mediaTrendSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_mediaTrendSort, mediaTrendSort)
                 apply()
             }
@@ -281,9 +282,9 @@ class Settings(
     @set:KeyUtil.ReviewSort
     @get:KeyUtil.ReviewSort
     var reviewSort: String?
-        get() = sharedPreferences.getString(_reviewSort, KeyUtil.ID)
+        get() = getString(_reviewSort, KeyUtil.ID)
         set(reviewSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_reviewSort, reviewSort)
                 apply()
             }
@@ -292,9 +293,9 @@ class Settings(
     @set:KeyUtil.StaffSort
     @get:KeyUtil.StaffSort
     var staffSort: String?
-        get() = sharedPreferences.getString(_staffSort, KeyUtil.ROLE)
+        get() = getString(_staffSort, KeyUtil.ROLE)
         set(staffSort) {
-            sharedPreferences.edit {
+            edit {
                 putString(_staffSort, staffSort)
                 apply()
             }
@@ -303,9 +304,9 @@ class Settings(
     @set:KeyUtil.Channel
     @get:KeyUtil.Channel
     var updateChannel: String?
-        get() = sharedPreferences.getString(_updateChannel, KeyUtil.STABLE)
+        get() = getString(_updateChannel, KeyUtil.STABLE)
         set(channel) {
-            sharedPreferences.edit {
+            edit {
                 putString(_updateChannel, channel)
                 apply()
             }
@@ -315,10 +316,10 @@ class Settings(
         get() = versionCode < BuildConfig.VERSION_CODE
 
     var versionCode: Int = 1
-        get() = sharedPreferences.getInt(_versionCode, 1)
+        get() = getInt(_versionCode, 1)
         set(value) {
             field = value
-            sharedPreferences.edit {
+            edit {
                 putInt(_versionCode, value)
                 apply()
             }
@@ -326,13 +327,13 @@ class Settings(
 
     var selectedGenres: Map<Int, String>?
         get() {
-            val selected = sharedPreferences.getString(_genreFilter, null)
+            val selected = getString(_genreFilter, null)
             return GenreTagUtil().convertToEntity(selected)
         }
         set(selectedIndices) {
             val selected = GenreTagUtil()
                     .convertToJson(selectedIndices)
-            sharedPreferences.edit {
+            edit {
                 putString(_genreFilter, selected)
                 apply()
             }
@@ -340,20 +341,20 @@ class Settings(
 
     var selectedTags: Map<Int, String>?
         get() {
-            val selected = sharedPreferences.getString(_tagFilter, null)
+            val selected = getString(_tagFilter, null)
             return GenreTagUtil().convertToEntity(selected)
         }
         set(selectedIndices) {
             val selected = GenreTagUtil()
                     .convertToJson(selectedIndices)
-            sharedPreferences.edit {
+            edit {
                 putString(_tagFilter, selected)
                 apply()
             }
         }
 
     fun saveSeasonYear(year: Int) {
-        sharedPreferences.edit {
+        edit {
             putInt(KeyUtil.arg_seasonYear, year)
             apply()
         }
@@ -361,25 +362,25 @@ class Settings(
 
 
     fun shouldShowTipFor(@KeyUtil.TapTargetType tipType: String): Boolean {
-        return sharedPreferences.getBoolean(tipType, true)
+        return getBoolean(tipType, true)
     }
 
     fun disableTipFor(@KeyUtil.TapTargetType tipType: String) {
-        sharedPreferences.edit {
+        edit {
             putBoolean(tipType, false)
             apply()
         }
     }
 
     fun saveSortOrder(@KeyUtil.SortOrderType sortOrder: String) {
-        sharedPreferences.edit {
+        edit {
             putString(_sortOrder, sortOrder)
             apply()
         }
     }
 
     fun setUpdated() {
-        sharedPreferences.edit {
+        edit {
             putInt(_versionCode, BuildConfig.VERSION_CODE)
             apply()
         }
@@ -387,8 +388,6 @@ class Settings(
 
     companion object {
 
-        /** Application Base Options  */
-        private const val _notificationWorkaround = "_notificationWorkaround"
         const val _updateChannel = "_updateChannel"
         const val _appTheme = "application_theme"
 

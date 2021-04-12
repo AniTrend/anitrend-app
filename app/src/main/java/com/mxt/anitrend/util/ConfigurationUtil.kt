@@ -9,9 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
 
-class ConfigurationUtil : KoinComponent {
-
-    private val settings by inject<Settings>()
+class ConfigurationUtil(private val settings: Settings) {
 
     @KeyUtil.ApplicationTheme
     private lateinit var currentTheme: String

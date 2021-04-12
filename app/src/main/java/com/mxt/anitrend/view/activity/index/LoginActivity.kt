@@ -98,7 +98,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     }
 
     override fun updateUI() {
-        scheduler.scheduleJob()
+        scheduler.scheduleNotificationJob(applicationContext)
         createApplicationShortcuts()
         finish()
     }

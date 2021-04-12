@@ -246,8 +246,8 @@ object DateUtil {
     fun getYearRanges(start: Int, endDelta: Int): List<Int> {
         return IntStream.rangeClosed(start,
             getCurrentYear(endDelta)
-        )
-                .boxed().collect(Collectors.toList())
+        ).boxed().collect(Collectors.toList())
+            .orEmpty()
     }
 
     /**

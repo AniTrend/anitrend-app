@@ -10,8 +10,6 @@
     </data>
 
     <com.mxt.anitrend.base.custom.view.container.CardViewBase
-        android:clickable="true"
-        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/lg_margin">

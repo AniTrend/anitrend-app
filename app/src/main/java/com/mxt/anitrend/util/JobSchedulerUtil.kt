@@ -1,10 +1,13 @@
+
 package com.mxt.anitrend.util
 
 import android.content.Context
 import androidx.work.*
-import com.mxt.anitrend.service.ClearNotificationService
+import com.mxt.anitrend.worker.ClearNotificationWorker
+import com.mxt.anitrend.worker.GenreSyncWorker
 
-import com.mxt.anitrend.service.JobDispatcherService
+import com.mxt.anitrend.worker.NotificationWorker
+import com.mxt.anitrend.worker.TagSyncWorker
 
 import java.util.concurrent.TimeUnit
 
@@ -14,10 +17,7 @@ import java.util.concurrent.TimeUnit
  *
  * @param context any valid application context
  */
-class JobSchedulerUtil(
-    private val context: Context,
-    private val settings: Settings
-) {
+class JobSchedulerUtil(private val settings: Settings) {
 
     private fun getConstraints() =
         Constraints.Builder()
@@ -25,38 +25,71 @@ class JobSchedulerUtil(
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
+    fun scheduleTagJob(context: Context) {
+        val periodicWorkRequest = PeriodicWorkRequest.Builder(
+            TagSyncWorker::class.java,
+            settings.syncTime.toLong() * 8,
+            TimeUnit.MINUTES
+        ).addTag(KeyUtil.WorkTagSyncId)
+            .setConstraints(getConstraints())
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniquePeriodicWork(
+                KeyUtil.WorkTagSyncId,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicWorkRequest
+            )
+    }
+
+    fun scheduleGenreJob(context: Context) {
+        val periodicWorkRequest = PeriodicWorkRequest.Builder(
+            GenreSyncWorker::class.java,
+            settings.syncTime.toLong() * 8,
+            TimeUnit.MINUTES
+        ).addTag(KeyUtil.WorkGenreSyncId)
+            .setConstraints(getConstraints())
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniquePeriodicWork(
+                KeyUtil.WorkGenreSyncId,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicWorkRequest
+            )
+    }
+
     /**
      * Schedules a new job service or replaces the existing job if one exists.
      */
-    fun scheduleJob() {
+    fun scheduleNotificationJob(context: Context) {
         if (settings.isAuthenticated && settings.isNotificationEnabled) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(
-                JobDispatcherService::class.java,
+                NotificationWorker::class.java,
                 settings.syncTime.toLong(),
                 TimeUnit.MINUTES
+            ).setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                5,
+                TimeUnit.MINUTES
             )
-                    .setBackoffCriteria(
-                        BackoffPolicy.EXPONENTIAL,
-                        5,
-                        TimeUnit.MINUTES
-                    )
-                    .addTag(KeyUtil.WorkNotificationTag)
-                    .setConstraints(getConstraints())
-                    .build()
+                .addTag(KeyUtil.WorkNotificationTag)
+                .setConstraints(getConstraints())
+                .build()
 
             WorkManager.getInstance(context)
                     .enqueueUniquePeriodicWork(
                         KeyUtil.WorkNotificationId,
-                        ExistingPeriodicWorkPolicy.REPLACE,
+                        ExistingPeriodicWorkPolicy.KEEP,
                         periodicWorkRequest
                     )
         }
     }
 
-    fun scheduleClearNotificationJob() {
+    fun scheduleClearNotificationJob(context: Context) {
         if (settings.isAuthenticated && settings.clearNotificationOnDismiss) {
             val workRequest = OneTimeWorkRequest.Builder(
-                ClearNotificationService::class.java
+                ClearNotificationWorker::class.java
             )
                 .setBackoffCriteria(
                     BackoffPolicy.EXPONENTIAL,
@@ -70,7 +103,7 @@ class JobSchedulerUtil(
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
                     KeyUtil.WorkClearNotificationId,
-                    ExistingWorkPolicy.REPLACE,
+                    ExistingWorkPolicy.KEEP,
                     workRequest
                 )
         }
@@ -79,10 +112,30 @@ class JobSchedulerUtil(
     /**
      * Cancels any scheduled jobs.
      */
-    fun cancelJob() {
+    fun cancelNotificationJob(context: Context) {
         WorkManager.getInstance(context)
             .cancelUniqueWork(
                 KeyUtil.WorkNotificationId
+            )
+    }
+
+    /**
+     * Cancels any scheduled jobs.
+     */
+    fun cancelTagJob(context: Context) {
+        WorkManager.getInstance(context)
+            .cancelUniqueWork(
+                KeyUtil.WorkTagSyncId
+            )
+    }
+
+    /**
+     * Cancels any scheduled jobs.
+     */
+    fun cancelGenreJob(context: Context) {
+        WorkManager.getInstance(context)
+            .cancelUniqueWork(
+                KeyUtil.WorkGenreSyncId
             )
     }
 }

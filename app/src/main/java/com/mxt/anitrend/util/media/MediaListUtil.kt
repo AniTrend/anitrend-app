@@ -75,8 +75,8 @@ object MediaListUtil {
      * Filters by the given search term
      */
     fun isFilterMatch(model: MediaList, filter: String): Boolean {
-        return model.media.title.english.toLowerCase(Locale.getDefault()).contains(filter) ||
-                model.media.title.romaji.toLowerCase(Locale.getDefault()).contains(filter) ||
-                model.media.title.original.toLowerCase(Locale.getDefault()).contains(filter)
+        return model.media.title?.english?.toLowerCase(Locale.getDefault())?.contains(filter) == true ||
+                model.media.title?.romaji?.toLowerCase(Locale.getDefault())?.contains(filter) == true ||
+                model.media.title?.original?.toLowerCase(Locale.getDefault())?.contains(filter) == true
     }
 }

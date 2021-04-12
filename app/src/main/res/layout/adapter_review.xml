@@ -29,7 +29,7 @@
             app:imageUrl="@{model.media.bannerImage}"
             tools:scaleType="centerCrop"
             tools:layout_height="@dimen/wide_image_md"
-            tools:src="@drawable/sample_banner" />
+            tools:src="@sample/darling" />
 
         <FrameLayout
             android:background="@color/colorTransparent"

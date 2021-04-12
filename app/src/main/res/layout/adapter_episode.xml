@@ -30,7 +30,7 @@
             app:imageUrl="@{presenter.getThumbnail(model.thumbnail)}"
             tools:layout_height="@dimen/app_bar_height"
             tools:scaleType="centerCrop"
-            tools:src="@drawable/sample_banner" />
+            tools:src="@sample/darling" />
 
         <LinearLayout
             android:layout_gravity="top|end"
