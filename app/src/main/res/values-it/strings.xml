@@ -168,7 +168,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> non è riuscito a connettersi al server! Assicurati che la tua connessione funzioni e che il sito web
-        <a href="https://anilist.co"><b>AniList</b></a> sia raggiungibile prima di procedere!
+        <a href=\"https://anilist.co\"><b>AniList</b></a> sia raggiungibile prima di procedere!
         </p>
 
         Se il sito è raggiungibile, desideri riavviare <b>AniTrend</b>?
@@ -407,9 +407,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Controlla di essere in possesso dell\'ultima versione. In caso contrario una nuova versione verrà scaricata da <b><a href="https://github.com/wax911/AniTrend">AniTrend Repo</a></b>.
+        Controlla di essere in possesso dell\'ultima versione. In caso contrario una nuova versione verrà scaricata da <b><a href=\"https://github.com/wax911/AniTrend\">AniTrend Repo</a></b>.
         <br/><br/>
-        <b>N.B.</b> Se avete scaricato questa app dal <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        <b>N.B.</b> Se avete scaricato questa app dal <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b>
         allora non c\'è bisogno di usare questa funzione. Vuoi comunque procedere a controllare &amp; l\'aggiornamento dell\'ultima versione?
         ]]>
     </string>
@@ -425,7 +425,7 @@
         <p>Sembra che l\'applicazione abbia riscontrato da un errore imprevisto mentre elaborava le tue informazioni d\'accesso. Questo può accadere con specifiche basse o in caso di meno di 1GB di RAM.</p>
 
         L\'applicazione verrà ora riavviata nella speranza di risolvere l\'errore, dopo il riavvio siete pregati di provare ad accedere nuovamente, se il problema persiste siete pregati di rivolgervi alla
-        <a href="https://anilist.co/forum/thread/2081">Pagina Forum di AniTrend</a> per un\'assistenza più mirata.
+        <a href=\"https://anilist.co/forum/thread/2081\">Pagina Forum di AniTrend</a> per un\'assistenza più mirata.
         ]]>
     </string>
 
@@ -860,7 +860,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Studio Principale</string>
 
-    <string name="create_new_account"><![CDATA[Non hai un\'account? <a href="https://anilist.co/register/">Crea account</a>]]></string>
+    <string name="create_new_account"><![CDATA[Non hai un\'account? <a href=\"https://anilist.co/register/\">Crea account</a>]]></string>
 
     <string name="title_select_all">Seleziona tutto</string>
 

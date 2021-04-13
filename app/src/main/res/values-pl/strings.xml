@@ -173,7 +173,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> nie udało się uwierzytelnić więcej niż jeden raz! Sprawdź, czy Twoje połączenie internetowe działa,
-        a także sprawdź, czy <a href="https://anilist.co"><b>Strona AniList</b></a> jest dostępna przed wybraniem TAK!
+        a także sprawdź, czy <a href=\"https://anilist.co\"><b>Strona AniList</b></a> jest dostępna przed wybraniem TAK!
         </p>
 
         Jeśli witryna jest dostępna, czy chcesz <b>AniTrend</b> zresetować się wylogując się, zakładając że wcześniej się zalogowałeś?
@@ -415,9 +415,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Sprawdza, czy masz najnowszą wersję. Jeśli nie, pobiera nowszą wersję z <b><a href="https://github.com/AniTrend/anitrend-app/releases">Repo AniTrend</a></b>.
+        Sprawdza, czy masz najnowszą wersję. Jeśli nie, pobiera nowszą wersję z <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">Repo AniTrend</a></b>.
         <br/><br/>
-        <b>N.B.</b> Jeśli pobrałeś tę aplikację z <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">sklepu Play</a></b>
+        <b>N.B.</b> Jeśli pobrałeś tę aplikację z <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">sklepu Play</a></b>
         wtedy nie ma potrzeby korzystania z tej funkcji. Czy nadal chcesz kontynuować sprawdzanie i zaktualizać do najnowszej wersji?
         ]]>
     </string>
@@ -433,7 +433,7 @@
         <p>Wygląda na to, że aplikacja została wznowiona z nieoczekiwanego stanu podczas przetwarzania danych logowania. Może to wystąpić na urządzeniach o niskich parametrach, 1 GB pamięci RAM lub mniej.</p>
 
         Aplikacja podejmie teraz próbę ponownego uruchomienia w celu rozwiązania problemu. Po ponownym uruchomieniu spróbuj ponownie się zalogować, a jeśli problem będzie się powtarzał, przejdź do
-        <a href="https://anilist.co/forum/thread/2081">Tematu AniTrend na forum</a> aby uzyskać więcej pomocy.
+        <a href=\"https://anilist.co/forum/thread/2081\">Tematu AniTrend na forum</a> aby uzyskać więcej pomocy.
         ]]>
     </string>
 
@@ -871,7 +871,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Główne studio</string>
 
-    <string name="create_new_account"><![CDATA[Nie masz konta? <a href="https://anilist.co/register">Utwórz konto</a>]]></string>
+    <string name="create_new_account"><![CDATA[Nie masz konta? <a href=\"https://anilist.co/register\">Utwórz konto</a>]]></string>
 
     <string name="title_select_all">Zaznacz wszystko</string>
 
