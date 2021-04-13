@@ -51,19 +51,19 @@ jobs:
       - name: Publish PlayStore APK
         uses: actions/upload-artifact@v2
         with:
-        name: app-release
-        path: app/app/release/
+          name: app-release
+          path: app/app/release/
       - name: Publish Github APK
         uses: actions/upload-artifact@v2
         with:
-        name: app-github-release
-        path: app/github/release/
+          name: app-github-release
+          path: app/github/release/
       - uses: ericcornelissen/git-tag-annotation-action@v1
         id: tag_data
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           title: "${{ steps.tag_data.outputs.git-tag-annotation }}"
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: "${{ secrets.TOKEN }}"
           prerelease: true
           files: |
             app/build/outputs/apk/**/release/*.apk
