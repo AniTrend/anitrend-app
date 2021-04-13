@@ -55,4 +55,5 @@ object Versions {
     const val alerter = "7.0.1"
     const val stream = "1.2.2"
     const val circularProgressView = "2.5.0"
+    const val hamcrest = "2.2"
 }
