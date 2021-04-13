@@ -143,11 +143,12 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         getByName("release") {
             isMinifyEnabled = false
             isTestCoverageEnabled = false
-            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (project.file(".config/keystore.properties").exists())
+                signingConfig = signingConfigs.getByName("release")
         }
 
         getByName("debug") {
