@@ -160,7 +160,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> a échoué à se connecter au serveur plus d\'une fois ! Merci de vérifier que votre connection internet fonctionne
-        et de vérifier que le <a href="https://anilist.co"><b>site Internet d\'Anilist</b></a> est disponible avant d\'appuyer sur "Oui" !
+        et de vérifier que le <a href=\"https://anilist.co"><b>site Internet d\'Anilist</b></a> est disponible avant d\'appuyer sur "Oui\" !
         </p>
 
         Si le site Internet est disponible, voulez-vous que <b>AniTrend</b> se réinitialise en vous déconnectant (si vous étiez connecté) ?
@@ -399,9 +399,9 @@
     <string name="drawer_update_text">
         <![CDATA[
         Vérifie si vous avez la dernière version d\'AniTrend. Si ce n\'est pas le cas, une version plus récente sera
-        téléchargée depuis <b><a href="https://github.com/AniTrend/anitrend-app/releases">le dépôt d\'AniTrend</a></b>.
+        téléchargée depuis <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">le dépôt d\'AniTrend</a></b>.
         <br/><br/>
-        <b>N.B.</b> Si vous avez téléchargé l\'application depuis <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">le Play Store</a></b>,
+        <b>N.B.</b> Si vous avez téléchargé l\'application depuis <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">le Play Store</a></b>,
         vous n\'avez pas besoin d\'utiliser cette fonctionnalité (l\'application se met à jour d\'elle-même grâce au Play Store). Souhaitez-vous continuer ?
         ]]>
     </string>
@@ -418,7 +418,7 @@
         Cela peut arriver sur les petit appareil ayant moins de 1GB de RAM.</p>
 
         L\'application va maintenant redémarrer afin d\'essayer de résoudre l\'erreur. Après le redémarrage, essayez de vous connecter à nouveau
-        et si le problème persiste, dirigez-vous vers <a href="https://anilist.co/forum/thread/2081">la page AniTrend du Forum</a> pour recevoir plus d\'assistance.
+        et si le problème persiste, dirigez-vous vers <a href=\"https://anilist.co/forum/thread/2081\">la page AniTrend du Forum</a> pour recevoir plus d\'assistance.
         ]]>
     </string>
 
@@ -854,7 +854,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Main Studio</string>
 
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register/">Create Account</a>]]></string>
+    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href=\"https://anilist.co/register/\">Create Account</a>]]></string>
 
     <string name="title_select_all">Select All</string>
 

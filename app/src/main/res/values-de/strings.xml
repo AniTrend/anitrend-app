@@ -159,7 +159,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> scheiterte mehr als einmal bei dem Versuch, sich zu authentifizieren! Bitte überprüfe deine Internetverbindung und
-        ob die <a href="https://anilist.co"><b>AniList Webseite</b></a> erreichbar ist, bevor du JA tippst!
+        ob die <a href=\"https://anilist.co\"><b>AniList Webseite</b></a> erreichbar ist, bevor du JA tippst!
         </p>
 
         Sollte die Website erreichbar sein, versuche bitte, dich bei <b>AniTrend</b> aus- und wieder einzuloggen. Möchtest du jetzt ausgeloggt werden?
@@ -396,8 +396,8 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Überprüft, ob du die neueste Version der App installiert hast. Falls nicht, wird sie von der <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b> heruntergeladen.<br/><br/>
-        Falls du diese App aus dem <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b> geladen hast
+        Überprüft, ob du die neueste Version der App installiert hast. Falls nicht, wird sie von der <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">AniTrend Repo</a></b> heruntergeladen.<br/><br/>
+        Falls du diese App aus dem <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b> geladen hast
         dann benötigst du diese Funktion nicht, deine App wird automatisch aktualisiert. Möchtest du trotzdem nach neuen Updates suchen und sie installieren?
         ]]>
     </string>
@@ -413,7 +413,7 @@
         <p>Es scheint so als wäre die App in einem unerwarteten Zustand fortgeführt worden. Das kann bei weniger performanten Geräten (mit weniger als 1GB Arbeitsspeicher) passieren.</p>
 
         Die App wird nun versuchen, sich neuzustarten, versuche danach bitte, dich erneut einzuloggen. Falls das Problem bestehen bleibt, kannst du gerne auf der
-        <a href="https://anilist.co/forum/thread/2081">AniTrend Foren Seite</a> vorbeischauen, um weitere Hilfe zu erhalten.
+        <a href=\"https://anilist.co/forum/thread/2081\">AniTrend Foren Seite</a> vorbeischauen, um weitere Hilfe zu erhalten.
         ]]>
     </string>
 
@@ -849,7 +849,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Main Studio</string>
 
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register/">Create Account</a>]]></string>
+    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href=\"https://anilist.co/register/\">Create Account</a>]]></string>
 
     <string name="title_select_all">Select All</string>
 
