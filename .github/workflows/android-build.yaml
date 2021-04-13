@@ -18,8 +18,8 @@ jobs:
         java-version: 1.8
     - name: Prepare secret files
       run: |
-        echo "${{ secrets.KEYSTORE }}" > signing.jks.asc
-        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch signing.jks.asc > app/signing.jks
+        echo "${{ secrets.KEYSTORE }}" > appstore.keystore.asc
+        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch appstore.keystore.asc > app/appstore.keystore.jks
         echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
         gpg -d --passphrase "${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}" --batch keystore.properties.asc > keystore.properties
         echo "${{ secrets.SECRETS_PROPERTIES }}" > secrets.properties.asc
@@ -32,12 +32,12 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
        name: app-release
-       path: app/app/release/
+       path: app/build/outputs/apk/app/release/
     - name: Publish github APK
       uses: actions/upload-artifact@v2
       with:
        name: app-github-release
-       path: app/github/release/
+       path: app/build/outputs/apk/github/release/
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"

@@ -43,18 +43,28 @@ private fun Properties.applyToBuildConfigForBuild(buildType: BuildType) {
     }
 }
 
-private fun Project.signingConfiguration(buildType: BuildType, properties: Properties) {
-    if (buildType.name == "release") {
-        baseAppExtension().signingConfigs {
-            create(buildType.name) {
-                storeFile(file(properties["STORE_FILE"] as String))
-                storePassword(properties["STORE_PASSWORD"] as String)
-                keyAlias(properties["STORE_KEY_ALIAS"] as String)
-                keyPassword(properties["STORE_KEY_PASSWORD"] as String)
+private fun Project.createSigningConfiguration(extension: BaseAppModuleExtension) {
+    var properties: Properties? = null
+    val keyStoreFile = project.file(".config/keystore.properties")
+    if (keyStoreFile.exists())
+        keyStoreFile.inputStream().use { fis ->
+            Properties().run {
+                load(fis);
+                properties = this
+            }
+        }
+    else println("${keyStoreFile.absolutePath} could not be found, release may fail")
+    properties?.also {
+        extension.signingConfigs {
+            create("release") {
+                storeFile(file(it["STORE_FILE"] as String))
+                storePassword(it["STORE_PASSWORD"] as String)
+                keyAlias(it["STORE_KEY_ALIAS"] as String)
+                keyPassword(it["STORE_KEY_PASSWORD"] as String)
                 isV2SigningEnabled = true
             }
         }
-    } else println("Skipping signing configuration for ${buildType.name}")
+    }
 }
 
 private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Project) {
@@ -70,15 +80,6 @@ private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Pr
                 }
             }
         else println("${secretsFile.absolutePath} could not be found, build may fail")
-
-        val keyStoreFile = project.file(".config/keystore.properties")
-        if (keyStoreFile.exists())
-            keyStoreFile.inputStream().use { fis ->
-                Properties().run {
-                    load(fis); project.signingConfiguration(buildType, this)
-                }
-            }
-        else println("${keyStoreFile.absolutePath} could not be found, release may fail")
 
         val configurationFile = project.file(".config/configuration.properties")
         if (configurationFile.exists())
@@ -123,28 +124,17 @@ private fun BaseAppModuleExtension.configureBuildFlavours() {
     applicationVariants.all {
         outputs.map { it as BaseVariantOutputImpl }.forEach { output ->
             val original = output.outputFileName
-            val versionCode = defaultConfig.versionCode
-            val versionName = defaultConfig.versionName
-            val currentName = "app-${output.name}.apk"
-            val prefix = "anitrend_v${versionName}_${versionCode}"
-            val outputFileName = when (output.name) {
-                "release" -> {
-                    val abi = output.getFilter("ABI") ?: "universal"
-                    original.replace(
-                        currentName, "${prefix}_${abi}-${output.name}.apk"
-                    )
-                }
-                else ->
-                    original.replace(
-                        currentName, "${prefix}-${output.name}.apk"
-                    )
-            }
-            output.outputFileName = outputFileName
+            val destination = if (output.name != "github-release")
+                original.substring(4)
+            else original
+            println("Configuring build output build -> name: ${output.name} | output: $destination")
+            output.outputFileName = destination
         }
     }
 }
 
 private fun BaseAppModuleExtension.setUpWith(project: Project) {
+    project.createSigningConfiguration(this)
     buildFeatures {
         dataBinding = true
         viewBinding = true
@@ -153,6 +143,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         getByName("release") {
             isMinifyEnabled = false
             isTestCoverageEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
