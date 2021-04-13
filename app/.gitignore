@@ -4,6 +4,7 @@
 
 # Credentials File
 .config/secrets.properties
+.config/keystore.properties
 
 # Google services local configuration
 google-services.json
