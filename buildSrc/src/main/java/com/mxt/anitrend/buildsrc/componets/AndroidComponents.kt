@@ -43,16 +43,18 @@ private fun Properties.applyToBuildConfigForBuild(buildType: BuildType) {
     }
 }
 
-private fun Project.signingConfiguration(properties: Properties) {
-    baseExtension().signingConfigs {
-        getByName("release") {
-            storeFile(file(properties["STORE_FILE"] as String))
-            storePassword(properties["STORE_PASSWORD"] as String)
-            keyAlias(properties["STORE_KEY_ALIAS"] as String)
-            keyPassword(properties["STORE_KEY_PASSWORD"] as String)
-            isV2SigningEnabled = true
+private fun Project.signingConfiguration(buildType: BuildType, properties: Properties) {
+    if (buildType.name == "release") {
+        baseAppExtension().signingConfigs {
+            create(buildType.name) {
+                storeFile(file(properties["STORE_FILE"] as String))
+                storePassword(properties["STORE_PASSWORD"] as String)
+                keyAlias(properties["STORE_KEY_ALIAS"] as String)
+                keyPassword(properties["STORE_KEY_PASSWORD"] as String)
+                isV2SigningEnabled = true
+            }
         }
-    }
+    } else println("Skipping signing configuration for ${buildType.name}")
 }
 
 private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Project) {
@@ -69,12 +71,11 @@ private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Pr
             }
         else println("${secretsFile.absolutePath} could not be found, build may fail")
 
-
         val keyStoreFile = project.file(".config/keystore.properties")
         if (keyStoreFile.exists())
-            secretsFile.inputStream().use { fis ->
+            keyStoreFile.inputStream().use { fis ->
                 Properties().run {
-                    load(fis); project.signingConfiguration(this)
+                    load(fis); project.signingConfiguration(buildType, this)
                 }
             }
         else println("${keyStoreFile.absolutePath} could not be found, release may fail")
