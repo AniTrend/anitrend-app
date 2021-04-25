@@ -6,12 +6,10 @@ query MediaStaff($id: Int!, $type: MediaType, $sort: [StaffSort] = ROLE, $isAdul
           ... PageInfoFragment
         }
         edges {
-          ... on StaffEdge {
             role
             node {
               ... StaffCoreFragment
             }
-          }
         }
       }
     }

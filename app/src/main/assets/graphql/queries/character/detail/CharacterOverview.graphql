@@ -1,8 +1,6 @@
 query CharacterOverview($id: Int!, $asHtml: Boolean = false) {
   Character(id: $id) {
     ... CharacterCoreFragment
-    ... on Character {
-      description(asHtml: $asHtml)
-    }
+    description(asHtml: $asHtml)
   }
 }

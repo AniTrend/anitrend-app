@@ -1,20 +1,16 @@
 query CharacterActors($id: Int!, $page: Int, $perPage: Int, $sort: [StaffSort] = [LANGUAGE_DESC, ROLE_DESC], $language: StaffLanguage) {
   Character(id: $id) {
     media(page: $page, perPage: $perPage, type: ANIME) {
-      ... on MediaConnection {
-        pageInfo {
-          ... PageInfoFragment
+      pageInfo {
+        ... PageInfoFragment
+      }
+      edges {
+        characterRole
+        voiceActors(sort: $sort, language: $language) {
+          ... StaffCoreFragment
         }
-        edges {
-          ... on MediaEdge {
-            characterRole
-            voiceActors(sort: $sort, language: $language) {
-              ... StaffCoreFragment
-            }
-            node {
-              ... MediaCoreFragment
-            }
-          }
+        node {
+          ... MediaCoreFragment
         }
       }
     }

@@ -1,9 +1,9 @@
 fragment MediaTagFragment on MediaTag {
-    id
-    name
-    description
-    category
-    rank
-    isGeneralSpoiler
-    isAdult
+  id
+  name
+  description
+  category
+  rank
+  isGeneralSpoiler
+  isAdult
 }

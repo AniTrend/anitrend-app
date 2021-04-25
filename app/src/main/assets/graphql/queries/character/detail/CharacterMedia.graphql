@@ -1,13 +1,11 @@
 query CharacterMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORMAT, $type: MediaType) {
   Character(id: $id) {
     media(page: $page, perPage: $perPage, sort: $sort, type: $type) {
-      ... on MediaConnection {
-        pageInfo {
-          ... PageInfoFragment
-        }
-        nodes {
-          ... MediaCoreFragment
-        }
+      pageInfo {
+        ... PageInfoFragment
+      }
+      nodes {
+        ... MediaCoreFragment
       }
     }
   }

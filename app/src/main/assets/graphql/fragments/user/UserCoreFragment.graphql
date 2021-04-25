@@ -1,10 +1,10 @@
 fragment UserCoreFragment on User {
-    id
-    name
-    avatar {
-        ... UserAvatarFragment
-    }
-    bannerImage
-    isFollowing
-    updatedAt
+  id
+  name
+  avatar {
+    ... UserAvatarFragment
+  }
+  bannerImage
+  isFollowing
+  updatedAt
 }

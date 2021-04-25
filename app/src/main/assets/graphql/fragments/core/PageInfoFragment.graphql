@@ -1,7 +1,7 @@
 fragment PageInfoFragment on PageInfo {
-    currentPage
-    hasNextPage
-    lastPage
-    perPage
-    total
+  currentPage
+  hasNextPage
+  lastPage
+  perPage
+  total
 }

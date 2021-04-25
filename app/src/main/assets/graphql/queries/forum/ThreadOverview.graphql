@@ -1,26 +1,26 @@
 query ThreadOverview(
-    $categoryId: Int,
-    $id: Int,
-    $id_in: [Int],
-    $mediaCategoryId: Int,
-    $replyUserId: Int,
-    $search: String,
-    $sort: [ThreadSort],
-    $subscribed: Boolean,
-    $userId: Int,
-    $asHtml: Boolean = false
+  $categoryId: Int,
+  $id: Int,
+  $id_in: [Int],
+  $mediaCategoryId: Int,
+  $replyUserId: Int,
+  $search: String,
+  $sort: [ThreadSort],
+  $subscribed: Boolean,
+  $userId: Int,
+  $asHtml: Boolean = false
 ) {
-    Thread(
-        categoryId: $categoryId
-        id: $id
-        id_in: $id_in
-        mediaCategoryId: $mediaCategoryId
-        replyUserId: $replyUserId
-        search: $search
-        sort: $sort
-        subscribed: $subscribed
-        userId: $userId
-    ) {
-        ... ThreadFragment
-    }
+  Thread(
+    categoryId: $categoryId
+    id: $id
+    id_in: $id_in
+    mediaCategoryId: $mediaCategoryId
+    replyUserId: $replyUserId
+    search: $search
+    sort: $sort
+    subscribed: $subscribed
+    userId: $userId
+  ) {
+    ... ThreadFragment
+  }
 }

@@ -1,4 +1,4 @@
 fragment ThreadCategoryFragment on ThreadCategory {
-    id
-    name
+  id
+  name
 }

@@ -1,5 +1,5 @@
 fragment FuzzyDateFragment on FuzzyDate {
-    day
-    month
-    year
+  day
+  month
+  year
 }

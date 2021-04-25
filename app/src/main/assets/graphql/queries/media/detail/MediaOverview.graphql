@@ -1,54 +1,23 @@
 query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean, $isMain: Boolean = true, $asHtml: Boolean = false) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
-    ... on Media {
-      id
-      title {
-        ... MediaTitleFragment
-      }
-      coverImage {
-        ... MediaImageFragment
-      }
-      bannerImage
-      type
-      format
-      startDate {
-        ... FuzzyDateFragment
-      }
-      endDate {
-        ... FuzzyDateFragment
-      }
-      genres
-      tags {
-        ... MediaTagFragment
-      }
-      trailer {
-        ... on MediaTrailer {
-          id
-          site
-          thumbnail
-        }
-      }
-      duration
-      season
-      episodes
-      chapters
-      volumes
-      hashtag
-      status
-      source
-      meanScore
-      averageScore
-      studios(isMain: $isMain) {
-        ... on StudioConnection {
-          nodes {
-            ... StudioFragment
-          }
-        }
-      }
-      nextAiringEpisode {
-        ... AiringScheduleFragment
-      }
-      description(asHtml: $asHtml)
+    ... MediaCoreFragment
+    genres
+    tags {
+      ... MediaTagFragment
     }
+    trailer {
+      id
+      site
+      thumbnail
+    }
+    duration
+    hashtag
+    source
+    studios(isMain: $isMain) {
+      nodes {
+        ... StudioFragment
+      }
+    }
+    description(asHtml: $asHtml)
   }
 }

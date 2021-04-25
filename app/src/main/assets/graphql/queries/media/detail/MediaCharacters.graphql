@@ -1,28 +1,15 @@
 query MediaCharacters($id: Int!, $type: MediaType, $isAdult: Boolean, $page: Int, $perPage: Int, $sort: [CharacterSort] = ROLE) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     characters(page: $page, perPage: $perPage, sort: $sort) {
-      ... on CharacterConnection {
         pageInfo {
           ... PageInfoFragment
         }
         edges {
-          ... on CharacterEdge {
             role
             node {
-              ... on Character {
-                id
-                name {
-                  ... CharacterNameFragment
-                }
-                image {
-                  ... CharacterImageFragment
-                }
-                isFavourite
-              }
+              ... CharacterCoreFragment
             }
-          }
         }
-      }
     }
   }
 }

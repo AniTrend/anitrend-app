@@ -1,31 +1,31 @@
 fragment ThreadFragment on Thread {
-    body(asHtml: $asHtml)
-    categories {
-        ... ThreadCategoryFragment
-    }
-    createdAt
-    id
-    isLocked
-    isSticky
-    isSubscribed
-    likes {
-        ... UserCoreFragment
-    }
-    mediaCategories {
-        ... MediaCoreFragment
-    }
-    repliedAt
-    replyCommentId
-    replyCount
-    replyUser {
-        ... UserCoreFragment
-    }
-    replyUserId
-    siteUrl
-    title
-    updatedAt
-    user {
-        ... UserCoreFragment
-    }
-    viewCount
+  body(asHtml: $asHtml)
+  categories {
+    ... ThreadCategoryFragment
+  }
+  createdAt
+  id
+  isLocked
+  isSticky
+  isSubscribed
+  likes {
+    ... UserCoreFragment
+  }
+  mediaCategories {
+    ... MediaCoreFragment
+  }
+  repliedAt
+  replyCommentId
+  replyCount
+  replyUser {
+    ... UserCoreFragment
+  }
+  replyUserId
+  siteUrl
+  title
+  updatedAt
+  user {
+    ... UserCoreFragment
+  }
+  viewCount
 }

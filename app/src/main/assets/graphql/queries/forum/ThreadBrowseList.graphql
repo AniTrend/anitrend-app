@@ -1,33 +1,33 @@
 query ThreadBrowseList(
-    $page: Int,
-    $perPage: Int,
-    $categoryId: Int,
-    $id: Int,
-    $id_in: [Int],
-    $mediaCategoryId: Int,
-    $replyUserId: Int,
-    $search: String,
-    $sort: [ThreadSort],
-    $subscribed: Boolean,
-    $userId: Int,
-    $asHtml: Boolean = false
+  $page: Int,
+  $perPage: Int,
+  $categoryId: Int,
+  $id: Int,
+  $id_in: [Int],
+  $mediaCategoryId: Int,
+  $replyUserId: Int,
+  $search: String,
+  $sort: [ThreadSort],
+  $subscribed: Boolean,
+  $userId: Int,
+  $asHtml: Boolean = false
 ) {
-    Page(page: $page, perPage: $perPage) {
-        pageInfo {
-            ... PageInfoFragment
-        }
-        threads(
-            categoryId: $categoryId
-            id: $id
-            id_in: $id_in
-            mediaCategoryId: $mediaCategoryId
-            replyUserId: $replyUserId
-            search: $search
-            sort: $sort
-            subscribed: $subscribed
-            userId: $userId
-        ) {
-            ... ThreadFragment
-        }
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      ... PageInfoFragment
     }
+    threads(
+      categoryId: $categoryId
+      id: $id
+      id_in: $id_in
+      mediaCategoryId: $mediaCategoryId
+      replyUserId: $replyUserId
+      search: $search
+      sort: $sort
+      subscribed: $subscribed
+      userId: $userId
+    ) {
+      ... ThreadFragment
+    }
+  }
 }

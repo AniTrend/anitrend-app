@@ -1,7 +1,7 @@
 fragment StaffNameFragment on StaffName {
-    first
-    last
-    full
-    native
-    alternative
+  first
+  last
+  full
+  native
+  alternative
 }

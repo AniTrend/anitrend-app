@@ -1,13 +1,9 @@
 query MediaEpisodes($id: Int!, $type: MediaType, $isAdult: Boolean) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
-    ... on Media {
-      externalLinks {
-        ... on MediaExternalLink {
-          id
-          url
-          site
-        }
-      }
+    externalLinks {
+      id
+      url
+      site
     }
   }
 }

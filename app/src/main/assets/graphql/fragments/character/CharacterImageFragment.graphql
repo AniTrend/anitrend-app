@@ -1,4 +1,4 @@
 fragment CharacterImageFragment on CharacterImage {
-    large
-    medium
+  large
+  medium
 }

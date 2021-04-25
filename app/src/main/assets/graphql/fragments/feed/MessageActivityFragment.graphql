@@ -1,21 +1,21 @@
 fragment MessageActivityFragment on MessageActivity {
-    id
-    message(asHtml: $asHtml)
-    isLocked
-    createdAt
-    type
-    messenger {
-        ...UserCoreFragment
-    }
-    recipient {
-        ...UserCoreFragment
-    }
-    replyCount
-    replies {
-        ...ActivityReplyFragment
-    }
-    likes {
-        ...UserCoreFragment
-    }
-    siteUrl
+  id
+  message(asHtml: $asHtml)
+  isLocked
+  createdAt
+  type
+  messenger {
+    ...UserCoreFragment
+  }
+  recipient {
+    ...UserCoreFragment
+  }
+  replyCount
+  replies {
+    ...ActivityReplyFragment
+  }
+  likes {
+    ...UserCoreFragment
+  }
+  siteUrl
 }

@@ -1,24 +1,24 @@
 fragment MediaListFragment on MediaList {
-    id
-    mediaId
-    status
-    score(format: $scoreFormat)
-    progress
-    progressVolumes
-    repeat
-    priority
-    private
-    hiddenFromStatusLists
-    customLists(asArray: true)
-    notes
-    startedAt {
-        ... FuzzyDateFragment
-    }
-    completedAt {
-        ... FuzzyDateFragment
-    }
-    media {
-        ... MediaCoreFragment
-    }
-    updatedAt
+  id
+  mediaId
+  status
+  score(format: $scoreFormat)
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  hiddenFromStatusLists
+  customLists(asArray: true)
+  notes
+  startedAt {
+    ... FuzzyDateFragment
+  }
+  completedAt {
+    ... FuzzyDateFragment
+  }
+  media {
+    ... MediaCoreFragment
+  }
+  updatedAt
 }
