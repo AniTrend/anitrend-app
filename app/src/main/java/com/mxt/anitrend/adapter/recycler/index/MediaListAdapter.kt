@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
+import android.widget.LinearLayout.LayoutParams
 import androidx.databinding.ViewDataBinding
 import butterknife.OnClick
 import butterknife.OnLongClick
@@ -107,9 +108,17 @@ class MediaListAdapter(context: Context?) :
                     binding.seriesTitle.setTitle(model)
                     binding.seriesEpisodes.setModel(model, currentUser)
 
-                    if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
-                        binding.seriesEpisodes.visibility = View.GONE
-                        binding.customRatingWidget.visibility = View.GONE
+                    when (presenter.settings.mediaListStyle) {
+                        KeyUtil.LIST_VIEW_STYLE_COMPACT_X1 -> {
+                            val margin = context.resources.getDimension(R.dimen.series_title_margin)
+                            val layout = (binding.seriesTitle.layoutParams as LayoutParams)
+                            layout.marginEnd = margin.toInt()
+                        }
+                        KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
+                            binding.seriesEpisodes.visibility = View.GONE
+                            binding.customRatingWidget.visibility = View.GONE
+                        }
+                        else -> {}
                     }
                 }
                 else -> {}
