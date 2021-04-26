@@ -22,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.DialogAction
@@ -40,6 +42,7 @@ import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.service.DownloaderService
 import com.mxt.anitrend.util.DialogUtil
@@ -191,6 +194,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
                 if (redirectShortcut == 0) R.id.nav_anime else redirectShortcut
         mNavigationView.setCheckedItem(selectedItem)
         onNavigate(selectedItem)
+        makeRequest()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -362,14 +366,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
                                         this@MainActivity,
                                         versionBase
                                     )
-                                else
-                                    NotifyUtil.createAlerter(
-                                        this@MainActivity,
-                                        getString(R.string.title_update_infodadat),
-                                        getString(R.string.app_no_date),
-                                        R.drawable.ic_cloud_done_white_24dp,
-                                        R.color.colorStateGreen
-                                    )
+                                else presenter.checkForUpdates()
                             }
 
                             override fun onNegativeButton() {
@@ -426,7 +423,6 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
     }
 
     override fun updateUI() {
-        val versionBase = presenter.database.remoteVersion
          headerContainer
              .findViewById<View>(R.id.banner_clickable).setOnClickListener(this)
 
@@ -440,18 +436,44 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         else
             mHeaderView.setImageResource(R.drawable.reg_bg)
 
-        if (versionBase != null && versionBase.isNewerVersion) {
-            // If a new version of the application is available on GitHub
-            val mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update)
-                .actionView.findViewById<TextView>(R.id.app_update_info)
-            mAppUpdateWidget.text = getString(R.string.app_update, versionBase.version)
-            mAppUpdateWidget.visibility = View.VISIBLE
-        }
         checkNewInstallation()
     }
 
     override fun makeRequest() {
-        // nothing to request
+        WorkManager.getInstance(this)
+            .getWorkInfosByTagLiveData(
+                KeyUtil.WorkUpdaterId
+            ).observe(this) { workInfoList ->
+                val workInfo = workInfoList.firstOrNull { workInfo ->
+                    workInfo.state == WorkInfo.State.SUCCEEDED
+                }
+                if (workInfo != null)
+                    onUpdateChecked()
+        }
+    }
+
+    private fun onLatestUpdateInstalled() {
+        NotifyUtil.createAlerter(
+            this@MainActivity,
+            getString(R.string.title_update_infodadat),
+            getString(R.string.app_no_date),
+            R.drawable.ic_cloud_done_white_24dp,
+            R.color.colorStateGreen
+        )
+    }
+
+    private fun onUpdateChecked() {
+        val remoteVersion = presenter.database.remoteVersion
+
+        if (remoteVersion != null) {
+            if (remoteVersion.isNewerVersion) {
+                // If a new version of the application is available on GitHub
+                val mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update)
+                    .actionView.findViewById<TextView>(R.id.app_update_info)
+                mAppUpdateWidget.text = getString(R.string.app_update, remoteVersion.version)
+                mAppUpdateWidget.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setupUserItems() {

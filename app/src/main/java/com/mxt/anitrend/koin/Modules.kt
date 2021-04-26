@@ -177,6 +177,14 @@ private val workerModule = module {
             presenter = WidgetPresenter(context)
         )
     }
+    worker { scope ->
+        val context = androidContext()
+        UpdateWorker(
+            context = context,
+            workerParams = scope.get(),
+            presenter = WidgetPresenter(context)
+        )
+    }
 }
 
 private val presenterModule = module {
