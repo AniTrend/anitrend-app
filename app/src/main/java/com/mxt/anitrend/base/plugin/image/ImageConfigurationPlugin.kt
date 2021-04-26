@@ -1,8 +1,6 @@
 package com.mxt.anitrend.base.plugin.image
 
-import android.content.res.Resources
 import android.view.View
-import com.mxt.anitrend.R
 import com.mxt.anitrend.util.CompatUtil
 import io.noties.markwon.*
 import io.noties.markwon.core.CoreProps
@@ -11,12 +9,11 @@ import io.noties.markwon.image.ImageProps
 import org.commonmark.node.Image
 
 internal class ImageConfigurationPlugin private constructor(
-    private val resources: Resources
 ) : AbstractMarkwonPlugin() {
 
     override fun configure(registry: MarkwonPlugin.Registry) {
-        val spacing = resources.getDimensionPixelSize(R.dimen.spacing_xl)
-        val maxWidth = resources.displayMetrics.widthPixels - spacing
+        //val spacing = resources.getDimensionPixelSize(R.dimen.spacing_xl)
+        //val maxWidth = resources.displayMetrics.widthPixels - spacing
         /*registry.require(ImagesPlugin::class.java) { plugin ->
             plugin.defaultMediaDecoder(
                 DefaultDownScalingMediaDecoder.create(
@@ -54,7 +51,6 @@ internal class ImageConfigurationPlugin private constructor(
     }
 
     companion object {
-        fun create(resources: Resources) =
-            ImageConfigurationPlugin(resources)
+        fun create() = ImageConfigurationPlugin()
     }
 }
