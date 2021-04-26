@@ -3,11 +3,7 @@ package com.mxt.anitrend.util
 
 import android.content.Context
 import androidx.work.*
-import com.mxt.anitrend.worker.ClearNotificationWorker
-import com.mxt.anitrend.worker.GenreSyncWorker
-
-import com.mxt.anitrend.worker.NotificationWorker
-import com.mxt.anitrend.worker.TagSyncWorker
+import com.mxt.anitrend.worker.*
 
 import java.util.concurrent.TimeUnit
 
@@ -107,6 +103,27 @@ class JobSchedulerUtil(private val settings: Settings) {
                     workRequest
                 )
         }
+    }
+
+    fun startUpdateJob(context: Context) {
+        val workRequest = OneTimeWorkRequest.Builder(
+            UpdateWorker::class.java
+        )
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                5,
+                TimeUnit.MINUTES
+            )
+            .addTag(KeyUtil.WorkUpdaterId)
+            .setConstraints(getConstraints())
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                KeyUtil.WorkUpdaterId,
+                ExistingWorkPolicy.KEEP,
+                workRequest
+            )
     }
 
     /**
