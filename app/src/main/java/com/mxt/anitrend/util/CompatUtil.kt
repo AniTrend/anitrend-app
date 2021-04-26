@@ -81,9 +81,9 @@ object CompatUtil {
             val intent = Intent(context, ImagePreviewActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(KeyUtil.arg_model, imageUri)
-            if (context is FragmentActivity)
-                startSharedImageTransition(context, view, intent, R.string.transition_image_preview)
-            else context.startActivity(intent)
+            //if (context is FragmentActivity)
+            //    startSharedImageTransition(context, view, intent, R.string.transition_image_preview)
+            context.startActivity(intent)
         }
     }
 
@@ -243,38 +243,6 @@ object CompatUtil {
     fun getScreenDimens(deviceDimens: Point, context: Context?) {
         val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
         windowManager?.defaultDisplay?.getSize(deviceDimens)
-    }
-
-    /**
-     * Starts a shared transition of activities connected by views
-     * <br></br>
-     *
-     * @param base The calling activity
-     * @param target The view from the calling activity with transition name
-     * @param data Intent with bundle and or activity to start
-     */
-    @Deprecated("")
-    fun startSharedTransitionActivity(base: FragmentActivity?, target: View, data: Intent) {
-        /*Pair participants = new Pair<>(target, ViewCompat.getTransitionName(target));
-        ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(base, participants);
-        ActivityCompat.startActivity(base, data, transitionActivityOptions.toBundle());*/
-        base?.startActivity(data)
-    }
-
-    /**
-     * Starts a shared transition of activities connected by views
-     * by making use of the provided transition name
-     * <br></br>
-     *
-     * @param base The calling activity
-     * @param target The view from the calling activity with transition name
-     * @param data Intent with bundle and or activity to start
-     */
-    fun startSharedImageTransition(base: FragmentActivity?, target: View, data: Intent, @StringRes transitionName: Int) {
-        ViewCompat.setTransitionName(target, Objects.requireNonNull<FragmentActivity>(base).getString(transitionName))
-        val transition = ActivityOptionsCompat.makeSceneTransitionAnimation(base!!, target, ViewCompat.getTransitionName(target)!!)
-        base.startActivity(data, transition.toBundle())
     }
 
     /**
