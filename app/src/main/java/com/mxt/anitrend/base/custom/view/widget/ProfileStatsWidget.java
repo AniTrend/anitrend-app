@@ -93,10 +93,11 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         binding.userMangaChaps.setTextColor(textColor);
         binding.userAnimeTotal.setTextColor(textColor);
         binding.userMangaTotal.setTextColor(textColor);
+
+        binding.setClickListener(this);
     }
 
     public void updateUI() {
-        binding.setClickListener(this);
         if (model != null) {
             binding.userAnimeTime.setText(getAnimeTime(model.getAnime().getMinutesWatched()));
             binding.userMangaChaps.setText(getMangaChaptersCount(model.getManga().getChaptersRead()));
