@@ -55,9 +55,6 @@ fragment UserStatisticsFragment on UserStatistics {
   staff {
     chaptersRead
     count
-    # staff {
-    #   ... StaffCoreFragment
-    # }
     meanScore
     mediaIds
     minutesWatched
