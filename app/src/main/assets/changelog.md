@@ -1,6 +1,7 @@
 __Anitrend v2.0 Coming Soon [W.I.P]__ All __v1.x.x__ updates will focus on major bug fixes as all resources are being moved to __v2.0__
 
 Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -> **Extras** -> **About** -> **Frequently Asked Questions**
+> Please update your profile stats using [this](https://anilist.co/settings/lists) if you've been having issues loading your profile in AniTrend
 
 ### Enhancements
 - Migrate to v2.0's markdown rendering, includes spoiler support and inline images, e.t.c (keep in mind this is an experimental feature which will be finalized in v2.0 see **Current Issues** below)
@@ -10,10 +11,8 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Apply start date to anime or manga when incremented by the __+1__ widget. Thanks @SilverFullbuster
 
 ### Bug Fixes
-- April fools media removed causes crashes in notifications (this was an edge case)
-- Notification workaround option has been deprecated, fixed some notification edge cases
-- Crash when opening activities from system notifications
-- Crashes at startup on some devices
+- Fix airing series compact style title overlapping with widgets. Thanks @YoussefHabri
+- Fix some profile not loading issues. Thanks @YoussefHabri
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment
