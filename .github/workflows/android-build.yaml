@@ -52,12 +52,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: app/app/release/
+          path: app/build/outputs/apk/app/release
       - name: Publish Github APK
         uses: actions/upload-artifact@v2
         with:
           name: app-github-release
-          path: app/github/release/
+          path: app/build/outputs/apk/github/release
       - uses: ericcornelissen/git-tag-annotation-action@v1
         id: tag_data
       - uses: marvinpinto/action-automatic-releases@latest
