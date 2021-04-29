@@ -39,7 +39,7 @@ jobs:
           echo "${{ secrets.KEYSTORE }}" > appstore.keystore.asc
           gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch appstore.keystore.asc > app/appstore.keystore.jks
           echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}" --batch keystore.properties.asc > keystore.properties
+          gpg -d --passphrase "${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}" --batch keystore.properties.asc > app/.config/keystore.properties
           echo "${{ secrets.SECRETS_PROPERTIES }}" > secrets.properties.asc
           gpg -d --passphrase "${{ secrets.SECRETS_PROPERTIES_PASSPHRASE }}" --batch secrets.properties.asc > app/.config/secrets.properties
           echo "${{ secrets.GOOGLE_SERVICES }}" > google-services.json.asc
