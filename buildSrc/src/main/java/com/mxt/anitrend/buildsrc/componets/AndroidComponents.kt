@@ -44,27 +44,24 @@ private fun Properties.applyToBuildConfigForBuild(buildType: BuildType) {
 }
 
 private fun Project.createSigningConfiguration(extension: BaseAppModuleExtension) {
-    var properties: Properties? = null
     val keyStoreFile = project.file(".config/keystore.properties")
-    if (keyStoreFile.exists())
+    if (keyStoreFile.exists()) {
         keyStoreFile.inputStream().use { fis ->
-            Properties().run {
-                load(fis);
-                properties = this
-            }
-        }
-    else println("${keyStoreFile.absolutePath} could not be found, release may fail")
-    properties?.also {
-        extension.signingConfigs {
-            create("release") {
-                storeFile(file(it["STORE_FILE"] as String))
-                storePassword(it["STORE_PASSWORD"] as String)
-                keyAlias(it["STORE_KEY_ALIAS"] as String)
-                keyPassword(it["STORE_KEY_PASSWORD"] as String)
-                isV2SigningEnabled = true
+            val properties = Properties().apply { load(fis) }
+            println("${keyStoreFile.name} found, creating signing configuration")
+            extension.signingConfigs {
+                create("release") {
+                    println("Creating signing configuration for $name")
+                    storeFile(file(properties["STORE_FILE"] as String))
+                    storePassword(properties["STORE_PASSWORD"] as String)
+                    keyAlias(properties["STORE_KEY_ALIAS"] as String)
+                    keyPassword(properties["STORE_KEY_PASSWORD"] as String)
+                    isV2SigningEnabled = true
+                }
             }
         }
     }
+    else println("${keyStoreFile.absolutePath} could not be found, release may fail")
 }
 
 private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Project) {
@@ -147,8 +144,10 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            if (project.file(".config/keystore.properties").exists())
+            if (project.file(".config/keystore.properties").exists()) {
+                println("Applying signing configuration for to build type: $name")
                 signingConfig = signingConfigs.getByName("release")
+            }
         }
 
         getByName("debug") {
