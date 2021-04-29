@@ -37,7 +37,7 @@ jobs:
       - name: Prepare secret files
         run: |
           echo "${{ secrets.KEYSTORE }}" > appstore.keystore.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch appstore.keystore.asc > app/appstore.keystore.jks
+          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch appstore.keystore.asc > app/appstore.keystore
           echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
           gpg -d --passphrase "${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}" --batch keystore.properties.asc > app/.config/keystore.properties
           echo "${{ secrets.SECRETS_PROPERTIES }}" > secrets.properties.asc
