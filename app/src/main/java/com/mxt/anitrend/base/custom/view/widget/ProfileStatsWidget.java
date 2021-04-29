@@ -174,10 +174,11 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     model = connectionContainer.getConnection();
                     updateUI();
                 }
-            } else
+            } else {
                 Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+            }
         } catch (Exception e) {
-            Timber.tag(TAG).w(e);
+            Timber.tag(TAG).e(e);
             e.printStackTrace();
         }
     }

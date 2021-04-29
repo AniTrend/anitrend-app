@@ -247,7 +247,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      * @param permission the current permission granted
      */
     protected void onPermissionGranted(@NonNull String permission) {
-        Timber.tag(TAG).i("Granted %s", permission);
+        Timber.tag(TAG).d("Granted %s", permission);
     }
 
     /**
@@ -369,13 +369,13 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      */
     @Override
     public void onChanged(@Nullable M model) {
-        Timber.tag(TAG).i("onChanged() from view model has received data");
+        Timber.tag(TAG).v("onChanged() from view model has received data");
     }
 
     @Override
     public void showError(String error) {
         if(!TextUtils.isEmpty(error))
-            Timber.tag(TAG).d(error);
+            Timber.tag(TAG).w(error);
         if(isAlive()) {
             NotifyUtil.INSTANCE.createAlerter(this, getString(R.string.text_error_request), error,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateOrange,
@@ -387,7 +387,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @Override
     public void showEmpty(String message) {
         if(!TextUtils.isEmpty(message))
-            Timber.tag(TAG).i(message);
+            Timber.tag(TAG).v(message);
         if (isAlive()) {
             NotifyUtil.INSTANCE.createAlerter(this, getString(R.string.text_error_request), message,
                     R.drawable.ic_warning_white_18dp, R.color.colorStateBlue,
