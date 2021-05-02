@@ -10,6 +10,7 @@ object Libraries {
 
     const val junit = "junit:junit:${Versions.junit}"
     const val mockk = "io.mockk:mockk:${Versions.mockk}"
+    const val hamcrest = "org.hamcrest:hamcrest-library:${Versions.hamcrest}"
 
     const val betterLinkMovement = "me.saket:better-link-movement-method:${Versions.betterLinkMovement}"
 
@@ -386,7 +387,7 @@ object Libraries {
     }
 
     object Mockito {
-        private const val version = "3.8.0"
+        private const val version = "3.9.0"
         const val android = "org.mockito:mockito-android:$version"
         const val core = "org.mockito:mockito-core:$version"
     }

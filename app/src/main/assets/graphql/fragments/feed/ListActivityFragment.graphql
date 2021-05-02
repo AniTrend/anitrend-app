@@ -1,22 +1,22 @@
 fragment ListActivityFragment on ListActivity {
-    id
-    status
-    progress
-    isLocked
-    createdAt
-    type
-    user {
+  id
+  status
+  progress
+  isLocked
+  createdAt
+  type
+  user {
     ... UserCoreFragment
-    }
-    replyCount
-    replies {
+  }
+  replyCount
+  replies {
     ... ActivityReplyFragment
-    }
-    likes {
+  }
+  likes {
     ... UserCoreFragment
-    }
-    media {
+  }
+  media {
     ... MediaCoreFragment
-    }
-    siteUrl
+  }
+  siteUrl
 }

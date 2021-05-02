@@ -10,6 +10,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.glide.GlideImagesPlugin
+import timber.log.Timber
 
 internal class GlideImagePlugin private constructor(
     private val requestManager: RequestManager
@@ -22,6 +23,8 @@ internal class GlideImagePlugin private constructor(
             target: Target<Drawable>?,
             isFirstResource: Boolean
         ): Boolean {
+            if (e != null)
+                Timber.w(e, "Cannot load model -> $model")
             return false
         }
 
@@ -33,7 +36,7 @@ internal class GlideImagePlugin private constructor(
             isFirstResource: Boolean
         ): Boolean {
             if (resource is Animatable)
-                resource.start();
+                resource.start()
             return false
         }
     }

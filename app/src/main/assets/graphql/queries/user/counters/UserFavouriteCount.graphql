@@ -1,41 +1,29 @@
 query UserFavouriteCount($id: Int, $userName: String, $page: Int, $perPage: Int) {
   User(id: $id, name: $userName) {
     favourites {
-      ... on Favourites {
-        anime(page: $page, perPage: $perPage) {
-          pageInfo {
-            ... on PageInfo {
-              total
-            }
-          }
+      anime(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
         }
-        manga(page: $page, perPage: $perPage) {
-          pageInfo {
-            ... on PageInfo {
-              total
-            }
-          }
+      }
+      manga(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
         }
-        characters(page: $page, perPage: $perPage) {
-          pageInfo {
-            ... on PageInfo {
-              total
-            }
-          }
+      }
+      characters(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
         }
-        staff(page: $page, perPage: $perPage) {
-          pageInfo {
-            ... on PageInfo {
-              total
-            }
-          }
+      }
+      staff(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
         }
-        studios(page: $page, perPage: $perPage) {
-          pageInfo {
-            ... on PageInfo {
-              total
-            }
-          }
+      }
+      studios(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
         }
       }
     }

@@ -1,20 +1,15 @@
 query MediaBase($id: Int!, $type: MediaType, $isAdult: Boolean) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
-    ... on Media {
-      id
-      title {
-        userPreferred
-      }
-      type
-      bannerImage
-      isFavourite
-      mediaListEntry {
-        ... on MediaList {
-          id
-          status
-        }
-      }
-      siteUrl
+    id
+    title {
+      userPreferred
     }
+    type
+    bannerImage
+    isFavourite
+    mediaListEntry {
+      ... MediaListFragmentMini
+    }
+    siteUrl
   }
 }

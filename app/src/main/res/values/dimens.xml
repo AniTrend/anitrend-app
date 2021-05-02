@@ -54,6 +54,8 @@
 
     <dimen name="divider_height">1px</dimen>
 
+    <dimen name="series_title_margin">36dp</dimen>
+
     <!-- Match Parent -->
     <dimen name="bottom_sheet_width">0dp</dimen>
 </resources>

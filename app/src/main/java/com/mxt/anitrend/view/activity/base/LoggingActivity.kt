@@ -89,28 +89,24 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
             }
             R.id.action_save_log -> {
                 if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        runCatching {
-                            val root = File(
-                                Environment.getExternalStoragePublicDirectory(
-                                    Environment.DIRECTORY_DOWNLOADS
-                                ),
-                                "AniTrend Logcat.txt"
-                            )
-                            applicationContext.logFile().copyTo(root, true)
-                        }.onFailure {
-                            Timber.e(it)
-                        }.onSuccess {
-                            withContext(Dispatchers.Main) {
-                                NotifyUtil.createAlerter(
-                                    this@LoggingActivity,
-                                    R.string.text_post_information,
-                                    R.string.bug_report_saved,
-                                    R.drawable.ic_insert_emoticon_white_24dp,
-                                    R.color.colorStateGreen
-                                )
-                            }
-                        }
+                    runCatching {
+                        val root = File(
+                            Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_DOWNLOADS
+                            ),
+                            "AniTrend Logcat.txt"
+                        )
+                        applicationContext.logFile().copyTo(root, true)
+                    }.onFailure {
+                        Timber.e(it)
+                    }.onSuccess {
+                        NotifyUtil.createAlerter(
+                            this@LoggingActivity,
+                            R.string.text_post_information,
+                            R.string.bug_report_saved,
+                            R.drawable.ic_insert_emoticon_white_24dp,
+                            R.color.colorStateGreen
+                        )
                     }
                 }
             }
@@ -191,7 +187,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     }
 
     override fun makeRequest() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Default) {
             loadLogFileContents()
             printLog()
         }

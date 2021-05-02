@@ -1,17 +1,13 @@
 query MediaStaff($id: Int!, $type: MediaType, $sort: [StaffSort] = ROLE, $isAdult: Boolean, $page: Int, $perPage: Int) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     staff(sort: $sort, page: $page, perPage: $perPage) {
-      ... on StaffConnection {
-        pageInfo {
-          ... PageInfoFragment
-        }
-        edges {
-          ... on StaffEdge {
-            role
-            node {
-              ... StaffCoreFragment
-            }
-          }
+      pageInfo {
+        ... PageInfoFragment
+      }
+      edges {
+        role
+        node {
+          ... StaffCoreFragment
         }
       }
     }

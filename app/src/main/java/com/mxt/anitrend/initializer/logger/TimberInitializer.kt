@@ -4,15 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.startup.Initializer
 import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.extension.logDirectory
-import com.mxt.anitrend.extension.logFile
 import fr.bipi.tressence.file.FileLoggerTree
 import timber.log.Timber
-import java.io.File
 
 class TimberInitializer : Initializer<Unit> {
-
 
     private fun createFileLoggingTree(context: Context): Timber.Tree {
         return FileLoggerTree.Builder()
@@ -51,7 +47,7 @@ class TimberInitializer : Initializer<Unit> {
 
     companion object {
         val MIN_LOG_LEVEL = if (BuildConfig.DEBUG) Log.DEBUG else Log.WARN
-        const val FILE_SIZE_LIMIT = 4 * 1024 * 1024
+        const val FILE_SIZE_LIMIT = 800 * 1024
         const val FILE_CREATION_LIMIT = 1
     }
 }

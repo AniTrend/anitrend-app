@@ -183,7 +183,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> has failed to authenticate with the server more than once! Please check that your internet connection is
-        working and also check if the <a href="https://anilist.co"><b>AniList Website</b></a> is available before tapping YES!
+        working and also check if the <a href=\"https://anilist.co\"><b>AniList Website</b></a> is available before tapping YES!
         </p>
 
         If the website is available then would you like <b>AniTrend</b> to reset itself by signing you out, assuming you were signed in before?
@@ -440,9 +440,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Checks if you have the latest version. If not a newer version will download from <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
+        Checks if you have the latest version. If not a newer version will download from <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">AniTrend Repo</a></b>.
         <br/><br/>
-        <b>N.B.</b> If you downloaded this app from the <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        <b>N.B.</b> If you downloaded this app from the <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b>
         then there is no need to use this feature. Do still you wish to continue with checking &amp; updating to the latest build?
         ]]>
     </string>
@@ -458,7 +458,7 @@
         <p>Looks like the app resumed from an unexpected state while processing your login information. This can occur on low powered devices 1GB of RAM or less.</p>
 
         The application will now try to restart in hopes to resolve the error, after the restart please try signing in again, and if this issue persists please feel free to head over to the
-        <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> for more assistance.
+        <a href=\"https://anilist.co/forum/thread/2081\">AniTrend Forum Page</a> for more assistance.
         ]]>
     </string>
 
@@ -898,7 +898,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Main Studio</string>
 
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href="https://anilist.co/register">Create Account</a>]]></string>
+    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href=\"https://anilist.co/register\">Create Account</a>]]></string>
 
     <string name="title_select_all">Select All</string>
 

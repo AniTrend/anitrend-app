@@ -15,6 +15,8 @@ import com.mxt.anitrend.model.entity.crunchy.MediaContent
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.migration.MigrationUtil
 import com.mxt.anitrend.util.migration.Migrations
 import timber.log.Timber
@@ -182,6 +184,14 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
                 WebTokenRequest.invalidateInstance(context)
             }
         }
+    }
+
+    /**
+     * Runs worker to check for updates
+     */
+    fun checkForUpdates() {
+        val scheduler = JobSchedulerUtil(settings)
+        scheduler.startUpdateJob(context)
     }
 
     companion object {

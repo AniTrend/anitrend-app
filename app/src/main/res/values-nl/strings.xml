@@ -162,7 +162,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> heeft meerdere keren gefaald om te authenticeren met de server!
-        Controleer of je internet connectie werkt en check ook of de<a href="https://anilist.co"><b>AniList Website</b></a> beschikbaar is voor je op JA klikt!
+        Controleer of je internet connectie werkt en check ook of de<a href=\"https://anilist.co\"><b>AniList Website</b></a> beschikbaar is voor je op JA klikt!
         </p>
 
         Als de website beschikbaar is, wil je dan bij <b>AniTrend</b> uitloggen om te resetten, ervan uitgaan dat je eerst ingelogd was?
@@ -392,9 +392,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Controleerd of je de nieuwste versie hebt. zo niet, dan wordt er een nieuwere versie gedownload via <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
+        Controleerd of je de nieuwste versie hebt. zo niet, dan wordt er een nieuwere versie gedownload via <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">AniTrend Repo</a></b>.
         <br/><br/>
-        <b>N.B.</b> Als je deze app hebt gedownload van de <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        <b>N.B.</b> Als je deze app hebt gedownload van de <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b>
         is er geen reden om deze functie te gebruiken. wil je toch doorgaan met het checken van &amp; van de laatste Build-versie?
         ]]>
     </string>
@@ -410,7 +410,7 @@
         <p>Het lijkt erop dat de app is gestart vanuit een onverwachte staat terwijl data werd opgehaald. Dit kan voorkomen op apparaten met laag vermogen, bijv. 1GB RAM of minder.</p>
 
         De applicatie zal opnieuw opgestart worden in de hoop dit probleem te verhelpen. Probeer opnieuw in te loggen na de restart en als het probleem zich nog steeds voordoet, neem dan contact op met
-        <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Page</a> voor meer assistentie.
+        <a href=\"https://anilist.co/forum/thread/2081\">AniTrend Forum Page</a> voor meer assistentie.
         ]]>
     </string>
 
@@ -848,7 +848,7 @@
     <string name="title_hash_tag">Hash Tag</string>
     <string name="title_main_studio">Huidige Studio</string>
 
-    <string name="create_new_account"><![CDATA[Nog geen account? <a href="https://anilist.co/register">Maak een account aan!</a>]]></string>
+    <string name="create_new_account"><![CDATA[Nog geen account? <a href=\"https://anilist.co/register\">Maak een account aan!</a>]]></string>
 
     <string name="title_select_all">Alles selecteren</string>
 

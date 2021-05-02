@@ -1,17 +1,13 @@
 query MediaListCollection($userId: Int, $userName: String, $type: MediaType, $forceSingleCompletedList: Boolean, $sort: [MediaListSort], $statusIn: [MediaListStatus], $scoreFormat: ScoreFormat = POINT_100) {
   MediaListCollection(userId: $userId, userName: $userName, type: $type, forceSingleCompletedList: $forceSingleCompletedList, sort: $sort, status_in: $statusIn) {
-    ... on MediaListCollection {
-      lists {
-        ... on MediaListGroup {
-          entries {
-            ... MediaListFragment
-          }
-          name
-          isCustomList
-          isSplitCompletedList
-          status
-        }
+    lists {
+      entries {
+        ... MediaListFragment
       }
+      name
+      isCustomList
+      isSplitCompletedList
+      status
     }
   }
 }

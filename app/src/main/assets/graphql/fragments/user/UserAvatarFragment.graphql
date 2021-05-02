@@ -1,4 +1,4 @@
 fragment UserAvatarFragment on UserAvatar {
-    large
-    medium
+  large
+  medium
 }

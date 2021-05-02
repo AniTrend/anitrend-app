@@ -172,7 +172,7 @@
 		<![CDATA[
         <p>
         <b>AniTrend</b> har misslyckats med att verifiera med servern mer än en gång! Kontrollera att din internetanslutning är
-         igång och kontrollera även om <a href="https://anilist.co"><b>Anilist hemsida</b></a> är tillgänglig innan du trycker på JA!
+         igång och kontrollera även om <a href=\"https://anilist.co\"><b>Anilist hemsida</b></a> är tillgänglig innan du trycker på JA!
         </p>
 
       Om webbplatsen är tillgänglig skulle du vilja <b>AniTrend</b> att återställa sig genom att logga ut, förutsatt att du var inloggad tidigare?
@@ -414,9 +414,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        Kontrollera om du har den senaste versionen. Om inte en nyare version laddas ner från <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
+        Kontrollera om du har den senaste versionen. Om inte en nyare version laddas ner från <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">AniTrend Repo</a></b>.
         <br/><br/>
-        <b>N.B.</b> Om du hämtade den här appen från <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        <b>N.B.</b> Om du hämtade den här appen från <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b>
        då är det inte nödvändigt att använda den här funktionen. Vill du fortfarande fortsätta med att kontrollera &amp; uppdatering till den senaste version?
         ]]>
     </string>
@@ -432,7 +432,7 @@
         <p> Ser ut att appen återupptogs från ett oväntat tillstånd medan du behandlar din inloggningsinformation. Detta kan uppstå på lågdrivna enheter 1 GB RAM eller mindre.</p>
 
         Applikationen försöker nu starta om i hopp om att lösa felet, efter omstart, försök igen logga in, och om det här problemet kvarstår är du välkommen att gå över till
-        <a href="https://anilist.co/forum/thread/2081">AniTrend Forum Sida</a> för mer hjälp.
+        <a href=\"https://anilist.co/forum/thread/2081\">AniTrend Forum Sida</a> för mer hjälp.
         ]]>
     </string>
 
@@ -867,7 +867,7 @@
     <string name="title_hash_tag">Hashtag</string>
     <string name="title_main_studio">Huvud Studio</string>
 
-    <string name="create_new_account"><![CDATA[Har du inget konto? <a href="https://anilist.co/register/">Skapa konto</a>]]></string>
+    <string name="create_new_account"><![CDATA[Har du inget konto? <a href=\"https://anilist.co/register/\">Skapa konto</a>]]></string>
 
     <string name="title_select_all">Välj alla</string>
 

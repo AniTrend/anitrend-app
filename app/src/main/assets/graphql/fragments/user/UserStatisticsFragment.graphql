@@ -1,0 +1,110 @@
+fragment UserStatisticsFragment on UserStatistics {
+  chaptersRead
+  count
+  countries {
+    chaptersRead
+    count
+    country
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  episodesWatched
+  formats {
+    chaptersRead
+    count
+    format
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  genres {
+    chaptersRead
+    count
+    genre
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  lengths {
+    chaptersRead
+    count
+    length
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  meanScore
+  minutesWatched
+  releaseYears {
+    chaptersRead
+    count
+    releaseYear
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  scores {
+    chaptersRead
+    count
+    score
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  staff {
+    chaptersRead
+    count
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  standardDeviation
+  startYears {
+    chaptersRead
+    count
+    startYear
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  statuses {
+    chaptersRead
+    count
+    status
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  studios {
+    chaptersRead
+    count
+    studio {
+      ... StudioFragment
+    }
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  tags {
+    chaptersRead
+    count
+    tag {
+      ... MediaTagFragment
+    }
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  voiceActors {
+    chaptersRead
+    count
+    voiceActor {
+      ... StaffCoreFragment
+    }
+    meanScore
+    mediaIds
+    minutesWatched
+  }
+  volumesRead
+}

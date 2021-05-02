@@ -172,7 +172,7 @@
 		<![CDATA[
         <p>
         <b>AniTrend</b> ¡No se ha podido conectar con el servidor en más de una ocasión! Por favor comprueba si tu conexión a internet está funcionando correctamente
-        y si la <a href="https://anilist.co"><b>página web de AniList</b></a> está disponible, antes de presionar en ¡Si!
+        y si la <a href=\"https://anilist.co\"><b>página web de AniList</b></a> está disponible, antes de presionar en ¡Si!
         </p>
 
         Si la página de Anilist está disponible, ¿deseas que <b>AniTrend</b>  restablezca tu Inicio de sesión?. Asumiendo que ya habías ingresado anteriormente.
@@ -416,9 +416,9 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="drawer_update_text">
         <![CDATA[
-        Comprueba si tienes la última versión. De haber una actualización disponible se descargará del <b><a href="https://github.com/AniTrend/anitrend-app/releases"> repositorio de AniTrend </a></b>.
+        Comprueba si tienes la última versión. De haber una actualización disponible se descargará del <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\"> repositorio de AniTrend </a></b>.
         <br/><br/>
-        <b>N.B.</b> Si descargaste la aplicación en <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        <b>N.B.</b> Si descargaste la aplicación en <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b>
        se actualizará cuando esté disponible en la tienda. ¿Aún deseas comprobar si tienes la última versión?
         ]]>
     </string>
@@ -434,7 +434,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
         <p> Parece que hubo un error mientras iniciabas sesión. Esto suele ocurrir en dispositivos de gama de entrada con menos de 1GB de RAM.</p>
 
         Reinicie la aplicación e inténtelo nuevamente, luego del reinicio vuelve a ingresar, si el problema persiste no dudes en comunicarlo por el
-        <a href="https://anilist.co/forum/thread/2081">foro de Anitrend</a> para recibir más asistencia.
+        <a href=\"https://anilist.co/forum/thread/2081\">foro de Anitrend</a> para recibir más asistencia.
         ]]>
     </string>
 
@@ -869,7 +869,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="title_hash_tag">Hashtag</string>
     <string name="title_main_studio">Estudio principal</string>
 
-    <string name="create_new_account"><![CDATA[No tienes una cuenta? <a href="https://anilist.co/register/">Crear cuenta</a>]]></string>
+    <string name="create_new_account"><![CDATA[No tienes una cuenta? <a href=\"https://anilist.co/register/\">Crear cuenta</a>]]></string>
 
     <string name="title_select_all">Selecciona todos</string>
 

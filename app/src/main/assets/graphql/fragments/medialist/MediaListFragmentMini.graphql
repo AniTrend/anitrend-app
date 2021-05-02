@@ -1,0 +1,4 @@
+fragment MediaListFragmentMini on MediaList {
+  id
+  status
+}

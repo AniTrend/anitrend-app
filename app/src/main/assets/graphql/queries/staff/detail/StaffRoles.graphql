@@ -5,11 +5,9 @@ query StaffRoles($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = POPU
         ... PageInfoFragment
       }
       edges {
-        ... on MediaEdge {
-          staffRole
-          node {
-            ... MediaCoreFragment
-          }
+        staffRole
+        node {
+          ... MediaCoreFragment
         }
       }
     }

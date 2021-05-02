@@ -171,7 +171,7 @@
         <![CDATA[
         <p>
         <b>AniTrend</b> não conseguiu autenticar com o servidor mais de uma vez! Por favor, verifique se sua cenexão com a Internet
-        está funcionando se <a href="https://anilist.co"><b>site do AniList</b></a> está disponível antes de tocar em SIM!
+        está funcionando se <a href=\"https://anilist.co\"><b>site do AniList</b></a> está disponível antes de tocar em SIM!
         </p>
 
         Se o site estiver disponível, você gostaria que o <b>AniTrend</b> fosse redefinido e fizesse logoff, assumindo que você estava conectado antes?
@@ -412,9 +412,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-       Verifica se você tem a versão mais recente. Se não uma versão mais recente será baixada do <b><a href="https://github.com/AniTrend/anitrend-app/releases">Repositório AniTrend</a></b>.
+       Verifica se você tem a versão mais recente. Se não uma versão mais recente será baixada do <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">Repositório AniTrend</a></b>.
         <br/><br/>
-        <b>N.B.</b> Se você baixou este aplicativo da <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Play Store</a></b>
+        <b>N.B.</b> Se você baixou este aplicativo da <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b>
         então não há necessidade de usar esse recurso. Você ainda deseja continuar com a verificação e atualização para a versão mais recente?
         ]]>
     </string>
@@ -430,7 +430,7 @@
         <p>Parece que o aplicativo foi retomado de um estado inesperado ao processar suas informações de login. Isso pode ocorrer em dispositivos de baixa potência (1 GB de RAM ou menos).</p>
 
         O aplicativo tentará reiniciar na tentativa de resolver o erro. Após a reinicialização, tente fazer login novamente. Se esse problema persistir, sinta-se à vontade para entrar na
-        <a href="https://anilist.co/forum/thread/2081">postagem do AniTrend no Fórum</a> para mais assistência.
+        <a href=\"https://anilist.co/forum/thread/2081\">postagem do AniTrend no Fórum</a> para mais assistência.
         ]]>
     </string>
 
@@ -868,7 +868,7 @@
     <string name="title_hash_tag">Hashtag</string>
     <string name="title_main_studio">Estúdio Principal</string>
 
-    <string name="create_new_account"><![CDATA[Não tem uma conta? <a href="https://anilist.co/register">Criar Conta</a>]]></string>
+    <string name="create_new_account"><![CDATA[Não tem uma conta? <a href=\"https://anilist.co/register\">Criar Conta</a>]]></string>
 
     <string name="title_select_all">Selecionar Tudo</string>
 

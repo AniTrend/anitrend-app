@@ -35,17 +35,8 @@ class AniRequestConverter(
                 .setQuery(rawPayload)
                 .build()
 
-        //val queryContainerModified = queryContainer.apply {
-        //    variables.forEach {
-        //        if (it.value == null)
-        //            this.variables.remove(it.key)
-        //    }
-        //}
-
         val queryJson = gson.toJson(queryContainer)
 
-        // Because anilist won't recognize application/graphql as a valid content type!
         return RequestBody.create(MediaType.parse(GraphConverter.MimeType), queryJson)
-        //return RequestBody.create(null, queryJson)
     }
 }

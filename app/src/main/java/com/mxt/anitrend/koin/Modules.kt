@@ -20,13 +20,11 @@ import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
 import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
-import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.entity.MyObjectBox
@@ -101,9 +99,8 @@ private val coreModule = module {
 }
 
 private val widgetModule = module {
-    single {
-        val context = androidContext()
-        Markwon.builder(androidContext())
+    factory {
+        Markwon.builder(get())
             .usePlugin(HtmlPlugin.create())
             .usePlugin(CorePlugin.create())
             .usePlugin(MentionPlugin.create())
@@ -118,16 +115,16 @@ private val widgetModule = module {
             .usePlugin(SpoilerPlugin.create())
             .usePlugin(StrikeThroughPlugin.create())
             .usePlugin(StrikethroughPlugin.create())
-            .usePlugin(TaskListPlugin.create(context))
+            .usePlugin(TaskListPlugin.create(get<Context>()))
             .usePlugin(ItalicsPlugin.create())
             .usePlugin(
                 GlideImagesPlugin.create(
                     GlideImagePlugin.create(
-                        Glide.with(context)
+                        Glide.with(get<Context>())
                     )
                 )
             )
-            .usePlugin(ImageConfigurationPlugin.create(context.resources))
+            .usePlugin(ImageConfigurationPlugin.create())
             .usePlugin(TextConfigurationPlugin.create())
             .build()
     }
@@ -172,6 +169,14 @@ private val workerModule = module {
     worker { scope ->
         val context = androidContext()
         TagSyncWorker(
+            context = context,
+            workerParams = scope.get(),
+            presenter = WidgetPresenter(context)
+        )
+    }
+    worker { scope ->
+        val context = androidContext()
+        UpdateWorker(
             context = context,
             workerParams = scope.get(),
             presenter = WidgetPresenter(context)

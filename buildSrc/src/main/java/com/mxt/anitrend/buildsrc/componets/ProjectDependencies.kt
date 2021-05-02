@@ -116,6 +116,7 @@ internal fun Project.configureDependencies() {
 
     /** Testing-only dependencies */
     dependencies.testImplementation(Libraries.junit)
+    dependencies.testImplementation(Libraries.hamcrest)
     dependencies.testImplementation(Libraries.Mockito.core)
 
     dependencies.androidTestImplementation(Libraries.CashApp.Turbine.turbine)
@@ -124,6 +125,7 @@ internal fun Project.configureDependencies() {
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.runner)
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.Espresso.core)
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.Extension.junitKtx)
+    dependencies.androidTestImplementation(Libraries.Mockito.core)
     dependencies.androidTestImplementation(Libraries.Mockito.android)
     dependencies.androidTestImplementation(Libraries.mockk)
 }

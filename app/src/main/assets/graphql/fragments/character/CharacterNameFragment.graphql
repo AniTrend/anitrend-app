@@ -1,5 +1,5 @@
 fragment CharacterNameFragment on CharacterName {
-    first
-    last
-    native
+  first
+  last
+  native
 }

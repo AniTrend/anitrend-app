@@ -176,7 +176,7 @@
         <![CDATA[
         <p>
           <b>AniTrend</b>  فشل في المصادقة مع الخادم أكثر من مرة! الرجاء التأكد من وجود اتصال بالإنترنت والتأكد ايضًا ان
-        <a href="https://anilist.co"><b>موقع AniTrend </b></a> يعمل قبل الضغط على نعم !
+        <a href=\"https://anilist.co\"><b>موقع AniTrend </b></a> يعمل قبل الضغط على نعم !
         </p>
 
         اذا كان الموقع يعمل فهل ترغب ان يقوم<b>AniTrend</b>بإعادة ضبط نفسه عن طريق تسجيل خروجك، بأفتراض انك سبق وان قمت بتسجيل دخولك؟?
@@ -419,9 +419,9 @@
 
     <string name="drawer_update_text">
         <![CDATA[
-        تأكد من امتلاكك احدث نسخة. ان لم تكن سيتم تحميل النسخة الجديدة من <b><a href="https://github.com/AniTrend/anitrend-app/releases">AniTrend Repo</a></b>.
+        تأكد من امتلاكك احدث نسخة. ان لم تكن سيتم تحميل النسخة الجديدة من <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">AniTrend Repo</a></b>.
         <br/><br/>
-        <b>ملاحظة:</b> إذا قمت بتحميل التطبيق من <b><a href="https://play.google.com/store/apps/details?id=com.mxt.anitrend">Google Play</a></b>
+        <b>ملاحظة:</b> إذا قمت بتحميل التطبيق من <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Google Play</a></b>
         فليس هناك داعٍ لإستخدام هذه الخاصية. هل ترغب في المتابعة والتحديث الى أحدث نسخة؟
         ]]>
     </string>
@@ -437,7 +437,7 @@
         <p>يبدو ان التطبيق تعرض لخطأ اثناء معالجة بيانات تسجيل الدخول. سبب حدوث هذا الخطأ غالبًا هو ان الهاتف يحتوي على ذاكرة عشوائية اقل من 1 جيجا.</p>
 
         سيتم إعادة تشغيل التطبيق لحل المشكلة، بعد إعادة التشغيل الرجاء تسجيل الدخول مرة اخرى، اذا استمر الخطأ توجه إلى
-        <a href="https://anilist.co/forum/thread/2081">AniTrend صفحة مجتمع</a> للمساعدة.
+        <a href=\"https://anilist.co/forum/thread/2081\">AniTrend صفحة مجتمع</a> للمساعدة.
         ]]>
     </string>
 
@@ -872,7 +872,7 @@
     <string name="title_hash_tag">الهاشتاغ:</string>
     <string name="title_main_studio">الاستديو المنتج:</string>
 
-    <string name="create_new_account"><![CDATA[أليس لديك حساب؟ <a href="https://anilist.co/register/">تسجيل</a>]]></string>
+    <string name="create_new_account"><![CDATA[أليس لديك حساب؟ <a href=\"https://anilist.co/register/\">تسجيل</a>]]></string>
 
     <string name="title_select_all">تحديد الكل</string>
 

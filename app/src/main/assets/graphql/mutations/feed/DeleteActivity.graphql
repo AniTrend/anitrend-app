@@ -1,5 +1,5 @@
 mutation DeleteActivity($id: Int) {
-	DeleteActivity(id: $id) {
-		... DeletedFragment
-	}
+  DeleteActivity(id: $id) {
+    ... DeletedFragment
+  }
 }

@@ -1,19 +1,19 @@
 fragment ThreadCommentFragment on ThreadComment {
-    childComments
-    comment(asHtml: $asHtml)
-    createdAt
-    id
-    likes {
-        ... UserCoreFragment
-    }
-    siteUrl
-    thread {
-        ... ThreadFragment
-    }
-    threadId
-    updatedAt
-    user {
-        ... UserCoreFragment
-    }
-    userId
+  childComments
+  comment(asHtml: $asHtml)
+  createdAt
+  id
+  likes {
+    ... UserCoreFragment
+  }
+  siteUrl
+  thread {
+    ... ThreadFragment
+  }
+  threadId
+  updatedAt
+  user {
+    ... UserCoreFragment
+  }
+  userId
 }

@@ -1,0 +1,36 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "03:00"
+    timezone: Africa/Johannesburg
+  open-pull-requests-limit: 12
+  target-branch: develop
+  reviewers:
+  - wax911
+  labels:
+  - enhancement
+  ignore:
+  - dependency-name: com.afollestad.material-dialogs:core
+    versions:
+    - "> 0.9.6.0"
+  - dependency-name: com.squareup.okhttp3:logging-interceptor
+    versions:
+    - "> 3.12.1"
+  - dependency-name: com.squareup.retrofit2:converter-gson
+    versions:
+    - "> 2.6.2, < 3"
+  - dependency-name: com.squareup.retrofit2:converter-simplexml
+    versions:
+    - "> 2.6.2, < 3"
+  - dependency-name: com.squareup.retrofit2:retrofit
+    versions:
+    - "> 2.6.2, < 3"
+  - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-core
+    versions:
+    - 1.4.3-native-mt
+  - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-android
+    versions:
+    - 1.4.3-native-mt

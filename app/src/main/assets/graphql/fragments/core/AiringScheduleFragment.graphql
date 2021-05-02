@@ -1,7 +1,7 @@
 fragment AiringScheduleFragment on AiringSchedule {
-    id
-    airingAt
-    timeUntilAiring
-    episode
-    mediaId
+  id
+  airingAt
+  timeUntilAiring
+  episode
+  mediaId
 }
