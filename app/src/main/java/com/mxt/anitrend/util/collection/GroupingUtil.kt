@@ -4,6 +4,7 @@ import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
+import com.mxt.anitrend.model.entity.base.CharacterStaffBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
@@ -195,7 +196,7 @@ object GroupingUtil {
                 it.node.startDate.year == year
             }.flatMap { mediaEdge ->
                 mediaEdge.characters.map { character ->
-                    character
+                    CharacterStaffBase(character, mediaEdge.node)
                 }
             }
             entityMap.addAll(characters)

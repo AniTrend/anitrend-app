@@ -8,10 +8,10 @@ import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.mxt.anitrend.R;
-import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter;
+import com.mxt.anitrend.adapter.recycler.group.GroupCharacterStaffAdapter;
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList;
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge;
-import com.mxt.anitrend.model.entity.base.CharacterBase;
+import com.mxt.anitrend.model.entity.base.CharacterStaffBase;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer;
 import com.mxt.anitrend.model.entity.group.RecyclerItem;
@@ -62,7 +62,7 @@ public class MediaAnimeRoleFragment extends FragmentBaseList<RecyclerItem, Conne
         }
         mColumnSize = R.integer.grid_giphy_x3;
         isPager = true;
-        mAdapter = new GroupCharacterAdapter(getContext());
+        mAdapter = new GroupCharacterStaffAdapter(getContext());
         setPresenter(new MediaPresenter(getContext()));
         setViewModel(true);
     }
@@ -119,7 +119,7 @@ public class MediaAnimeRoleFragment extends FragmentBaseList<RecyclerItem, Conne
         switch (target.getId()) {
             case R.id.container:
                 Intent intent = new Intent(getActivity(), CharacterActivity.class);
-                intent.putExtra(KeyUtil.arg_id, ((CharacterBase) data.getSecond()).getId());
+                intent.putExtra(KeyUtil.arg_id, ((CharacterStaffBase) data.getSecond()).getCharacter().getId());
                 CompatUtil.INSTANCE.startRevealAnim(getActivity(), target, intent);
                 break;
         }
