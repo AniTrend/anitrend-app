@@ -1,5 +1,6 @@
 package com.mxt.anitrend.model.entity.anilist.edge;
 
+import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.container.attribute.Edge;
@@ -14,10 +15,18 @@ import java.util.List;
 
 public class MediaEdge extends Edge<MediaBase> {
 
+    private List<CharacterBase> characters;
     private @KeyUtil.CharacterRole String characterRole;
     private @KeyUtil.MediaRelation String relationType;
     private List<StaffBase> voiceActors;
     private String staffRole;
+
+    /**
+     * The list of characters in the media
+     */
+    public List<CharacterBase> getCharacters() {
+        return characters;
+    }
 
     /**
      * The characters role in the media
