@@ -1,0 +1,17 @@
+query StaffCharacters($id: Int!, $page: Int, $sort: [MediaSort] = START_DATE_DESC) {
+  Staff(id: $id) {
+    characterMedia(page: $page, sort: $sort) {
+      pageInfo {
+        ... PageInfoFragment
+      }
+      edges {
+        node {
+          ... MediaCoreFragment
+        }
+        characters {
+          ... CharacterCoreFragment
+        }
+      }
+    }
+  }
+}

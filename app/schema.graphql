@@ -3110,6 +3110,14 @@ type SiteTrendEdge {
 
 "Voice actors or production staff"
 type Staff {
+    "Media with characters voiced by the actor"
+    characterMedia(
+        #The page
+        page: Int,
+        #The amount of entries per page, max 25
+        perPage: Int,
+        sort: [MediaSort]
+    ): MediaConnection
     "Characters voiced by the actor"
     characters(
         #The page

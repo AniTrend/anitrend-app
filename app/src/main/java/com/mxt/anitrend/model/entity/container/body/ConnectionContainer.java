@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class ConnectionContainer<T> {
 
     @SerializedName(value = "relations", alternate = {"anime", "manga", "media",
-            "characters", "staff", "staffMedia",
+            "characters", "characterMedia", "staff", "staffMedia",
             "stats", "statistics", "favourites", "nodes",
             "externalLinks"
     })

@@ -9,6 +9,7 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.fragment.detail.StaffOverviewFragment;
+import com.mxt.anitrend.view.fragment.group.MediaAnimeRoleFragment;
 import com.mxt.anitrend.view.fragment.group.MediaFormatFragment;
 import com.mxt.anitrend.view.fragment.group.MediaStaffRoleFragment;
 
@@ -34,7 +35,7 @@ public class StaffPageAdapter extends BaseStatePageAdapter {
             case 0:
                 return StaffOverviewFragment.newInstance(getParams());
             case 1:
-                return MediaFormatFragment.newInstance(getParams(), KeyUtil.ANIME, KeyUtil.STAFF_MEDIA_REQ);
+                return MediaAnimeRoleFragment.newInstance(getParams(), KeyUtil.ANIME, KeyUtil.STAFF_CHARACTERS_REQ);
             case 2:
                 return MediaFormatFragment.newInstance(getParams(), KeyUtil.MANGA, KeyUtil.STAFF_MEDIA_REQ);
             case 3:

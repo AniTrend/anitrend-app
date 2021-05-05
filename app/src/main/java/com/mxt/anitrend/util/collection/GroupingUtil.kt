@@ -172,6 +172,39 @@ object GroupingUtil {
     }
 
     /**
+     * Groups characters by year
+     * <br></br>
+     *
+     *
+     * @param edges The potential external model response which needs to be grouped
+     * @param model The current model item/s containing all data minus current mediaItems
+     */
+    fun groupCharactersByYear(edges: List<MediaEdge>, model: List<RecyclerItem>?): List<RecyclerItem> {
+        val entityMap = if (!CompatUtil.isEmpty(model)) ArrayList(model!!) else ArrayList()
+
+        val years = edges.map {
+            it.node.startDate.year
+        }.distinct().sorted()
+
+        for (year in years.reversed()) {
+            val recyclerHeaderItem = RecyclerHeaderItem(year.toString())
+            if (!entityMap.contains(recyclerHeaderItem))
+                entityMap.add(recyclerHeaderItem)
+
+            val characters = edges.filter {
+                it.node.startDate.year == year
+            }.flatMap { mediaEdge ->
+                mediaEdge.characters.map { character ->
+                    character
+                }
+            }
+            entityMap.addAll(characters)
+        }
+
+        return getDifference(model, entityMap)
+    }
+
+    /**
      * Groups media by the staff role, assuming that the staff has be sorted by role
      * <br></br>
      *
