@@ -2,4 +2,5 @@ fragment CharacterNameFragment on CharacterName {
   first
   last
   native
+  alternative
 }
