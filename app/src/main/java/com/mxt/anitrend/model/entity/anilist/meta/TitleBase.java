@@ -83,8 +83,12 @@ public class TitleBase implements Parcelable {
 
     public String getFullName() {
         String fullName = first;
-        if(!TextUtils.isEmpty(last))
-            fullName += " " + last;
+        if (!TextUtils.isEmpty(last)) {
+            if (!TextUtils.isEmpty(fullName))
+                fullName += " " + last;
+            else
+                fullName = last;
+        }
         return fullName;
     }
 }
