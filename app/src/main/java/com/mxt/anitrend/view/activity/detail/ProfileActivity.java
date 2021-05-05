@@ -60,6 +60,12 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
             id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
         if(getIntent().hasExtra(KeyUtil.arg_userName))
             userName = getIntent().getStringExtra(KeyUtil.arg_userName);
+        if(getIntent().hasExtra(KeyUtil.arg_mediaType)) {
+            Intent intent = new Intent(this, MediaListActivity.class);
+            intent.putExtras(getIntent().getExtras());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override
