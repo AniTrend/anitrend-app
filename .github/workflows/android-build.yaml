@@ -63,7 +63,7 @@ jobs:
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           title: "${{ steps.tag_data.outputs.git-tag-annotation }}"
-          repo_token: "${{ secrets.TOKEN }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
           files: |
             app/build/outputs/apk/**/release/*.apk
