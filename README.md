@@ -13,7 +13,7 @@ Big shout out to all the testers, translators and donators on the [AniTrend Disc
 
 ## Known Issues
 
-- Find all issues, feature requests, bugs and project road map [here](https://waffle.io/AniTrend/anitrend-app)
+- Find all issues, feature requests, bugs [here](https://github.com/AniTrend/anitrend-app/issues)
 
 ## Documentation
 
