@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
@@ -13,21 +14,31 @@ import com.mxt.anitrend.util.Settings
 import timber.log.Timber
 
 @SuppressLint("MissingPermission")
-class AnalyticsLogging(context: Context, settings: Settings): Timber.Tree(), ISupportAnalytics {
+class AnalyticsLogging(context: Context, settings: Settings) : Timber.Tree(), ISupportAnalytics {
 
     private val analytics by lazy(LazyThreadSafetyMode.NONE) {
-        FirebaseAnalytics.getInstance(context).apply {
-            setAnalyticsCollectionEnabled(
-                settings.isUsageAnalyticsEnabled
-            )
+        FirebaseApp.getApps(context).let {
+            if (it.isNotEmpty())
+                FirebaseAnalytics.getInstance(context).apply {
+                    setAnalyticsCollectionEnabled(
+                        settings.isUsageAnalyticsEnabled
+                    )
+                }
+            else
+                null
         }
     }
 
     private val crashlytics by lazy(LazyThreadSafetyMode.NONE) {
-        FirebaseCrashlytics.getInstance().apply {
-            setCrashlyticsCollectionEnabled(
-                settings.isCrashReportsEnabled
-            )
+        FirebaseApp.getApps(context).let {
+            if (it.isNotEmpty())
+                FirebaseCrashlytics.getInstance().apply {
+                    setCrashlyticsCollectionEnabled(
+                        settings.isCrashReportsEnabled
+                    )
+                }
+            else
+                null
         }
     }
 
@@ -44,9 +55,9 @@ class AnalyticsLogging(context: Context, settings: Settings): Timber.Tree(), ISu
             return
 
         runCatching {
-            crashlytics.setCustomKey(PRIORITY, priority)
-            crashlytics.setCustomKey(TAG, tag ?: "Unknown")
-            crashlytics.setCustomKey(MESSAGE, message)
+            crashlytics?.setCustomKey(PRIORITY, priority)
+            crashlytics?.setCustomKey(TAG, tag ?: "Unknown")
+            crashlytics?.setCustomKey(MESSAGE, message)
         }.exceptionOrNull()?.printStackTrace()
 
         when (throwable) {
@@ -55,46 +66,46 @@ class AnalyticsLogging(context: Context, settings: Settings): Timber.Tree(), ISu
         }
     }
 
-    override fun logCurrentScreen(context: FragmentActivity, tag : String) {
+    override fun logCurrentScreen(context: FragmentActivity, tag: String) {
         runCatching {
-            analytics.setCurrentScreen(context, tag, null)
+            analytics?.setCurrentScreen(context, tag, null)
         }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun logCurrentState(tag: String, bundle: Bundle?) {
         runCatching {
-            bundle?.also { analytics.logEvent(tag, it) }
+            bundle?.also { analytics?.logEvent(tag, it) }
         }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun logException(throwable: Throwable) {
         runCatching {
-            crashlytics.recordException(throwable)
+            crashlytics?.recordException(throwable)
         }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun log(priority: Int, tag: String?, message: String) {
         runCatching {
-            crashlytics.log(message)
+            crashlytics?.log(message)
         }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun clearUserSession() {
         runCatching {
-            crashlytics.setUserId(String.empty())
-            crashlytics.deleteUnsentReports()
+            crashlytics?.setUserId(String.empty())
+            crashlytics?.deleteUnsentReports()
         }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun setCrashAnalyticUser(userIdentifier: String) {
         runCatching {
-            crashlytics.setUserId(userIdentifier)
+            crashlytics?.setUserId(userIdentifier)
         }.exceptionOrNull()?.printStackTrace()
     }
 
     override fun resetAnalyticsData() {
         runCatching {
-            analytics.resetAnalyticsData()
+            analytics?.resetAnalyticsData()
         }.exceptionOrNull()?.printStackTrace()
     }
 
