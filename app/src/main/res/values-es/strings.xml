@@ -354,7 +354,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_header_notifications_summary">Ajusta el comportamiento de las notificaciones</string>
 
     <string name="pref_title_new_message_notifications">Mostrar nuevas notificaciones</string>
-    <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -980,4 +979,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
+    <string name="pref_title_list_view_style">List View Style</string>
+    <string name="pref_title_app_theme">Application Theme</string>
 </resources>
