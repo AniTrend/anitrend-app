@@ -54,14 +54,6 @@
         To All Translators I am very grateful for your help! :)
     -->
 
-    <string name="app_name" translatable="false">AniTrend</string>
-
-    <string name="title_discord" translatable="false">Discord</string>
-
-    <string name="tba_placeholder" translatable="false">TBA</string>
-
-    <string name="app_provider" translatable="false">Powered By AniList</string>
-
     <string name="text_popularity"> Popularity: %d</string>
 
     <string name="app_description">
@@ -95,9 +87,6 @@
     <string name="Retry">Retry</string>
 
     <string name="Watch">Watch</string>
-
-    <!--TBA means To Be Announced probably not going to translate this-->
-    <string name="TBA" translatable="false">TBA</string>
 
     <!--Try to keep all titles short and do not change the order of the <item> tags-->
     <string-array name="feed_titles">
@@ -315,17 +304,10 @@
     <string name="notification_episode" formatted="false">Episode %s of %s has just aired!</string>
     <string name="notification_episode_short" formatted="false">EP %s of %s just aired!</string>
 
-    <!-- Transition Names -->
-    <string name="transition_user_banner" translatable="false">transition_user_banner</string>
-    <string name="transition_image_preview" translatable="false">transition_image_preview</string>
-
 
     <!-- Settings for Application -->
     <string name="pref_header_general">General</string>
     <string name="pref_header_general_summary">Configure basic application behavior</string>
-
-    <!--Do not translate anything that is starts with pref_key-->
-    <string name="pref_key_auto_increment" translatable="false">general_auto_increment</string>
 
     <string name="pref_title_startup_page">Startup Page</string>
 
@@ -366,18 +348,11 @@
         <item>develop</item>
     </string-array>
 
-    <!--Do not translate anything that is starts with pref_key-->
-    <string name="pref_key_startup_page" translatable="false">general_startup_page</string>
-    <string name="pref_key_update_channel" translatable="false">_updateChannel</string>
-
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_header_notifications_summary">Configure how notifications are handled</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>
-    <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-    <string name="pref_key_ringtone" translatable="false">notifications_new_message_ringtone</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -385,7 +360,6 @@
     <string name="pref_header_data_sync_summary">Configure the notification check frequency</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string name="pref_key_sync_frequency" translatable="false">sync_frequency</string>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -560,8 +534,6 @@
     <string name="text_please_sign_in">Please Sing In</string>
 
     <string name="text_login_error">AniTrend has failed to retrieve your login details!</string>
-
-    <string name="link_anitrend_discord" translatable="false">https://discord.gg/2wzTqnF</string>
 
     <string name="text_search_empty">Search content cannot be empty</string>
 
@@ -934,10 +906,6 @@
 
     <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
 
-    <!-- Privacy Settings -->
-    <string name="pref_key_crash_reports" translatable="false">crash_reports</string>
-    <string name="pref_key_usage_analytics" translatable="false">usage_analytics</string>
-
     <string name="pref_header_privacy">Privacy</string>
     <string name="pref_header_privacy_summary">Configure privacy settings</string>
 
@@ -952,7 +920,6 @@
     <!--Language preferences-->
     <string name="pref_title_language">Application Language</string>
     <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
-    <string name="pref_key_selected_language" translatable="false">selected_language</string>
 
     <string-array name="pref_selected_language_titles" translatable="false">
         <item>English</item>
@@ -982,8 +949,6 @@
 
     <!--List view preferences-->
     <string name="pref_title_list_view_style">List View Style</string>
-    <string name="pref_title_list_view_style_summary">// WIP TBA //</string>
-    <string name="pref_key_list_view_style" translatable="false">list_view_style</string>
 
     <string-array name="pref_selected_list_view_style_titles" translatable="true">
         <item>Default</item>
@@ -1042,8 +1007,7 @@
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
 
-    <string name="pref_title_app_theme" translatable="false">Application Theme</string>
-    <string name="pref_key_app_theme" translatable="false">application_theme</string>
+    <string name="pref_title_app_theme">Application Theme</string>
 
     <string-array name="pref_selected_theme_titles">
         <item>Light</item>
@@ -1055,10 +1019,6 @@
         <item>dark</item>
         <item>black</item>
     </string-array>
-
-    <string name="pref_key_display_adult_content" translatable="false">display_adult_content</string>
-    <string name="pref_key_notification_work_around" translatable="false">_notificationWorkaround</string>
-    <string name="pref_key_clear_notification_on_dismiss" translatable="false">clear_notification_on_dismiss</string>
 
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>

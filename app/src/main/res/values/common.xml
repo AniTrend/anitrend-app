@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Transition Names -->
+    <string name="transition_user_banner" translatable="false">transition_user_banner</string>
+    <string name="transition_image_preview" translatable="false">transition_image_preview</string>
+
+    <string name="link_anitrend_discord" translatable="false">https://discord.gg/2wzTqnF</string>
+
+    <string name="app_name" translatable="false">AniTrend</string>
+
+    <string name="title_discord" translatable="false">Discord</string>
+
+    <string name="tba_placeholder" translatable="false">TBA</string>
+
+    <string name="app_provider" translatable="false">Powered By AniList</string>
+
+    <!--TBA means To Be Announced probably not going to translate this-->
+    <string name="TBA" translatable="false">TBA</string>
+</resources>
