@@ -57,6 +57,7 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
                     .addMigration(Migrations.MIGRATION_101_108)
                     .addMigration(Migrations.MIGRATION_109_134)
                     .addMigration(Migrations.MIGRATION_135_136)
+                    .addMigration(Migrations.MIGRATION_18400_18500)
                     .build(context)
             return migrationUtil.applyMigration()
         }

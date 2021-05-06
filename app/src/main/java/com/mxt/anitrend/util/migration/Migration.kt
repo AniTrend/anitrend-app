@@ -39,4 +39,9 @@ abstract class Migration(
         result = 31 * result + endVersion
         return result
     }
+
+    /**
+     * Returns a string representation of the object.
+     */
+    override fun toString() = "$startVersion - $endVersion"
 }
