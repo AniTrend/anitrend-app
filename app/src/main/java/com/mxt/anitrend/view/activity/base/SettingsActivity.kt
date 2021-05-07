@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.extension.applyConfiguredTheme
@@ -64,6 +66,10 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+            // Hide privacy category if Firebase is not initialized
+            findPreference<PreferenceCategory>(getString(R.string.pref_key_privacy))?.isVisible =
+                FirebaseApp.getApps(requireContext()).isNotEmpty()
         }
 
         /**

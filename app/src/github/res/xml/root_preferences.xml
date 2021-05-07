@@ -105,7 +105,8 @@
     <PreferenceCategory
         app:summary="@string/pref_header_privacy_summary"
         app:title="@string/pref_header_privacy"
-        app:icon="@drawable/ic_privacy_grey_600_24dp">
+        app:icon="@drawable/ic_privacy_grey_600_24dp"
+        app:key="@string/pref_key_privacy">
 
         <SwitchPreference
             app:title="@string/pref_title_crash_reports"
