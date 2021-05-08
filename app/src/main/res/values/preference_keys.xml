@@ -10,6 +10,7 @@
     <string name="pref_key_sync_frequency" translatable="false">sync_frequency</string>
 
     <!-- Privacy Settings -->
+    <string name="pref_key_privacy" translatable="false">privacy</string>
     <string name="pref_key_crash_reports" translatable="false">crash_reports</string>
     <string name="pref_key_usage_analytics" translatable="false">usage_analytics</string>
     <string name="pref_key_selected_language" translatable="false">selected_language</string>
