@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.fragment.detail.NotificationFragment;
 
 import butterknife.BindView;
@@ -37,6 +39,14 @@ public class NotificationActivity extends ActivityBase<Void, BasePresenter> {
         super.onPostCreate(savedInstanceState);
         setPresenter(new BasePresenter(this));
         onActivityReady();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isTaskRoot())
+            startActivity(new Intent(this, MainActivity.class));
+
+        super.onBackPressed();
     }
 
     /**
