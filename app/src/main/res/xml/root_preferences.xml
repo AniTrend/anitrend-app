@@ -68,6 +68,13 @@
             app:title="@string/pref_title_update_channel"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_key_display_adult_content"
+            app:summary="@string/pref_summary_display_adult_content"
+            app:title="@string/pref_title_display_adult_content"
+            app:isPreferenceVisible="@bool/display_adult_content_pref" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
