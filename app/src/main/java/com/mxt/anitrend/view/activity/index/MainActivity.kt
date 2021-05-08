@@ -49,6 +49,7 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
@@ -64,7 +65,7 @@ import org.greenrobot.eventbus.ThreadMode
  * Base main_menu activity to show case template
  */
 
-class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
+class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     BaseConsumer.onRequestModelChange<User>, NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.toolbar)
@@ -122,6 +123,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         ButterKnife.bind(this)
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
+        setViewModel(true)
         if (savedInstanceState == null)
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
     }
@@ -195,6 +197,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         mNavigationView.setCheckedItem(selectedItem)
         onNavigate(selectedItem)
         makeRequest()
+        requestCurrentUser()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -240,6 +243,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
         updateUI()
+        requestCurrentUser()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -452,6 +456,17 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         }
     }
 
+    private fun requestCurrentUser() {
+        // Sync local current user data with remote
+        if (presenter.settings.isAuthenticated) {
+            viewModel.params.putParcelable(
+                KeyUtil.arg_graph_params,
+                GraphUtil.getDefaultQuery(false)
+            )
+            viewModel.requestData(KeyUtil.USER_CURRENT_REQ, this)
+        }
+    }
+
     private fun onLatestUpdateInstalled() {
         NotifyUtil.createAlerter(
             this@MainActivity,
@@ -542,6 +557,13 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
     override fun onDestroy() {
         mUserAvatar.onViewRecycled()
         super.onDestroy()
+    }
+
+    override fun onChanged(model: User?) {
+        if (isAlive && model != null) {
+            presenter.database.currentUser = model
+            updateUI()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
