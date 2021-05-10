@@ -56,4 +56,5 @@ object Versions {
     const val stream = "1.2.2"
     const val circularProgressView = "2.5.0"
     const val hamcrest = "2.2"
+    const val txtmark = "0.16"
 }
