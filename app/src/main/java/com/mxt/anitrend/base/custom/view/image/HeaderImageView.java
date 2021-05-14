@@ -62,11 +62,10 @@ public class HeaderImageView extends AppCompatImageView implements CustomView {
 
     }
 
-    @BindingAdapter({"bannerUrl"})
-    public static void setImage(HeaderImageView view, String url) {
-        Glide.with(view.getContext()).load(url)
+    public void setImage(String url) {
+        Glide.with(getContext()).load(url)
                 .transition(DrawableTransitionOptions.withCrossFade(350))
                 .apply(RequestOptions.centerCropTransform())
-                .into(view);
+                .into(this);
     }
 }

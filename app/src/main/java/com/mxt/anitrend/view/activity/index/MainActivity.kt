@@ -37,10 +37,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
-import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
-import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.extension.startNewActivity
+import com.mxt.anitrend.extension.*
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -495,7 +492,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         presenter.database.currentUser?.apply {
             mUserName.text = name
             mUserAvatar.onInit()
-            HeaderImageView.setImage(mHeaderView, bannerImage)
+            mHeaderView.setImage(bannerImage)
             if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(this@MainActivity, this)
                 presenter.settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
@@ -506,7 +503,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                     .build()
                 showBottomSheet()
             }
-            KoinExt.get(ISupportAnalytics::class.java).setCrashAnalyticUser(name)
+            koinOf<ISupportAnalytics>().setCrashAnalyticUser(name)
         }
         mAccountLogin.isVisible = false
 
