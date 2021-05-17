@@ -474,6 +474,8 @@
     <string name="alerter_notification_title">Notifications Available</string>
     <string name="alerter_notification_text">You have one or more unread notifications!</string>
 
+    <string name="alerter_notification_action_clear">Mark as read</string>
+
     <string name="title_new_features">New Features!</string>
 
     <string name="text_new_features">

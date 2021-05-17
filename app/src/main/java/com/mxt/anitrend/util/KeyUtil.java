@@ -17,6 +17,12 @@ public interface KeyUtil {
     float PEEK_HEIGHT = 200f;
     int PAGING_LIMIT = 42, GLIDE_REQUEST_TIMEOUT = 10000, SINGLE_ITEM_LIMIT = 1;
 
+    /** Notification Actions */
+    String NOTIFICATION_ID = "anitrend_notification_id";
+    String NOTIFICATION_ACTION = "anitrend_notification_action";
+    String NOTIFICATION_ACTION_CLEAR = "anitrend_notification_action_clear";
+    String NOTIFICATION_ACTION_DISMISS = "anitrend_notification_action_dismiss";
+
     /** Notification Channels */
     String CHANNEL_ID = "anitrend_app";
     String CHANNEL_TITLE = "AniTrend Notifications";

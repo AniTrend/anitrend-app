@@ -229,7 +229,7 @@
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleTop" />
 
-        <receiver android:name=".receiver.DismissNotification" />
+        <receiver android:name=".receiver.ClearNotifications" />
 
         <!--
         Disable default work manager initializer
