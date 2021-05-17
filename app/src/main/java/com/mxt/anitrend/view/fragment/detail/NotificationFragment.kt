@@ -67,9 +67,10 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
 
         //Testing notifications by forcing the notification dispatcher
-        /*for (int i = 0; i < 3; i++)
-            NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(i, i + 1)));*/
-        // NotificationUtil.createNotification(getContext(), new ArrayList<>(model.subList(5, 6)));
+        /*presenter.database.currentUser?.let {
+            it.unreadNotificationCount = 3
+            koinOf<NotificationUtil>().createNotification(it, viewModel.model.value!!)
+        }*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
