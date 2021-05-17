@@ -15,9 +15,10 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.receiver.DismissNotification
+import com.mxt.anitrend.receiver.ClearNotifications
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
 import kotlin.math.min
+
 
 /**
  * Created by max on 1/22/2017.
@@ -46,13 +47,15 @@ class NotificationUtil(
         )
     }
 
-    private fun dismissNotificationsIntent(): PendingIntent {
-        val onDismissIntent = Intent(this.context, DismissNotification::class.java)
+    private fun clearNotificationsIntent(action: String): PendingIntent {
+        val intent = Intent(this.context, ClearNotifications::class.java)
+        intent.putExtra(KeyUtil.NOTIFICATION_ID, defaultNotificationId)
+        intent.putExtra(KeyUtil.NOTIFICATION_ACTION, action)
         return PendingIntent.getBroadcast(
-            this.context,
-            0,
-            onDismissIntent,
-            0
+            context,
+            action.hashCode(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 
@@ -119,11 +122,18 @@ class NotificationUtil(
 
     fun createNotification(userGraphContainer: User, notificationsContainer: PageContainer<Notification>) {
 
+        val notificationCount = userGraphContainer.unreadNotificationCount
+        if (notificationCount > 0)
+            defaultNotificationId = defaultNotificationId.inc()
+
         val notificationBuilder = NotificationCompat.Builder(context, KeyUtil.CHANNEL_ID)
+                .setColor(context.resources.getColor(R.color.colorStateBlue))
                 .setSmallIcon(R.drawable.ic_new_releases)
-                .setAutoCancel(true)
                 .setPriority(PRIORITY_HIGH)
-                .setDeleteIntent(dismissNotificationsIntent())
+                .addAction(0,
+                    context.resources.getString(R.string.alerter_notification_action_clear),
+                    clearNotificationsIntent(KeyUtil.NOTIFICATION_ACTION_CLEAR))
+                .setDeleteIntent(clearNotificationsIntent(KeyUtil.NOTIFICATION_ACTION_DISMISS))
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -148,8 +158,6 @@ class NotificationUtil(
             }
         }
 
-        val notificationCount = userGraphContainer.unreadNotificationCount
-
         if (notificationCount > 0) {
             val notificationContent = buildBigNotificationContent(notificationCount, notificationsContainer)
             notificationBuilder.setContentIntent(multiContentIntent())
@@ -163,7 +171,6 @@ class NotificationUtil(
                     .setStyle(NotificationCompat.BigTextStyle()
                             .bigText(notificationContent))
 
-            defaultNotificationId = defaultNotificationId.inc()
             notificationManager?.notify(defaultNotificationId, notificationBuilder.build())
         }
     }
