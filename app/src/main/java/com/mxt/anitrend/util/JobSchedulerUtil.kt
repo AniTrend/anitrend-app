@@ -99,7 +99,7 @@ class JobSchedulerUtil(private val settings: Settings) {
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
                     KeyUtil.WorkClearNotificationId,
-                    ExistingWorkPolicy.KEEP,
+                    ExistingWorkPolicy.REPLACE,
                     workRequest
                 )
         }
