@@ -17,9 +17,12 @@ class ClearNotifications : BroadcastReceiver() {
         ) as NotificationManager?
         notificationManager?.cancel(intent?.extras?.getInt(KeyUtil.NOTIFICATION_ID)!!)
 
-        when (intent?.extras?.getString(KeyUtil.NOTIFICATION_ACTION)!!) {
+        val settings = koinOf<Settings>()
+        settings.lastDismissedNotificationId = intent?.extras?.getLong(KeyUtil.NOTIFICATION_ID_REMOTE)!!
+
+        when (intent.extras?.getString(KeyUtil.NOTIFICATION_ACTION)!!) {
             KeyUtil.NOTIFICATION_ACTION_DISMISS -> {
-                if (!koinOf<Settings>().clearNotificationOnDismiss)
+                if (!settings.clearNotificationOnDismiss)
                     return
             }
         }

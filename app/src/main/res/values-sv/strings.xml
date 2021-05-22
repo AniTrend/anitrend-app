@@ -972,8 +972,8 @@
     <string name="pref_title_display_adult_content">Display Adult Content</string>
     <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
 
-    <string name="pref_summary_clear_notification_on_dismiss">Clear notifications when you dismiss them from the status bar</string>
-    <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
+    <string name="pref_summary_clear_notification_on_dismiss">Marks notifications as read when you dismiss them from the status bar</string>
+    <string name="pref_title_clear_notification_on_dismiss">Mark all notifications as read on dismiss</string>
 
     <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
     <string name="pref_title_notification_work_around">Notification workaround</string>

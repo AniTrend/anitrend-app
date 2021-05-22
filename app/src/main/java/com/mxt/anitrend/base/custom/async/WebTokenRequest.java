@@ -46,6 +46,7 @@ public class WebTokenRequest {
     public static void invalidateInstance(Context context) {
         CommonPresenter presenter = new BasePresenter(context);
         presenter.getSettings().setAuthenticated(false);
+        presenter.getSettings().setLastDismissedNotificationId(-1);
         presenter.getDatabase().invalidateBoxStores();
         KoinExt.get(JobSchedulerUtil.class).cancelNotificationJob(context);
         WebFactory.invalidate();

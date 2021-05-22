@@ -69,6 +69,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         //Testing notifications by forcing the notification dispatcher
         /*presenter.database.currentUser?.let {
             it.unreadNotificationCount = 3
+            koinOf<Settings>().lastDismissedNotificationId = -1
             koinOf<NotificationUtil>().createNotification(it, viewModel.model.value!!)
         }*/
     }

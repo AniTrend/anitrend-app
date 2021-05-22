@@ -27,12 +27,22 @@ class Settings(
     private val _versionCode = "_versionCode"
     private val _freshInstall = "_freshInstall"
     private val _isAuthenticated = "_isAuthenticated"
+    private val _lastDismissedNotificationId = "_lastDismissedNotificationId"
 
     var isAuthenticated: Boolean
         get() = getBoolean(_isAuthenticated, false)
         set(value) {
             edit {
                 putBoolean(_isAuthenticated, value)
+                apply()
+            }
+        }
+
+    var lastDismissedNotificationId: Long
+        get() = getLong(_lastDismissedNotificationId, -1)
+        set(value) {
+            edit {
+                putLong(_lastDismissedNotificationId, value)
                 apply()
             }
         }

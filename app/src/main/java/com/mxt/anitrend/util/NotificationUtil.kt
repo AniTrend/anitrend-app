@@ -47,9 +47,10 @@ class NotificationUtil(
         )
     }
 
-    private fun clearNotificationsIntent(action: String): PendingIntent {
+    private fun clearNotificationsIntent(action: String, notificationIdRemote: Long): PendingIntent {
         val intent = Intent(this.context, ClearNotifications::class.java)
         intent.putExtra(KeyUtil.NOTIFICATION_ID, defaultNotificationId)
+        intent.putExtra(KeyUtil.NOTIFICATION_ID_REMOTE, notificationIdRemote)
         intent.putExtra(KeyUtil.NOTIFICATION_ACTION, action)
         return PendingIntent.getBroadcast(
             context,
@@ -121,19 +122,32 @@ class NotificationUtil(
     }
 
     fun createNotification(userGraphContainer: User, notificationsContainer: PageContainer<Notification>) {
+        val notificationIdRemote = notificationsContainer.pageData.first().id
+        if (settings.lastDismissedNotificationId == notificationIdRemote)
+            return
 
         val notificationCount = userGraphContainer.unreadNotificationCount
         if (notificationCount > 0)
             defaultNotificationId = defaultNotificationId.inc()
 
         val notificationBuilder = NotificationCompat.Builder(context, KeyUtil.CHANNEL_ID)
-                .setColor(context.resources.getColor(R.color.colorStateBlue))
-                .setSmallIcon(R.drawable.ic_new_releases)
-                .setPriority(PRIORITY_HIGH)
-                .addAction(0,
-                    context.resources.getString(R.string.alerter_notification_action_clear),
-                    clearNotificationsIntent(KeyUtil.NOTIFICATION_ACTION_CLEAR))
-                .setDeleteIntent(clearNotificationsIntent(KeyUtil.NOTIFICATION_ACTION_DISMISS))
+            .setColor(context.resources.getColor(R.color.colorStateBlue))
+            .setSmallIcon(R.drawable.ic_new_releases)
+            .setPriority(PRIORITY_HIGH)
+            .addAction(
+                0,
+                context.resources.getString(R.string.alerter_notification_action_clear),
+                clearNotificationsIntent(
+                    KeyUtil.NOTIFICATION_ACTION_CLEAR,
+                    notificationIdRemote
+                )
+            )
+            .setDeleteIntent(
+                clearNotificationsIntent(
+                    KeyUtil.NOTIFICATION_ACTION_DISMISS,
+                    notificationIdRemote
+                )
+            )
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library

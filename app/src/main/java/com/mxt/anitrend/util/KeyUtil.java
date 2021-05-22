@@ -19,6 +19,7 @@ public interface KeyUtil {
 
     /** Notification Actions */
     String NOTIFICATION_ID = "anitrend_notification_id";
+    String NOTIFICATION_ID_REMOTE = "anitrend_notification_id_remote";
     String NOTIFICATION_ACTION = "anitrend_notification_action";
     String NOTIFICATION_ACTION_CLEAR = "anitrend_notification_action_clear";
     String NOTIFICATION_ACTION_DISMISS = "anitrend_notification_action_dismiss";
