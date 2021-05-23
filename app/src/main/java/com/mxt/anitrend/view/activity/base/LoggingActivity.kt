@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.FileProvider
 import androidx.core.text.color
 import androidx.core.text.toHtml
 import androidx.lifecycle.lifecycleScope
@@ -115,7 +116,12 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
             R.id.action_share_log -> {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, spannableLogBuilder.toString())
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
+                        applicationContext,
+                        "${applicationContext.packageName}.provider",
+                        applicationContext.logFile()
+                    ))
                     type = "text/plain"
                 }
                 startActivity(intent)
