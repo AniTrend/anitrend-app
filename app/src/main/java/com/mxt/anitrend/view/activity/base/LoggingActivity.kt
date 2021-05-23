@@ -4,12 +4,14 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.text.Html
 import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.text.color
+import androidx.core.text.toHtml
 import androidx.lifecycle.lifecycleScope
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -148,7 +150,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     private suspend fun printLog() {
         withContext(Dispatchers.Main) {
             updateUI()
-            reportLogTextView.text = spannableLogBuilder
+            reportLogTextView.text = Html.fromHtml(spannableLogBuilder.toHtml())
         }
     }
 
