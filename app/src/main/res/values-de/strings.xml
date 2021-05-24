@@ -627,6 +627,7 @@
     <string name="series_add_to_list">Zur Liste hinzufügen</string>
     <string name="series_write_a_review">Eine Review verfassen</string>
     <string name="series_share">Teilen</string>
+    <string name="series_on_my_list">On My List</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Status</string>

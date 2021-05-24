@@ -1,6 +1,6 @@
-query StaffCharacters($id: Int!, $page: Int, $sort: [MediaSort] = START_DATE_DESC) {
+query StaffCharacters($id: Int!, $onList: Boolean, $page: Int, $sort: [MediaSort] = START_DATE_DESC) {
   Staff(id: $id) {
-    characterMedia(page: $page, sort: $sort) {
+    characterMedia(onList: $onList, page: $page, sort: $sort) {
       pageInfo {
         ... PageInfoFragment
       }
