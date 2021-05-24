@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_favourite"
+        android:orderInCategory="100"
+        android:title="@string/series_favourite_this"
+        android:icon="@drawable/ic_favorite_border_white_24dp"
+        app:actionViewClass="com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_share"
+        android:orderInCategory="101"
+        android:title="@string/series_share"
+        android:icon="@drawable/ic_share_grey_600_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_on_my_list"
+        android:checkable="true"
+        android:title="@string/series_on_my_list"
+        app:showAsAction="never"/>
+
+</menu>

@@ -36,6 +36,7 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 public class MediaFormatFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter> {
 
     private long id;
+    private boolean onList;
     private @KeyUtil.MediaType String mediaType;
 
     private @KeyUtil.RequestType int requestType;
@@ -60,6 +61,7 @@ public class MediaFormatFragment extends FragmentBaseList<RecyclerItem, Connecti
         if(getArguments() != null) {
             requestType = getArguments().getInt(KeyUtil.arg_request_type);
             id = getArguments().getLong(KeyUtil.arg_id);
+            onList = getArguments().getBoolean(KeyUtil.arg_onList);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
@@ -84,6 +86,7 @@ public class MediaFormatFragment extends FragmentBaseList<RecyclerItem, Connecti
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, id)
+                .putVariable(KeyUtil.arg_onList, onList)
                 .putVariable(KeyUtil.arg_mediaType, mediaType)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);

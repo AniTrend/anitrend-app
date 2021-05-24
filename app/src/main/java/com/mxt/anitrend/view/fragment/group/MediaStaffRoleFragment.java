@@ -37,6 +37,7 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
     private long id;
+    private boolean onList;
 
     public static MediaStaffRoleFragment newInstance(Bundle args) {
         MediaStaffRoleFragment fragment = new MediaStaffRoleFragment();
@@ -52,8 +53,10 @@ public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, Conne
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
+        if (getArguments() != null) {
             id = getArguments().getLong(KeyUtil.arg_id);
+            onList = getArguments().getBoolean(KeyUtil.arg_onList);
+        }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         mAdapter = new GroupSeriesAdapter(getContext());
         setPresenter(new MediaPresenter(getContext()));
@@ -67,6 +70,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, Conne
     public void makeRequest() {
         QueryContainerBuilder queryContainer = GraphUtil.INSTANCE.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, id)
+                .putVariable(KeyUtil.arg_onList, onList)
                 .putVariable(KeyUtil.arg_page, getPresenter().getCurrentPage());
         getViewModel().getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         getViewModel().requestData(KeyUtil.STAFF_ROLES_REQ, getContext());

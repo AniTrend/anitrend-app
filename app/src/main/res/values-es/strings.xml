@@ -647,6 +647,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="series_add_to_list">Agregar a la lista</string>
     <string name="series_write_a_review">Escribe una reseña</string>
     <string name="series_share">Compartir</string>
+    <string name="series_on_my_list">On My List</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Estado</string>

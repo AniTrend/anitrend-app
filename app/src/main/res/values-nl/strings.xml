@@ -623,6 +623,7 @@
     <string name="series_add_to_list">Toevoegen aan lijst</string>
     <string name="series_write_a_review">Schrijf een Review</string>
     <string name="series_share">Delen</string>
+    <string name="series_on_my_list">On My List</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Status</string>
