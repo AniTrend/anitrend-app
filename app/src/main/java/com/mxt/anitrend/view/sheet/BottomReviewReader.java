@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.sheet;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,11 +9,13 @@ import androidx.annotation.Nullable;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
+import com.mxt.anitrend.base.custom.view.image.AvatarImageView;
 import com.mxt.anitrend.base.custom.view.text.SeriesTitleView;
 import com.mxt.anitrend.databinding.BottomSheetReviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +32,9 @@ public class BottomReviewReader extends BottomSheetBase {
 
     protected @BindView(R.id.series_title)
     SeriesTitleView seriesTitleView;
+
+    protected @BindView(R.id.user_avatar)
+    AvatarImageView userAvatar;
 
     public static BottomReviewReader newInstance(Bundle bundle) {
         BottomReviewReader fragment = new BottomReviewReader();
@@ -70,6 +76,12 @@ public class BottomReviewReader extends BottomSheetBase {
         super.onStart();
         binding.setModel(model);
         seriesTitleView.setTitle(model);
+        userAvatar.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(KeyUtil.arg_id, model.getUser().getId());
+            CompatUtil.INSTANCE.startRevealAnim(getActivity(), v, intent);
+        });
     }
 
     public static class Builder extends BottomSheetBuilder {
