@@ -4,6 +4,8 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 > Please update your profile stats using [this](https://anilist.co/settings/lists) if you've been having issues loading your profile in AniTrend
 
 ### Enhancements
+- Added **onList** filtering for Staff screen. Thanks @LuK1337
+- Added mark as read notification action. Thanks @LuK1337
 - Initial support for opening users lists from url. Thanks @LuK1337
 - Display anime characters sorted by years on anime roles. Thanks @LuK1337
 
