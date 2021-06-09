@@ -184,16 +184,24 @@ object GroupingUtil {
         val entityMap = model.orEmpty().toMutableList()
 
         val years = edges.map {
-            it.node.startDate.year
+            it.node.startDate.year.let { year ->
+                when (year) {
+                    0 -> "TBA"
+                    else -> year.toString()
+                }
+            }
         }.distinct().sorted()
 
         for (year in years.reversed()) {
-            val recyclerHeaderItem = RecyclerHeaderItem(year.toString())
+            val recyclerHeaderItem = RecyclerHeaderItem(year, 0, false)
             if (!entityMap.contains(recyclerHeaderItem))
                 entityMap.add(recyclerHeaderItem)
 
             val characters = edges.filter {
-                it.node.startDate.year == year
+                when (it.node.startDate.year) {
+                    0 -> "TBA" == year
+                    else -> it.node.startDate.year.toString() == year
+                }
             }.flatMap { mediaEdge ->
                 mediaEdge.characters.map { character ->
                     CharacterStaffBase(character, mediaEdge.node)
