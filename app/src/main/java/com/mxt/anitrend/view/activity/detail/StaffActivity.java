@@ -154,8 +154,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
     }
 
     private void reloadViewPager() {
-        StaffPageAdapter adapter = (StaffPageAdapter) viewPager.getAdapter();
-        assert adapter != null;
+        StaffPageAdapter adapter = new StaffPageAdapter(getSupportFragmentManager(), getApplicationContext());
 
         // Update params if necessary
         getViewModel().getParams().putLong(KeyUtil.arg_id, id);
