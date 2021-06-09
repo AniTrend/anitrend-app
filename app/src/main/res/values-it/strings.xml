@@ -150,6 +150,7 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Organizza</string>
+    <string name="app_filter_on_list">On My List?</string>
     <string name="app_filter_order">Ordina</string>
     <string name="app_filter_genres">Genere</string>
     <string name="app_filter_show_type">Tipo</string>
@@ -809,6 +810,12 @@
     <string-array name="messages_page_titles">
         <item>In entrata</item>
         <item>In uscita</item>
+    </string-array>
+
+    <string-array name="on_list_values">
+        <item>All</item>
+        <item>Not on list only</item>
+        <item>On list only</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

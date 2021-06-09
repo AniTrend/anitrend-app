@@ -11,12 +11,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.GraphUtil;
@@ -72,7 +75,6 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         getMenuInflater().inflate(R.menu.staff_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
         menu.findItem(R.id.action_on_my_list).setVisible(isAuth);
-        menu.findItem(R.id.action_on_my_list).setChecked(onList != null && onList);
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
@@ -95,9 +97,26 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
                     startActivity(intent);
                     break;
                 case R.id.action_on_my_list:
-                    onList = onList != null ? null : true;
-                    item.setChecked(onList != null && onList);
-                    reloadViewPager();
+                    DialogUtil.createSelection(this, R.string.app_filter_on_list,
+                            onList == null ? 0 : !onList ? 1 : 2,
+                            CompatUtil.INSTANCE.getStringList(this, R.array.on_list_values),
+                            (dialog, which) -> {
+                                if (which == DialogAction.POSITIVE) {
+                                    switch (dialog.getSelectedIndex()) {
+                                        case 0:
+                                            onList = null;
+                                            break;
+                                        case 1:
+                                            onList = false;
+                                            break;
+                                        case 2:
+                                            onList = true;
+                                            break;
+                                    }
+                                    reloadViewPager();
+                                }
+                            });
+                    break;
             }
         } else
             NotifyUtil.INSTANCE.makeText(getApplicationContext(), R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
