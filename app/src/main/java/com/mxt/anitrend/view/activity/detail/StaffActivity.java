@@ -40,7 +40,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
-    private boolean onList;
+    private Boolean onList;
 
     private StaffBase model;
 
@@ -55,14 +55,14 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         setPresenter(new BasePresenter(this));
         setViewModel(true);
         id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
-        onList = getIntent().getBooleanExtra(KeyUtil.arg_onList, false);
+        onList = (Boolean) getIntent().getSerializableExtra(KeyUtil.arg_onList);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getViewModel().getParams().putLong(KeyUtil.arg_id, id);
-        getViewModel().getParams().putBoolean(KeyUtil.arg_onList, onList);
+        getViewModel().getParams().putSerializable(KeyUtil.arg_onList, onList);
         onActivityReady();
     }
 
@@ -72,7 +72,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         getMenuInflater().inflate(R.menu.staff_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
         menu.findItem(R.id.action_on_my_list).setVisible(isAuth);
-        menu.findItem(R.id.action_on_my_list).setChecked(onList);
+        menu.findItem(R.id.action_on_my_list).setChecked(onList != null && onList);
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
@@ -95,8 +95,8 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
                     startActivity(intent);
                     break;
                 case R.id.action_on_my_list:
-                    onList = !onList;
-                    item.setChecked(onList);
+                    onList = onList != null ? null : true;
+                    item.setChecked(onList != null && onList);
                     reloadViewPager();
             }
         } else
@@ -159,7 +159,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
 
         // Update params if necessary
         getViewModel().getParams().putLong(KeyUtil.arg_id, id);
-        getViewModel().getParams().putBoolean(KeyUtil.arg_onList, onList);
+        getViewModel().getParams().putSerializable(KeyUtil.arg_onList, onList);
         adapter.setParams(getViewModel().getParams());
 
         // Re-set adapter while preserving currently selected item

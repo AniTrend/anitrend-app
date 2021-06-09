@@ -37,7 +37,7 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
     private long id;
-    private boolean onList;
+    private Boolean onList;
 
     public static MediaStaffRoleFragment newInstance(Bundle args) {
         MediaStaffRoleFragment fragment = new MediaStaffRoleFragment();
@@ -55,7 +55,7 @@ public class MediaStaffRoleFragment extends FragmentBaseList<RecyclerItem, Conne
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             id = getArguments().getLong(KeyUtil.arg_id);
-            onList = getArguments().getBoolean(KeyUtil.arg_onList);
+            onList = (Boolean) getArguments().getSerializable(KeyUtil.arg_onList);
         }
         mColumnSize = R.integer.grid_giphy_x3; isPager = true;
         mAdapter = new GroupSeriesAdapter(getContext());

@@ -34,7 +34,7 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 public class MediaAnimeRoleFragment extends FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter> {
 
     private long id;
-    private boolean onList;
+    private Boolean onList;
     private @KeyUtil.MediaType String mediaType;
 
     private @KeyUtil.RequestType int requestType;
@@ -59,7 +59,7 @@ public class MediaAnimeRoleFragment extends FragmentBaseList<RecyclerItem, Conne
         if (getArguments() != null) {
             requestType = getArguments().getInt(KeyUtil.arg_request_type);
             id = getArguments().getLong(KeyUtil.arg_id);
-            onList = getArguments().getBoolean(KeyUtil.arg_onList);
+            onList = (Boolean) getArguments().getSerializable(KeyUtil.arg_onList);
             mediaType = getArguments().getString(KeyUtil.arg_mediaType);
         }
         mColumnSize = R.integer.grid_giphy_x3;
