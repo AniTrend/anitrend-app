@@ -158,6 +158,7 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">الفرز حسب:</string>
+    <string name="app_filter_on_list">On My List?</string>
     <string name="app_filter_order">ترتيب كـ</string>
     <string name="app_filter_genres">أختر الصنف:</string>
     <string name="app_filter_show_type">أختر النوع:</string>
@@ -821,6 +822,12 @@
     <string-array name="messages_page_titles">
         <item>رسائل واردة</item>
         <item>رسائل صادرة</item>
+    </string-array>
+
+    <string-array name="on_list_values">
+        <item>All</item>
+        <item>Not on list only</item>
+        <item>On list only</item>
     </string-array>
 
     <string name="series_type">النوع:</string>

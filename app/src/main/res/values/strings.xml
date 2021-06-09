@@ -154,6 +154,7 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sort By?</string>
+    <string name="app_filter_on_list">On My List?</string>
     <string name="app_filter_order">Order By?</string>
     <string name="app_filter_genres">Series Genres?</string>
     <string name="app_filter_show_type">Series Type?</string>
@@ -822,6 +823,12 @@
     <string-array name="messages_page_titles">
         <item>Inbox</item>
         <item>Outbox</item>
+    </string-array>
+
+    <string-array name="on_list_values">
+        <item>All</item>
+        <item>Not on list only</item>
+        <item>On list only</item>
     </string-array>
 
     <string name="series_type">Series Type:</string>

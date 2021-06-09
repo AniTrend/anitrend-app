@@ -11,16 +11,25 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_share"
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_list_grey_600_24dp"
         android:orderInCategory="101"
+        android:title="@string/action_filter"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_on_my_list"
+                android:icon="@drawable/ic_book_grey_600_24dp"
+                android:title="@string/series_on_my_list"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_share"
+        android:orderInCategory="102"
         android:title="@string/series_share"
         android:icon="@drawable/ic_share_grey_600_24dp"
         app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/action_on_my_list"
-        android:checkable="true"
-        android:title="@string/series_on_my_list"
-        app:showAsAction="never"/>
 
 </menu>

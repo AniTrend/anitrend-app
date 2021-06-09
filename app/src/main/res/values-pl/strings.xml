@@ -155,6 +155,7 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sortuj według</string>
+    <string name="app_filter_on_list">On My List?</string>
     <string name="app_filter_order">Uporządkuj według:</string>
     <string name="app_filter_genres">Gatunki Serii:</string>
     <string name="app_filter_show_type">Typ Serii:</string>
@@ -820,6 +821,12 @@
     <string-array name="messages_page_titles">
         <item>Skrzynka odbiorcza</item>
         <item>Skrzynka nadawcza</item>
+    </string-array>
+
+    <string-array name="on_list_values">
+        <item>All</item>
+        <item>Not on list only</item>
+        <item>On list only</item>
     </string-array>
 
     <string name="series_type">Typ serii:</string>

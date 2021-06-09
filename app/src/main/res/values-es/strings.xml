@@ -154,6 +154,7 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Ordenar Por:</string>
+    <string name="app_filter_on_list">On My List?</string>
     <string name="app_filter_order">Orden:</string>
     <string name="app_filter_genres">Por Género:</string>
     <string name="app_filter_show_type">Por Tipo:</string>
@@ -818,6 +819,12 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string-array name="messages_page_titles">
         <item>Inbox</item>
         <item>Outbox</item>
+    </string-array>
+
+    <string-array name="on_list_values">
+        <item>All</item>
+        <item>Not on list only</item>
+        <item>On list only</item>
     </string-array>
 
     <string name="series_type">Tipo de serie:</string>
