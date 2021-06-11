@@ -124,7 +124,7 @@ object GroupingUtil {
      */
     fun groupMediaByRelationType(edges: List<MediaEdge>): List<RecyclerItem> {
         val entityMap = ArrayList<RecyclerItem>()
-        for (edge in edges) {
+        for (edge in edges.sortedBy { it.relationType }) {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.relationType)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.relationType }
