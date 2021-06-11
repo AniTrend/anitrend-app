@@ -5,7 +5,7 @@ query MediaRelations($id: Int!, $type: MediaType, $isAdult: Boolean) {
         ... PageInfoFragment
       }
       edges {
-        relationType
+        relationType(version: 2)
         node {
           ... MediaCoreFragment
         }
