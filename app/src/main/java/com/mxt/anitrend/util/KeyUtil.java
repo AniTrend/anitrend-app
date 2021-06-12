@@ -374,14 +374,15 @@ public interface KeyUtil {
     @interface MediaStatus {}
 
 
-    String ORIGINAL = "ORIGINAL", LIGHT_NOVEL = "LIGHT_NOVEL",
-            VISUAL_NOVEL = "VISUAL_NOVEL", VIDEO_GAME = "VIDEO_GAME", OTHER = "OTHER";
-    @StringDef({ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER})
+    String DOUJINSHI = "DOUJINSHI", LIGHT_NOVEL = "LIGHT_NOVEL", NOVEL = "NOVEL",
+            ORIGINAL = "ORIGINAL", OTHER = "OTHER", VIDEO_GAME = "VIDEO_GAME",
+            VISUAL_NOVEL = "VISUAL_NOVEL";
+    @StringDef({ANIME, DOUJINSHI, LIGHT_NOVEL, MANGA, NOVEL, ORIGINAL, OTHER, VIDEO_GAME, VISUAL_NOVEL})
     @interface MediaSource {}
 
 
     String TV = "TV", TV_SHORT = "TV_SHORT", MOVIE = "MOVIE", SPECIAL = "SPECIAL",
-            OVA = "OVA", ONA = "ONA", MUSIC = "MUSIC", NOVEL = "NOVEL", ONE_SHOT = "ONE_SHOT";
+            OVA = "OVA", ONA = "ONA", MUSIC = "MUSIC", ONE_SHOT = "ONE_SHOT";
     @StringDef({TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT})
     @interface MediaFormat {}
 
