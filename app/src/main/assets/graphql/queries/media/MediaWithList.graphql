@@ -10,7 +10,7 @@ query MediaWithList($id: Int, $type: MediaType, $onList: Boolean, $scoreFormat: 
     type
     format
     season
-    status
+    status(version: 2)
     meanScore
     averageScore
     startDate {
