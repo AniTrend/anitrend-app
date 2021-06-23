@@ -123,16 +123,16 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         setViewModel(true)
         if (savedInstanceState == null)
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
         mNavigationView.setNavigationItemSelectedListener(this)
         mViewPager.offscreenPageLimit = offScreenLimit
         mPageIndex = DateUtil.menuSelect
         menuItems = mNavigationView.menu
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
         onActivityReady()
     }
 
