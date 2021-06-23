@@ -34,6 +34,7 @@
 
         <activity
             android:name=".view.activity.base.SettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".view.activity.index.MainActivity">
             <meta-data
@@ -42,6 +43,7 @@
         </activity>
         <activity
             android:name=".view.activity.index.SplashActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -56,17 +58,21 @@
         </activity>
         <activity
             android:name=".view.activity.index.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.detail.NotificationActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_notification"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.detail.MessageActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_message" />
         <activity
             android:name=".view.activity.index.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeLight.Translucent">
@@ -83,6 +89,7 @@
         </activity>
         <activity
             android:name=".view.activity.detail.ProfileActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/drawer_title_profile">
             <intent-filter>
                 <data
@@ -98,6 +105,7 @@
         </activity>
         <activity
             android:name=".view.activity.detail.MediaActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_series">
             <intent-filter>
                 <data
@@ -117,6 +125,7 @@
         </activity>
         <activity
             android:name=".view.activity.detail.CharacterActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_character">
             <intent-filter>
                 <data
@@ -132,6 +141,7 @@
         </activity>
         <activity
             android:name=".view.activity.detail.StaffActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_staff">
             <intent-filter>
                 <data
@@ -151,6 +161,7 @@
         </activity>
         <activity
             android:name=".view.activity.detail.StudioActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_studio">
             <intent-filter>
                 <data
@@ -166,27 +177,34 @@
         </activity>
         <activity
             android:name=".view.activity.detail.FavouriteActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_favourites_list" />
         <activity
             android:name=".view.activity.detail.MediaListActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_user_list_view" />
         <activity
             android:name=".view.activity.detail.MediaBrowseActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.base.AboutActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/nav_about"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.base.LoggingActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_logging"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.index.SearchActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/action_search"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.detail.CommentActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/title_activity_reply"
             android:launchMode="singleTop">
             <intent-filter>
@@ -203,6 +221,7 @@
         </activity>
         <activity
             android:name=".view.activity.base.SharedContentActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/menu_title_new_activity_post"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeLight.Translucent">
@@ -217,12 +236,15 @@
         </activity>
         <activity
             android:name=".view.activity.base.WelcomeActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.base.ImagePreviewActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.base.GiphyPreviewActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleTop" />
         <activity
             android:name=".view.activity.base.VideoPlayerActivity"
