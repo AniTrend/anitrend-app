@@ -24,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import butterknife.ButterKnife
 import com.afollestad.materialdialogs.DialogAction
 import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
@@ -121,7 +120,6 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
