@@ -24,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.DialogAction
 import com.google.android.material.navigation.NavigationView
@@ -39,7 +38,6 @@ import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.extension.*
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.service.DownloaderService
 import com.mxt.anitrend.util.DialogUtil
@@ -65,18 +63,24 @@ import org.greenrobot.eventbus.ThreadMode
 class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     BaseConsumer.onRequestModelChange<User>, NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.toolbar)
-    lateinit var mToolbar: Toolbar
-    @BindView(R.id.page_container)
-    lateinit var mViewPager: ViewPager
-    @BindView(R.id.smart_tab)
-    lateinit var mNavigationTabStrip: SmartTabLayout
-    @BindView(R.id.coordinator)
-    lateinit var coordinatorLayout: CoordinatorLayout
-    @BindView(R.id.drawer_layout)
-    lateinit var mDrawerLayout: DrawerLayout
-    @BindView(R.id.nav_view)
-    lateinit var mNavigationView: NavigationView
+    private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Toolbar>(R.id.toolbar)
+    }
+    private val mViewPager by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<ViewPager>(R.id.page_container)
+    }
+    private val mNavigationTabStrip by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<SmartTabLayout>(R.id.smart_tab)
+    }
+    private val coordinatorLayout by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<CoordinatorLayout>(R.id.coordinator)
+    }
+    private val mDrawerLayout by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<DrawerLayout>(R.id.drawer_layout)
+    }
+    private val mNavigationView by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<NavigationView>(R.id.nav_view)
+    }
 
     private val mDrawerToggle by lazy(LAZY_MODE_UNSAFE) {
         ActionBarDrawerToggle(this@MainActivity, mDrawerLayout, mToolbar,
