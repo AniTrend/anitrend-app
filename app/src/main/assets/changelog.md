@@ -10,13 +10,14 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Display anime characters sorted by years on anime roles. Thanks @LuK1337
 
 ### Bug Fixes
-- Many bug fixes, too many to list. Thank you @LuK1337
+- Application displaying incorrect dates for some entries @LuK1337
+- Many bug fixes to list. Thank you @LuK1337
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment
 
 ### Special Thanks
-> _Translators (minna arigato) & all of you lovely weebs <3_
+> _Translators (minna arigato) & all of you lovely poeple <3_
 
 #### Awesome Supporters: __[join us](https://www.patreon.com/wax911)__
 > @artemisthemp @Bas @barbas @kdy @Golumpa @sirenondine @SilverFS @TamikoGotti @Trivernis @Reddragon7 @Mokacchi
