@@ -94,6 +94,18 @@ object DateUtil {
             year
         )
 
+    fun getDateOutputFormat(fuzzyDate: FuzzyDate): String? {
+        if (fuzzyDate.day != 0 && fuzzyDate.month != 0 && fuzzyDate.year != 0)
+            return "MMM dd, yyyy"
+
+        if (fuzzyDate.month != 0 && fuzzyDate.year != 0)
+            return "MMM, yyyy"
+
+        if (fuzzyDate.year != 0)
+            return "yyyy"
+
+        return null
+    }
 
     fun getMediaSeason(fuzzyDate: FuzzyDate): String {
         val format = SimpleDateFormat(dateInputFormat, Locale.getDefault())
@@ -159,7 +171,7 @@ object DateUtil {
                 val simpleDateFormat = SimpleDateFormat(dateInputFormat, Locale.getDefault())
                 val converted = simpleDateFormat.parse(fuzzyDate.toString())
                 if (converted != null)
-                    return SimpleDateFormat(dateOutputFormat, Locale.getDefault()).format(converted)
+                    return SimpleDateFormat(getDateOutputFormat(fuzzyDate), Locale.getDefault()).format(converted)
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
