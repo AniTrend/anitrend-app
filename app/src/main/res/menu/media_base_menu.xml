@@ -3,8 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_favourite"
+        android:id="@+id/action_mal"
         android:orderInCategory="100"
+        android:title="@string/series_mal"
+        android:icon="@drawable/ic_mal_white_24dp"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_favourite"
+        android:orderInCategory="101"
         android:title="@string/series_favourite_this"
         android:icon="@drawable/ic_favorite_border_white_24dp"
         app:actionViewClass="com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget"
@@ -12,14 +19,14 @@
 
     <item
         android:id="@+id/action_manage"
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         android:title="@string/series_add_to_list"
         android:icon="@drawable/ic_bookmark_white_24dp"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_share"
-        android:orderInCategory="102"
+        android:orderInCategory="103"
         android:title="@string/series_share"
         android:icon="@drawable/ic_share_white_24dp"
         app:showAsAction="always"/>
