@@ -1,6 +1,7 @@
 query MediaBase($id: Int!, $type: MediaType, $isAdult: Boolean) {
   Media(id: $id, type: $type, isAdult: $isAdult) {
     id
+    idMal
     title {
       userPreferred
     }

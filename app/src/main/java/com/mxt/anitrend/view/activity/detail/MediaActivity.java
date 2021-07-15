@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.activity.detail;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     private @KeyUtil.MediaType String mediaType;
 
     private FavouriteToolbarWidget favouriteWidget;
+    private MenuItem malMenuItem;
     private MenuItem manageMenuItem;
 
     protected @BindView(R.id.toolbar) Toolbar toolbar;
@@ -85,6 +87,9 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
 
+        malMenuItem = menu.findItem(R.id.action_mal);
+        malMenuItem.setVisible(model != null && model.getIdMal() > 0);
+
         manageMenuItem = menu.findItem(R.id.action_manage);
         manageMenuItem.setVisible(isAuth);
         setManageMenuItemIcon();
@@ -112,6 +117,13 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                     intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
                             "%s - %s", model.getTitle().getUserPreferred(), model.getSiteUrl()));
                     intent.setType("text/plain");
+                    startActivity(intent);
+                    break;
+                case R.id.action_mal:
+                    String url = String.format(Locale.getDefault(),
+                            "https://myanimelist.net/%s/%d",
+                            mediaType.toLowerCase(), model.getIdMal());
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
                     break;
             }
@@ -152,6 +164,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         if(model != null) {
             binding.setModel(model);
             binding.setOnClickListener(this);
+            malMenuItem.setVisible(model.getIdMal() > 0);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
             setFavouriteWidgetMenuItemIcon(); setManageMenuItemIcon();
             if(getPresenter().getSettings().isAuthenticated()) {
