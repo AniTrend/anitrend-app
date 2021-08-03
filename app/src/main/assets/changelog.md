@@ -8,6 +8,8 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Added mark as read notification action. Thanks @LuK1337
 - Initial support for opening users lists from url. Thanks @LuK1337
 - Display anime characters sorted by years on anime roles. Thanks @LuK1337
+- Add MAL URL to MediaActivity menu. Thanks @LuK1337
+- Open browser when handing threads
 
 ### Bug Fixes
 - Application displaying incorrect dates for some entries @LuK1337
