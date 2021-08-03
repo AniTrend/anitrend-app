@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.fragment.detail
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -205,9 +206,6 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
-                KeyUtil.THREAD_COMMENT_MENTION -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
-                KeyUtil.THREAD_SUBSCRIBED -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
-                KeyUtil.THREAD_COMMENT_REPLY -> DialogUtil.createMessage(context, data.second.user.name, data.second.context)
                 KeyUtil.AIRING, KeyUtil.RELATED_MEDIA_ADDITION -> {
                     intent = Intent(activity, MediaActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.media?.id)
@@ -231,10 +229,24 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
-                KeyUtil.THREAD_LIKE ->
-                    DialogUtil.createMessage(context, data.second.user.name, data.second.context)
-                KeyUtil.THREAD_COMMENT_LIKE ->
-                    DialogUtil.createMessage(context, data.second.user.name, data.second.context)
+                KeyUtil.THREAD_SUBSCRIBED,
+                KeyUtil.THREAD_LIKE -> {
+                    intent = Intent(Intent.ACTION_VIEW)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.data = Uri.parse(
+                        "https://anilist.co/forum/thread/${data.second.thread.id}"
+                    )
+                    startActivity(intent)
+                }
+                KeyUtil.THREAD_COMMENT_MENTION,
+                KeyUtil.THREAD_COMMENT_REPLY,
+                KeyUtil.THREAD_COMMENT_LIKE -> {
+                    intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(
+                        "https://anilist.co/forum/thread/${data.second.thread.id}/comment/${data.second.commentId}"
+                    )
+                    startActivity(intent)
+                }
             }
     }
 
@@ -255,10 +267,6 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     mediaActionUtil.startSeriesAction()
                 }
             }
-        } else {
-                context?.also {
-                    NotifyUtil.makeText(it, R.string.info_login_req, R.drawable.ic_group_add_grey_600_18dp, Toast.LENGTH_SHORT).show()
-                }
         }
     }
 
