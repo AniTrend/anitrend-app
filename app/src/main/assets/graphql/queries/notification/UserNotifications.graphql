@@ -114,6 +114,10 @@ fragment ThreadCommentMentionNotificationFragment on ThreadCommentMentionNotific
   type
   createdAt
   context
+  thread {
+    id
+  }
+  commentId
   user {
     ... UserCoreFragment
   }
@@ -124,6 +128,10 @@ fragment ThreadCommentReplyNotificationFragment on ThreadCommentReplyNotificatio
   type
   createdAt
   context
+  thread {
+    id
+  }
+  commentId
   user {
     ... UserCoreFragment
   }
@@ -134,6 +142,10 @@ fragment ThreadCommentSubscribedNotificationFragment on ThreadCommentSubscribedN
   type
   createdAt
   context
+  thread {
+    id
+  }
+  commentId
   user {
     ... UserCoreFragment
   }
@@ -144,6 +156,10 @@ fragment ThreadCommentLikeNotificationFragment on ThreadCommentLikeNotification 
   type
   createdAt
   context
+  thread {
+    id
+  }
+  commentId
   user {
     ... UserCoreFragment
   }
@@ -154,6 +170,9 @@ fragment ThreadLikeNotificationFragment on ThreadLikeNotification {
   type
   createdAt
   context
+  thread {
+    id
+  }
   user {
     ... UserCoreFragment
   }
