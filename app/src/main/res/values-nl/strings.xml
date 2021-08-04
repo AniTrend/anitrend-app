@@ -83,58 +83,6 @@
 
     <string name="Watch">Kijken</string>
 
-    <!--Try to keep all titles short and do not change the order of the <item> tags-->
-    <string-array name="feed_titles">
-        <item>vooruitgaan</item>
-        <item>status</item>
-        <item>publieke status</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="seasons_titles">
-        <item>winter</item>
-        <item>lente</item>
-        <item>zomer</item>
-        <item>herfst</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="trending_title">
-        <item>worden bekeken</item>
-        <item>recentelijk toegevoegd</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="airing_title">
-        <item>opkomende afleveringen</item>
-        <item>laatste afleveringen</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="manga_title">
-        <item>manga lijst</item>
-        <item>recentelijk toegevoegd</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles_auth">
-        <item>anime</item>
-        <item>manga</item>
-        <item>studio</item>
-        <item>personeel</item>
-        <item>characters</item>
-        <item>karakters</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles">
-        <item>anime</item>
-        <item>manga</item>
-        <item>studio</item>
-        <item>personeel</item>
-        <item>karakters</item>
-    </string-array>
-
     <!--First time usage intro screen-->
     <string name="app_intro_colors_title">Kleurenstaten</string>
     <string name="app_intro_colors_text">Kleuren die Anime / Manga-status vertegenwoordigen!</string>
@@ -170,12 +118,6 @@
         Je hoeft daarna alleen maar weer opnieuw in te loggen.
         ]]>
     </string>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="order_by_types">
-        <item>Oplopend</item>
-        <item>Aflopend</item>
-    </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
     <string name="campaign_link">
@@ -289,42 +231,7 @@
 
     <string name="pref_title_startup_page">Startup Page</string>
 
-    <string-array name="pref_titles_menu_entries">
-        <item>Thuis</item>
-        <item>Anime Ontdekken</item>
-        <item>Manga Ontdekken</item>
-        <item>Wat Is Populair</item>
-        <item>Draaiende Anime</item>
-        <item>Mijn Anime Lijst</item>
-        <item>Mijn Manga Lijst</item>
-        <item>AniTrend Hub</item>
-        <item>Serie Reviews</item>
-    </string-array>
-
-    <string-array name="pref_values_menu_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
-
     <string name="pref_title_update_channel">Kanaal updaten</string>
-
-    <string-array name="pref_titles_channel_entries">
-        <item>Stable</item>
-        <item>Beta (Experimenteel)</item>
-    </string-array>
-
-    <!-- Do Not Translate This -->
-    <string-array name="pref_values_channel_entries">
-        <item>master</item>
-        <item>develop</item>
-    </string-array>
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notificaties</string>
@@ -340,23 +247,6 @@
     <string name="pref_title_sync_frequency">Sync frequentie</string>
 
     <string name="pref_title_system_sync_settings">Systeem sync instellingen</string>
-
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minuten</item>
-        <item>30 minuten</item>
-        <item>1 uur</item>
-        <item>3 uur</item>
-        <item>6 uur</item>
-    </string-array>
-
-    <!--These are the actual value of the titles above, obviously no translation required here-->
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-    </string-array>
 
     <!--Another message using a bit of html the p tags represent new paragraphs-->
 
@@ -654,67 +544,6 @@
     <string name="manga">Manga</string>
     <string name="chapters">Hoofdstukken</string>
 
-
-    <!--Profile page titles-->
-    <string-array name="profile_page_titles">
-        <item>overzicht</item>
-        <item>vooruitgang</item>
-        <item>status</item>
-    </string-array>
-
-    <!--Staff page titles-->
-    <string-array name="staff_page_titles">
-        <item>overzicht</item>
-        <item>anime rollen</item>
-        <item>manga rollen</item>
-        <item>Staff rollen</item>
-    </string-array>
-
-    <!--Anime page titles-->
-    <string-array name="anime_page_titles">
-        <item>overzicht</item>
-        <item>@string/title_relation</item>
-        <item>stats</item>
-        <item>afleveringen</item>
-        <item>karakters</item>
-        <item>personeel</item>
-        <item>@string/title_social</item>
-        <item>reviews</item>
-    </string-array>
-
-    <!--Manga page titles-->
-    <string-array name="manga_page_titles">
-        <item>overzicht</item>
-        <item>@string/title_relation</item>
-        <item>stats</item>
-        <item>karakters</item>
-        <item>personeel</item>
-        <item>@string/title_social</item>
-        <item>reviews</item>
-    </string-array>
-
-    <!--Favourites page titles-->
-    <string-array name="favorites_page_titles">
-        <item>anime</item>
-        <item>karakters</item>
-        <item>manga</item>
-        <item>personeel</item>
-        <item>studios</item>
-    </string-array>
-
-    <!--Character page titles-->
-    <string-array name="character_page_titles">
-        <item>overzicht</item>
-        <item>anime rollen</item>
-        <item>manga rollen</item>
-        <item>acteur rollen</item>
-    </string-array>
-
-    <string-array name="hub_title">
-        <item>suggesties</item>
-        <item>meest populair</item>
-    </string-array>
-
     <!-- Menu title for text composer -->
     <string name="action_attach">Vastmaken</string>
     <string name="action_send">Zenden</string>
@@ -741,70 +570,10 @@
     <string name="sheet_share_title">formatteer je statuspost!</string>
     <string name="sheet_share_body">Bescrijf de inhoud van de link hieronder.</string>
 
-    <!--Only replace the first item the others are already provided in this file-->
-    <string-array name="post_share_types">
-        <item>Lege Tekst</item>
-        <item>Website</item>
-        <item>Afbeelding</item>
-        <item>YouTube</item>
-        <item>Video</item>
-    </string-array>
-
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f Uren</string>
     <string name="anime_time_days">%.1f Dagen</string>
     <string name="anime_time_years">%.1f Jaren</string>
-
-    <string-array name="media_status">
-        <item>Alles</item>
-        <item>Voltooid</item>
-        <item>vrijgeven</item>
-        <item>Nog Niet Vrijgegeven</item>
-        <item>geannuleerd</item>
-    </string-array>
-
-    <string-array name="anime_formats">
-        <item>Alles</item>
-        <item>TV</item>
-        <item>TV Mini</item>
-        <item>Film</item>
-        <item>Speciaal</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Muziek</item>
-    </string-array>
-
-    <string-array name="manga_formats">
-        <item>Alles</item>
-        <item>Manga</item>
-        <item>Roman</item>
-        <item>Één Opname</item>
-    </string-array>
-
-    <string-array name="reviews_title">
-        <item>@string/anime</item>
-        <item>@string/manga</item>
-    </string-array>
-
-    <string-array name="media_list_status">
-        <item>Kijkend</item>
-        <item>Gepland</item>
-        <item>Voltooid</item>
-        <item>Gedropt</item>
-        <item>Gepauzeerd</item>
-        <item>Herhaling</item>
-    </string-array>
-
-    <string-array name="messages_page_titles">
-        <item>Inbox</item>
-        <item>Uitgaand</item>
-    </string-array>
-
-    <string-array name="on_list_values">
-        <item>All</item>
-        <item>Not on list only</item>
-        <item>On list only</item>
-    </string-array>
 
     <string name="series_type">Type Serie:</string>
     <string name="series_episodes">Afleveringen:</string>
@@ -967,7 +736,7 @@
     <string name="title_migration_failed">Upgrade Failed</string>
     <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
     <string name="text_about_general_information">General Information</string>
-    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_application_version">Version %s</string>
     <string name="text_about_additional_information">Additional Information</string>
     <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
     <string name="text_about_legal_information">Legal Information</string>
@@ -975,6 +744,8 @@
     <string name="text_about_code_of_conduct">Code of Conduct</string>
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
+
+    <string name="pref_title_app_theme">Application Theme</string>
 
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
@@ -989,5 +760,5 @@
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
     <string name="pref_title_list_view_style">List View Style</string>
-    <string name="pref_title_app_theme">Application Theme</string>
+    <string name="notification_action_mark_as_read">Mark as read</string>
 </resources>
