@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_values_menu_entries" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="pref_values_channel_entries" translatable="false">
+        <item>master</item>
+        <item>develop</item>
+    </string-array>
+
+    <string-array name="pref_sync_frequency_values" translatable="false">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+    </string-array>
+
+    <string-array name="pref_selected_language_values" translatable="false">
+        <item>en</item>
+        <item>ar</item>
+        <item>de</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>pl</item>
+        <item>pt</item>
+        <item>sv</item>
+        <item>nl</item>
+    </string-array>
+
+    <string-array name="pref_selected_list_view_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_selected_theme_values" translatable="false">
+        <item>light</item>
+        <item>dark</item>
+        <item>black</item>
+    </string-array>
+</resources>
