@@ -24,7 +24,6 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.nguyenhoanglam.progresslayout.ProgressLayout
 import kotlinx.coroutines.*
@@ -64,7 +63,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         applicationVersionTextView.text = getString(
-                R.string.text_about_appication_version,
+                R.string.text_about_application_version,
                 BuildConfig.VERSION_NAME
         )
     }
