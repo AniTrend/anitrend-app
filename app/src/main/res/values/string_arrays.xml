@@ -24,7 +24,7 @@
 
     <!--Try to keep all titles short-->
     <string-array name="airing_title">
-        <item>@string/airing_title_airing_anime</item>
+        <item>@string/airing_title_anime</item>
         <item>@string/airing_title_latest_episodes</item>
     </string-array>
 
