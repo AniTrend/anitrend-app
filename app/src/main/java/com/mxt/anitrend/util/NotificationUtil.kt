@@ -136,7 +136,7 @@ class NotificationUtil(
             .setPriority(PRIORITY_HIGH)
             .addAction(
                 0,
-                context.resources.getString(R.string.alerter_notification_action_clear),
+                context.resources.getString(R.string.notification_action_mark_as_read),
                 clearNotificationsIntent(
                     KeyUtil.NOTIFICATION_ACTION_CLEAR,
                     notificationIdRemote
