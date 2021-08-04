@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="feed_title_progress">progress</string>
+    <string name="feed_title_status">status</string>
+    <string name="feed_title_public_status">public status</string>
+
+    <string name="seasons_title_winter">winter</string>
+    <string name="seasons_title_spring">spring</string>
+    <string name="seasons_title_summer">summer</string>
+    <string name="seasons_title_fall">fall</string>
+
+    <string name="trending_title_being_watched">being watched</string>
+    <string name="trending_title_recently_added">recently added</string>
+
+    <string name="airing_title_airing_anime">airing anime</string>
+    <string name="airing_title_latest_episodes">latest episodes</string>
+
+    <string name="manga_title_manga_list">manga list</string>
+    <string name="manga_title_recently_added">recently added</string>
+
+    <string name="search_titles_auth_anime">anime</string>
+    <string name="search_titles_auth_manga">manga</string>
+    <string name="search_titles_auth_studio">studio</string>
+    <string name="search_titles_auth_staff">staff</string>
+    <string name="search_titles_auth_characters">characters</string>
+    <string name="search_titles_auth_users">users</string>
+
+    <string name="search_title_anime">anime</string>
+    <string name="search_title_manga">manga</string>
+    <string name="search_title_studio">studio</string>
+    <string name="search_title_staff">staff</string>
+    <string name="search_title_characters">characters</string>
+
+    <string name="order_by_type_ascending">Ascending</string>
+    <string name="order_by_type_descending">Descending</string>
+
+    <string name="pref_titles_menu_entry_home">Home</string>
+    <string name="pref_titles_menu_entry_discover_anime">Discover Anime</string>
+    <string name="pref_titles_menu_entry_discover_manga">Discover Manga</string>
+    <string name="pref_titles_menu_entry_what_is_trending">What\'s Trending</string>
+    <string name="pref_titles_menu_entry_airing_anime">Airing Anime</string>
+    <string name="pref_titles_menu_entry_my_anime_list">My Anime List</string>
+    <string name="pref_titles_menu_entry_my_manga_list">My Manga List</string>
+    <string name="pref_titles_menu_entry_anitrend_hub">AniTrend Hub</string>
+    <string name="pref_titles_menu_entry_series_reviews">Series Reviews</string>
+
+    <string name="pref_titles_channel_entry_stable">Stable</string>
+    <string name="pref_titles_channel_entry_beta">Beta (Experimental)</string>
+
+    <string name="pref_sync_frequency_title_15_minutes">15 minutes</string>
+    <string name="pref_sync_frequency_title_30_minutes">30 minutes</string>
+    <string name="pref_sync_frequency_title_1_hour">1 hour</string>
+    <string name="pref_sync_frequency_title_3_hours">3 hours</string>
+    <string name="pref_sync_frequency_title_6_hours">6 hours</string>
+
+    <string name="profile_page_title_overview">overview</string>
+    <string name="profile_page_title_progress">progress</string>
+    <string name="profile_page_title_status">status</string>
+
+    <string name="staff_page_title_overview">overview</string>
+    <string name="staff_page_title_anime_roles">anime roles</string>
+    <string name="staff_page_title_manga_roles">manga roles</string>
+    <string name="staff_page_title_staff_roles">staff roles</string>
+
+    <string name="anime_page_title_overview">overview</string>
+    <string name="anime_page_title_stats">stats</string>
+    <string name="anime_page_title_episodes">episodes</string>
+    <string name="anime_page_title_characters">characters</string>
+    <string name="anime_page_title_staff">staff</string>
+    <string name="anime_page_title_reviews">reviews</string>
+
+    <string name="manga_page_title_overview">overview</string>
+    <string name="manga_page_title_stats">stats</string>
+    <string name="manga_page_title_characters">characters</string>
+    <string name="manga_page_title_staff">staff</string>
+    <string name="manga_page_title_reviews">reviews</string>
+
+    <string name="favorites_page_title_anime">anime</string>
+    <string name="favorites_page_title_characters">characters</string>
+    <string name="favorites_page_title_manga">manga</string>
+    <string name="favorites_page_title_staff">staff</string>
+    <string name="favorites_page_title_studios">studios</string>
+
+    <string name="character_page_title_overview">overview</string>
+    <string name="character_page_title_anime_roles">anime roles</string>
+    <string name="character_page_title_manga_roles">manga roles</string>
+    <string name="character_page_title_actor_roles">actor roles</string>
+
+    <string name="hub_title_suggestions">suggestions</string>
+    <string name="hub_title_most_popular">most popular</string>
+
+    <string name="post_share_type_plain_text">Plain Text</string>
+    <string name="post_share_type_website">Website</string>
+    <string name="post_share_type_picture">Picture</string>
+    <string name="post_share_type_youtube">YouTube</string>
+    <string name="post_share_type_video">Video</string>
+
+    <string name="media_status_all">All</string>
+    <string name="media_status_finished">Finished</string>
+    <string name="media_status_releasing">Releasing</string>
+    <string name="media_status_not_yet_released">Not Yet Released</string>
+    <string name="media_status_canceled">Canceled</string>
+
+    <string name="anime_format_all">All</string>
+    <string name="anime_format_tv">TV</string>
+    <string name="anime_format_tv_short">TV Short</string>
+    <string name="anime_format_movie">Movie</string>
+    <string name="anime_format_special">Special</string>
+    <string name="anime_format_ova">OVA</string>
+    <string name="anime_format_ona">ONA</string>
+    <string name="anime_format_music">Music</string>
+
+    <string name="manga_format_all">All</string>
+    <string name="manga_format_manga">Manga</string>
+    <string name="manga_format_novel">Novel</string>
+    <string name="manga_format_oneshot">One Shot</string>
+
+    <string name="media_list_status_current">Current</string>
+    <string name="media_list_status_planning">Planning</string>
+    <string name="media_list_status_completed">Completed</string>
+    <string name="media_list_status_dropped">Dropped</string>
+    <string name="media_list_status_paused">Paused</string>
+    <string name="media_list_status_repeating">Repeating</string>
+
+    <string name="messages_page_title_inbox">Inbox</string>
+    <string name="messages_page_title_outbox">Outbox</string>
+
+    <string name="on_list_all">All</string>
+    <string name="on_list_not_on_list_only">Not on list only</string>
+    <string name="on_list_on_list_only">On list only</string>
+
+    <string name="pref_selected_list_view_style_title_default">Compact (single column)</string>
+    <string name="pref_selected_list_view_style_title_compact_single">Compact (single column)</string>
+    <string name="pref_selected_list_view_style_title_compact_double">Compact (double column)</string>
+
+    <string name="pref_selected_theme_title_light">Light</string>
+    <string name="pref_selected_theme_title_dark">Dark</string>
+    <string name="pref_selected_theme_title_black">Black</string>
+
+    <string name="pref_selected_language_title_en" translatable="false">English</string>
+    <string name="pref_selected_language_title_ar" translatable="false">العربية</string>
+    <string name="pref_selected_language_title_de" translatable="false">Deutsch</string>
+    <string name="pref_selected_language_title_es" translatable="false">Español</string>
+    <string name="pref_selected_language_title_fr" translatable="false">Français</string>
+    <string name="pref_selected_language_title_it" translatable="false">Italiano</string>
+    <string name="pref_selected_language_title_pl" translatable="false">Polski</string>
+    <string name="pref_selected_language_title_pt" translatable="false">Português</string>
+    <string name="pref_selected_language_title_sv" translatable="false">Svenska</string>
+    <string name="pref_selected_language_title_de_nl" translatable="false">Deutsch-Nederlands</string>
+</resources>
