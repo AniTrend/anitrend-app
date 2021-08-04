@@ -89,58 +89,6 @@
 
     <string name="Watch">Ver</string>
 
-    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
-    <string-array name="feed_titles">
-        <item>progreso</item>
-        <item>estado</item>
-        <item>publicaciones</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="seasons_titles">
-        <item>invierno</item>
-        <item>primavera</item>
-        <item>verano</item>
-        <item>otoño</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="trending_title">
-        <item>más vistos</item>
-        <item>nuevos</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="airing_title">
-        <item>anime en emisión</item>
-        <item>episodios recientes</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="manga_title">
-        <item>lista de mangas</item>
-        <item>recientes</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles_auth">
-        <item>anime</item>
-        <item>manga</item>
-        <item>estudio</item>
-        <item>personal</item>
-        <item>personajes</item>
-        <item>usuarios</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles">
-        <item>anime</item>
-        <item>manga</item
-            >        <item>estudio</item>
-        <item>personal</item>
-        <item>personajes</item>
-    </string-array>
-
     <!--First time usage intro screen-->
     <string name="get_started">Empecemos</string>
     <string name="app_intro_colors_title">Color por estado</string>
@@ -180,12 +128,6 @@
 
         ]]>
 	</string>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="order_by_types">
-        <item>Ascending</item>
-        <item>Descending</item>
-    </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
     <string name="campaign_link">
@@ -311,43 +253,8 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <string name="pref_title_startup_page">Página de inicio</string>
 
-    <string-array name="pref_titles_menu_entries">
-        <item>Inicio</item>
-        <item>Descubre Anime</item>
-        <item>Descubre Manga</item>
-        <item>Tendencias Actuales</item>
-        <item>Animes en Emisión</item>
-        <item>Mi Lista de Anime</item>
-        <item>Mi Lista de Mangas</item>
-        <item>Centro AniTrend</item>
-        <item>Reseña de Series</item>
-    </string-array>
-
-    <string-array name="pref_values_menu_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
-
     <!-- Settings for update channel to use -->
     <string name="pref_title_update_channel">Canal de actualizaciones</string>
-
-    <string-array name="pref_titles_channel_entries">
-        <item>Estable</item>
-        <item>Beta (Experimental)</item>
-    </string-array>
-
-    <!-- Do Not Translate This -->
-    <string-array name="pref_values_channel_entries">
-        <item>master</item>
-        <item>develop</item>
-    </string-array>
 
 
     <!-- Settings for Notifications -->
@@ -364,23 +271,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_title_sync_frequency">Frecuencia de sincronización</string>
 
     <string name="pref_title_system_sync_settings">Ajustes de sincronización en el sistema</string>
-
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutos</item>
-        <item>30 minutos</item>
-        <item>1 hora</item>
-        <item>3 horas</item>
-        <item>6 horas</item>
-    </string-array>
-
-    <!--These are the actual value of the titles above, obviously no translation required here-->
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-    </string-array>
 
     <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
 
@@ -675,67 +565,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="manga">Manga</string>
     <string name="chapters">Capítulos</string>
 
-    <!--Profile page titles-->
-    <string-array name="profile_page_titles">
-        <item>resumen</item>
-        <item>progreso</item>
-        <item>estado</item>
-    </string-array>
-
-    <!--Staff page titles-->
-    <string-array name="staff_page_titles">
-        <item>resumen</item>
-        <item>Papeles en anime</item>
-        <item>Papeles en manga</item>
-        <item>Papel del personal</item>
-    </string-array>
-
-    <!--Anime page titles-->
-    <string-array name="anime_page_titles">
-        <item>resumen</item>
-        <item>@string/title_relation</item>
-        <item>estado</item>
-        <item>episodios</item>
-        <item>personajes</item>
-        <item>personal</item>
-        <item>@string/title_social</item>
-        <item>reseñas</item>
-    </string-array>
-
-    <!--Manga page titles-->
-    <string-array name="manga_page_titles">
-        <item>resumen</item>
-        <item>@string/title_relation</item>
-        <item>estado</item>
-        <item>personajes</item>
-        <item>personal</item>
-        <item>@string/title_social</item>
-        <item>reseñas</item>
-    </string-array>
-
-    <!--Favourites page titles-->
-    <string-array name="favorites_page_titles">
-        <item>animes</item>
-        <item>personajes</item>
-        <item>mangas</item>
-        <item>personal</item>
-        <item>estudios</item>
-    </string-array>
-
-    <!--Character page titles-->
-    <string-array name="character_page_titles">
-        <item>resumen</item>
-        <item>Papeles en anime</item>
-        <item>Paples en manga</item>
-        <item>Papeles de actor</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>sugerencias</item>
-        <item>Lo más popular</item>
-    </string-array>
-
     <!-- Menu title for text composer -->
     <string name="action_attach">Adjuntar</string>
     <string name="action_send">Enviar</string>
@@ -762,70 +591,10 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="sheet_share_title">Formatea el estado de tu publicación para compartir</string>
     <string name="sheet_share_body">Por favor, selecciona el tipo de contenido que quieres compartir.</string>
 
-    <!--Only replace the first item the others are already provided in this file-->
-    <string-array name="post_share_types">
-        <item>Introduce texto plano</item>
-        <item>@string/attach_link_title</item>
-        <item>@string/attach_image_title</item>
-        <item>@string/attach_youtube_title</item>
-        <item>@string/attach_webm_title</item>
-    </string-array>
-
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f Horas</string>
     <string name="anime_time_days">%.1f Días</string>
     <string name="anime_time_years">%.1f Años</string>
-
-    <string-array name="media_status">
-        <item>Todos</item>
-        <item>Acabados</item>
-        <item>Estrenados</item>
-        <item>Sin Estrenar</item>
-        <item>Cancelados</item>
-    </string-array>
-
-    <string-array name="anime_formats">
-        <item>Todos</item>
-        <item>TV</item>
-        <item>TV Cortos</item>
-        <item>Película</item>
-        <item>Especial</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Musical</item>
-    </string-array>
-
-    <string-array name="manga_formats">
-        <item>Todos</item>
-        <item>Manga</item>
-        <item>Novela</item>
-        <item>One Shot</item>
-    </string-array>
-
-    <string-array name="reviews_title">
-        <item>@string/anime</item>
-        <item>@string/manga</item>
-    </string-array>
-
-    <string-array name="media_list_status">
-        <item>Current</item>
-        <item>Planning</item>
-        <item>Completed</item>
-        <item>Dropped</item>
-        <item>Paused</item>
-        <item>Repeating</item>
-    </string-array>
-
-    <string-array name="messages_page_titles">
-        <item>Inbox</item>
-        <item>Outbox</item>
-    </string-array>
-
-    <string-array name="on_list_values">
-        <item>All</item>
-        <item>Not on list only</item>
-        <item>On list only</item>
-    </string-array>
 
     <string name="series_type">Tipo de serie:</string>
     <string name="series_episodes">Episodios:</string>
@@ -966,7 +735,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="title_migration_failed">Upgrade Failed</string>
     <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
     <string name="text_about_general_information">General Information</string>
-    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_application_version">Version %s</string>
     <string name="text_about_additional_information">Additional Information</string>
     <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
     <string name="text_about_legal_information">Legal Information</string>
@@ -974,6 +743,8 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_about_code_of_conduct">Code of Conduct</string>
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
+
+    <string name="pref_title_app_theme">Application Theme</string>
 
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
@@ -988,5 +759,5 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
     <string name="pref_title_list_view_style">List View Style</string>
-    <string name="pref_title_app_theme">Application Theme</string>
+    <string name="notification_action_mark_as_read">Mark as read</string>
 </resources>
