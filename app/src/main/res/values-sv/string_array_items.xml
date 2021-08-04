@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="feed_title_progress">Framsteg</string>
+    <string name="feed_title_status">Status</string>
+    <string name="feed_title_public_status">offentlig status</string>
+
+    <string name="seasons_title_winter">vinter</string>
+    <string name="seasons_title_spring">vår</string>
+    <string name="seasons_title_summer">sommar</string>
+    <string name="seasons_title_fall">höst</string>
+
+    <string name="trending_title_being_watched">tittas på</string>
+    <string name="trending_title_recently_added">nyligen tillagd</string>
+
+    <string name="airing_title_anime">vädring anime</string>
+    <string name="airing_title_latest_episodes">senaste episoderna</string>
+
+    <string name="manga_title_manga_list">manga lista</string>
+    <string name="manga_title_recently_added">nyligen tillagd</string>
+
+    <string name="search_titles_auth_anime">anime</string>
+    <string name="search_titles_auth_manga">manga</string>
+    <string name="search_titles_auth_studio">studio</string>
+    <string name="search_titles_auth_staff">personal</string>
+    <string name="search_titles_auth_characters">karaktär</string>
+    <string name="search_titles_auth_users">användare</string>
+
+    <string name="search_title_anime">anime</string>
+    <string name="search_title_manga">manga</string>
+    <string name="search_title_studio">studio</string>
+    <string name="search_title_staff">karaktär</string>
+    <string name="search_title_characters">användare</string>
+
+    <string name="order_by_type_ascending">Ascending</string>
+    <string name="order_by_type_descending">Descending</string>
+
+    <string name="pref_titles_menu_entry_home">Hem</string>
+    <string name="pref_titles_menu_entry_discover_anime">Upptäck Anime</string>
+    <string name="pref_titles_menu_entry_discover_manga">Upptäck Manga</string>
+    <string name="pref_titles_menu_entry_what_is_trending">Vad är i trend</string>
+    <string name="pref_titles_menu_entry_airing_anime">Pågående anime</string>
+    <string name="pref_titles_menu_entry_my_anime_list">Min anime lista</string>
+    <string name="pref_titles_menu_entry_my_manga_list">Min Manga Lista</string>
+    <string name="pref_titles_menu_entry_anitrend_hub">AniTrend Hub</string>
+    <string name="pref_titles_menu_entry_series_reviews">Serie Recensioner</string>
+
+    <string name="pref_titles_channel_entry_stable">Stabil</string>
+    <string name="pref_titles_channel_entry_beta">Beta (Experimentell)</string>
+
+    <string name="pref_sync_frequency_title_15_minutes">15 minuter</string>
+    <string name="pref_sync_frequency_title_30_minutes">30 minuter</string>
+    <string name="pref_sync_frequency_title_1_hour">1 timme</string>
+    <string name="pref_sync_frequency_title_3_hours">3 timmar</string>
+    <string name="pref_sync_frequency_title_6_hours">6 timmar</string>
+
+    <string name="profile_page_title_overview">översikt</string>
+    <string name="profile_page_title_progress">framsteg</string>
+    <string name="profile_page_title_status">status</string>
+
+    <string name="staff_page_title_overview">översikt</string>
+    <string name="staff_page_title_anime_roles">anime roller</string>
+    <string name="staff_page_title_manga_roles">manga roller</string>
+    <string name="staff_page_title_staff_roles">personal roller</string>
+
+    <string name="anime_page_title_overview">översikt</string>
+    <string name="anime_page_title_stats">statistik</string>
+    <string name="anime_page_title_episodes">episoder</string>
+    <string name="anime_page_title_characters">karaktär</string>
+    <string name="anime_page_title_staff">personal</string>
+    <string name="anime_page_title_reviews">recensioner</string>
+
+    <string name="manga_page_title_overview">översikt</string>
+    <string name="manga_page_title_stats">statistik</string>
+    <string name="manga_page_title_characters">karaktär</string>
+    <string name="manga_page_title_staff">personal</string>
+    <string name="manga_page_title_reviews">studior</string>
+
+    <string name="favorites_page_title_anime">animes</string>
+    <string name="favorites_page_title_characters">karaktär</string>
+    <string name="favorites_page_title_manga">mangas</string>
+    <string name="favorites_page_title_staff">personal</string>
+    <string name="favorites_page_title_studios">studior</string>
+
+    <string name="character_page_title_overview">översikt</string>
+    <string name="character_page_title_anime_roles">anime roller</string>
+    <string name="character_page_title_manga_roles">manga roller</string>
+    <string name="character_page_title_actor_roles">skådespelare rollerr</string>
+
+    <string name="hub_title_suggestions">förslag</string>
+    <string name="hub_title_most_popular">mest populär</string>
+
+    <string name="post_share_type_plain_text">Oformatterad text</string>
+    <string name="post_share_type_website">Website</string>
+    <string name="post_share_type_picture">Picture</string>
+    <string name="post_share_type_youtube">YouTube</string>
+    <string name="post_share_type_video">Video</string>
+
+    <string name="media_status_all">Alla</string>
+    <string name="media_status_finished">Färdiga</string>
+    <string name="media_status_releasing">Släpper</string>
+    <string name="media_status_not_yet_released">Inte släppts ännu</string>
+    <string name="media_status_canceled">Avbruten</string>
+
+    <string name="anime_format_all">Alla</string>
+    <string name="anime_format_tv">TV</string>
+    <string name="anime_format_tv_short">TV Kort</string>
+    <string name="anime_format_movie">Film</string>
+    <string name="anime_format_special">Särskild</string>
+    <string name="anime_format_ova">OVA</string>
+    <string name="anime_format_ona">ONA</string>
+    <string name="anime_format_music">Musik</string>
+
+    <string name="manga_format_all">Alla</string>
+    <string name="manga_format_manga">Manga</string>
+    <string name="manga_format_novel">Novel</string>
+    <string name="manga_format_oneshot">One Shot</string>
+
+    <string name="media_list_status_current">Current</string>
+    <string name="media_list_status_planning">Planning</string>
+    <string name="media_list_status_completed">Completed</string>
+    <string name="media_list_status_dropped">Dropped</string>
+    <string name="media_list_status_paused">Paused</string>
+    <string name="media_list_status_repeating">Repeating</string>
+
+    <string name="messages_page_title_inbox">Inbox</string>
+    <string name="messages_page_title_outbox">Outbox</string>
+
+    <string name="on_list_all">All</string>
+    <string name="on_list_not_on_list_only">Not on list only</string>
+    <string name="on_list_on_list_only">On list only</string>
+
+    <string name="pref_selected_list_view_style_title_default">Compact (single column)</string>
+    <string name="pref_selected_list_view_style_title_compact_single">Compact (single column)</string>
+    <string name="pref_selected_list_view_style_title_compact_double">Compact (double column)</string>
+
+    <string name="pref_selected_theme_title_light">Light</string>
+    <string name="pref_selected_theme_title_dark">Dark</string>
+    <string name="pref_selected_theme_title_black">Black</string>
+</resources>

@@ -92,58 +92,6 @@
 
     <string name="Watch">شاهد</string>
 
-    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
-    <string-array name="feed_titles">
-        <item>التقدّم</item>
-        <item>المنشورات</item>
-        <item>المنشورات العامة</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="seasons_titles">
-        <item>الشتاء</item>
-        <item>الربيع</item>
-        <item>الصيف</item>
-        <item>الخريف</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="trending_title">
-        <item>تجري مشاهدته</item>
-        <item>اضيف مؤخرًا</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="airing_title">
-        <item>قيد العرض</item>
-        <item>آخر الحلقات</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="manga_title">
-        <item>قائمة المانغا</item>
-        <item>اضيف مؤخرًا</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles_auth">
-        <item>أنيمي</item>
-        <item>مانغا</item>
-        <item>استوديو</item>
-        <item>طاقم</item>
-        <item>شخصيات</item>
-        <item>مستخدمين</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles">
-        <item>أنيمي</item>
-        <item>مانغا</item>
-        <item>استوديو</item>
-        <item>طاقم</item>
-        <item>شخصيات</item>
-    </string-array>
-
     <!--First time usage intro screen-->
     <string name="get_started">لنبدأ</string>
     <string name="app_intro_colors_title">حالات اللون</string>
@@ -184,12 +132,6 @@
         سيتوجب عليك ان تقوم بتسجيل الدخول مره اخرى.
         ]]>
     </string>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="order_by_types">
-        <item>تصاعدي</item>
-        <item>تنازلي</item>
-    </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
     <string name="campaign_link">
@@ -316,44 +258,8 @@
 
     <string name="pref_title_startup_page">صفحة بدء التشغيل</string>
 
-    <string-array name="pref_titles_menu_entries">
-        <item>الرئيسيّة</item>
-        <item>اكتشف الأنيميات</item>
-        <item>تصفح المانغا</item>
-        <item>الأكثر تداولًا</item>
-        <item>أنيميات يتم بثها حاليًا</item>
-        <item>قائمة الأنيمي</item>
-        <item>قائمة المانغا</item>
-        <item>AniTrend مركز</item>
-        <item>المراجعات</item>
-    </string-array>
-
-    <string-array name="pref_values_menu_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
-
     <!-- Settings for update channel to use -->
     <string name="pref_title_update_channel">نوع التحديث</string>
-
-    <string-array name="pref_titles_channel_entries">
-        <item>مستقر</item>
-        <item>بيتا</item>
-    </string-array>
-
-    <!-- Do Not Translate This -->
-    <string-array name="pref_values_channel_entries">
-        <item>master</item>
-        <item>develop</item>
-    </string-array>
-
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">الإشعارات</string>
@@ -369,23 +275,6 @@
     <string name="pref_title_sync_frequency">اوقات المزامنة</string>
 
     <string name="pref_title_system_sync_settings">إعدادات المزامنة</string>
-
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 دقيقة</item>
-        <item>30 دقيقة</item>
-        <item>ساعة واحدة</item>
-        <item>ثلاث ساعات</item>
-        <item>ستة ساعات</item>
-    </string-array>
-
-    <!--These are the actual value of the titles above, obviously no translation required here-->
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-    </string-array>
 
     <string name="create_account">هل تريد إنشاء حساب جديد؟</string>
 
@@ -678,67 +567,6 @@
     <string name="manga">المانغا</string>
     <string name="chapters">الفصول</string>
 
-    <!--Profile page titles-->
-    <string-array name="profile_page_titles">
-        <item>نظرة عامة</item>
-        <item>التقدّم</item>
-        <item>المنشورات</item>
-    </string-array>
-
-    <!--Staff page titles-->
-    <string-array name="staff_page_titles">
-        <item>نظرة عامة</item>
-        <item>الأنيمي</item>
-        <item>المانغا</item>
-        <item>أدواره</item>
-    </string-array>
-
-    <!--Anime page titles-->
-    <string-array name="anime_page_titles">
-        <item>نظرة عامة</item>
-        <item>مرتبط</item>
-        <item>روابط واحصائيات</item>
-        <item>مشاهدة</item>
-        <item>الشخصيات</item>
-        <item>طاقم العمل</item>
-        <item>سجل المشاهدة</item>
-        <item>المراجعات</item>
-    </string-array>
-
-    <!--Manga page titles-->
-    <string-array name="manga_page_titles">
-        <item>نظرة عامة</item>
-        <item>مرتبط</item>
-        <item>روابط واحصائيات</item>
-        <item>الشخصيات</item>
-        <item>طاقم العمل</item>
-        <item>سجل القراءة</item>
-        <item>المراجعات</item>
-    </string-array>
-
-    <!--Favourites page titles-->
-    <string-array name="favorites_page_titles">
-        <item>أنيمي</item>
-        <item>شخصيات</item>
-        <item>مانغا</item>
-        <item>طاقم</item>
-        <item>استديو</item>
-    </string-array>
-
-    <!--Character page titles-->
-    <string-array name="character_page_titles">
-        <item>نظرة عامة</item>
-        <item>الأنيمي</item>
-        <item>المانغا</item>
-        <item>مؤدي الصوت</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>اقتراحات</item>
-        <item>الأكثر شعبية</item>
-    </string-array>
-
     <!-- Menu title for text composer -->
     <string name="action_attach">أرفق</string>
     <string name="action_send">إرسال</string>
@@ -765,70 +593,10 @@
     <string name="sheet_share_title">إعادة ضبط منشورات حالتك لمشاركتها</string>
     <string name="sheet_share_body">حدد نوع المحتوى الذي تريد مشاركته.</string>
 
-    <!--Only replace the first item the others are already provided in this file-->
-    <string-array name="post_share_types">
-        <item>ادراج نص عادي</item>
-        <item>@string/attach_link_title</item>
-        <item>@string/attach_image_title</item>
-        <item>@string/attach_youtube_title</item>
-        <item>@string/attach_webm_title</item>
-    </string-array>
-
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f ساعة</string>
     <string name="anime_time_days">%.1f يوم</string>
     <string name="anime_time_years">%.1f سنة</string>
-
-    <string-array name="media_status">
-        <item>الكل</item>
-        <item>منتهية</item>
-        <item>معروضة</item>
-        <item>لم تعرض بعد</item>
-        <item>ملغاة</item>
-    </string-array>
-
-    <string-array name="anime_formats">
-        <item>الكل</item>
-        <item>تلفزيوني</item>
-        <item>تلفزيوني قصير</item>
-        <item>فيلم</item>
-        <item>حلقات خاصة</item>
-        <item>اوفا</item>
-        <item>اونا</item>
-        <item>موسيقى</item>
-    </string-array>
-
-    <string-array name="manga_formats">
-        <item>الكل</item>
-        <item>مانغا</item>
-        <item>رواية</item>
-        <item>ون شوت</item>
-    </string-array>
-
-    <string-array name="reviews_title">
-        <item>@string/anime</item>
-        <item>@string/manga</item>
-    </string-array>
-
-    <string-array name="media_list_status">
-        <item>تُشاهده</item>
-        <item>تُخطط لذلك</item>
-        <item>أكملت مشاهدته</item>
-        <item>سئمت منه</item>
-        <item>استراحة مؤقتة</item>
-        <item>أعدت مشاهدته</item>
-    </string-array>
-
-    <string-array name="messages_page_titles">
-        <item>رسائل واردة</item>
-        <item>رسائل صادرة</item>
-    </string-array>
-
-    <string-array name="on_list_values">
-        <item>All</item>
-        <item>Not on list only</item>
-        <item>On list only</item>
-    </string-array>
 
     <string name="series_type">النوع:</string>
     <string name="series_episodes">الحلقات:</string>
@@ -966,7 +734,7 @@
     <string name="title_migration_failed">Upgrade Failed</string>
     <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
     <string name="text_about_general_information">General Information</string>
-    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_application_version">Version %s</string>
     <string name="text_about_additional_information">Additional Information</string>
     <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
     <string name="text_about_legal_information">Legal Information</string>
@@ -974,6 +742,8 @@
     <string name="text_about_code_of_conduct">Code of Conduct</string>
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
+
+    <string name="pref_title_app_theme">Application Theme</string>
 
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
@@ -988,5 +758,5 @@
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
     <string name="pref_title_list_view_style">List View Style</string>
-    <string name="pref_title_app_theme">Application Theme</string>
+    <string name="notification_action_mark_as_read">Mark as read</string>
 </resources>

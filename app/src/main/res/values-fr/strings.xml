@@ -76,58 +76,6 @@
 
     <string name="Watch">Regarder</string>
 
-    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
-    <string-array name="feed_titles">
-        <item>progrès</item>
-        <item>publications</item>
-        <item>publications publiques</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="seasons_titles">
-        <item>hiver</item>
-        <item>printemps</item>
-        <item>été</item>
-        <item>automne</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="trending_title">
-        <item>en visionnage</item>
-        <item>ajouté récemment</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="airing_title">
-        <item>anime en diffusion</item>
-        <item>derniers épisodes</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="manga_title">
-        <item>mes mangas</item>
-        <item>ajouté récemment</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles_auth">
-        <item>anime</item>
-        <item>manga</item>
-        <item>studio</item>
-        <item>staff</item>
-        <item>characters</item>
-        <item>utilisateurs</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles">
-        <item>anime</item>
-        <item>manga</item>
-        <item>studio</item>
-        <item>staff</item>
-        <item>characters</item>
-    </string-array>
-
     <!--First time usage intro screen-->
     <string name="get_started">C\'est Partis !</string>
     <string name="app_intro_colors_title">Couleur</string>
@@ -168,13 +116,6 @@
         Vous aurez ensuite simplement à vous reconnecter.
         ]]>
     </string>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="order_by_types">
-        <item>Ascending</item>
-        <item>Descending</item>
-    </string-array>
-
 
     <!--You can translate this just try to keep the meaning consistent :)-->
     <string name="campaign_link">
@@ -293,44 +234,8 @@
 
     <string name="pref_title_startup_page">Page de Démarrage</string>
 
-    <string-array name="pref_titles_menu_entries">
-        <item>Accueil</item>
-        <item>Découvrir des Animes</item>
-        <item>Découvrir des Mangas</item>
-        <item>En ce Moment</item>
-        <item>Anime en Diffusion</item>
-        <item>Mes Animes</item>
-        <item>Mes Mangas</item>
-        <item>HUB AniTrend</item>
-        <item>Critiques</item>
-    </string-array>
-
-    <string-array name="pref_values_menu_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
-
     <!-- Settings for update channel to use -->
     <string name="pref_title_update_channel">Update Channel</string>
-
-    <string-array name="pref_titles_channel_entries">
-        <item>Stable</item>
-        <item>Beta (Experimental)</item>
-    </string-array>
-
-    <!-- Do Not Translate This -->
-    <string-array name="pref_values_channel_entries">
-        <item>master</item>
-        <item>develop</item>
-    </string-array>
-
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
@@ -346,23 +251,6 @@
     <string name="pref_title_sync_frequency">Fréquence de Synchronisation</string>
 
     <string name="pref_title_system_sync_settings">Paramètres de Synchronisation Système</string>
-
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 heures</item>
-        <item>3 heures</item>
-        <item>6 heures</item>
-    </string-array>
-
-    <!--These are the actual value of the titles above, obviously no translation required here-->
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-    </string-array>
 
     <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
 
@@ -660,67 +548,6 @@
     <string name="manga">Manga</string>
     <string name="chapters">Chapters</string>
 
-    <!--Profile page titles-->
-    <string-array name="profile_page_titles">
-        <item>overview</item>
-        <item>progress</item>
-        <item>status</item>
-    </string-array>
-
-    <!--Staff page titles-->
-    <string-array name="staff_page_titles">
-        <item>overview</item>
-        <item>anime roles</item>
-        <item>manga roles</item>
-        <item>staff roles</item>
-    </string-array>
-
-    <!--Anime page titles-->
-    <string-array name="anime_page_titles">
-        <item>overview</item>
-        <item>@string/title_relation</item>
-        <item>stats</item>
-        <item>episodes</item>
-        <item>characters</item>
-        <item>staff</item>
-        <item>@string/title_social</item>
-        <item>reviews</item>
-    </string-array>
-
-    <!--Manga page titles-->
-    <string-array name="manga_page_titles">
-        <item>overview</item>
-        <item>@string/title_relation</item>
-        <item>stats</item>
-        <item>characters</item>
-        <item>staff</item>
-        <item>@string/title_social</item>
-        <item>reviews</item>
-    </string-array>
-
-    <!--Favourites page titles-->
-    <string-array name="favorites_page_titles">
-        <item>anime</item>
-        <item>characters</item>
-        <item>manga</item>
-        <item>staff</item>
-        <item>studios</item>
-    </string-array>
-
-    <!--Character page titles-->
-    <string-array name="character_page_titles">
-        <item>overview</item>
-        <item>anime roles</item>
-        <item>manga roles</item>
-        <item>actor roles</item>
-    </string-array>
-
-    <!--This refers primarily to anime shows or episodes-->
-    <string-array name="hub_title">
-        <item>suggestions</item>
-        <item>most popular</item>
-    </string-array>
-
     <!-- Menu title for text composer -->
     <string name="action_attach">Attach</string>
     <string name="action_send">Send</string>
@@ -747,70 +574,10 @@
     <string name="sheet_share_title">Format your status post to share</string>
     <string name="sheet_share_body">Please select the type of content you are trying to share.</string>
 
-    <!--Only replace the first item the others are already provided in this file-->
-    <string-array name="post_share_types">
-        <item>Plain Text</item>
-        <item>Website</item>
-        <item>Picture</item>
-        <item>YouTube</item>
-        <item>Video</item>
-    </string-array>
-
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f Hours</string>
     <string name="anime_time_days">%.1f Days</string>
     <string name="anime_time_years">%.1f Years</string>
-
-    <string-array name="media_status">
-        <item>All</item>
-        <item>Finished</item>
-        <item>Releasing</item>
-        <item>Not Yet Released</item>
-        <item>Canceled</item>
-    </string-array>
-
-    <string-array name="anime_formats">
-        <item>All</item>
-        <item>TV</item>
-        <item>TV Short</item>
-        <item>Movie</item>
-        <item>Special</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Music</item>
-    </string-array>
-
-    <string-array name="manga_formats">
-        <item>All</item>
-        <item>Manga</item>
-        <item>Novel</item>
-        <item>One Shot</item>
-    </string-array>
-
-    <string-array name="reviews_title">
-        <item>@string/anime</item>
-        <item>@string/manga</item>
-    </string-array>
-
-    <string-array name="media_list_status">
-        <item>Current</item>
-        <item>Planning</item>
-        <item>Completed</item>
-        <item>Dropped</item>
-        <item>Paused</item>
-        <item>Repeating</item>
-    </string-array>
-
-    <string-array name="messages_page_titles">
-        <item>Inbox</item>
-        <item>Outbox</item>
-    </string-array>
-
-    <string-array name="on_list_values">
-        <item>All</item>
-        <item>Not on list only</item>
-        <item>On list only</item>
-    </string-array>
 
     <string name="series_type">Series Type:</string>
     <string name="series_episodes">Episodes:</string>
@@ -966,7 +733,7 @@
     <string name="title_migration_failed">Upgrade Failed</string>
     <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
     <string name="text_about_general_information">General Information</string>
-    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_application_version">Version %s</string>
     <string name="text_about_additional_information">Additional Information</string>
     <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
     <string name="text_about_legal_information">Legal Information</string>
@@ -974,6 +741,8 @@
     <string name="text_about_code_of_conduct">Code of Conduct</string>
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
+
+    <string name="pref_title_app_theme">Application Theme</string>
 
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
@@ -988,5 +757,5 @@
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
     <string name="pref_title_list_view_style">List View Style</string>
-    <string name="pref_title_app_theme">Application Theme</string>
+    <string name="notification_action_mark_as_read">Mark as read</string>
 </resources>

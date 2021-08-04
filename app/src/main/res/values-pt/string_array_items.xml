@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="feed_title_progress">progresso</string>
+    <string name="feed_title_status">status</string>
+    <string name="feed_title_public_status">status público</string>
+
+    <string name="seasons_title_winter">inverno</string>
+    <string name="seasons_title_spring">primavera</string>
+    <string name="seasons_title_summer">verão</string>
+    <string name="seasons_title_fall">outono</string>
+
+    <string name="trending_title_being_watched">assistindo</string>
+    <string name="trending_title_recently_added">adicionado recentemente</string>
+
+    <string name="airing_title_anime">em lançamento</string>
+    <string name="airing_title_latest_episodes">episódios recentes</string>
+
+    <string name="manga_title_manga_list">mangá list</string>
+    <string name="manga_title_recently_added">adicionados recentemente</string>
+
+    <string name="search_titles_auth_anime">anime</string>
+    <string name="search_titles_auth_manga">mangá</string>
+    <string name="search_titles_auth_studio">estúdio</string>
+    <string name="search_titles_auth_staff">staff</string>
+    <string name="search_titles_auth_characters">personagens</string>
+    <string name="search_titles_auth_users">usuários</string>
+
+    <string name="search_title_anime">anime</string>
+    <string name="search_title_manga">mangá</string>
+    <string name="search_title_studio">estúdio</string>
+    <string name="search_title_staff">staff</string>
+    <string name="search_title_characters">personagens</string>
+
+    <string name="order_by_type_ascending">Ascending</string>
+    <string name="order_by_type_descending">Descending</string>
+
+    <string name="pref_titles_menu_entry_home">Home</string>
+    <string name="pref_titles_menu_entry_discover_anime">Descubra Animes</string>
+    <string name="pref_titles_menu_entry_discover_manga">Descubra Mangás</string>
+    <string name="pref_titles_menu_entry_what_is_trending">Tendâncias</string>
+    <string name="pref_titles_menu_entry_airing_anime">Em Lançamento</string>
+    <string name="pref_titles_menu_entry_my_anime_list">Minha Lista de Animes</string>
+    <string name="pref_titles_menu_entry_my_manga_list">Minha Lista de mangás</string>
+    <string name="pref_titles_menu_entry_anitrend_hub">Central do AniTrend</string>
+    <string name="pref_titles_menu_entry_series_reviews">Reviews de Séries</string>
+
+    <string name="pref_titles_channel_entry_stable">Estável</string>
+    <string name="pref_titles_channel_entry_beta">Beta (Experimental)</string>
+
+    <string name="pref_sync_frequency_title_15_minutes">15 minutos</string>
+    <string name="pref_sync_frequency_title_30_minutes">30 minutos</string>
+    <string name="pref_sync_frequency_title_1_hour">1 hora</string>
+    <string name="pref_sync_frequency_title_3_hours">3 horas</string>
+    <string name="pref_sync_frequency_title_6_hours">6 horas</string>
+
+    <string name="profile_page_title_overview">visão geral</string>
+    <string name="profile_page_title_progress">progresso</string>
+    <string name="profile_page_title_status">status</string>
+
+    <string name="staff_page_title_overview">visão geral</string>
+    <string name="staff_page_title_anime_roles">papéis em animes</string>
+    <string name="staff_page_title_manga_roles">papéis em mangás</string>
+    <string name="staff_page_title_staff_roles">papéis como staff</string>
+
+    <string name="anime_page_title_overview">visão geral</string>
+    <string name="anime_page_title_stats">estatísticas</string>
+    <string name="anime_page_title_episodes">episódios</string>
+    <string name="anime_page_title_characters">personagens</string>
+    <string name="anime_page_title_staff">staff</string>
+    <string name="anime_page_title_reviews">reviews</string>
+
+    <string name="manga_page_title_overview">Visão Geral</string>
+    <string name="manga_page_title_stats">episódios</string>
+    <string name="manga_page_title_characters">personagens</string>
+    <string name="manga_page_title_staff">staff</string>
+    <string name="manga_page_title_reviews">reviews</string>
+
+    <string name="favorites_page_title_anime">animes</string>
+    <string name="favorites_page_title_characters">personagens</string>
+    <string name="favorites_page_title_manga">mangás</string>
+    <string name="favorites_page_title_staff">staff</string>
+    <string name="favorites_page_title_studios">estúdios</string>
+
+    <string name="character_page_title_overview">Visão Geral</string>
+    <string name="character_page_title_anime_roles">papéis em animes</string>
+    <string name="character_page_title_manga_roles">papéis em mangás</string>
+    <string name="character_page_title_actor_roles">papéis como staff</string>
+
+    <string name="hub_title_suggestions">sugestões</string>
+    <string name="hub_title_most_popular">mais popular</string>
+
+    <string name="post_share_type_plain_text">Texto Simples</string>
+    <string name="post_share_type_website">Website</string>
+    <string name="post_share_type_picture">Imagem</string>
+    <string name="post_share_type_youtube">YouTube</string>
+    <string name="post_share_type_video">Vídeo</string>
+
+    <string name="media_status_all">Todos</string>
+    <string name="media_status_finished">Completos</string>
+    <string name="media_status_releasing">Em Lançamento</string>
+    <string name="media_status_not_yet_released">Ainda Não Lançado</string>
+    <string name="media_status_canceled">Cancelado</string>
+
+    <string name="anime_format_all">Todos</string>
+    <string name="anime_format_tv">TV</string>
+    <string name="anime_format_tv_short">Curta</string>
+    <string name="anime_format_movie">Filme</string>
+    <string name="anime_format_special">Especial</string>
+    <string name="anime_format_ova">OVA</string>
+    <string name="anime_format_ona">ONA</string>
+    <string name="anime_format_music">Música</string>
+
+    <string name="manga_format_all">Todos</string>
+    <string name="manga_format_manga">Mangá</string>
+    <string name="manga_format_novel">Novel</string>
+    <string name="manga_format_oneshot">One Shot</string>
+
+    <string name="media_list_status_current">Conferindo</string>
+    <string name="media_list_status_planning">Plajando</string>
+    <string name="media_list_status_completed">Completo</string>
+    <string name="media_list_status_dropped">Droppado</string>
+    <string name="media_list_status_paused">Pausado</string>
+    <string name="media_list_status_repeating">Repetindo</string>
+
+    <string name="messages_page_title_inbox">Caixa de Entrada</string>
+    <string name="messages_page_title_outbox">Caixa de Saída</string>
+
+    <string name="on_list_all">All</string>
+    <string name="on_list_not_on_list_only">Not on list only</string>
+    <string name="on_list_on_list_only">On list only</string>
+
+    <string name="pref_selected_list_view_style_title_default">Compact (single column)</string>
+    <string name="pref_selected_list_view_style_title_compact_single">Compact (single column)</string>
+    <string name="pref_selected_list_view_style_title_compact_double">Compact (double column)</string>
+
+    <string name="pref_selected_theme_title_light">Light</string>
+    <string name="pref_selected_theme_title_dark">Dark</string>
+    <string name="pref_selected_theme_title_black">Black</string>
+</resources>

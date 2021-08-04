@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Try to keep all titles short and do not change the order of the <item> tags-->
+    <string-array name="feed_titles">
+        <item>@string/feed_title_progress</item>
+        <item>@string/feed_title_status</item>
+        <item>@string/feed_title_public_status</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="seasons_titles">
+        <item>@string/seasons_title_winter</item>
+        <item>@string/seasons_title_spring</item>
+        <item>@string/seasons_title_summer</item>
+        <item>@string/seasons_title_fall</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="trending_title">
+        <item>@string/trending_title_being_watched</item>
+        <item>@string/trending_title_recently_added</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="airing_title">
+        <item>@string/airing_title_anime</item>
+        <item>@string/airing_title_latest_episodes</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="manga_title">
+        <item>@string/manga_title_manga_list</item>
+        <item>@string/manga_title_recently_added</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="search_titles_auth">
+        <item>@string/search_titles_auth_anime</item>
+        <item>@string/search_titles_auth_manga</item>
+        <item>@string/search_titles_auth_studio</item>
+        <item>@string/search_titles_auth_staff</item>
+        <item>@string/search_titles_auth_characters</item>
+        <item>@string/search_titles_auth_users</item>
+    </string-array>
+
+    <!--Try to keep all titles short-->
+    <string-array name="search_titles">
+        <item>@string/search_title_anime</item>
+        <item>@string/search_title_manga</item>
+        <item>@string/search_title_studio</item>
+        <item>@string/search_title_staff</item>
+        <item>@string/search_title_characters</item>
+    </string-array>
+
+    <!--Do not Translate, native anilist strings-->
+    <string-array name="order_by_types">
+        <item>@string/order_by_type_ascending</item>
+        <item>@string/order_by_type_descending</item>
+    </string-array>
+
+    <string-array name="pref_titles_menu_entries">
+        <item>@string/pref_titles_menu_entry_home</item>
+        <item>@string/pref_titles_menu_entry_discover_anime</item>
+        <item>@string/pref_titles_menu_entry_discover_manga</item>
+        <item>@string/pref_titles_menu_entry_what_is_trending</item>
+        <item>@string/pref_titles_menu_entry_airing_anime</item>
+        <item>@string/pref_titles_menu_entry_my_anime_list</item>
+        <item>@string/pref_titles_menu_entry_my_manga_list</item>
+        <item>@string/pref_titles_menu_entry_anitrend_hub</item>
+        <item>@string/pref_titles_menu_entry_series_reviews</item>
+    </string-array>
+
+    <string-array name="pref_titles_channel_entries">
+        <item>@string/pref_titles_channel_entry_stable</item>
+        <item>@string/pref_titles_channel_entry_beta</item>
+    </string-array>
+
+    <string-array name="pref_sync_frequency_titles">
+        <item>@string/pref_sync_frequency_title_15_minutes</item>
+        <item>@string/pref_sync_frequency_title_30_minutes</item>
+        <item>@string/pref_sync_frequency_title_1_hour</item>
+        <item>@string/pref_sync_frequency_title_3_hours</item>
+        <item>@string/pref_sync_frequency_title_6_hours</item>
+    </string-array>
+
+    <!--Profile page titles-->
+    <string-array name="profile_page_titles">
+        <item>@string/profile_page_title_overview</item>
+        <item>@string/profile_page_title_progress</item>
+        <item>@string/profile_page_title_status</item>
+    </string-array>
+
+    <!--Staff page titles-->
+    <string-array name="staff_page_titles">
+        <item>@string/staff_page_title_overview</item>
+        <item>@string/staff_page_title_anime_roles</item>
+        <item>@string/staff_page_title_manga_roles</item>
+        <item>@string/staff_page_title_staff_roles</item>
+    </string-array>
+
+    <!--Anime page titles-->
+    <string-array name="anime_page_titles">
+        <item>@string/anime_page_title_overview</item>
+        <item>@string/title_relation</item>
+        <item>@string/anime_page_title_stats</item>
+        <item>@string/anime_page_title_episodes</item>
+        <item>@string/anime_page_title_characters</item>
+        <item>@string/anime_page_title_staff</item>
+        <item>@string/title_social</item>
+        <item>@string/anime_page_title_reviews</item>
+    </string-array>
+
+    <!--Manga page titles-->
+    <string-array name="manga_page_titles">
+        <item>@string/manga_page_title_overview</item>
+        <item>@string/title_relation</item>
+        <item>@string/manga_page_title_stats</item>
+        <item>@string/manga_page_title_characters</item>
+        <item>@string/manga_page_title_staff</item>
+        <item>@string/title_social</item>
+        <item>@string/manga_page_title_reviews</item>
+    </string-array>
+
+    <!--Favourites page titles-->
+    <string-array name="favorites_page_titles">
+        <item>@string/favorites_page_title_anime</item>
+        <item>@string/favorites_page_title_characters</item>
+        <item>@string/favorites_page_title_manga</item>
+        <item>@string/favorites_page_title_staff</item>
+        <item>@string/favorites_page_title_studios</item>
+    </string-array>
+
+    <!--Character page titles-->
+    <string-array name="character_page_titles">
+        <item>@string/character_page_title_overview</item>
+        <item>@string/character_page_title_anime_roles</item>
+        <item>@string/character_page_title_manga_roles</item>
+        <item>@string/character_page_title_actor_roles</item>
+    </string-array>
+
+    <string-array name="hub_title">
+        <item>@string/hub_title_suggestions</item>
+        <item>@string/hub_title_most_popular</item>
+    </string-array>
+
+    <!--Only replace the first item the others are already provided in this file-->
+    <string-array name="post_share_types">
+        <item>@string/post_share_type_plain_text</item>
+        <item>@string/post_share_type_website</item>
+        <item>@string/post_share_type_picture</item>
+        <item>@string/post_share_type_youtube</item>
+        <item>@string/post_share_type_video</item>
+    </string-array>
+
+    <string-array name="media_status">
+        <item>@string/media_status_all</item>
+        <item>@string/media_status_finished</item>
+        <item>@string/media_status_releasing</item>
+        <item>@string/media_status_not_yet_released</item>
+        <item>@string/media_status_canceled</item>
+    </string-array>
+
+    <string-array name="anime_formats">
+        <item>@string/anime_format_all</item>
+        <item>@string/anime_format_tv</item>
+        <item>@string/anime_format_tv_short</item>
+        <item>@string/anime_format_movie</item>
+        <item>@string/anime_format_special</item>
+        <item>@string/anime_format_ova</item>
+        <item>@string/anime_format_ona</item>
+        <item>@string/anime_format_music</item>
+    </string-array>
+
+    <string-array name="manga_formats">
+        <item>@string/manga_format_all</item>
+        <item>@string/manga_format_manga</item>
+        <item>@string/manga_format_novel</item>
+        <item>@string/manga_format_oneshot</item>
+    </string-array>
+
+    <string-array name="reviews_title">
+        <item>@string/anime</item>
+        <item>@string/manga</item>
+    </string-array>
+
+    <string-array name="media_list_status">
+        <item>@string/media_list_status_current</item>
+        <item>@string/media_list_status_planning</item>
+        <item>@string/media_list_status_completed</item>
+        <item>@string/media_list_status_dropped</item>
+        <item>@string/media_list_status_paused</item>
+        <item>@string/media_list_status_repeating</item>
+    </string-array>
+
+    <string-array name="messages_page_titles">
+        <item>@string/messages_page_title_inbox</item>
+        <item>@string/messages_page_title_outbox</item>
+    </string-array>
+
+    <string-array name="on_list_values">
+        <item>@string/on_list_all</item>
+        <item>@string/on_list_not_on_list_only</item>
+        <item>@string/on_list_on_list_only</item>
+    </string-array>
+
+    <string-array name="pref_selected_language_titles" translatable="false">
+        <item>pref_selected_language_title_en</item>
+        <item>pref_selected_language_title_ar</item>
+        <item>pref_selected_language_title_de</item>
+        <item>pref_selected_language_title_es</item>
+        <item>pref_selected_language_title_fr</item>
+        <item>pref_selected_language_title_it</item>
+        <item>pref_selected_language_title_pl</item>
+        <item>pref_selected_language_title_pt</item>
+        <item>pref_selected_language_title_sv</item>
+        <item>pref_selected_language_title_de_nl</item>
+    </string-array>
+
+    <string-array name="pref_selected_list_view_style_titles" translatable="true">
+        <item>@string/pref_selected_list_view_style_title_default</item>
+        <item>@string/pref_selected_list_view_style_title_compact_single</item>
+        <item>@string/pref_selected_list_view_style_title_compact_double</item>
+    </string-array>
+
+    <string-array name="pref_selected_theme_titles">
+        <item>@string/pref_selected_theme_title_light</item>
+        <item>@string/pref_selected_theme_title_dark</item>
+        <item>@string/pref_selected_theme_title_black</item>
+    </string-array>
+
+</resources>
