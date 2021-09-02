@@ -36,7 +36,6 @@ public class Notification extends NotificationBase {
     private String deletedMediaTitle;
     private List<String> deletedMediaTitles;
 
-
     protected Notification(Parcel in) {
         super(in);
         activityId = in.readLong();
