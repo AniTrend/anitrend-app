@@ -186,6 +186,21 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                     binding.notificationHeader.text = model.media?.title?.userPreferred
                     binding.notificationContent.text = model.context
                 }
+                KeyUtil.MEDIA_DATA_CHANGE -> {
+                    binding.notificationSubject.setText(R.string.notification_media_data_change)
+                    binding.notificationHeader.text = model.media?.title?.userPreferred
+                    binding.notificationContent.text = model.context
+                }
+                KeyUtil.MEDIA_MERGE -> {
+                    binding.notificationSubject.setText(R.string.notification_media_merge)
+                    binding.notificationHeader.text = model.deletedMediaTitles.joinToString(", ")
+                    binding.notificationContent.text = model.context
+                }
+                KeyUtil.MEDIA_DELETION -> {
+                    binding.notificationSubject.setText(R.string.notification_media_deletion)
+                    binding.notificationHeader.text = model.deletedMediaTitle
+                    binding.notificationContent.text = model.context
+                }
             }
             binding.executePendingBindings()
         }

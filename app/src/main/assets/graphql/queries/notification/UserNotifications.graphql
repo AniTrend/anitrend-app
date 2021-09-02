@@ -18,6 +18,9 @@ query UserNotifications($page: Int, $perPage: Int, $type: NotificationType, $typ
       ... ThreadCommentLikeNotificationFragment
       ... ThreadLikeNotificationFragment
       ... RelatedMediaAdditionNotificationFragment
+      ... MediaDataChangeNotificationFragment
+      ... MediaMergeNotificationFragment
+      ... MediaDeletionNotificationFragment
     }
   }
 }
@@ -186,4 +189,36 @@ fragment RelatedMediaAdditionNotificationFragment on RelatedMediaAdditionNotific
   media {
     ... MediaCoreFragment
   }
+}
+
+fragment MediaDataChangeNotificationFragment on MediaDataChangeNotification {
+  id
+  type
+  createdAt
+  context
+  media {
+    ... MediaCoreFragment
+  }
+  reason
+}
+
+fragment MediaMergeNotificationFragment on MediaMergeNotification {
+  id
+  type
+  createdAt
+  context
+  media {
+    ... MediaCoreFragment
+  }
+  reason
+  deletedMediaTitles
+}
+
+fragment MediaDeletionNotificationFragment on MediaDeletionNotification {
+  id
+  type
+  createdAt
+  context
+  reason
+  deletedMediaTitle
 }

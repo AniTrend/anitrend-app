@@ -242,6 +242,9 @@
     <string name="notification_user_activity_message">Direct Message</string>
     <string name="notification_user_activity_mention">Mention You</string>
     <string name="notification_user_like_comment">Comment Like</string>
+    <string name="notification_media_data_change">Media Update</string>
+    <string name="notification_media_merge">Media Merge</string>
+    <string name="notification_media_deletion">Media Deletion</string>
 
     <!-- This will become something like Episode 2 of One Piece has just aired! the title is set according to what the user has set on AniList -->
     <string name="notification_episode" formatted="false">Episode %s of %s has just aired!</string>
