@@ -31,6 +31,11 @@ public class Notification extends NotificationBase {
     private MediaBase media;
     private ThreadBase thread;
 
+    // Media data updates notifications
+    private String reason;
+    private String deletedMediaTitle;
+    private List<String> deletedMediaTitles;
+
     protected Notification(Parcel in) {
         super(in);
         activityId = in.readLong();
@@ -40,6 +45,9 @@ public class Notification extends NotificationBase {
         contexts = in.createStringArrayList();
         media = in.readParcelable(MediaBase.class.getClassLoader());
         thread = in.readParcelable(ThreadBase.class.getClassLoader());
+        reason = in.readString();
+        deletedMediaTitle = in.readString();
+        in.readList(deletedMediaTitles, String.class.getClassLoader());
     }
 
     @Override
@@ -52,6 +60,9 @@ public class Notification extends NotificationBase {
         dest.writeStringList(contexts);
         dest.writeParcelable(media, flags);
         dest.writeParcelable(thread, flags);
+        dest.writeString(reason);
+        dest.writeString(deletedMediaTitle);
+        dest.writeStringList(deletedMediaTitles);
     }
 
     @Override
@@ -87,5 +98,17 @@ public class Notification extends NotificationBase {
 
     public long getCommentId() {
         return commentId;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public String getDeletedMediaTitle() {
+        return deletedMediaTitle;
+    }
+
+    public List<String> getDeletedMediaTitles() {
+        return deletedMediaTitles;
     }
 }
