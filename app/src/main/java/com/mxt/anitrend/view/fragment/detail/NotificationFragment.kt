@@ -14,6 +14,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter
 import com.mxt.anitrend.base.custom.async.ThreadPool
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
@@ -22,6 +23,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
@@ -164,6 +166,8 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
 
         presenter.database.getBoxStore(NotificationHistory::class.java)
                 .put(notificationHistories)
+
+        koinOf<NotificationUtil>().cancelLastNotification()
 
         activity?.runOnUiThread {
             if (mAdapter != null)

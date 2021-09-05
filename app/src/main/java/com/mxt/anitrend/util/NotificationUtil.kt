@@ -188,4 +188,8 @@ class NotificationUtil(
             notificationManager?.notify(defaultNotificationId, notificationBuilder.build())
         }
     }
+
+    fun cancelLastNotification() {
+        notificationManager?.cancel(defaultNotificationId)
+    }
 }

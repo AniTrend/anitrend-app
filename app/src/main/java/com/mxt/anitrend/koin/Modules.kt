@@ -86,7 +86,7 @@ private val coreModule = module {
         )
     }
 
-    factory {
+    single {
         val context = androidContext()
         NotificationUtil(
             context = context,
