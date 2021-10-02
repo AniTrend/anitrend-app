@@ -205,16 +205,16 @@
     </string-array>
 
     <string-array name="pref_selected_language_titles" translatable="false">
-        <item>pref_selected_language_title_en</item>
-        <item>pref_selected_language_title_ar</item>
-        <item>pref_selected_language_title_de</item>
-        <item>pref_selected_language_title_es</item>
-        <item>pref_selected_language_title_fr</item>
-        <item>pref_selected_language_title_it</item>
-        <item>pref_selected_language_title_pl</item>
-        <item>pref_selected_language_title_pt</item>
-        <item>pref_selected_language_title_sv</item>
-        <item>pref_selected_language_title_de_nl</item>
+        <item>@string/pref_selected_language_title_en</item>
+        <item>@string/pref_selected_language_title_ar</item>
+        <item>@string/pref_selected_language_title_de</item>
+        <item>@string/pref_selected_language_title_es</item>
+        <item>@string/pref_selected_language_title_fr</item>
+        <item>@string/pref_selected_language_title_it</item>
+        <item>@string/pref_selected_language_title_pl</item>
+        <item>@string/pref_selected_language_title_pt</item>
+        <item>@string/pref_selected_language_title_sv</item>
+        <item>@string/pref_selected_language_title_de_nl</item>
     </string-array>
 
     <string-array name="pref_selected_list_view_style_titles" translatable="true">
