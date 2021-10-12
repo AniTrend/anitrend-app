@@ -10,7 +10,7 @@ fragment MediaCoreFragment on Media {
   type
   format
   season
-  status
+  status(version: 2)
   meanScore
   averageScore
   startDate {

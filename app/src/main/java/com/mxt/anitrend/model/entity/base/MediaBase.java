@@ -21,6 +21,7 @@ import com.mxt.anitrend.util.KeyUtil;
 public class MediaBase extends RecyclerItem implements Parcelable {
 
     private long id;
+    private long idMal;
     private MediaTitle title;
     private ImageBase coverImage;
     private String bannerImage;
@@ -45,6 +46,7 @@ public class MediaBase extends RecyclerItem implements Parcelable {
 
     protected MediaBase(Parcel in) {
         id = in.readLong();
+        idMal = in.readLong();
         title = in.readParcelable(MediaTitle.class.getClassLoader());
         coverImage = in.readParcelable(ImageBase.class.getClassLoader());
         bannerImage = in.readString();
@@ -70,6 +72,7 @@ public class MediaBase extends RecyclerItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeLong(idMal);
         dest.writeParcelable(title, flags);
         dest.writeParcelable(coverImage, flags);
         dest.writeString(bannerImage);
@@ -111,6 +114,10 @@ public class MediaBase extends RecyclerItem implements Parcelable {
 
     public long getId() {
         return id;
+    }
+
+    public long getIdMal() {
+        return idMal;
     }
 
     @Nullable

@@ -53,4 +53,7 @@ dependencies {
 
     /** Circular Progress View */
     implementation("com.github.rahatarmanahmed:circularprogressview:${Versions.circularProgressView}")
+
+    /** Txtmark */
+    implementation("es.nitaur.markdown:txtmark:${Versions.txtmark}")
 }

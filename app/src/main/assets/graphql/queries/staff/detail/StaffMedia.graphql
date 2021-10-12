@@ -1,6 +1,6 @@
-query StaffMedia($id: Int!, $page: Int, $perPage: Int, $sort: [MediaSort] = FORMAT, $type: MediaType) {
+query StaffMedia($id: Int!, $onList: Boolean, $page: Int, $perPage: Int, $sort: [MediaSort] = FORMAT, $type: MediaType) {
   Staff(id: $id) {
-    staffMedia(page: $page, perPage: $perPage, type: $type, sort: $sort) {
+    staffMedia(onList: $onList, page: $page, perPage: $perPage, type: $type, sort: $sort) {
       pageInfo {
         ... PageInfoFragment
       }

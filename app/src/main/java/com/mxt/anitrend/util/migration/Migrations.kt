@@ -16,7 +16,7 @@ object Migrations {
 
     val MIGRATION_101_108 = object : Migration(101, 108) {
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying test migration from 101 - 109")
+            Timber.i("Applying migrations for $this")
             settings.edit {
                 clear()
                 apply()
@@ -28,7 +28,7 @@ object Migrations {
 
     val MIGRATION_109_134 = object : Migration(109, 134) {
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying migration from 109 - 134")
+            Timber.i("Applying migrations for $this")
             settings.edit {
                 clear()
                 apply()
@@ -44,8 +44,19 @@ object Migrations {
 
     val MIGRATION_135_136 = object : Migration(135, 136) {
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying migrations for 135 - 136")
+            Timber.i("Applying migrations for $this")
             settings.isCrashReportsEnabled = true
+        }
+    }
+
+    val MIGRATION_18400_18500 = object : Migration(18400, 18500) {
+        override fun applyMigration(context: Context, settings: Settings) {
+            Timber.i("Applying migrations for $this")
+            settings.edit {
+                // A small error in the italian translation which was using the
+                // string below as a key for notification preference
+                remove("Notifiche di nuovo messaggio")
+            }
         }
     }
 }

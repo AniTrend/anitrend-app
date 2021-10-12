@@ -183,7 +183,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home)
-            super.onBackPressed();
+            onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 

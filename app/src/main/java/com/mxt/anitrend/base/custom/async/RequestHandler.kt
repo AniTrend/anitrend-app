@@ -98,6 +98,7 @@ class RequestHandler<T>(
                 STAFF_BASE_REQ -> return WebFactory.createService(StaffModel::class.java, context).getStaffBase(param.getParcelable(arg_graph_params)) as Call<T>
                 STAFF_MEDIA_REQ -> return WebFactory.createService(StaffModel::class.java, context).getStaffMedia(param.getParcelable(arg_graph_params)) as Call<T>
                 STAFF_OVERVIEW_REQ -> return WebFactory.createService(StaffModel::class.java, context).getStaffOverview(param.getParcelable(arg_graph_params)) as Call<T>
+                STAFF_CHARACTERS_REQ -> return WebFactory.createService(StaffModel::class.java, context).getStaffCharacters(param.getParcelable(arg_graph_params)) as Call<T>
                 STAFF_ROLES_REQ -> return WebFactory.createService(StaffModel::class.java, context).getStaffRoles(param.getParcelable(arg_graph_params)) as Call<T>
                 STAFF_SEARCH_REQ -> return WebFactory.createService(SearchModel::class.java, context).getStaffSearch(param.getParcelable(arg_graph_params)) as Call<T>
 

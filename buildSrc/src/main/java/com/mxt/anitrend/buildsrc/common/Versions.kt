@@ -4,7 +4,7 @@ object Versions {
 
     private const val major = 1
     private const val minor = 8
-    private const val patch = 4
+    private const val patch = 8
     private const val candidate = 0
 
     const val compileSdk = 30
@@ -56,4 +56,5 @@ object Versions {
     const val stream = "1.2.2"
     const val circularProgressView = "2.5.0"
     const val hamcrest = "2.2"
+    const val txtmark = "0.16"
 }

@@ -12,7 +12,7 @@ query MediaOverview($id: Int!, $type: MediaType, $isAdult: Boolean, $isMain: Boo
     }
     duration
     hashtag
-    source
+    source(version: 3)
     studios(isMain: $isMain) {
       nodes {
         ... StudioFragment

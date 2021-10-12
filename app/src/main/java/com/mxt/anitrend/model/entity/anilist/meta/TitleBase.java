@@ -70,21 +70,22 @@ public class TitleBase implements Parcelable {
     }
 
     public String getAlternativeFormatted() {
-        StringBuilder builder = new StringBuilder();
-        if (alternative != null)
-            for (String alternate: alternative) {
-                if(TextUtils.isEmpty(builder))
-                    builder.append(alternate);
-                else
-                    builder.append(", ").append(alternate);
-            }
-        return builder.toString();
+        if (alternative != null) {
+            String formatted = TextUtils.join(", ", alternative);
+            if (!formatted.isEmpty())
+                return formatted;
+        }
+        return null;
     }
 
     public String getFullName() {
         String fullName = first;
-        if(!TextUtils.isEmpty(last))
-            fullName += " " + last;
+        if (!TextUtils.isEmpty(last)) {
+            if (!TextUtils.isEmpty(fullName))
+                fullName += " " + last;
+            else
+                fullName = last;
+        }
         return fullName;
     }
 }

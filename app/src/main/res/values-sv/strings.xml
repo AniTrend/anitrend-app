@@ -88,58 +88,6 @@
 
     <string name="Watch">Kolla på</string>
 
-    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
-    <string-array name="feed_titles">
-        <item>Framsteg</item>
-        <item>Status</item>
-        <item>offentlig status</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="seasons_titles">
-        <item>vinter</item>
-        <item>vår</item>
-        <item>sommar</item>
-        <item>höst</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="trending_title">
-        <item>tittas på</item>
-        <item>nyligen tillagd</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="airing_title">
-        <item>vädring anime</item>
-        <item>senaste episoderna</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="manga_title">
-        <item>manga lista</item>
-        <item>nyligen tillagd</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles_auth">
-        <item>anime</item>
-        <item>manga</item>
-        <item>studio</item>
-        <item>personal</item>
-        <item>karaktär</item>
-        <item>användare</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles">
-        <item>anime</item>
-        <item>manga</item>
-        <item>studio</item>
-        <item>karaktär</item>
-        <item>användare</item>
-    </string-array>
-
     <!--First time usage intro screen-->
     <string name="get_started">Komma igång</string>
     <string name="app_intro_colors_title">Färgstater</string>
@@ -154,6 +102,7 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sortera efter?</string>
+    <string name="app_filter_on_list">On My List?</string>
     <string name="app_filter_order">Sortera efter?</string>
     <string name="app_filter_genres">Serie Genrer?</string>
     <string name="app_filter_show_type">Serie Typ?</string>
@@ -179,12 +128,6 @@
          Du måste bara logga in igen.
         ]]>
 	</string>
-
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="order_by_types">
-        <item>Ascending</item>
-        <item>Descending</item>
-    </string-array>
 
     <!--You can translate this just try to keep the meaning consistent :)-->
     <string name="campaign_link">
@@ -308,51 +251,14 @@
 
     <string name="pref_title_startup_page">Startsida</string>
 
-    <string-array name="pref_titles_menu_entries">
-        <item>Hem</item>
-        <item>Upptäck Anime</item>
-        <item>Upptäck Manga</item>
-        <item>Vad är i trend</item>
-        <item>Pågående anime</item>
-        <item>Min anime lista</item>
-        <item>Min Manga Lista</item>
-        <item>AniTrend Hub</item>
-        <item>Serie Recensioner</item>
-    </string-array>
-
-    <string-array name="pref_values_menu_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
-
     <!-- Settings for update channel to use -->
     <string name="pref_title_update_channel">Uppdateringskanal</string>
-
-    <string-array name="pref_titles_channel_entries">
-        <item>Stabil</item>
-        <item>Beta (Experimentell)</item>
-    </string-array>
-
-    <!-- Do Not Translate This -->
-    <string-array name="pref_values_channel_entries">
-        <item>master</item>
-        <item>develop</item>
-    </string-array>
-
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Anmälningar</string>
     <string name="pref_header_notifications_summary">Konfigurera hur meddelanden hanteras</string>
 
     <string name="pref_title_new_message_notifications">Nya meddelandemeddelanden</string>
-    <string name="pref_key_new_message_notifications">notifications_new_message</string>
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
@@ -362,23 +268,6 @@
     <string name="pref_title_sync_frequency">Synkroniseringsfrekvens</string>
 
     <string name="pref_title_system_sync_settings">System synkroniseringsinställningar</string>
-
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minuter</item>
-        <item>30 minuter</item>
-        <item>1 timme</item>
-        <item>3 timmar</item>
-        <item>6 timmar</item>
-    </string-array>
-
-    <!--These are the actual value of the titles above, obviously no translation required here-->
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-    </string-array>
 
     <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
 
@@ -646,6 +535,7 @@
     <string name="series_add_to_list">Lägg till i lista</string>
     <string name="series_write_a_review">Skriva en recension</string>
     <string name="series_share">Dela</string>
+    <string name="series_on_my_list">On My List</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Status</string>
@@ -671,67 +561,6 @@
     <string name="anime_time">Anime Tid</string>
     <string name="manga">Manga</string>
     <string name="chapters">Kapitel</string>
-
-    <!--Profile page titles-->
-    <string-array name="profile_page_titles">
-        <item>översikt</item>
-        <item>framsteg</item>
-        <item>status</item>
-    </string-array>
-
-    <!--Staff page titles-->
-    <string-array name="staff_page_titles">
-        <item>översikt</item>
-        <item>anime roller</item>
-        <item>manga roller</item>
-        <item>personal roller</item>
-    </string-array>
-
-    <!--Anime page titles-->
-    <string-array name="anime_page_titles">
-        <item>översikt</item>
-        <item>@string/title_relation</item>
-        <item>statistik</item>
-        <item>episoder</item>
-        <item>karaktär</item>
-        <item>personal</item>
-        <item>@string/title_social</item>
-        <item>recensioner</item>
-    </string-array>
-
-    <!--Manga page titles-->
-    <string-array name="manga_page_titles">
-        <item>översikt</item>
-        <item>@string/title_relation</item>
-        <item>statistik</item>
-        <item>karaktär</item>
-        <item>personal</item>
-        <item>@string/title_social</item>
-        <item>studior</item>
-    </string-array>
-
-    <!--Favourites page titles-->
-    <string-array name="favorites_page_titles">
-        <item>animes</item>
-        <item>karaktär</item>
-        <item>mangas</item>
-        <item>personal</item>
-        <item>studior</item>
-    </string-array>
-
-    <!--Character page titles-->
-    <string-array name="character_page_titles">
-        <item>översikt</item>
-        <item>anime roller</item>
-        <item>manga roller</item>
-        <item>skådespelare rollerr</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>förslag</item>
-        <item>mest populär</item>
-    </string-array>
 
     <!-- Menu title for text composer -->
     <string name="action_attach">Fästa</string>
@@ -759,64 +588,10 @@
     <string name="sheet_share_title">Formatera ditt statuspost</string>
     <string name="sheet_share_body">Beskriv innehållet i länken nedan.</string>
 
-    <!--Only replace the first item the others are already provided in this file-->
-    <string-array name="post_share_types">
-        <item>Oformatterad text</item>
-        <item>@string/attach_link_title</item>
-        <item>@string/attach_image_title</item>
-        <item>@string/attach_youtube_title</item>
-        <item>@string/attach_webm_title</item>
-    </string-array>
-
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f Timmar</string>
     <string name="anime_time_days">%.1f Dagar</string>
     <string name="anime_time_years">%.1f År</string>
-
-    <string-array name="media_status">
-        <item>Alla</item>
-        <item>Färdiga</item>
-        <item>Släpper</item>
-        <item>Inte släppts ännu</item>
-        <item>Avbruten</item>
-    </string-array>
-
-    <string-array name="anime_formats">
-        <item>Alla</item>
-        <item>TV</item>
-        <item>TV Kort</item>
-        <item>Film</item>
-        <item>Särskild</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Musik</item>
-    </string-array>
-
-    <string-array name="manga_formats">
-        <item>Alla</item>
-        <item>Manga</item>
-        <item>Novel</item>
-        <item>One Shot</item>
-    </string-array>
-
-    <string-array name="reviews_title">
-        <item>@string/anime</item>
-        <item>@string/manga</item>
-    </string-array>
-
-    <string-array name="media_list_status">
-        <item>Current</item>
-        <item>Planning</item>
-        <item>Completed</item>
-        <item>Dropped</item>
-        <item>Paused</item>
-        <item>Repeating</item>
-    </string-array>
-
-    <string-array name="messages_page_titles">
-        <item>Inbox</item>
-        <item>Outbox</item>
-    </string-array>
 
     <string name="series_type">Serie Typ:</string>
     <string name="series_episodes">Episoder:</string>
@@ -958,7 +733,7 @@
     <string name="title_migration_failed">Upgrade Failed</string>
     <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
     <string name="text_about_general_information">General Information</string>
-    <string name="text_about_appication_version">Version %s</string>
+    <string name="text_about_application_version">Version %s</string>
     <string name="text_about_additional_information">Additional Information</string>
     <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
     <string name="text_about_legal_information">Legal Information</string>
@@ -967,16 +742,20 @@
     <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
     <string name="title_activity_logging">Logging</string>
 
+    <string name="pref_title_app_theme">Application Theme</string>
+
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
 
     <string name="pref_title_display_adult_content">Display Adult Content</string>
     <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
 
-    <string name="pref_summary_clear_notification_on_dismiss">Clear notifications when you dismiss them from the status bar</string>
-    <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
+    <string name="pref_summary_clear_notification_on_dismiss">Marks notifications as read when you dismiss them from the status bar</string>
+    <string name="pref_title_clear_notification_on_dismiss">Mark all notifications as read on dismiss</string>
 
     <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
+    <string name="pref_title_list_view_style">List View Style</string>
+    <string name="notification_action_mark_as_read">Mark as read</string>
 </resources>

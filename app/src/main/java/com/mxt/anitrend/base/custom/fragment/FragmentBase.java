@@ -238,6 +238,10 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
         }
     }
 
+    public void setFilterable(boolean filterable) {
+        isFilterable = filterable;
+    }
+
     /**
      * Called when the model state is changed.
      *

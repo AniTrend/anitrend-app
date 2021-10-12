@@ -4,6 +4,7 @@ import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
+import com.mxt.anitrend.model.entity.base.CharacterStaffBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
@@ -35,7 +36,7 @@ object GroupingUtil {
      * @param model The current model item/s containing all data minus current mediaItems
      */
     fun groupMediaByFormat(edges: List<MediaBase>, model: List<RecyclerItem>?): List<RecyclerItem> {
-        val entityMap = if (!CompatUtil.isEmpty(model)) ArrayList(model!!) else ArrayList()
+        val entityMap = model.orEmpty().toMutableList()
 
         val map = edges.filter {
             !it.format.isNullOrBlank()
@@ -66,7 +67,7 @@ object GroupingUtil {
      * @param model The current model item/s containing all data minus current mediaItems
      */
     fun groupStaffByLanguage(edges: List<StaffBase>, model: List<RecyclerItem>?): List<RecyclerItem> {
-        val entityMap = if (!CompatUtil.isEmpty(model)) ArrayList(model!!) else ArrayList()
+        val entityMap = model.orEmpty().toMutableList()
 
         val map = edges.filter {
             !it.language.isNullOrBlank()
@@ -123,7 +124,7 @@ object GroupingUtil {
      */
     fun groupMediaByRelationType(edges: List<MediaEdge>): List<RecyclerItem> {
         val entityMap = ArrayList<RecyclerItem>()
-        for (edge in edges) {
+        for (edge in edges.sortedBy { it.relationType }) {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.relationType)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.relationType }
@@ -156,7 +157,7 @@ object GroupingUtil {
      * @param model The current model item/s containing all data minus current mediaItems
      */
     fun groupCharactersByRole(edges: List<CharacterEdge>, model: List<RecyclerItem>?): List<RecyclerItem> {
-        val entityMap = if (!CompatUtil.isEmpty(model)) ArrayList(model!!) else ArrayList()
+        val entityMap = model.orEmpty().toMutableList()
         for (edge in edges) {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.role)
             if (!entityMap.contains(recyclerHeaderItem)) {
@@ -172,6 +173,47 @@ object GroupingUtil {
     }
 
     /**
+     * Groups characters by year
+     * <br></br>
+     *
+     *
+     * @param edges The potential external model response which needs to be grouped
+     * @param model The current model item/s containing all data minus current mediaItems
+     */
+    fun groupCharactersByYear(edges: List<MediaEdge>, model: List<RecyclerItem>?): List<RecyclerItem> {
+        val entityMap = model.orEmpty().toMutableList()
+
+        val years = edges.map {
+            it.node.startDate.year.let { year ->
+                when (year) {
+                    0 -> "TBA"
+                    else -> year.toString()
+                }
+            }
+        }.distinct().sorted()
+
+        for (year in years.reversed()) {
+            val recyclerHeaderItem = RecyclerHeaderItem(year, 0, false)
+            if (!entityMap.contains(recyclerHeaderItem))
+                entityMap.add(recyclerHeaderItem)
+
+            val characters = edges.filter {
+                when (it.node.startDate.year) {
+                    0 -> "TBA" == year
+                    else -> it.node.startDate.year.toString() == year
+                }
+            }.flatMap { mediaEdge ->
+                mediaEdge.characters.map { character ->
+                    CharacterStaffBase(character, mediaEdge.node)
+                }
+            }
+            entityMap.addAll(characters)
+        }
+
+        return getDifference(model, entityMap)
+    }
+
+    /**
      * Groups media by the staff role, assuming that the staff has be sorted by role
      * <br></br>
      *
@@ -179,7 +221,7 @@ object GroupingUtil {
      * @param model The current model item/s containing all data minus current mediaItems
      */
     fun groupStaffByRole(edges: List<StaffEdge>, model: List<RecyclerItem>?): List<RecyclerItem> {
-        val entityMap = if (!CompatUtil.isEmpty(model)) ArrayList(model!!) else ArrayList()
+        val entityMap = model.orEmpty().toMutableList()
         for (edge in edges) {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.role)
             if (!entityMap.contains(recyclerHeaderItem)) {
@@ -202,7 +244,7 @@ object GroupingUtil {
      * @param model The current model item/s containing all data minus current mediaItems
      */
     fun groupMediaByStaffRole(edges: List<MediaEdge>, model: List<RecyclerItem>?): List<RecyclerItem> {
-        val entityMap = if (!CompatUtil.isEmpty(model)) ArrayList(model!!) else ArrayList()
+        val entityMap = model.orEmpty().toMutableList()
         for (edge in edges) {
             val recyclerHeaderItem = RecyclerHeaderItem(edge.staffRole)
             if (!entityMap.contains(recyclerHeaderItem)) {

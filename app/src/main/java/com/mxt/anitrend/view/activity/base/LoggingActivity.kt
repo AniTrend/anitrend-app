@@ -4,12 +4,15 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.text.Html
 import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.FileProvider
 import androidx.core.text.color
+import androidx.core.text.toHtml
 import androidx.lifecycle.lifecycleScope
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -21,7 +24,6 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.nguyenhoanglam.progresslayout.ProgressLayout
 import kotlinx.coroutines.*
@@ -61,7 +63,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         applicationVersionTextView.text = getString(
-                R.string.text_about_appication_version,
+                R.string.text_about_application_version,
                 BuildConfig.VERSION_NAME
         )
     }
@@ -113,7 +115,12 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
             R.id.action_share_log -> {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, spannableLogBuilder.toString())
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
+                        applicationContext,
+                        "${applicationContext.packageName}.provider",
+                        applicationContext.logFile()
+                    ))
                     type = "text/plain"
                 }
                 startActivity(intent)
@@ -148,7 +155,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     private suspend fun printLog() {
         withContext(Dispatchers.Main) {
             updateUI()
-            reportLogTextView.text = spannableLogBuilder
+            reportLogTextView.text = Html.fromHtml(spannableLogBuilder.toHtml())
         }
     }
 

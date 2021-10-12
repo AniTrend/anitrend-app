@@ -11,12 +11,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
+import com.mxt.anitrend.util.CompatUtil;
+import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.GraphUtil;
@@ -40,6 +43,8 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
     protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
     protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
+    private Boolean onList;
+
     private StaffBase model;
 
     private FavouriteToolbarWidget favouriteWidget;
@@ -53,20 +58,23 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         setPresenter(new BasePresenter(this));
         setViewModel(true);
         id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
+        onList = (Boolean) getIntent().getSerializableExtra(KeyUtil.arg_onList);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getViewModel().getParams().putLong(KeyUtil.arg_id, id);
+        getViewModel().getParams().putSerializable(KeyUtil.arg_onList, onList);
         onActivityReady();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean isAuth = getPresenter().getSettings().isAuthenticated();
-        getMenuInflater().inflate(R.menu.custom_menu, menu);
+        getMenuInflater().inflate(R.menu.staff_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
+        menu.findItem(R.id.action_on_my_list).setVisible(isAuth);
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
@@ -87,6 +95,27 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
                             "%s - %s", model.getName().getFullName(), model.getSiteUrl()));
                     intent.setType("text/plain");
                     startActivity(intent);
+                    break;
+                case R.id.action_on_my_list:
+                    DialogUtil.createSelection(this, R.string.app_filter_on_list,
+                            onList == null ? 0 : !onList ? 1 : 2,
+                            CompatUtil.INSTANCE.getStringList(this, R.array.on_list_values),
+                            (dialog, which) -> {
+                                if (which == DialogAction.POSITIVE) {
+                                    switch (dialog.getSelectedIndex()) {
+                                        case 0:
+                                            onList = null;
+                                            break;
+                                        case 1:
+                                            onList = false;
+                                            break;
+                                        case 2:
+                                            onList = true;
+                                            break;
+                                    }
+                                    reloadViewPager();
+                                }
+                            });
                     break;
             }
         } else
@@ -141,5 +170,19 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         super.onChanged(model);
         this.model = model;
         updateUI();
+    }
+
+    private void reloadViewPager() {
+        StaffPageAdapter adapter = new StaffPageAdapter(getSupportFragmentManager(), getApplicationContext());
+
+        // Update params if necessary
+        getViewModel().getParams().putLong(KeyUtil.arg_id, id);
+        getViewModel().getParams().putSerializable(KeyUtil.arg_onList, onList);
+        adapter.setParams(getViewModel().getParams());
+
+        // Re-set adapter while preserving currently selected item
+        int currentItem = viewPager.getCurrentItem();
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(currentItem);
     }
 }

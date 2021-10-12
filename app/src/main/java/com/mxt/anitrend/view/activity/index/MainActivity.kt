@@ -24,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import butterknife.BindView
 import butterknife.ButterKnife
 import com.afollestad.materialdialogs.DialogAction
 import com.google.android.material.navigation.NavigationView
@@ -37,18 +36,15 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
-import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
-import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.extension.startNewActivity
+import com.mxt.anitrend.extension.*
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.service.DownloaderService
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
@@ -64,21 +60,27 @@ import org.greenrobot.eventbus.ThreadMode
  * Base main_menu activity to show case template
  */
 
-class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
+class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     BaseConsumer.onRequestModelChange<User>, NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.toolbar)
-    lateinit var mToolbar: Toolbar
-    @BindView(R.id.page_container)
-    lateinit var mViewPager: ViewPager
-    @BindView(R.id.smart_tab)
-    lateinit var mNavigationTabStrip: SmartTabLayout
-    @BindView(R.id.coordinator)
-    lateinit var coordinatorLayout: CoordinatorLayout
-    @BindView(R.id.drawer_layout)
-    lateinit var mDrawerLayout: DrawerLayout
-    @BindView(R.id.nav_view)
-    lateinit var mNavigationView: NavigationView
+    private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Toolbar>(R.id.toolbar)
+    }
+    private val mViewPager by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<ViewPager>(R.id.page_container)
+    }
+    private val mNavigationTabStrip by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<SmartTabLayout>(R.id.smart_tab)
+    }
+    private val coordinatorLayout by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<CoordinatorLayout>(R.id.coordinator)
+    }
+    private val mDrawerLayout by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<DrawerLayout>(R.id.drawer_layout)
+    }
+    private val mNavigationView by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<NavigationView>(R.id.nav_view)
+    }
 
     private val mDrawerToggle by lazy(LAZY_MODE_UNSAFE) {
         ActionBarDrawerToggle(this@MainActivity, mDrawerLayout, mToolbar,
@@ -122,18 +124,19 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         ButterKnife.bind(this)
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
+        setViewModel(true)
         if (savedInstanceState == null)
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
         mNavigationView.setNavigationItemSelectedListener(this)
         mViewPager.offscreenPageLimit = offScreenLimit
         mPageIndex = DateUtil.menuSelect
         menuItems = mNavigationView.menu
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
         onActivityReady()
     }
 
@@ -195,6 +198,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         mNavigationView.setCheckedItem(selectedItem)
         onNavigate(selectedItem)
         makeRequest()
+        requestCurrentUser()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -240,6 +244,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
         updateUI()
+        requestCurrentUser()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -452,6 +457,17 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         }
     }
 
+    private fun requestCurrentUser() {
+        // Sync local current user data with remote
+        if (presenter.settings.isAuthenticated) {
+            viewModel.params.putParcelable(
+                KeyUtil.arg_graph_params,
+                GraphUtil.getDefaultQuery(false)
+            )
+            viewModel.requestData(KeyUtil.USER_CURRENT_REQ, this)
+        }
+    }
+
     private fun onLatestUpdateInstalled() {
         NotifyUtil.createAlerter(
             this@MainActivity,
@@ -480,7 +496,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
         presenter.database.currentUser?.apply {
             mUserName.text = name
             mUserAvatar.onInit()
-            HeaderImageView.setImage(mHeaderView, bannerImage)
+            mHeaderView.setImage(bannerImage)
             if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(this@MainActivity, this)
                 presenter.settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
@@ -491,7 +507,7 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
                     .build()
                 showBottomSheet()
             }
-            KoinExt.get(ISupportAnalytics::class.java).setCrashAnalyticUser(name)
+            koinOf<ISupportAnalytics>().setCrashAnalyticUser(name)
         }
         mAccountLogin.isVisible = false
 
@@ -542,6 +558,13 @@ class MainActivity : ActivityBase<Void, BasePresenter>(), View.OnClickListener,
     override fun onDestroy() {
         mUserAvatar.onViewRecycled()
         super.onDestroy()
+    }
+
+    override fun onChanged(model: User?) {
+        if (isAlive && model != null) {
+            presenter.database.currentUser = model
+            updateUI()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)

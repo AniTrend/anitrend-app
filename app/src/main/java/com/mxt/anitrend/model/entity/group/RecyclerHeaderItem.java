@@ -11,11 +11,17 @@ public class RecyclerHeaderItem extends RecyclerItem {
 
     private String title;
     private int size;
+    private boolean capitalize;
 
-    public RecyclerHeaderItem(String title, int size) {
+    public RecyclerHeaderItem(String title, int size, boolean capitalize) {
         this.title = title;
         this.size = size;
+        this.capitalize = capitalize;
         this.setContentType(KeyUtil.RECYCLER_TYPE_HEADER);
+    }
+
+    public RecyclerHeaderItem(String title, int size) {
+        this(title, size, true);
     }
 
     public RecyclerHeaderItem(String title) {
@@ -31,7 +37,7 @@ public class RecyclerHeaderItem extends RecyclerItem {
     }
 
     public String getTitle() {
-        return CompatUtil.INSTANCE.capitalizeWords(title);
+        return capitalize ? CompatUtil.INSTANCE.capitalizeWords(title) : title;
     }
 
     public void setTitle(String title) {

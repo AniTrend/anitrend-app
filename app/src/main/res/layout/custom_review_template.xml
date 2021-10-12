@@ -19,6 +19,7 @@
             android:orientation="horizontal">
 
             <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                android:id="@+id/user_avatar"
                 android:layout_width="@dimen/avatar_ripple_radius"
                 android:layout_height="@dimen/avatar_ripple_radius"
                 app:avatarUrl="@{model.user.avatar}"

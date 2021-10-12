@@ -1,6 +1,8 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
+import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
+import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
@@ -30,6 +32,11 @@ interface StaffModel {
     @GraphQuery("StaffOverview")
     @Headers("Content-Type: application/json")
     fun getStaffOverview(@Body request: QueryContainerBuilder?): Call<AniListContainer<StaffBase>>
+
+    @POST("/")
+    @GraphQuery("StaffCharacters")
+    @Headers("Content-Type: application/json")
+    fun getStaffCharacters(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 
     @POST("/")
     @GraphQuery("StaffMedia")

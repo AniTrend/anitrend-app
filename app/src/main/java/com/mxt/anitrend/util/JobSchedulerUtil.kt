@@ -83,7 +83,7 @@ class JobSchedulerUtil(private val settings: Settings) {
     }
 
     fun scheduleClearNotificationJob(context: Context) {
-        if (settings.isAuthenticated && settings.clearNotificationOnDismiss) {
+        if (settings.isAuthenticated) {
             val workRequest = OneTimeWorkRequest.Builder(
                 ClearNotificationWorker::class.java
             )
@@ -99,7 +99,7 @@ class JobSchedulerUtil(private val settings: Settings) {
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
                     KeyUtil.WorkClearNotificationId,
-                    ExistingWorkPolicy.KEEP,
+                    ExistingWorkPolicy.REPLACE,
                     workRequest
                 )
         }

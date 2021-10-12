@@ -90,7 +90,7 @@ type ActivityReply {
     likes: [User]
     "The reply text"
     text(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The user who created reply"
@@ -187,7 +187,7 @@ type AiringProgression {
     watching: Int
 }
 
-"Media Airing Schedule"
+"Media Airing Schedule. NOTE: We only aim to guarantee that FUTURE airing data is present and accurate."
 type AiringSchedule {
     "The time the episode airs at"
     airingAt: Int!
@@ -225,34 +225,44 @@ type AniChartUser {
 
 "A character that features in an anime or manga"
 type Character {
+    "The character's age. Note this is a string, not an int, it may contain further text and additional ages."
+    age: String
+    "The character's birth date"
+    dateOfBirth: FuzzyDate
     "A general description of the character"
     description(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The amount of user's who have favourited the character"
     favourites: Int
+    "The character's gender. Usually Male, Female, or Non-binary but can be any string."
+    gender: String
     "The id of the character"
     id: Int!
     "Character images"
     image: CharacterImage
     "If the character is marked as favourite by the currently authenticated user"
     isFavourite: Boolean!
+    "If the character is blocked from being added to favourites"
+    isFavouriteBlocked: Boolean!
     "Media that includes the character"
     media(
-        #The page
+        onList: Boolean,
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [MediaSort],
         type: MediaType
     ): MediaConnection
+    "Notes for site moderators"
+    modNotes: String
     "The names of the character"
     name: CharacterName
     "The url for the character page on the AniList website"
     siteUrl: String
-    "When the character's data was last updated"
-    updatedAt: Int
+    updatedAt: Int @deprecated(reason : "No data available")
 }
 
 type CharacterConnection {
@@ -270,9 +280,13 @@ type CharacterEdge {
     id: Int
     "The media the character is in"
     media: [Media]
+    "Media specific character name"
+    name: String
     node: Character
     "The characters role in the media"
     role: CharacterRole
+    "The voice actors of the character with role date"
+    voiceActorRoles(language: StaffLanguage, sort: [StaffSort]): [StaffRoleType]
     "The voice actors of the character"
     voiceActors(language: StaffLanguage, sort: [StaffSort]): [Staff]
 }
@@ -288,12 +302,16 @@ type CharacterImage {
 type CharacterName {
     "Other names the character might be referred to as"
     alternative: [String]
+    "Other names the character might be referred to as but are spoilers"
+    alternativeSpoiler: [String]
     "The character's given name"
     first: String
-    "The character's full name"
+    "The character's first and last name"
     full: String
     "The character's surname"
     last: String
+    "The character's middle name"
+    middle: String
     "The character's full name in their native language"
     native: String
 }
@@ -307,6 +325,7 @@ type CharacterSubmission {
     id: Int!
     "Inner details of submission status"
     notes: String
+    source: String
     "Status of the submission"
     status: SubmissionStatus
     "The character submission changes"
@@ -343,37 +362,37 @@ type Deleted {
 type Favourites {
     "Favourite anime"
     anime(
-        #The page number
+        "The page number"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int
     ): MediaConnection
     "Favourite characters"
     characters(
-        #The page number
+        "The page number"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int
     ): CharacterConnection
     "Favourite manga"
     manga(
-        #The page number
+        "The page number"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int
     ): MediaConnection
     "Favourite staff"
     staff(
-        #The page number
+        "The page number"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int
     ): StaffConnection
     "Favourite studios"
     studios(
-        #The page number
+        "The page number"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int
     ): StudioConnection
 }
@@ -422,519 +441,531 @@ type GenreStats {
 "Page of data (Used for internal use only)"
 type InternalPage {
     activities(
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt: Int,
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt_greater: Int,
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt_lesser: Int,
-        #Filter activity to only activity with replies
+        "Filter activity to only activity with replies"
         hasReplies: Boolean,
-        #Filter activity to only activity with replies or is of type text
+        "Filter activity to only activity with replies or is of type text"
         hasRepliesOrTypeText: Boolean,
-        #Filter by the activity id
+        "Filter by the activity id"
         id: Int,
-        #Filter by the activity id
+        "Filter by the activity id"
         id_in: [Int],
-        #Filter by the activity id
+        "Filter by the activity id"
         id_not: Int,
-        #Filter by the activity id
+        "Filter by the activity id"
         id_not_in: [Int],
-        #Filter activity to users who are being followed by the authenticated user
+        "Filter activity to users who are being followed by the authenticated user"
         isFollowing: Boolean,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId: Int,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_in: [Int],
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_not: Int,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_not_in: [Int],
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId: Int,
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_in: [Int],
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_not: Int,
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_not_in: [Int],
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ActivitySort],
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type: ActivityType,
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_in: [ActivityType],
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_not: ActivityType,
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_not_in: [ActivityType],
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId: Int,
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_in: [Int],
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_not: Int,
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_not_in: [Int]
     ): [ActivityUnion]
     activityReplies(
-        #Filter by the parent id
+        "Filter by the parent id"
         activityId: Int,
-        #Filter by the reply id
+        "Filter by the reply id"
         id: Int
     ): [ActivityReply]
     airingSchedules(
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt: Int,
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt_greater: Int,
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt_lesser: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_greater: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_in: [Int],
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_lesser: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_not: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_not_in: [Int],
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id: Int,
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_in: [Int],
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_not: Int,
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_not_in: [Int],
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId: Int,
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_in: [Int],
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_not: Int,
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_not_in: [Int],
-        #Filter to episodes that haven't yet aired
+        "Filter to episodes that haven't yet aired"
         notYetAired: Boolean,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [AiringSort]
     ): [AiringSchedule]
     characterSubmissions(
         characterId: Int,
-        #Filter by the status of the submission
+        "The order the results will be returned in"
+        sort: [SubmissionSort],
+        "Filter by the status of the submission"
         status: SubmissionStatus,
-        #Filter by the submitter of the submission
+        "Filter by the submitter of the submission"
         userId: Int
     ): [CharacterSubmission]
     characters(
-        #Filter by character id
+        "Filter by character id"
         id: Int,
-        #Filter by character id
+        "Filter by character id"
         id_in: [Int],
-        #Filter by character id
+        "Filter by character id"
         id_not: Int,
-        #Filter by character id
+        "Filter by character id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by character by if its their birthday today"
+        isBirthday: Boolean,
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [CharacterSort]
     ): [Character]
     followers(
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort],
-        #User id of the follower/followed
+        "User id of the follower/followed"
         userId: Int!
     ): [User]
     following(
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort],
-        #User id of the follower/followed
+        "User id of the follower/followed"
         userId: Int!
     ): [User]
     likes(
-        #The id of the likeable type
+        "The id of the likeable type"
         likeableId: Int,
-        #The type of model the id applies to
+        "The type of model the id applies to"
         type: LikeableType
     ): [User]
     media(
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_greater: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_lesser: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_not: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters_greater: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters_lesser: Int,
-        #Filter by the media's country of origin
+        "Filter by the media's country of origin"
         countryOfOrigin: CountryCode,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration: Int,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration_greater: Int,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration_lesser: Int,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_greater: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_lesser: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_like: String,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes: Int,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes_greater: Int,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes_lesser: Int,
-        #Filter by the media's format
+        "Filter by the media's format"
         format: MediaFormat,
-        #Filter by the media's format
+        "Filter by the media's format"
         format_in: [MediaFormat],
-        #Filter by the media's format
+        "Filter by the media's format"
         format_not: MediaFormat,
-        #Filter by the media's format
+        "Filter by the media's format"
         format_not_in: [MediaFormat],
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre: String,
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre_in: [String],
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre_not_in: [String],
-        #Filter by the media id
+        "Filter by the media id"
         id: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_in: [Int],
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_not: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_not_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         id_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         id_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         id_not_in: [Int],
-        #Filter by if the media's intended for 18+ adult audiences
+        "Filter by if the media's intended for 18+ adult audiences"
         isAdult: Boolean,
-        #Filter media by sites with a online streaming or reading license
+        "Filter media by sites with a online streaming or reading license"
         licensedBy: String,
-        #Filter media by sites with a online streaming or reading license
+        "Filter media by sites with a online streaming or reading license"
         licensedBy_in: [String],
-        #Only apply the tags filter argument to tags above this rank. Default: 18
+        "Only apply the tags filter argument to tags above this rank. Default: 18"
         minimumTagRank: Int,
-        #Filter by the media on the authenticated user's lists
+        "Filter by the media on the authenticated user's lists"
         onList: Boolean,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_greater: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_lesser: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_not: Int,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #Filter by the season the media was released in
+        "Filter by the season the media was released in"
         season: MediaSeason,
-        #The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument
+        "The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument"
         seasonYear: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaSort],
-        #Filter by the source type of the media
+        "Filter by the source type of the media"
         source: MediaSource,
-        #Filter by the source type of the media
+        "Filter by the source type of the media"
         source_in: [MediaSource],
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_greater: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_lesser: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_like: String,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status: MediaStatus,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_in: [MediaStatus],
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_not: MediaStatus,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_not_in: [MediaStatus],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag: String,
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory: String,
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory_in: [String],
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory_not_in: [String],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag_in: [String],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag_not_in: [String],
-        #Filter by the media's type
+        "Filter by the media's type"
         type: MediaType,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes: Int,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes_greater: Int,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes_lesser: Int
     ): [Media]
     mediaList(
-        #Limit to only entries also on the auth user's list. Requires user id or name arguments.
+        "Limit to only entries also on the auth user's list. Requires user id or name arguments."
         compareWithAuthList: Boolean,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_greater: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_like: String,
-        #Filter by a list entry's id
+        "Filter by a list entry's id"
         id: Int,
-        #Filter list entries to users who are being followed by the authenticated user
+        "Filter list entries to users who are being followed by the authenticated user"
         isFollowing: Boolean,
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId: Int,
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId_in: [Int],
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId_not_in: [Int],
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes: String,
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes_like: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaListSort],
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_greater: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_like: String,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_in: [MediaListStatus],
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not_in: [MediaListStatus],
-        #Filter by the list entries media type
+        "Filter by the list entries media type"
         type: MediaType,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId: Int,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId_in: [Int],
-        #Filter by a user's name
+        "Filter by a user's name"
         userName: String
     ): [MediaList]
     mediaSubmissions(
         mediaId: Int,
+        "The order the results will be returned in"
+        sort: [SubmissionSort],
         status: SubmissionStatus,
         submissionId: Int,
-        #Filter by the media's type
+        "Filter by the media's type"
         type: MediaType,
         userId: Int
     ): [MediaSubmission]
     mediaTrends(
-        #Filter by score
+        "Filter by score"
         averageScore: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_greater: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_lesser: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_not: Int,
-        #Filter by date
+        "Filter by date"
         date: Int,
-        #Filter by date
+        "Filter by date"
         date_greater: Int,
-        #Filter by date
+        "Filter by date"
         date_lesser: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_greater: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_lesser: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_not_in: [Int],
-        #Filter by popularity
+        "Filter by popularity"
         popularity: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_greater: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_lesser: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_not: Int,
-        #Filter to stats recorded while the media was releasing
+        "Filter to stats recorded while the media was releasing"
         releasing: Boolean,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaTrendSort],
-        #Filter by trending amount
+        "Filter by trending amount"
         trending: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_greater: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_lesser: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_not: Int
     ): [MediaTrend]
-    modActions(userId: Int): [ModAction]
+    modActions(modId: Int, userId: Int): [ModAction]
     notifications(
-        #Reset the unread notification count to 0 on load
+        "Reset the unread notification count to 0 on load"
         resetNotificationCount: Boolean,
-        #Filter by the type of notifications
+        "Filter by the type of notifications"
         type: NotificationType,
-        #Filter by the type of notifications
+        "Filter by the type of notifications"
         type_in: [NotificationType]
     ): [NotificationUnion]
     "The pagination information"
     pageInfo: PageInfo
     recommendations(
-        #Filter by recommendation id
+        "Filter by recommendation id"
         id: Int,
-        #Filter by media id
+        "Filter by media id"
         mediaId: Int,
-        #Filter by media recommendation id
+        "Filter by media recommendation id"
         mediaRecommendationId: Int,
-        #Filter by total rating of the recommendation
+        "Filter by the media on the authenticated user's lists"
+        onList: Boolean,
+        "Filter by total rating of the recommendation"
         rating: Int,
-        #Filter by total rating of the recommendation
+        "Filter by total rating of the recommendation"
         rating_greater: Int,
-        #Filter by total rating of the recommendation
+        "Filter by total rating of the recommendation"
         rating_lesser: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [RecommendationSort],
-        #Filter by user who created the recommendation
+        "Filter by user who created the recommendation"
         userId: Int
     ): [Recommendation]
     reports: [Report]
     reviews(
-        #Filter by Review id
+        "Filter by Review id"
         id: Int,
-        #Filter by media id
+        "Filter by media id"
         mediaId: Int,
-        #Filter by media type
+        "Filter by media type"
         mediaType: MediaType,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ReviewSort],
-        #Filter by media id
+        "Filter by user id"
         userId: Int
     ): [Review]
     revisionHistory(
-        #Filter by the character id
+        "Filter by the character id"
         characterId: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         staffId: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         studioId: Int,
-        #Filter by the user id
+        "Filter by the user id"
         userId: Int
     ): [RevisionHistory]
     staff(
-        #Filter by the staff id
+        "Filter by the staff id"
         id: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         id_in: [Int],
-        #Filter by the staff id
+        "Filter by the staff id"
         id_not: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by staff by if its their birthday today"
+        isBirthday: Boolean,
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [StaffSort]
     ): [Staff]
     staffSubmissions(
+        "The order the results will be returned in"
+        sort: [SubmissionSort],
         staffId: Int,
-        #Filter by the status of the submission
+        "Filter by the status of the submission"
         status: SubmissionStatus,
-        #Filter by the submitter of the submission
+        "Filter by the submitter of the submission"
         userId: Int
     ): [StaffSubmission]
     studios(
-        #Filter by the studio id
+        "Filter by the studio id"
         id: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         id_in: [Int],
-        #Filter by the studio id
+        "Filter by the studio id"
         id_not: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [StudioSort]
     ): [Studio]
     threadComments(
-        #Filter by the comment id
+        "Filter by the comment id"
         id: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ThreadCommentSort],
-        #Filter by the thread id
+        "Filter by the thread id"
         threadId: Int,
-        #Filter by the user id of the comment's creator
+        "Filter by the user id of the comment's creator"
         userId: Int
     ): [ThreadComment]
     threads(
-        #Filter by thread category id
+        "Filter by thread category id"
         categoryId: Int,
-        #Filter by the thread id
+        "Filter by the thread id"
         id: Int,
-        #Filter by the thread id
+        "Filter by the thread id"
         id_in: [Int],
-        #Filter by thread media id category
+        "Filter by thread media id category"
         mediaCategoryId: Int,
-        #Filter by the user id of the last user to comment on the thread
+        "Filter by the user id of the last user to comment on the thread"
         replyUserId: Int,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ThreadSort],
-        #Filter by if the currently authenticated user's subscribed threads
+        "Filter by if the currently authenticated user's subscribed threads"
         subscribed: Boolean,
-        #Filter by the user id of the thread's creator
+        "Filter by the user id of the thread's creator"
         userId: Int
     ): [Thread]
     users(
-        #Filter by the user id
+        "Filter by the user id"
         id: Int,
-        #Filter by the name of the user
+        "Filter by the name of the user"
         name: String,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort]
     ): [User]
 }
@@ -985,11 +1016,11 @@ type ListScoreStats {
 type Media {
     "The media's entire airing schedule"
     airingSchedule(
-        #Filter to episodes that have not yet aired
+        "Filter to episodes that have not yet aired"
         notYetAired: Boolean,
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int
     ): AiringScheduleConnection
     "If the media should have forum thread automatically created for it on airing episode release"
@@ -1002,9 +1033,9 @@ type Media {
     chapters: Int
     "The characters in the media"
     characters(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         role: CharacterRole,
         sort: [CharacterSort]
@@ -1015,7 +1046,7 @@ type Media {
     coverImage: MediaCoverImage
     "Short description of the media's story and characters"
     description(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The general length of each anime episode in minutes"
@@ -1062,9 +1093,9 @@ type Media {
     rankings: [MediaRank]
     "User recommendations for similar media"
     recommendations(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [RecommendationSort]
     ): RecommendationConnection
@@ -1073,28 +1104,30 @@ type Media {
     "User reviews of the media"
     reviews(
         limit: Int,
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [ReviewSort]
     ): ReviewConnection
-    "The year & season the media was initially released in"
+    "The season the media was initially released in"
     season: MediaSeason
     "The year & season the media was initially released in"
     seasonInt: Int
+    "The season year the media was initially released in"
+    seasonYear: Int
     "The url for the media page on the AniList website"
     siteUrl: String
     "Source type the media was adapted from."
     source(
-        #Provide 2 to use new version 2 of sources enum
+        "Provide 2 to use new version 2 of sources enum"
         version: Int
     ): MediaSource
     "The staff who produced the media"
     staff(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [StaffSort]
     ): StaffConnection
@@ -1102,7 +1135,10 @@ type Media {
     startDate: FuzzyDate
     stats: MediaStats
     "The current releasing status of the media"
-    status: MediaStatus
+    status(
+        "Provide 2 to use new version 2 of sources enum"
+        version: Int
+    ): MediaStatus
     "Data and links to legal streaming episodes on external sites"
     streamingEpisodes: [MediaStreamingEpisode]
     "The companies who produced the media"
@@ -1119,11 +1155,11 @@ type Media {
     trending: Int
     "The media's daily trend stats"
     trends(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
-        #Filter to stats recorded while the media was releasing
+        "Filter to stats recorded while the media was releasing"
         releasing: Boolean,
         sort: [MediaTrendSort]
     ): MediaTrendConnection
@@ -1139,10 +1175,14 @@ type Media {
 type MediaCharacter {
     "The characters in the media voiced by the parent actor"
     character: Character
+    "Media specific character name"
+    characterName: String
+    dubGroup: String
     "The id of the connection"
     id: Int
     "The characters role in the media"
     role: CharacterRole
+    roleNotes: String
     "The voice actor of the character"
     voiceActor: Staff
 }
@@ -1167,10 +1207,14 @@ type MediaCoverImage {
 
 "Media connection edge"
 type MediaEdge {
+    "Media specific character name"
+    characterName: String
     "The characters role in the media"
     characterRole: CharacterRole
     "The characters in the media voiced by the parent actor"
     characters: [Character]
+    "Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant."
+    dubGroup: String
     "The order the media should be displayed from the users favourites"
     favouriteOrder: Int
     "The id of the connection"
@@ -1180,11 +1224,15 @@ type MediaEdge {
     node: Media
     "The type of relation to the parent model"
     relationType(
-        #Provide 2 to use new version 2 of relation enum
+        "Provide 2 to use new version 2 of relation enum"
         version: Int
     ): MediaRelation
+    "Notes regarding the VA's role for the character"
+    roleNotes: String
     "The role of the staff member in the production of the media"
     staffRole: String
+    "The voice actors of the character with role date"
+    voiceActorRoles(language: StaffLanguage, sort: [StaffSort]): [StaffRoleType]
     "The voice actors of the character"
     voiceActors(language: StaffLanguage, sort: [StaffSort]): [Staff]
 }
@@ -1209,7 +1257,7 @@ type MediaList {
     createdAt: Int
     "Map of booleans for which custom lists the entry are in"
     customLists(
-        #Change return structure to an array of objects
+        "Change return structure to an array of objects"
         asArray: Boolean
     ): Json
     "If the entry shown be hidden from non-custom lists"
@@ -1233,7 +1281,7 @@ type MediaList {
     repeat: Int
     "The score of the entry"
     score(
-        #Force the score to be returned in the provided format type.
+        "Force the score to be returned in the provided format type."
         format: ScoreFormat
     ): Float
     "When the entry was started by the user"
@@ -1285,8 +1333,7 @@ type MediaListOptions {
     sharedTheme: Json @deprecated(reason : "No longer used")
     "If the shared theme should be used instead of the individual list themes"
     sharedThemeEnabled: Boolean @deprecated(reason : "No longer used")
-    "(Site only) If the user should be using legacy css-supporting list versions"
-    useLegacyLists: Boolean
+    useLegacyLists: Boolean @deprecated(reason : "No longer used")
 }
 
 "A user's list options for anime or manga lists"
@@ -1376,12 +1423,15 @@ type MediaSubmissionComparison {
 
 type MediaSubmissionEdge {
     character: Character
+    characterName: String
     characterRole: CharacterRole
     characterSubmission: Character
+    dubGroup: String
     "The id of the direct submission"
     id: Int
     isMain: Boolean
     media: Media
+    roleNotes: String
     staff: Staff
     staffRole: String
     staffSubmission: Staff
@@ -1486,7 +1536,7 @@ type MessageActivity {
     likes: [User]
     "The message text (Markdown)"
     message(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The user who sent the activity message"
@@ -1522,304 +1572,309 @@ type ModAction {
 type Mutation {
     "Delete an activity item of the authenticated users"
     DeleteActivity(
-        #The id of the activity to delete
+        "The id of the activity to delete"
         id: Int
     ): Deleted
     "Delete an activity reply of the authenticated users"
     DeleteActivityReply(
-        #The id of the reply to delete
+        "The id of the reply to delete"
         id: Int
     ): Deleted
     "Delete a custom list and remove the list entries from it"
     DeleteCustomList(
-        #The name of the custom list to delete
+        "The name of the custom list to delete"
         customList: String,
-        #The media list type of the custom list
+        "The media list type of the custom list"
         type: MediaType
     ): Deleted
     "Delete a media list entry"
     DeleteMediaListEntry(
-        #The id of the media list entry to delete
+        "The id of the media list entry to delete"
         id: Int
     ): Deleted
     "Delete a review"
     DeleteReview(
-        #The id of the review to delete
+        "The id of the review to delete"
         id: Int
     ): Deleted
     "Delete a thread"
     DeleteThread(
-        #The id of the thread to delete
+        "The id of the thread to delete"
         id: Int
     ): Deleted
     "Delete a thread comment"
     DeleteThreadComment(
-        #The id of the thread comment to delete
+        "The id of the thread comment to delete"
         id: Int
     ): Deleted
     "Rate a review"
     RateReview(
-        #The rating to apply to the review
+        "The rating to apply to the review"
         rating: ReviewRating,
-        #The id of the review to rate
+        "The id of the review to rate"
         reviewId: Int
     ): Review
     "Create or update an activity reply"
     SaveActivityReply(
-        #The id of the parent activity being replied to
+        "The id of the parent activity being replied to"
         activityId: Int,
-        #If the reply should be sent from the Moderator account (Mod Only)
+        "If the reply should be sent from the Moderator account (Mod Only)"
         asMod: Boolean,
-        #The activity reply id, required for updating
+        "The activity reply id, required for updating"
         id: Int,
-        #The reply text
+        "The reply text"
         text: String
     ): ActivityReply
     "Update list activity (Mod Only)"
     SaveListActivity(
-        #The activity's id, required for updating
+        "The activity's id, required for updating"
         id: Int,
-        #If the activity should be locked. (Mod Only)
+        "If the activity should be locked. (Mod Only)"
         locked: Boolean
     ): ListActivity
     "Create or update a media list entry"
     SaveMediaListEntry(
-        #Array of advanced scores
+        "Array of advanced scores"
         advancedScores: [Float],
-        #When the entry was completed by the user
+        "When the entry was completed by the user"
         completedAt: FuzzyDateInput,
-        #Array of custom list names which should be enabled for this entry
+        "Array of custom list names which should be enabled for this entry"
         customLists: [String],
-        #If the entry shown be hidden from non-custom lists
+        "If the entry shown be hidden from non-custom lists"
         hiddenFromStatusLists: Boolean,
-        #The list entry id, required for updating
+        "The list entry id, required for updating"
         id: Int,
-        #The id of the media the entry is of
+        "The id of the media the entry is of"
         mediaId: Int,
-        #Text notes
+        "Text notes"
         notes: String,
-        #Priority of planning
+        "Priority of planning"
         priority: Int,
-        #If the entry should only be visible to authenticated user
+        "If the entry should only be visible to authenticated user"
         private: Boolean,
-        #The amount of episodes/chapters consumed by the user
+        "The amount of episodes/chapters consumed by the user"
         progress: Int,
-        #The amount of volumes read by the user
+        "The amount of volumes read by the user"
         progressVolumes: Int,
-        #The amount of times the user has rewatched/read the media
+        "The amount of times the user has rewatched/read the media"
         repeat: Int,
-        #The score of the media in the user's chosen scoring method
+        "The score of the media in the user's chosen scoring method"
         score: Float,
-        #The score of the media in 100 point
+        "The score of the media in 100 point"
         scoreRaw: Int,
-        #When the entry was started by the user
+        "When the entry was started by the user"
         startedAt: FuzzyDateInput,
-        #The watching/reading status
+        "The watching/reading status"
         status: MediaListStatus
     ): MediaList
     "Create or update message activity for the currently authenticated user"
     SaveMessageActivity(
-        #If the message should be sent from the Moderator account (Mod Only)
+        "If the message should be sent from the Moderator account (Mod Only)"
         asMod: Boolean,
-        #The activity id, required for updating
+        "The activity id, required for updating"
         id: Int,
-        #If the activity should be locked. (Mod Only)
+        "If the activity should be locked. (Mod Only)"
         locked: Boolean,
-        #The activity message text
+        "The activity message text"
         message: String,
-        #If the activity should be private
+        "If the activity should be private"
         private: Boolean,
-        #The id of the user the message is being sent to
+        "The id of the user the message is being sent to"
         recipientId: Int
     ): MessageActivity
     "Recommendation a media"
     SaveRecommendation(
-        #The id of the base media
+        "The id of the base media"
         mediaId: Int,
-        #The id of the media to recommend
+        "The id of the media to recommend"
         mediaRecommendationId: Int,
-        #The rating to give the recommendation
+        "The rating to give the recommendation"
         rating: RecommendationRating
     ): Recommendation
     "Create or update a review"
     SaveReview(
-        #The main review text. Min:2200 characters
+        "The main review text. Min:2200 characters"
         body: String,
-        #The review id, required for updating
+        "The review id, required for updating"
         id: Int,
-        #The id of the media the review is of
+        "The id of the media the review is of"
         mediaId: Int,
-        #If the review should only be visible to its creator
+        "If the review should only be visible to its creator"
         private: Boolean,
-        #A short summary/preview of the review. Min:20, Max:120 characters
+        "A short summary/preview of the review. Min:20, Max:120 characters"
         score: Int,
-        #A short summary/preview of the review. Min:20, Max:120 characters
+        "A short summary/preview of the review. Min:20, Max:120 characters"
         summary: String
     ): Review
     "Create or update text activity for the currently authenticated user"
     SaveTextActivity(
-        #The activity's id, required for updating
+        "The activity's id, required for updating"
         id: Int,
-        #If the activity should be locked. (Mod Only)
+        "If the activity should be locked. (Mod Only)"
         locked: Boolean,
-        #The activity text
+        "The activity text"
         text: String
     ): TextActivity
     "Create or update a forum thread"
     SaveThread(
-        #The main text body of the thread
+        "The main text body of the thread"
         body: String,
-        #Forum categories the thread should be within
+        "Forum categories the thread should be within"
         categories: [Int],
-        #The thread id, required for updating
+        "The thread id, required for updating"
         id: Int,
-        #If the thread should be locked. (Mod Only)
+        "If the thread should be locked. (Mod Only)"
         locked: Boolean,
-        #Media related to the contents of the thread
+        "Media related to the contents of the thread"
         mediaCategories: [Int],
-        #If the thread should be stickied. (Mod Only)
+        "If the thread should be stickied. (Mod Only)"
         sticky: Boolean,
-        #The title of the thread
+        "The title of the thread"
         title: String
     ): Thread
     "Create or update a thread comment"
     SaveThreadComment(
-        #The comment markdown text
+        "The comment markdown text"
         comment: String,
-        #The comment id, required for updating
+        "The comment id, required for updating"
         id: Int,
-        #The id of thread comment to reply to
+        "The id of thread comment to reply to"
         parentCommentId: Int,
-        #The id of thread the comment belongs to
+        "The id of thread the comment belongs to"
         threadId: Int
     ): ThreadComment
     "Toggle the subscription of an activity item"
     ToggleActivitySubscription(
-        #The id of the activity to un/subscribe
+        "The id of the activity to un/subscribe"
         activityId: Int,
-        #Whether to subscribe or unsubscribe from the activity
+        "Whether to subscribe or unsubscribe from the activity"
         subscribe: Boolean
     ): ActivityUnion
     "Favourite or unfavourite an anime, manga, character, staff member, or studio"
     ToggleFavourite(
-        #The id of the anime to un/favourite
+        "The id of the anime to un/favourite"
         animeId: Int,
-        #The id of the character to un/favourite
+        "The id of the character to un/favourite"
         characterId: Int,
-        #The id of the manga to un/favourite
+        "The id of the manga to un/favourite"
         mangaId: Int,
-        #The id of the staff to un/favourite
+        "The id of the staff to un/favourite"
         staffId: Int,
-        #The id of the studio to un/favourite
+        "The id of the studio to un/favourite"
         studioId: Int
     ): Favourites
     "Toggle the un/following of a user"
     ToggleFollow(
-        #The id of the user to un/follow
+        "The id of the user to un/follow"
         userId: Int
     ): User
     """
+
     Add or remove a like from a likeable type.
     Returns all the users who liked the same model
     """
     ToggleLike(
-        #The id of the likeable type
+        "The id of the likeable type"
         id: Int,
-        #The type of model to be un/liked
+        "The type of model to be un/liked"
         type: LikeableType
     ): [User]
     "Add or remove a like from a likeable type."
     ToggleLikeV2(
-        #The id of the likeable type
+        "The id of the likeable type"
         id: Int,
-        #The type of model to be un/liked
+        "The type of model to be un/liked"
         type: LikeableType
     ): LikeableUnion
     "Toggle the subscription of a forum thread"
     ToggleThreadSubscription(
-        #Whether to subscribe or unsubscribe from the forum thread
+        "Whether to subscribe or unsubscribe from the forum thread"
         subscribe: Boolean,
-        #The id of the forum thread to un/subscribe
+        "The id of the forum thread to un/subscribe"
         threadId: Int
     ): Thread
     UpdateAniChartHighlights(highlights: [AniChartHighlightInput]): Json
     UpdateAniChartSettings(outgoingLinkProvider: String, sort: String, theme: String, titleLanguage: String): Json
     "Update the order favourites are displayed in"
     UpdateFavouriteOrder(
-        #The id of the anime to un/favourite
+        "The id of the anime to un/favourite"
         animeIds: [Int],
-        #List of integers which the anime should be ordered by (Asc)
+        "List of integers which the anime should be ordered by (Asc)"
         animeOrder: [Int],
-        #The id of the character to un/favourite
+        "The id of the character to un/favourite"
         characterIds: [Int],
-        #List of integers which the character should be ordered by (Asc)
+        "List of integers which the character should be ordered by (Asc)"
         characterOrder: [Int],
-        #The id of the manga to un/favourite
+        "The id of the manga to un/favourite"
         mangaIds: [Int],
-        #List of integers which the manga should be ordered by (Asc)
+        "List of integers which the manga should be ordered by (Asc)"
         mangaOrder: [Int],
-        #The id of the staff to un/favourite
+        "The id of the staff to un/favourite"
         staffIds: [Int],
-        #List of integers which the staff should be ordered by (Asc)
+        "List of integers which the staff should be ordered by (Asc)"
         staffOrder: [Int],
-        #The id of the studio to un/favourite
+        "The id of the studio to un/favourite"
         studioIds: [Int],
-        #List of integers which the studio should be ordered by (Asc)
+        "List of integers which the studio should be ordered by (Asc)"
         studioOrder: [Int]
     ): Favourites
     "Update multiple media list entries to the same values"
     UpdateMediaListEntries(
-        #Array of advanced scores
+        "Array of advanced scores"
         advancedScores: [Float],
-        #When the entry was completed by the user
+        "When the entry was completed by the user"
         completedAt: FuzzyDateInput,
-        #If the entry shown be hidden from non-custom lists
+        "If the entry shown be hidden from non-custom lists"
         hiddenFromStatusLists: Boolean,
-        #The list entries ids to update
+        "The list entries ids to update"
         ids: [Int],
-        #Text notes
+        "Text notes"
         notes: String,
-        #Priority of planning
+        "Priority of planning"
         priority: Int,
-        #If the entry should only be visible to authenticated user
+        "If the entry should only be visible to authenticated user"
         private: Boolean,
-        #The amount of episodes/chapters consumed by the user
+        "The amount of episodes/chapters consumed by the user"
         progress: Int,
-        #The amount of volumes read by the user
+        "The amount of volumes read by the user"
         progressVolumes: Int,
-        #The amount of times the user has rewatched/read the media
+        "The amount of times the user has rewatched/read the media"
         repeat: Int,
-        #The score of the media in the user's chosen scoring method
+        "The score of the media in the user's chosen scoring method"
         score: Float,
-        #The score of the media in 100 point
+        "The score of the media in 100 point"
         scoreRaw: Int,
-        #When the entry was started by the user
+        "When the entry was started by the user"
         startedAt: FuzzyDateInput,
-        #The watching/reading status
+        "The watching/reading status"
         status: MediaListStatus
     ): [MediaList]
     UpdateUser(
-        #User's about/bio text
+        "User's about/bio text"
         about: String,
-        #If the user should get notifications when a show they are watching aires
+        "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always."
+        activityMergeTime: Int,
+        "If the user should get notifications when a show they are watching aires"
         airingNotifications: Boolean,
-        #The user's anime list options
+        "The user's anime list options"
         animeListOptions: MediaListOptionsInput,
-        #If the user should see media marked as adult-only
+        "If the user should see media marked as adult-only"
         displayAdultContent: Boolean,
-        #Profile highlight color
+        "Profile highlight color"
         donatorBadge: String,
-        #The user's anime list options
+        "The user's anime list options"
         mangaListOptions: MediaListOptionsInput,
-        #Notification options
+        "Notification options"
         notificationOptions: [NotificationOptionInput],
-        #Profile highlight color
+        "Profile highlight color"
         profileColor: String,
-        #The user's default list order
+        "The user's default list order"
         rowOrder: String,
-        #The user's list scoring system
+        "The user's list scoring system"
         scoreFormat: ScoreFormat,
-        #User's title language
+        "Timezone offset format: -?HH:MM"
+        timezone: String,
+        "User's title language"
         titleLanguage: UserTitleLanguage
     ): User
 }
@@ -1835,483 +1890,489 @@ type NotificationOption {
 "Page of data"
 type Page {
     activities(
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt: Int,
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt_greater: Int,
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt_lesser: Int,
-        #Filter activity to only activity with replies
+        "Filter activity to only activity with replies"
         hasReplies: Boolean,
-        #Filter activity to only activity with replies or is of type text
+        "Filter activity to only activity with replies or is of type text"
         hasRepliesOrTypeText: Boolean,
-        #Filter by the activity id
+        "Filter by the activity id"
         id: Int,
-        #Filter by the activity id
+        "Filter by the activity id"
         id_in: [Int],
-        #Filter by the activity id
+        "Filter by the activity id"
         id_not: Int,
-        #Filter by the activity id
+        "Filter by the activity id"
         id_not_in: [Int],
-        #Filter activity to users who are being followed by the authenticated user
+        "Filter activity to users who are being followed by the authenticated user"
         isFollowing: Boolean,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId: Int,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_in: [Int],
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_not: Int,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_not_in: [Int],
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId: Int,
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_in: [Int],
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_not: Int,
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_not_in: [Int],
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ActivitySort],
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type: ActivityType,
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_in: [ActivityType],
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_not: ActivityType,
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_not_in: [ActivityType],
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId: Int,
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_in: [Int],
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_not: Int,
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_not_in: [Int]
     ): [ActivityUnion]
     activityReplies(
-        #Filter by the parent id
+        "Filter by the parent id"
         activityId: Int,
-        #Filter by the reply id
+        "Filter by the reply id"
         id: Int
     ): [ActivityReply]
     airingSchedules(
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt: Int,
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt_greater: Int,
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt_lesser: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_greater: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_in: [Int],
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_lesser: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_not: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_not_in: [Int],
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id: Int,
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_in: [Int],
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_not: Int,
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_not_in: [Int],
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId: Int,
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_in: [Int],
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_not: Int,
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_not_in: [Int],
-        #Filter to episodes that haven't yet aired
+        "Filter to episodes that haven't yet aired"
         notYetAired: Boolean,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [AiringSort]
     ): [AiringSchedule]
     characters(
-        #Filter by character id
+        "Filter by character id"
         id: Int,
-        #Filter by character id
+        "Filter by character id"
         id_in: [Int],
-        #Filter by character id
+        "Filter by character id"
         id_not: Int,
-        #Filter by character id
+        "Filter by character id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by character by if its their birthday today"
+        isBirthday: Boolean,
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [CharacterSort]
     ): [Character]
     followers(
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort],
-        #User id of the follower/followed
+        "User id of the follower/followed"
         userId: Int!
     ): [User]
     following(
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort],
-        #User id of the follower/followed
+        "User id of the follower/followed"
         userId: Int!
     ): [User]
     likes(
-        #The id of the likeable type
+        "The id of the likeable type"
         likeableId: Int,
-        #The type of model the id applies to
+        "The type of model the id applies to"
         type: LikeableType
     ): [User]
     media(
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_greater: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_lesser: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_not: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters_greater: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters_lesser: Int,
-        #Filter by the media's country of origin
+        "Filter by the media's country of origin"
         countryOfOrigin: CountryCode,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration: Int,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration_greater: Int,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration_lesser: Int,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_greater: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_lesser: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_like: String,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes: Int,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes_greater: Int,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes_lesser: Int,
-        #Filter by the media's format
+        "Filter by the media's format"
         format: MediaFormat,
-        #Filter by the media's format
+        "Filter by the media's format"
         format_in: [MediaFormat],
-        #Filter by the media's format
+        "Filter by the media's format"
         format_not: MediaFormat,
-        #Filter by the media's format
+        "Filter by the media's format"
         format_not_in: [MediaFormat],
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre: String,
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre_in: [String],
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre_not_in: [String],
-        #Filter by the media id
+        "Filter by the media id"
         id: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_in: [Int],
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_not: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_not_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         id_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         id_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         id_not_in: [Int],
-        #Filter by if the media's intended for 18+ adult audiences
+        "Filter by if the media's intended for 18+ adult audiences"
         isAdult: Boolean,
-        #Filter media by sites with a online streaming or reading license
+        "Filter media by sites with a online streaming or reading license"
         licensedBy: String,
-        #Filter media by sites with a online streaming or reading license
+        "Filter media by sites with a online streaming or reading license"
         licensedBy_in: [String],
-        #Only apply the tags filter argument to tags above this rank. Default: 18
+        "Only apply the tags filter argument to tags above this rank. Default: 18"
         minimumTagRank: Int,
-        #Filter by the media on the authenticated user's lists
+        "Filter by the media on the authenticated user's lists"
         onList: Boolean,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_greater: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_lesser: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_not: Int,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #Filter by the season the media was released in
+        "Filter by the season the media was released in"
         season: MediaSeason,
-        #The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument
+        "The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument"
         seasonYear: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaSort],
-        #Filter by the source type of the media
+        "Filter by the source type of the media"
         source: MediaSource,
-        #Filter by the source type of the media
+        "Filter by the source type of the media"
         source_in: [MediaSource],
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_greater: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_lesser: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_like: String,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status: MediaStatus,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_in: [MediaStatus],
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_not: MediaStatus,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_not_in: [MediaStatus],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag: String,
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory: String,
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory_in: [String],
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory_not_in: [String],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag_in: [String],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag_not_in: [String],
-        #Filter by the media's type
+        "Filter by the media's type"
         type: MediaType,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes: Int,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes_greater: Int,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes_lesser: Int
     ): [Media]
     mediaList(
-        #Limit to only entries also on the auth user's list. Requires user id or name arguments.
+        "Limit to only entries also on the auth user's list. Requires user id or name arguments."
         compareWithAuthList: Boolean,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_greater: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_like: String,
-        #Filter by a list entry's id
+        "Filter by a list entry's id"
         id: Int,
-        #Filter list entries to users who are being followed by the authenticated user
+        "Filter list entries to users who are being followed by the authenticated user"
         isFollowing: Boolean,
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId: Int,
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId_in: [Int],
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId_not_in: [Int],
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes: String,
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes_like: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaListSort],
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_greater: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_like: String,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_in: [MediaListStatus],
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not_in: [MediaListStatus],
-        #Filter by the list entries media type
+        "Filter by the list entries media type"
         type: MediaType,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId: Int,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId_in: [Int],
-        #Filter by a user's name
+        "Filter by a user's name"
         userName: String
     ): [MediaList]
     mediaTrends(
-        #Filter by score
+        "Filter by score"
         averageScore: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_greater: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_lesser: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_not: Int,
-        #Filter by date
+        "Filter by date"
         date: Int,
-        #Filter by date
+        "Filter by date"
         date_greater: Int,
-        #Filter by date
+        "Filter by date"
         date_lesser: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_greater: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_lesser: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_not_in: [Int],
-        #Filter by popularity
+        "Filter by popularity"
         popularity: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_greater: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_lesser: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_not: Int,
-        #Filter to stats recorded while the media was releasing
+        "Filter to stats recorded while the media was releasing"
         releasing: Boolean,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaTrendSort],
-        #Filter by trending amount
+        "Filter by trending amount"
         trending: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_greater: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_lesser: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_not: Int
     ): [MediaTrend]
     notifications(
-        #Reset the unread notification count to 0 on load
+        "Reset the unread notification count to 0 on load"
         resetNotificationCount: Boolean,
-        #Filter by the type of notifications
+        "Filter by the type of notifications"
         type: NotificationType,
-        #Filter by the type of notifications
+        "Filter by the type of notifications"
         type_in: [NotificationType]
     ): [NotificationUnion]
     "The pagination information"
     pageInfo: PageInfo
     recommendations(
-        #Filter by recommendation id
+        "Filter by recommendation id"
         id: Int,
-        #Filter by media id
+        "Filter by media id"
         mediaId: Int,
-        #Filter by media recommendation id
+        "Filter by media recommendation id"
         mediaRecommendationId: Int,
-        #Filter by total rating of the recommendation
+        "Filter by the media on the authenticated user's lists"
+        onList: Boolean,
+        "Filter by total rating of the recommendation"
         rating: Int,
-        #Filter by total rating of the recommendation
+        "Filter by total rating of the recommendation"
         rating_greater: Int,
-        #Filter by total rating of the recommendation
+        "Filter by total rating of the recommendation"
         rating_lesser: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [RecommendationSort],
-        #Filter by user who created the recommendation
+        "Filter by user who created the recommendation"
         userId: Int
     ): [Recommendation]
     reviews(
-        #Filter by Review id
+        "Filter by Review id"
         id: Int,
-        #Filter by media id
+        "Filter by media id"
         mediaId: Int,
-        #Filter by media type
+        "Filter by media type"
         mediaType: MediaType,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ReviewSort],
-        #Filter by media id
+        "Filter by user id"
         userId: Int
     ): [Review]
     staff(
-        #Filter by the staff id
+        "Filter by the staff id"
         id: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         id_in: [Int],
-        #Filter by the staff id
+        "Filter by the staff id"
         id_not: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by staff by if its their birthday today"
+        isBirthday: Boolean,
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [StaffSort]
     ): [Staff]
     studios(
-        #Filter by the studio id
+        "Filter by the studio id"
         id: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         id_in: [Int],
-        #Filter by the studio id
+        "Filter by the studio id"
         id_not: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [StudioSort]
     ): [Studio]
     threadComments(
-        #Filter by the comment id
+        "Filter by the comment id"
         id: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ThreadCommentSort],
-        #Filter by the thread id
+        "Filter by the thread id"
         threadId: Int,
-        #Filter by the user id of the comment's creator
+        "Filter by the user id of the comment's creator"
         userId: Int
     ): [ThreadComment]
     threads(
-        #Filter by thread category id
+        "Filter by thread category id"
         categoryId: Int,
-        #Filter by the thread id
+        "Filter by the thread id"
         id: Int,
-        #Filter by the thread id
+        "Filter by the thread id"
         id_in: [Int],
-        #Filter by thread media id category
+        "Filter by thread media id category"
         mediaCategoryId: Int,
-        #Filter by the user id of the last user to comment on the thread
+        "Filter by the user id of the last user to comment on the thread"
         replyUserId: Int,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ThreadSort],
-        #Filter by if the currently authenticated user's subscribed threads
+        "Filter by if the currently authenticated user's subscribed threads"
         subscribed: Boolean,
-        #Filter by the user id of the thread's creator
+        "Filter by the user id of the thread's creator"
         userId: Int
     ): [Thread]
     users(
-        #Filter by the user id
+        "Filter by the user id"
         id: Int,
-        #Filter by the name of the user
+        "Filter by the name of the user"
         name: String,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort]
     ): [User]
 }
@@ -2338,564 +2399,570 @@ type ParsedMarkdown {
 type Query {
     "Activity query"
     Activity(
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt: Int,
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt_greater: Int,
-        #Filter by the time the activity was created
+        "Filter by the time the activity was created"
         createdAt_lesser: Int,
-        #Filter activity to only activity with replies
+        "Filter activity to only activity with replies"
         hasReplies: Boolean,
-        #Filter activity to only activity with replies or is of type text
+        "Filter activity to only activity with replies or is of type text"
         hasRepliesOrTypeText: Boolean,
-        #Filter by the activity id
+        "Filter by the activity id"
         id: Int,
-        #Filter by the activity id
+        "Filter by the activity id"
         id_in: [Int],
-        #Filter by the activity id
+        "Filter by the activity id"
         id_not: Int,
-        #Filter by the activity id
+        "Filter by the activity id"
         id_not_in: [Int],
-        #Filter activity to users who are being followed by the authenticated user
+        "Filter activity to users who are being followed by the authenticated user"
         isFollowing: Boolean,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId: Int,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_in: [Int],
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_not: Int,
-        #Filter by the associated media id of the activity
+        "Filter by the associated media id of the activity"
         mediaId_not_in: [Int],
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId: Int,
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_in: [Int],
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_not: Int,
-        #Filter by the id of the user who sent a message
+        "Filter by the id of the user who sent a message"
         messengerId_not_in: [Int],
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ActivitySort],
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type: ActivityType,
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_in: [ActivityType],
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_not: ActivityType,
-        #Filter by the type of activity
+        "Filter by the type of activity"
         type_not_in: [ActivityType],
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId: Int,
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_in: [Int],
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_not: Int,
-        #Filter by the owner user id
+        "Filter by the owner user id"
         userId_not_in: [Int]
     ): ActivityUnion
     "Activity reply query"
     ActivityReply(
-        #Filter by the parent id
+        "Filter by the parent id"
         activityId: Int,
-        #Filter by the reply id
+        "Filter by the reply id"
         id: Int
     ): ActivityReply
     "Airing schedule query"
     AiringSchedule(
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt: Int,
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt_greater: Int,
-        #Filter by the time of airing
+        "Filter by the time of airing"
         airingAt_lesser: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_greater: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_in: [Int],
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_lesser: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_not: Int,
-        #Filter by the airing episode number
+        "Filter by the airing episode number"
         episode_not_in: [Int],
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id: Int,
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_in: [Int],
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_not: Int,
-        #Filter by the id of the airing schedule item
+        "Filter by the id of the airing schedule item"
         id_not_in: [Int],
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId: Int,
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_in: [Int],
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_not: Int,
-        #Filter by the id of associated media
+        "Filter by the id of associated media"
         mediaId_not_in: [Int],
-        #Filter to episodes that haven't yet aired
+        "Filter to episodes that haven't yet aired"
         notYetAired: Boolean,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [AiringSort]
     ): AiringSchedule
     AniChartUser: AniChartUser
     "Character query"
     Character(
-        #Filter by character id
+        "Filter by character id"
         id: Int,
-        #Filter by character id
+        "Filter by character id"
         id_in: [Int],
-        #Filter by character id
+        "Filter by character id"
         id_not: Int,
-        #Filter by character id
+        "Filter by character id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by character by if its their birthday today"
+        isBirthday: Boolean,
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [CharacterSort]
     ): Character
     "Follow query"
     Follower(
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort],
-        #User id of the follower/followed
+        "User id of the follower/followed"
         userId: Int!
     ): User
     "Follow query"
     Following(
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort],
-        #User id of the follower/followed
+        "User id of the follower/followed"
         userId: Int!
     ): User
     "Collection of all the possible media genres"
     GenreCollection: [String]
     "Like query"
     Like(
-        #The id of the likeable type
+        "The id of the likeable type"
         likeableId: Int,
-        #The type of model the id applies to
+        "The type of model the id applies to"
         type: LikeableType
     ): User
     "Provide AniList markdown to be converted to html (Requires auth)"
     Markdown(
-        #The markdown to be parsed to html
+        "The markdown to be parsed to html"
         markdown: String!
     ): ParsedMarkdown
     "Media query"
     Media(
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_greater: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_lesser: Int,
-        #Filter by the media's average score
+        "Filter by the media's average score"
         averageScore_not: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters_greater: Int,
-        #Filter by the media's chapter count
+        "Filter by the media's chapter count"
         chapters_lesser: Int,
-        #Filter by the media's country of origin
+        "Filter by the media's country of origin"
         countryOfOrigin: CountryCode,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration: Int,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration_greater: Int,
-        #Filter by the media's episode length
+        "Filter by the media's episode length"
         duration_lesser: Int,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_greater: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_lesser: FuzzyDateInt,
-        #Filter by the end date of the media
+        "Filter by the end date of the media"
         endDate_like: String,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes: Int,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes_greater: Int,
-        #Filter by amount of episodes the media has
+        "Filter by amount of episodes the media has"
         episodes_lesser: Int,
-        #Filter by the media's format
+        "Filter by the media's format"
         format: MediaFormat,
-        #Filter by the media's format
+        "Filter by the media's format"
         format_in: [MediaFormat],
-        #Filter by the media's format
+        "Filter by the media's format"
         format_not: MediaFormat,
-        #Filter by the media's format
+        "Filter by the media's format"
         format_not_in: [MediaFormat],
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre: String,
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre_in: [String],
-        #Filter by the media's genres
+        "Filter by the media's genres"
         genre_not_in: [String],
-        #Filter by the media id
+        "Filter by the media id"
         id: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_in: [Int],
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_not: Int,
-        #Filter by the media's MyAnimeList id
+        "Filter by the media's MyAnimeList id"
         idMal_not_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         id_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         id_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         id_not_in: [Int],
-        #Filter by if the media's intended for 18+ adult audiences
+        "Filter by if the media's intended for 18+ adult audiences"
         isAdult: Boolean,
-        #Filter media by sites with a online streaming or reading license
+        "Filter media by sites with a online streaming or reading license"
         licensedBy: String,
-        #Filter media by sites with a online streaming or reading license
+        "Filter media by sites with a online streaming or reading license"
         licensedBy_in: [String],
-        #Only apply the tags filter argument to tags above this rank. Default: 18
+        "Only apply the tags filter argument to tags above this rank. Default: 18"
         minimumTagRank: Int,
-        #Filter by the media on the authenticated user's lists
+        "Filter by the media on the authenticated user's lists"
         onList: Boolean,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_greater: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_lesser: Int,
-        #Filter by the number of users with this media on their list
+        "Filter by the number of users with this media on their list"
         popularity_not: Int,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #Filter by the season the media was released in
+        "Filter by the season the media was released in"
         season: MediaSeason,
-        #The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument
+        "The year of the season (Winter 2017 would also include December 2016 releases). Requires season argument"
         seasonYear: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaSort],
-        #Filter by the source type of the media
+        "Filter by the source type of the media"
         source: MediaSource,
-        #Filter by the source type of the media
+        "Filter by the source type of the media"
         source_in: [MediaSource],
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_greater: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_lesser: FuzzyDateInt,
-        #Filter by the start date of the media
+        "Filter by the start date of the media"
         startDate_like: String,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status: MediaStatus,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_in: [MediaStatus],
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_not: MediaStatus,
-        #Filter by the media's current release status
+        "Filter by the media's current release status"
         status_not_in: [MediaStatus],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag: String,
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory: String,
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory_in: [String],
-        #Filter by the media's tags with in a tag category
+        "Filter by the media's tags with in a tag category"
         tagCategory_not_in: [String],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag_in: [String],
-        #Filter by the media's tags
+        "Filter by the media's tags"
         tag_not_in: [String],
-        #Filter by the media's type
+        "Filter by the media's type"
         type: MediaType,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes: Int,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes_greater: Int,
-        #Filter by the media's volume count
+        "Filter by the media's volume count"
         volumes_lesser: Int
     ): Media
     "Media list query"
     MediaList(
-        #Limit to only entries also on the auth user's list. Requires user id or name arguments.
+        "Limit to only entries also on the auth user's list. Requires user id or name arguments."
         compareWithAuthList: Boolean,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_greater: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_like: String,
-        #Filter by a list entry's id
+        "Filter by a list entry's id"
         id: Int,
-        #Filter list entries to users who are being followed by the authenticated user
+        "Filter list entries to users who are being followed by the authenticated user"
         isFollowing: Boolean,
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId: Int,
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId_in: [Int],
-        #Filter by the media id of the list entry
+        "Filter by the media id of the list entry"
         mediaId_not_in: [Int],
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes: String,
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes_like: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaListSort],
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_greater: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_like: String,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_in: [MediaListStatus],
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not_in: [MediaListStatus],
-        #Filter by the list entries media type
+        "Filter by the list entries media type"
         type: MediaType,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId: Int,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId_in: [Int],
-        #Filter by a user's name
+        "Filter by a user's name"
         userName: String
     ): MediaList
     "Media list collection query, provides list pre-grouped by status & custom lists. User ID and Media Type arguments required."
     MediaListCollection(
-        #Which chunk of list entries to load
+        "Which chunk of list entries to load"
         chunk: Int,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_greater: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user completed the media
+        "Filter by the date the user completed the media"
         completedAt_like: String,
-        #Always return completed list entries in one group, overriding the user's split completed option.
+        "Always return completed list entries in one group, overriding the user's split completed option."
         forceSingleCompletedList: Boolean,
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes: String,
-        #Filter by note words and #tags
+        "Filter by note words and #tags"
         notes_like: String,
-        #The amount of entries per chunk, max 500
+        "The amount of entries per chunk, max 500"
         perChunk: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaListSort],
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_greater: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_lesser: FuzzyDateInt,
-        #Filter by the date the user started the media
+        "Filter by the date the user started the media"
         startedAt_like: String,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_in: [MediaListStatus],
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        #Filter by the watching/reading status
+        "Filter by the watching/reading status"
         status_not_in: [MediaListStatus],
-        #Filter by the list entries media type
+        "Filter by the list entries media type"
         type: MediaType,
-        #Filter by a user's id
+        "Filter by a user's id"
         userId: Int,
-        #Filter by a user's name
+        "Filter by a user's name"
         userName: String
     ): MediaListCollection
     "Collection of all the possible media tags"
     MediaTagCollection(
-        #Mod Only
+        "Mod Only"
         status: Int
     ): [MediaTag]
     "Media Trend query"
     MediaTrend(
-        #Filter by score
+        "Filter by score"
         averageScore: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_greater: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_lesser: Int,
-        #Filter by score
+        "Filter by score"
         averageScore_not: Int,
-        #Filter by date
+        "Filter by date"
         date: Int,
-        #Filter by date
+        "Filter by date"
         date_greater: Int,
-        #Filter by date
+        "Filter by date"
         date_lesser: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_greater: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_lesser: Int,
-        #Filter by episode number
+        "Filter by episode number"
         episode_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_in: [Int],
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_not: Int,
-        #Filter by the media id
+        "Filter by the media id"
         mediaId_not_in: [Int],
-        #Filter by popularity
+        "Filter by popularity"
         popularity: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_greater: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_lesser: Int,
-        #Filter by popularity
+        "Filter by popularity"
         popularity_not: Int,
-        #Filter to stats recorded while the media was releasing
+        "Filter to stats recorded while the media was releasing"
         releasing: Boolean,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaTrendSort],
-        #Filter by trending amount
+        "Filter by trending amount"
         trending: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_greater: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_lesser: Int,
-        #Filter by trending amount
+        "Filter by trending amount"
         trending_not: Int
     ): MediaTrend
     "Notification query"
     Notification(
-        #Reset the unread notification count to 0 on load
+        "Reset the unread notification count to 0 on load"
         resetNotificationCount: Boolean,
-        #Filter by the type of notifications
+        "Filter by the type of notifications"
         type: NotificationType,
-        #Filter by the type of notifications
+        "Filter by the type of notifications"
         type_in: [NotificationType]
     ): NotificationUnion
     Page(
-        #The page number
+        "The page number"
         page: Int,
-        #The amount of entries per page, max 50
+        "The amount of entries per page, max 50"
         perPage: Int
     ): Page
     "Recommendation query"
     Recommendation(
-        #Filter by recommendation id
+        "Filter by recommendation id"
         id: Int,
-        #Filter by media id
+        "Filter by media id"
         mediaId: Int,
-        #Filter by media recommendation id
+        "Filter by media recommendation id"
         mediaRecommendationId: Int,
-        #Filter by total rating of the recommendation
+        "Filter by the media on the authenticated user's lists"
+        onList: Boolean,
+        "Filter by total rating of the recommendation"
         rating: Int,
-        #Filter by total rating of the recommendation
+        "Filter by total rating of the recommendation"
         rating_greater: Int,
-        #Filter by total rating of the recommendation
+        "Filter by total rating of the recommendation"
         rating_lesser: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [RecommendationSort],
-        #Filter by user who created the recommendation
+        "Filter by user who created the recommendation"
         userId: Int
     ): Recommendation
     "Review query"
     Review(
-        #Filter by Review id
+        "Filter by Review id"
         id: Int,
-        #Filter by media id
+        "Filter by media id"
         mediaId: Int,
-        #Filter by media type
+        "Filter by media type"
         mediaType: MediaType,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ReviewSort],
-        #Filter by media id
+        "Filter by user id"
         userId: Int
     ): Review
     "Site statistics query"
     SiteStatistics: SiteStatistics
     "Staff query"
     Staff(
-        #Filter by the staff id
+        "Filter by the staff id"
         id: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         id_in: [Int],
-        #Filter by the staff id
+        "Filter by the staff id"
         id_not: Int,
-        #Filter by the staff id
+        "Filter by the staff id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by staff by if its their birthday today"
+        isBirthday: Boolean,
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [StaffSort]
     ): Staff
     "Studio query"
     Studio(
-        #Filter by the studio id
+        "Filter by the studio id"
         id: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         id_in: [Int],
-        #Filter by the studio id
+        "Filter by the studio id"
         id_not: Int,
-        #Filter by the studio id
+        "Filter by the studio id"
         id_not_in: [Int],
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [StudioSort]
     ): Studio
     "Thread query"
     Thread(
-        #Filter by thread category id
+        "Filter by thread category id"
         categoryId: Int,
-        #Filter by the thread id
+        "Filter by the thread id"
         id: Int,
-        #Filter by the thread id
+        "Filter by the thread id"
         id_in: [Int],
-        #Filter by thread media id category
+        "Filter by thread media id category"
         mediaCategoryId: Int,
-        #Filter by the user id of the last user to comment on the thread
+        "Filter by the user id of the last user to comment on the thread"
         replyUserId: Int,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ThreadSort],
-        #Filter by if the currently authenticated user's subscribed threads
+        "Filter by if the currently authenticated user's subscribed threads"
         subscribed: Boolean,
-        #Filter by the user id of the thread's creator
+        "Filter by the user id of the thread's creator"
         userId: Int
     ): Thread
     "Comment query"
     ThreadComment(
-        #Filter by the comment id
+        "Filter by the comment id"
         id: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [ThreadCommentSort],
-        #Filter by the thread id
+        "Filter by the thread id"
         threadId: Int,
-        #Filter by the user id of the comment's creator
+        "Filter by the user id of the comment's creator"
         userId: Int
     ): [ThreadComment]
     "User query"
     User(
-        #Filter by the user id
+        "Filter by the user id"
         id: Int,
-        #Filter by the name of the user
+        "Filter by the name of the user"
         name: String,
-        #Filter by search query
+        "Filter by search query"
         search: String,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [UserSort]
     ): User
     "Get the currently authenticated user"
@@ -2959,7 +3026,7 @@ type Report {
 type Review {
     "The main review body text"
     body(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The time of the thread creation"
@@ -3037,51 +3104,51 @@ type ScoreDistribution {
 
 type SiteStatistics {
     anime(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
     characters(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
     manga(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
     reviews(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
     staff(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
     studios(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
     users(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [SiteTrendSort]
     ): SiteTrendConnection
@@ -3110,40 +3177,66 @@ type SiteTrendEdge {
 
 "Voice actors or production staff"
 type Staff {
+    "The person's age in years"
+    age: Int
+    "Media the actor voiced characters in. (Same data as characters with media as node instead of characters)"
+    characterMedia(
+        onList: Boolean,
+        "The page"
+        page: Int,
+        "The amount of entries per page, max 25"
+        perPage: Int,
+        sort: [MediaSort]
+    ): MediaConnection
     "Characters voiced by the actor"
     characters(
-        #The page
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [CharacterSort]
     ): CharacterConnection
+    dateOfBirth: FuzzyDate
+    dateOfDeath: FuzzyDate
     "A general description of the staff member"
     description(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The amount of user's who have favourited the staff member"
     favourites: Int
+    "The staff's gender. Usually Male, Female, or Non-binary but can be any string."
+    gender: String
+    "The persons birthplace or hometown"
+    homeTown: String
     "The id of the staff member"
     id: Int!
     "The staff images"
     image: StaffImage
     "If the staff member is marked as favourite by the currently authenticated user"
     isFavourite: Boolean!
-    "The primary language of the staff member"
-    language: StaffLanguage
+    "If the staff member is blocked from being added to favourites"
+    isFavouriteBlocked: Boolean!
+    "The primary language the staff member dub's in"
+    language: StaffLanguage @deprecated(reason : "Replaced with languageV2")
+    "The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan"
+    languageV2: String
+    "Notes for site moderators"
+    modNotes: String
     "The names of the staff member"
     name: StaffName
+    "The person's primary occupations"
+    primaryOccupations: [String]
     "The url for the staff page on the AniList website"
     siteUrl: String
     "Staff member that the submission is referencing"
     staff: Staff
     "Media where the staff member has a production role"
     staffMedia(
-        #The page
+        onList: Boolean,
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
         sort: [MediaSort],
         type: MediaType
@@ -3154,8 +3247,9 @@ type Staff {
     submissionStatus: Int
     "Submitter for the submission"
     submitter: User
-    "When the staff's data was last updated"
-    updatedAt: Int
+    updatedAt: Int @deprecated(reason : "No data available")
+    "[startYear, endYear] (If the 2nd value is not present staff is still active)"
+    yearsActive: [Int]
 }
 
 type StaffConnection {
@@ -3189,12 +3283,24 @@ type StaffName {
     alternative: [String]
     "The person's given name"
     first: String
-    "The person's full name"
+    "The person's first and last name"
     full: String
     "The person's surname"
     last: String
+    "The person's middle name"
+    middle: String
     "The person's full name in their native language"
     native: String
+}
+
+"Voice actor role for a character"
+type StaffRoleType {
+    "Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant."
+    dubGroup: String
+    "Notes regarding the VA's role for the character"
+    roleNotes: String
+    "The voice actors of the character"
+    voiceActor: Staff
 }
 
 "User's staff statistics"
@@ -3213,6 +3319,7 @@ type StaffSubmission {
     id: Int!
     "Inner details of submission status"
     notes: String
+    source: String
     "Staff that the submission is referencing"
     staff: Staff
     "Status of the submission"
@@ -3243,13 +3350,14 @@ type Studio {
     isFavourite: Boolean!
     "The media the studio has worked on"
     media(
-        #If the studio was the primary animation studio of the media
+        "If the studio was the primary animation studio of the media"
         isMain: Boolean,
-        #The page
+        onList: Boolean,
+        "The page"
         page: Int,
-        #The amount of entries per page, max 25
+        "The amount of entries per page, max 25"
         perPage: Int,
-        #The order the results will be returned in
+        "The order the results will be returned in"
         sort: [MediaSort]
     ): MediaConnection
     "The name of the studio"
@@ -3318,7 +3426,7 @@ type TextActivity {
     siteUrl: String
     "The status text (Markdown)"
     text(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The type of activity"
@@ -3333,7 +3441,7 @@ type TextActivity {
 type Thread {
     "The text body of the thread (Markdown)"
     body(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The categories of the thread"
@@ -3394,7 +3502,7 @@ type ThreadComment {
     childComments: Json
     "The text content of the comment (Markdown)"
     comment(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The time of the comments creation"
@@ -3535,7 +3643,7 @@ type ThreadLikeNotification {
 type User {
     "The bio written by user (Markdown)"
     about(
-        #Return the string in pre-parsed html instead of markdown
+        "Return the string in pre-parsed html instead of markdown"
         asHtml: Boolean
     ): String
     "The user's avatar images"
@@ -3549,7 +3657,7 @@ type User {
     donatorTier: Int
     "The users favourites"
     favourites(
-        #Deprecated. Use page arguments on each favourite field instead.
+        "Deprecated. Use page arguments on each favourite field instead."
         page: Int
     ): Favourites
     "The id of the user"
@@ -3644,6 +3752,8 @@ type UserModData {
 
 "A user's general options"
 type UserOptions {
+    "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always."
+    activityMergeTime: Int
     "Whether the user receives notifications when a show they are watching aires"
     airingNotifications: Boolean
     "Whether the user has enabled viewing of 18+ content"
@@ -3652,6 +3762,8 @@ type UserOptions {
     notificationOptions: [NotificationOption]
     "Profile highlight color (blue, purple, pink, orange, red, green, gray)"
     profileColor: String
+    "The user's timezone offset (Auth user only)"
+    timezone: String
     "The language the user wants to see media titles in"
     titleLanguage: UserTitleLanguage
 }
@@ -3794,15 +3906,15 @@ enum ActivitySort {
 
 "Activity type enum."
 enum ActivityType {
-    #A anime list update activity
+    "A anime list update activity"
     ANIME_LIST
-    #A manga list update activity
+    "A manga list update activity"
     MANGA_LIST
-    #Anime & Manga list update, only used in query arguments
+    "Anime & Manga list update, only used in query arguments"
     MEDIA_LIST
-    #A text message activity sent to another user
+    "A text message activity sent to another user"
     MESSAGE
-    #A text activity
+    "A text activity"
     TEXT
 }
 
@@ -3820,11 +3932,11 @@ enum AiringSort {
 
 "The role the character plays in the media"
 enum CharacterRole {
-    #A background character in the media
+    "A background character in the media"
     BACKGROUND
-    #A primary character role in the media
+    "A primary character role in the media"
     MAIN
-    #A supporting character role in the media
+    "A supporting character role in the media"
     SUPPORTING
 }
 
@@ -3834,6 +3946,8 @@ enum CharacterSort {
     FAVOURITES_DESC
     ID
     ID_DESC
+    "Order manually decided by moderators"
+    RELEVANCE
     ROLE
     ROLE_DESC
     SEARCH_MATCH
@@ -3849,25 +3963,25 @@ enum LikeableType {
 
 "The format the media was released in"
 enum MediaFormat {
-    #Professionally published manga with more than one chapter
+    "Professionally published manga with more than one chapter"
     MANGA
-    #Anime movies with a theatrical release
+    "Anime movies with a theatrical release"
     MOVIE
-    #Short anime released as a music video
+    "Short anime released as a music video"
     MUSIC
-    #Written books released as a series of light novels
+    "Written books released as a series of light novels"
     NOVEL
-    #(Original Net Animation) Anime that have been originally released online or are only available through streaming services.
+    "(Original Net Animation) Anime that have been originally released online or are only available through streaming services."
     ONA
-    #Manga with just one chapter
+    "Manga with just one chapter"
     ONE_SHOT
-    #(Original Video Animation) Anime that have been released directly on DVD/Blu-ray without originally going through a theatrical release or television broadcast
+    "(Original Video Animation) Anime that have been released directly on DVD/Blu-ray without originally going through a theatrical release or television broadcast"
     OVA
-    #Special episodes that have been included in DVD/Blu-ray releases, picture dramas, pilots, etc
+    "Special episodes that have been included in DVD/Blu-ray releases, picture dramas, pilots, etc"
     SPECIAL
-    #Anime broadcast on television
+    "Anime broadcast on television"
     TV
-    #Anime which are under 15 minutes in length and broadcast on television
+    "Anime which are under 15 minutes in length and broadcast on television"
     TV_SHORT
 }
 
@@ -3907,66 +4021,66 @@ enum MediaListSort {
 
 "Media list watching/reading status enum."
 enum MediaListStatus {
-    #Finished watching/reading
+    "Finished watching/reading"
     COMPLETED
-    #Currently watching/reading
+    "Currently watching/reading"
     CURRENT
-    #Stopped watching/reading before completing
+    "Stopped watching/reading before completing"
     DROPPED
-    #Paused watching/reading
+    "Paused watching/reading"
     PAUSED
-    #Planning to watch/read
+    "Planning to watch/read"
     PLANNING
-    #Re-watching/reading
+    "Re-watching/reading"
     REPEATING
 }
 
 "The type of ranking"
 enum MediaRankType {
-    #Ranking is based on the media's popularity
+    "Ranking is based on the media's popularity"
     POPULAR
-    #Ranking is based on the media's ratings/score
+    "Ranking is based on the media's ratings/score"
     RATED
 }
 
 "Type of relation media has to its parent."
 enum MediaRelation {
-    #An adaption of this media into a different format
+    "An adaption of this media into a different format"
     ADAPTATION
-    #An alternative version of the same media
+    "An alternative version of the same media"
     ALTERNATIVE
-    #Shares at least 1 character
+    "Shares at least 1 character"
     CHARACTER
-    #Version 2 only.
+    "Version 2 only."
     COMPILATION
-    #Version 2 only.
+    "Version 2 only."
     CONTAINS
-    #Other
+    "Other"
     OTHER
-    #The media a side story is from
+    "The media a side story is from"
     PARENT
-    #Released before the relation
+    "Released before the relation"
     PREQUEL
-    #Released after the relation
+    "Released after the relation"
     SEQUEL
-    #A side story of the parent media
+    "A side story of the parent media"
     SIDE_STORY
-    #Version 2 only. The source material the media was adapted from
+    "Version 2 only. The source material the media was adapted from"
     SOURCE
-    #An alternative version of the media with a different primary focus
+    "An alternative version of the media with a different primary focus"
     SPIN_OFF
-    #A shortened and summarized version
+    "A shortened and summarized version"
     SUMMARY
 }
 
 enum MediaSeason {
-    #Months September to November
+    "Months September to November"
     FALL
-    #Months March to May
+    "Months March to May"
     SPRING
-    #Months June to August
+    "Months June to August"
     SUMMER
-    #Months December to February
+    "Months December to February"
     WINTER
 }
 
@@ -4013,35 +4127,37 @@ enum MediaSort {
 
 "Source type the media was adapted from"
 enum MediaSource {
-    #Version 2 only. Japanese Anime
+    "Version 2 only. Japanese Anime"
     ANIME
-    #Version 2 only. Self-published works
+    "Version 2 only. Self-published works"
     DOUJINSHI
-    #Written work published in volumes
+    "Written work published in volumes"
     LIGHT_NOVEL
-    #Asian comic book
+    "Asian comic book"
     MANGA
-    #Version 2 only. Written works not published in volumes
+    "Version 2 only. Written works not published in volumes"
     NOVEL
-    #An original production not based of another work
+    "An original production not based of another work"
     ORIGINAL
-    #Other
+    "Other"
     OTHER
-    #Video game
+    "Video game"
     VIDEO_GAME
-    #Video game driven primary by text and narrative
+    "Video game driven primary by text and narrative"
     VISUAL_NOVEL
 }
 
 "The current releasing status of the media"
 enum MediaStatus {
-    #Ended before the work could be finished
+    "Ended before the work could be finished"
     CANCELLED
-    #Has completed and is no longer being released
+    "Has completed and is no longer being released"
     FINISHED
-    #To be released at a later date
+    "Version 2 only. Is currently paused from releasing and will resume at a later date"
+    HIATUS
+    "To be released at a later date"
     NOT_YET_RELEASED
-    #Currently releasing
+    "Currently releasing"
     RELEASING
 }
 
@@ -4065,9 +4181,9 @@ enum MediaTrendSort {
 
 "Media type enum, anime or manga."
 enum MediaType {
-    #Japanese Anime
+    "Japanese Anime"
     ANIME
-    #Asian comic
+    "Asian comic"
     MANGA
 }
 
@@ -4084,33 +4200,33 @@ enum ModActionType {
 
 "Notification type enum"
 enum NotificationType {
-    #A user has liked your activity
+    "A user has liked your activity"
     ACTIVITY_LIKE
-    #A user has mentioned you in their activity
+    "A user has mentioned you in their activity"
     ACTIVITY_MENTION
-    #A user has sent you message
+    "A user has sent you message"
     ACTIVITY_MESSAGE
-    #A user has replied to your activity
+    "A user has replied to your activity"
     ACTIVITY_REPLY
-    #A user has liked your activity reply
+    "A user has liked your activity reply"
     ACTIVITY_REPLY_LIKE
-    #A user has replied to activity you have also replied to
+    "A user has replied to activity you have also replied to"
     ACTIVITY_REPLY_SUBSCRIBED
-    #An anime you are currently watching has aired
+    "An anime you are currently watching has aired"
     AIRING
-    #A user has followed you
+    "A user has followed you"
     FOLLOWING
-    #A new anime or manga has been added to the site where its related media is on the user's list
+    "A new anime or manga has been added to the site where its related media is on the user's list"
     RELATED_MEDIA_ADDITION
-    #A user has liked your forum comment
+    "A user has liked your forum comment"
     THREAD_COMMENT_LIKE
-    #A user has mentioned you in a forum comment
+    "A user has mentioned you in a forum comment"
     THREAD_COMMENT_MENTION
-    #A user has replied to your forum comment
+    "A user has replied to your forum comment"
     THREAD_COMMENT_REPLY
-    #A user has liked your forum thread
+    "A user has liked your forum thread"
     THREAD_LIKE
-    #A user has commented in one of your subscribed forum threads
+    "A user has commented in one of your subscribed forum threads"
     THREAD_SUBSCRIBED
 }
 
@@ -4158,15 +4274,15 @@ enum RevisionHistoryAction {
 
 "Media list scoring type"
 enum ScoreFormat {
-    #An integer from 0-10
+    "An integer from 0-10"
     POINT_10
-    #An integer from 0-100
+    "An integer from 0-100"
     POINT_100
-    #A float from 0-10 with 1 decimal place
+    "A float from 0-10 with 1 decimal place"
     POINT_10_DECIMAL
-    #An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :)
+    "An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :)"
     POINT_3
-    #An integer from 0-5. Should be represented in Stars
+    "An integer from 0-5. Should be represented in Stars"
     POINT_5
 }
 
@@ -4182,25 +4298,25 @@ enum SiteTrendSort {
 
 "The primary language of the voice actor"
 enum StaffLanguage {
-    #English
+    "English"
     ENGLISH
-    #French
+    "French"
     FRENCH
-    #German
+    "German"
     GERMAN
-    #Hebrew
+    "Hebrew"
     HEBREW
-    #Hungarian
+    "Hungarian"
     HUNGARIAN
-    #Italian
+    "Italian"
     ITALIAN
-    #Japanese
+    "Japanese"
     JAPANESE
-    #Korean
+    "Korean"
     KOREAN
-    #Portuguese
+    "Portuguese"
     PORTUGUESE
-    #Spanish
+    "Spanish"
     SPANISH
 }
 
@@ -4212,6 +4328,8 @@ enum StaffSort {
     ID_DESC
     LANGUAGE
     LANGUAGE_DESC
+    "Order manually decided by moderators"
+    RELEVANCE
     ROLE
     ROLE_DESC
     SEARCH_MATCH
@@ -4226,6 +4344,12 @@ enum StudioSort {
     NAME
     NAME_DESC
     SEARCH_MATCH
+}
+
+"Submission sort enums"
+enum SubmissionSort {
+    ID
+    ID_DESC
 }
 
 "Submission status"
@@ -4289,17 +4413,17 @@ enum UserStatisticsSort {
 
 "The language the user wants to see media titles in"
 enum UserTitleLanguage {
-    #The official english title
+    "The official english title"
     ENGLISH
-    #The official english title, stylised by media creator
+    "The official english title, stylised by media creator"
     ENGLISH_STYLISED
-    #Official title in it's native language
+    "Official title in it's native language"
     NATIVE
-    #Official title in it's native language, stylised by media creator
+    "Official title in it's native language, stylised by media creator"
     NATIVE_STYLISED
-    #The romanization of the native language title
+    "The romanization of the native language title"
     ROMAJI
-    #The romanization of the native language title, stylised by media creator
+    "The romanization of the native language title, stylised by media creator"
     ROMAJI_STYLISED
 }
 
@@ -4318,10 +4442,14 @@ input AniChartHighlightInput {
 input CharacterNameInput {
     "Other names the character might be referred by"
     alternative: [String]
+    "Other names the character might be referred to as but are spoilers"
+    alternativeSpoiler: [String]
     "The character's given name"
     first: String
     "The character's surname"
     last: String
+    "The character's middle name"
+    middle: String
     "The character's full name in their native language"
     native: String
 }
@@ -4388,6 +4516,8 @@ input StaffNameInput {
     first: String
     "The person's surname"
     last: String
+    "The person's middle name"
+    middle: String
     "The person's full name in their native language"
     native: String
 }

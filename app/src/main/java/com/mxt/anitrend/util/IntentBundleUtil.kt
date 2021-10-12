@@ -53,9 +53,12 @@ class IntentBundleUtil(private val intent: Intent) {
                 KeyUtil.DEEP_LINK_USER -> when {
                     TextUtils.isDigitsOnly(lastKey) -> intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
                     else -> {
-                        if (lastKey?.contains("/") == true)
-                            lastKey = lastKey.replace("/", "")
-                        intent.putExtra(KeyUtil.arg_userName, lastKey)
+                        val keys = lastKey?.split("/", limit = 2)
+                        intent.putExtra(KeyUtil.arg_userName, keys?.getOrNull(0))
+                        when (keys?.getOrNull(1)?.lowercase()) {
+                            "animelist" -> intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                            "mangalist" -> intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                        }
                     }
                 }
                 KeyUtil.DEEP_LINK_MANGA -> {

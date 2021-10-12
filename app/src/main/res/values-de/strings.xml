@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="nav_header_discover">"Entdecken"</string>
+    <string name="nav_header_manage">"Verwalten"</string>
+    <string name="nav_header_customization">"Anpassung"</string>
+    <string name="nav_header_support">"Hilfe"</string>
+    <string name="nav_contact">"Kontakt"</string>
+    <string name="nav_about">"Über"</string>
+    <string name="action_search">"Suche"</string>
 
+    <!-- References another string resource -->
     <string name="action_filter">@string/drawer_title_filter</string>
-    <string name="action_help">Help</string>
+    <string name="action_help">"Hilfe"</string>
+    <string name="action_mode_selected">"Ausgewählt: %d"</string>
+    <string name="navigation_drawer_open">"Seitenleiste geöffnet"</string>
+    <string name="navigation_drawer_close">"Seitenleiste geschlossen"</string>
+    <string name="nav_home">"Start"</string>
+    <string name="nav_history">"Verlauf"</string>
 
-    <string name="action_mode_selected">Selected: %d</string>
-
-
-    <!--
-        Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
+    <!-- Important please do not change the order of the string-arrays or generally anything unless it's text you're translating
 
         What You'll Need:
 
         1. A good text editor I recommend Atom (https://atom.io/), Sublime (https://www.sublimetext.com/), Brackets (http://brackets.io/) if you want to use something else no problem
-        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information https://www.w3schools.mediaTagstags/
+        2. A little knowledge on basic HTML things like <p> <b> <i> <br/> since there are certain parts I used a bit of html to format information https://www.w3schools.com/tags/
         3. Know what character escaping is, because you cannot use characters like ' or , or ; or & or $ or % e.t.c without escaping them. e.g.
            What\'s Trending should become What\'s Trending (Refer to http://www.ascii.cl/htmlcodes.htm look at the HTML Name Column for some conventions) not what i am looking for?
-           Contact me on the AniTrend Discord server (https://discord.gg/nqsFGgX) under the #translators channel
+           Contact me on the AniTrend Discord server (https://discord.gg/2wzTqnF) under the #translators channel
 
         Just a quick note for translators, if you see some text that has %s or %d or %f just leave those as they are those are place holders:
         %s - is a place holder for text most likely coming from AniList, e.g. %s liked your status post -> will be wax911 or Josh liked your status post
@@ -25,7 +34,7 @@
 
         I know different languages have different rules like RTL so if you need to change the positions/order of %s or %d or %f you can still do so just don't remove the % sign
 
-        N.B. If any of mediaTagstags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
+        N.B. If any of the tags <string name="abc" translatable="false" ></string> have an attribute labeled translatable="false" it means you should not translate it!
         So you can just omit those fields
 
         Special Cases:
@@ -38,941 +47,592 @@
 
         You may just upload the files in #translators and the file name should be something like strings_en.xml for english and strings_fr.xml for french respective of your locale
 
-        To All Translators I am very grateful for your help! :)
-    -->
-
-    <string name="text_popularity"> Beliebtheit: %d</string>
-
-    <string name="app_description">
-        <![CDATA[
+        To All Translators I am very grateful for your help! :) -->
+    <string name="text_popularity">"Beliebtheit: %d"</string>
+    <string name="app_description"><![CDATA[
         AniTrend ist ein AniList Android Client, welcher dir hilft, deine Manga und Anime Listen von deinem mobilen Endgerät aus zu verwalten.
         AniTrend bietet dir viele Features, die es dir einfach machen, neue Anime oder Manga zu entdecken, alles zusammen auf einer übersichtlichen Oberfläche.\n\n
         Die meisten Features für die Anime und Manga Verwaltung wurden bereits in AniTrend implementiert, um dein Erlebnis zu verbessern!
-        ]]>
-    </string>
+        ]]></string>
+    <string name="Yes">"Ja"</string>
+    <string name="No">"Nein"</string>
+    <string name="Ok">"Okay"</string>
+    <string name="Loading">"Lädt"</string>
+    <string name="Sending">"Sendet"</string>
+    <string name="Dismiss">"Verwerfen"</string>
+    <string name="Cancel">"Abbrechen"</string>
+    <string name="Close">"Schließen"</string>
+    <string name="Apply">"Ausführen"</string>
+    <string name="Reset">"Zurücksetzen"</string>
+    <string name="Add">"Hinzufügen"</string>
+    <string name="Delete">"Löschen"</string>
+    <string name="Update">"Aktualisieren"</string>
+    <string name="Go_Back">"Zurück"</string>
+    <string name="Retry">"Wiederholen"</string>
+    <string name="Watch">"Anschauen"</string>
 
-    <string name="Yes">Ja</string>
-    <string name="No">Nein</string>
-    <string name="Ok">Okay</string>
+    <!-- Try to keep all titles short and do not change the order of the <item> tags
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+First time usage intro screen -->
+    <string name="get_started">"Los geht's"</string>
 
-    <string name="Loading">Lädt</string>
-    <string name="Sending">Sendet</string>
+    <!-- Try to keep all titles short and do not change the order of the <item> tags
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+Try to keep all titles short
+First time usage intro screen -->
+    <string name="app_intro_colors_title">"Bedeutung der Farben"</string>
+    <string name="app_intro_colors_text">"Farben zeigen den Anime/Manga Status!"</string>
+    <string name="app_intro_content_title">"Inhalt"</string>
+    <string name="app_intro_content_text">"Mehrere Anime &amp; Manga Listen!"</string>
+    <string name="app_intro_search_title">"Suche"</string>
+    <string name="app_intro_search_text">"Anime, Manga &amp; Weitere Suchfunktionen!"</string>
+    <string name="app_intro_videos_title">"Videos"</string>
+    <string name="app_intro_videos_text">"Verwendet den eingebauten Youtube Video Player!"</string>
+    <string name="app_greeting">"Wilkommen bei AniTrend! Dies ist keine Streaming App!"</string>
 
-    <string name="Dismiss">Verwerfen</string>
-    <string name="Cancel">Abbrechen</string>
+    <!-- Filter menu entry these are the dialog titles -->
+    <string name="app_filter_sort">"Sortieren nach?"</string>
+    <string name="app_filter_order">"Reihenfolge?"</string>
+    <string name="app_filter_genres">"Serien Genres?"</string>
+    <string name="app_filter_show_type">"Serien Typ?"</string>
+    <string name="app_filter_year">"Serien Jahr"</string>
+    <string name="app_filter_status">"Serien Status?"</string>
 
-    <string name="Close">Schließen</string>
-    <string name="Apply">Ausführen</string>
-    <string name="Reset">Zurücksetzen</string>
-
-    <string name="Add">Hinzufügen</string>
-    <string name="Delete">Löschen</string>
-    <string name="Update">Aktualisieren</string>
-
-    <string name="Go_Back">Zurück</string>
-
-    <string name="follow">Folgen</string>
-
-    <string name="Retry">Wiederholen</string>
-
-    <string name="Watch">Schauen</string>
-
-    <!--Try to keep all titles short and do not change the order of the <itmediaTagstags-->
-    <string-array name="feed_titles">
-        <item>Verlauf</item>
-        <item>Status</item>
-        <item>Öffentlich</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="seasons_titles">
-        <item>Winter</item>
-        <item>Frühling</item>
-        <item>Sommer</item>
-        <item>Herbst</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="trending_title">
-        <item>Momentan Beliebt</item>
-        <item>Kürzlich Hinzugefügt</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="airing_title">
-        <item>Laufende Anime</item>
-        <item>Neueste Folgen</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="manga_title">
-        <item>Manga Liste</item>
-        <item>Kürzlich Hinzugefügt</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles_auth">
-        <item>Anime</item>
-        <item>Manga</item>
-        <item>Studio</item>
-        <item>Staff</item>
-        <item>Characters</item>
-        <item>Benutzer</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="search_titles">
-        <item>Anime</item>
-        <item>Manga</item>
-        <item>Studio</item>
-        <item>Staff</item>
-        <item>Characters</item>
-    </string-array>
-
-    <!--First time usage intro screen-->
-    <string name="app_intro_colors_title">Bedeutung der Farben</string>
-    <string name="app_intro_colors_text">Farben zeigen den Anime/Manga Status!</string>
-    <string name="app_intro_content_title">Inhalt</string>
-    <string name="app_intro_content_text">Mehrere Anime &amp; Manga Listen!</string>
-    <string name="app_intro_search_title">Suche</string>
-    <string name="app_intro_search_text">Anime, Manga &amp; Weitere Suchfunktionen!</string>
-    <string name="app_intro_videos_text">Verwendet eingebauten Youtube Video Player!</string>
-    <string name="app_greeting">Wilkommen bei AniTrend, this is not a streaming app!</string>
-
-    <!--Filter menu entry these are the dialog titles-->
-    <string name="app_filter_sort">Sortieren nach?</string>
-    <string name="app_filter_order">Reihenfolge?</string>
-    <string name="app_filter_genres">Serien Genres?</string>
-    <string name="app_filter_show_type">Serien Typ?</string>
-    <string name="app_filter_year">Serien Jahr</string>
-    <string name="app_filter_status">Serien Status?</string>
-
-    <!--Splash Screen-->
-    <string name="app_splash_api_unavailable">Keine Verbindung :( Herunterziehen, um es erneut zu versuchen!</string>
-    <string name="app_splash_authentication_failed">Login fehlgeschlagen. Herunterziehen, um es erneut zu versuchen!</string>
-    <string name="app_splash_authenticating">Authentifizieren..</string>
-    <string name="app_splash_fetching">Frage nach weiteren Daten..</string>
-    <string name="app_splash_profile">Frage nach Profildaten..</string>
-    <string name="app_splash_loading">Anwendung wird initialisiert..</string>
-
-    <string name="app_splash_authenticating_message">
-        <![CDATA[
+    <!-- Splash Screen -->
+    <string name="app_splash_api_unavailable">"Keine Verbindung :( Herunterziehen, um es erneut zu versuchen!"</string>
+    <string name="app_splash_authentication_failed">"Login fehlgeschlagen. Herunterziehen, um es erneut zu versuchen!"</string>
+    <string name="app_splash_authenticating">"Authentifizieren.."</string>
+    <string name="app_splash_fetching">"Warte auf Daten.."</string>
+    <string name="app_splash_profile">"Warte auf Profildaten.."</string>
+    <string name="app_splash_loading">"Anwendung wird initialisiert.."</string>
+    <string name="app_splash_authenticating_message"><![CDATA[
         <p>
         <b>AniTrend</b> scheiterte mehr als einmal bei dem Versuch, sich zu authentifizieren! Bitte überprüfe deine Internetverbindung und
         ob die <a href=\"https://anilist.co\"><b>AniList Webseite</b></a> erreichbar ist, bevor du JA tippst!
         </p>
 
         Sollte die Website erreichbar sein, versuche bitte, dich bei <b>AniTrend</b> aus- und wieder einzuloggen. Möchtest du jetzt ausgeloggt werden?
-        ]]>
-    </string>
+        ]]></string>
 
-    <!--Do not Translate, native anilist strings-->
-    <string-array name="order_by_types">
-        <item>Ascending</item>
-        <item>Descending</item>
-    </string-array>
-
-    <!--You can translate this just try to keep the meaning consistent :)-->
-    <string name="campaign_link">
-        <![CDATA[
+    <!-- Do not Translate, native anilist strings
+You can translate this just try to keep the meaning consistent :) -->
+    <string name="campaign_link"><![CDATA[
         Behalte alle deine Anime & Manga im Blick mit AniTrend\n\n
         Hol sie dir im Play Store:\n
         https://play.google.com/store/apps/details?id=com.mxt.anitrend
-        ]]>
-    </string>
+        ]]></string>
 
-    <!--N.B. When using CDATA a new line can either be /n or </p> or </br>
-    Indentation will not affect how the text appears it just makes it easier for me and others to read the text-->
-    <string name="login_message">
-        <![CDATA[
+    <!-- N.B. When using CDATA a new line can either be /n or </p> or </br>
+    Indentation will not affect how the text appears it just makes it easier for me and others to read the text -->
+    <string name="login_message"><![CDATA[
         <p>Du erreichst weitere Optionen, wie zum Beispiel das Editieren, Hinzufügen &
         Entfernen von Anime oder Manga aus deinen Listen, indem du den jeweiligen Eintrag gedrückt hälst.</p>
 
         Ebenso kannst du Anime & Manga zu deinen Favoriten hinzufügen oder entfernen, indem du auf das Herz tippst.
-        ]]>
-    </string>
-
-    <string name="app_intro_guide">
-        <![CDATA[
+        ]]></string>
+    <string name="app_intro_guide"><![CDATA[
         <p>Du kannst dir die Details zu jedem der oben aufgeführten Einträge ansehen, indem du einfach auf das Bild oder die Karte tippst.
         Du kannst dich außerdem mit deinem AniList Account anmelden, um noch mehr Features verwenden zu können!</p>
 
         Wenn du noch keinen AniList Account hast, kannst du dich direkt vom Login Bildschirm aus registrieren!
-        ]]>
-    </string>
-    <string name="app_intro_title">Wie funktioniert..?</string>
+        ]]></string>
+    <string name="app_intro_title">"Wie funktioniert das?"</string>
+    <string name="login_welcome_title">"Wilkommen %s"</string>
+    <string name="login_welcome_text">"Erfolgreich angemeldet"</string>
 
-    <string name="login_welcome_title">Wilkommen %s</string>
+    <!-- Anything with drawer_title is the titles for the navigation drawer -->
+    <string name="drawer_title_home">"Übersicht"</string>
 
-    <string name="login_welcome_text">Erfolgreich angemeldet</string>
+    <!-- Anything with drawer_title is the titles for the navigation drawer -->
+    <string name="drawer_title_anime">"Anime entdecken"</string>
+    <string name="drawer_title_manga">"Manga entdecken"</string>
+    <string name="drawer_title_trending">"Was Ist Beliebt?"</string>
+    <string name="drawer_title_airing">"Laufende Anime"</string>
+    <string name="drawer_title_myanime">"Meine Anime Liste"</string>
+    <string name="drawer_title_mymanga">"Meine Manga Liste"</string>
+    <string name="drawer_title_reviews">"Serien Reviews"</string>
+    <string name="drawer_title_hub">"AniTrend Hub"</string>
+    <string name="drawer_section_configuration">"Einstellungen"</string>
+    <string name="drawer_title_filter">"Filter"</string>
+    <string name="drawer_section_account">"Benutzer"</string>
+    <string name="drawer_title_sign_in">"Einloggen"</string>
+    <string name="drawer_title_profile">"Profil"</string>
+    <string name="drawer_title_sign_out">"Ausloggen"</string>
+    <string name="drawer_section_extras">"Extras"</string>
+    <string name="drawer_title_share">"Teilen"</string>
+    <string name="drawer_title_update">"Aktualisieren"</string>
+    <string name="layout_empty_response">"Nichts zum Anzeigen gefunden"</string>
 
-    <!--Anything with drawer_title is the titles for the navigation drawer-->
-    <string name="drawer_title_home">Übersicht</string>
-    <string name="drawer_title_anime">Anime entdecken</string>
-    <string name="drawer_title_manga">Manga entdecken</string>
-    <string name="drawer_title_trending">Was Ist Beliebt?</string>
-    <string name="drawer_title_airing">Laufende Anime</string>
-    <string name="drawer_title_myanime">Meine Anime Liste</string>
-    <string name="drawer_title_mymanga">Meine Manga Liste</string>
-    <string name="drawer_title_reviews">Serien Reviews</string>
+    <!-- Application Tips -->
+    <string name="tip_options_text">"Von hier aus erreichst du die Einstellungen, kannst einen neuen Status verfassen, den Changelog lesen und weitere Hilfe erhalten.
 
-    <string name="drawer_section_configuration">Einstellungen</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_options_title">"Das Menü"</string>
+    <string name="tip_search_title">"Die Suchleiste"</string>
+    <string name="tip_search_message">"Suche hier nach verschiedensten Anime &amp; Manga mithilfe von Schlagwörtern.
 
-    <string name="drawer_section_account">Benutzer</string>
-    <string name="drawer_title_sign_in">Einloggen</string>
-    <string name="drawer_title_profile">Profil</string>
-    <string name="drawer_title_sign_out">Ausloggen</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_navigation_title">"Die Seitenleiste"</string>
+    <string name="tip_navigation_text">"Verwende die Seitenleiste, um auf unterschiedliche Inhalte in der App zuzugreifen.
 
-    <string name="drawer_title_share">Teilen</string>
-    <string name="drawer_title_update">Aktualisieren</string>
-    <string name="layout_empty_response">Nichts zum Anzeigen gefunden</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_series_options_message">"Favorisiere, füge Anime deiner Liste hinzu oder teile sie mit Freunden!
 
-    <!-- Application Tips-->
-    <string name="tip_options_text">Von hier aus erreichst du die Einstellungen, kannst einen neuen Status verfassen, den Changelog lesen und weitere Hilfe erhalten. \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_options_title">Das Menü</string>
-    <string name="tip_search_title">Die Suchleiste</string>
-    <string name="tip_search_message">Suche hier nach verschiedensten Anime &amp; Manga mithilfe von Schlagwörtern. \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_navigation_title">Die Seitenleiste</string>
-    <string name="tip_navigation_text">Verwende die Seitenleiste, um auf unterschiedliche Inhalte in der App zuzugreifen. \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_series_options_message">Favorisiere, füge Anime deiner Liste hinzu oder teile sie mit Freunden! \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_series_options_title">Serienoptionen</string>
-    <string name="tip_character_options_title">Favoriten</string>
-    <string name="tip_character_options_message">Füge den Charakter zu deinen Favoriten hinzu oder entferne ihn. \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_messages_title">Nachrichten</string>
-    <string name="tip_messages_text">Sieh dir all deine gesendeten und empfangenen Nachrichten an. \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_status_post_title">Schreibe eine Statusnachricht</string>
-    <string name="tip_status_post_text">Poste eine Statusnachricht an alle anderen AniList User. Was bewegt dich heute? \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_notifications_title">Benachrichtigungen</string>
-    <string name="tip_notifications_text">Schau dir alle Benachrichtigungen an einem gemeinsamen Ort an \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_more_actions_title">Mehr Aktionen</string>
-    <string name="tip_more_actions_text">Tippe hier für weitere Aktionen, z.B. um dir Likes anzusehen \n\nHier tippen, um fortzufahren</string>
-    <string name="tip_compose_message_title">Nachrichten verfassen</string>
-    <string name="tip_compose_message_text">Schreibe eine Nachricht an diesen Benutzer. \n\nHier tippen, um fortzufahren</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_series_options_title">"Serienoptionen"</string>
+    <string name="tip_character_options_title">"Favoriten"</string>
+    <string name="tip_character_options_message">"Füge den Charakter zu deinen Favoriten hinzu oder entferne ihn.
 
-    <!--Media attachments on the reply activity-->
-    <string name="attach_media">Medien einfügen</string>
-    <string name="attach_link_title">Web URL einfügen</string>
-    <string name="attach_link_text">Gib eine Web URL ein, z.B. https://anilist.co/forum/thread/2459/1</string>
-    <string name="attach_image_title">Bild URL einfügen</string>
-    <string name="attach_image_text">Gib eine Bild URL ein, z.B. https://media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif</string>
-    <string name="attach_youtube_title">Youtube ID einfügen</string>
-    <string name="attach_youtube_text">Gib eine Youtube ID von einem Video an, welches du teilen willst. Nimm als Beispiel https://www.youtube.com/watch?v=izdhszFZy-c oder https://youtu.be/izdhszFZy-c und benutze nur die ID: izdhszFZy-c</string>
-    <string name="attach_webm_title">Video URL einfügen</string>
-    <string name="attach_webm_text">Gib einen Link zu einer Videodatei an, z.B. http://dl1.webmfiles.org/big-buck-bunny_trailer.webm</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_messages_title">"Nachrichten"</string>
+    <string name="tip_messages_text">"Sieh dir all deine gesendeten und empfangenen Nachrichten an.
 
-    <!--Activity / Screen Names-->
-    <string name="title_activity_notification">Benachrichtigungen</string>
-    <string name="title_activity_message">Nachrichten</string>
-    <string name="title_activity_user_list_view">Liste des Benutzers</string>
-    <string name="title_activity_settings">Einstellungen</string>
-    <string name="title_activity_reply">Antwort verfassen</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_status_post_title">"Schreibe eine Statusnachricht"</string>
+    <string name="tip_status_post_text">"Poste eine Statusnachricht an alle anderen AniList User. Was bewegt dich heute?
 
-    <string name="notification_default">Undefinierte Activity</string>
-    <string name="notification_series">Neue Episode</string>
-    <string name="notification_user_follow_activity">Neuer Follower</string>
-    <string name="notification_user_like_forum">Like im Forum</string>
-    <string name="notification_user_like_activity">Like eines Status</string>
-    <string name="notification_user_comment_forum">Kommentar im Forum</string>
-    <string name="notification_user_reply_forum">Antwort im Forum</string>
-    <string name="notification_user_reply_activity">Kommentar zum Status</string>
-    <string name="notification_user_activity_message">Direktnachricht</string>
-    <string name="notification_user_activity_mention">Erwähnung</string>
-    <string name="notification_user_like_comment">Like eines Kommentars</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_notifications_title">"Benachrichtigungen"</string>
+    <string name="tip_notifications_text">"Schau dir alle Benachrichtigungen an einem gemeinsamen Ort an
 
-    <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
-    <string name="notification_episode" formatted="false">Episode %s von %s ist gerade erschienen!</string>
-    <string name="notification_episode_short" formatted="false">Neu: EP %s von %s!</string>
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_more_actions_title">"Mehr Aktionen"</string>
+    <string name="tip_more_actions_text">"Tippe hier für weitere Aktionen, z.B. um dir Likes anzusehen
 
+Hier tippen, um fortzufahren"</string>
+    <string name="tip_compose_message_title">"Nachrichten verfassen"</string>
+    <string name="tip_compose_message_text">"Schreibe eine Nachricht an diesen Benutzer.
+
+Hier tippen, um fortzufahren"</string>
+
+    <!-- Media attachments on the reply activity -->
+    <string name="attach_media">"Medien einfügen"</string>
+    <string name="attach_link_title">"Web URL einfügen"</string>
+    <string name="attach_link_text">"Gib eine Web URL ein, z.B. https://anilist.co/forum/thread/2459/1"</string>
+    <string name="attach_image_title">"Bild URL einfügen"</string>
+    <string name="attach_image_text">"Gib eine Bild URL ein, z.B. https://media.giphy.com/media/l41YxdIcDU58r5CDK/giphy.gif"</string>
+    <string name="attach_youtube_title">"Youtube ID einfügen"</string>
+    <string name="attach_youtube_text">"Gib eine Youtube ID von einem Video an, welches du teilen willst. Nimm als Beispiel https://www.youtube.com/watch?v=izdhszFZy-c oder https://youtu.be/izdhszFZy-c und benutze nur die ID: izdhszFZy-c"</string>
+    <string name="attach_webm_title">"Video URL einfügen"</string>
+    <string name="attach_webm_text">"Gib einen Link zu einer Videodatei an, z.B. http://dl1.webmfiles.org/big-buck-bunny_trailer.webm"</string>
+
+    <!-- Activity / Screen Names -->
+    <string name="title_activity_notification">"Benachrichtigungen"</string>
+    <string name="title_activity_message">"Nachrichten"</string>
+    <string name="title_activity_user_list_view">"Liste des Benutzers"</string>
+    <string name="title_activity_studio">"Studio"</string>
+    <string name="title_activity_settings">"Einstellungen"</string>
+    <string name="title_activity_reply">"Antwort verfassen"</string>
+    <string name="notification_default">"Undefinierte Activity"</string>
+    <string name="notification_series">"Neue Episode"</string>
+    <string name="notification_user_follow_activity">"Neuer Follower"</string>
+    <string name="notification_user_like_forum">"Like im Forum"</string>
+    <string name="notification_user_like_activity">"Like eines Status"</string>
+    <string name="notification_user_like_reply">"Like einer Antwort"</string>
+    <string name="notification_user_comment_forum">"Kommentar im Forum"</string>
+    <string name="notification_user_reply_forum">"Antwort im Forum"</string>
+    <string name="notification_user_reply_activity">"Kommentar zum Status"</string>
+    <string name="notification_user_activity_message">"Direktnachricht"</string>
+    <string name="notification_user_activity_mention">"Erwähnung"</string>
+    <string name="notification_user_like_comment">"Like eines Kommentars"</string>
+
+    <!-- This will become something like Episode 2 of One Piece has just aired! the title is set according to what the user has set on AniList -->
+    <string name="notification_episode" formatted="false">"Episode %s von %s ist gerade erschienen!"</string>
+    <string name="notification_episode_short" formatted="false">"Neu: EP %s von %s!"</string>
 
     <!-- Settings for Application -->
-    <string name="pref_header_general">Allgemein</string>
-    <string name="pref_header_general_summary">Verwalte das allgemeine Verhalten der App</string>
+    <string name="pref_header_general">"Allgemein"</string>
 
-    <string name="pref_title_startup_page">Startseite</string>
-
-    <string-array name="pref_titles_menu_entries">
-        <item>Übersicht</item>
-        <item>Anime entdecken</item>
-        <item>Manga entdecken</item>
-        <item>Was ist beliebt?</item>
-        <item>Laufende Anime</item>
-        <item>Meine Anime Liste</item>
-        <item>Meine Manga Liste</item>
-        <item>AniTrend Hub</item>
-        <item>Reviews</item>
-    </string-array>
-
-    <string-array name="pref_values_menu_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
+    <!-- Settings for Application -->
+    <string name="pref_header_general_summary">"Verwalte das allgemeine Verhalten der App"</string>
+    <string name="pref_title_startup_page">"Startseite"</string>
 
     <!-- Settings for update channel to use -->
-    <string name="pref_title_update_channel">Update Channel</string>
+    <string name="pref_title_update_channel">"Update Kanal"</string>
 
-    <string-array name="pref_titles_channel_entries">
-        <item>Stable</item>
-        <item>Beta (Experimental)</item>
-    </string-array>
+    <!-- Do Not Translate This
+Settings for Notifications -->
+    <string name="pref_header_notifications">"Benachrichtigungen"</string>
+    <string name="pref_header_notifications_summary">"Verwalte das Benachrichtigungsverhalten"</string>
+    <string name="pref_title_new_message_notifications">"Benachrichtigung bei neuen Nachrichten"</string>
 
-    <!-- Do Not Translate This -->
-    <string-array name="pref_values_channel_entries">
-        <item>master</item>
-        <item>develop</item>
-    </string-array>
+    <!-- Settings for Data & Sync &amp; is the html equivalent of & -->
+    <string name="pref_header_data_sync">"Daten &amp; Synchronisation"</string>
+    <string name="pref_header_data_sync_summary">"Wie oft soll nach neuen Nachrichten geschaut werden?"</string>
+    <string name="pref_title_sync_frequency">"Sync Intervall"</string>
+    <string name="pref_title_system_sync_settings">"Systemeinstellungen"</string>
 
-
-    <!-- Settings for Notifications -->
-    <string name="pref_header_notifications">Benachrichtigungen</string>
-    <string name="pref_header_notifications_summary">Verwalte das Benachrichtigungsverhalten</string>
-
-    <string name="pref_title_new_message_notifications">Benachrichtigung bei neuen Nachrichten</string>
-    <string name="pref_key_new_message_notifications">notifications_new_message</string>
-
-
-    <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
-    <string name="pref_header_data_sync">Daten &amp; Synchronisation</string>
-    <string name="pref_header_data_sync_summary">Wie oft soll nach neuen Nachrichten geschaut werden?</string>
-
-    <string name="pref_title_sync_frequency">Sync Intervall</string>
-
-    <string name="pref_title_system_sync_settings">Systemeinstellungen</string>
-
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 Minuten</item>
-        <item>30 Minuten</item>
-        <item>1 Stunde</item>
-        <item>3 Stunden</item>
-        <item>6 Stunden</item>
-    </string-array>
-
-    <!--These are the actual value of the titles above, obviously no translation required here-->
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-    </string-array>
-
-    <!--Another lmessageBasesage using a bit of html thmediaTagstags represent new paragraphs-->
-
-    <string name="create_account">Möchtest du ein neues Konto anlegen?</string>
-
-    <string name="dialog_confirm_delete">Löschen bestätigen!</string>
-    <string name="dialog_delete_message">Bist du sicher, dass du mit dem Löschen fortfahren willst? Dieser Vorgang kann nicht rückgängig gemacht werden!</string>
-
-    <string name="title_bottom_sheet_likes">Gesamte Likes: %d</string>
-
-    <string name="dialog_unfollow_message">Möchtest du diesem User wirklich nicht mehr folgen?</string>
-
-    <string name="info_login_req">Logge dich ein um hierauf zuzugreifen!</string>
-    <string name="button_try_again">Erneut versuchen</string>
-
-    <string name="dialog_add_title">
-        <![CDATA[
+    <!-- These are the actual value of the titles above, obviously no translation required here
+Another message using a bit of html the p tags represent new paragraphs -->
+    <string name="create_account">"Möchtest du ein neues Konto anlegen?"</string>
+    <string name="dialog_confirm_delete">"Löschen bestätigen!"</string>
+    <string name="dialog_delete_message">"Bist du sicher, dass du mit dem Löschen fortfahren willst? Dieser Vorgang kann nicht rückgängig gemacht werden!"</string>
+    <string name="title_bottom_sheet_likes">"Gesamte Likes: %d"</string>
+    <string name="dialog_unfollow_message">"Möchtest du diesem User wirklich nicht mehr folgen?"</string>
+    <string name="info_login_req">"Logge dich ein um hierauf zuzugreifen!"</string>
+    <string name="button_try_again">"Erneut versuchen"</string>
+    <string name="dialog_add_title"><![CDATA[
         <small>Hinzufügen: %s</small>
-        ]]>
-    </string>
-
-    <string name="dialog_edit_title">
-        <![CDATA[
+        ]]></string>
+    <string name="dialog_edit_title"><![CDATA[
         <small>Bearbeiten: %s</small>
-        ]]>
-    </string>
-
-    <string name="title_view_likes">Likes anschauen</string>
-    <string name="input_empty_warning">Die Eingabe darf nicht leer sein!</string>
-    <string name="completed_success">Erfolgreich ausgeführt</string>
-
-    <string name="drawer_update_title">AniTrend aktualisieren?</string>
-
-    <string name="drawer_update_text">
-        <![CDATA[
+        ]]></string>
+    <string name="title_view_likes">"Likes anschauen"</string>
+    <string name="input_empty_warning">"Die Eingabe darf nicht leer sein!"</string>
+    <string name="completed_success">"Erfolgreich ausgeführt"</string>
+    <string name="drawer_update_title">"AniTrend aktualisieren?"</string>
+    <string name="drawer_update_text"><![CDATA[
         Überprüft, ob du die neueste Version der App installiert hast. Falls nicht, wird sie von der <b><a href=\"https://github.com/AniTrend/anitrend-app/releases\">AniTrend Repo</a></b> heruntergeladen.<br/><br/>
         Falls du diese App aus dem <b><a href=\"https://play.google.com/store/apps/details?id=com.mxt.anitrend\">Play Store</a></b> geladen hast
         dann benötigst du diese Funktion nicht, deine App wird automatisch aktualisiert. Möchtest du trotzdem nach neuen Updates suchen und sie installieren?
-        ]]>
-    </string>
-
-    <string name="drawer_signout_title">Logout bestätigen!</string>
-    <string name="drawer_signout_text">Bist du sicher, dass du dich ausloggen willst? Du müsstest dich dann beim nächsten Mal erneut einloggen.</string>
-    <string name="login_title">Los gehts!</string>
-
-    <string name="login_error_title">Unerwarteter Zustand!</string>
-
-    <string name="login_error_text">
-        <![CDATA[
+        ]]></string>
+    <string name="drawer_signout_title">"Logout bestätigen!"</string>
+    <string name="drawer_signout_text">"Bist du sicher, dass du dich ausloggen willst? Du müsstest dich dann beim nächsten Mal erneut einloggen."</string>
+    <string name="login_title">"Los geht's!"</string>
+    <string name="login_error_title">"Unerwarteter Zustand!"</string>
+    <string name="login_error_text"><![CDATA[
         <p>Es scheint so als wäre die App in einem unerwarteten Zustand fortgeführt worden. Das kann bei weniger performanten Geräten (mit weniger als 1GB Arbeitsspeicher) passieren.</p>
 
         Die App wird nun versuchen, sich neuzustarten, versuche danach bitte, dich erneut einzuloggen. Falls das Problem bestehen bleibt, kannst du gerne auf der
         <a href=\"https://anilist.co/forum/thread/2081\">AniTrend Foren Seite</a> vorbeischauen, um weitere Hilfe zu erhalten.
-        ]]>
-    </string>
-
-    <string name="app_update">Neu: v%s</string>
-
-    <string name="app_no_date">Du besitzt bereits die neueste Version von AniTrend!</string>
-
-    <string name="title_permission_write">Berechtigung erforderlich</string>
-
-    <string name="text_permission_write">AniTrend benötigt die Erlaubnis, Dateien in das Downloadverzeichnis zu speichern. Fortfahren?</string>
-
-    <string name="init_youtube_missing">Um sich Trailer anzuschauen, benötigst du die YouTube App!</string>
-
-    <string name="text_confirm_exit">Tippe erneut, um die App zu beenden</string>
-
-    <string name="text_filter_applying">Änderungen anwenden..</string>
-
-    <string name="text_filter_restriction">Filter sind auf dieser Seite nicht verfügbar</string>
-
-    <string name="text_quality_changed">Qualität der Liste wurde verändert!</string>
-
-    <string name="text_review_changed">Reviewtyp wurde verändert!</string>
-
-    <string name="text_auth_unknown">Unerwarteter Zustand der App, bitte versuche die App neuzustarten!</string>
-
-
-    <string name="title_bottom_sheet_followers">Follower: %d</string>
-    <string name="title_bottom_sheet_following">Folgt: %d</string>
-
-    <string name="text_no_likes">Keine Likes zum Anzeigen</string>
-
-    <string name="text_user_anime_time">Hat insgesamt %s Anime geschaut</string>
-
-    <string name="text_user_manga_chapters">Hat insgesamt %s Manga Kapitel gelesen</string>
-
-    <string name="text_notification">%d Benachrichtigung</string>
-    <string name="text_notifications">%d Benachrichtigungen</string>
-
-    <string name="alerter_notification_title">Neue Benachrichtigungen</string>
-    <string name="alerter_notification_text">Du hast eine oder mehrere ungelesene Benachrichtigungen!</string>
-
-    <string name="title_new_features">Neue Features!</string>
-
-    <string name="text_new_features">
-        <![CDATA[
+        ]]></string>
+    <string name="app_update">"Neu: v%s"</string>
+    <string name="app_no_date">"Du besitzt bereits die neueste Version von AniTrend!"</string>
+    <string name="title_permission_write">"Berechtigung erforderlich"</string>
+    <string name="text_permission_write">"AniTrend benötigt die Erlaubnis, Dateien in das Downloadverzeichnis zu speichern. Fortfahren?"</string>
+    <string name="init_youtube_missing">"Um sich Trailer anzuschauen, benötigst du die YouTube App!"</string>
+    <string name="text_confirm_exit">"Tippe erneut, um die App zu beenden"</string>
+    <string name="text_filter_applying">"Änderungen anwenden.."</string>
+    <string name="text_filter_restriction">"Filter sind auf dieser Seite nicht verfügbar"</string>
+    <string name="text_quality_changed">"Qualität der Liste wurde verändert!"</string>
+    <string name="text_review_changed">"Reviewtyp wurde verändert!"</string>
+    <string name="text_auth_unknown">"Unerwarteter Zustand der App, bitte versuche die App neuzustarten!"</string>
+    <string name="title_bottom_sheet_followers">"Follower: %d"</string>
+    <string name="title_bottom_sheet_following">"Folgt: %d"</string>
+    <string name="text_no_likes">"Keine Likes zum Anzeigen"</string>
+    <string name="text_user_anime_time">"Hat insgesamt %s Anime geschaut"</string>
+    <string name="text_user_manga_chapters">"Hat insgesamt %s Manga Kapitel gelesen"</string>
+    <string name="text_notification">"%d Benachrichtigung"</string>
+    <string name="text_notifications">"%d Benachrichtigungen"</string>
+    <string name="alerter_notification_title">"Neue Benachrichtigungen"</string>
+    <string name="alerter_notification_text">"Du hast eine oder mehrere ungelesene Benachrichtigungen!"</string>
+    <string name="title_new_features">"Neue Features!"</string>
+    <string name="text_new_features"><![CDATA[
         Die Listen der Follower und jenen, denen eine Person folgt kannst du dir ansehen, indem du auf die
         entsprechenden Texte unter der Beschreibung des Nutzer tippst.
         Genauso kannst du auch auf die Anime, Anime-Zeit und Manga Text tippen, um mehr Details zu erhalten!
-        ]]>
-     </string>
-
-    <string name="text_reply_action_feedback">Code hinzugefügt!</string>
-
-    <string name="busy_please_wait">Bitte warten!</string>
-
-    <string name="warning_empty_input">Eine leere Eingabe ist nicht erlaubt</string>
-
-    <string name="text_experimental_feature">Dies ist ein experimentelles Feature!</string>
-
-    <string name="text_premium_show">Zahlungspflichtige Show, kein Link verfügbar!</string>
-
-    <string name="text_link_unavailable">Der Link zu dieser Episode ist leider nicht verfügbar</string>
-    <string name="error_episode_fetch">Fehler %d ist aufgetreten</string>
-
-    <string name="waring_missing_episode_links">Diese Serie hat noch keine Crunchyroll Links</string>
-
-    <string name="text_play_video">Video abspielen</string>
-    <string name="text_multiple_images">Mehrere Bilder</string>
-    <string name="text_multiple_videos">Mehrere Videos</string>
-
-    <string name="text_insufficient_genres">Bislang zu wenige Genres verfügbar!</string>
-
-    <string name="text_checking_collection">Durchsuche deine Sammlung..</string>
-
-    <string name="text_processing_request">Anfrage wird bearbeitet..</string>
-    <string name="text_permission_required">AniTrend wurde keine Erlaubnis erteilt!</string>
-
-    <string name="text_read_more">Weiterlesen</string>
-
-    <string name="text_reviewed_by">Von: %s</string>
-
-    <string name="Help">Hilfe!</string>
-
-    <string name="Sync_Changes">Änderungen synchronisieren</string>
-
-    <string name="title_anitrend_help">AniTrend Hilfe</string>
-
-    <string name="text_waiting_for_response">Warte auf Antwort</string>
-
-    <string name="text_operation_unsuccessful">Die Operation war nicht erfolgreich!</string>
-
-    <string name="text_almost_finished">Fast fertig!</string>
-
-    <string name="canceled_by_user">Vom Benutzer abgebrochen!</string>
-
-    <string name="text_processing">Verarbeite..</string>
-
-    <string name="text_already_authenticated">Du bist bereits eingeloggt!</string>
-
-    <string name="text_please_sign_in">Bitte einloggen</string>
-
-    <string name="text_login_error">AniTrend konnte deine Logindaten nicht abrufen!</string>
-
-    <string name="text_search_empty">Die Suchanfrage darf nicht leer sein</string>
-
-    <string name="text_user_model">Unerwartetes Format der Userdaten</string>
-
-
-    <string name="text_signed_out">Ausgeloggt! E(104) Runterziehen, um neuzuladen</string>
-    <string name="text_unknown_error">Keine Information zu diesem Fehler verfübar, bitte erneut versuchen!</string>
-    <string name="text_error_auth_login">Etwas ist schiefgelaufen und die App konnte deine Anfrage nicht authorisieren</string>
-    <string name="text_error_capture_login">Die Antwort des Servers konnte nicht gespeichert werden! Bitte später erneut versuchen</string>
-    <string name="text_login_success_with_error">Login erfolgreich, aber deinem Account sind keine Anime oder Manga zugeteilt! AniTrend hat dich automatisch ausgeloggt, um einen Fehler zu vermeiden. Bitte füge deinem Account über die Webseite mindestens einen Anime oder Manga hinzu.</string>
-    <string name="text_error_login">Etwas lief schief beim Versuch, dich einzuloggen!</string>
-    <string name="text_login_canceled">Login erfolgreich, aber abgebrochen</string>
-
-    <string name="text_emoticons_scroll">Emoticons: Seitwärts scrollen</string>
-
-    <string name="text_post_information">Informationen zum Post</string>
-
-    <string name="text_sending_request">Sende Anfrage..</string>
-
-    <string name="text_activity_loading">Das Fenster lädt möglicherweise noch, oder es sind keine Daten vorhanden!</string>
-
-    <string name="text_removed_from_favourites">Von Favoriten entfernt</string>
-
-    <string name="text_add_to_favourites">Zu Favoriten hinzugefügt!</string>
-
-    <string name="text_feature_on_hold">Feature noch aus technischen Gründen nicht verfügbar!</string>
-
-    <string name="text_share_series" formatted="false">
-        <![CDATA[
+        ]]></string>
+    <string name="text_reply_action_feedback">"Code hinzugefügt!"</string>
+    <string name="busy_please_wait">"Bitte warten!"</string>
+    <string name="warning_empty_input">"Eine leere Eingabe ist nicht erlaubt"</string>
+    <string name="text_experimental_feature">"Dies ist ein experimentelles Feature!"</string>
+    <string name="text_premium_show">"Zahlungspflichtige Show, kein Link verfügbar!"</string>
+    <string name="text_link_unavailable">"Der Link zu dieser Episode ist leider nicht verfügbar"</string>
+    <string name="error_episode_fetch">"Fehler %d ist aufgetreten"</string>
+    <string name="waring_missing_episode_links">"Diese Serie hat noch keine Crunchyroll Links"</string>
+    <string name="text_play_video">"Video abspielen"</string>
+    <string name="text_multiple_images">"Mehrere Bilder"</string>
+    <string name="text_multiple_videos">"Mehrere Videos"</string>
+    <string name="text_insufficient_genres">"Bislang zu wenige Genres verfügbar!"</string>
+    <string name="text_checking_collection">"Durchsuche deine Sammlung.."</string>
+    <string name="text_processing_request">"Anfrage wird bearbeitet.."</string>
+    <string name="text_permission_required">"AniTrend wurde keine Erlaubnis erteilt!"</string>
+    <string name="text_read_more">"Weiterlesen"</string>
+    <string name="text_reviewed_by">"Von: %s"</string>
+    <string name="Help">"Hilfe!"</string>
+    <string name="Sync_Changes">"Änderungen synchronisieren"</string>
+    <string name="title_anitrend_help">"AniTrend Hilfe"</string>
+    <string name="text_waiting_for_response">"Warte auf Antwort"</string>
+    <string name="text_operation_unsuccessful">"Die Operation war nicht erfolgreich!"</string>
+    <string name="text_almost_finished">"Fast fertig!"</string>
+    <string name="canceled_by_user">"Vom Benutzer abgebrochen!"</string>
+    <string name="text_processing">"Verarbeite.."</string>
+    <string name="text_already_authenticated">"Du bist bereits eingeloggt!"</string>
+    <string name="text_please_sign_in">"Bitte einloggen"</string>
+    <string name="text_login_error">"AniTrend konnte deine Logindaten nicht abrufen!"</string>
+    <string name="text_search_empty">"Die Suchanfrage darf nicht leer sein"</string>
+    <string name="text_user_model">"Unerwartetes Format der Userdaten"</string>
+    <string name="text_signed_out">"Ausgeloggt! E(104) Runterziehen, um neuzuladen"</string>
+    <string name="text_unknown_error">"Keine Information zu diesem Fehler verfübar, bitte erneut versuchen!"</string>
+    <string name="text_error_auth_login">"Etwas ist schiefgelaufen und die App konnte deine Anfrage nicht authorisieren"</string>
+    <string name="text_error_capture_login">"Die Antwort des Servers konnte nicht gespeichert werden! Bitte später erneut versuchen"</string>
+    <string name="text_login_success_with_error">"Login erfolgreich, aber deinem Account sind keine Anime oder Manga zugeteilt! AniTrend hat dich automatisch ausgeloggt, um einen Fehler zu vermeiden. Bitte füge deinem Account über die Webseite mindestens einen Anime oder Manga hinzu."</string>
+    <string name="text_error_login">"Etwas lief schief beim Versuch, dich einzuloggen!"</string>
+    <string name="text_login_canceled">"Login erfolgreich, aber abgebrochen"</string>
+    <string name="text_emoticons_scroll">"Emoticons: Seitwärts scrollen"</string>
+    <string name="text_post_information">"Informationen zum Post"</string>
+    <string name="text_sending_request">"Sende Anfrage.."</string>
+    <string name="text_activity_loading">"Das Fenster lädt möglicherweise noch, oder es sind keine Daten vorhanden!"</string>
+    <string name="text_removed_from_favourites">"Von Favoriten entfernt"</string>
+    <string name="text_add_to_favourites">"Zu Favoriten hinzugefügt!"</string>
+    <string name="text_feature_on_hold">"Feature noch aus technischen Gründen nicht verfügbar!"</string>
+    <string name="text_share_series" formatted="false"><![CDATA[
             Schau dir diese Serie mal an: %s %s \n\n
             https://anilist.co/anime/%d \n\n
             Verfolge all deine Lieblingsanime und Manga mit AniTrend \n\n
             Hol sie dir im Play Store: \n
             %s
-        ]]>
-    </string>
+        ]]></string>
+    <string name="text_item_in_favourites">"Bereits favorisiert"</string>
+    <string name="text_item_not_in_favourites">"Noch nicht favorisiert"</string>
+    <string name="text_error_request">"Konnte Anfrage nicht erfolgreich verarbeiten"</string>
+    <string name="text_what_is_new">"Was gibt's Neues?"</string>
+    <string name="text_enter_text">"Hier einen Text verfassen"</string>
+    <string name="text_unable_set_text">"Konnte Text nicht setzen.."</string>
+    <string name="edit_status_title">"Status bearbeiten"</string>
+    <string name="edit_status_text">"Verändere deine zuletzt geschriebene Statusnachricht!"</string>
+    <string name="create_status_title">"Status verfassen"</string>
+    <string name="create_status_text">"Schreibe eine neue Statusnachricht. Was beschäftigt dich gerade?"</string>
+    <string name="text_changes_saved">"Änderungen gespeichert!"</string>
+    <string name="dialog_action_null">"Das zum DialogManager übergebene Item ist ungültig!"</string>
+    <string name="text_unable_to_increment_episodes">"Die Episodennummer kann nicht über die Episodenanzahl hinaus erhöht werden!"</string>
+    <string name="text_unable_to_increment_chapters">"Die Kapitelnummer kann nicht über die Kapitelanzahl hinaus erhöht werden!"</string>
+    <string name="title_anime_list">"Anime Liste des Users"</string>
+    <string name="title_manga_list">"Manga Liste des Users"</string>
+    <string name="title_favourites_list">"Favoriten des Users"</string>
+    <string name="text_anime_episodes">"%d Episoden"</string>
+    <string name="text_anime_length">"%d Minuten"</string>
+    <string name="text_anime_score">"%d%% Durchschnitt"</string>
+    <string name="text_message_to">"Schreibe eine Nachricht an %s"</string>
+    <string name="title_bottom_sheet_favourites">"Favoriten des Users"</string>
+    <string name="warning_anime_is_airing">"Anime läuft noch!"</string>
+    <string name="warning_anime_not_airing">"Anime wurde noch nicht ausgestrahlt!"</string>
+    <string name="warning_manga_publishing">"Manga wird noch veröffentlicht!"</string>
+    <string name="warning_manga_not_publishing">"Manga wurde noch nicht veröffentlicht!"</string>
+    <string name="text_update_check_failed">"Konnte nicht nach Updates suchen"</string>
+    <string name="text_downloading_update">"Downloade die neueste Version von AniTrend!"</string>
+    <string name="title_new_feature">"Neues Feature!"</string>
 
-    <string name="text_item_in_favourites">Bereits favorisiert</string>
-    <string name="text_item_not_in_favourites">Noch nicht favorisiert</string>
+    <!-- End of strings used in Antrend v0.9.9r7
+        All new strings will be appended after this line,
+        so it's easier for everyone to update thier respective translation files :)
+   
+Start of Menu labels -->
+    <string name="menu_title_notifications">"Benachrichtigungen"</string>
+    <string name="menu_title_messages">"Nachrichten"</string>
+    <string name="menu_title_create_status">"Status erstellen"</string>
+    <string name="menu_title_compose_message">"Nachricht verfassen"</string>
+    <string name="menu_title_sorting">"Sortierung"</string>
+    <string name="menu_title_order">"Reihenfolge"</string>
+    <string name="menu_title_genres">"Genres"</string>
+    <string name="menu_title_formats">"Typen"</string>
+    <string name="menu_title_year">"Jahr"</string>
+    <string name="menu_title_status">"Status"</string>
+    <string name="menu_title_new_activity_post">"Status verfassen"</string>
+    <string name="menu_title_changelog">"Neuerungen"</string>
+    <string name="menu_title_about">"Über die App"</string>
+    <string name="menu_title_help">"Hilfe"</string>
 
-    <string name="text_error_request">Konnte Anfrage nicht erfolgreich verarbeiten</string>
+    <!-- End of Menu labels
+Reply or comment page when you tap the attach icon -->
+    <string name="text_attach_link">"Link anfügen"</string>
+    <string name="text_attach_image">"Bild anfügen"</string>
+    <string name="text_youtube_link">"Youtube Video"</string>
+    <string name="text_webm_link">"WebM Video"</string>
 
-    <string name="text_what_is_new">Was gibt\'s Neues?</string>
-    <string name="text_enter_text">Hier einen Text verfassen</string>
-    <string name="text_unable_set_text">Konnte Text nicht setzen..</string>
-    <string name="edit_status_title">Status bearbeiten</string>
-    <string name="edit_status_text">Verändere deine zuletzt geschriebene Statusnachricht!</string>
-    <string name="create_status_title">Status verfassen</string>
-    <string name="create_status_text">Schreibe eine neue Statusnachricht. Was beschäftigt dich gerade?</string>
-    <string name="text_changes_saved">Änderungen gespeichert!</string>
+    <!-- Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons -->
+    <string name="series_favourite_this">"Zu den Favoriten hinzufügen"</string>
+    <string name="series_add_to_list">"Zur Liste hinzufügen"</string>
+    <string name="series_write_a_review">"Eine Review verfassen"</string>
+    <string name="series_share">"Teilen"</string>
 
-    <string name="dialog_action_null">Das zum DialogManager übergebene Item ist ungültig!</string>
+    <!-- Start of Dialog you use to add, remove or update anime or manga listings -->
+    <string name="dialog_title_status">"Status"</string>
+    <string name="dialog_title_episodes">"Episoden"</string>
+    <string name="dialog_title_rewatched">"Erneut geschaut"</string>
+    <string name="dialog_title_score">"Bewertung"</string>
+    <string name="dialog_title_private">"Privat"</string>
+    <string name="dialog_title_increment_episodes">"Episodenzahl erhöhen"</string>
+    <string name="dialog_hint_enter_your_notes">"Eine Notiz anfügen"</string>
+    <string name="dialog_title_volumes_read">"Bände gelesen"</string>
+    <string name="dialog_title_chapters_read">"Kapitel gelesen"</string>
+    <string name="dialog_title_reread">"Erneut gelesen"</string>
 
-    <string name="text_unable_to_increment_episodes">Die Episodennummer kann nicht über die Episodenanzahl hinaus erhöht werden!</string>
-    <string name="text_unable_to_increment_chapters">Die Kapitelnummer kann nicht über die Kapitelanzahl hinaus erhöht werden!</string>
+    <!-- More labels from profiles -->
+    <string name="text_top_genres">"Lieblings Genres:"</string>
+    <string name="text_tap_on_item_below_to_view_stats">"Auf das Icon tippen um Details zu sehen!"</string>
+    <string name="follow">"Folgen"</string>
+    <string name="following">"Folgt"</string>
+    <string name="followers">"Follower"</string>
+    <string name="favourites">"Favoriten"</string>
+    <string name="anime">"Anime"</string>
+    <string name="anime_time">"Anime Zeit"</string>
+    <string name="manga">"Manga"</string>
+    <string name="chapters">"Kapitel"</string>
 
-    <string name="title_anime_list">Anime Liste des Users</string>
-    <string name="title_manga_list">Manga Liste des Users</string>
-    <string name="title_favourites_list">Favoriten des Users</string>
-    <string name="text_anime_episodes">%d Episoden</string>
-    <string name="text_anime_length">%d Minuten</string>
-    <string name="text_anime_score">%d%% Durchschnitt</string>
-
-    <string name="text_message_to">Schreibe eine Nachricht an %s</string>
-    <string name="title_bottom_sheet_favourites">Favoriten des Users</string>
-    <string name="warning_anime_is_airing">Anime läuft bereits!</string>
-    <string name="warning_anime_not_airing">Anime wurde noch nicht ausgestrahlt!</string>
-    <string name="warning_manga_publishing">Manga wird noch veröffentlicht!</string>
-    <string name="warning_manga_not_publishing">Manga wurde noch nicht veröffentlicht!</string>
-
-    <string name="text_update_check_failed">Konnte nicht nach Updates suchen</string>
-    <string name="text_downloading_update">Downloade die neueste Version von AniTrend!</string>
-
-    <string name="title_new_feature">Neues Feature!</string>
-
-    <!--
-        End of strings used in Antrend v0.9.9r7
-        All new translation will be appended after this line,
-        so it's easier for everyone to add more strings :)
-    -->
-
-    <!--Start of Menu labels-->
-    <string name="menu_title_notifications">Benachrichtigungen</string>
-    <string name="menu_title_messages">Nachrichten</string>
-    <string name="menu_title_create_status">Status erstellen</string>
-    <string name="menu_title_compose_message">Nachricht verfassen</string>
-
-    <string name="menu_title_sorting">Sortierung</string>
-    <string name="menu_title_order">Reihenfolge</string>
-    <string name="menu_title_genres">Genres</string>
-    <string name="menu_title_formats">Typen</string>
-    <string name="menu_title_year">Jahr</string>
-    <string name="menu_title_status">Status</string>
-
-    <string name="menu_title_new_activity_post">Status verfassen</string>
-    <string name="menu_title_changelog">Neuerungen</string>
-    <string name="menu_title_about">Über die App</string>
-    <string name="menu_title_help">Hilfe</string>
-    <!--End of Menu labels-->
-
-    <!--Reply or comment page when you tap the attach icon-->
-    <string name="text_attach_link">Link anfügen</string>
-    <string name="text_attach_image">Bild anfügen</string>
-    <string name="text_youtube_link">Youtube Video</string>
-    <string name="text_webm_link">WebM Video</string>
-
-    <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
-    <string name="series_favourite_this">Zu den Favoriten hinzufügen</string>
-    <string name="series_add_to_list">Zur Liste hinzufügen</string>
-    <string name="series_write_a_review">Eine Review verfassen</string>
-    <string name="series_share">Teilen</string>
-
-    <!--Start of Dialog you use to add, remove or update anime or manga listings-->
-    <string name="dialog_title_status">Status</string>
-    <string name="dialog_title_episodes">Episoden</string>
-    <string name="dialog_title_rewatched">Erneut geschaut</string>
-    <string name="dialog_title_score">Bewertung</string>
-    <string name="dialog_title_private">Privat</string>
-    <string name="dialog_title_increment_episodes">Episodenzahl erhöhen</string>
-    <string name="dialog_hint_enter_your_notes">Eine Notiz anfügen</string>
-
-    <string name="dialog_title_volumes_read">Bände gelesen</string>
-    <string name="dialog_title_chapters_read">Kapitel gelesen</string>
-    <string name="dialog_title_reread">Erneut gelesen</string>
-
-    <!--More labels from profiles-->
-    <string name="text_top_genres">Lieblings Genres:</string>
-    <string name="text_tap_on_item_below_to_view_stats">Auf das Icon tippen um Details zu sehen!</string>
-    <string name="following">Folgt</string>
-    <string name="followers">Follower</string>
-    <string name="favourites">Favoriten</string>
-
-    <string name="anime">Anime</string>
-    <string name="anime_time">Anime Zeit</string>
-    <string name="manga">Manga</string>
-    <string name="chapters">Kapitel</string>
-
-    <!--Profile page titles-->
-    <string-array name="profile_page_titles">
-        <item>Übersicht</item>
-        <item>Verlauf</item>
-        <item>Status</item>
-    </string-array>
-
-    <!--Staff page titles-->
-    <string-array name="staff_page_titles">
-        <item>Übersicht</item>
-        <item>In Anime</item>
-        <item>In Manga</item>
-        <item>Gesprochen Von</item>
-    </string-array>
-
-    <!--Anime page titles-->
-    <string-array name="anime_page_titles">
-        <item>Übersicht</item>
-        <item>@string/title_relation</item>
-        <item>Statistik</item>
-        <item>Episoden</item>
-        <item>Charaktere</item>
-        <item>Produzenten</item>
-        <item>@string/title_social</item>
-        <item>Reviews</item>
-    </string-array>
-
-    <!--Manga page titles-->
-    <string-array name="manga_page_titles">
-        <item>Übersicht</item>
-        <item>@string/title_relation</item>
-        <item>Statistik</item>
-        <item>Charaktere</item>
-        <item>Produzenten</item>
-        <item>@string/title_social</item>
-        <item>Reviews</item>
-    </string-array>
-
-    <!--Favourites page titles-->
-    <string-array name="favorites_page_titles">
-        <item>Anime</item>
-        <item>Charaktere</item>
-        <item>Manga</item>
-        <item>Produzenten</item>
-        <item>Studios</item>
-    </string-array>
-
-    <!--Character page titles-->
-    <string-array name="character_page_titles">
-        <item>Übersicht</item>
-        <item>Anime Rollen</item>
-        <item>Manga Rollen</item>
-        <item>Sprechrollen</item>
-    </string-array>
-
-    <!--Try to keep all titles short-->
-    <string-array name="hub_title">
-        <item>Vorschläge</item>
-        <item>Beliebteste</item>
-    </string-array>
-
-    <!-- Menu title for text composer -->
-    <string name="action_attach">Anhang anfügen</string>
-    <string name="action_send">Senden</string>
-    <string name="action_preview">Vorschau</string>
+    <!-- Profile page titles
+Staff page titles
+Anime page titles
+Manga page titles
+Favourites page titles
+Character page titles
+Menu title for text composer -->
+    <string name="action_attach">"Anhang anfügen"</string>
+    <string name="action_send">"Senden"</string>
+    <string name="action_preview">"Vorschau"</string>
 
     <!-- Some text for comments or composer -->
-    <string name="text_hint_comment">Kommentar eingeben</string>
-    <string name="text_edit_mode">Bearbeitungsmodus!</string>
-    <string name="text_preview_mode">Vorschaumodus!</string>
+    <string name="text_hint_comment">"Kommentar eingeben"</string>
+    <string name="text_edit_mode">"Bearbeitungsmodus aktiv!"</string>
+    <string name="text_preview_mode">"Vorschaumodus aktiv!"</string>
 
     <!-- Menu title for text composer -->
-    <string name="text_compose_success">Erfolgreich gesendet! Vergiss nicht, deinen Statusfeed neu zu laden!</string>
+    <string name="text_compose_success">"Erfolgreich gesendet! Vergiss nicht, deinen Statusfeed neu zu laden!"</string>
 
     <!-- Some controls will be shown even though they will be disabled -->
-    <string name="text_feature_disabled">Das Feature ist in diesem Kontext nicht zugänglich!</string>
+    <string name="text_feature_disabled">"Das Feature ist in diesem Kontext nicht zugänglich!"</string>
 
     <!-- Dialogs for check updates, etc -->
-    <string name="title_download_info">Informationen zum Download!</string>
-    <string name="text_download_info">Die Update Datei wird in deinem Downloadordner gespeichert.</string>
-    <string name="title_update_infodadat">Informationen zum Update!</string>
+    <string name="title_download_info">"Informationen zum Download!"</string>
+    <string name="text_download_info">"Die Update Datei wird in deinem Downloadordner gespeichert."</string>
+    <string name="title_update_infodadat">"Informationen zum Update!"</string>
 
     <!-- Sliding dialog that helps you select content type -->
-    <string name="sheet_share_hint">Information to share</string>
-    <string name="sheet_share_title">Inhalte formatieren</string>
-    <string name="sheet_share_body">Bitte wähle die Art des Inhalts, den du teilen möchtest.</string>
+    <string name="sheet_share_hint">"Geteilte Informationen"</string>
+    <string name="sheet_share_title">"Inhalt formatieren"</string>
+    <string name="sheet_share_body">"Bitte wähle die Art des Inhalts, den du teilen möchtest."</string>
 
-    <!--Only replace the first item the others are already provided in this file-->
-    <string-array name="post_share_types">
-        <item>Text einfügen</item>
-        <item>@string/attach_link_title</item>
-        <item>@string/attach_image_title</item>
-        <item>@string/attach_youtube_title</item>
-        <item>@string/attach_webm_title</item>
-    </string-array>
-
-    <!--These are the anime time labels in your profile-->
-    <string name="anime_time_hours">%.1f Hours</string>
-    <string name="anime_time_days">%.1f Days</string>
-    <string name="anime_time_years">%.1f Years</string>
-
-    <string-array name="media_status">
-        <item>All</item>
-        <item>Finished</item>
-        <item>Releasing</item>
-        <item>Not Yet Released</item>
-        <item>Canceled</item>
-    </string-array>
-
-    <string-array name="anime_formats">
-        <item>All</item>
-        <item>TV</item>
-        <item>TV Short</item>
-        <item>Movie</item>
-        <item>Special</item>
-        <item>OVA</item>
-        <item>ONA</item>
-        <item>Music</item>
-    </string-array>
-
-    <string-array name="manga_formats">
-        <item>All</item>
-        <item>Manga</item>
-        <item>Novel</item>
-        <item>One Shot</item>
-    </string-array>
-
-    <string-array name="reviews_title">
-        <item>@string/anime</item>
-        <item>@string/manga</item>
-    </string-array>
-
-    <string-array name="media_list_status">
-        <item>Current</item>
-        <item>Planning</item>
-        <item>Completed</item>
-        <item>Dropped</item>
-        <item>Paused</item>
-        <item>Repeating</item>
-    </string-array>
-
-    <string-array name="messages_page_titles">
-        <item>Inbox</item>
-        <item>Outbox</item>
-    </string-array>
-
-    <string name="series_type">Series Type:</string>
-    <string name="series_episodes">Episodes:</string>
-    <string name="series_next_ep">Next Episode:</string>
-    <string name="series_chapters">Chapters:</string>
-    <string name="series_volumes">Volumes:</string>
-    <string name="logged_in_as">Logged in as</string>
-
-    <string name="sign_into_anilist">Sign Into AniList</string>
-
-    <string name="anitrend_sign_in">AniTrend Sign-In</string>
-    <string name="please_sing_in">Please Sing In</string>
-
-    <string name="action_donate">Donate</string>
-
-    <string name="dialog_title_increment_chapters">Increment Chapters</string>
-
-    <string name="title_activity_staff">Staff</string>
-    <string name="title_activity_character">Character</string>
-    <string name="title_activity_series">Series</string>
-
-    <string name="More">More</string>
-
-    <string name="title_bottom_sheet_giphy">Powered By Giphy</string>
-
-    <string name="title_bookmark">Bookmark</string>
-
-    <string name="series_share_complete">Detailed</string>
-    <string name="series_share_summary">Summary</string>
-
-    <string name="text_giphy_feature">Spice up your posts. Just simply tap to select and long press to preview.</string>
-
-    <string name="text_manga_volumes">%d Volumes</string>
-    <string name="text_manga_chapters">%d Chapters</string>
-
-    <string name="title_series_status">Series Status</string>
-    <string name="title_series_season">Series Season</string>
-    <string name="title_series_score">Series Score</string>
-    <string name="title_series_origin">Series Origin</string>
-
-    <string name="title_total_chapters">Total Chapters</string>
-    <string name="title_total_volumes">Total Volumes</string>
-
-    <string name="title_total_episodes">Total Episodes</string>
-    <string name="title_episode_duration">Episode Duration</string>
-    <string name="title_next_episode">Next Episode</string>
-
-    <string name="title_hash_tag">Hash Tag</string>
-    <string name="title_main_studio">Main Studio</string>
-
-    <string name="create_new_account"><![CDATA[Don\'t have an account? <a href=\"https://anilist.co/register/\">Create Account</a>]]></string>
-
-    <string name="title_select_all">Select All</string>
-
-    <string name="title_relation">Relations</string>
-
-    <string name="title_social">Social</string>
-
-    <string name="title_website">Website</string>
-    <string name="title_summary">Summary</string>
-
-    <string name="title_date_of_birth">Date Of Birth:</string>
-    <string name="title_language">Language:</string>
-
-    <string name="title_series_japanese_name">Native Title</string>
-    <string name="title_series_description">Series Description</string>
-
-    <string name="title_series_english_name">Series English Name:</string>
-    <string name="title_series_type">Series Type:</string>
-    <string name="title_native_name">Native Name:</string>
-
-    <string name="title_alternative_names">Alternative Names</string>
-    <string name="text_unable_to_load_next_page">Error loading more results!</string>
-    <string name="menu_title_mark_all_as_read">Mark All As Read</string>
-    <string name="title_score_distribution">Score Distribution</string>
-
-    <string name="title_score">Score</string>
-    <string name="title_watching">Watching</string>
-    <string name="title_series_stats">Series Stats</string>
-    <string name="error_unresolved_type">Unable to resolve content</string>
-
-    <string name="menu_title_tags">Tags</string>
-    <string name="app_filter_tags">Series Tags?</string>
-
-    <string name="anitrend_sign_in_browser">Google Chrome Recommended</string>
+    <!-- Only replace the first item the others are already provided in this file
+These are the anime time labels in your profile -->
+    <string name="anime_time_hours">"%.1f Stunden"</string>
+    <string name="anime_time_days">"%.1f Tage"</string>
+    <string name="anime_time_years">"%.1f Jahre"</string>
+    <string name="series_type">"Serientyp:"</string>
+    <string name="series_episodes">"Episoden:"</string>
+    <string name="series_next_ep">"Nächste Episode:"</string>
+    <string name="series_chapters">"Kapitel:"</string>
+    <string name="series_volumes">"Bände:"</string>
+    <string name="logged_in_as">"Eingeloggt als"</string>
+    <string name="sign_into_anilist">"Bei AniList einloggen"</string>
+    <string name="anitrend_sign_in">"AniTrend Login"</string>
+    <string name="please_sing_in">"Bitte einloggen"</string>
+    <string name="action_donate">"Spenden"</string>
+    <string name="dialog_title_increment_chapters">"Kapitel erhöhen"</string>
+    <string name="title_activity_staff">"Besetzung"</string>
+    <string name="title_activity_character">"Charakter"</string>
+    <string name="title_activity_series">"Serie"</string>
+    <string name="More">"Mehr"</string>
+    <string name="title_bottom_sheet_giphy">"Verwendet Giphy"</string>
+    <string name="title_bookmark">"Lesezeichen"</string>
+    <string name="series_share_complete">"Detailliert"</string>
+    <string name="series_share_summary">"Zusammenfassung"</string>
+    <string name="text_giphy_feature">"Spice up your posts. Just simply tap to select and long press to preview."</string>
+    <string name="text_manga_volumes">"%d Bände"</string>
+    <string name="text_manga_chapters">"%d Kapitel"</string>
+    <string name="title_series_status">"Status"</string>
+    <string name="title_series_season">"Saison"</string>
+    <string name="title_series_score">"Bewertung"</string>
+    <string name="title_series_origin">"Basierend auf"</string>
+    <string name="title_total_chapters">"Anzahl Kapitel"</string>
+    <string name="title_total_volumes">"Anzahl Bände"</string>
+    <string name="title_total_episodes">"Anzahl Episoden"</string>
+    <string name="title_episode_duration">"Episodendauer"</string>
+    <string name="title_next_episode">"Nächste Episode"</string>
+    <string name="title_hash_tag">"Hash Tag"</string>
+    <string name="title_main_studio">"Haupt-Studio"</string>
+    <string name="create_new_account"><![CDATA[Du hast noch kein Konto? <a href=\"https://anilist.co/register/\">Anmelden</a>]]></string>
+    <string name="title_select_all">"Alles auswählen"</string>
+    <string name="title_relation">"Verwandt"</string>
+    <string name="title_social">"Sozial"</string>
+    <string name="title_website">"Webseite"</string>
+    <string name="title_summary">"Zusammenfassung"</string>
+    <string name="title_date_of_birth">"Geburtsdatum:"</string>
+    <string name="title_language">"Sprache:"</string>
+    <string name="title_series_japanese_name">"Originaltitel"</string>
+    <string name="title_series_description">"Beschreibung"</string>
+    <string name="title_series_english_name">"Englischer Name:"</string>
+    <string name="title_series_type">"Serientyp:"</string>
+    <string name="title_native_name">"Originalname:"</string>
+    <string name="title_alternative_names">"Alternative Names"</string>
+    <string name="text_unable_to_load_next_page">"Fehler beim Laden!"</string>
+    <string name="menu_title_mark_all_as_read">"Alle als gelesen markieren"</string>
+    <string name="title_score_distribution">"Bewertungs-Verteilung"</string>
+    <string name="title_score">"Bewertung"</string>
+    <string name="title_watching">"Schauend"</string>
+    <string name="title_series_stats">"Statistiken"</string>
+    <string name="error_unresolved_type">"Konnte den Inhalt nicht laden"</string>
+    <string name="menu_title_tags">"Tags"</string>
+    <string name="app_filter_tags">"Serien Tags?"</string>
+    <string name="anitrend_sign_in_browser">"Google Chrome empfohlen"</string>
 
     <!-- Privacy Settings -->
-    <string name="pref_header_privacy">Privacy</string>
-    <string name="pref_header_privacy_summary">Configure privacy settings</string>
+    <string name="pref_header_privacy">"Datenschutz"</string>
+    <string name="pref_header_privacy_summary">"Datenschutzeinstellungen verwalten"</string>
+    <string name="pref_title_crash_reports">"Absturz Report"</string>
+    <string name="pref_crash_reports_summary_off">"Die App wird keine Absturz Reports senden. Aktiviere diese Option, um das Finden und Beheben von Fehlern zu erleichtern"</string>
+    <string name="pref_crash_reports_summary_on">"Die App wird automatisch Absturz Reports senden"</string>
+    <string name="pref_title_usage_analytics">"Nutzungsverhalten"</string>
+    <string name="pref_usage_analytics_summary_off">"Die App wird keine Nutzungsstatistiken senden. Aktiviere diese Option, um die App in Zukunft noch besser zu machen"</string>
+    <string name="pref_usage_analytics_summary_on">"Die App wird ausschließlich anonymisierte Statistiken senden"</string>
 
-    <!-- Black Setting Related -->
+    <!-- Language preferences -->
+    <string name="pref_title_language">"Sprache der App"</string>
+    <string name="pref_title_language_summary">"Stelle eine benutzerdefinierte Sprache für diese App ein"</string>
 
-    <!--Language preferences-->
-    <string name="pref_title_language">Application Language</string>
-    <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
-
-    <string name="pref_title_crash_reports">Crash Reports</string>
-    <string name="pref_crash_reports_summary_off">Application will not send crash reports, please enable this option to make bug discovery and fixing easier</string>
-    <string name="pref_crash_reports_summary_on">Application will automatically send crash reports</string>
-
-    <string name="pref_title_usage_analytics">Usage Analytics</string>
-    <string name="pref_usage_analytics_summary_off">Application will not send any anonymous statistics on most used features, please consider enabling this option for better design choices in future</string>
-    <string name="pref_usage_analytics_summary_on">Application will only send anonymous statistics like most used features</string>
-
-    <string name="dialog_title_started_at">Start Date</string>
-    <string name="dialog_title_completed_at">Finish Date</string>
-    <string name="pref_header_customize">Customize</string>
-    <string name="pref_header_customize_summary">Customize the look and feel of the app</string>
-    <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
-    <string name="dialog_button_clear">Clear</string>
+    <!-- List view preferences -->
+    <string name="pref_title_list_view_style">"Anzeige der Listenn"</string>
+    <string name="dialog_title_started_at">"Startdatum"</string>
+    <string name="dialog_title_completed_at">"Enddatum"</string>
+    <string name="dialog_button_clear">"Leeren"</string>
+    <string name="pref_header_customize">"Anpassen"</string>
+    <string name="pref_header_customize_summary">"Passe das Aussehen der App an"</string>
+    <string name="text_application_restart_required">"Bitte starte die App neu, um die Änderungen anzuwenden"</string>
 
     <!-- Image Preview strings -->
-    <string name="image_preview_title">Preview</string>
-    <string name="image_preview_download">Download</string>
-    <string name="image_preview_share">Share</string>
-    <string name="image_preview_link">Original Link</string>
+    <string name="image_preview_title">"Vorschau"</string>
+    <string name="image_preview_download">"Download"</string>
+    <string name="image_preview_share">"Teilen"</string>
+    <string name="image_preview_link">"Originaler Link"</string>
 
     <!-- Image Preview error strings -->
-    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
-    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
-    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
-    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
-    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
-    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+    <string name="image_preview_error_character_image">"Das Charakterbild existiert nicht!"</string>
+    <string name="image_preview_error_profile_banner">"Der Nutzer hat keinen Banner gesetzt!"</string>
+    <string name="image_preview_error_series_cover">"Das Serienbild existiert nicht!"</string>
+    <string name="image_preview_error_series_banner">"Das Serienbanner existiert nicht!"</string>
+    <string name="image_preview_error_staff_image">"Das Bild der Besetzung existiert nicht!"</string>
+    <string name="image_preview_error_user_avatar">"Der Nutzeravatar existiert nicht"</string>
 
     <!-- App Log strings -->
-    <string name="app_log">App Logs</string>
-    <string name="save_bug_report">Save Bug Report</string>
-    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+    <string name="app_log">"App Logs"</string>
+    <string name="save_bug_report">"Fehler Report speichern"</string>
+    <string name="bug_report_saved">"Fehler Report wurde in Downloads Ordner gespeichert (AniTrend Logcat.txt)"</string>
+    <string name="show_spoiler_tags">"Spoiler anzeigen"</string>
+    <string name="notification_media_added">"Neue verwandte Serie/Manga hinzugefügt"</string>
 
-    <string name="show_spoiler_tags">Show Spoiler Tags</string>
-    <string name="notification_media_added">New Related Media Added</string>
-    <string name="action_search">Search</string>
-    <string name="title_activity_studio">Studio</string>
-    <string name="notification_user_like_reply">Reply Like</string>
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
-    <string name="nav_home">Home</string>
-    <string name="nav_header_support">Support</string>
-    <string name="nav_history">History</string>
-    <string name="nav_header_manage">Manage</string>
-    <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_customization">Customization</string>
-    <string name="nav_contact">Contact</string>
-    <string name="nav_about">About</string>
-    <string name="drawer_title_hub">AniTrend Hub</string>
-    <string name="drawer_title_filter">Filter</string>
-    <string name="drawer_section_extras">Extras</string>
-    <string name="get_started">Get Started</string>
-    <string name="app_intro_videos_title">Videos</string>
-    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
-    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
-    <string name="title_migration_failed">Upgrade Failed</string>
-    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
-    <string name="text_about_general_information">General Information</string>
-    <string name="text_about_appication_version">Version %s</string>
-    <string name="text_about_additional_information">Additional Information</string>
-    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
-    <string name="text_about_legal_information">Legal Information</string>
-    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
-    <string name="text_about_code_of_conduct">Code of Conduct</string>
-    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
-    <string name="title_activity_logging">Logging</string>
-
-    <string name="dialog_title_delete_activity">Delete Activity</string>
-    <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
-
-    <string name="pref_title_display_adult_content">Display Adult Content</string>
-    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
-
-    <string name="pref_summary_clear_notification_on_dismiss">Clear notifications when you dismiss them from the status bar</string>
-    <string name="pref_title_clear_notification_on_dismiss">Clear all notification on dismiss</string>
-
-    <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
-    <string name="pref_title_notification_work_around">Notification workaround</string>
-    <string name="title_bottom_sheet_spoiler">Spoiler</string>
+    <!-- Token error -->
+    <string name="text_error_auth_token">"Invalide Login Session, bitte logge dich erneut ein"</string>
+    <string name="text_migration_in_progress">"Applikation wird aktualisiert, bitte warten"</string>
+    <string name="title_migration_failed">"Update fehlgeschlagen"</string>
+    <string name="text_migration_failed"><![CDATA[Die Applikation konnte manche Teile des Updates nicht anwenden, bitte lösche den App Cache und versuche es erneut]]></string>
+    <string name="text_about_general_information">"Allgemeine Informationen"</string>
+    <string name="text_about_additional_information">"Zusätzliche Informationen"</string>
+    <string name="text_about_frequently_asked_questions">"Häufig gestellte Fragen"</string>
+    <string name="text_about_legal_information">"Rechtsinformationen"</string>
+    <string name="text_about_terms_and_conditions"><![CDATA[Geschäftsbedingungen]]></string>
+    <string name="text_about_code_of_conduct">"Verhaltensgrundsätze"</string>
+    <string name="text_migration_required">"AniTrend wird aktualisiert, dies kann einen Moment dauern"</string>
+    <string name="title_activity_logging">"Logging"</string>
+    <string name="pref_title_app_theme">"App Thema"</string>
+    <string name="dialog_title_delete_activity">"Aktivität löschen"</string>
+    <string name="dialog_message_delete_activity">"Bist du sicher, dass du diese Aktivität löschen möchtest? Dies kann nicht rückgängig gemacht werden!"</string>
+    <string name="pref_title_display_adult_content">"18+ Inhalte anzeigen"</string>
+    <string name="pref_summary_display_adult_content">"Erlaube der App, 18+ (NSFW) Inhalte anzuzeigen. Dies muss außerdem in deinem AniList Konto aktiviert werden"</string>
+    <string name="pref_summary_clear_notification_on_dismiss">"Benachrichtungen als gelesen markieren, wenn du sie in der Statusleiste verwirfst"</string>
+    <string name="pref_title_clear_notification_on_dismiss">"Benachrichtigungen als gelesen markieren"</string>
+    <string name="pref_summary_notification_work_around">"Aktiviere dies nur, wenn du keine Benachrichtigungen erhälst"</string>
+    <string name="pref_title_notification_work_around">"Benachrichtigungs Workaround"</string>
+    <string name="title_bottom_sheet_spoiler">"Spoiler"</string>
+    <string name="series_on_my_list">"Auf meiner Liste"</string>
+    <string name="app_filter_on_list">"Auf meiner Liste?"</string>
+    <string name="text_about_application_version">"Version %s"</string>
+    <string name="notification_action_mark_as_read">"Als gelesen markieren"</string>
 </resources>
