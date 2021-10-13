@@ -203,8 +203,11 @@ object GroupingUtil {
                     else -> it.node.startDate.year.toString() == year
                 }
             }.flatMap { mediaEdge ->
-                mediaEdge.characters.map { character ->
-                    CharacterStaffBase(character, mediaEdge.node)
+                mediaEdge.characters.mapNotNull { character ->
+                    if (character == null)
+                        null
+                    else
+                        CharacterStaffBase(character, mediaEdge.node)
                 }
             }
             entityMap.addAll(characters)
