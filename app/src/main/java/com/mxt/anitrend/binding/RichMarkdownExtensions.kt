@@ -3,6 +3,7 @@ package com.mxt.anitrend.binding
 import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+import com.mxt.anitrend.util.markdown.RegexUtil
 
 @BindingAdapter("markDown")
 fun RichMarkdownTextView.markDown(markdown: String?) {
@@ -42,5 +43,8 @@ fun RichMarkdownTextView.richMarkDown(markdown: String?) {
     val userTagsConverted = RegexUtil.findUserTags(tagsStripped)
     val standardMarkdown = RegexUtil.convertToStandardMarkdown(userTagsConverted)
     markwon.setMarkdown(this, standardMarkdown)*/
-    setMarkDownText(markdown)
+
+    val cleanMarkdown = RegexUtil.removeUserScriptCSS(markdown)
+
+    setMarkDownText(cleanMarkdown)
 }

@@ -179,4 +179,8 @@ object RegexUtil {
             substitute
         } ?: substitute
     }
+
+    fun removeUserScriptCSS(markdown: String?): String? {
+        return markdown?.replace("\\[]\\(json.*?\\)".toRegex(), "")?.trim()
+    }
 }
