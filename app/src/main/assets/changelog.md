@@ -14,7 +14,8 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 ### Bug Fixes
 - Application displaying incorrect dates for some entries @LuK1337
-- Many bug fixes to list. Thank you @LuK1337
+- Markdown optimizations and fixes. Thank you @LuK1337
+- Many bug fixes to list. Thank you @LuK1337 & @YoussefHabri
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment
