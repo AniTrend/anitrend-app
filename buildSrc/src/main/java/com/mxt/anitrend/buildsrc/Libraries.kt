@@ -172,8 +172,8 @@ object Libraries {
         }
 
         object Markdown {
-			private const val version = "0.12.0-alpha02"
-            const val markdown = "com.github.anitrend:support-markdown:$version"
+			private const val version = "0.12.1-alpha01"
+            const val markdown = "com.github.AniTrend:support-markdown:$version"
         }
 
         object Retrofit {
