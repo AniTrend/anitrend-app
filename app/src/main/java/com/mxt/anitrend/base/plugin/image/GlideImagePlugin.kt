@@ -6,11 +6,14 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.noties.markwon.image.AsyncDrawable
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import timber.log.Timber
+import java.net.URL
 
 internal class GlideImagePlugin private constructor(
     private val requestManager: RequestManager
@@ -42,9 +45,16 @@ internal class GlideImagePlugin private constructor(
     }
 
     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
+        val headers = LazyHeaders.Builder()
+        val url = URL(drawable.destination)
+
+        when (url.host) {
+            "files.catbox.moe" -> headers.addHeader("User-Agent", USER_AGENT_FEDORA)
+        }
+
         return requestManager.asDrawable()
             .addListener(requestListener)
-            .load(drawable.destination)
+            .load(GlideUrl(url, headers.build()))
     }
 
     override fun cancel(target: Target<*>) {
@@ -54,5 +64,8 @@ internal class GlideImagePlugin private constructor(
     companion object {
         fun create(requestManager: RequestManager) =
             GlideImagePlugin(requestManager)
+
+        const val USER_AGENT_FEDORA =
+            "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.49 Safari/537.36"
     }
 }
