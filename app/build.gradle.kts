@@ -40,7 +40,7 @@ dependencies {
     implementation("com.github.ma-myair:MaterialSearchView:${Versions.materialSearchView}")
 
     /** State Layout Library */
-    implementation("com.github.nguyenhoanglam:ProgressLayout:${Versions.progressLayout}")
+    implementation("com.github.wax911:ProgressLayout:${Versions.progressLayout}")
 
     /** Event Bus Library */
     implementation("org.greenrobot:eventbus:${Versions.eventBus}")
