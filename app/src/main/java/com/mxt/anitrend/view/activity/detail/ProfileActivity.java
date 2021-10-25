@@ -28,6 +28,8 @@ import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
@@ -116,6 +118,14 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                     }
                 } else
                     NotifyUtil.INSTANCE.makeText(this, R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_share:
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
+                        "https://anilist.co/user/%s", model.getName()));
+                intent.setType("text/plain");
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
