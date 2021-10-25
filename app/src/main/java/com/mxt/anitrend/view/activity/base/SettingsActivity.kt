@@ -63,6 +63,7 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
 
         private val settings by inject<Settings>()
         private val scheduler by inject<JobSchedulerUtil>()
+        private val presenter by inject<BasePresenter>()
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -135,6 +136,9 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                             scheduler.scheduleNotificationJob(applicationContext)
                         else
                             scheduler.cancelNotificationJob(applicationContext)
+                    }
+                    getString(R.string.pref_key_update_channel) -> {
+                        presenter.database.remoteVersion = null
                     }
                     else -> Timber.i("$key not registered in this sharedPreferenceChange listener")
                 }
