@@ -53,7 +53,7 @@ class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
      */
     override fun onActivityReady() {
         lifecycleScope.launchWhenResumed {
-            presenter.checkForUpdates()
+            presenter.checkForUpdates(true)
             presenter.checkValidAuth()
             delay(500)
             makeRequest()

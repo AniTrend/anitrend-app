@@ -190,9 +190,9 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     /**
      * Runs worker to check for updates
      */
-    fun checkForUpdates() {
+    fun checkForUpdates(silent: Boolean) {
         val scheduler = JobSchedulerUtil(settings)
-        scheduler.startUpdateJob(context)
+        scheduler.startUpdateJob(context, silent)
     }
 
     companion object {

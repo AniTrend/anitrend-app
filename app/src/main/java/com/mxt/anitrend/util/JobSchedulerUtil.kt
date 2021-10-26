@@ -105,7 +105,7 @@ class JobSchedulerUtil(private val settings: Settings) {
         }
     }
 
-    fun startUpdateJob(context: Context) {
+    fun startUpdateJob(context: Context, silent: Boolean) {
         val workRequest = OneTimeWorkRequest.Builder(
             UpdateWorker::class.java
         )
@@ -114,6 +114,7 @@ class JobSchedulerUtil(private val settings: Settings) {
                 5,
                 TimeUnit.MINUTES
             )
+            .setInputData(workDataOf(KeyUtil.WorkUpdaterSilentId to silent))
             .addTag(KeyUtil.WorkUpdaterId)
             .setConstraints(getConstraints())
             .build()
