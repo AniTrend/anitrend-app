@@ -95,10 +95,10 @@ class DatabaseHelper : BoxQuery {
                 .query().build().findFirst()
         set(value) {
             field = value
+            val versionBox = getBoxStore(VersionBase::class.java)
+            if (versionBox.count() != 0L)
+                versionBox.removeAll()
             if (value != null) {
-                val versionBox = getBoxStore(VersionBase::class.java)
-                if (versionBox.count() != 0L)
-                    versionBox.removeAll()
                 value.lastChecked = System.currentTimeMillis()
                 versionBox.put(value)
             }
