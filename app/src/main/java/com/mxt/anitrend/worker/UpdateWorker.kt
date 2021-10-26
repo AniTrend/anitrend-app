@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
@@ -68,8 +69,11 @@ class UpdateWorker(
             Timber.e(it)
         }
 
+        val silent = inputData.getBoolean(KeyUtil.WorkUpdaterSilentId, false)
+        val output = workDataOf(KeyUtil.WorkUpdaterSilentId to silent)
+
         return if (result.isSuccess)
-            Result.success()
-        else Result.failure()
+            Result.success(output)
+        else Result.failure(output)
     }
 }
