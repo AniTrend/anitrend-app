@@ -4,7 +4,7 @@ object Versions {
 
     private const val major = 1
     private const val minor = 8
-    private const val patch = 8
+    private const val patch = 12
     private const val candidate = 0
 
     const val compileSdk = 30
@@ -50,7 +50,7 @@ object Versions {
     const val mpAndroidChart = "3.1.0"
     const val aboutPage = "1.2.5"
     const val materialSearchView = "1.4.15"
-    const val progressLayout = "1.0.1"
+    const val progressLayout = "master-SNAPSHOT"
     const val eventBus = "3.2.0"
     const val alerter = "7.0.1"
     const val stream = "1.2.2"

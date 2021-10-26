@@ -371,7 +371,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                                         this@MainActivity,
                                         versionBase
                                     )
-                                else presenter.checkForUpdates()
+                                else presenter.checkForUpdates(false)
                             }
 
                             override fun onNegativeButton() {
@@ -453,7 +453,9 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                     workInfo.state == WorkInfo.State.SUCCEEDED
                 }
                 if (workInfo != null)
-                    onUpdateChecked()
+                    onUpdateChecked(
+                        workInfo.outputData.getBoolean(KeyUtil.WorkUpdaterSilentId, false)
+                    )
         }
     }
 
@@ -478,7 +480,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         )
     }
 
-    private fun onUpdateChecked() {
+    private fun onUpdateChecked(silent: Boolean) {
         val remoteVersion = presenter.database.remoteVersion
 
         if (remoteVersion != null) {
@@ -488,6 +490,8 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                     .actionView.findViewById<TextView>(R.id.app_update_info)
                 mAppUpdateWidget.text = getString(R.string.app_update, remoteVersion.version)
                 mAppUpdateWidget.visibility = View.VISIBLE
+            } else if (!silent) {
+                onLatestUpdateInstalled()
             }
         }
     }
