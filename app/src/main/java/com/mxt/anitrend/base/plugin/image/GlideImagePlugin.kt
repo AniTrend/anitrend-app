@@ -46,10 +46,14 @@ internal class GlideImagePlugin private constructor(
 
     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
         val headers = LazyHeaders.Builder()
-        val url = URL(drawable.destination)
 
-        when (url.host) {
-            "files.catbox.moe" -> headers.addHeader("User-Agent", USER_AGENT_FEDORA)
+        val url = runCatching {
+            URL(drawable.destination)
+        }.getOrNull()
+
+        when (url?.host) {
+            "files.catbox.moe" ->
+                headers.addHeader("User-Agent", USER_AGENT_FEDORA)
         }
 
         return requestManager.asDrawable()
