@@ -55,6 +55,7 @@ internal class GlideImagePlugin private constructor(
         return requestManager.asDrawable()
             .addListener(requestListener)
             .load(GlideUrl(url, headers.build()))
+            .override(720)
     }
 
     override fun cancel(target: Target<*>) {
