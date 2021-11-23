@@ -17,6 +17,7 @@ import com.mxt.anitrend.view.fragment.detail.MediaStaffFragment;
 import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment;
 import com.mxt.anitrend.view.fragment.detail.ReviewFragment;
 import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment;
+import com.mxt.anitrend.view.fragment.group.MediaRecommendationsFragment;
 import com.mxt.anitrend.view.fragment.group.MediaRelationFragment;
 import com.mxt.anitrend.view.fragment.list.WatchListFragment;
 
@@ -52,19 +53,21 @@ public class AnimePageAdapter extends BaseStatePageAdapter {
             case 1:
                 return MediaRelationFragment.newInstance(getParams());
             case 2:
-                return MediaStatsFragment.newInstance(getParams());
+                return MediaRecommendationsFragment.newInstance(getParams());
             case 3:
-                return WatchListFragment.newInstance(getParams(),false);
+                return MediaStatsFragment.newInstance(getParams());
             case 4:
-                return MediaCharacterFragment.newInstance(getParams());
+                return WatchListFragment.newInstance(getParams(),false);
             case 5:
-                return MediaStaffFragment.newInstance(getParams());
+                return MediaCharacterFragment.newInstance(getParams());
             case 6:
+                return MediaStaffFragment.newInstance(getParams());
+            case 7:
                 return MediaFeedFragment.newInstance(getParams(), GraphUtil.INSTANCE.getDefaultQuery(true)
                         .putVariable(KeyUtil.arg_mediaId, getParams().getLong(KeyUtil.arg_id))
                         .putVariable(KeyUtil.arg_type, KeyUtil.ANIME_LIST)
                         .putVariable(KeyUtil.arg_isFollowing, true));
-            case 7:
+            case 8:
                 return ReviewFragment.newInstance(getParams());
         }
         return null;
