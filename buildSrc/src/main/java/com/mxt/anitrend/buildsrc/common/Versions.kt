@@ -3,8 +3,8 @@ package com.mxt.anitrend.buildsrc.common
 object Versions {
 
     private const val major = 1
-    private const val minor = 8
-    private const val patch = 13
+    private const val minor = 9
+    private const val patch = 4
     private const val candidate = 0
 
     const val compileSdk = 30
