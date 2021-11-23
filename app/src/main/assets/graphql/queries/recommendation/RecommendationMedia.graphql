@@ -4,10 +4,8 @@ query RecommendationMedia($id: Int!, $type: MediaType, $isAdult: Boolean, $page:
       pageInfo {
         ... PageInfoFragment
       }
-      edges {
-        node {
-          ... RecommendationCoreFragment
-        }
+      nodes {
+        ... RecommendationCoreFragment
       }
     }
   }
