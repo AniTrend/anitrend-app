@@ -103,6 +103,7 @@
     <string-array name="anime_page_titles">
         <item>@string/anime_page_title_overview</item>
         <item>@string/title_relation</item>
+        <item>@string/title_recommendations</item>
         <item>@string/anime_page_title_stats</item>
         <item>@string/anime_page_title_episodes</item>
         <item>@string/anime_page_title_characters</item>
@@ -115,6 +116,7 @@
     <string-array name="manga_page_titles">
         <item>@string/manga_page_title_overview</item>
         <item>@string/title_relation</item>
+        <item>@string/title_recommendations</item>
         <item>@string/manga_page_title_stats</item>
         <item>@string/manga_page_title_characters</item>
         <item>@string/manga_page_title_staff</item>
