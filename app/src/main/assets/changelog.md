@@ -4,6 +4,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 > Please update your profile stats using [this](https://anilist.co/settings/lists) if you've been having issues loading your profile in AniTrend
 
 ### Enhancements
+- Add recommendations to anime and manga details. Thanks @LuK1337
 - Added new notification types. Thanks @YoussefHabri
 - Added **onList** filtering for Staff screen. Thanks @LuK1337
 - Added mark as read notification action. Thanks @LuK1337
@@ -19,6 +20,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Catbox images not loading. Thank you @LuK1337
 - Github release failing to update. Thank you @LuK1337
 - Many bug fixes to list. Thank you @LuK1337 & @YoussefHabri
+- Improve markdown image loading performance. Thank you @LuK1337
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment
