@@ -60,6 +60,7 @@ internal class GlideImagePlugin private constructor(
             .addListener(requestListener)
             .load(GlideUrl(url, headers.build()))
             .override(720)
+            .fitCenter()
     }
 
     override fun cancel(target: Target<*>) {
