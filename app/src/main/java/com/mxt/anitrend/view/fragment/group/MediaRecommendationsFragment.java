@@ -85,8 +85,10 @@ public class MediaRecommendationsFragment extends FragmentBaseList<RecyclerItem,
                 if (content.getConnection().hasPageInfo())
                     getPresenter().setPageInfo(content.getConnection().getPageInfo());
                 ArrayList<RecyclerItem> entityMap = new ArrayList<>();
-                for (RecommendationBase recommendation : content.getConnection().getPageData())
-                    entityMap.add(recommendation.getMediaRecommendation());
+                for (RecommendationBase recommendation : content.getConnection().getPageData()) {
+                    if (recommendation.getMediaRecommendation() != null)
+                        entityMap.add(recommendation.getMediaRecommendation());
+                }
                 onPostProcessed(entityMap);
             }
         } else
