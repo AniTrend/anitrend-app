@@ -107,7 +107,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         }
     }
 
-    public void setParams(Bundle bundle) {
+    public void setParams(@Nullable Bundle bundle) {
         this.bundle = bundle;
         if(bundle.containsKey(KeyUtil.arg_id))
             queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id));
