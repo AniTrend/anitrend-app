@@ -111,10 +111,14 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
 
     public void setParams(@Nullable Bundle bundle) {
         this.bundle = bundle;
-        if(bundle.containsKey(KeyUtil.arg_id))
-            queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id));
-        else
-            queryContainer.putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName));
+        if (bundle != null) {
+            if (bundle.containsKey(KeyUtil.arg_id))
+                queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id));
+            else
+                queryContainer.putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName));
+        } else {
+            Timber.w("Bundle from parent activity should typically not be null");
+        }
         presenter.getParams().putParcelable(KeyUtil.arg_graph_params, queryContainer);
         presenter.requestData(KeyUtil.USER_STATS_REQ, getContext(), this);
     }
@@ -159,7 +163,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
                     getContext().startActivity(intent);
                 } else {
-                    Timber.w("Parent activity returned provided empty bundle params");
+                    Timber.w("Bundle for this widget is no longer valid");
                     NotifyUtil.INSTANCE.makeText(
                             getContext(),
                             R.string.login_error_title,
@@ -175,7 +179,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
                     getContext().startActivity(intent);
                 } else {
-                    Timber.w("Parent activity returned provided empty bundle params");
+                    Timber.w("Bundle for this widget is no longer valid");
                     NotifyUtil.INSTANCE.makeText(
                             getContext(),
                             R.string.login_error_title,
