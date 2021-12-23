@@ -145,7 +145,6 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
 
     @Override
     protected void updateUI() {
-        binding.setOnClickListener(this);
         binding.profileStatsWidget.setParams(getIntent().getExtras());
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
         if(getPresenter().isCurrentUser(model.getId())) {
@@ -163,7 +162,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                     .showTapTarget(R.string.tip_compose_message_title,
                             R.string.tip_compose_message_text, R.id.action_message);
         }
-
+        binding.setOnClickListener(this);
         getPresenter().notifyAllListeners(new BaseConsumer<>(KeyUtil.USER_BASE_REQ, model), false);
     }
 
