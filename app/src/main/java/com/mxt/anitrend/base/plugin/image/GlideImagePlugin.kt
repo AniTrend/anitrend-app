@@ -58,7 +58,7 @@ internal class GlideImagePlugin private constructor(
 
         return requestManager.asDrawable()
             .addListener(requestListener)
-            .load(GlideUrl(url, headers.build()))
+            .load(runCatching { GlideUrl(url, headers.build()) }.getOrNull())
             .override(720)
             .fitCenter()
     }
