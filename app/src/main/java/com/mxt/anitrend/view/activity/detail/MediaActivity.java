@@ -117,14 +117,14 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
                     intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
                             "%s - %s", model.getTitle().getUserPreferred(), model.getSiteUrl()));
                     intent.setType("text/plain");
-                    startActivity(intent);
+                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)));
                     break;
                 case R.id.action_mal:
                     String url = String.format(Locale.getDefault(),
                             "https://myanimelist.net/%s/%d",
                             mediaType.toLowerCase(), model.getIdMal());
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
+                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)));
                     break;
             }
         } else

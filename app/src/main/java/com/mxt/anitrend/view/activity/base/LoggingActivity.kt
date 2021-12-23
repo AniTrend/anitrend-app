@@ -123,7 +123,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
                     ))
                     type = "text/plain"
                 }
-                startActivity(intent)
+                startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
             }
         }
         return super.onOptionsItemSelected(item)
