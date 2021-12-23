@@ -96,7 +96,7 @@ public class CommentFragment extends FragmentBaseComment implements BaseConsumer
                     intent.setAction(Intent.ACTION_SEND);
                     intent.putExtra(Intent.EXTRA_TEXT, feedList.getSiteUrl());
                     intent.setType("text/plain");
-                    startActivity(intent);
+                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)));
                     break;
             }
         } else
