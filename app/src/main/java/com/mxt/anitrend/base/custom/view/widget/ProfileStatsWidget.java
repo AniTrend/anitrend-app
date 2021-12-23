@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
 import com.mxt.anitrend.util.KeyUtil;
+import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.AniGraphErrorUtilKt;
 import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.activity.detail.MediaListActivity;
@@ -150,18 +152,36 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                     ).show();
                 break;
             case R.id.user_anime_total_container:
-                intent = new Intent(getContext(), MediaListActivity.class);
-                intent.putExtras(bundle);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
-                getContext().startActivity(intent);
+                if (bundle != null) {
+                    intent = new Intent(getContext(), MediaListActivity.class);
+                    intent.putExtras(bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME);
+                    getContext().startActivity(intent);
+                } else {
+                    Timber.w("Parent activity returned provided empty bundle params");
+                    NotifyUtil.INSTANCE.makeText(
+                            getContext(),
+                            R.string.login_error_title,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
                 break;
             case R.id.user_manga_total_container:
-                intent = new Intent(getContext(), MediaListActivity.class);
-                intent.putExtras(bundle);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
-                getContext().startActivity(intent);
+                if (bundle != null) {
+                    intent = new Intent(getContext(), MediaListActivity.class);
+                    intent.putExtras(bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA);
+                    getContext().startActivity(intent);
+                } else {
+                    Timber.w("Parent activity returned provided empty bundle params");
+                    NotifyUtil.INSTANCE.makeText(
+                            getContext(),
+                            R.string.login_error_title,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
                 break;
         }
     }
