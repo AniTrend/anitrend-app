@@ -126,7 +126,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
                     intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
                             "https://anilist.co/user/%s", model.getName()));
                     intent.setType("text/plain");
-                    startActivity(intent);
+                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)));
                 } else
                     NotifyUtil.INSTANCE.makeText(this, R.string.text_activity_loading, Toast.LENGTH_SHORT).show();
                 return true;
