@@ -48,6 +48,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
     private UserStatisticTypes model;
     private QueryContainerBuilder queryContainer;
 
+    @Nullable
     private Bundle bundle;
     private final String TAG = ProfileStatsWidget.class.getSimpleName();
 
