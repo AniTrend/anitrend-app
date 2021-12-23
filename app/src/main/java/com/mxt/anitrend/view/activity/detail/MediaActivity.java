@@ -92,7 +92,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
         manageMenuItem = menu.findItem(R.id.action_manage);
         manageMenuItem.setVisible(isAuth);
-        setManageMenuItemIcon();
+        setMenuItemIcons();
 
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
@@ -164,9 +164,8 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         if(model != null) {
             binding.setModel(model);
             binding.setOnClickListener(this);
-            malMenuItem.setVisible(model.getIdMal() > 0);
             WideImageView.setImage(binding.seriesBanner, model.getBannerImage());
-            setFavouriteWidgetMenuItemIcon(); setManageMenuItemIcon();
+            setFavouriteWidgetMenuItemIcon(); setMenuItemIcons();
             if(getPresenter().getSettings().isAuthenticated()) {
                 MaterialTapTargetPrompt.Builder favouritesPrompt = new TutorialUtil().setContext(this)
                         .setFocalColour(R.color.colorGrey600)
@@ -217,9 +216,13 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         super.onDestroy();
     }
 
-    private void setManageMenuItemIcon() {
-        if(model != null && model.getMediaListEntry() != null && manageMenuItem != null)
-            manageMenuItem.setIcon(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_mode_edit_white_24dp));
+    private void setMenuItemIcons() {
+        if (model != null) {
+            if (model.getMediaListEntry() != null && manageMenuItem != null)
+                manageMenuItem.setIcon(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_mode_edit_white_24dp));
+            if (malMenuItem != null)
+                malMenuItem.setVisible(model.getIdMal() > 0);
+        }
     }
 
     private void setFavouriteWidgetMenuItemIcon() {
