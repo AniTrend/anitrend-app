@@ -164,7 +164,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                 intent.action = Intent.ACTION_SEND
                 intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.campaign_link))
                 intent.type = "text/plain"
-                startActivity(intent)
+                startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 return true
             }
             R.id.action_settings -> {

@@ -4,7 +4,7 @@ object Versions {
 
     private const val major = 1
     private const val minor = 9
-    private const val patch = 5
+    private const val patch = 6
     private const val candidate = 0
 
     const val compileSdk = 30
@@ -15,10 +15,10 @@ object Versions {
       * **RR**_X.Y.Z_
       * > **RR** reserved for build flavours and **X.Y.Z** follow the [versionName] convention
       */
-    const val versionCode = major.times(10_000) +
-             minor.times(1000) +
+    const val versionCode = major.times(1_000_000) +
+             minor.times(10_000) +
              patch.times(100) +
-             candidate.times(10)
+             candidate.times(1)
 
     /**
      * Naming schema: X.Y.Z-variant##
