@@ -6,7 +6,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 ## What's Changed
 
 ### Enhancements
-- Improve share button experince. Thanks @Luk1337
+- Improve share button experience. Thanks @Luk1337
 
 ### Bug Fixes
 - Many quality of life bug fixes. Thanks @Luk1337
