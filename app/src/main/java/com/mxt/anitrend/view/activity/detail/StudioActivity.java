@@ -82,7 +82,7 @@ public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
                     intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
                             "%s - %s", model.getName(), model.getSiteUrl()));
                     intent.setType("text/plain");
-                    startActivity(intent);
+                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)));
                     break;
             }
         } else

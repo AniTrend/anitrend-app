@@ -93,8 +93,6 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
         binding.userMangaChaps.setTextColor(textColor);
         binding.userAnimeTotal.setTextColor(textColor);
         binding.userMangaTotal.setTextColor(textColor);
-
-        binding.setClickListener(this);
     }
 
     public void updateUI() {
@@ -103,6 +101,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
             binding.userMangaChaps.setText(getMangaChaptersCount(model.getManga().getChaptersRead()));
             binding.userAnimeTotal.setText(getCount(model.getAnime().getCount()));
             binding.userMangaTotal.setText(getCount(model.getManga().getCount()));
+            binding.setClickListener(this);
         }
     }
 

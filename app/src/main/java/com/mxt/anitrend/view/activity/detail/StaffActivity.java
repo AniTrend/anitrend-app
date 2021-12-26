@@ -94,7 +94,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
                     intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.getDefault(),
                             "%s - %s", model.getName().getFullName(), model.getSiteUrl()));
                     intent.setType("text/plain");
-                    startActivity(intent);
+                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)));
                     break;
                 case R.id.action_on_my_list:
                     DialogUtil.createSelection(this, R.string.app_filter_on_list,
