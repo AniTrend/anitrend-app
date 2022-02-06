@@ -147,5 +147,5 @@
     <string name="pref_selected_language_title_pl" translatable="false">Polski</string>
     <string name="pref_selected_language_title_pt" translatable="false">Português</string>
     <string name="pref_selected_language_title_sv" translatable="false">Svenska</string>
-    <string name="pref_selected_language_title_de_nl" translatable="false">Deutsch-Nederlands</string>
+    <string name="pref_selected_language_title_de_nl" translatable="false">Nederlands</string>
 </resources>
