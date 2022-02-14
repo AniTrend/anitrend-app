@@ -62,7 +62,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
         return when (notification.user) {
             null -> {
                 when (notification?.type) {
-                    KeyUtil.AIRING, KeyUtil.RELATED_MEDIA_ADDITION -> KeyUtil.RECYCLER_TYPE_CONTENT
+                    KeyUtil.AIRING, KeyUtil.RELATED_MEDIA_ADDITION, KeyUtil.MEDIA_DATA_CHANGE, KeyUtil.MEDIA_DELETION, KeyUtil.MEDIA_MERGE -> KeyUtil.RECYCLER_TYPE_CONTENT
                     else -> KeyUtil.RECYCLER_TYPE_ERROR
                 }
             }
@@ -113,10 +113,9 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
 
             binding.notificationTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
 
-            if (!CompatUtil.equals(model.type, KeyUtil.AIRING) && !CompatUtil.equals(model.type, KeyUtil.RELATED_MEDIA_ADDITION)) {
-                if (model.user != null && model.user.avatar != null)
-                    AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
-            } else
+            if (model.user != null && model.user.avatar != null)
+                AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
+            else if (model.media != null && model.media?.coverImage != null)
                 AspectImageView.setImage(binding.notificationImg, model.media?.coverImage?.extraLarge)
 
             when (model.type) {
