@@ -65,7 +65,7 @@ public class NotificationBase extends RecyclerItem implements Parcelable {
     }
 
     public String getContext() {
-        return context;
+        return context.trim();
     }
 
     @Override
