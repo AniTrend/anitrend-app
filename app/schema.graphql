@@ -971,6 +971,10 @@ type InternalPage {
         "Filter by the user id of the thread's creator"
         userId: Int
     ): [Thread]
+    userBlockSearch(
+        "Filter by search query"
+        search: String
+    ): [User]
     users(
         "Filter by the user id"
         id: Int,
@@ -1088,6 +1092,8 @@ type Media {
     isAdult: Boolean
     "If the media is marked as favourite by the current authenticated user"
     isFavourite: Boolean!
+    "If the media is blocked from being added to favourites"
+    isFavouriteBlocked: Boolean!
     "If the media is officially licensed or a self-published doujin release"
     isLicensed: Boolean
     "Locked media may not be added to lists our favorited. This may be due to the entry pending for deletion or other reasons."
@@ -1813,6 +1819,8 @@ type Mutation {
         comment: String,
         "The comment id, required for updating"
         id: Int,
+        "If the comment tree should be locked. (Mod Only)"
+        locked: Boolean,
         "The id of thread comment to reply to"
         parentCommentId: Int,
         "The id of thread the comment belongs to"
@@ -2467,7 +2475,7 @@ type PageInfo {
     lastPage: Int
     "The count on a page"
     perPage: Int
-    "The total number of items"
+    "The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic"
     total: Int
 }
 
@@ -3605,6 +3613,8 @@ type ThreadComment {
     id: Int!
     "If the currently authenticated user liked the comment"
     isLiked: Boolean
+    "If the comment tree is locked and may not receive replies or edits"
+    isLocked: Boolean
     "The amount of likes the comment has"
     likeCount: Int!
     "The users who liked the comment"
