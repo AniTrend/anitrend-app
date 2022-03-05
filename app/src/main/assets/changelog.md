@@ -7,7 +7,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 ### Enhancements
 - Improve share button experience. Thanks @Luk1337
-- Improve notification expereince @Luk1337
+- Improve notification experience @Luk1337
 
 ### Bug Fixes
 - Many quality of life bug fixes. Thanks @Luk1337
