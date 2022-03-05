@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -59,6 +60,8 @@ import timber.log.Timber;
 public abstract class ActivityBase<M, P extends CommonPresenter> extends AppCompatActivity implements
         Observer<M>, CommonPresenter.AbstractPresenter<P>, ResponseCallback,
         MaterialSearchView.SearchViewListener, MaterialSearchView.OnQueryTextListener {
+
+    private static final String KEY_SEARCHVIEW_QUERY = "SEARCHVIEW_QUERY";
 
     protected String TAG;
 
@@ -119,6 +122,25 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
             mSearchView.setOnSearchViewListener(this);
             mSearchView.setCursorDrawable(R.drawable.material_search_cursor);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mSearchView != null) {
+            CharSequence text = ((TextView) mSearchView.findViewById(R.id.searchTextView)).getText();
+            if (!TextUtils.isEmpty(text))
+                outState.putCharSequence(KEY_SEARCHVIEW_QUERY, text);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.containsKey(KEY_SEARCHVIEW_QUERY))
+            onQueryTextChange(savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY).toString());
     }
 
     /**
