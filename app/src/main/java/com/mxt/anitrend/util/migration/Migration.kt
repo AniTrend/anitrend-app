@@ -2,6 +2,7 @@ package com.mxt.anitrend.util.migration
 
 import android.content.Context
 import com.mxt.anitrend.util.Settings
+import timber.log.Timber
 
 /**
  * Creates a new migration between [startVersion] and [endVersion].
@@ -13,7 +14,9 @@ abstract class Migration(
         val startVersion: Int,
         val endVersion: Int
 ) {
-    abstract fun applyMigration(context: Context, settings: Settings)
+    open fun applyMigration(context: Context, settings: Settings) {
+        Timber.i("Applying migrations for $this")
+    }
 
     /**
      * Indicates whether some other object is "equal to" this one. Implementations must fulfil the following

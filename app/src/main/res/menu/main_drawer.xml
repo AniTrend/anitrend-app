@@ -68,6 +68,7 @@
                 android:id="@+id/nav_check_update"
                 android:icon="@drawable/ic_cloud_download_white_24dp"
                 android:title="@string/drawer_title_update"
+                android:visible="@bool/display_update_channel_pref"
                 app:actionLayout="@layout/action_view_update" />
         </menu>
     </item>
