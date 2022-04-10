@@ -186,3 +186,7 @@ fun Context.logFile(): File {
     if (!log.exists()) log.mkdirs()
     return log
 }
+
+fun Context.supportsAutoUpdates(): Boolean {
+    return resources.getBoolean(R.bool.display_update_channel_pref)
+}

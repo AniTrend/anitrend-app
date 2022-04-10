@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="display_adult_content_pref">true</bool>
+    <bool name="display_update_channel_pref">true</bool>
 </resources>

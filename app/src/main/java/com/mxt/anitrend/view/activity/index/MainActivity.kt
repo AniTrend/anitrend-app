@@ -2,8 +2,6 @@ package com.mxt.anitrend.view.activity.index
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager.PERMISSION_DENIED
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,29 +15,28 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import butterknife.ButterKnife
-import com.afollestad.materialdialogs.DialogAction
 import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.index.*
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.ActivityBase
+import com.mxt.anitrend.base.custom.activity.checkUpdate
+import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
-import com.mxt.anitrend.extension.*
+import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.extension.getCompatDrawable
+import com.mxt.anitrend.extension.koinOf
+import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.service.DownloaderService
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -353,60 +350,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                     })
                 showBottomSheet()
             }
-            R.id.nav_check_update -> when (ContextCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )) {
-                PERMISSION_GRANTED -> {
-                    mBottomSheet = BottomSheetMessage.Builder()
-                        .setText(R.string.drawer_update_text)
-                        .setTitle(R.string.drawer_update_title)
-                        .setPositiveText(R.string.Yes)
-                        .setNegativeText(R.string.No)
-                        .buildWithCallback(object : BottomSheetChoice {
-                            override fun onPositiveButton() {
-                                val versionBase = presenter.database.remoteVersion
-                                if (versionBase != null && versionBase.isNewerVersion)
-                                    DownloaderService.downloadNewVersion(
-                                        this@MainActivity,
-                                        versionBase
-                                    )
-                                else presenter.checkForUpdates(false)
-                            }
-
-                            override fun onNegativeButton() {
-
-                            }
-                        })
-                    showBottomSheet()
-                }
-                PERMISSION_DENIED -> if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        this@MainActivity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    )
-                )
-                    DialogUtil.createMessage(
-                        this@MainActivity,
-                        R.string.title_permission_write,
-                        R.string.text_permission_write
-                    ) { _, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> ActivityCompat.requestPermissions(
-                                this,
-                                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                REQUEST_PERMISSION
-                            )
-                            DialogAction.NEGATIVE -> NotifyUtil.makeText(
-                                this@MainActivity,
-                                R.string.canceled_by_user,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            else -> {}
-                        }
-                    }
-                else
-                    requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            }
+            R.id.nav_check_update -> checkUpdate()
             else -> { }
         }
     }
@@ -445,17 +389,21 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     }
 
     override fun makeRequest() {
-        WorkManager.getInstance(this)
-            .getWorkInfosByTagLiveData(
-                KeyUtil.WorkUpdaterId
-            ).observe(this) { workInfoList ->
-                val workInfo = workInfoList.firstOrNull { workInfo ->
-                    workInfo.state == WorkInfo.State.SUCCEEDED
-                }
-                if (workInfo != null)
-                    onUpdateChecked(
-                        workInfo.outputData.getBoolean(KeyUtil.WorkUpdaterSilentId, false)
-                    )
+        launchUpdateWorker(menuItems)
+    }
+
+    private fun checkNewInstallation() {
+        if (presenter.settings.isUpdated) {
+            DialogUtil.createChangeLog(this)
+            presenter.settings.setUpdated()
+        }
+        if (presenter.settings.isFreshInstall) {
+            presenter.settings.isFreshInstall = false
+            mBottomSheet = BottomSheetMessage.Builder()
+                .setText(R.string.app_intro_guide)
+                .setTitle(R.string.app_intro_title)
+                .setNegativeText(R.string.Ok).build()
+            showBottomSheet()
         }
     }
 
@@ -467,32 +415,6 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                 GraphUtil.getDefaultQuery(false)
             )
             viewModel.requestData(KeyUtil.USER_CURRENT_REQ, this)
-        }
-    }
-
-    private fun onLatestUpdateInstalled() {
-        NotifyUtil.createAlerter(
-            this@MainActivity,
-            getString(R.string.title_update_infodadat),
-            getString(R.string.app_no_date),
-            R.drawable.ic_cloud_done_white_24dp,
-            R.color.colorStateGreen
-        )
-    }
-
-    private fun onUpdateChecked(silent: Boolean) {
-        val remoteVersion = presenter.database.remoteVersion
-
-        if (remoteVersion != null) {
-            if (remoteVersion.isNewerVersion) {
-                // If a new version of the application is available on GitHub
-                val mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update)
-                    .actionView.findViewById<TextView>(R.id.app_update_info)
-                mAppUpdateWidget.text = getString(R.string.app_update, remoteVersion.version)
-                mAppUpdateWidget.visibility = View.VISIBLE
-            } else if (!silent) {
-                onLatestUpdateInstalled()
-            }
         }
     }
 
@@ -518,24 +440,6 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         mSignOutProfile.isVisible = true
         mManageMenu.isVisible = true
         mHomeFeed.isVisible = true
-    }
-
-    /**
-     * Checks to see if this instance is a new installation
-     */
-    private fun checkNewInstallation() {
-        if (presenter.settings.isUpdated) {
-            DialogUtil.createChangeLog(this)
-            presenter.settings.setUpdated()
-        }
-        if (presenter.settings.isFreshInstall) {
-            presenter.settings.isFreshInstall = false
-            mBottomSheet = BottomSheetMessage.Builder()
-                .setText(R.string.app_intro_guide)
-                .setTitle(R.string.app_intro_title)
-                .setNegativeText(R.string.Ok).build()
-            showBottomSheet()
-        }
     }
 
     override fun onClick(view: View) {
