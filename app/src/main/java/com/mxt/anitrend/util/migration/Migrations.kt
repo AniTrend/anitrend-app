@@ -2,10 +2,13 @@ package com.mxt.anitrend.util.migration
 
 import android.content.Context
 import android.os.Build
+import androidx.annotation.CallSuper
 import androidx.core.content.edit
+import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.extension.koinOf
+import com.mxt.anitrend.extension.supportsAutoUpdates
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
@@ -15,8 +18,8 @@ import timber.log.Timber
 object Migrations {
 
     val MIGRATION_101_108 = object : Migration(101, 108) {
+        @CallSuper
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying migrations for $this")
             settings.edit {
                 clear()
                 apply()
@@ -27,8 +30,8 @@ object Migrations {
     }
 
     val MIGRATION_109_134 = object : Migration(109, 134) {
+        @CallSuper
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying migrations for $this")
             settings.edit {
                 clear()
                 apply()
@@ -43,19 +46,30 @@ object Migrations {
     }
 
     val MIGRATION_135_136 = object : Migration(135, 136) {
+        @CallSuper
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying migrations for $this")
             settings.isCrashReportsEnabled = true
         }
     }
 
     val MIGRATION_18400_18500 = object : Migration(18400, 18500) {
+        @CallSuper
         override fun applyMigration(context: Context, settings: Settings) {
-            Timber.i("Applying migrations for $this")
             settings.edit {
                 // A small error in the italian translation which was using the
                 // string below as a key for notification preference
                 remove("Notifiche di nuovo messaggio")
+            }
+        }
+    }
+
+    val MIGRATION_1090700_1090800 = object : Migration(1090700, 1090800) {
+        @CallSuper
+        override fun applyMigration(context: Context, settings: Settings) {
+            settings.edit {
+                if (!context.supportsAutoUpdates()) {
+                    settings.updateChannel = null
+                }
             }
         }
     }
