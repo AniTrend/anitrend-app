@@ -78,17 +78,14 @@ public class StatusContentWidget extends LinearLayout implements CustomView, Ite
     }
 
     public void setModel(FeedList model) {
-        binding.widgetStatusText.setMarkDownText(model.getText());
         findMediaAttachments(model.getText());
     }
 
     public void setModel(FeedReply model) {
-        binding.widgetStatusText.setMarkDownText(model.getReply());
         findMediaAttachments(model.getReply());
     }
 
     public void setTextData(@Nullable String textData) {
-        binding.widgetStatusText.setMarkDownText(textData);
         findMediaAttachments(textData);
     }
 
