@@ -635,4 +635,10 @@ These are the anime time labels in your profile -->
     <string name="app_filter_on_list">"Auf meiner Liste?"</string>
     <string name="text_about_application_version">"Version %s"</string>
     <string name="notification_action_mark_as_read">"Als gelesen markieren"</string>
+    <string name="pref_title_experimental_markdown">Experimental markdown support</string>
+    <string name="pref_summary_experimental_markdown">Allows the application to render AniList specific markdown better but does have some issues</string>
+    <string name="notification_media_merge">Media Merge</string>
+    <string name="notification_media_deletion">Media Deletion</string>
+    <string name="notification_media_data_change">Media Update</string>
+    <string name="title_recommendations">Recommendations</string>
 </resources>
