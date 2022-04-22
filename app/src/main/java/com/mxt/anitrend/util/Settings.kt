@@ -359,7 +359,14 @@ class Settings(
                     .convertToJson(selectedIndices)
             edit {
                 putString(_tagFilter, selected)
-                apply()
+            }
+        }
+
+    var experimentalMarkdown: Boolean
+        get() = getBoolean(_experimentalMarkdown, false)
+        set(enabled) {
+            edit {
+                putBoolean(_experimentalMarkdown, enabled)
             }
         }
 
@@ -417,5 +424,6 @@ class Settings(
         private const val _mediaTrendSort = "_mediaTrendSort"
         private const val _reviewSort = "_reviewSort"
         private const val _staffSort = "_staffSort"
+        private const val _experimentalMarkdown = "_experimentalMarkdown"
     }
 }
