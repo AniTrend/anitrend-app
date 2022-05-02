@@ -8,6 +8,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
@@ -23,7 +24,8 @@ class RichMarkdownTextView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : MaterialTextView(context, attrs, defStyleAttr), CustomView, KoinComponent {
 
-    private val markwon by inject<Markwon>()
+    val markwon by inject<Markwon>()
+    val settings by inject<Settings>()
 
     init { onInit() }
 
@@ -44,9 +46,10 @@ class RichMarkdownTextView @JvmOverloads constructor(
     }
 
     fun setMarkDownText(markDownText: String?) {
-        //val strippedText = RegexUtil.removeTags(markDownText)
-        //val markdownSpan = MarkDownUtil.convert(strippedText)
-        //setText(markdownSpan, BufferType.SPANNABLE)
-        markwon.setMarkdown(this, markDownText ?: "**No content available**")
+        if (!settings.experimentalMarkdown) {
+            val strippedText = RegexUtil.removeTags(markDownText)
+            val markdownSpan = MarkDownUtil.convert(strippedText)
+            setText(markdownSpan, BufferType.SPANNABLE)
+        } else markwon.setMarkdown(this, markDownText ?: "**No content available**")
     }
 }

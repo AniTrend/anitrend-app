@@ -34,7 +34,6 @@ class Settings(
         set(value) {
             edit {
                 putBoolean(_isAuthenticated, value)
-                apply()
             }
         }
 
@@ -43,7 +42,6 @@ class Settings(
         set(value) {
             edit {
                 putLong(_lastDismissedNotificationId, value)
-                apply()
             }
         }
 
@@ -55,7 +53,6 @@ class Settings(
             field = value
             edit {
                 putString(resources.getString(R.string.pref_key_app_theme), value)
-                apply()
             }
         }
 
@@ -70,7 +67,6 @@ class Settings(
             field = value
             edit {
                 putBoolean(_freshInstall, field)
-                apply()
             }
         }
 
@@ -81,7 +77,6 @@ class Settings(
             field = value
             edit {
                 putString(resources.getString(R.string.pref_key_selected_language), field)
-                apply()
             }
         }
 
@@ -91,7 +86,6 @@ class Settings(
             field = value
             edit {
                 putInt(resources.getString(R.string.pref_key_list_view_style), field)
-                apply()
             }
         }
 
@@ -103,7 +97,6 @@ class Settings(
             field = value
             edit {
                 putInt(resources.getString(R.string.pref_key_sync_frequency), field)
-                apply()
             }
         }
 
@@ -113,7 +106,6 @@ class Settings(
             field = value
             edit {
                 putBoolean(resources.getString(R.string.pref_key_new_message_notifications), field)
-                apply()
             }
         }
 
@@ -123,7 +115,6 @@ class Settings(
             field = value
             edit {
                 putBoolean(resources.getString(R.string.pref_key_clear_notification_on_dismiss), field)
-                apply()
             }
         }
 
@@ -133,7 +124,6 @@ class Settings(
             field = value
             edit {
                 putBoolean(resources.getString(R.string.pref_key_crash_reports), field)
-                apply()
             }
         }
 
@@ -143,7 +133,6 @@ class Settings(
             field = value
             edit {
                 putBoolean(resources.getString(R.string.pref_key_usage_analytics), field)
-                apply()
             }
         }
 
@@ -153,7 +142,6 @@ class Settings(
             field = value
             edit {
                 putInt(KeyUtil.arg_seasonYear, field)
-                apply()
             }
         }
 
@@ -163,7 +151,6 @@ class Settings(
             field = value
             edit {
                 putBoolean(resources.getString(R.string.pref_key_display_adult_content), field)
-                apply()
             }
         }
 
@@ -176,7 +163,6 @@ class Settings(
             field = value
             edit {
                 putString(_sortOrder, value)
-                apply()
             }
         }
 
@@ -187,7 +173,6 @@ class Settings(
         set(mediaStatus) {
             edit {
                 putString(_mediaStatus, mediaStatus)
-                apply()
             }
         }
 
@@ -198,7 +183,6 @@ class Settings(
         set(mediaFormat) {
             edit {
                 putString(_mediaFormat, mediaFormat)
-                apply()
             }
         }
 
@@ -209,7 +193,6 @@ class Settings(
         set(animeFormat) {
             edit {
                 putString(_animeFormat, animeFormat)
-                apply()
             }
         }
 
@@ -220,7 +203,6 @@ class Settings(
         set(mangaFormat) {
             edit {
                 putString(_mangaFormat, mangaFormat)
-                apply()
             }
         }
 
@@ -231,7 +213,6 @@ class Settings(
         set(mediaSource) {
             edit {
                 putString(_mediaSource, mediaSource)
-                apply()
             }
         }
 
@@ -242,7 +223,6 @@ class Settings(
         set(airingSort) {
             edit {
                 putString(_airingSort, airingSort)
-                apply()
             }
         }
 
@@ -253,7 +233,6 @@ class Settings(
         set(characterSort) {
             edit {
                 putString(_characterSort, characterSort)
-                apply()
             }
         }
 
@@ -264,7 +243,6 @@ class Settings(
         set(mediaListSort) {
             edit {
                 putString(_mediaListSort, mediaListSort)
-                apply()
             }
         }
 
@@ -275,7 +253,6 @@ class Settings(
         set(mediaSort) {
             edit {
                 putString(_mediaSort, mediaSort)
-                apply()
             }
         }
     @set:KeyUtil.MediaTrendSort
@@ -285,7 +262,6 @@ class Settings(
         set(mediaTrendSort) {
             edit {
                 putString(_mediaTrendSort, mediaTrendSort)
-                apply()
             }
         }
 
@@ -296,7 +272,6 @@ class Settings(
         set(reviewSort) {
             edit {
                 putString(_reviewSort, reviewSort)
-                apply()
             }
         }
 
@@ -307,7 +282,6 @@ class Settings(
         set(staffSort) {
             edit {
                 putString(_staffSort, staffSort)
-                apply()
             }
         }
 
@@ -318,7 +292,6 @@ class Settings(
         set(channel) {
             edit {
                 putString(_updateChannel, channel)
-                apply()
             }
         }
 
@@ -331,7 +304,6 @@ class Settings(
             field = value
             edit {
                 putInt(_versionCode, value)
-                apply()
             }
         }
 
@@ -345,7 +317,6 @@ class Settings(
                     .convertToJson(selectedIndices)
             edit {
                 putString(_genreFilter, selected)
-                apply()
             }
         }
 
@@ -359,14 +330,20 @@ class Settings(
                     .convertToJson(selectedIndices)
             edit {
                 putString(_tagFilter, selected)
-                apply()
+            }
+        }
+
+    var experimentalMarkdown: Boolean
+        get() = getBoolean(_experimentalMarkdown, false)
+        set(enabled) {
+            edit {
+                putBoolean(_experimentalMarkdown, enabled)
             }
         }
 
     fun saveSeasonYear(year: Int) {
         edit {
             putInt(KeyUtil.arg_seasonYear, year)
-            apply()
         }
     }
 
@@ -378,21 +355,18 @@ class Settings(
     fun disableTipFor(@KeyUtil.TapTargetType tipType: String) {
         edit {
             putBoolean(tipType, false)
-            apply()
         }
     }
 
     fun saveSortOrder(@KeyUtil.SortOrderType sortOrder: String) {
         edit {
             putString(_sortOrder, sortOrder)
-            apply()
         }
     }
 
     fun setUpdated() {
         edit {
             putInt(_versionCode, BuildConfig.VERSION_CODE)
-            apply()
         }
     }
 
@@ -401,7 +375,6 @@ class Settings(
         const val _updateChannel = "_updateChannel"
         const val _appTheme = "application_theme"
 
-        /** Api Keys  */
         private const val _genreFilter = "_genreFilter"
         private const val _tagFilter = "_tagFilter"
         private const val _sortOrder = "_sortOrder"
@@ -417,5 +390,6 @@ class Settings(
         private const val _mediaTrendSort = "_mediaTrendSort"
         private const val _reviewSort = "_reviewSort"
         private const val _staffSort = "_staffSort"
+        private const val _experimentalMarkdown = "_experimentalMarkdown"
     }
 }

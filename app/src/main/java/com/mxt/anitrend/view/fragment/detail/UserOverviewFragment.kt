@@ -83,7 +83,12 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         model?.apply {
             binding.model = this
             binding.stateLayout.showContent()
-            //binding.widgetStatus.setTextData(about)
+            if (!presenter.settings.experimentalMarkdown) {
+                binding.widgetStatus.visibility = View.VISIBLE
+                binding.widgetStatus.setTextData(about)
+            } else {
+                binding.widgetStatus.visibility = View.GONE
+            }
 
             binding.userFollowStateWidget.setUserModel(model)
             binding.userAboutPanelWidget.setFragmentActivity(activity)
