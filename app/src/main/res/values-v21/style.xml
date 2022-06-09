@@ -191,4 +191,40 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="AppThemeBlack" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBlack</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
+
+        <item name="cardColor">@color/colorPrimaryBlack</item>
+        <item name="drawerColor">@color/colorLight</item>
+
+
+        <item name="rootColor">@color/colorPrimaryBlack</item>
+        <item name="lineColor">@color/colorPrimaryBlack</item>
+        <item name="titleColor">@color/colorTextTitleDark</item>
+        <item name="subtitleColor">@color/colorTextSubtitleDark</item>
+        <item name="contentColor">@color/colorTextContentDark</item>
+
+        <item name="voiceDrawable">@drawable/ic_action_voice_search_inverted</item>
+        <item name="closeDrawable">@drawable/ic_action_navigation_close_inverted</item>
+        <item name="backDrawable">@drawable/ic_action_navigation_arrow_back_inverted</item>
+        <item name="suggestionDrawable">@drawable/ic_suggestion</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="toolbarColor">@style/BlackToolbarTheme</item>
+        <item name="android:textViewStyle">@style/TextFamily</item>
+
+        <item name="android:windowBackground">@color/colorPrimaryBlack</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryBlack</item>
+
+        <!--popupMenuStyle doesn't seem to be having any effect-->
+        <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
+
+        <!--actionOverflowMenuStyle controls the state of the overflow popup window-->
+        <item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>
+
+    </style>
+
 </resources>
