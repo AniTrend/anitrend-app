@@ -15,18 +15,17 @@ object LocaleUtil {
 
     @Deprecated(
         message = "We have migrated to androidx.appcompat with multi-locale support",
+        replaceWith = ReplaceWith(""),
         level = DeprecationLevel.WARNING
     )
-    fun onAttach(context: Context, settings: Settings): Context {
-        val language = settings.userLanguage ?: Locale.getDefault().language
+    fun onAttach(context: Context, settings: Settings): Context =
+        applyConfiguration(context, settings)
 
+    fun applyConfiguration(context: Context, settings: Settings): Context {
+        val locale = scopeLocale(settings)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            updateResources(context, Locale(language))
-        } else updateResourcesLegacy(
-            context,
-            Locale(language)
-        )
-
+            updateResources(context, locale)
+        } else updateResourcesLegacy(context, locale)
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -53,5 +52,11 @@ object LocaleUtil {
         resources.updateConfiguration(configuration, resources.displayMetrics)
 
         return context
+    }
+
+    fun scopeLocale(settings: Settings): Locale {
+        return settings.userLanguage?.let { language ->
+            Locale(language)
+        } ?: Locale.getDefault()
     }
 }
