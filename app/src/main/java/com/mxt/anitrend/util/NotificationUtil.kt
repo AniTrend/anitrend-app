@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.text.bold
 import com.mxt.anitrend.R
+import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -110,7 +111,7 @@ class NotificationUtil(
                 }
             }
             if (i != displayedNotificationsCount - 1) {
-                builder.appendln()
+                builder.appendLine()
             }
         }
 
@@ -131,7 +132,7 @@ class NotificationUtil(
             defaultNotificationId = defaultNotificationId.inc()
 
         val notificationBuilder = NotificationCompat.Builder(context, KeyUtil.CHANNEL_ID)
-            .setColor(context.resources.getColor(R.color.colorStateBlue))
+            .setColor(context.getCompatColor(R.color.colorStateBlue))
             .setSmallIcon(R.drawable.ic_new_releases)
             .setPriority(PRIORITY_HIGH)
             .addAction(

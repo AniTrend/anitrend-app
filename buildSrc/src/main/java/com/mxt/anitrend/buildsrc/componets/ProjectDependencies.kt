@@ -61,11 +61,9 @@ internal fun Project.configureDependencies() {
 
     /** Koin AndroidX Dependency Injection */
     dependencies.implementation (Libraries.Koin.core)
-    dependencies.implementation (Libraries.Koin.extension)
-    dependencies.implementation (Libraries.Koin.AndroidX.scope)
-    dependencies.implementation (Libraries.Koin.AndroidX.viewModel)
+    dependencies.implementation (Libraries.Koin.android)
     dependencies.implementation (Libraries.Koin.AndroidX.workManager)
-    dependencies.androidTestImplementation(Libraries.Koin.test)
+    dependencies.androidTestImplementation(Libraries.Koin.Test.testJUnit4)
 
     /** Glide Libraries */
     dependencies.implementation(Libraries.Glide.glide)

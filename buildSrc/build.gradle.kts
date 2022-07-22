@@ -1,3 +1,5 @@
+
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 import java.net.URI
 
 plugins {
@@ -13,13 +15,20 @@ repositories {
     }
 }
 
-kotlinDslPluginOptions {
-    experimentalWarning.set(false)
+tasks.withType(KotlinJvmCompile::class.java) {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
-val kotlinVersion = "1.4.31"
-val buildToolsVersion = "4.1.3"
-val manesVersion = "0.33.0"
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+val buildToolsVersion = "7.2.1"
+val kotlinVersion = "1.6.21"
+val manesVersion = "0.38.0"
 
 dependencies {
     /* Depend on the android gradle plugin, since we want to access it in our plugin */

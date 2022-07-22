@@ -123,7 +123,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
             updateUI()
         } else
             binding.stateLayout.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                    getString(R.string.layout_empty_response), getString(R.string.try_again)) { view ->
+                    getString(R.string.layout_empty_response), getString(R.string.try_again)) {
                 binding.stateLayout.showLoading()
                 makeRequest()
             }

@@ -11,10 +11,8 @@ import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.apiError
-import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by max on 2017/10/14.

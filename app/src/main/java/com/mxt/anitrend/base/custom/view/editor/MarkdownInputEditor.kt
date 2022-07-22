@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.core.view.inputmethod.InputConnectionCompat
 import androidx.core.view.inputmethod.InputContentInfoCompat
@@ -32,6 +33,7 @@ import io.wax911.emojify.initializer.EmojiInitializer
 import io.wax911.emojify.parser.parseToHtmlHexadecimal
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
 
 /**
  * Created by max on 2017/08/14.
@@ -132,7 +134,7 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         // filters = arrayOf<InputFilter>(emojiInputFilter)
         isVerticalScrollBarEnabled = true
         customSelectionActionModeCallback = this
-        maxHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
+        maxHeight = CompatUtil.dipToPx(PEEK_HEIGHT)
         setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL)
     }
@@ -140,8 +142,11 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
         val ic = super.onCreateInputConnection(outAttrs)
         EditorInfoCompat.setContentMimeTypes(outAttrs, arrayOf("image/png", "image/gif"))
+        val mimeTypes = ViewCompat.getOnReceiveContentMimeTypes(this)
+            ?: arrayOf("image/png", "image/gif")
+        EditorInfoCompat.setContentMimeTypes(outAttrs, mimeTypes)
         return ic?.let {
-            InputConnectionCompat.createWrapper(ic, outAttrs, this)
+            InputConnectionCompat.createWrapper(this, it, outAttrs)
         }
     }
 
