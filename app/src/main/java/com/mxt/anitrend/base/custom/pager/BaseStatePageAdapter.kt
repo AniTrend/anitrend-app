@@ -11,7 +11,6 @@ import com.mxt.anitrend.extension.getStringList
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
-import java.util.*
 
 /**
  * Created by max on 2017/06/26.
