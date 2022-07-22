@@ -52,8 +52,11 @@ inline fun <reified T> Context?.startNewActivity(params: Bundle? = null) {
 /**
  * Creates a list of the array resource given
  *
+ * @param arrayRes Array resource that needs to be resolved
+ * @param settings Application settings for locale management
+ *
  * @return The string list associated with the resource.
- * @throws Exception if the given ID does not exist.
+ * @throws Exception if the given [arrayRes] does not exist.
  */
 fun Context.getStringList(@ArrayRes arrayRes : Int, settings: Settings): List<String> {
     val context = LocaleUtil.applyConfiguration(this, settings)
