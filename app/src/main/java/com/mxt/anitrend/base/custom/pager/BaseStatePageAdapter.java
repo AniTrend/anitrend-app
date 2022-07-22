@@ -1,12 +1,16 @@
 package com.mxt.anitrend.base.custom.pager;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.ArrayRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.mxt.anitrend.extension.KoinExt;
+import com.mxt.anitrend.util.Settings;
 
 import java.util.Locale;
 
@@ -27,7 +31,9 @@ public abstract class BaseStatePageAdapter extends FragmentStatePagerAdapter {
     }
 
     public void setPagerTitles(@ArrayRes int mTitleRes) {
-        mTitles = context.getResources().getStringArray(mTitleRes);
+        Configuration configuration = new Configuration(context.getResources().getConfiguration());
+        configuration.setLocale(new Locale(KoinExt.get(Settings.class).getUserLanguage()));
+        mTitles = context.createConfigurationContext(configuration).getResources().getStringArray(mTitleRes);
     }
 
     public String[] getPagerTitles() {
