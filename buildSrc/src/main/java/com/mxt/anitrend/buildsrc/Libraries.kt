@@ -40,6 +40,12 @@ object Libraries {
             const val activityKtx = "androidx.activity:activity-ktx:$version"
         }
 
+        object AppCompat {
+            private const val version = "1.6.0-alpha05"
+            const val appcompat = "androidx.appcompat:appcompat:$version"
+            const val appcompatResources = "androidx.appcompat:appcompat-resources:$version"
+        }
+
         object Collection {
             private const val version = "1.2.0"
             const val collection = "androidx.collection:collection:$version"

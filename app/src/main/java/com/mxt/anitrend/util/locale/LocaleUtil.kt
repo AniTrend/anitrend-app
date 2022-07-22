@@ -13,6 +13,10 @@ import java.util.*
  */
 object LocaleUtil {
 
+    @Deprecated(
+        message = "We have migrated to androidx.appcompat with multi-locale support",
+        level = DeprecationLevel.WARNING
+    )
     fun onAttach(context: Context, settings: Settings): Context {
         val language = settings.userLanguage ?: Locale.getDefault().language
 

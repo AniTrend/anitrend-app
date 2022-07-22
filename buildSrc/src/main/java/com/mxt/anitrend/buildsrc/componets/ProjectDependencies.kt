@@ -46,6 +46,8 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(Libraries.AndroidX.Collection.collectionKtx)
 
     dependencies.implementation(Libraries.AndroidX.Core.coreKtx)
+    dependencies.implementation(Libraries.AndroidX.AppCompat.appcompat)
+    dependencies.implementation(Libraries.AndroidX.AppCompat.appcompatResources)
     dependencies.implementation(Libraries.AndroidX.Activity.activityKtx)
     dependencies.implementation(Libraries.AndroidX.Fragment.fragmentKtx)
     dependencies.implementation(Libraries.AndroidX.Preference.preferenceKtx)
