@@ -60,7 +60,7 @@ jobs:
         with:
           name: app-github-release
           path: app/build/outputs/apk/github/release
-      - uses: ericcornelissen/git-tag-annotation-action@v1
+      - uses: ericcornelissen/git-tag-annotation-action@v2
         id: tag_data
       - uses: marvinpinto/action-automatic-releases@latest
         with:
