@@ -142,11 +142,8 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
         val ic = super.onCreateInputConnection(outAttrs)
         EditorInfoCompat.setContentMimeTypes(outAttrs, arrayOf("image/png", "image/gif"))
-        val mimeTypes = ViewCompat.getOnReceiveContentMimeTypes(this)
-            ?: arrayOf("image/png", "image/gif")
-        EditorInfoCompat.setContentMimeTypes(outAttrs, mimeTypes)
         return ic?.let {
-            InputConnectionCompat.createWrapper(this, it, outAttrs)
+            InputConnectionCompat.createWrapper(ic, outAttrs, this)
         }
     }
 
