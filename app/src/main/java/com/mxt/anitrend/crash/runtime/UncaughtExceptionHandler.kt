@@ -39,7 +39,7 @@ internal class UncaughtExceptionHandler : Thread.UncaughtExceptionHandler {
      * @param thread the thread
      * @param throwable the exception
      */
-    override fun uncaughtException(thread: Thread?, throwable: Throwable?) {
+    override fun uncaughtException(thread: Thread, throwable: Throwable) {
         exceptionHandler.onException(thread, throwable)
     }
 }

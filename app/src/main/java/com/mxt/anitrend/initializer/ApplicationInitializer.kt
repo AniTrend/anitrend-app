@@ -25,7 +25,7 @@ class ApplicationInitializer : Initializer<Unit> {
                         Timber.i("Provider installed successfully")
                     }
 
-                    override fun onProviderInstallFailed(code: Int, intent: Intent) {
+                    override fun onProviderInstallFailed(code: Int, intent: Intent?) {
                         Timber.e("Provider installer failed to patch device -> code: $code, intent: $intent")
                     }
                 }

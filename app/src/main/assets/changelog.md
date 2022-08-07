@@ -13,6 +13,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 ### Bug Fixes
 - Many quality of life bug fixes. Thanks @Luk1337
 - Duplicate entries for list styles in settings
+- Translations not being applied correctly
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)

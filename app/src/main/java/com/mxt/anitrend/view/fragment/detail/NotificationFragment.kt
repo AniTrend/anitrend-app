@@ -75,11 +75,13 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }*/
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_mark_all).isVisible = true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_mark_all -> {

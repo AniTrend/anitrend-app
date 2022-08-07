@@ -36,9 +36,7 @@ internal class ExceptionCrashHandler(
      * @param throwable Exception that was unhandled
      */
     @SuppressLint("LogNotTimber")
-    override fun onException(thread: Thread?, throwable: Throwable?) {
-        if (thread == null) return
-        if (throwable == null) return
+    override fun onException(thread: Thread, throwable: Throwable) {
         try {
             handleUncaughtCrashException(thread, throwable)
         } catch (e: Exception) {

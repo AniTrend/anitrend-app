@@ -6,10 +6,7 @@ import androidx.work.DelegatingWorkerFactory
 import androidx.work.WorkManager
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.worker.factory.WorkManagerFactory
-import org.koin.androidx.workmanager.factory.KoinWorkerFactory
 import org.koin.core.KoinApplication
-import org.koin.core.KoinExperimentalAPI
-import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import org.koin.core.parameter.ParametersDefinition

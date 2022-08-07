@@ -1,5 +1,6 @@
 package com.mxt.anitrend.extension
 
+import java.util.*
 
 
 /**
@@ -43,8 +44,13 @@ fun String?.capitalizeWords(exceptions: List<String>? = null): String = when {
             when (word.isNotEmpty()) {
                 true -> {
                     if (!exceptions.isNullOrEmpty() && exceptions.contains(word)) result.append(word)
-                    else result.append(word.capitalize())
+                    else result.append(word.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    })
                 }
+                else -> {}
             }
             if (index != words.size - 1)
                 result.append(" ")

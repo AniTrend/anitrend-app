@@ -204,8 +204,8 @@ private val networkModule = module {
     }
     single {
         val logLevel = if (BuildConfig.DEBUG)
-            ILogger.Level.DEBUG
-        else ILogger.Level.INFO
+            ILogger.Level.INFO
+        else ILogger.Level.ERROR
 
         AniGraphConverter(
             graphProcessor = GraphProcessor(
