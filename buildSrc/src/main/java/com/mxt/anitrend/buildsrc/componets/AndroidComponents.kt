@@ -21,8 +21,9 @@ package com.mxt.anitrend.buildsrc.componets
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.android.build.gradle.internal.dsl.BuildType
+import com.android.build.api.dsl.ApplicationBuildType
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import com.mxt.anitrend.buildsrc.common.Versions
+import com.mxt.anitrend.buildsrc.common.Configuration
 import com.mxt.anitrend.buildsrc.extensions.*
 import com.mxt.anitrend.buildsrc.Libraries
 import org.gradle.api.JavaVersion
@@ -35,7 +36,7 @@ import java.io.File
 import java.io.FileWriter
 import java.util.*
 
-private fun Properties.applyToBuildConfigForBuild(buildType: BuildType) {
+private fun Properties.applyToBuildConfigForBuild(buildType: ApplicationBuildType) {
     forEach { propEntry ->
         val key = propEntry.key as String
         val value = propEntry.value as String
@@ -43,7 +44,7 @@ private fun Properties.applyToBuildConfigForBuild(buildType: BuildType) {
     }
 }
 
-private fun Project.createSigningConfiguration(extension: BaseAppModuleExtension) {
+private fun Project.createSigningConfiguration(extension: BaseExtension) {
     val keyStoreFile = project.file(".config/keystore.properties")
     if (keyStoreFile.exists()) {
         keyStoreFile.inputStream().use { fis ->
@@ -56,7 +57,6 @@ private fun Project.createSigningConfiguration(extension: BaseAppModuleExtension
                     storePassword(properties["STORE_PASSWORD"] as String)
                     keyAlias(properties["STORE_KEY_ALIAS"] as String)
                     keyPassword(properties["STORE_KEY_PASSWORD"] as String)
-                    isV2SigningEnabled = true
                 }
             }
         }
@@ -64,7 +64,7 @@ private fun Project.createSigningConfiguration(extension: BaseAppModuleExtension
     else println("${keyStoreFile.absolutePath} could not be found, release may fail")
 }
 
-private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Project) {
+private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(project: Project) {
     asMap.forEach { buildTypeEntry ->
         println("Configuring build type -> ${buildTypeEntry.key}")
         val buildType = buildTypeEntry.value
@@ -90,13 +90,13 @@ private fun NamedDomainObjectContainer<BuildType>.applyConfiguration(project: Pr
 }
 
 private fun BaseExtension.setUpWith() {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdkVersion(Configuration.compileSdk)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
-        versionCode = Versions.versionCode
-        versionName = Versions.versionName
+        minSdk = Configuration.minSdk
+        targetSdk = Configuration.targetSdk
+        versionCode = Configuration.versionCode
+        versionName = Configuration.versionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -104,7 +104,7 @@ private fun BaseExtension.setUpWith() {
 }
 
 private fun BaseAppModuleExtension.configureBuildFlavours() {
-    flavorDimensions("version")
+    flavorDimensions.add("version")
 
     productFlavors {
         create("app") {
@@ -161,19 +161,19 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
     }
 
     packagingOptions {
-        excludes.add("META-INF/NOTICE.txt")
-        excludes.add("META-INF/LICENSE")
-        excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/NOTICE.txt")
+        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.add("META-INF/LICENSE.txt")
         // Exclude potential duplicate kotlin_module files
-        excludes.add("META-INF/*kotlin_module")
+        resources.excludes.add("META-INF/*kotlin_module")
         // Exclude consumer proguard files
-        excludes.add("META-INF/proguard/*")
+        resources.excludes.add("META-INF/proguard/*")
         // Exclude AndroidX version files
-        excludes.add("META-INF/*.version")
+        resources.excludes.add("META-INF/*.version")
         // Exclude the Firebase/Fabric/other random properties files
-        excludes.add("META-INF/*.properties")
-        excludes.add("/*.properties")
-        excludes.add("fabric/*.properties")
+        resources.excludes.add("META-INF/*.properties")
+        resources.excludes.add("/*.properties")
+        resources.excludes.add("fabric/*.properties")
     }
 
     sourceSets {
@@ -188,15 +188,15 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         unitTests.isReturnDefaultValues = true
     }
 
-    lintOptions {
-        isAbortOnError = false
-        isIgnoreWarnings = false
-        isIgnoreTestSources = true
+    lint {
+        abortOnError = false
+        ignoreWarnings = false
+        ignoreTestSources = true
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
@@ -208,9 +208,6 @@ internal fun Project.applyAndroidConfiguration() {
     baseExtension.setUpWith()
     appExtension.setUpWith(this)
 
-    baseExtension.dexOptions {
-        jumboMode = true
-    }
     androidExtension.isExperimental = true
 
     configurations.all {
@@ -225,22 +222,20 @@ internal fun Project.applyAndroidConfiguration() {
 
     tasks.withType(KotlinJvmCompile::class.java) {
         kotlinOptions {
-            jvmTarget = "1.8"
-            // https://blog.jetbrains.com/kotlin/2021/02/the-jvm-backend-is-in-beta-let-s-make-it-stable-together/
-            useIR
+            jvmTarget = "11"
         }
     }
 
+
     tasks.withType(KotlinCompile::class.java) {
         val compilerArgumentOptions = mutableListOf(
-            "-Xuse-experimental=kotlin.Experimental",
-            "-Xopt-in=kotlin.ExperimentalStdlibApi",
-            "-Xopt-in=kotlin.Experimental",
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xopt-in=kotlinx.coroutines.FlowPreview",
-            "-Xopt-in=org.koin.core.component.KoinExperimentalAPI",
-            "-Xopt-in=org.koin.core.component.KoinApiExtension",
-            "-Xopt-in=org.koin.core.KoinExperimentalAPI"
+            "-opt-in=kotlin.ExperimentalStdlibApi",
+            "-opt-in=kotlin.Experimental",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+            "-opt-in=org.koin.core.component.KoinExperimentalAPI",
+            "-opt-in=org.koin.core.component.KoinApiExtension",
+            "-opt-in=org.koin.core.KoinExperimentalAPI"
         )
 
         kotlinOptions {
@@ -262,11 +257,11 @@ internal fun Project.applyAndroidConfiguration() {
             writer.write(
                 """
                     {
-                        "code": ${Versions.versionCode},
+                        "code": ${Configuration.versionCode},
                         "migration": false,
-                        "minSdk": ${Versions.minSdk},
+                        "minSdk": ${Configuration.minSdk},
                         "releaseNotes": "",
-                        "version": "${Versions.versionName}",
+                        "version": "${Configuration.versionName}",
                         "appId": "com.mxt.anitrend"
                     }
                 """.trimIndent()

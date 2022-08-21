@@ -17,10 +17,8 @@ import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityManagerCompat
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import com.annimon.stream.IntPair
 import com.annimon.stream.Optional
@@ -143,7 +141,7 @@ object CompatUtil {
     )
     fun getTintedDrawable(context: Context, @DrawableRes resource: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
-        DrawableCompat.setTint(drawable, getColorFromAttr(context, R.attr.titleColor))
+        DrawableCompat.setTint(drawable, context.getCompatColorAttr(R.attr.titleColor))
         return drawable
     }
 
@@ -207,7 +205,7 @@ object CompatUtil {
     )
     fun getDrawableTintAttr(context: Context, @DrawableRes resource: Int, @AttrRes attribute: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
-        DrawableCompat.setTint(drawable, getColorFromAttr(context, attribute))
+        DrawableCompat.setTint(drawable, context.getCompatColorAttr(attribute))
         return drawable
     }
 

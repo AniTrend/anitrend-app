@@ -1,6 +1,6 @@
 package com.mxt.anitrend.buildsrc.componets
 
-import com.mxt.anitrend.buildsrc.extensions.baseAppExtension
+import com.mxt.anitrend.buildsrc.extensions.baseExtension
 import org.gradle.api.Project
 
 internal fun Project.configurePlugins() {
@@ -14,9 +14,9 @@ internal fun Project.configurePlugins() {
 
 @Suppress("UnstableApiUsage")
 internal fun Project.configureAdditionalPlugins() {
-    baseAppExtension().onVariants {
-        if (flavorName == "app") {
-            println("Applying additional google plugins on -> variant: $flavorName | type: $buildType")
+    baseExtension().variantFilter {
+        if (flavors.first().name == "app") {
+            println("Applying additional google plugins on -> variant: $name | type: $buildType")
             if (file("google-services.json").exists()) {
                 plugins.apply("com.google.gms.google-services")
                 plugins.apply("com.google.firebase.crashlytics")

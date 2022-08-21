@@ -28,6 +28,7 @@ import java.util.*
  * Created by max on 2017/11/03.
  * adapter for series lists
  */
+@Suppress("UNCHECKED_CAST")
 class MediaListAdapter(context: Context?) :
     RecyclerViewAdapter<MediaList?>(context) {
     private var currentUser: String? = null

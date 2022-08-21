@@ -1,6 +1,5 @@
 package com.mxt.anitrend.base.custom.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -37,8 +36,6 @@ import com.mxt.anitrend.util.ConfigurationUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
-import com.mxt.anitrend.util.Settings;
-import com.mxt.anitrend.util.locale.LocaleUtil;
 import com.mxt.anitrend.util.media.MediaActionUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
@@ -56,7 +53,6 @@ import timber.log.Timber;
  * Created by max on 2017/06/09.
  * Activity base <M type of data model, P extends CommonPresenter>
  */
-
 public abstract class ActivityBase<M, P extends CommonPresenter> extends AppCompatActivity implements
         Observer<M>, CommonPresenter.AbstractPresenter<P>, ResponseCallback,
         MaterialSearchView.SearchViewListener, MaterialSearchView.OnQueryTextListener {
@@ -97,11 +93,6 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         if (configurationUtil == null)
             configurationUtil = KoinExt.get(ConfigurationUtil.class);
         configurationUtil.onCreateAttach(this);
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleUtil.INSTANCE.onAttach(base, KoinExt.get(Settings.class)));
     }
 
     @Override

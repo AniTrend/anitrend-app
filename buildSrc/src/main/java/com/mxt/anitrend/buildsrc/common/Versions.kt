@@ -1,34 +1,6 @@
 package com.mxt.anitrend.buildsrc.common
 
 object Versions {
-
-    private const val major = 1
-    private const val minor = 9
-    private const val patch = 9
-    private const val candidate = 0
-
-    const val compileSdk = 30
-    const val targetSdk = 30
-    const val minSdk = 17
-
-     /**
-      * **RR**_X.Y.Z_
-      * > **RR** reserved for build flavours and **X.Y.Z** follow the [versionName] convention
-      */
-    const val versionCode = major.times(1_000_000) +
-             minor.times(10_000) +
-             patch.times(100) +
-             candidate.times(1)
-
-    /**
-     * Naming schema: X.Y.Z-variant##
-     * > **X**(Major).**Y**(Minor).**Z**(Patch)
-     */
-    val versionName = when {
-        candidate > 0 -> "$major.$minor.$patch-rc$candidate"
-        else -> "$major.$minor.$patch"
-    }
-
     const val mockk = "1.11.0"
     const val junit = "4.13.2"
 

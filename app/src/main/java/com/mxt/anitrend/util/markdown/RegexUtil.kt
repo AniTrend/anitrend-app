@@ -1,5 +1,6 @@
 package com.mxt.anitrend.util.markdown
 
+import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -164,14 +165,16 @@ object RegexUtil {
                     val tag = matcher.group(gc - 1) // returns the first match group tag of the regex match img|IMG|Img
                     val media = matcher.group(gc) // contains the second match group e.g. (http://git.raw.sample.jpg) brackets included
                     val mediaWithoutBrackets = media?.removeSurrounding("(", ")")
-                    substitute = when (tag?.toLowerCase()) {
-                        KEY_IMG ->
-                            substitute.replace(match, "![image]$media")
-                        KEY_WEB ->
-                            substitute.replace(match, "<a href=\"$mediaWithoutBrackets\"><img src=\"$NO_THUMBNAIL\"/></a>")
-                        KEY_YOU ->
-                            substitute.replace(match, "<a href=\"$mediaWithoutBrackets\"><img src=\"${VID_THUMB.format(mediaWithoutBrackets)}\"/></a>")
-                        else -> substitute
+                    if (tag != null) {
+                        substitute = when (tag.lowercase(Locale.getDefault())) {
+                            KEY_IMG ->
+                                substitute.replace(match, "![image]$media")
+                            KEY_WEB ->
+                                substitute.replace(match, "<a href=\"$mediaWithoutBrackets\"><img src=\"$NO_THUMBNAIL\"/></a>")
+                            KEY_YOU ->
+                                substitute.replace(match, "<a href=\"$mediaWithoutBrackets\"><img src=\"${VID_THUMB.format(mediaWithoutBrackets)}\"/></a>")
+                            else -> substitute
+                        }
                     }
 
                 }
