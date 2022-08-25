@@ -68,7 +68,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
         )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.logging_menu, menu)
         return true
     }

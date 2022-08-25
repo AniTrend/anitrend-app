@@ -15,6 +15,8 @@ import androidx.core.app.ActivityManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.mxt.anitrend.R
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.locale.LocaleUtil
 import timber.log.Timber
 import java.io.File
 
@@ -50,11 +52,15 @@ inline fun <reified T> Context?.startNewActivity(params: Bundle? = null) {
 /**
  * Creates a list of the array resource given
  *
+ * @param arrayRes Array resource that needs to be resolved
+ * @param settings Application settings for locale management
+ *
  * @return The string list associated with the resource.
- * @throws Exception if the given ID does not exist.
+ * @throws Exception if the given [arrayRes] does not exist.
  */
-fun Context.getStringList(@ArrayRes arrayRes : Int): List<String> {
-    val array = resources.getStringArray(arrayRes)
+fun Context.getStringList(@ArrayRes arrayRes : Int, settings: Settings): List<String> {
+    val context = LocaleUtil.applyConfiguration(this, settings)
+    val array = context.resources.getStringArray(arrayRes)
     return array.toList()
 }
 
@@ -185,4 +191,8 @@ fun Context.logFile(): File {
     val log = File(logDirectory(), "${packageName}.log")
     if (!log.exists()) log.mkdirs()
     return log
+}
+
+fun Context.supportsAutoUpdates(): Boolean {
+    return resources.getBoolean(R.bool.display_update_channel_pref)
 }

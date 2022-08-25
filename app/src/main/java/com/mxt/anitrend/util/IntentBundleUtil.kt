@@ -103,7 +103,7 @@ class IntentBundleUtil(private val intent: Intent) {
             ShortcutUtil.reportShortcutUsage(context, context.intent.getIntExtra(KeyUtil.arg_shortcut_used, KeyUtil.SHORTCUT_SEARCH))
 
         if (!intentAction.isNullOrEmpty() && intentAction == Intent.ACTION_SEND)
-            sharedIntent = ShareCompat.IntentReader.from(context)
+            sharedIntent = ShareCompat.IntentReader(context)
         else if (deepLinkMatcher != null)
             injectIntentParams()
     }

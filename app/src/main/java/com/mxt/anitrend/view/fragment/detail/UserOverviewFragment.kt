@@ -83,7 +83,12 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         model?.apply {
             binding.model = this
             binding.stateLayout.showContent()
-            //binding.widgetStatus.setTextData(about)
+            if (!presenter.settings.experimentalMarkdown) {
+                binding.widgetStatus.visibility = View.VISIBLE
+                binding.widgetStatus.setTextData(about)
+            } else {
+                binding.widgetStatus.visibility = View.GONE
+            }
 
             binding.userFollowStateWidget.setUserModel(model)
             binding.userAboutPanelWidget.setFragmentActivity(activity)
@@ -118,7 +123,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
             updateUI()
         } else
             binding.stateLayout.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                    getString(R.string.layout_empty_response), getString(R.string.try_again)) { view ->
+                    getString(R.string.layout_empty_response), getString(R.string.try_again)) {
                 binding.stateLayout.showLoading()
                 makeRequest()
             }

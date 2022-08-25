@@ -181,7 +181,12 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         @Override
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
-            //binding.widgetStatus.setModel(model);
+            if (!presenter.getSettings().getExperimentalMarkdown()) {
+                binding.widgetStatus.setVisibility(View.VISIBLE);
+                binding.widgetStatus.setModel(model);
+            } else {
+                binding.widgetStatus.setVisibility(View.GONE);
+            }
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
@@ -212,7 +217,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public void onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar);
             binding.widgetFavourite.onViewRecycled();
-            //binding.widgetStatus.onViewRecycled();
+            binding.widgetStatus.onViewRecycled();
             binding.widgetDelete.onViewRecycled();
             binding.unbind();
         }
@@ -259,7 +264,12 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public void onBindViewHolder(FeedList model) {
             binding.setModel(model);
             binding.setType(messageType);
-            //binding.widgetStatus.setModel(model);
+            if (!presenter.getSettings().getExperimentalMarkdown()) {
+                binding.widgetStatus.setVisibility(View.VISIBLE);
+                binding.widgetStatus.setModel(model);
+            } else {
+                binding.widgetStatus.setVisibility(View.GONE);
+            }
 
             binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.getId());
             binding.widgetFavourite.setModel(model.getLikes());
@@ -290,7 +300,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public void onViewRecycled() {
             Glide.with(getContext()).clear(binding.messengerAvatar);
             Glide.with(getContext()).clear(binding.recipientAvatar);
-            //binding.widgetStatus.onViewRecycled();
+            binding.widgetStatus.onViewRecycled();
             binding.widgetDelete.onViewRecycled();
             binding.unbind();
         }

@@ -3,7 +3,9 @@ package com.mxt.anitrend.view.activity.base
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
@@ -105,12 +107,16 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
         override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
             activity?.apply {
                 when (key) {
+                    getString(R.string.pref_key_experimental_markdown),
                     getString(R.string.pref_key_display_adult_content),
                     getString(R.string.pref_key_crash_reports),
                     getString(R.string.pref_key_usage_analytics),
-                    getString(R.string.pref_key_selected_language),
                     getString(R.string.pref_key_list_view_style)-> {
                         requireRestartNotice(this)
+                    }
+                    getString(R.string.pref_key_selected_language) -> {
+                        val locales = LocaleListCompat.forLanguageTags(settings.userLanguage)
+                        AppCompatDelegate.setApplicationLocales(locales)
                     }
                     getString(R.string.pref_key_startup_page) -> {
                         if (!settings.isAuthenticated)
@@ -129,7 +135,6 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         scheduler.scheduleNotificationJob(applicationContext)
                         scheduler.scheduleGenreJob(applicationContext)
                         scheduler.scheduleTagJob(applicationContext)
-
                     }
                     getString(R.string.pref_key_new_message_notifications) -> {
                         if (settings.isNotificationEnabled)

@@ -248,7 +248,10 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
         if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.RESUMED) == true) {
             resetFlipperState()
             throwable.printStackTrace()
-            NotifyUtil.makeText(context, throwable.localizedMessage, Toast.LENGTH_SHORT).show()
+            throwable.localizedMessage?.let {
+                NotifyUtil.makeText(context,
+                    it, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
