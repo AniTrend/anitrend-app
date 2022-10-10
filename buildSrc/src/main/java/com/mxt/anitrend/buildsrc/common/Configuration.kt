@@ -24,8 +24,8 @@ object Configuration {
     private const val patch = 11
     private const val candidate = 0
 
-    const val compileSdk = 32
-    const val targetSdk = 32
+    const val compileSdk = 33
+    const val targetSdk = 33
     const val minSdk = 17
 
     private const val channel = "beta"
