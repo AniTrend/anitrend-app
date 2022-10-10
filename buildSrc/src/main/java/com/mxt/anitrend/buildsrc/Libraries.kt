@@ -38,7 +38,7 @@ object Libraries {
         }
 
         object AppCompat {
-            private const val version = "1.6.0-alpha05"
+            private const val version = "1.6.0-rc01"
             const val appcompat = "androidx.appcompat:appcompat:$version"
             const val appcompatResources = "androidx.appcompat:appcompat-resources:$version"
         }
