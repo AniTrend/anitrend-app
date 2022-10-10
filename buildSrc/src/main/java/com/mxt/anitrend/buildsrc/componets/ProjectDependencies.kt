@@ -30,6 +30,7 @@ internal fun Project.configureDependencies() {
     )
 
     dependencies.implementation(Libraries.JetBrains.Kotlin.stdlib)
+    dependencies.implementation(Libraries.JetBrains.Kotlin.reflect)
     dependencies.implementation(Libraries.JetBrains.KotlinX.Serialization.json)
     dependencies.implementation(Libraries.JetBrains.KotlinX.Coroutines.android)
     dependencies.implementation(Libraries.JetBrains.KotlinX.Coroutines.core)
@@ -57,6 +58,7 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(Libraries.AndroidX.StartUp.startUpRuntime)
 
     dependencies.implementation(Libraries.AndroidX.Lifecycle.liveDataCoreKtx)
+    dependencies.implementation(Libraries.AndroidX.Lifecycle.viewModelKtx)
     dependencies.implementation(Libraries.AndroidX.Lifecycle.runTimeKtx)
     dependencies.implementation(Libraries.AndroidX.Lifecycle.liveDataKtx)
     dependencies.implementation(Libraries.AndroidX.Lifecycle.extensions)
@@ -65,6 +67,7 @@ internal fun Project.configureDependencies() {
     dependencies.implementation (Libraries.Koin.core)
     dependencies.implementation (Libraries.Koin.android)
     dependencies.implementation (Libraries.Koin.AndroidX.workManager)
+    dependencies.testImplementation(Libraries.Koin.Test.test)
     dependencies.androidTestImplementation(Libraries.Koin.Test.testJUnit4)
 
     /** Glide Libraries */
@@ -123,6 +126,7 @@ internal fun Project.configureDependencies() {
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.coreKtx)
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.rules)
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.runner)
+    dependencies.androidTestImplementation(Libraries.AndroidX.Fragment.test)
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.Espresso.core)
     dependencies.androidTestImplementation(Libraries.AndroidX.Test.Extension.junitKtx)
     dependencies.androidTestImplementation(Libraries.Mockito.core)
