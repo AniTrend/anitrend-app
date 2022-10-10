@@ -8,7 +8,6 @@ object Versions {
     const val treesSence = "1.0.4"
 
     const val prettyTime = "4.0.4.Final"
-    const val scalingImageView = "3.10.0"
 
     const val betterLinkMovement = "2.2.0"
 

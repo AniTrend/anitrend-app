@@ -6,6 +6,8 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.extension.workManagerFactory
 import com.mxt.anitrend.initializer.ApplicationInitializer
 import com.mxt.anitrend.koin.appModules
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.locale.LocaleUtil
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.logger.KOIN_TAG
@@ -23,7 +25,12 @@ class InjectorInitializer : Initializer<Unit> {
      */
     override fun create(context: Context) {
         startKoin {
-            androidContext(context)
+            androidContext(
+                LocaleUtil.applyConfiguration(
+                    context,
+                    Settings(context)
+                )
+            )
             logger(KoinLogger())
             workManagerFactory()
             modules(appModules)
