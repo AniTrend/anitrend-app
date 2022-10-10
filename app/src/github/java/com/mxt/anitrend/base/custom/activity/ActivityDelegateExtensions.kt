@@ -40,9 +40,9 @@ private fun MainActivity.onUpdateChecked(silent: Boolean, menuItems: Menu) {
         if (remoteVersion.isNewerVersion) {
             // If a new version of the application is available on GitHub
             val mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update)
-                .actionView.findViewById<TextView>(R.id.app_update_info)
-            mAppUpdateWidget.text = getString(R.string.app_update, remoteVersion.version)
-            mAppUpdateWidget.visibility = View.VISIBLE
+                .actionView?.findViewById<TextView>(R.id.app_update_info)
+            mAppUpdateWidget?.text = getString(R.string.app_update, remoteVersion.version)
+            mAppUpdateWidget?.visibility = View.VISIBLE
         } else if (!silent) {
             onLatestUpdateInstalled()
         }
