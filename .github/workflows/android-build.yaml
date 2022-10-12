@@ -51,12 +51,12 @@ jobs:
       - name: Build release APKs
         run: ./gradlew clean assembleRelease
       - name: Publish PlayStore APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-release
           path: app/build/outputs/apk/app/release
       - name: Publish Github APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-github-release
           path: app/build/outputs/apk/github/release
