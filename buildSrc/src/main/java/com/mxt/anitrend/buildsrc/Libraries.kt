@@ -14,8 +14,6 @@ object Libraries {
 
     const val betterLinkMovement = "me.saket:better-link-movement-method:${Versions.betterLinkMovement}"
 
-    const val scalingImageView = "com.davemorrissey.labs:subsampling-scale-image-view-androidx:${Versions.scalingImageView}"
-
     const val prettyTime = "org.ocpsoft.prettytime:prettytime:${Versions.prettyTime}"
 
     object Repositories {
@@ -27,7 +25,7 @@ object Libraries {
     object Android {
 
         object Tools {
-            private const val version = "4.1.3"
+            private const val version = "7.3.0"
             const val buildGradle = "com.android.tools.build:gradle:$version"
         }
     }
@@ -35,20 +33,18 @@ object Libraries {
     object AndroidX {
 
         object Activity {
-            private const val version = "1.6.0-alpha05"
-            const val activity = "androidx.activity:activity:$version"
+            private const val version = "1.6.0"
             const val activityKtx = "androidx.activity:activity-ktx:$version"
         }
 
         object AppCompat {
-            private const val version = "1.6.0-alpha05"
+            private const val version = "1.6.0-rc01"
             const val appcompat = "androidx.appcompat:appcompat:$version"
             const val appcompatResources = "androidx.appcompat:appcompat-resources:$version"
         }
 
         object Collection {
             private const val version = "1.2.0"
-            const val collection = "androidx.collection:collection:$version"
             const val collectionKtx = "androidx.collection:collection-ktx:$version"
         }
 
@@ -64,14 +60,8 @@ object Libraries {
             const val constraintLayoutSolver = "androidx.constraintlayout:constraintlayout-solver:$version"
         }
 
-        object Emoji {
-            private const val version = "1.1.0"
-            const val appCompat = "androidx.emoji:emoji-appcompat:$version"
-        }
-
         object Fragment {
-            private const val version = "1.5.0"
-            const val fragment = "androidx.fragment:fragment:$version"
+            private const val version = "1.5.3"
             const val fragmentKtx = "androidx.fragment:fragment-ktx:$version"
             const val test = "androidx.fragment:fragment-ktx:fragment-testing$version"
         }
@@ -157,7 +147,6 @@ object Libraries {
 
             object Analytics {
                 private const val version = "18.0.2"
-                const val analytics = "com.google.firebase:firebase-analytics:$version"
                 const val analyticsKtx = "com.google.firebase:firebase-analytics-ktx:$version"
             }
 
@@ -215,10 +204,6 @@ object Libraries {
                 const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
             }
 
-            object Android {
-                const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
-            }
-
             object Serialization {
                 const val serialization = "org.jetbrains.kotlin:kotlin-serialization:$version"
             }
@@ -245,8 +230,6 @@ object Libraries {
         const val core = "io.insert-koin:koin-core:$version"
 
         object AndroidX {
-            const val compose = "io.insert-koin:koin-androidx-compose:$version"
-            const val navigation = "io.insert-koin:koin-androidx-navigation:$version"
             const val workManager = "io.insert-koin:koin-androidx-workmanager:$version"
         }
 

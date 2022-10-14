@@ -25,7 +25,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-val buildToolsVersion = "7.2.1"
+val buildToolsVersion = "7.3.0"
 val kotlinVersion = "1.6.21"
 val manesVersion = "0.38.0"
 
