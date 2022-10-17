@@ -27,7 +27,7 @@ java {
 
 val buildToolsVersion = "7.3.1"
 val kotlinVersion = "1.6.21"
-val manesVersion = "0.38.0"
+val manesVersion = "v0.42.0"
 
 dependencies {
     /* Depend on the android gradle plugin, since we want to access it in our plugin */
