@@ -26,7 +26,7 @@ java {
 }
 
 val buildToolsVersion = "7.3.0"
-val kotlinVersion = "1.7.20"
+val kotlinVersion = "1.7.21"
 val manesVersion = "0.38.0"
 
 dependencies {
