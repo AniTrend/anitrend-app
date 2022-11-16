@@ -1,0 +1,77 @@
+[versions]
+ktlint = "0.40.0"
+
+gradle-plugin = "7.3.1"
+
+androidx-core = "1.9.0"
+androix-lifecycle = "2.5.1"
+androidx-paging = "2.1.2"
+androidx-preference = "1.2.0"
+androidx-recycler = "1.3.0-rc01"
+androidx-test = "1.5.1"
+androidx-test-ext = "1.1.4"
+androidx-work = "2.7.1"
+
+jetbrains-dokka = "1.7.20"
+jetbrains-kotlin = "1.7.21"
+jetbrains-kotlinx-coroutines = "1.6.4"
+
+io-mockk = "1.13.2"
+
+[libraries]
+threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.3"
+timber = "com.jakewharton.timber:timber:5.0.1"
+junit = "junit:junit:4.13.2"
+
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle-plugin" }
+
+androidx-coreKtx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+
+androidx-lifecycle-extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
+androidx-lifecycle-runTimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androix-lifecycle" }
+androidx-lifecycle-liveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androix-lifecycle" }
+androidx-lifecycle-viewModelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androix-lifecycle" }
+androidx-lifecycle-liveDataCoreKtx = { module = "androidx.lifecycle:lifecycle-livedata-core-ktx", version.ref = "androix-lifecycle" }
+
+androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
+androidx-preferenceKtx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
+
+androidx-recyclerView = { module = "androidx.recyclerview:recyclerview", version.ref = "androidx-recycler" }
+androidx-recyclerViewSelection = { module = "androidx.recyclerview:recyclerview-selection", version.ref = "androidx-recycler" }
+
+androidx-startupRuntime = "androidx.startup:startup-runtime:1.1.1"
+
+androidx-swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
+
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
+androidx-test-coreKtx = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
+
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext" }
+androidx-junitKtx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-ext" }
+
+androidx-runtimeKtx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+androidx-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
+androidx-test = { module = "androidx.work:work-test", version.ref = "androidx-work" }
+
+androidx-work-runtimeKtx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
+androidx-work-test = { module = "androidx.work:work-test", version.ref = "androidx-work" }
+
+cash-turbine = "app.cash.turbine:turbine:0.12.1"
+
+google-android-material = "com.google.android.material:material:1.7.0"
+
+jetbrains-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "jetbrains-kotlin" }
+jetbrains-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "jetbrains-kotlin" }
+jetbrains-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "jetbrains-kotlin" }
+jetbrains-kotlin-extensions = { module = "org.jetbrains.kotlin:kotlin-android-extensions", version.ref = "jetbrains-kotlin" }
+jetbrains-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "jetbrains-kotlinx-coroutines" }
+jetbrains-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "jetbrains-kotlinx-coroutines" }
+jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "jetbrains-kotlinx-coroutines" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "io-mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "io-mockk" }
+
+gradle-versions = "com.github.ben-manes:gradle-versions-plugin:0.44.0"
