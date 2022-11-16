@@ -28,7 +28,7 @@ allprojects {
         jcenter()
         mavenCentral()
         maven {
-            url = java.net.URI(com.mxt.anitrend.buildsrc.Libraries.Repositories.jitPack)
+            setUrl("https://www.jitpack.io")
         }
     }
 }
