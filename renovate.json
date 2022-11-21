@@ -3,6 +3,11 @@
   "extends": [
     "config:base"
   ],
+  "addLabels": [
+    "dependencies"
+  ],
+  "branchPrefix": "dependencies/",
+  "reviewers": ["wax911"],
   "labels": ["dependencies"],
   "baseBranches": ["dependencies/version-bump"],
   "schedule": ["every weekend"]
