@@ -10,7 +10,7 @@ androidx-fragment = "1.5.3"
 androix-lifecycle = "2.5.1"
 androidx-paging = "2.1.2"
 androidx-preference = "1.2.0"
-androidx-test = "1.5.1"
+androidx-test = "1.5.0"
 androidx-test-ext = "1.1.4"
 androidx-work = "2.7.1"
 
@@ -27,9 +27,31 @@ jetbrains-kotlinx-serialization = "1.1.0"
 
 noties-markwon = "4.6.2"
 org-mockito = "3.9.0"
-ogaclejapan-smarttab = "3.9.0"
+ogaclejapan-smarttab = "2.0.0"
 squareup-retrofit = "2.9.0"
-squareup-okhttp = "2.9.0"
+squareup-okhttp = "3.12.1"
+
+timber = "4.7.1"
+treesSence = "1.0.4"
+prettyTime = "4.0.4.Final"
+betterLinkMovement = "2.2.0"
+butterKnife = "10.2.3"
+multidex = "2.0.1"
+materialDialogs = "0.9.6.0"
+tapTarget = "3.1.0"
+jiaoziVideoPlayer = "7.6.0"
+photoView = "2.3.0"
+onboarder = "1.0.4"
+mpAndroidChart = "3.1.0"
+aboutPage = "1.2.5"
+materialSearchView = "1.4.15"
+progressLayout = "master-SNAPSHOT"
+eventBus = "3.2.0"
+alerter = "7.0.1"
+stream = "1.2.2"
+circularProgressView = "2.5.0"
+hamcrest = "2.2"
+txtmark = "0.16"
 
 [libraries]
 betterLinkMovement = "me.saket:better-link-movement-method:2.2.0"
@@ -83,7 +105,7 @@ androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "
 androidx-work-test = { module = "androidx.work:work-test", version.ref = "androidx-work" }
 
 anitrend-android-emoji = "com.github.anitrend:android-emojify:1.6.0-beta01"
-anitrend-support-markwon = "com.github.anitrend:support-markdown:0.12.1-alpha01"
+anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:cf428d8430"
 
 cash-turbine = "app.cash.turbine:turbine:0.12.1"
@@ -110,6 +132,7 @@ jetbrains-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jd
 jetbrains-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "jetbrains-kotlin" }
 jetbrains-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "jetbrains-kotlin" }
 jetbrains-kotlin-extensions = { module = "org.jetbrains.kotlin:kotlin-android-extensions", version.ref = "jetbrains-kotlin" }
+jetbrains-kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "jetbrains-kotlin" }
 
 jetbrains-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "jetbrains-kotlinx-coroutines" }
 jetbrains-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "jetbrains-kotlinx-coroutines" }
@@ -148,8 +171,8 @@ smarttablayout-library = { module = "com.ogaclejapan.smarttablayout:library", ve
 smarttablayout-utils = { module = "com.ogaclejapan.smarttablayout:utils-v4", version.ref = "ogaclejapan-smarttab" }
 
 square-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareup-retrofit" }
-square-conver-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "squareup-retrofit" }
-square-convert-simplexml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "squareup-retrofit" }
+square-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "squareup-retrofit" }
+square-converter-simplexml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "squareup-retrofit" }
 square-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "squareup-okhttp" }
 square-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "squareup-okhttp" }
 square-mockServer = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "squareup-okhttp" }

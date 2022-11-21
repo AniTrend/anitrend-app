@@ -14,6 +14,9 @@ repositories {
     maven {
         setUrl("https://plugins.gradle.org/m2/")
     }
+    maven {
+        setUrl("https://www.jitpack.io")
+    }
 }
 
 tasks.withType(KotlinCompile::class) {
