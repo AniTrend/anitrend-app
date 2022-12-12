@@ -1,8 +1,8 @@
 {
-    "code": 1009012000,
+    "code": 1010000000,
     "migration": false,
     "minSdk": 17,
     "releaseNotes": "",
-    "version": "1.9.12",
+    "version": "1.10.0",
     "appId": "com.mxt.anitrend"
 }
