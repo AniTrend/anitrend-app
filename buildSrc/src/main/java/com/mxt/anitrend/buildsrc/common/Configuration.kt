@@ -20,8 +20,8 @@ package com.mxt.anitrend.buildsrc.common
 object Configuration {
 
     private const val major = 1
-    private const val minor = 9
-    private const val patch = 12
+    private const val minor = 10
+    private const val patch = 0
     private const val candidate = 0
 
     const val compileSdk = 33
