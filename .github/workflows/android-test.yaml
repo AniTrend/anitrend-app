@@ -1,7 +1,7 @@
-name: Android test
+name: android-unit-test
 on: [push, pull_request]
 jobs:
-  build:
+  android-unit-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
