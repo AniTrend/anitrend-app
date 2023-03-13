@@ -64,7 +64,7 @@ timber = "com.jakewharton.timber:timber:5.0.1"
 
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle-plugin" }
 
-androidx-activityKtx = "androidx.activity:activity-ktx:1.6.0"
+androidx-activityKtx = "androidx.activity:activity-ktx:1.6.1"
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "androidx-appcompat" }
