@@ -3,7 +3,7 @@ ktlint = "0.40.0"
 
 gradle-plugin = "7.3.1"
 
-androidx-appcompat = "1.6.0-rc01"
+androidx-appcompat = "1.7.0-alpha02"
 androidx-core = "1.9.0"
 androidx-constraintlayout = "2.1.4"
 androidx-fragment = "1.5.3"
