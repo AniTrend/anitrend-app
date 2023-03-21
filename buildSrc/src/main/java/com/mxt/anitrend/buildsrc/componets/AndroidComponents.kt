@@ -87,14 +87,14 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
     }
 }
 
-private fun BaseExtension.setUpWith() {
+private fun BaseExtension.setUpWith(project: Project) {
     compileSdkVersion(Configuration.compileSdk)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = Configuration.minSdk
         targetSdk = Configuration.targetSdk
-        versionCode = Configuration.versionCode
-        versionName = Configuration.versionName
+        versionCode = project.releaseProperties["code"] as? Int
+        versionName = project.releaseProperties["version"] as? String
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -201,7 +201,7 @@ internal fun Project.applyAndroidConfiguration() {
     val appExtension = baseAppExtension()
     val androidExtension = androidExtensionsExtension()
 
-    baseExtension.setUpWith()
+    baseExtension.setUpWith(this)
     appExtension.setUpWith(this)
 
     androidExtension.isExperimental = true
@@ -238,30 +238,6 @@ internal fun Project.applyAndroidConfiguration() {
             allWarningsAsErrors = false
             // Filter out modules that won't be using coroutines
             freeCompilerArgs = compilerArgumentOptions
-        }
-    }
-
-    tasks.register("generateVersions") {
-        println("Generate versions for $name -> $projectDir")
-        val versionMeta = File(projectDir, ".meta/version.json")
-        if (!versionMeta.exists()) {
-            println("Creating versions meta file in ${versionMeta.absolutePath}")
-            versionMeta.mkdirs()
-        }
-        println("Writing version information to ${versionMeta.absolutePath}")
-        FileWriter(versionMeta).use { writer ->
-            writer.write(
-                """
-                    {
-                        "code": ${Configuration.versionCode},
-                        "migration": false,
-                        "minSdk": ${Configuration.minSdk},
-                        "releaseNotes": "",
-                        "version": "${Configuration.versionName}",
-                        "appId": "com.mxt.anitrend"
-                    }
-                """.trimIndent()
-            )
         }
     }
 }

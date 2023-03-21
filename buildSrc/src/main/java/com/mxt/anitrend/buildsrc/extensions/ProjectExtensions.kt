@@ -23,6 +23,20 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
+import java.io.File
+import java.util.Properties
+
+internal val Project.releaseProperties: Properties
+    get() {
+        val releaseFile = File(rootDir, "gradle/release.properties")
+        if (!releaseFile.exists()) {
+            logger.error("Release file cannot be found in path: $releaseFile")
+        }
+
+        return Properties(2).apply {
+            load(releaseFile.inputStream())
+        }
+    }
 
 fun Project.versionCatalog() =
     versionCatalogExtension()
