@@ -4,6 +4,13 @@ plugins {
 
 android {
     namespace = "com.mxt.anitrend"
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
 }
 
 val prettyTime = "4.0.4.Final"
@@ -11,7 +18,7 @@ val butterKnife = "10.2.3"
 val multidex = "2.0.1"
 val materialDialogs = "0.9.6.0"
 val tapTarget = "3.3.2"
-val jiaoziVideoPlayer = "7.6.0"
+val jiaoziVideoPlayer = "7.7.2.3300"
 val photoView = "2.3.0"
 val onboarder = "1.0.4"
 val mpAndroidChart = "3.1.0"

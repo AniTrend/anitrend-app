@@ -6,7 +6,7 @@ gradle-plugin = "7.4.2"
 androidx-appcompat = "1.6.0-rc01"
 androidx-core = "1.9.0"
 androidx-constraintlayout = "2.1.4"
-androidx-fragment = "1.5.3"
+androidx-fragment = "1.5.5"
 androix-lifecycle = "2.6.0"
 androidx-paging = "2.1.2"
 androidx-preference = "1.2.0"
@@ -18,7 +18,7 @@ bumptech-glide = "4.15.0"
 
 io-koin = "3.2.0"
 io-objectbox = "3.5.1"
-io-mockk = "1.13.2"
+io-mockk = "1.13.4"
 
 jetbrains-dokka = "1.7.20"
 jetbrains-kotlin = "1.7.21"
@@ -58,13 +58,13 @@ betterLinkMovement = "me.saket:better-link-movement-method:2.2.0"
 hamcrest = "org.hamcrest:hamcrest-library:2.2"
 junit = "junit:junit:4.13.2"
 prettyTime = "org.ocpsoft.prettytime:prettytime:4.0.4.Final"
-threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.3"
+threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.4"
 treessence = "com.github.bastienpaulfr:Treessence:1.0.4"
 timber = "com.jakewharton.timber:timber:5.0.1"
 
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle-plugin" }
 
-androidx-activityKtx = "androidx.activity:activity-ktx:1.6.0"
+androidx-activityKtx = "androidx.activity:activity-ktx:1.6.1"
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "androidx-appcompat" }
@@ -95,7 +95,7 @@ androidx-test-coreKtx = { module = "androidx.test:core-ktx", version.ref = "andr
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
 
-androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.4.0"
+androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
 
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext" }
 androidx-junitKtx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-ext" }
@@ -112,7 +112,7 @@ cash-turbine = "app.cash.turbine:turbine:0.12.1"
 
 google-firebase-core = "com.google.firebase:firebase-core:17.4.4"
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:18.0.2"
-google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics:18.2.11"
+google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics:18.3.5"
 google-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2.9.4"
 
 google-android-flexbox = "com.google.android:flexbox:2.0.1"
