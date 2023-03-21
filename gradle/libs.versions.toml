@@ -14,7 +14,7 @@ androidx-test = "1.5.0"
 androidx-test-ext = "1.1.5"
 androidx-work = "2.7.1"
 
-bumptech-glide = "4.15.0"
+bumptech-glide = "4.15.1"
 
 io-koin = "3.2.0"
 io-objectbox = "3.5.1"
