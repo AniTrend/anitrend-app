@@ -67,6 +67,9 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
         println("Configuring build type -> ${buildTypeEntry.key}")
         val buildType = buildTypeEntry.value
 
+        buildType.buildConfigField("String", "versionName", "\"${project.releaseProperties["version"] as String}\"")
+        buildType.buildConfigField("int", "versionCode", project.releaseProperties["code"] as String)
+
         val secretsFile = project.file(".config/secrets.properties")
         if (secretsFile.exists())
             secretsFile.inputStream().use { fis ->
