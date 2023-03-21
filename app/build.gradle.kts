@@ -4,6 +4,13 @@ plugins {
 
 android {
     namespace = "com.mxt.anitrend"
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
 }
 
 val prettyTime = "4.0.4.Final"
