@@ -11,13 +11,13 @@ androix-lifecycle = "2.6.0"
 androidx-paging = "2.1.2"
 androidx-preference = "1.2.0"
 androidx-test = "1.5.0"
-androidx-test-ext = "1.1.4"
+androidx-test-ext = "1.1.5"
 androidx-work = "2.7.1"
 
-bumptech-glide = "4.12.0"
+bumptech-glide = "4.15.0"
 
 io-koin = "3.2.0"
-io-objectbox = "2.9.1"
+io-objectbox = "3.5.1"
 io-mockk = "1.13.2"
 
 jetbrains-dokka = "1.7.20"
@@ -64,7 +64,7 @@ timber = "com.jakewharton.timber:timber:5.0.1"
 
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "gradle-plugin" }
 
-androidx-activityKtx = "androidx.activity:activity-ktx:1.6.0"
+androidx-activityKtx = "androidx.activity:activity-ktx:1.6.1"
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "androidx-appcompat" }
@@ -117,9 +117,9 @@ google-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-g
 
 google-android-flexbox = "com.google.android:flexbox:2.0.1"
 
-google-android-material = "com.google.android.material:material:1.7.0"
+google-android-material = "com.google.android.material:material:1.8.0"
 
-google-gsm-google-services = "com.google.gms:google-services:4.3.13"
+google-gsm-google-services = "com.google.gms:google-services:4.3.15"
 
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "bumptech-glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "bumptech-glide" }
