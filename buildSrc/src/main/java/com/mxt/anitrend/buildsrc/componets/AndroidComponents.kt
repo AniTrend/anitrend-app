@@ -67,6 +67,9 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
         println("Configuring build type -> ${buildTypeEntry.key}")
         val buildType = buildTypeEntry.value
 
+        buildType.buildConfigField("String", "versionName", "\"${project.props[PropertyTypes.VERSION]}\"")
+        buildType.buildConfigField("int", "versionCode", project.props[PropertyTypes.CODE])
+
         val secretsFile = project.file(".config/secrets.properties")
         if (secretsFile.exists())
             secretsFile.inputStream().use { fis ->
@@ -87,14 +90,14 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
     }
 }
 
-private fun BaseExtension.setUpWith() {
+private fun BaseExtension.setUpWith(project: Project) {
     compileSdkVersion(Configuration.compileSdk)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = Configuration.minSdk
         targetSdk = Configuration.targetSdk
-        versionCode = Configuration.versionCode
-        versionName = Configuration.versionName
+        versionCode = project.props[PropertyTypes.CODE].toInt()
+        versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -201,7 +204,7 @@ internal fun Project.applyAndroidConfiguration() {
     val appExtension = baseAppExtension()
     val androidExtension = androidExtensionsExtension()
 
-    baseExtension.setUpWith()
+    baseExtension.setUpWith(this)
     appExtension.setUpWith(this)
 
     androidExtension.isExperimental = true
@@ -253,11 +256,11 @@ internal fun Project.applyAndroidConfiguration() {
             writer.write(
                 """
                     {
-                        "code": ${Configuration.versionCode},
+                        "code": ${project.props[PropertyTypes.CODE].toInt()},
                         "migration": false,
                         "minSdk": ${Configuration.minSdk},
                         "releaseNotes": "",
-                        "version": "${Configuration.versionName}",
+                        "version": "${project.props[PropertyTypes.VERSION]}",
                         "appId": "com.mxt.anitrend"
                     }
                 """.trimIndent()
