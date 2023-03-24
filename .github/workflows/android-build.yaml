@@ -20,7 +20,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
           running-workflow-name: android-build
-          check-name: android-unit-test
+          check-name: android-unit-test-release
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
       - name: Prepare secret files
@@ -53,6 +53,7 @@ jobs:
         with:
           title: "${{ steps.tag_data.outputs.git-tag-annotation }}"
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: true
+          prerelease: false
           files: |
             app/build/outputs/apk/**/release/*.apk
+            app/build/outputs/apk/**/release/*.json

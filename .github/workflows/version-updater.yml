@@ -1,12 +1,10 @@
 name: version-updater
-
 on:
-  push:
-    tags:
-      - '*'
+  repository_dispatch:
+    types: [version-updater]
 
 jobs:
-  build:
+  version-updater:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

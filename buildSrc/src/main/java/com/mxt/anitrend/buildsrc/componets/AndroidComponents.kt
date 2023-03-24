@@ -67,8 +67,8 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
         println("Configuring build type -> ${buildTypeEntry.key}")
         val buildType = buildTypeEntry.value
 
-        buildType.buildConfigField("String", "versionName", "\"${project.releaseProperties["version"] as String}\"")
-        buildType.buildConfigField("int", "versionCode", project.releaseProperties["code"] as String)
+        buildType.buildConfigField("String", "versionName", "\"${project.props[PropertyTypes.VERSION]}\"")
+        buildType.buildConfigField("int", "versionCode", project.props[PropertyTypes.CODE])
 
         val secretsFile = project.file(".config/secrets.properties")
         if (secretsFile.exists())
@@ -96,8 +96,8 @@ private fun BaseExtension.setUpWith(project: Project) {
         applicationId = "com.mxt.anitrend"
         minSdk = Configuration.minSdk
         targetSdk = Configuration.targetSdk
-        versionCode = project.releaseProperties["code"] as? Int
-        versionName = project.releaseProperties["version"] as? String
+        versionCode = project.props[PropertyTypes.CODE].toInt()
+        versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -241,6 +241,30 @@ internal fun Project.applyAndroidConfiguration() {
             allWarningsAsErrors = false
             // Filter out modules that won't be using coroutines
             freeCompilerArgs = compilerArgumentOptions
+        }
+    }
+
+    tasks.register("generateVersions") {
+        println("Generate versions for $name -> $projectDir")
+        val versionMeta = File(projectDir, ".meta/version.json")
+        if (!versionMeta.exists()) {
+            println("Creating versions meta file in ${versionMeta.absolutePath}")
+            versionMeta.mkdirs()
+        }
+        println("Writing version information to ${versionMeta.absolutePath}")
+        FileWriter(versionMeta).use { writer ->
+            writer.write(
+                """
+                    {
+                        "code": ${project.props[PropertyTypes.CODE].toInt()},
+                        "migration": false,
+                        "minSdk": ${Configuration.minSdk},
+                        "releaseNotes": "",
+                        "version": "${project.props[PropertyTypes.VERSION]}",
+                        "appId": "com.mxt.anitrend"
+                    }
+                """.trimIndent()
+            )
         }
     }
 }
