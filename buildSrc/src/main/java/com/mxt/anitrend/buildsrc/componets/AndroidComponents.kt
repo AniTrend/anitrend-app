@@ -160,9 +160,8 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
     }
 
     packagingOptions {
-        resources.excludes.add("META-INF/NOTICE.txt")
-        resources.excludes.add("META-INF/LICENSE")
-        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/NOTICE.*")
+        resources.excludes.add("META-INF/LICENSE*")
         // Exclude potential duplicate kotlin_module files
         resources.excludes.add("META-INF/*kotlin_module")
         // Exclude consumer proguard files
