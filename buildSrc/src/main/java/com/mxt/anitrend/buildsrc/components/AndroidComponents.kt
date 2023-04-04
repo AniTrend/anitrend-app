@@ -16,7 +16,7 @@
  */
 @file:Suppress("UnstableApiUsage")
 
-package com.mxt.anitrend.buildsrc.componets
+package com.mxt.anitrend.buildsrc.components
 
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
