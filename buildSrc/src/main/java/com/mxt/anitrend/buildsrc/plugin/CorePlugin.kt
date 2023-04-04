@@ -23,7 +23,6 @@ import com.mxt.anitrend.buildsrc.components.configureDependencies
 import com.mxt.anitrend.buildsrc.components.configurePlugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import com.mxt.anitrend.buildsrc.componets.*
 
 open class CorePlugin : Plugin<Project> {
 
