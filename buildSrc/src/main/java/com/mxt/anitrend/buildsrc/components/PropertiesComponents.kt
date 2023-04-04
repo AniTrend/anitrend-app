@@ -1,4 +1,4 @@
-package com.mxt.anitrend.buildsrc.componets
+package com.mxt.anitrend.buildsrc.components
 
 import org.gradle.api.Project
 import java.io.File

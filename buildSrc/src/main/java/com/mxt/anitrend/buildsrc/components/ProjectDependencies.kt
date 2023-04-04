@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.mxt.anitrend.buildsrc.componets
+package com.mxt.anitrend.buildsrc.components
 
 import org.gradle.api.Project
 import com.mxt.anitrend.buildsrc.extensions.*
