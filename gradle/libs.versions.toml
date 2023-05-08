@@ -112,7 +112,7 @@ cash-turbine = "app.cash.turbine:turbine:0.12.3"
 
 google-firebase-core = "com.google.firebase:firebase-core:21.1.1"
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.2.2"
-google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics:18.3.6"
+google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics:18.3.7"
 google-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2.9.5"
 
 google-android-flexbox = "com.google.android:flexbox:2.0.1"
