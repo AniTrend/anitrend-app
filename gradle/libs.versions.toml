@@ -4,7 +4,7 @@ ktlint = "0.40.0"
 gradle-plugin = "7.4.2"
 
 androidx-appcompat = "1.6.0-rc01"
-androidx-core = "1.10.0"
+androidx-core = "1.10.1"
 androidx-constraintlayout = "2.1.4"
 androidx-fragment = "1.5.7"
 androix-lifecycle = "2.6.1"
@@ -22,7 +22,7 @@ io-mockk = "1.13.5"
 
 jetbrains-dokka = "1.7.20"
 jetbrains-kotlin = "1.7.21"
-jetbrains-kotlinx-coroutines = "1.6.4"
+jetbrains-kotlinx-coroutines = "1.7.1"
 jetbrains-kotlinx-serialization = "1.5.1"
 
 noties-markwon = "4.6.2"
@@ -108,7 +108,7 @@ anitrend-android-emoji = "com.github.anitrend:android-emojify:1.6.0-beta01"
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:cf428d8430"
 
-cash-turbine = "app.cash.turbine:turbine:0.12.3"
+cash-turbine = "app.cash.turbine:turbine:0.13.0"
 
 google-firebase-core = "com.google.firebase:firebase-core:21.1.1"
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.2.2"
