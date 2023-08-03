@@ -6,8 +6,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 ## What's Changed
 
 ### Enhancements
-- Added long press to copy URL in media stats fragment @Luk1337
-- Add **TRENDING MANGA** tab to What's Trending page @Luk1337
+- New application icon
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)
