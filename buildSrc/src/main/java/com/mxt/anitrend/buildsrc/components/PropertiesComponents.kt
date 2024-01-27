@@ -14,7 +14,7 @@ class PropertiesReader(project: Project) {
     private val properties = Properties(2)
 
     init {
-        val releaseFile = File(project.rootDir, "gradle/release.properties")
+        val releaseFile = File(project.rootDir, "gradle/version.properties")
         if (!releaseFile.exists()) {
             project.logger.error("Release file cannot be found in path: $releaseFile")
         }

@@ -6,7 +6,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 ## What's Changed
 
 ### Enhancements
-- New application icon
+- Reduce the number of items loaded per page, hopefully will result in less request timeouts
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)
