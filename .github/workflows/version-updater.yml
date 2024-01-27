@@ -22,18 +22,18 @@ jobs:
           MINOR=$((VER[1] * 10000))
           PATCH=${VER[2]}
           CODE=$((MAJOR + MINOR + PATCH))
-          echo "version=$(cat VERSION)" > gradle/release.properties
-          echo "code=$CODE" >> gradle/release.properties
-          echo "name=v$(cat VERSION)" >> gradle/release.properties
+          echo "version=$(cat VERSION)" > gradle/version.properties
+          echo "code=$CODE" >> gradle/version.properties
+          echo "name=v$(cat VERSION)" >> gradle/version.properties
 
       - name: Show release info
-        run: cat gradle/release.properties
+        run: cat gradle/version.properties
 
-      - name: Commit release.properties
+      - name: Commit version.properties
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add gradle/release.properties
+          git add gradle/version.properties
           git commit -m "Bump version to $(cat VERSION)"
         
       - name: Push changes
