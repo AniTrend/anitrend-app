@@ -13,8 +13,6 @@ private const val HTTP_LIMIT_REACHED = 429
 
 private const val TAG = "ErrorUtil"
 private const val Retry_After = "Retry-After"
-private const val RateLimit_Limit = "X-RateLimit-Limit"
-private const val RateLimit_Remaining = "X-RateLimit-Remaining"
 
 /**
  * Converts the response error response into an object.
@@ -28,16 +26,18 @@ fun Response<*>?.apiError(): String {
             val headers = headers()
             val errors = getError()
             return if (code() != HTTP_LIMIT_REACHED) {
-                errors?.firstOrNull()?.message ?: "Unable to provide information regarding error!"
-            } else
-                "${headers.get(RateLimit_Remaining)} of ${headers.get(RateLimit_Limit)} requests remaining, please retry after ${headers.get(Retry_After)} seconds"
+                errors?.firstOrNull()?.message ?: "Unexpected HTTP/${code()} from server"
+            } else {
+                val waitPeriod = headers.get(Retry_After) ?: 60
+                "Too many requests, please retry after $waitPeriod seconds"
+            }
         }
     } catch (ex: Exception) {
         ex.printStackTrace()
         Timber.tag(TAG).e(ex)
-        return "Unexpected error encountered"
+        return "Unable to recover from encountered error"
     }
 
-    return "Unable to provide information regarding error!"
+    return "Unable to provide information regarding error"
 }
 

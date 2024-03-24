@@ -33,6 +33,8 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
     val params = Bundle()
 
+    fun snapshot() = model.value
+
     fun setContext(context: Context?) {
         context?.apply {
             emptyMessage = getString(R.string.layout_empty_response)

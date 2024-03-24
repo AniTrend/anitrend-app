@@ -18,6 +18,7 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.databinding.ActivityProfileBinding;
+import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.model.entity.base.UserBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -47,7 +48,6 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
 
     private ActivityProfileBinding binding;
     private String userName;
-    private UserBase model;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(model == null)
+        if(getViewModel().snapshot() == null)
             onActivityReady();
         else
             updateUI();
@@ -100,6 +100,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        UserBase model = getViewModel().snapshot();
         switch (item.getItemId()) {
             case R.id.action_notification:
                 startActivity(new Intent(ProfileActivity.this, NotificationActivity.class));
@@ -150,6 +151,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     protected void updateUI() {
         binding.setOnClickListener(this);
         binding.profileStatsWidget.setParams(getIntent().getExtras());
+        UserBase model = getViewModel().snapshot();
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
         if(getPresenter().isCurrentUser(model.getId())) {
             new TutorialUtil().setContext(this)
@@ -191,7 +193,6 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         super.onChanged(model);
         if(model != null) {
             this.id = model.getId();
-            this.model = model;
             updateUI();
         } else
             NotifyUtil.INSTANCE.createAlerter(this, R.string.text_user_model, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, R.color.colorStateRed);
@@ -201,7 +202,10 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_banner:
-                CompatUtil.INSTANCE.imagePreview(view, model.getBannerImage(), R.string.image_preview_error_profile_banner);
+                UserBase model = getViewModel().snapshot();
+                if (model != null) {
+                    CompatUtil.INSTANCE.imagePreview(view, model.getBannerImage(), R.string.image_preview_error_profile_banner);
+                }
                 break;
         }
     }
