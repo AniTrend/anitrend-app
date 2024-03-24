@@ -84,7 +84,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(getViewModel().snapshot() == null)
+        if(getModel() == null)
             onActivityReady();
         else
             updateUI();
@@ -100,7 +100,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        UserBase model = getViewModel().snapshot();
+        UserBase model = getModel();
         switch (item.getItemId()) {
             case R.id.action_notification:
                 startActivity(new Intent(ProfileActivity.this, NotificationActivity.class));
@@ -151,7 +151,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     protected void updateUI() {
         binding.setOnClickListener(this);
         binding.profileStatsWidget.setParams(getIntent().getExtras());
-        UserBase model = getViewModel().snapshot();
+        UserBase model = getModel();
         WideImageView.setImage(binding.profileBanner, model.getBannerImage());
         if(getPresenter().isCurrentUser(model.getId())) {
             new TutorialUtil().setContext(this)
@@ -202,7 +202,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_banner:
-                UserBase model = getViewModel().snapshot();
+                UserBase model = getModel();
                 if (model != null) {
                     CompatUtil.INSTANCE.imagePreview(view, model.getBannerImage(), R.string.image_preview_error_profile_banner);
                 }

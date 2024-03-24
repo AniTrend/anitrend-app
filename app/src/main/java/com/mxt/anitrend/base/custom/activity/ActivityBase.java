@@ -377,6 +377,11 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         }
     }
 
+    @Nullable
+    protected M getModel() {
+        return viewModel != null ? viewModel.snapshot() : null;
+    }
+
     /**
      * Called when the model state is changed.
      *

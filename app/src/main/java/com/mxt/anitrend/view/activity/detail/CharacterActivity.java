@@ -69,7 +69,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            CharacterBase model = getViewModel().snapshot();
+            CharacterBase model = getModel();
             if(model != null)
                 favouriteWidget.setModel(model);
         }
@@ -78,7 +78,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        CharacterBase model = getViewModel().snapshot();
+        CharacterBase model = getModel();
         if(model != null) {
             switch (item.getItemId()) {
                 case R.id.action_share:
@@ -111,7 +111,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     @Override
     protected void onResume() {
         super.onResume();
-        if(getViewModel().snapshot() == null)
+        if(getModel() == null)
             makeRequest();
         else
             updateUI();
@@ -119,7 +119,7 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
 
     @Override
     protected void updateUI() {
-        CharacterBase model = getViewModel().snapshot();
+        CharacterBase model = getModel();
         if(model != null)
             if(favouriteWidget != null)
                 favouriteWidget.setModel(model);

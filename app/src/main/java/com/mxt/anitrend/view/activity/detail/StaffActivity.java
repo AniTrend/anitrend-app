@@ -76,7 +76,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         if(isAuth) {
             MenuItem favouriteMenuItem = menu.findItem(R.id.action_favourite);
             favouriteWidget = (FavouriteToolbarWidget) favouriteMenuItem.getActionView();
-            StaffBase model = getViewModel().snapshot();
+            StaffBase model = getModel();
             if(model != null)
                 favouriteWidget.setModel(model);
         }
@@ -85,7 +85,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        StaffBase model = getViewModel().snapshot();
+        StaffBase model = getModel();
         if(model != null) {
             switch (item.getItemId()) {
                 case R.id.action_share:
@@ -139,7 +139,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
     @Override
     protected void onResume() {
         super.onResume();
-        if(getViewModel().snapshot() == null)
+        if(getModel() == null)
             makeRequest();
         else
             updateUI();
@@ -147,7 +147,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
 
     @Override
     protected void updateUI() {
-        StaffBase model = getViewModel().snapshot();
+        StaffBase model = getModel();
         if(model != null)
             if(favouriteWidget != null)
                 favouriteWidget.setModel(model);

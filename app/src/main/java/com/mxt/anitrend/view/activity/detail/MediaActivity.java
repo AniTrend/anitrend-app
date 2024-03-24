@@ -86,7 +86,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
         getMenuInflater().inflate(R.menu.media_base_menu, menu);
         menu.findItem(R.id.action_favourite).setVisible(isAuth);
 
-        MediaBase model = getViewModel().snapshot();
+        MediaBase model = getModel();
         malMenuItem = menu.findItem(R.id.action_mal);
         malMenuItem.setVisible(model != null && model.getIdMal() > 0);
 
@@ -104,7 +104,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        MediaBase model = getViewModel().snapshot();
+        MediaBase model = getModel();
         if(model != null) {
             switch (item.getItemId()) { 
                 case R.id.action_manage:
@@ -154,7 +154,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     @Override
     protected void onResume() {
         super.onResume();
-        if(getViewModel().snapshot() == null)
+        if(getModel() == null)
             makeRequest();
         else
             updateUI();
@@ -162,7 +162,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
 
     @Override
     protected void updateUI() {
-        MediaBase model = getViewModel().snapshot();
+        MediaBase model = getModel();
         if(model != null) {
             binding.setModel(model);
             binding.setOnClickListener(this);
@@ -205,7 +205,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.series_banner:
-                MediaBase model = getViewModel().snapshot();
+                MediaBase model = getModel();
                 if (model != null) {
                     CompatUtil.INSTANCE.imagePreview(view, model.getBannerImage(), R.string.image_preview_error_series_banner);
                 }
@@ -221,7 +221,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     }
 
     private void setMenuItemIcons() {
-        MediaBase model = getViewModel().snapshot();
+        MediaBase model = getModel();
         if (model != null) {
             if (model.getMediaListEntry() != null && manageMenuItem != null)
                 manageMenuItem.setIcon(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_mode_edit_white_24dp));
@@ -231,7 +231,7 @@ public class MediaActivity extends ActivityBase<MediaBase, MediaPresenter> imple
     }
 
     private void setFavouriteWidgetMenuItemIcon() {
-        MediaBase model = getViewModel().snapshot();
+        MediaBase model = getModel();
         if(model != null && favouriteWidget != null)
             favouriteWidget.setModel(model);
     }
