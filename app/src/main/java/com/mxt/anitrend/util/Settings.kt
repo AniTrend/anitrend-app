@@ -341,6 +341,14 @@ class Settings(
             }
         }
 
+    var lastUserSyncTime: Long
+        get() = getLong(_lastUserSyncTime, 0)
+        set(value) {
+            edit {
+                putLong(_lastUserSyncTime, value)
+            }
+        }
+
     fun saveSeasonYear(year: Int) {
         edit {
             putInt(KeyUtil.arg_seasonYear, year)
@@ -391,5 +399,6 @@ class Settings(
         private const val _reviewSort = "_reviewSort"
         private const val _staffSort = "_staffSort"
         private const val _experimentalMarkdown = "_experimentalMarkdown"
+        private const val _lastUserSyncTime = "_lastUserSyncTime"
     }
 }

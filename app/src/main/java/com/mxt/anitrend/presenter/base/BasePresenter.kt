@@ -35,6 +35,14 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     private var favouriteYears: List<String>? = null
     private var favouriteFormats: List<String>? = null
 
+    inline fun updateUserLastSyncTimeStampIf(intervalInMinutes: Int = 15, action: () -> Unit) {
+        val lastSyncedAt = settings.lastUserSyncTime
+        if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, lastSyncedAt, intervalInMinutes)) {
+            action()
+            settings.lastUserSyncTime = System.currentTimeMillis()
+        }
+    }
+
     @IdRes
     fun getNavigationItem(): Int {
         return when (settings.startupPage) {

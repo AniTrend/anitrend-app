@@ -124,8 +124,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         setViewModel(true)
         if (savedInstanceState == null)
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
+        mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
         mNavigationView.setNavigationItemSelectedListener(this)
         mViewPager.offscreenPageLimit = offScreenLimit
         mPageIndex = DateUtil.menuSelect
@@ -408,13 +407,14 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     }
 
     private fun requestCurrentUser() {
-        // Sync local current user data with remote
         if (presenter.settings.isAuthenticated) {
-            viewModel.params.putParcelable(
-                KeyUtil.arg_graph_params,
-                GraphUtil.getDefaultQuery(false)
-            )
-            viewModel.requestData(KeyUtil.USER_CURRENT_REQ, this)
+            presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
+                viewModel.params.putParcelable(
+                    KeyUtil.arg_graph_params,
+                    GraphUtil.getDefaultQuery(false)
+                )
+                viewModel.requestData(KeyUtil.USER_CURRENT_REQ, this)
+            }
         }
     }
 

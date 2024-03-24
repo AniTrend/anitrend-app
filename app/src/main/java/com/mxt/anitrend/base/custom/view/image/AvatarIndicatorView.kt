@@ -47,7 +47,6 @@ class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseC
         get() = presenter.database?.currentUser
 
     private lateinit var binding: WidgetAvatarIndicatorBinding
-    private var mLastSynced: Long = 0
 
     override fun onInit() {
         binding = WidgetAvatarIndicatorBinding.inflate(context.getLayoutInflater(), this, true)
@@ -76,8 +75,6 @@ class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseC
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     override fun onModelChanged(consumer: BaseConsumer<User>) {
         if (consumer.requestMode == KeyUtil.USER_CURRENT_REQ) {
-            if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, mLastSynced, 15))
-                mLastSynced = System.currentTimeMillis()
             checkLastSyncTime()
         }
     }
