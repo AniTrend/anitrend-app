@@ -33,7 +33,10 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
     val params = Bundle()
 
-    fun snapshot() = model.value
+    /**
+     * @return A live data snapshot value [T]? at the time this function is invoked
+     */
+    fun snapshot(): T? = model.value
 
     fun setContext(context: Context?) {
         context?.apply {

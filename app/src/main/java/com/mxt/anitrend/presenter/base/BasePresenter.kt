@@ -35,6 +35,15 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     private var favouriteYears: List<String>? = null
     private var favouriteFormats: List<String>? = null
 
+    /**
+     * Avoids running a delegate if the specified interval time has not elapsed since the last
+     * call of this function
+     *
+     * @param intervalInMinutes time interval in minutes
+     * @param action delegate to invoke if the the time interval has elapsed since the last run
+     *
+     * @see KeyUtil.TIME_UNIT_MINUTES
+     */
     inline fun updateUserLastSyncTimeStampIf(intervalInMinutes: Int = 15, action: () -> Unit) {
         val lastSyncedAt = settings.lastUserSyncTime
         if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, lastSyncedAt, intervalInMinutes)) {
