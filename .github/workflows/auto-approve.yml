@@ -1,10 +1,24 @@
 name: auto-approve
-on: pull_request_target
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+    inputs:
+      pullRequestNumber:
+        description: Pull request number to auto-approve
+        required: false
 
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+    if: github.actor == 'dependabot[bot]' || github.ref == 'refs/heads/platform/update-version-meta-data' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: hmarr/auto-approve-action@v3
+        with:
+          review-message: "Auto approved automated PR"
+          pull-request-number: ${{ github.event.inputs.pullRequestNumber }}
