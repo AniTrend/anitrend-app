@@ -132,7 +132,7 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         StaffPageAdapter pageAdapter = new StaffPageAdapter(getSupportFragmentManager(), getApplicationContext());
         pageAdapter.setParams(getViewModel().getParams());
         viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit + 1);
+        viewPager.setOffscreenPageLimit(offScreenLimit);
         smartTabLayout.setViewPager(viewPager);
     }
 
