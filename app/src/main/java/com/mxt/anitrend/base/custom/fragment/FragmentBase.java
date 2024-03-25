@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.annimon.stream.IntPair;
@@ -229,7 +230,8 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     @SuppressWarnings("unchecked")
     protected void setViewModel(boolean stateSupported) {
         if(viewModel == null) {
-            viewModel = ViewModelProviders.of(this).get(ViewModelBase.class);
+            ViewModelProvider provider = new ViewModelProvider(this);
+            viewModel = provider.get(ViewModelBase.class);
             viewModel.setContext(getContext());
             if(!viewModel.getModel().hasActiveObservers())
                 viewModel.getModel().observe(this, this);

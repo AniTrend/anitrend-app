@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -73,7 +74,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     protected long id;
 
-    protected int offScreenLimit = 3;
+    protected int offScreenLimit = 2;
     protected boolean disableNavigationStyle;
     protected static final int REQUEST_PERMISSION = 102;
 
@@ -366,13 +367,19 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     @SuppressWarnings("unchecked")
     protected void setViewModel(boolean stateSupported) {
         if(viewModel == null) {
-            viewModel = ViewModelProviders.of(this).get(ViewModelBase.class);
+            ViewModelProvider provider = new ViewModelProvider(this);
+            viewModel = provider.get(ViewModelBase.class);
             viewModel.setContext(this);
             if(!viewModel.getModel().hasActiveObservers())
                 viewModel.getModel().observe(this, this);
             if(stateSupported)
                 viewModel.setState(this);
         }
+    }
+
+    @Nullable
+    protected M getModel() {
+        return viewModel != null ? viewModel.snapshot() : null;
     }
 
     /**

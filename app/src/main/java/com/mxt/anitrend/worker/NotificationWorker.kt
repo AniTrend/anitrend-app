@@ -72,12 +72,10 @@ class NotificationWorker(
     private fun requestUser(): User? {
         val userGraphContainer = userEndpoint.getCurrentUser(
                 GraphUtil.getDefaultQuery(false)
-        ).execute().body() as User?
+        ).execute().body() as? User?
 
-        return (userGraphContainer).let {
-            it?.also { user ->
-                presenter.database.currentUser = user
-            }
+        return userGraphContainer?.let {
+            presenter.database.currentUser = it
             it
         }
     }
@@ -85,7 +83,7 @@ class NotificationWorker(
     private fun requestNotifications(user: User) {
         val notificationsContainer = userEndpoint.getUserNotifications(
             GraphUtil.getDefaultQuery(false)
-        ).execute().body() as PageContainer<Notification>?
+        ).execute().body() as? PageContainer<Notification>?
 
         if (user.unreadNotificationCount > 0 && notificationsContainer != null)
             notificationUtil.createNotification(user, notificationsContainer)
