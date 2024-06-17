@@ -74,7 +74,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     protected long id;
 
-    protected int offScreenLimit = 2;
+    protected int offScreenLimit = 3;
     protected boolean disableNavigationStyle;
     protected static final int REQUEST_PERMISSION = 102;
 
