@@ -86,7 +86,7 @@ public class MediaListActivity extends ActivityBase<User, BasePresenter> {
     @Override
     protected void updateUI() {
         viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
+        viewPager.setOffscreenPageLimit(offScreenLimit + 2);
         smartTabLayout.setViewPager(viewPager);
     }
 

@@ -9,6 +9,7 @@ import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor
+import com.mxt.anitrend.model.api.interceptor.ClientInterceptor
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor
 import com.mxt.anitrend.model.api.retro.anilist.AuthModel
 import com.mxt.anitrend.model.api.retro.base.GiphyModel
@@ -50,11 +51,11 @@ object WebFactory {
      * Creates a standard HttpBuilder with most common likely used configuration and optionally
      * will include http logging based off a given log level.
      * @see HttpLoggingInterceptor.setLevel
-     * @param interceptor Optional interceptor of your own implementation
+     * @param interceptors Optional interceptors of your own implementation
      * @param logLevel Mandatory log level that the logging http interceptor should use
      */
     private fun createHttpClient(
-        interceptor: Interceptor?,
+        vararg interceptors: Interceptor,
         logLevel: HttpLoggingInterceptor.Level
     ): OkHttpClient.Builder {
         val okHttpClientBuilder = OkHttpClient.Builder()
@@ -66,7 +67,7 @@ object WebFactory {
                 .setLevel(logLevel)
             okHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
         }
-        if (interceptor != null) okHttpClientBuilder.addInterceptor(interceptor)
+        interceptors.forEach(okHttpClientBuilder::addInterceptor)
         return okHttpClientBuilder
     }
 
@@ -84,9 +85,11 @@ object WebFactory {
         if (mRetrofit == null) {
             val httpClient = createHttpClient(
                 koinOf<AuthInterceptor>(),
-                HttpLoggingInterceptor.Level.BODY
+                koinOf<ClientInterceptor>(),
+                logLevel = HttpLoggingInterceptor.Level.BODY
             )
-            mRetrofit = Retrofit.Builder().client(httpClient.build())
+            mRetrofit = Retrofit.Builder()
+                .client(httpClient.build())
                 .addConverterFactory(koinOf<AniGraphConverter>())
                 .baseUrl(BuildConfig.API_LINK)
                 .build()
@@ -101,7 +104,7 @@ object WebFactory {
             .client(
                 createHttpClient(
                     CacheInterceptor(context, true),
-                    HttpLoggingInterceptor.Level.HEADERS
+                    logLevel = HttpLoggingInterceptor.Level.HEADERS
                 )
                     .addNetworkInterceptor(NetworkCacheInterceptor(context, true))
                     .cache(cacheProvider(context!!)).build()
@@ -117,7 +120,8 @@ object WebFactory {
                 .client(
                     createHttpClient(
                         CacheInterceptor(context, true),
-                        HttpLoggingInterceptor.Level.HEADERS
+                        koinOf<ClientInterceptor>(),
+                        logLevel = HttpLoggingInterceptor.Level.HEADERS
                     )
                         .addNetworkInterceptor(NetworkCacheInterceptor(context, true))
                         .cache(cacheProvider(context!!)).build()
@@ -129,7 +133,9 @@ object WebFactory {
 
     fun createRepositoryService(): RepositoryModel {
         return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson))
-            .client(createHttpClient(null, HttpLoggingInterceptor.Level.HEADERS).build())
+            .client(createHttpClient(
+                logLevel = HttpLoggingInterceptor.Level.HEADERS
+            ).build())
             .baseUrl(BuildConfig.APP_REPO).build().create(
                 RepositoryModel::class.java
             )
@@ -143,8 +149,9 @@ object WebFactory {
         return try {
             val retrofit = Retrofit.Builder()
                 .client(
-                    createHttpClient(null, HttpLoggingInterceptor.Level.HEADERS)
-                        .build()
+                    createHttpClient(
+                        logLevel = HttpLoggingInterceptor.Level.HEADERS
+                    ).build()
                 ).addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BuildConfig.API_AUTH_LINK)
                 .build()

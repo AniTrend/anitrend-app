@@ -2,7 +2,7 @@ package com.mxt.anitrend.koin
 
 import android.app.NotificationManager
 import android.content.Context
-import android.text.util.Linkify
+import android.webkit.WebSettings
 import co.anitrend.support.markdown.center.CenterPlugin
 import co.anitrend.support.markdown.core.CorePlugin
 import co.anitrend.support.markdown.ephasis.EmphasisPlugin
@@ -27,6 +27,7 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
+import com.mxt.anitrend.model.api.interceptor.ClientInterceptor
 import com.mxt.anitrend.model.entity.MyObjectBox
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
@@ -262,6 +263,11 @@ private val networkModule = module {
                 .enableComplexMapKeySerialization()
                 .setLenient()
                 .create()
+        )
+    }
+    single(createdAtStart = true) {
+        ClientInterceptor(
+            agent = WebSettings.getDefaultUserAgent(androidContext())
         )
     }
 }
