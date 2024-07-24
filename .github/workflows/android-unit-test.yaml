@@ -17,9 +17,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Configure dummy files
-        run: |
-          mv app/.travic-ci/google-services.json app/google-services.json
-          mv app/.travic-ci/secrets app/.config/secrets.properties
+      - name: Configure properties
+        run: bash .github/scripts/setup-config.sh
       - name: Test with Gradle
         run: ./gradlew test
