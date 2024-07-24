@@ -22,7 +22,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mxt.anitrend.R;
@@ -31,6 +30,7 @@ import com.mxt.anitrend.base.custom.presenter.CommonPresenter;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase;
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback;
+import com.mxt.anitrend.databinding.CustomToolbarBinding;
 import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.ConfigurationUtil;
@@ -170,23 +170,19 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     }
 
     protected void setTransparentStatusBar() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            Window window = getWindow();
-            window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            int color = ContextCompat.getColor(this, android.R.color.transparent);
-            window.setStatusBarColor(color);
-        }
+        Window window = getWindow();
+        window.getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        int color = ContextCompat.getColor(this, android.R.color.transparent);
+        window.setStatusBarColor(color);
     }
 
     protected void setTransparentStatusBarWithColor() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            Window window = getWindow();
-            int color = ContextCompat.getColor(this, R.color.colorTransparent);
-            window.setStatusBarColor(color);
-            window.setNavigationBarColor(color);
-        }
+        Window window = getWindow();
+        int color = ContextCompat.getColor(this, R.color.colorTransparent);
+        window.setStatusBarColor(color);
+        window.setNavigationBarColor(color);
     }
 
     @Override

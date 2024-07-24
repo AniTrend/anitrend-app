@@ -13,74 +13,56 @@ android {
     }
 }
 
-val prettyTime = "4.0.4.Final"
-val butterKnife = "10.2.3"
-val multidex = "2.0.1"
-val materialDialogs = "0.9.6.0"
-val tapTarget = "3.3.2"
-val jiaoziVideoPlayer = "7.7.2.3300"
-val photoView = "2.3.0"
-val onboarder = "1.0.4"
-val mpAndroidChart = "3.1.0"
-val aboutPage = "1.3.1"
-val materialSearchView = "1.4.18"
-val progressLayout = "master-SNAPSHOT"
-val eventBus = "3.3.1"
-val alerter = "7.0.1"
-val stream = "1.2.2"
-val circularProgressView = "2.5.0"
-val txtmark = "0.16"
-
 dependencies {
     /** Butter Knife Libraries */
-    implementation("com.jakewharton:butterknife:${butterKnife}")
-    kapt("com.jakewharton:butterknife-compiler:${butterKnife}")
+    implementation(libs.butterknife)
+    kapt(libs.butterknife.compiler)
 
     /** Material Dialogs */
-    implementation("com.afollestad.material-dialogs:core:${materialDialogs}")
+    implementation(libs.material.dialogs.core)
 
     /** Tap Target Prompt */
-    implementation("uk.co.samuelwall:material-tap-target-prompt:${tapTarget}")
+    implementation(libs.material.tap.target.prompt)
 
     /** Pretty Time */
-    implementation("org.ocpsoft.prettytime:prettytime:${prettyTime}")
+    implementation(libs.prettyTime)
 
     /** Highly Customizable Video Player */
-    implementation("cn.jzvd:jiaozivideoplayer:${jiaoziVideoPlayer}")
+    implementation(libs.jiaozivideoplayer)
 
     /** Photo View */
-    implementation("com.github.chrisbanes:PhotoView:${photoView}")
+    implementation(libs.photoview)
 
     /** On-boarding Experience */
-    implementation("com.codemybrainsout.onboarding:onboarder:${onboarder}")
+    implementation(libs.onboarder)
 
     /** Charts */
-    implementation("com.github.PhilJay:MPAndroidChart:v${mpAndroidChart}")
+    implementation(libs.mpandroidchart)
 
     /** About Library */
-    implementation("com.github.medyo:android-about-page:${aboutPage}")
+    implementation(libs.android.about.page)
 
     /** Multi Dex */
-    implementation("androidx.multidex:multidex:${multidex}")
+    implementation(libs.androidx.multidex)
 
     /** Material Search View */
-    implementation("com.github.ma-myair:MaterialSearchView:${materialSearchView}")
+    implementation(libs.materialsearchview)
 
     /** State Layout Library */
-    implementation("com.github.nguyenhoanglam:ProgressLayout:${progressLayout}")
+    implementation(libs.progresslayout)
 
     /** Event Bus Library */
-    implementation("org.greenrobot:eventbus:${eventBus}")
+    implementation(libs.eventbus)
 
     /** Alerter */
-    implementation("com.tapadoo.android:alerter:${alerter}")
+    implementation(libs.alerter)
 
     /** Stream */
-    implementation("com.annimon:stream:${stream}")
+    implementation(libs.stream)
 
     /** Circular Progress View */
-    implementation("com.github.rahatarmanahmed:circularprogressview:${circularProgressView}")
+    implementation(libs.circularprogressview)
 
     /** Txtmark */
-    implementation("es.nitaur.markdown:txtmark:${txtmark}")
+    implementation(libs.txtmark)
 }

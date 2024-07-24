@@ -8,7 +8,9 @@ import io.github.wax911.library.converter.GraphConverter
 import io.github.wax911.library.converter.request.GraphRequestConverter
 import io.github.wax911.library.model.request.QueryContainerBuilder
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import timber.log.Timber
 
 class AniRequestConverter(
@@ -37,6 +39,6 @@ class AniRequestConverter(
 
         val queryJson = gson.toJson(queryContainer)
 
-        return RequestBody.create(MediaType.parse(GraphConverter.MimeType), queryJson)
+        return queryJson.toRequestBody(GraphConverter.MimeType.toMediaTypeOrNull())
     }
 }
