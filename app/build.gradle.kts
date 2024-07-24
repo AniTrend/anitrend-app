@@ -13,7 +13,7 @@ android {
     }
 }
 
-val prettyTime = "4.0.4.Final"
+val prettyTime = "4.0.6.Final"
 val butterKnife = "10.2.3"
 val multidex = "2.0.1"
 val materialDialogs = "0.9.6.0"
