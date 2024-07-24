@@ -12,7 +12,6 @@ internal fun Project.configurePlugins() {
     plugins.apply("io.objectbox")
 }
 
-@Suppress("UnstableApiUsage")
 internal fun Project.configureAdditionalPlugins() {
     baseExtension().variantFilter {
         if (flavors.first().name == "app") {
