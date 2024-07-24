@@ -1,9 +1,9 @@
 [versions]
 ktlint = "0.40.0"
 
-gradle-plugin = "7.4.2"
+gradle-plugin = "8.5.1"
 
-androidx-appcompat = "1.6.0-rc01"
+androidx-appcompat = "1.6.0"
 androidx-core = "1.10.1"
 androidx-constraintlayout = "2.1.4"
 androidx-fragment = "1.6.2"
@@ -21,15 +21,16 @@ io-objectbox = "3.7.1"
 io-mockk = "1.13.12"
 
 jetbrains-dokka = "1.7.20"
-jetbrains-kotlin = "1.7.21"
-jetbrains-kotlinx-coroutines = "1.7.3"
-jetbrains-kotlinx-serialization = "1.5.1"
+jetbrains-kotlin = "1.9.23"
+jetbrains-kotlinx-coroutines = "1.8.1"
+jetbrains-kotlinx-serialization = "1.7.1"
 
+mpandroidchartVersion = "v3.1.0"
 noties-markwon = "4.6.2"
 org-mockito = "3.9.0"
 ogaclejapan-smarttab = "2.0.0"
-squareup-retrofit = "2.9.0"
-squareup-okhttp = "3.12.1"
+squareup-retrofit = "2.11.0"
+squareup-okhttp = "4.12.0"
 
 timber = "4.7.1"
 treesSence = "1.0.4"
@@ -54,10 +55,26 @@ hamcrest = "2.2"
 txtmark = "0.16"
 
 [libraries]
+alerter = { module = "com.tapadoo.android:alerter", version.ref = "alerter" }
+android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "aboutPage" }
+androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 betterLinkMovement = "me.saket:better-link-movement-method:2.2.0"
+butterknife = { module = "com.jakewharton:butterknife", version.ref = "butterKnife" }
+butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", version.ref = "butterKnife" }
+circularprogressview = { module = "com.github.rahatarmanahmed:circularprogressview", version.ref = "circularProgressView" }
+material-dialogs-core = { module = "com.afollestad.material-dialogs:core", version.ref = "materialDialogs" }
+eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventBus" }
 hamcrest = "org.hamcrest:hamcrest-library:2.2"
+jiaozivideoplayer = { module = "cn.jzvd:jiaozivideoplayer", version.ref = "jiaoziVideoPlayer" }
 junit = "junit:junit:4.13.2"
+material-tap-target-prompt = { module = "uk.co.samuelwall:material-tap-target-prompt", version.ref = "tapTarget" }
+materialsearchview = { module = "com.github.ma-myair:MaterialSearchView", version.ref = "materialSearchView" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
+onboarder = { module = "com.codemybrainsout.onboarding:onboarder", version.ref = "onboarder" }
+photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
 prettyTime = "org.ocpsoft.prettytime:prettytime:4.0.4.Final"
+progresslayout = { module = "com.github.nguyenhoanglam:ProgressLayout", version.ref = "progressLayout" }
+stream = { module = "com.annimon:stream", version.ref = "stream" }
 threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.7"
 treessence = "com.github.bastienpaulfr:Treessence:1.0.4"
 timber = "com.jakewharton.timber:timber:5.0.1"
@@ -131,7 +148,6 @@ objectbox-gradle-plugin = { module = "io.objectbox:objectbox-gradle-plugin", ver
 jetbrains-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "jetbrains-kotlin" }
 jetbrains-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "jetbrains-kotlin" }
 jetbrains-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "jetbrains-kotlin" }
-jetbrains-kotlin-extensions = { module = "org.jetbrains.kotlin:kotlin-android-extensions", version.ref = "jetbrains-kotlin" }
 jetbrains-kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "jetbrains-kotlin" }
 
 jetbrains-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "jetbrains-kotlinx-coroutines" }
@@ -178,3 +194,4 @@ square-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.
 square-mockServer = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "squareup-okhttp" }
 
 gradle-versions = "com.github.ben-manes:gradle-versions-plugin:0.44.0"
+txtmark = { module = "es.nitaur.markdown:txtmark", version.ref = "txtmark" }

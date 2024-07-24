@@ -115,7 +115,7 @@ private fun DependencyHandler.addDependency(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -128,7 +128,7 @@ internal fun DependencyHandler.kapt(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -141,7 +141,7 @@ internal fun DependencyHandler.api(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -154,7 +154,7 @@ internal fun DependencyHandler.compile(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -167,7 +167,7 @@ internal fun DependencyHandler.debug(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -180,7 +180,7 @@ internal fun DependencyHandler.implementation(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -193,7 +193,7 @@ internal fun DependencyHandler.debugImplementation(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -206,7 +206,7 @@ internal fun DependencyHandler.releaseImplementation(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -219,7 +219,7 @@ internal fun DependencyHandler.runtime(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */
@@ -232,7 +232,7 @@ internal fun DependencyHandler.testImplementation(
  * Adds a dependency to the given configuration, and configures the dependency using the given closure.
  *
  * @param dependencyNotation The dependency notation, in one of the notations described above.
- * @param configureClosure The closure to use to configure the dependency.
+ * @param dependencyConfiguration The closure to use to configure the dependency.
  *
  * @return The dependency.
  */

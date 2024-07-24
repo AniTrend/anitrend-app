@@ -35,7 +35,7 @@ allprojects {
 
 tasks {
     val clean by registering(Delete::class) {
-        delete(rootProject.buildDir)
+        delete(rootProject.layout.buildDirectory)
     }
 }
 

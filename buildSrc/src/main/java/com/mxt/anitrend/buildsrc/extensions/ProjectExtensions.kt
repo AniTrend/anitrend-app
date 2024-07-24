@@ -17,6 +17,7 @@
 
 package com.mxt.anitrend.buildsrc.extensions
 
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.mxt.anitrend.buildsrc.components.PropertiesReader
@@ -44,6 +45,9 @@ fun Project.version(alias: String) =
 
 internal fun Project.baseExtension() =
     extensions.getByType<BaseExtension>()
+
+internal fun Project.androidComponents() =
+    extensions.getByType<ApplicationAndroidComponentsExtension>()
 
 internal fun Project.baseAppExtension() =
     extensions.getByType<BaseAppModuleExtension>()

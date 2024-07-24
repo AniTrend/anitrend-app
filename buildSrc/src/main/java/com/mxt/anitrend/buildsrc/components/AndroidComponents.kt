@@ -136,6 +136,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
     buildTypes {
         getByName("release") {
@@ -159,7 +160,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         configureBuildFlavours()
     }
 
-    packagingOptions {
+    packaging {
         resources.excludes.add("META-INF/NOTICE.*")
         resources.excludes.add("META-INF/LICENSE*")
         // Exclude potential duplicate kotlin_module files
@@ -193,20 +194,17 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 internal fun Project.applyAndroidConfiguration() {
     val baseExtension = baseExtension()
     val appExtension = baseAppExtension()
-    val androidExtension = androidExtensionsExtension()
 
     baseExtension.setUpWith(this)
     appExtension.setUpWith(this)
-
-    androidExtension.isExperimental = true
 
     configurations.all {
         exclude("org.jetbrains", "annotations-java5")
@@ -220,7 +218,7 @@ internal fun Project.applyAndroidConfiguration() {
 
     tasks.withType(KotlinJvmCompile::class.java) {
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "17"
         }
     }
 
