@@ -11,7 +11,7 @@ androix-lifecycle = "2.6.2"
 androidx-paging = "2.1.2"
 androidx-preference = "1.2.1"
 androidx-test = "1.6.1"
-androidx-test-ext = "1.1.5"
+androidx-test-ext = "1.2.1"
 androidx-work = "2.7.1"
 
 bumptech-glide = "4.15.1"
