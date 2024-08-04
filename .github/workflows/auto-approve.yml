@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    if: github.actor == 'dependabot[bot]' || github.ref == 'refs/heads/platform/update-version-meta-data' || github.event_name == 'workflow_dispatch'
+    if: github.actor == 'renovate[bot]' || github.ref == 'refs/heads/platform/update-version-meta-data' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: hmarr/auto-approve-action@v3
         with:
