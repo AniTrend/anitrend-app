@@ -19,7 +19,7 @@ package com.mxt.anitrend.buildsrc.common
 
 object Configuration {
 
-    const val compileSdk = 33
-    const val targetSdk = 33
+    const val compileSdk = 34
+    const val targetSdk = 34
     const val minSdk = 21
 }
