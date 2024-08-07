@@ -48,14 +48,14 @@ aboutPage = "1.2.5"
 materialSearchView = "1.4.18"
 progressLayout = "master-SNAPSHOT"
 eventBus = "3.2.0"
-alerter = "7.0.1"
+alerter = "7.2.4"
 stream = "1.2.2"
 circularProgressView = "2.5.0"
 hamcrest = "2.2"
 txtmark = "0.16"
 
 [libraries]
-alerter = { module = "com.tapadoo.android:alerter", version.ref = "alerter" }
+alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
 android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "aboutPage" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 betterLinkMovement = "me.saket:better-link-movement-method:2.2.0"
