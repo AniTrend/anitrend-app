@@ -5,9 +5,6 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 ## What's Changed
 
-### Enhancements
-- Additional optimizations to reduce the number of requests should result in slightly lower rate limit issues
-
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)
 
