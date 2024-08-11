@@ -134,7 +134,7 @@ google-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-g
 
 google-android-flexbox = "com.google.android.flexbox:flexbox:3.0.0"
 
-google-android-material = "com.google.android.material:material:1.9.0"
+google-android-material = "com.google.android.material:material:1.12.0"
 
 google-gsm-google-services = "com.google.gms:google-services:4.4.2"
 
