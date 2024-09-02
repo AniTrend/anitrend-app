@@ -10,7 +10,7 @@ androidx-fragment = "1.8.2"
 androix-lifecycle = "2.8.4"
 androidx-paging = "2.1.2"
 androidx-preference = "1.2.1"
-androidx-test = "1.6.1"
+androidx-test = "1.6.2"
 androidx-test-ext = "1.2.1"
 androidx-work = "2.9.1"
 
