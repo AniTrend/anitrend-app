@@ -105,7 +105,7 @@ androidx-lifecycle-liveDataCoreKtx = { module = "androidx.lifecycle:lifecycle-li
 androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
 androidx-preferenceKtx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }
 
-androidx-startupRuntime = "androidx.startup:startup-runtime:1.1.1"
+androidx-startupRuntime = "androidx.startup:startup-runtime:1.2.0"
 
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
 androidx-test-coreKtx = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
