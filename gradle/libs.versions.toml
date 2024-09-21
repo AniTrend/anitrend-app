@@ -64,7 +64,7 @@ butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", versio
 circularprogressview = { module = "com.github.rahatarmanahmed:circularprogressview", version.ref = "circularProgressView" }
 material-dialogs-core = { module = "com.afollestad.material-dialogs:core", version.ref = "materialDialogs" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventBus" }
-hamcrest = "org.hamcrest:hamcrest-library:2.2"
+hamcrest = "org.hamcrest:hamcrest-library:3.0"
 jiaozivideoplayer = { module = "cn.jzvd:jiaozivideoplayer", version.ref = "jiaoziVideoPlayer" }
 junit = "junit:junit:4.13.2"
 material-tap-target-prompt = { module = "uk.co.samuelwall:material-tap-target-prompt", version.ref = "tapTarget" }
