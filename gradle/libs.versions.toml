@@ -34,7 +34,7 @@ squareup-okhttp = "4.12.0"
 
 timber = "4.7.1"
 treesSence = "1.0.4"
-prettyTime = "4.0.4.Final"
+prettyTime = "5.0.8.Final"
 betterLinkMovement = "2.2.0"
 butterKnife = "10.2.3"
 multidex = "2.0.1"
@@ -72,7 +72,7 @@ materialsearchview = { module = "com.github.ma-myair:MaterialSearchView", versio
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
 onboarder = { module = "com.codemybrainsout.onboarding:onboarder", version.ref = "onboarder" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
-prettyTime = "org.ocpsoft.prettytime:prettytime:5.0.9.Final"
+prettyTime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettyTime" }
 progresslayout = { module = "com.github.nguyenhoanglam:ProgressLayout", version.ref = "progressLayout" }
 stream = { module = "com.annimon:stream", version.ref = "stream" }
 threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.7"
