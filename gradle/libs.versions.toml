@@ -121,7 +121,7 @@ androidx-work-runtimeKtx = { module = "androidx.work:work-runtime-ktx", version.
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 androidx-work-test = { module = "androidx.work:work-test", version.ref = "androidx-work" }
 
-anitrend-android-emoji = "com.github.anitrend:android-emojify:1.6.0-beta01"
+anitrend-android-emoji = "com.github.anitrend:android-emojify:1.9.4"
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:cf428d8430"
 
