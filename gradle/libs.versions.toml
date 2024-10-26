@@ -125,7 +125,7 @@ anitrend-android-emoji = "com.github.anitrend:android-emojify:1.6.0-beta01"
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:cf428d8430"
 
-cash-turbine = "app.cash.turbine:turbine:1.1.0"
+cash-turbine = "app.cash.turbine:turbine:1.2.0"
 
 google-firebase-core = "com.google.firebase:firebase-core:21.1.1"
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.1.2"
