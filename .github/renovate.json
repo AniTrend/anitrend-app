@@ -4,5 +4,8 @@
       "config:base"
     ],
     "baseBranches": ["develop"],
-    "schedule": ["every weekend"]
-  }
+    "schedule": ["every weekend"],
+    "automerge": true,
+    "automergeType": "pr",
+    "automergeStrategy": "rebase"
+}
