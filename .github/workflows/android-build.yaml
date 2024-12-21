@@ -52,13 +52,9 @@ jobs:
         with:
           name: app-github-release
           path: app/build/outputs/apk/github/release
-      - uses: ericcornelissen/git-tag-annotation-action@v2
-        id: tag_data
-      - uses: marvinpinto/action-automatic-releases@latest
-        with:
-          title: "${{ steps.tag_data.outputs.git-tag-annotation }}"
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          files: |
-            app/build/outputs/apk/**/release/*.apk
-            app/build/outputs/apk/**/release/*.json
+      - name: Upload APKs to GitHub Release
+        run: |
+          files=$(find app/build/outputs/apk/ -type f -name '*.apk')
+          gh release upload "${{ github.ref_name }}" $files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
