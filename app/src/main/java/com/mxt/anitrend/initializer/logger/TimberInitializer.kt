@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.startup.Initializer
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.extension.logDirectory
-import fr.bipi.tressence.file.FileLoggerTree
+import fr.bipi.treessence.file.FileLoggerTree
 import timber.log.Timber
 
 class TimberInitializer : Initializer<Unit> {
