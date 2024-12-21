@@ -10,11 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'adopt'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.3'
+          bundler-cache: true
+      - name: Fetch tags
+        run: git fetch --tags --force
       - name: Wait for tests to succeed
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
@@ -23,20 +29,19 @@ jobs:
           check-name: android-unit-test-release
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
-      - name: Prepare secret files
-        run: |
-          echo "${{ secrets.KEYSTORE }}" > appstore.keystore.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch appstore.keystore.asc > app/appstore.keystore
-          echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}" --batch keystore.properties.asc > app/.config/keystore.properties
-          echo "${{ secrets.SECRETS_PROPERTIES }}" > secrets.properties.asc
-          gpg -d --passphrase "${{ secrets.SECRETS_PROPERTIES_PASSPHRASE }}" --batch secrets.properties.asc > app/.config/secrets.properties
-          echo "${{ secrets.GOOGLE_SERVICES }}" > google-services.json.asc
-          gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" --batch google-services.json.asc > app/google-services.json
-      - name: Fetch tags
-        run: git fetch --tags --force
       - name: Build release APKs
-        run: ./gradlew clean assembleRelease
+        run: .github/scripts/fastlane.sh
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+          KEYSTORE_PROPERTIES_PASSPHRASE: ${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}
+          SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
+          SECRETS_PROPERTIES_PASSPHRASE: ${{ secrets.SECRETS_PROPERTIES_PASSPHRASE }}
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+          GOOGLE_SERVICES_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
+          PLAYSTORE_SERVICE_ACCOUNT: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
+          PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE }}
       - name: Publish PlayStore APK
         uses: actions/upload-artifact@v4
         with:
