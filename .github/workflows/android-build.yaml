@@ -30,7 +30,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
       - name: Build release APKs
-        run: .github/scripts/fastlane.sh
+        run: bash .github/scripts/fastlane.sh
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
