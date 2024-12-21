@@ -53,6 +53,8 @@ import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
+import io.wax911.emojify.EmojiManager
+import io.wax911.emojify.serializer.gson.GsonDeserializer
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
@@ -98,6 +100,12 @@ private val coreModule = module {
             context.getSystemService(
                 Context.NOTIFICATION_SERVICE
             ) as NotificationManager?
+        )
+    }
+    single(createdAtStart = true) {
+        EmojiManager.create(
+            context = androidContext(),
+            serializer = GsonDeserializer()
         )
     }
 }

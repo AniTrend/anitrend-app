@@ -58,6 +58,8 @@ hamcrest = "2.2"
 txtmark = "0.16"
 chuncker = "3.5.2"
 
+anitrend-android-emoji = "1.9.5"
+
 [libraries]
 alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
 android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "aboutPage" }
@@ -125,7 +127,9 @@ androidx-work-runtimeKtx = { module = "androidx.work:work-runtime-ktx", version.
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 androidx-work-test = { module = "androidx.work:work-test", version.ref = "androidx-work" }
 
-anitrend-android-emoji = "com.github.anitrend:android-emojify:1.6.0-beta01"
+anitrend-android-emoji = { module = "com.github.anitrend.android-emojify:emojify", version.ref = "anitrend-android-emoji" }
+anitrend-android-emoji-contract = { module = "com.github.anitrend.android-emojify:contract", version.ref = "anitrend-android-emoji" }
+anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gson", version.ref = "anitrend-android-emoji" }
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:0.11.5"
 
