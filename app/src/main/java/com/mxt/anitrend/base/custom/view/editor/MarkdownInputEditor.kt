@@ -15,21 +15,19 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.core.view.inputmethod.InputConnectionCompat
 import androidx.core.view.inputmethod.InputContentInfoCompat
-import androidx.startup.AppInitializer
 import com.google.android.material.textfield.TextInputEditText
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.*
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
-import io.wax911.emojify.initializer.EmojiInitializer
+import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.parser.parseToHtmlHexadecimal
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -84,11 +82,10 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
     /**
      * @return composed text as hex html entities
      */
-    val formattedText: String?
+    val formattedText: String
         get() {
             val content = text.toString()
-            val manager = AppInitializer.getInstance(context)
-                .initializeComponent(EmojiInitializer::class.java)
+            val manager = koinOf<EmojiManager>()
             return manager.parseToHtmlHexadecimal(content)
         }
 

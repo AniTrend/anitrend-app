@@ -10,7 +10,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
-import androidx.startup.AppInitializer
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
@@ -19,6 +18,7 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetComposerBinding
 import com.mxt.anitrend.extension.getLayoutInflater
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -29,7 +29,7 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.util.markdown.MarkDownUtil
-import io.wax911.emojify.initializer.EmojiInitializer
+import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.parser.parseToUnicode
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
@@ -273,8 +273,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
     }
 
     fun setText(textValue: String?) {
-        val manager = AppInitializer.getInstance(context)
-            .initializeComponent(EmojiInitializer::class.java)
+        val manager = koinOf<EmojiManager>()
         val emojified: String? = when (!textValue.isNullOrBlank()) {
             true -> manager.parseToUnicode(textValue)
             else -> null

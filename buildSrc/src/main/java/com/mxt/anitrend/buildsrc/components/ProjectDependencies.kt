@@ -103,6 +103,8 @@ internal fun Project.configureDependencies() {
 
     /** AniTrend */
     dependencies.implementation(libs.anitrend.android.emoji)
+    dependencies.implementation(libs.anitrend.android.emoji.contract)
+    dependencies.implementation(libs.anitrend.android.emoji.gson)
     dependencies.implementation(libs.anitrend.support.markwon)
     dependencies.implementation(libs.square.converter.simplexml.get()) {
         exclude("xpp3", "xpp3")
