@@ -127,7 +127,7 @@ androidx-work-test = { module = "androidx.work:work-test", version.ref = "androi
 
 anitrend-android-emoji = "com.github.anitrend:android-emojify:1.6.0-beta01"
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
-anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:cf428d8430"
+anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:0.11.5"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.0"
 
