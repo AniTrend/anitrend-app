@@ -26,6 +26,7 @@ import com.mxt.anitrend.buildsrc.common.Configuration
 import com.mxt.anitrend.buildsrc.extensions.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.logging.Logger;
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.exclude
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -47,10 +48,10 @@ private fun Project.createSigningConfiguration(extension: BaseExtension) {
     if (keyStoreFile.exists()) {
         keyStoreFile.inputStream().use { fis ->
             val properties = Properties().apply { load(fis) }
-            println("${keyStoreFile.name} found, creating signing configuration")
+            logger.lifecycle("${keyStoreFile.name} found, creating signing configuration")
             extension.signingConfigs {
                 create("release") {
-                    println("Creating signing configuration for $name")
+                    logger.lifecycle("Creating signing configuration for $name")
                     storeFile(file(properties["STORE_FILE"] as String))
                     storePassword(properties["STORE_PASSWORD"] as String)
                     keyAlias(properties["STORE_KEY_ALIAS"] as String)
@@ -59,12 +60,12 @@ private fun Project.createSigningConfiguration(extension: BaseExtension) {
             }
         }
     }
-    else println("${keyStoreFile.absolutePath} could not be found, release may fail")
+    else logger.lifecycle("${keyStoreFile.absolutePath} could not be found, release may fail")
 }
 
 private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(project: Project) {
     asMap.forEach { buildTypeEntry ->
-        println("Configuring build type -> ${buildTypeEntry.key}")
+        project.logger.lifecycle("Configuring build type -> ${buildTypeEntry.key}")
         val buildType = buildTypeEntry.value
 
         buildType.buildConfigField("String", "versionName", "\"${project.props[PropertyTypes.VERSION]}\"")
@@ -77,7 +78,7 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
                     load(fis); applyToBuildConfigForBuild(buildType)
                 }
             }
-        else println("${secretsFile.absolutePath} could not be found, build may fail")
+        else project.logger.lifecycle("${secretsFile.absolutePath} could not be found, build may fail")
 
         val configurationFile = project.file(".config/configuration.properties")
         if (configurationFile.exists())
@@ -86,7 +87,7 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
                     load(fis); applyToBuildConfigForBuild(buildType)
                 }
             }
-        else println("${configurationFile.absolutePath} could not be found, build may fail")
+        else project.logger.lifecycle("${configurationFile.absolutePath} could not be found, build may fail")
     }
 }
 
@@ -104,7 +105,7 @@ private fun BaseExtension.setUpWith(project: Project) {
     }
 }
 
-private fun BaseAppModuleExtension.configureBuildFlavours() {
+private fun BaseAppModuleExtension.configureBuildFlavours(logger: Logger) {
     flavorDimensions.add("version")
 
     productFlavors {
@@ -125,7 +126,7 @@ private fun BaseAppModuleExtension.configureBuildFlavours() {
             val destination = if (output.name != "github-release")
                 original.substring(4)
             else original
-            println("Configuring build output build -> name: ${output.name} | output: $destination")
+            logger.lifecycle("Configuring build output build -> name: ${output.name} | output: $destination")
             output.outputFileName = destination
         }
     }
@@ -146,7 +147,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
                 "proguard-rules.pro"
             )
             if (project.file(".config/keystore.properties").exists()) {
-                println("Applying signing configuration for to build type: $name")
+                project.logger.lifecycle("Applying signing configuration for to build type: $name")
                 signingConfig = signingConfigs.getByName("release")
             }
         }
@@ -157,7 +158,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
 
         applyConfiguration(project)
 
-        configureBuildFlavours()
+        configureBuildFlavours(project.logger)
     }
 
     packaging {
@@ -191,6 +192,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         abortOnError = false
         ignoreWarnings = false
         ignoreTestSources = true
+        disable.add("EnsureInitializerMetadata")
     }
 
     compileOptions {
@@ -242,13 +244,13 @@ internal fun Project.applyAndroidConfiguration() {
     }
 
     tasks.register("generateVersions") {
-        println("Generate versions for $name -> $projectDir")
+        logger.lifecycle("Generate versions for $name -> $projectDir")
         val versionMeta = File(projectDir, ".meta/version.json")
         if (!versionMeta.exists()) {
-            println("Creating versions meta file in ${versionMeta.absolutePath}")
+            logger.lifecycle("Creating versions meta file in ${versionMeta.absolutePath}")
             versionMeta.mkdirs()
         }
-        println("Writing version information to ${versionMeta.absolutePath}")
+        logger.lifecycle("Writing version information to ${versionMeta.absolutePath}")
         FileWriter(versionMeta).use { writer ->
             writer.write(
                 """

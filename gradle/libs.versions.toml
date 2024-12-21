@@ -10,7 +10,10 @@ androidx-fragment = "1.8.5"
 androix-lifecycle = "2.8.7"
 androidx-paging = "2.1.2"
 androidx-preference = "1.2.1"
-androidx-test = "1.6.2"
+androidx-test-core = "1.6.1"
+androidx-test-core-ktx = "1.6.1"
+androidx-test-runner = "1.6.2"
+androidx-test-rules = "1.6.1"
 androidx-test-ext = "1.2.1"
 androidx-work = "2.9.1"
 
@@ -107,10 +110,10 @@ androidx-preferenceKtx = { module = "androidx.preference:preference-ktx", versio
 
 androidx-startupRuntime = "androidx.startup:startup-runtime:1.2.0"
 
-androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
-androidx-test-coreKtx = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
-androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
-androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
+androidx-test-coreKtx = { module = "androidx.test:core-ktx", version.ref = "androidx-test-core-ktx" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test-rules" }
 
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.1"
 
