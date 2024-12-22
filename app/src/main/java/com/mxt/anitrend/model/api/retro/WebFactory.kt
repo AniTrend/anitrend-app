@@ -1,10 +1,10 @@
 package com.mxt.anitrend.model.api.retro
 
 import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.extension.KoinExt.get
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -86,6 +86,7 @@ object WebFactory {
             val httpClient = createHttpClient(
                 koinOf<AuthInterceptor>(),
                 koinOf<ClientInterceptor>(),
+                koinOf<ChuckerInterceptor>(),
                 logLevel = HttpLoggingInterceptor.Level.BODY
             )
             mRetrofit = Retrofit.Builder()

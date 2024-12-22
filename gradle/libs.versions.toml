@@ -56,6 +56,7 @@ stream = "1.2.2"
 circularProgressView = "2.5.0"
 hamcrest = "2.2"
 txtmark = "0.16"
+chuncker = "3.5.2"
 
 [libraries]
 alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
@@ -129,6 +130,9 @@ anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:cf428d8430"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.0"
+
+chuncker-debug = { module = "com.github.ChuckerTeam.Chucker:library", version.ref = "chuncker" }
+chuncker-release = { module = "com.github.ChuckerTeam.Chucker:library-no-op", version.ref = "chuncker" }
 
 google-firebase-core = "com.google.firebase:firebase-core:21.1.1"
 google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.1.2"
