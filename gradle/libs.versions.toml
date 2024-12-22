@@ -4,7 +4,7 @@ ktlint = "0.40.0"
 gradle-plugin = "8.7.3"
 
 androidx-appcompat = "1.7.0"
-androidx-core = "1.13.1"
+androidx-core = "1.15.0"
 androidx-constraintlayout = "2.2.0"
 androidx-fragment = "1.8.5"
 androix-lifecycle = "2.8.7"
