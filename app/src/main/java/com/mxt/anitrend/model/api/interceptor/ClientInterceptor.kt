@@ -12,10 +12,10 @@ class ClientInterceptor(private val agent: String) : Interceptor {
             .header(ACCEPT_ENCODING, "*")
             .header(USER_AGENT, agent)
             .header(CONNECTION, "keep-alive")
-            .header(HOST, request.url().host())
+            .header(HOST, request.url.host)
 
-        if (request.method() == "POST") {
-            val contentLength = request.body()?.contentLength() ?: 0
+        if (request.method == "POST") {
+            val contentLength = request.body?.contentLength() ?: 0
             builder.header(CONTENT_LENGTH, contentLength.toString())
         }
 
