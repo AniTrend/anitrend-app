@@ -21,27 +21,17 @@ import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.mxt.anitrend.buildsrc.components.PropertiesReader
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
 
-val Project.props: PropertiesReader
+internal val Project.props: PropertiesReader
     get() = PropertiesReader(this)
 
 internal val Project.libs: LibrariesForLibs get() =
     extensions.getByType<LibrariesForLibs>()
-        .named("libs")
-
-fun Project.library(alias: String) =
-    versionCatalog()
-        .findLibrary(alias)
-        .get()
-
-fun Project.version(alias: String) =
-    versionCatalog()
-        .findVersion(alias)
-        .get()
 
 internal fun Project.baseExtension() =
     extensions.getByType<BaseExtension>()
