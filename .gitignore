@@ -134,3 +134,15 @@ fabric.properties
 # End of https://www.gitignore.io/api/androidstudio
 
 .directory
+
+.idea/material_theme_project_new.xml
+
+.idea/runConfigurations.xml
+
+playstore-service-account.json
+
+.idea/appInsightsSettings.xml
+
+.idea/deploymentTargetSelector.xml
+
+.idea/studiobot.xml

@@ -37,7 +37,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     private lateinit var binding: ActivityLoginBinding
     private var model: User? = null
 
-    private val workInfoObserver = Observer<WorkInfo> { workInfo ->
+    private val workInfoObserver = Observer<WorkInfo?> { workInfo ->
         if (workInfo != null && workInfo.state.isFinished) {
             val outputData = workInfo.outputData
             if (outputData.getBoolean(KeyUtil.arg_model, false)) {
