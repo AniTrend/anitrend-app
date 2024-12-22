@@ -212,9 +212,9 @@ internal fun Project.applyAndroidConfiguration() {
         exclude("org.jetbrains", "annotations-java5")
         resolutionStrategy.force(
             "com.google.code.findbugs:jsr305:3.0.2",
-            library("square-okhttp"),
-            library("square-logging"),
-            library("square-mockServer")
+            libs.square.okhttp,
+            libs.square.logging,
+            libs.square.mockServer,
         )
     }
 
