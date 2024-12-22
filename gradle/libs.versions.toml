@@ -21,7 +21,7 @@ bumptech-glide = "4.16.0"
 
 io-koin = "3.2.0"
 io-objectbox = "4.0.3"
-io-mockk = "1.13.13"
+io-mockk = "1.13.14"
 
 jetbrains-dokka = "1.7.20"
 jetbrains-kotlin = "2.0.21"
