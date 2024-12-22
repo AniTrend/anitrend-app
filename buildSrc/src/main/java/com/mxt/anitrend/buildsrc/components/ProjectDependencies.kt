@@ -130,4 +130,7 @@ internal fun Project.configureDependencies() {
     dependencies.androidTestImplementation(library("mockito-core"))
     dependencies.androidTestImplementation(library("mockk-android"))
     dependencies.androidTestImplementation(library("mockk"))
+
+    dependencies.debugImplementation(libs.chuncker.debug)
+    dependencies.releaseImplementation(libs.chuncker.release)
 }

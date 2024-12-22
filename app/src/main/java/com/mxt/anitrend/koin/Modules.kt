@@ -16,6 +16,9 @@ import co.anitrend.support.markdown.strike.StrikeThroughPlugin
 import co.anitrend.support.markdown.webm.WebMPlugin
 import co.anitrend.support.markdown.youtube.YouTubePlugin
 import com.bumptech.glide.Glide
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.chuckerteam.chucker.api.RetentionManager
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
@@ -202,6 +205,24 @@ private val networkModule = module {
         AuthInterceptor(
             settings = get()
         )
+    }
+    factory {
+        ChuckerInterceptor.Builder(context = androidContext())
+            .collector(
+                collector = ChuckerCollector(
+                    context = androidContext(),
+                    showNotification = true,
+                    retentionPeriod = RetentionManager.Period.ONE_WEEK
+                )
+            )
+            .maxContentLength(
+                length = 250000L
+            )
+            .redactHeaders(
+                headerNames = setOf(BuildConfig.HEADER_KEY)
+            )
+            .alwaysReadResponseBody(false)
+            .build()
     }
     single {
         val logLevel = if (BuildConfig.DEBUG)
