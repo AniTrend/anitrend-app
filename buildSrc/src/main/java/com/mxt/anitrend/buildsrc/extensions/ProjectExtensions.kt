@@ -29,8 +29,8 @@ import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
 val Project.props: PropertiesReader
     get() = PropertiesReader(this)
 
-fun Project.versionCatalog() =
-    versionCatalogExtension()
+internal val Project.libs: LibrariesForLibs get() =
+    extensions.getByType<LibrariesForLibs>()
         .named("libs")
 
 fun Project.library(alias: String) =
