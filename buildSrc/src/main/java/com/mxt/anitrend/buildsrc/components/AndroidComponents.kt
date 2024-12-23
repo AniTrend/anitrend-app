@@ -242,28 +242,4 @@ internal fun Project.applyAndroidConfiguration() {
             freeCompilerArgs = compilerArgumentOptions
         }
     }
-
-    tasks.register("generateVersions") {
-        logger.lifecycle("Generate versions for $name -> $projectDir")
-        val versionMeta = File(projectDir, ".meta/version.json")
-        if (!versionMeta.exists()) {
-            logger.lifecycle("Creating versions meta file in ${versionMeta.absolutePath}")
-            versionMeta.mkdirs()
-        }
-        logger.lifecycle("Writing version information to ${versionMeta.absolutePath}")
-        FileWriter(versionMeta).use { writer ->
-            writer.write(
-                """
-                    {
-                        "code": ${project.props[PropertyTypes.CODE].toInt()},
-                        "migration": false,
-                        "minSdk": ${Configuration.minSdk},
-                        "releaseNotes": "",
-                        "version": "${project.props[PropertyTypes.VERSION]}",
-                        "appId": "com.mxt.anitrend"
-                    }
-                """.trimIndent()
-            )
-        }
-    }
 }
