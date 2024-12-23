@@ -16,47 +16,57 @@
 default_platform(:android)
 
 platform :android do
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
+
+  apk_path = "app/build/outputs/apk/app/release/app-release.apk"
+  skip_metadata_upload = 'true'
+
+  desc "Test with gradle"
+  lane :verify do
     gradle(
-      task: "assemble",
-      build_type: "Release",
+      task: "test"
     )
-    upload_to_play_store(
-      release_status: 'completed',
-      track: 'beta',
-      rollout: '1.0',
-      apk: 'app/build/outputs/apk/app/release/app-release.apk',
-      skip_upload_images: 'true',
-      skip_upload_metadata: 'true',
-    )
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
+  desc "Prepare release builds"
+  lane :build do
     gradle(
       task: "assemble",
       build_type: "Release",
     )
+  end
 
+  desc "Submit a new Beta Build to Google Play"
+  lane :submit_beta do
     upload_to_play_store(
       release_status: 'completed',
       track: 'beta',
       rollout: '1.0',
-      apk: 'app/build/outputs/apk/app/release/app-release.apk',
-      skip_upload_images: 'true',
-      skip_upload_metadata: 'true',
+      apk: apk_path,
+      skip_upload_images: skip_metadata_upload,
+      skip_upload_metadata: skip_metadata_upload,
     )
+  end
 
+  desc "Submit a new Prod Build to Google Play"
+  lane :submit_prod do
     upload_to_play_store(
       release_status: 'draft',
       track: 'production',
-      apk: 'app/build/outputs/apk/app/release/app-release.apk',
-      skip_upload_images: 'true',
-      skip_upload_metadata: 'true',
+      apk: apk_path,
+      skip_upload_images: skip_metadata_upload,
+      skip_upload_metadata: skip_metadata_upload,
     )
   end
+
+  desc "Deploy builds to Google Play"
+  lane :deploy do |options|
+    if options[:skip_tests].nil? || !options[:skip_tests]
+      verify
+    end
+
+    build
+    submit_beta
+    submit_prod
+  end
+
 end
