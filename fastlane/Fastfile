@@ -16,8 +16,6 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     gradle(
@@ -27,8 +25,10 @@ platform :android do
     upload_to_play_store(
       release_status: 'completed',
       track: 'beta',
-      rollout: '1',
-      apk: 'app/build/outputs/apk/app/release/app-release.apk'
+      rollout: '1.0',
+      apk: 'app/build/outputs/apk/app/release/app-release.apk',
+      skip_upload_images: 'true',
+      skip_upload_metadata: 'true',
     )
   
     # sh "your_script.sh"
@@ -41,10 +41,22 @@ platform :android do
       task: "assemble",
       build_type: "Release",
     )
+
+    upload_to_play_store(
+      release_status: 'completed',
+      track: 'beta',
+      rollout: '1.0',
+      apk: 'app/build/outputs/apk/app/release/app-release.apk',
+      skip_upload_images: 'true',
+      skip_upload_metadata: 'true',
+    )
+
     upload_to_play_store(
       release_status: 'draft',
       track: 'production',
-      apk: 'app/build/outputs/apk/app/release/app-release.apk'
+      apk: 'app/build/outputs/apk/app/release/app-release.apk',
+      skip_upload_images: 'true',
+      skip_upload_metadata: 'true',
     )
   end
 end
