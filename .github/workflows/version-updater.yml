@@ -18,36 +18,52 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: develop
-      - name: set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'adopt'
       - name: Configure properties
         run: bash .github/scripts/setup-config.sh
 
-      - name: Extract version information to file
-        run: echo "${{ github.event.client_payload.version }}" > VERSION
-
-      - name: Create version.properties using extracted version
+      - name: Generate version information
         run: |
-          IFS='.' read -ra VER <<< "$(cat VERSION)"
+          # Extract version from event payload
+          VERSION="${{ github.event.client_payload.version }}"
+          echo "$VERSION" > VERSION
+
+          # Parse and compute code
+          IFS='.' read -ra VER <<< "$VERSION"
           MAJOR=$((VER[0] * 1000000000))
           MINOR=$((VER[1] * 1000000))
           PATCH=$((VER[2] * 1000))
           CODE=$((MAJOR + MINOR + PATCH))
-          echo "version=$(cat VERSION)" > gradle/version.properties
-          echo "code=$CODE" >> gradle/version.properties
-          echo "name=v$(cat VERSION)" >> gradle/version.properties
 
-      - name: Clean up version information file
+          # Create version.properties
+          mkdir -p gradle
+          cat <<EOF > gradle/version.properties
+          version=$VERSION
+          code=$CODE
+          name=v$VERSION
+          EOF
+
+          # Create version.json
+          mkdir -p .meta
+          cat <<EOF > .meta/version.json
+          {
+            "code": $CODE,
+            "migration": false,
+            "minSdk": 21,
+            "releaseNotes": "",
+            "version": "$VERSION",
+            "appId": "com.mxt.anitrend"
+          }
+          EOF
+
+      - name: Preview created files
+        run: |
+          echo "Preview version.properties:"
+          cat gradle/version.properties
+          echo "Preview version.json:"
+          cat .meta/version.json
+
+      - name: Clean up temporary files
         run: rm VERSION
-
-      - name: Preview created version.properties
-        run: cat gradle/version.properties
-
-      - name: Generate version.json
-        run: ./gradlew generateVersions
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
@@ -55,11 +71,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           signoff: true
           delete-branch: true
-          commit-message: "automation: update version.properties"
+          commit-message: "automation: update version.properties and version.json"
           author: "Author <actions@github.com>"
           title: "platform: automated version update"
           body: |
-            This PR was automatically generated to update `version.properties`
+            This PR was automatically generated to update `version.properties` and `.meta/version.json`
           branch: platform/update-version-meta-data
           labels: "skip-changelog"
           assignees: "wax911"
