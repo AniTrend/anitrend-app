@@ -24,4 +24,4 @@ gpg -d --passphrase "$GOOGLE_SERVICES_PASSPHRASE" --batch google-services.json.a
 echo "$PLAYSTORE_SERVICE_ACCOUNT" > playstore-service-account.json.asc
 gpg -d --passphrase "$PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE" --batch playstore-service-account.json.asc > app/playstore-service-account.json
 
-bundle exec fastlane deploy
+bundle exec fastlane deploy skip_tests:false
