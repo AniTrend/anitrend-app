@@ -260,8 +260,8 @@ object CompatUtil {
     }
 
     fun isLightTheme(settings: Settings): Boolean {
-        @KeyUtil.ApplicationTheme val theme: String? = settings.theme
-        return theme == null || theme == KeyUtil.THEME_LIGHT
+        @KeyUtil.ApplicationTheme val theme: String = settings.theme
+        return theme == KeyUtil.THEME_LIGHT
     }
 
     fun dipToPx(dpValue: Float): Int {
@@ -502,7 +502,8 @@ object CompatUtil {
                         result.append(word)
                     else {
                         val starting = Character.toUpperCase(word[0])
-                        result.append(starting).append(word.substring(1).toLowerCase())
+                        result.append(starting).append(word.substring(1)
+                            .lowercase(Locale.getDefault()))
                     }
                 }
                 if (index != word.length - 1)
@@ -522,7 +523,7 @@ object CompatUtil {
     }
 
     fun <T : Collection<*>> isEmpty(collection: T?): Boolean {
-        return collection == null || collection.isEmpty()
+        return collection.isNullOrEmpty()
     }
 
     fun <T : Collection<*>> sizeOf(collection: T?): Int {
