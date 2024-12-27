@@ -24,7 +24,7 @@ object MarkDownUtil {
                     Html.fromHtml(processedText)
             } as SpannableStringBuilder
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e)
             SpannableStringBuilder("Unable to process content")
         }
     }
@@ -44,7 +44,6 @@ object MarkDownUtil {
                 while (result.last() == '\n')
                     result = result.delete(result.lastIndex - 1, result.length)
         } catch (e: Exception) {
-            e.printStackTrace()
             Timber.tag("convert(input)").w(e)
         }
 

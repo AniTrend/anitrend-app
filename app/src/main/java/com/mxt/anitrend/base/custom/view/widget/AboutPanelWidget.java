@@ -129,8 +129,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             @Override
             public void onFailure(@NonNull Call<PageContainer<UserBase>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
-                    throwable.printStackTrace();
-                    Timber.tag(TAG).e(throwable);
+                    Timber.e(throwable);
                 }
             }
         });
@@ -198,8 +197,7 @@ public class AboutPanelWidget extends FrameLayout implements CustomView, View.On
             @Override
             public void onFailure(@NonNull Call<ConnectionContainer<Favourite>> call, @NonNull Throwable throwable) {
                 if(isAlive()) {
-                    throwable.printStackTrace();
-                    Timber.tag(TAG).e(throwable);
+                    Timber.e(throwable);
                 }
             }
         });

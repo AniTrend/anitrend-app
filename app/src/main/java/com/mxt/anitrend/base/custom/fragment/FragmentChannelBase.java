@@ -336,7 +336,6 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
             } else
                 showEmpty(getString(R.string.layout_empty_response));
         } catch (Exception e) {
-            e.printStackTrace();
             Timber.tag("onChanged(Rss content)").e(e);
             showEmpty(getString(R.string.layout_empty_response));
         }

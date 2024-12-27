@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Response
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -247,7 +248,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
     override fun onFailure(call: Call<ResponseBody>, throwable: Throwable) {
         if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.RESUMED) == true) {
             resetFlipperState()
-            throwable.printStackTrace()
+            Timber.e(throwable)
             throwable.localizedMessage?.let {
                 NotifyUtil.makeText(context,
                     it, Toast.LENGTH_SHORT).show()

@@ -62,6 +62,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import timber.log.Timber
 
 /**
  * Created by max on 2017/10/04.
@@ -381,7 +382,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
             if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 onNavigate(R.id.nav_check_update)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e)
         }
 
     }

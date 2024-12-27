@@ -140,8 +140,7 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
                 setControlText();
             }
         } catch (Exception e) {
-            Timber.tag(TAG).w(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
@@ -155,11 +154,10 @@ public class FollowStateWidget extends FrameLayout implements CustomView, View.O
     @Override
     public void onFailure(@NonNull Call<UserBase> call, @NonNull Throwable throwable) {
         try {
-            throwable.printStackTrace();
+            Timber.w(throwable);
             setControlText();
         } catch (Exception e) {
-            Timber.tag(TAG).e(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 }

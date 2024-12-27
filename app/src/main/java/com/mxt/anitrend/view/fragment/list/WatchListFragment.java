@@ -130,8 +130,7 @@ public class WatchListFragment extends FragmentChannelBase implements RetroCallb
     @Override
     public void onFailure(@NonNull Call<ConnectionContainer<List<ExternalLink>>> call, @NonNull Throwable throwable) {
         if(isAlive()) {
-            Timber.tag(TAG).w(throwable);
-            throwable.printStackTrace();
+            Timber.w(throwable);
         }
     }
 }

@@ -25,6 +25,7 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.markdown.RegexUtil;
 
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresenter, MediaTrailer> {
 
@@ -106,7 +107,7 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
                 intent.setData(Uri.parse(youtubeLink));
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
+                Timber.e(e);
                 NotifyUtil.INSTANCE.makeText(getContext(), R.string.init_youtube_missing, Toast.LENGTH_SHORT).show();
             }
         });

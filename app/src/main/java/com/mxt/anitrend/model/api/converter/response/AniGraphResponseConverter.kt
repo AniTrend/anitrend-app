@@ -36,16 +36,11 @@ class AniGraphResponseConverter<T>(
                 targetResult = dataContainer.result
             } else
                 container?.errors?.forEach {
-                    Timber.tag(TAG).e(it.message)
+                    Timber.e(it.message)
                 }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            Timber.tag(TAG).e(ex, jsonResponse?:"Json response is null")
+        } catch (e: Exception) {
+            Timber.e(e, jsonResponse?:"Json response is null")
         }
         return targetResult
-    }
-
-    companion object {
-        private val TAG = AniGraphResponseConverter::class.java.simpleName
     }
 }

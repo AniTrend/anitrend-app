@@ -2,14 +2,14 @@ package com.mxt.anitrend.worker
 
 import android.content.Context
 import android.net.Uri
-import android.text.TextUtils
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.ListenableWorker
+import androidx.work.WorkerParameters
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 import java.util.concurrent.ExecutionException
 
@@ -57,10 +57,10 @@ class AuthenticatorWorker(
             } else
                 Timber.tag(TAG).e("Authorization authenticatorUri was empty or null, cannot authenticate with the current state")
         } catch (e: ExecutionException) {
-            e.printStackTrace()
+            Timber.e(e)
             errorDataBuilder.putString(KeyUtil.arg_exception_error, e.message)
         } catch (e: InterruptedException) {
-            e.printStackTrace()
+            Timber.e(e)
             errorDataBuilder.putString(KeyUtil.arg_exception_error, e.message)
         }
 

@@ -104,20 +104,18 @@ final class MediaDialogUtil extends DialogUtil {
                         NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Timber.tag(TAG).w(e);
-                    e.printStackTrace();
+                    Timber.w(e);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<MediaList> call, @NonNull Throwable throwable) {
-                throwable.printStackTrace();
+                Timber.e(throwable);
                 try {
                     progressDialog.dismiss();
                     NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
-                    Timber.tag(TAG).e(e);
-                    e.printStackTrace();
+                    Timber.e(e);
                 }
             }
         });
@@ -159,20 +157,18 @@ final class MediaDialogUtil extends DialogUtil {
                         NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Timber.tag(TAG).e(e);
+                    Timber.e(e);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<DeleteState> call, @NonNull Throwable throwable) {
-                throwable.printStackTrace();
+                Timber.w(throwable);
                 try {
                     progressDialog.dismiss();
                     NotifyUtil.INSTANCE.makeText(context, context.getString(R.string.text_error_request), R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Timber.tag(TAG).e(e);
+                    Timber.e(e);
                 }
             }
         });

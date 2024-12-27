@@ -60,8 +60,7 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
                     }
                 }
             } catch (e: Exception) {
-                Timber.tag(TAG).e(e)
-                e.printStackTrace()
+                Timber.e(e)
             }
             return Result.retry()
         }

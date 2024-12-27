@@ -70,7 +70,7 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
                             break;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Timber.e(e);
                 }
             }
         }

@@ -32,9 +32,8 @@ fun Response<*>?.apiError(): String {
                 "Too many requests, please retry after $waitPeriod seconds"
             }
         }
-    } catch (ex: Exception) {
-        ex.printStackTrace()
-        Timber.tag(TAG).e(ex)
+    } catch (e: Exception) {
+        Timber.e(e)
         return "Unable to recover from encountered error"
     }
 
