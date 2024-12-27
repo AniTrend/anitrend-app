@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.activity.index
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,11 +16,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withResumed
 import androidx.viewpager.widget.ViewPager
 import butterknife.ButterKnife
 import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.pager.index.*
+import com.mxt.anitrend.adapter.pager.index.AiringPageAdapter
+import com.mxt.anitrend.adapter.pager.index.FeedPageAdapter
+import com.mxt.anitrend.adapter.pager.index.HubPageAdapter
+import com.mxt.anitrend.adapter.pager.index.MangaPageAdapter
+import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter
+import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter
+import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter
+import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.activity.checkUpdate
@@ -34,6 +42,7 @@ import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
+import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -48,6 +57,8 @@ import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
 import com.ogaclejapan.smarttablayout.SmartTabLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -133,6 +144,11 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
+        lifecycleScope.launch(Dispatchers.Main) {
+            withResumed {
+                requestNotificationsPermission()
+            }
+        }
         onActivityReady()
     }
 
@@ -409,11 +425,11 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     private fun requestCurrentUser() {
         if (presenter.settings.isAuthenticated) {
             presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
-                viewModel.params.putParcelable(
+                viewModel?.params?.putParcelable(
                     KeyUtil.arg_graph_params,
                     GraphUtil.getDefaultQuery(false)
                 )
-                viewModel.requestData(KeyUtil.USER_CURRENT_REQ, this)
+                viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, this)
             }
         }
     }
