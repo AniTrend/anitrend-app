@@ -1,19 +1,25 @@
 package com.mxt.anitrend.extension
 
+import android.Manifest
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Point
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityManagerCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
@@ -195,4 +201,33 @@ fun Context.logFile(): File {
 
 fun Context.supportsAutoUpdates(): Boolean {
     return resources.getBoolean(R.bool.display_update_channel_pref)
+}
+
+fun Context.checkNotificationPermission(channelId: String?): Boolean {
+    val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PERMISSION_GRANTED
+    } else {
+        NotificationManagerCompat.from(this).areNotificationsEnabled()
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && hasPermission && channelId != null) {
+        val channel = NotificationManagerCompat.from(this).getNotificationChannel(channelId)
+        if (channel != null && channel.importance == NotificationManagerCompat.IMPORTANCE_DEFAULT) {
+            return false
+        }
+    }
+    return hasPermission
+}
+
+fun FragmentActivity.requestNotificationsPermission() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
+            /* context = */ this,
+            /* permission = */ Manifest.permission.POST_NOTIFICATIONS,
+        ) != PERMISSION_GRANTED
+    ) {
+        ActivityCompat.requestPermissions(
+            /* activity = */ this,
+            /* permissions = */ arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            /* requestCode = */ 1,
+        )
+    }
 }

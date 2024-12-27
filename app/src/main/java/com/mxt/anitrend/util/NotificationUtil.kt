@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.text.bold
 import com.mxt.anitrend.R
+import com.mxt.anitrend.extension.checkNotificationPermission
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
@@ -189,7 +190,8 @@ class NotificationUtil(
                     .setStyle(NotificationCompat.BigTextStyle()
                             .bigText(notificationContent))
 
-            notificationManager?.notify(defaultNotificationId, notificationBuilder.build())
+            if (context.checkNotificationPermission(KeyUtil.CHANNEL_ID))
+                notificationManager?.notify(defaultNotificationId, notificationBuilder.build())
         }
     }
 }
