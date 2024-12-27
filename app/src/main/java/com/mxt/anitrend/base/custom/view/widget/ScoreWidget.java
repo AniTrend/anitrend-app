@@ -18,6 +18,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 public class ScoreWidget extends ProgressWidget {
 
     private float scoreMaximum, scoreCurrent;
@@ -159,7 +161,7 @@ public class ScoreWidget extends ProgressWidget {
         try {
             temporaryValue = !TextUtils.isEmpty(currentChange) ? new DecimalFormat("#.#").parse(currentChange).floatValue() : 0;
         } catch (ParseException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
         if (scoreFormat.equals(KeyUtil.POINT_10_DECIMAL) && !boundCheck(temporaryValue)) {
             temporaryValue /= 10;

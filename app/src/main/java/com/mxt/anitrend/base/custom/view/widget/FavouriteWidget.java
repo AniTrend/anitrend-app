@@ -140,8 +140,7 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
                 resetFlipperState();
             }
         } catch (Exception e) {
-            Timber.tag(TAG).w(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
@@ -155,11 +154,10 @@ public class FavouriteWidget extends FrameLayout implements CustomView, RetroCal
     @Override
     public void onFailure(@NonNull Call<List<UserBase>> call, @NonNull Throwable throwable) {
         try {
-            Timber.tag(TAG).e(throwable);
+            Timber.w(throwable);
             resetFlipperState();
         } catch (Exception e) {
-            Timber.tag(TAG).e(throwable);
-            e.printStackTrace();
+            Timber.e(throwable);
         }
     }
 }

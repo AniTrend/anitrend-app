@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
+import timber.log.Timber;
+
 /**
  * Created by max on 2017/09/16.
  * Creates different dialog types
@@ -239,7 +241,7 @@ public class DialogUtil {
 
             materialDialog.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 

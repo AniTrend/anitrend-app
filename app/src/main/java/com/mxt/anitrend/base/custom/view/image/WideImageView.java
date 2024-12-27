@@ -13,6 +13,8 @@ import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.interfaces.view.CustomView;
 import com.mxt.anitrend.util.KeyUtil;
 
+import timber.log.Timber;
+
 /**
  * Created by max on 2017/10/30.
  * 16 x 10 Aspect image view
@@ -83,7 +85,7 @@ public class WideImageView extends AppCompatImageView implements CustomView {
                         .apply(RequestOptions.centerCropTransform())
                         .into(view);
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 }

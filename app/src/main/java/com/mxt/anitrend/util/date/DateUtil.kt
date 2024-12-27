@@ -8,6 +8,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import org.ocpsoft.prettytime.PrettyTime
+import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -123,7 +124,7 @@ object DateUtil {
                     calendar.get(Calendar.YEAR))
 
         } catch (e: ParseException) {
-            e.printStackTrace()
+            Timber.e(e)
         }
 
         return fuzzyDate.toString()
@@ -152,8 +153,8 @@ object DateUtil {
         try {
             if (value != 0L)
                 return SimpleDateFormat(dateOutputFormat, Locale.getDefault()).format(Date(value * 1000L))
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+        } catch (e: Exception) {
+            Timber.e(e)
         }
 
         return null
@@ -173,8 +174,8 @@ object DateUtil {
                 if (converted != null)
                     return SimpleDateFormat(getDateOutputFormat(fuzzyDate), Locale.getDefault()).format(converted)
             }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+        } catch (e: Exception) {
+            Timber.e(e)
         }
 
         return "TBA"
@@ -202,7 +203,7 @@ object DateUtil {
         try {
             return if (isNewerDate(fuzzyDate)) "Ends" else "Ended"
         } catch (e: ParseException) {
-            e.printStackTrace()
+            Timber.e(e)
         }
 
         return "Ends"
@@ -220,7 +221,7 @@ object DateUtil {
         try {
             return if (isNewerDate(fuzzyDate)) "Starts" else "Started"
         } catch (e: ParseException) {
-            e.printStackTrace()
+            Timber.e(e)
         }
 
         return "Starts"

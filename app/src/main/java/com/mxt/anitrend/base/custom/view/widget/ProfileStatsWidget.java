@@ -177,8 +177,7 @@ public class ProfileStatsWidget extends FrameLayout implements CustomView, View.
                 Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
             }
         } catch (Exception e) {
-            Timber.tag(TAG).e(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 

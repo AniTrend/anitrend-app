@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
+import timber.log.Timber;
 
 public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener {
 
@@ -60,7 +61,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
         try {
             player.cancelProgressTimer();
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
         if(Jzvd.backPress()) {
             NotifyUtil.INSTANCE.makeText(this, R.string.text_confirm_exit, Toast.LENGTH_SHORT).show();

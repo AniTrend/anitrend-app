@@ -31,6 +31,7 @@ import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.parser.parseToHtmlHexadecimal
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 
 
 /**
@@ -306,7 +307,7 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
             }
             inputContentInfo.releasePermission()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e)
         }
 
         return false  // return true if succeeded

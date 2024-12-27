@@ -36,7 +36,6 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
     private @KeyUtil.RequestType int requestType;
     private FeedList feedList;
     private FeedReply feedReply;
-    private final String TAG = StatusDeleteWidget.class.getSimpleName();
 
     public StatusDeleteWidget(Context context) {
         super(context);
@@ -142,10 +141,9 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
                 } else
                     NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             } else
-                Timber.tag(TAG).w(AniGraphErrorUtilKt.apiError(response));
+                Timber.w(AniGraphErrorUtilKt.apiError(response));
         } catch (Exception e) {
-            Timber.tag(TAG).w(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
@@ -159,11 +157,10 @@ public class StatusDeleteWidget extends FrameLayout implements CustomView, Retro
     @Override
     public void onFailure(@NonNull Call<DeleteState> call, @NonNull Throwable throwable) {
         try {
-            Timber.tag(TAG).e(throwable.getLocalizedMessage());
-            throwable.printStackTrace();
+            Timber.w(throwable);
             resetFlipperState();
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 }

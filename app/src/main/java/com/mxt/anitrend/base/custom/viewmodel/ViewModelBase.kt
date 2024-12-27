@@ -13,6 +13,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.apiError
 import retrofit2.Call
 import retrofit2.Response
+import timber.log.Timber
 
 /**
  * Created by max on 2017/10/14.
@@ -106,6 +107,6 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      */
     override fun onFailure(call: Call<T>, throwable: Throwable) {
         state?.showEmpty(throwable.message ?: errorMessage)
-        throwable.printStackTrace()
+        Timber.e(throwable)
     }
 }

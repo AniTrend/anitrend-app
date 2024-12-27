@@ -193,8 +193,7 @@ public class VoteWidget extends LinearLayout implements CustomView, View.OnClick
                 resetFlipperState();
             }
         } catch (Exception e) {
-            Timber.tag(TAG).w(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 

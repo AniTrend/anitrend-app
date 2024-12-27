@@ -163,9 +163,8 @@ object WebFactory {
             val response = refreshTokenCall.execute()
             if (!response.isSuccessful) Timber.tag("requestCodeTokenSync").w(response.apiError())
             response.body()
-        } catch (ex: Exception) {
-            Timber.tag("requestCodeTokenSync").e(ex)
-            ex.printStackTrace()
+        } catch (e: Exception) {
+            Timber.tag("requestCodeTokenSync").e(e)
             null
         }
     }

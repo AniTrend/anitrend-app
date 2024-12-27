@@ -30,6 +30,7 @@ import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.util.collection.ComparatorUtil
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import okhttp3.Cache
+import timber.log.Timber
 import java.io.File
 import java.util.*
 import kotlin.math.min
@@ -67,7 +68,7 @@ object CompatUtil {
         try {
             cache = Cache(File(context.cacheDir, "response-cache"), CACHE_LIMIT.toLong())
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e)
         }
 
         return cache

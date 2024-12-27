@@ -79,8 +79,7 @@ public class MediaActionUtil implements RetroCallback<MediaBase>, LifecycleListe
         try {
             MediaDialogUtil.createSeriesManage(context, mediaBase);
         } catch (Exception e) {
-            e.printStackTrace();
-            Timber.tag(TAG).e(e.getLocalizedMessage());
+            Timber.e(e);
         }
     }
 

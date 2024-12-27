@@ -45,8 +45,7 @@ fun FragmentActivity.startSharedTransitionActivity(target : View, data : Intent)
                 .makeSceneTransitionAnimation(this, participants)
         ActivityCompat.startActivity(this, data, transitionActivityOptions.toBundle())
     } catch (e: Exception) {
-        Timber.tag("SharedTransition").w(e)
-        e.printStackTrace()
+        Timber.tag("SharedTransition").e(e)
     }
 }
 

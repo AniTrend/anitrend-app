@@ -62,7 +62,6 @@ class NotificationWorker(
                 return Result.success()
             } catch (e: Exception) {
                 Timber.e(e)
-                e.printStackTrace()
             }
             return Result.retry()
         }

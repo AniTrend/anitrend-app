@@ -193,19 +193,17 @@ public class FavouriteToolbarWidget extends FrameLayout implements CustomView, R
                 NotifyUtil.INSTANCE.makeText(getContext(), R.string.text_error_request, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Timber.tag(TAG).w(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
     @Override
     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
         try {
-            Timber.tag(TAG).e(throwable);
+            Timber.w(throwable);
             resetFlipperState();
         } catch (Exception e) {
-            Timber.tag(TAG).e(e);
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 }
