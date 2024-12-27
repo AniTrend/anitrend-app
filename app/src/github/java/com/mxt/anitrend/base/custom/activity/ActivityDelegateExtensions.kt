@@ -69,58 +69,25 @@ fun MainActivity.launchUpdateWorker(menuItems: Menu) {
 }
 
 fun MainActivity.checkUpdate() {
-    when (ContextCompat.checkSelfPermission(
-        applicationContext,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )) {
-        PackageManager.PERMISSION_GRANTED -> {
-            mBottomSheet = BottomSheetMessage.Builder()
-                .setText(R.string.drawer_update_text)
-                .setTitle(R.string.drawer_update_title)
-                .setPositiveText(R.string.Yes)
-                .setNegativeText(R.string.No)
-                .buildWithCallback(object : BottomSheetChoice {
-                    override fun onPositiveButton() {
-                        val versionBase = presenter.database.remoteVersion
-                        if (versionBase != null && versionBase.isNewerVersion)
-                            DownloaderService.downloadNewVersion(
-                                this@checkUpdate,
-                                versionBase
-                            )
-                        else presenter.checkForUpdates(false)
-                    }
-
-                    override fun onNegativeButton() {
-
-                    }
-                })
-            showBottomSheet()
-        }
-        PackageManager.PERMISSION_DENIED -> if (ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        )
-            DialogUtil.createMessage(
-                this,
-                R.string.title_permission_write,
-                R.string.text_permission_write
-            ) { _, which ->
-                when (which) {
-                    DialogAction.POSITIVE -> ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        ActivityBase.REQUEST_PERMISSION
+    mBottomSheet = BottomSheetMessage.Builder()
+        .setText(R.string.drawer_update_text)
+        .setTitle(R.string.drawer_update_title)
+        .setPositiveText(R.string.Yes)
+        .setNegativeText(R.string.No)
+        .buildWithCallback(object : BottomSheetChoice {
+            override fun onPositiveButton() {
+                val versionBase = presenter.database.remoteVersion
+                if (versionBase != null && versionBase.isNewerVersion)
+                    DownloaderService.downloadNewVersion(
+                        this@checkUpdate,
+                        versionBase
                     )
-                    DialogAction.NEGATIVE -> NotifyUtil.makeText(
-                        this,
-                        R.string.canceled_by_user,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    else -> {}
-                }
+                else presenter.checkForUpdates(false)
             }
-        else
-            requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    }
+
+            override fun onNegativeButton() {
+
+            }
+        })
+    showBottomSheet()
 }
