@@ -131,7 +131,7 @@ anitrend-android-emoji = { module = "com.github.anitrend.android-emojify:emojify
 anitrend-android-emoji-contract = { module = "com.github.anitrend.android-emojify:contract", version.ref = "anitrend-android-emoji" }
 anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gson", version.ref = "anitrend-android-emoji" }
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
-anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:0.11.5"
+anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:0.11.6"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.0"
 
