@@ -58,7 +58,7 @@ hamcrest = "2.2"
 txtmark = "0.16"
 chuncker = "3.5.2"
 
-anitrend-android-emoji = "1.9.5"
+anitrend-android-emoji = "1.9.6"
 
 [libraries]
 alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
