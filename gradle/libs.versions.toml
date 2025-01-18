@@ -139,7 +139,7 @@ chuncker-debug = { module = "com.github.ChuckerTeam.Chucker:library", version.re
 chuncker-release = { module = "com.github.ChuckerTeam.Chucker:library-no-op", version.ref = "chuncker" }
 
 google-firebase-core = "com.google.firebase:firebase-core:21.1.1"
-google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.1.2"
+google-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.2.0"
 google-firebase-crashlytics = "com.google.firebase:firebase-crashlytics:19.3.0"
 google-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:3.0.2"
 
