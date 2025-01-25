@@ -204,5 +204,5 @@ square-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "squareu
 square-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "squareup-okhttp" }
 square-mockServer = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "squareup-okhttp" }
 
-gradle-versions = "com.github.ben-manes:gradle-versions-plugin:0.51.0"
+gradle-versions = "com.github.ben-manes:gradle-versions-plugin:0.52.0"
 txtmark = { module = "es.nitaur.markdown:txtmark", version.ref = "txtmark" }
