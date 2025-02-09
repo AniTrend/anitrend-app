@@ -3,7 +3,7 @@ query FeedList($page: Int, $perPage: Int, $id: Int, $isFollowing: Boolean, $user
     pageInfo {
       ... PageInfoFragment
     }
-    activities(id: $id, hasRepliesOrTypeText: $isMixed, type: $type, sort: ID_DESC, isFollowing: $isFollowing, userId: $userId) {
+    activities(id: $id, hasRepliesOrTypeText: $isMixed, type: $type, type_in: [TEXT, ANIME_LIST, MANGA_LIST], sort: ID_DESC, isFollowing: $isFollowing, userId: $userId) {
       ... ListActivityFragment
       ... TextActivityFragment
     }
