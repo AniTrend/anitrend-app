@@ -1,0 +1,12 @@
+🚀 What's New:
+- 🛠️ Various stability improvements.
+
+📈 Improvements:
+- 🐛 Fixed feed activity for users you follow.
+
+⚠️ A Quick Note:
+Updates will be slow as we are working hard behind the scenes on v2 – a major upgrade to bring you an even better experience! We appreciate your patience and support. 🙏
+
+📖 Have questions or need support? Visit our FAQ: docs.anitrend.co/project/faq
+
+Thank you for being a part of the AniTrend community! Your feedback helps us improve. 🌸

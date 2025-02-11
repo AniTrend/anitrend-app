@@ -5,7 +5,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 ## What's Changed
 
-- Stability improvements
+- Fixed feed activity for users you follow
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)
