@@ -1,12 +1,8 @@
 🌟 What's New with AniTrend?
-At AniTrend, we're committed to enhancing your anime discovery and tracking experience with every update! 🚀
-
-💡 Highlights of Our Updates:
-
-- Improving stability and performance to ensure a smoother app experience.
+AniTrend, is committed to enhancing your anime discovery and tracking experience with every update! 🚀
 
 ⚠️ A Quick Note:
-Updates may be slower than usual as we are working hard behind the scenes on AniTrend V2 – a major upgrade to bring you an even better experience! We appreciate your patience and support. 🙏
+Updates will be slow as we are working hard behind the scenes on v2 – We appreciate your patience and support. 🙏
 
 📖 Have questions or need support? Visit our FAQ: docs.anitrend.co/project/faq
 
