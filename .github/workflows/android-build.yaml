@@ -34,6 +34,7 @@ jobs:
           PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE }}
       - name: Publish PlayStore APK
         uses: actions/upload-artifact@v4
+        if: always() # always run even if the previous step fails
         with:
           name: app-release
           path: app/build/outputs/apk/app/release
