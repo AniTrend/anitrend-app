@@ -18,7 +18,7 @@ default_platform(:android)
 platform :android do
 
   apk_path = "app/build/outputs/apk/app/release/app-release.apk"
-  skip_metadata_upload = 'true'
+  skip_metadata_upload = true
 
   desc "Test with gradle"
   lane :verify do
@@ -42,6 +42,7 @@ platform :android do
       track: 'beta',
       rollout: '1.0',
       apk: apk_path,
+      sync_image_upload: true
       skip_upload_images: skip_metadata_upload,
       skip_upload_metadata: skip_metadata_upload,
     )
@@ -53,6 +54,7 @@ platform :android do
       release_status: 'draft',
       track: 'production',
       apk: apk_path,
+      sync_image_upload: true
       skip_upload_images: skip_metadata_upload,
       skip_upload_metadata: skip_metadata_upload,
     )
