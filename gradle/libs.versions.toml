@@ -20,7 +20,7 @@ androidx-work = "2.10.0"
 bumptech-glide = "4.16.0"
 
 io-koin = "4.0.2"
-io-objectbox = "4.1.0"
+io-objectbox = "4.2.0"
 io-mockk = "1.13.17"
 
 jetbrains-dokka = "1.7.20"
