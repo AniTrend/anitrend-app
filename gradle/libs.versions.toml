@@ -92,7 +92,7 @@ androidx-activityKtx = "androidx.activity:activity-ktx:1.10.1"
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "androidx-appcompat" }
 
-androidx-collectionKtx = "androidx.collection:collection-ktx:1.4.5"
+androidx-collectionKtx = "androidx.collection:collection-ktx:1.5.0"
 
 androidx-coreKtx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 
