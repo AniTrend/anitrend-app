@@ -30,7 +30,7 @@ jetbrains-kotlinx-serialization = "1.8.0"
 
 mpandroidchartVersion = "v3.1.0"
 noties-markwon = "4.6.2"
-org-mockito = "5.16.0"
+org-mockito = "5.16.1"
 ogaclejapan-smarttab = "2.0.0"
 squareup-retrofit = "2.11.0"
 squareup-okhttp = "4.12.0"
