@@ -32,7 +32,7 @@ mpandroidchartVersion = "v3.1.0"
 noties-markwon = "4.6.2"
 org-mockito = "5.17.0"
 ogaclejapan-smarttab = "2.0.0"
-squareup-retrofit = "2.12.0"
+squareup-retrofit = "3.0.0"
 squareup-okhttp = "4.12.0"
 
 timber = "4.7.1"
