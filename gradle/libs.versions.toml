@@ -24,7 +24,7 @@ io-objectbox = "4.3.0"
 io-mockk = "1.14.2"
 
 jetbrains-dokka = "1.7.20"
-jetbrains-kotlin = "2.1.10"
+jetbrains-kotlin = "2.1.21"
 jetbrains-kotlinx-coroutines = "1.10.2"
 jetbrains-kotlinx-serialization = "1.8.1"
 
