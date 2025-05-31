@@ -22,17 +22,15 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.android.build.api.dsl.ApplicationBuildType
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import com.mxt.anitrend.buildsrc.common.Configuration
 import com.mxt.anitrend.buildsrc.extensions.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.logging.Logger;
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.exclude
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.io.File
-import java.io.FileWriter
 import java.util.*
 
 private fun Properties.applyToBuildConfigForBuild(buildType: ApplicationBuildType) {
@@ -92,11 +90,11 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
 }
 
 private fun BaseExtension.setUpWith(project: Project) {
-    compileSdkVersion(Configuration.compileSdk)
+    compileSdkVersion(35)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
-        minSdk = Configuration.minSdk
-        targetSdk = Configuration.targetSdk
+        minSdk = 23
+        targetSdk = 35
         versionCode = project.props[PropertyTypes.CODE].toInt()
         versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -219,8 +217,8 @@ internal fun Project.applyAndroidConfiguration() {
     }
 
     tasks.withType(KotlinJvmCompile::class.java) {
-        kotlinOptions {
-            jvmTarget = "21"
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -236,10 +234,10 @@ internal fun Project.applyAndroidConfiguration() {
             "-opt-in=org.koin.core.KoinExperimentalAPI"
         )
 
-        kotlinOptions {
-            allWarningsAsErrors = false
+        compilerOptions {
+            allWarningsAsErrors.set(false)
             // Filter out modules that won't be using coroutines
-            freeCompilerArgs = compilerArgumentOptions
+            freeCompilerArgs.addAll(compilerArgumentOptions)
         }
     }
 }
