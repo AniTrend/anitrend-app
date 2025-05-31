@@ -25,7 +25,7 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import com.mxt.anitrend.buildsrc.extensions.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.logging.Logger;
+import org.gradle.api.logging.Logger
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.exclude
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
