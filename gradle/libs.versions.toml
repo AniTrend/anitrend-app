@@ -133,7 +133,7 @@ anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gs
 anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:0.11.11"
 
-cash-turbine = "app.cash.turbine:turbine:1.2.0"
+cash-turbine = "app.cash.turbine:turbine:1.2.1"
 
 chuncker-debug = { module = "com.github.ChuckerTeam.Chucker:library", version.ref = "chuncker" }
 chuncker-release = { module = "com.github.ChuckerTeam.Chucker:library-no-op", version.ref = "chuncker" }
