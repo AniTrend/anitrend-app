@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -18,7 +17,6 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
         maven {
             setUrl("https://www.jitpack.io")
@@ -30,12 +28,6 @@ allprojects {
 
     configurations.all {
         handleConflicts(this@allprojects)
-    }
-}
-
-tasks {
-    val clean by registering(Delete::class) {
-        delete(rootProject.layout.buildDirectory)
     }
 }
 
