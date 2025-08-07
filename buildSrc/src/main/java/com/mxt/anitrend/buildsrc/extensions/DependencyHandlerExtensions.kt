@@ -19,7 +19,6 @@ package com.mxt.anitrend.buildsrc.extensions
 
 import org.gradle.api.artifacts.*
 import org.gradle.api.artifacts.dsl.DependencyHandler
-import org.gradle.kotlin.dsl.exclude
 
 private enum class DependencyType(val configurationName: String) {
     API("api"),
@@ -95,8 +94,8 @@ private inline fun DependencyHandler.add(
  * @see [ModuleDependency.exclude]
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : ModuleDependency> T.exclude(group: String? = null, module: String? = null): T =
-    exclude(mapOf("group" to group, "module" to module)) as T
+fun <T : ModuleDependency> T.exclude(group: String = "", module: String = ""): T =
+    exclude(mutableMapOf("group" to group, "module" to module)) as T
 
 private fun DependencyHandler.addDependency(
     dependencyNotation: Any,
