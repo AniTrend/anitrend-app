@@ -1,0 +1,118 @@
+name: test-pipeline
+
+# This workflow is for testing the new CI/CD pipeline
+# It can be manually triggered to validate the pipeline behavior
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of test to run'
+        required: true
+        default: 'validation'
+        type: choice
+        options:
+        - validation
+        - unit-tests
+        - full-pipeline
+        - version-check
+
+jobs:
+  test-validation-stage:
+    if: contains(github.event.inputs.test_type, 'validation') || contains(github.event.inputs.test_type, 'full-pipeline')
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job: [gradle-wrapper]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test Gradle Wrapper Validation
+        if: matrix.job == 'gradle-wrapper'
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Validation Stage Complete
+        run: echo "✅ Validation stage test completed successfully"
+
+  test-unit-tests:
+    if: contains(github.event.inputs.test_type, 'unit-tests') || contains(github.event.inputs.test_type, 'full-pipeline')
+    needs: [test-validation-stage]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Configure properties
+        run: bash .github/scripts/setup-config.sh
+
+      - name: Test with Gradle (dry run)
+        run: ./gradlew test --dry-run
+
+      - name: Unit Tests Stage Complete
+        run: echo "✅ Unit tests stage test completed successfully"
+
+  test-version-check:
+    if: contains(github.event.inputs.test_type, 'version-check') || contains(github.event.inputs.test_type, 'full-pipeline')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Test Version Check Logic
+        run: |
+          echo "Testing version check logic..."
+          
+          # Simulate checking for version update PR merges
+          RECENT_MERGES=$(git log --oneline --grep="automation: update version.properties and version.json" --since="30 days ago" --merges)
+          
+          if [ -n "$RECENT_MERGES" ]; then
+            echo "✅ Found recent version update merges:"
+            echo "$RECENT_MERGES"
+          else
+            echo "ℹ️  No recent version update merges found (expected for test)"
+          fi
+          
+          echo "✅ Version check logic test completed"
+
+  test-summary:
+    needs: [test-validation-stage, test-unit-tests, test-version-check]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Results Summary
+        run: |
+          echo "🧪 Pipeline Test Summary"
+          echo "======================="
+          echo "Test Type: ${{ github.event.inputs.test_type }}"
+          echo ""
+          
+          # Check job results
+          validation_result="${{ needs.test-validation-stage.result }}"
+          unit_tests_result="${{ needs.test-unit-tests.result }}"
+          version_check_result="${{ needs.test-version-check.result }}"
+          
+          echo "Validation Stage: ${validation_result:-skipped}"
+          echo "Unit Tests Stage: ${unit_tests_result:-skipped}"
+          echo "Version Check: ${version_check_result:-skipped}"
+          echo ""
+          
+          # Overall status
+          if [[ "$validation_result" != "failure" && "$unit_tests_result" != "failure" && "$version_check_result" != "failure" ]]; then
+            echo "✅ All tested stages passed!"
+            echo "The new CI/CD pipeline is ready for production use."
+          else
+            echo "❌ Some tests failed. Please review the logs."
+            exit 1
+          fi

@@ -1,0 +1,218 @@
+name: ci-cd-pipeline
+
+on:
+  push:
+    branches: [ develop ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+  pull_request_target:
+    types: [ opened, reopened, synchronize ]
+
+permissions:
+  contents: read
+
+jobs:
+  # Stage 1: Parallel validation and setup jobs
+  validation-stage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job: [gradle-wrapper, auto-approve]
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        if: matrix.job != 'auto-approve'
+
+      # Gradle wrapper validation
+      - name: Validate Gradle Wrapper
+        if: matrix.job == 'gradle-wrapper'
+        uses: gradle/actions/wrapper-validation@v4
+
+      # Auto approve for automated PRs
+      - name: Auto Approve
+        if: matrix.job == 'auto-approve' && (github.actor == 'renovate[bot]' || contains(github.ref, 'platform/update-version-meta-data') || github.event_name == 'workflow_dispatch')
+        uses: hmarr/auto-approve-action@v3
+        with:
+          review-message: "Auto approved automated PR"
+
+  # First contribution greeting (separate job to avoid linting issues)
+  first-contribution-greeting:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target' || github.event_name == 'issues'
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: First Contribution Greeting
+        uses: actions/first-interaction@v2
+        with:
+          issue_message: "Hey there! Thank you for creating an issue :) Please take a moment to review our [**community guidelines**](https://github.com/AniTrend/support-query-builder/blob/develop/CONTRIBUTING.md) to make the contribution process easy and effective for everyone involved."
+          pr_message: "Hey there! Thank you for this PR :) Please take a moment to review our [**community guidelines**](https://github.com/AniTrend/support-query-builder/blob/develop/CONTRIBUTING.md) to make the contribution process easy and effective for everyone involved."
+
+  # Release drafting (runs in parallel with validation)
+  release-drafter:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop' || github.event_name == 'pull_request_target'
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      version: ${{ steps.release_drafter.outputs.resolved_version }}
+    steps:
+      - name: Update Draft Release
+        uses: release-drafter/release-drafter@v6
+        id: release_drafter
+        with:
+          config-name: release-drafter-config.yml
+          disable-autolabeler: false
+          commitish: develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Version Update
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: version-update-and-push
+          client-payload: '{"version": "${{ steps.release_drafter.outputs.resolved_version }}"}'
+
+  # Stage 2: Unit tests (depends on validation)
+  unit-tests:
+    needs: [validation-stage, first-contribution-greeting]
+    runs-on: ubuntu-latest
+    if: always() && (github.event_name == 'push' || github.event_name == 'pull_request') && needs.validation-stage.result == 'success'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
+
+      - name: Configure properties
+        run: bash .github/scripts/setup-config.sh
+
+      - name: Test with Gradle
+        run: ./gradlew test --stacktrace
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: '**/build/test-results/**/TEST-*.xml'
+
+  # Stage 3: Pre-release validation (for tags only)
+  pre-release-check:
+    needs: [unit-tests]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    outputs:
+      version-pr-merged: ${{ steps.check-version-pr.outputs.merged }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if version update PR was merged
+        id: check-version-pr
+        run: |
+          # Get the tag version
+          TAG_VERSION=${GITHUB_REF#refs/tags/}
+          echo "Checking for version update PR for tag: $TAG_VERSION"
+          
+          # Check if there's a recent merge commit for version update
+          RECENT_MERGES=$(git log --oneline --grep="automation: update version.properties and version.json" --since="7 days ago" --merges)
+          
+          if [ -n "$RECENT_MERGES" ]; then
+            echo "Version update PR was recently merged"
+            echo "merged=true" >> $GITHUB_OUTPUT
+          else
+            echo "No recent version update merge found"
+            echo "merged=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Fail if version PR not merged
+        if: steps.check-version-pr.outputs.merged == 'false'
+        run: |
+          echo "::error::Version update PR must be merged before releasing a tag"
+          echo "Please ensure the version-updater workflow has created and merged a PR with updated version metadata"
+          exit 1
+
+  # Stage 4: Build and release (depends on tests and pre-release check)
+  build-release:
+    needs: [unit-tests, pre-release-check]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') && needs.pre-release-check.outputs.version-pr-merged == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.3'
+          bundler-cache: true
+
+      - name: Build release APKs
+        run: bash .github/scripts/fastlane.sh
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+          KEYSTORE_PROPERTIES_PASSPHRASE: ${{ secrets.KEYSTORE_PROPERTIES_PASSPHRASE }}
+          SECRETS_PROPERTIES: ${{ secrets.SECRETS_PROPERTIES }}
+          SECRETS_PROPERTIES_PASSPHRASE: ${{ secrets.SECRETS_PROPERTIES_PASSPHRASE }}
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+          GOOGLE_SERVICES_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
+          PLAYSTORE_SERVICE_ACCOUNT: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
+          PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT_PASSPHRASE }}
+
+      - name: Upload PlayStore APK
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: app-release
+          path: app/build/outputs/apk/app/release
+
+      - name: Upload Github APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-github-release
+          path: app/build/outputs/apk/github/release
+
+      - name: Upload APKs to GitHub Release
+        run: |
+          files=$(find app/build/outputs/apk/ -type f -name '*.apk')
+          gh release upload "${{ github.ref_name }}" $files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: '**/build/test-results/**/TEST-*.xml'
