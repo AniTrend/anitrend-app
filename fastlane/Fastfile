@@ -51,12 +51,13 @@ platform :android do
   desc "Submit a new Prod Build to Google Play"
   lane :submit_prod do
     upload_to_play_store(
-      release_status: 'draft',
-      track: 'production',
-      apk: apk_path,
-      sync_image_upload: true,
-      skip_upload_images: skip_metadata_upload,
+      track: 'beta',
+      track_promote_to: 'production',
+      track_promote_release_status: 'draft',
+      skip_upload_apk: true,
+      skip_upload_aab: true,
       skip_upload_metadata: skip_metadata_upload,
+      skip_upload_images: skip_metadata_upload,
     )
   end
 
