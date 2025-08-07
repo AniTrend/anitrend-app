@@ -48,7 +48,7 @@ platform :android do
     )
   end
 
-  desc "Submit a new Prod Build to Google Play"
+  desc "Promote existing Beta build to Production on Google Play"
   lane :submit_prod do
     upload_to_play_store(
       track: 'beta',
