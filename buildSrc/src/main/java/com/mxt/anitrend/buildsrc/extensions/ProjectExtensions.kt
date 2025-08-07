@@ -25,7 +25,6 @@ import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
-import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
 
 internal val Project.props: PropertiesReader
     get() = PropertiesReader(this)
@@ -41,9 +40,6 @@ internal fun Project.androidComponents() =
 
 internal fun Project.baseAppExtension() =
     extensions.getByType<BaseAppModuleExtension>()
-
-internal fun Project.androidExtensionsExtension() =
-    extensions.getByType<AndroidExtensionsExtension>()
 
 internal fun Project.containsAndroidPlugin(): Boolean {
     return project.plugins.toList().any { plugin ->
