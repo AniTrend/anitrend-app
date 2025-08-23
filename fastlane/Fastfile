@@ -58,6 +58,7 @@ platform :android do
       skip_upload_aab: true,
       skip_upload_metadata: skip_metadata_upload,
       skip_upload_images: skip_metadata_upload,
+      version_code: ENV['VERSION_CODE'],
     )
   end
 
