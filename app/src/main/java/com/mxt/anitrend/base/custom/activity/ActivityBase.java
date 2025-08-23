@@ -20,6 +20,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -37,6 +40,7 @@ import com.mxt.anitrend.util.ConfigurationUtil;
 import com.mxt.anitrend.util.IntentBundleUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.util.Settings;
 import com.mxt.anitrend.util.media.MediaActionUtil;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.activity.index.SearchActivity;
@@ -45,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import timber.log.Timber;
@@ -100,9 +105,31 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = getClass().getSimpleName();
         configureActivity();
+        enableEdgeToEdge();
         super.onCreate(savedInstanceState);
         intentBundleUtil = new IntentBundleUtil(getIntent());
         intentBundleUtil.checkIntentData(this);
+    }
+
+    /**
+     * Enables edge-to-edge display and handles system window insets properly
+     * for content that should extend behind system bars.
+     * This method should be called before super.onCreate() to ensure proper setup.
+     */
+    protected void enableEdgeToEdge() {
+        // Enable edge-to-edge display
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        
+        // For light themes, ensure status bar icons are dark
+        if (configurationUtil != null) {
+            Settings settings = KoinExt.get(Settings.class);
+            if (CompatUtil.INSTANCE.isLightTheme(settings)) {
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+                    .setAppearanceLightStatusBars(true);
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+                    .setAppearanceLightNavigationBars(true);
+            }
+        }
     }
 
     @Override
@@ -185,6 +212,52 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
         window.setNavigationBarColor(color);
     }
 
+    /**
+     * Helper method to setup window insets for edge-to-edge content.
+     * This should be called on the root view of your layout after setContentView().
+     * 
+     * @param rootView The root view of the activity's layout
+     */
+    protected void setupEdgeToEdgeContent(View rootView) {
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, windowInsets) -> {
+            int systemBarsType = WindowInsetsCompat.Type.systemBars();
+            
+            // Get system bar insets
+            int statusBarHeight = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            int navigationBarHeight = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            int leftInset = windowInsets.getInsets(systemBarsType).left;
+            int rightInset = windowInsets.getInsets(systemBarsType).right;
+            
+            // Apply padding to the root view to avoid content overlap
+            v.setPadding(leftInset, statusBarHeight, rightInset, navigationBarHeight);
+            
+            // Return the insets unchanged for child views to handle if needed
+            return windowInsets;
+        });
+    }
+
+    /**
+     * Helper method to setup window insets for toolbars when using edge-to-edge.
+     * This ensures the toolbar has proper top padding for the status bar.
+     * 
+     * @param toolbar The toolbar view to apply insets to
+     */
+    protected void setupToolbarInsets(androidx.appcompat.widget.Toolbar toolbar) {
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, windowInsets) -> {
+            // Get status bar height
+            int statusBarHeight = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            
+            // Apply top padding to toolbar for status bar
+            int currentPaddingLeft = v.getPaddingLeft();
+            int currentPaddingRight = v.getPaddingRight();
+            int currentPaddingBottom = v.getPaddingBottom();
+            
+            v.setPadding(currentPaddingLeft, statusBarHeight, currentPaddingRight, currentPaddingBottom);
+            
+            return windowInsets;
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
@@ -198,10 +271,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     }
 
     protected boolean requestPermissionIfMissing(String permission) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        else if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(this,
                 permission) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
@@ -217,9 +287,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
      * @return true if the activity is still valid otherwise false
      */
     protected boolean isAlive() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            return !isFinishing() || !isDestroyed();
-        return !isDestroyed();
+        return !isFinishing() || !isDestroyed();
     }
 
     /**
@@ -336,8 +404,8 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if (matches != null && matches.size() > 0) {
-                String searchWrd = matches.get(0);
+            if (matches != null && !matches.isEmpty()) {
+                String searchWrd = matches.getFirst();
                 if (!TextUtils.isEmpty(searchWrd) && mSearchView != null)
                     mSearchView.setQuery(searchWrd, false);
             }

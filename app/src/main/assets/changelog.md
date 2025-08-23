@@ -6,6 +6,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 ## What's Changed
 
 - Fixed Crunchyroll RSS feed connectivity issues by updating feedburner.com endpoint URLs.
+- Initial support for edge-to-edge support for Android 15+
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)
