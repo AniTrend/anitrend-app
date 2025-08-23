@@ -81,6 +81,8 @@ AniTrend uses a custom **MVVMP architecture** (Model-View-ViewModel-Presenter) d
   - Check next version from `gradle/version.properties` but always check for automated PR from `platform/update-version-meta-data` branch for this REPO, this should be our source of truth as the version might be bumped between releases/changes.
   - When making user-facing changes, create/update changelog file in `fastlane/metadata/android/en-GB/changelogs/{versionCode}.txt`
   - Use version code format (e.g., `1011009000.txt` for version 1.11.9) matching the `code` field in in the check version step.
+  - **CRITICAL: Changelog files MUST NOT exceed 500 characters** - this is enforced by Google Play Store requirements
+  - Validation occurs automatically via pre-commit hooks and CI/CD workflows using `.github/scripts/validate-changelogs.sh`
   - Focus only on user-visible changes (features, bug fixes, improvements) - exclude internal/technical changes
   - Follow existing changelog format with emojis: 🚀 What's New, 📈 Improvements, 🐛 Bug Fixes
   - Also assure that `app/src/main/assets/changelog.md` is updated accordingly, but keep the format for this file as as close to what already exists within it as much as possible

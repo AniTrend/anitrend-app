@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Validate Changelog Character Limits
+        run: bash .github/scripts/validate-changelogs.sh
       - name: set up JDK 21
         uses: actions/setup-java@v5
         with:
