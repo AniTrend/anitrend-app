@@ -4,6 +4,7 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".view.activity.index.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout

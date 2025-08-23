@@ -1,5 +1,6 @@
 🐛 Bug Fixes:
 - 🔧 Fixed Crunchyroll RSS feed connectivity issues by updating feedburner.com endpoint URLs.
+- 🔧 Initial support for edge-to-edge support for Android 15+
 
 ⚠️ A Quick Note:
 Updates will be slow as we are working hard behind the scenes on v2 – a major upgrade to bring you an even better experience! We appreciate your patience and support. 🙏
