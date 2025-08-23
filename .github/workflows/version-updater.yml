@@ -43,8 +43,8 @@ jobs:
           EOF
 
           # Create version.json
-          mkdir -p .meta
-          cat <<EOF > .meta/version.json
+          mkdir -p app/.meta
+          cat <<EOF > app/.meta/version.json
           {
             "code": $CODE,
             "migration": false,
@@ -60,7 +60,7 @@ jobs:
           echo "Preview version.properties:"
           cat gradle/version.properties
           echo "Preview version.json:"
-          cat .meta/version.json
+          cat app/.meta/version.json
 
       - name: Clean up temporary files
         run: rm VERSION
@@ -75,7 +75,7 @@ jobs:
           author: "Author <actions@github.com>"
           title: "platform: automated version update"
           body: |
-            This PR was automatically generated to update `version.properties` and `.meta/version.json`
+            This PR was automatically generated to update `version.properties` and `app/.meta/version.json`
           branch: platform/update-version-meta-data
           labels: "skip-changelog"
           assignees: "wax911"
