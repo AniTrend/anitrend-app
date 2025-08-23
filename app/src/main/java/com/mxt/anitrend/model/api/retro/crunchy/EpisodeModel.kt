@@ -12,10 +12,10 @@ import retrofit2.http.Path
 
 interface EpisodeModel {
 
-    @get:GET("crunchyroll/rss/anime/popular?format=xml")
+    @get:GET("crunchyroll/rss/popular?format=xml")
     val popularFeed: Call<Rss>
 
-    @get:GET("crunchyroll/rss/anime")
+    @get:GET("crunchyroll/rss")
     val latestFeed: Call<Rss>
 
     @GET("/{path}")
