@@ -22,15 +22,22 @@ if [ -n "$GITHUB_STEP_SUMMARY" ]; then
 fi
 
 if [ -d "$CHANGELOG_DIR" ]; then
-  for changelog in "$CHANGELOG_DIR"/*.txt; do
-    if [ -f "$changelog" ]; then
+  shopt -s nullglob
+  changelog_files=("$CHANGELOG_DIR"/*.txt)
+  if [ ${#changelog_files[@]} -eq 0 ]; then
+    echo "⚠️  No changelog files found in $CHANGELOG_DIR"
+    if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+      echo "| - | - | ⚠️ **No changelog files found** |" >> $GITHUB_STEP_SUMMARY
+    fi
+  else
+    for changelog in "${changelog_files[@]}"; do
       filename=$(basename "$changelog")
       char_count=$(wc -m < "$changelog" | tr -d ' ')
       
       echo "📄 $filename: $char_count characters"
       
       if [ "$char_count" -gt 500 ]; then
-        echo "❌ ERROR: $filename exceeds 500 character limit ($char_count characters)"
+        echo "❌ ERROR: $changelog exceeds 500 character limit ($char_count characters)"
         if [ -n "$GITHUB_STEP_SUMMARY" ]; then
           echo "| \`$filename\` | **$char_count** | ❌ **EXCEEDS LIMIT** |" >> $GITHUB_STEP_SUMMARY
         fi
@@ -41,8 +48,9 @@ if [ -d "$CHANGELOG_DIR" ]; then
           echo "| \`$filename\` | $char_count | ✅ Within limit |" >> $GITHUB_STEP_SUMMARY
         fi
       fi
-    fi
-  done
+    done
+  fi
+  shopt -u nullglob
 else
   echo "⚠️  Changelog directory not found: $CHANGELOG_DIR"
   if [ -n "$GITHUB_STEP_SUMMARY" ]; then
