@@ -11,7 +11,7 @@ jobs:
   android-unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Validate Changelog Character Limits
         run: bash .github/scripts/validate-changelogs.sh
       - name: set up JDK 21
