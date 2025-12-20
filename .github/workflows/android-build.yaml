@@ -23,7 +23,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4.7'
+          ruby-version: '3.4.8'
           bundler-cache: true
       - name: Extract version info
         id: version
