@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import androidx.databinding.ViewDataBinding
-import butterknife.OnClick
-import butterknife.OnLongClick
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
@@ -86,6 +84,11 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
      */ internal constructor(private val binding: ViewDataBinding) :
         RecyclerViewHolder<MediaBase?>(binding.root) {
 
+        init {
+            bindClickListeners(R.id.container)
+            bindLongClickListeners(R.id.container)
+        }
+
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br></br>
@@ -134,12 +137,10 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @OnClick(R.id.container)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @OnLongClick(R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }
@@ -152,6 +153,11 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
      * @param view
      */ internal constructor(private val binding: ViewDataBinding) :
         RecyclerViewHolder<MediaBase?>(binding.root) {
+
+        init {
+            bindClickListeners(R.id.container)
+            bindLongClickListeners(R.id.container)
+        }
 
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
@@ -195,12 +201,10 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
             binding.unbind()
         }
 
-        @OnClick(R.id.container)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @OnLongClick(R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }
@@ -214,6 +218,11 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
      * @param binding
      */ (private val binding: AdapterSeriesBinding) :
         RecyclerViewHolder<MediaBase?>(binding.root) {
+
+        init {
+            bindClickListeners(R.id.container)
+            bindLongClickListeners(R.id.container)
+        }
 
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
@@ -239,12 +248,10 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
             binding.unbind()
         }
 
-        @OnClick(R.id.container)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @OnLongClick(R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }

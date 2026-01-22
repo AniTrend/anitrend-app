@@ -12,8 +12,6 @@ import com.mxt.anitrend.util.ActionModeUtil;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by max on 2017/06/09.
  * Recycler view holder implementation
@@ -28,7 +26,6 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
      */
     public RecyclerViewHolder(View view) {
         super(view);
-        ButterKnife.bind(this, view);
     }
 
     /**
@@ -115,6 +112,24 @@ public abstract class RecyclerViewHolder<T> extends RecyclerView.ViewHolder impl
 
     protected boolean isLongClickable (T clicked) {
         return (callback == null || !callback.onItemLongClick(this, clicked));
+    }
+
+    protected void bindClickListeners(int... viewIds) {
+        for (int viewId : viewIds) {
+            View view = itemView.findViewById(viewId);
+            if (view != null) {
+                view.setOnClickListener(this);
+            }
+        }
+    }
+
+    protected void bindLongClickListeners(int... viewIds) {
+        for (int viewId : viewIds) {
+            View view = itemView.findViewById(viewId);
+            if (view != null) {
+                view.setOnLongClickListener(this);
+            }
+        }
     }
 
     void setActionMode(ActionModeUtil<T> actionModeUtil) {

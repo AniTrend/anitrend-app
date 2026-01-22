@@ -23,6 +23,7 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.databinding.FragmentListBinding;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer;
 import com.mxt.anitrend.model.entity.crunchy.Channel;
@@ -43,8 +44,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -54,9 +53,11 @@ import timber.log.Timber;
 public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPresenter<ConnectionContainer<List<ExternalLink>>>, Rss> implements RecyclerLoadListener,
         CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
-    public @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
-    public @BindView(R.id.stateLayout) ProgressLayout stateLayout;
+    public CustomSwipeRefreshLayout swipeRefreshLayout;
+    public StatefulRecyclerView recyclerView;
+    public ProgressLayout stateLayout;
+
+    private FragmentListBinding binding;
 
     protected String query;
     protected boolean isLimit;
@@ -109,8 +110,11 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_list, container, false);
-        unbinder = ButterKnife.bind(this, root);
+        binding = FragmentListBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        swipeRefreshLayout = binding.refreshLayout;
+        recyclerView = binding.recyclerView;
+        stateLayout = binding.stateLayout;
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(true); //set to false if somethings fail to work properly
         mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL);
@@ -120,6 +124,12 @@ public abstract class FragmentChannelBase extends FragmentBase<Channel, WidgetPr
         CompatUtil.INSTANCE.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     /**

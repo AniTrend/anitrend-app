@@ -22,9 +22,6 @@ import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 /**
  * Created by max on 2017/11/07.
  */
@@ -101,6 +98,8 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public ProgressFeedViewHolder(AdapterFeedProgressBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.widget_users, R.id.user_avatar, R.id.widget_comment, R.id.series_image);
+            bindLongClickListeners(R.id.series_image);
         }
 
         /**
@@ -147,12 +146,12 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick({R.id.widget_users, R.id.user_avatar, R.id.widget_comment, R.id.series_image})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.series_image)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }
@@ -170,6 +169,8 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public StatusFeedViewHolder(AdapterFeedStatusBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container, R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_comment);
+            bindLongClickListeners(R.id.container);
         }
 
         /**
@@ -229,12 +230,12 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick({R.id.container, R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_comment})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.container)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }
@@ -252,6 +253,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public MessageFeedViewHolder(AdapterFeedMessageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.widget_edit, R.id.widget_users, R.id.messenger_avatar, R.id.recipient_avatar, R.id.widget_comment);
         }
 
         /**
@@ -305,7 +307,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.unbind();
         }
 
-        @Override @OnClick({R.id.widget_edit, R.id.widget_users, R.id.messenger_avatar, R.id.recipient_avatar,  R.id.widget_comment})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
@@ -328,6 +330,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
         public ListFeedViewHolder(AdapterFeedProgressBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.user_avatar, R.id.widget_comment);
         }
 
         /**
@@ -366,7 +369,7 @@ public class FeedAdapter extends RecyclerViewAdapter<FeedList> {
             binding.unbind();
         }
 
-        @Override @OnClick({R.id.user_avatar, R.id.widget_comment})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }

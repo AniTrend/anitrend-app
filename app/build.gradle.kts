@@ -14,9 +14,6 @@ android {
 }
 
 dependencies {
-    /** Butter Knife Libraries */
-    implementation(libs.butterknife)
-    kapt(libs.butterknife.compiler)
 
     /** Material Dialogs */
     implementation(libs.material.dialogs.core)

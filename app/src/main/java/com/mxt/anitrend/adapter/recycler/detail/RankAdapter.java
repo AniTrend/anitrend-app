@@ -16,9 +16,6 @@ import com.mxt.anitrend.model.entity.anilist.MediaRank;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 /**
  * Created by max on 2018/01/01.
  */
@@ -52,6 +49,8 @@ public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
         public RankViewHolder(AdapterRankingBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container, R.id.sub_container);
+            bindLongClickListeners(R.id.container);
         }
 
         /**
@@ -87,12 +86,12 @@ public class RankAdapter extends RecyclerViewAdapter<MediaRank> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick({R.id.container, R.id.sub_container})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.container)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }

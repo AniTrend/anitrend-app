@@ -6,17 +6,12 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatButton;
-
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView;
 import com.mxt.anitrend.binding.RichMarkdownExtensionsKt;
+import com.mxt.anitrend.databinding.BottomSheetMessageBinding;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by max on 2017/11/03.
@@ -25,9 +20,7 @@ import butterknife.OnClick;
 
 public class BottomSheetMessage extends BottomSheetBase implements View.OnClickListener {
 
-    protected @BindView(R.id.bottom_text) RichMarkdownTextView bottom_text;
-    protected @BindView(R.id.bottom_positive) AppCompatButton bottom_positive;
-    protected @BindView(R.id.bottom_negative) AppCompatButton bottom_negative;
+    private BottomSheetMessageBinding binding;
 
     public static BottomSheetMessage newInstance(Bundle bundle) {
         BottomSheetMessage fragment = new BottomSheetMessage();
@@ -45,29 +38,37 @@ public class BottomSheetMessage extends BottomSheetBase implements View.OnClickL
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        View contentView = View.inflate(getContext(), R.layout.bottom_sheet_message, null);
-        dialog.setContentView(contentView);
-        unbinder = ButterKnife.bind(this, dialog);
-        createBottomSheetBehavior(contentView);
+        binding = BottomSheetMessageBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
+        dialog.setContentView(binding.getRoot());
+        bindToolbarViews(binding.getRoot());
+        createBottomSheetBehavior(binding.getRoot());
+        binding.bottomPositive.setOnClickListener(this);
+        binding.bottomNegative.setOnClickListener(this);
         return dialog;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        RichMarkdownExtensionsKt.basicText(bottom_text, getString(mText));
+        RichMarkdownExtensionsKt.basicText(binding.bottomText, getString(mText));
         if(mPositive != 0)
-            bottom_positive.setText(mPositive);
+            binding.bottomPositive.setText(mPositive);
         else
-            bottom_positive.setVisibility(View.GONE);
+            binding.bottomPositive.setVisibility(View.GONE);
 
         if(mNegative != 0)
-            bottom_negative.setText(mNegative);
+            binding.bottomNegative.setText(mNegative);
         else
-            bottom_negative.setVisibility(View.GONE);
+            binding.bottomNegative.setVisibility(View.GONE);
     }
 
-    @Override @OnClick({R.id.bottom_positive, R.id.bottom_negative})
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bottom_positive:

@@ -25,8 +25,6 @@ import com.mxt.anitrend.util.KeyUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-import butterknife.BindView;
-import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
@@ -38,12 +36,10 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
 
     public String TAG;
 
-    protected Unbinder unbinder;
-
-    protected @BindView(R.id.toolbar_title) SingleLineTextView toolbarTitle;
-    protected @BindView(R.id.toolbar_state) AppCompatImageView toolbarState;
-    protected @BindView(R.id.toolbar_search) AppCompatImageView toolbarSearch;
-    protected @BindView(R.id.search_view) MaterialSearchView searchView;
+    protected SingleLineTextView toolbarTitle;
+    protected AppCompatImageView toolbarState;
+    protected AppCompatImageView toolbarSearch;
+    protected MaterialSearchView searchView;
 
     protected ViewModelBase<T> viewModel;
     protected BottomSheetChoice bottomSheetChoice;
@@ -165,6 +161,13 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
         }
     }
 
+    protected void bindToolbarViews(View rootView) {
+        toolbarTitle = rootView.findViewById(R.id.toolbar_title);
+        toolbarState = rootView.findViewById(R.id.toolbar_state);
+        toolbarSearch = rootView.findViewById(R.id.toolbar_search);
+        searchView = rootView.findViewById(R.id.search_view);
+    }
+
     public boolean closeDialog() {
         if(bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -179,8 +182,6 @@ public abstract class BottomSheetBase<T> extends BottomSheetDialogFragment imple
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(unbinder != null)
-            unbinder.unbind();
         bottomSheetCallback = null;
     }
 

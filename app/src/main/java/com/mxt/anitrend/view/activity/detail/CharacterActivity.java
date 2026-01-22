@@ -7,25 +7,19 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.viewpager.widget.ViewPager;
-
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
+import com.mxt.anitrend.databinding.ActivityPagerGenericBinding;
 import com.mxt.anitrend.model.entity.base.CharacterBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.GraphUtil;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
@@ -35,19 +29,17 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter> {
 
-    protected @BindView(R.id.toolbar) Toolbar toolbar;
-    protected @BindView(R.id.page_container) ViewPager viewPager;
-    protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
-    protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
+    private ActivityPagerGenericBinding binding;
 
     private FavouriteToolbarWidget favouriteWidget;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pager_generic);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        binding = ActivityPagerGenericBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mSearchView = binding.customToolbar.searchView;
+        setSupportActionBar(binding.customToolbar.toolbar);
         setPresenter(new BasePresenter(this));
         setViewModel(true);
         if(getIntent().hasExtra(KeyUtil.arg_id))
@@ -103,9 +95,9 @@ public class CharacterActivity extends ActivityBase<CharacterBase, BasePresenter
     protected void onActivityReady() {
         CharacterPageAdapter pageAdapter = new CharacterPageAdapter(getSupportFragmentManager(), getApplicationContext());
         pageAdapter.setParams(getViewModel().getParams());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
-        smartTabLayout.setViewPager(viewPager);
+        binding.contentMain.pageContainer.setAdapter(pageAdapter);
+        binding.contentMain.pageContainer.setOffscreenPageLimit(offScreenLimit);
+        binding.customTab.smartTab.setViewPager(binding.contentMain.pageContainer);
     }
 
     @Override

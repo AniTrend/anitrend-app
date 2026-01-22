@@ -38,7 +38,6 @@ import com.mxt.anitrend.util.media.MediaActionUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-import butterknife.Unbinder;
 import timber.log.Timber;
 
 public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fragment implements
@@ -55,7 +54,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
 
     protected Snackbar snackbar;
     protected BottomSheetBase mBottomSheet;
-    protected Unbinder unbinder;
     protected @IntegerRes int mColumnSize;
 
     public final String TAG = getClass().getSimpleName();
@@ -101,8 +99,6 @@ public abstract class FragmentBase<M, P extends CommonPresenter, VM> extends Fra
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(unbinder != null)
-            unbinder.unbind();
         if(presenter != null)
             presenter.onDestroy();
         if(mediaActionUtil != null)

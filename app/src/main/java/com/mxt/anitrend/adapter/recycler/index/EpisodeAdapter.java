@@ -15,9 +15,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder;
 import com.mxt.anitrend.databinding.AdapterEpisodeBinding;
 import com.mxt.anitrend.model.entity.crunchy.Episode;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 /**
  * Created by max on 2017/11/04.
  */
@@ -51,6 +48,8 @@ public class EpisodeAdapter extends RecyclerViewAdapter<Episode> {
         public EpisodeViewHolder(AdapterEpisodeBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.series_image);
+            bindLongClickListeners(R.id.series_image);
         }
 
         /**
@@ -79,13 +78,12 @@ public class EpisodeAdapter extends RecyclerViewAdapter<Episode> {
             binding.unbind();
         }
 
-        @OnClick(R.id.series_image)
         @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.series_image)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }

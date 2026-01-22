@@ -7,15 +7,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.viewpager.widget.ViewPager;
-
 import com.afollestad.materialdialogs.DialogAction;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
+import com.mxt.anitrend.databinding.ActivityPagerGenericBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
@@ -23,12 +20,9 @@ import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.graphql.GraphUtil;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
@@ -38,10 +32,7 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
 
-    protected @BindView(R.id.toolbar) Toolbar toolbar;
-    protected @BindView(R.id.page_container) ViewPager viewPager;
-    protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
-    protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
+    private ActivityPagerGenericBinding binding;
 
     private Boolean onList;
 
@@ -50,9 +41,10 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pager_generic);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        binding = ActivityPagerGenericBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mSearchView = binding.customToolbar.searchView;
+        setSupportActionBar(binding.customToolbar.toolbar);
         setPresenter(new BasePresenter(this));
         setViewModel(true);
         id = getIntent().getLongExtra(KeyUtil.arg_id, -1);
@@ -131,9 +123,9 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
     protected void onActivityReady() {
         StaffPageAdapter pageAdapter = new StaffPageAdapter(getSupportFragmentManager(), getApplicationContext());
         pageAdapter.setParams(getViewModel().getParams());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
-        smartTabLayout.setViewPager(viewPager);
+        binding.contentMain.pageContainer.setAdapter(pageAdapter);
+        binding.contentMain.pageContainer.setOffscreenPageLimit(offScreenLimit);
+        binding.customTab.smartTab.setViewPager(binding.contentMain.pageContainer);
     }
 
     @Override
@@ -181,8 +173,8 @@ public class StaffActivity extends ActivityBase<StaffBase, BasePresenter> {
         adapter.setParams(getViewModel().getParams());
 
         // Re-set adapter while preserving currently selected item
-        int currentItem = viewPager.getCurrentItem();
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(currentItem);
+        int currentItem = binding.contentMain.pageContainer.getCurrentItem();
+        binding.contentMain.pageContainer.setAdapter(adapter);
+        binding.contentMain.pageContainer.setCurrentItem(currentItem);
     }
 }

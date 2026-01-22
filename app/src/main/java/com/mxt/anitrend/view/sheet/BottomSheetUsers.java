@@ -28,8 +28,6 @@ import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-
 public class BottomSheetUsers extends BottomSheetList<UserBase> implements MaterialSearchView.OnQueryTextListener, MaterialSearchView.SearchViewListener {
 
     private BottomSheetListBinding binding;
@@ -65,7 +63,8 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         binding = BottomSheetListBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
-        unbinder = ButterKnife.bind(this, dialog);
+        bindToolbarViews(binding.getRoot());
+        bindListViews(binding.getRoot());
         createBottomSheetBehavior(binding.getRoot());
         mLayoutManager = new StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL);
         return dialog;
@@ -132,6 +131,12 @@ public class BottomSheetUsers extends BottomSheetList<UserBase> implements Mater
     public void onSearchViewClosed() {
         if(mAdapter != null && mAdapter.getFilter() != null)
             mAdapter.getFilter().filter("");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     /**

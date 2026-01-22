@@ -50,7 +50,6 @@ import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
@@ -91,13 +90,18 @@ public class MediaStatsFragment extends FragmentBase<Media, MediaPresenter, Medi
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSeriesStatsBinding.inflate(inflater, container, false);
-        unbinder = ButterKnife.bind(this, binding.getRoot());
         binding.stateLayout.showLoading();
         binding.linksRecycler.setLayoutManager(new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL));
         binding.linksRecycler.setHasFixedSize(true);
         binding.rankingRecycler.setLayoutManager(new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL));
         binding.rankingRecycler.setHasFixedSize(true);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override

@@ -26,8 +26,6 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by max on 2017/12/09.
  * giphy bottom sheet container
@@ -66,7 +64,8 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         binding = BottomSheetListBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
-        unbinder = ButterKnife.bind(this, dialog);
+        bindToolbarViews(binding.getRoot());
+        bindListViews(binding.getRoot());
         createBottomSheetBehavior(binding.getRoot());
         mLayoutManager = new StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL);
         return dialog;
@@ -144,6 +143,12 @@ public class BottomSheetGiphy extends BottomSheetGiphyList implements MaterialSe
     @Override
     public void onSearchViewClosed() {
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     /**

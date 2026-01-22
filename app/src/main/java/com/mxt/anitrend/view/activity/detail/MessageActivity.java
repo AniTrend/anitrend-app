@@ -3,20 +3,12 @@ package com.mxt.anitrend.view.activity.detail;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.viewpager.widget.ViewPager;
-
-import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.MessagePageAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
+import com.mxt.anitrend.databinding.ActivityPagerGenericBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by max on 2017/12/07.
@@ -25,19 +17,17 @@ import butterknife.ButterKnife;
 
 public class MessageActivity extends ActivityBase<FeedList, BasePresenter> {
 
-    protected @BindView(R.id.toolbar) Toolbar toolbar;
-    protected @BindView(R.id.page_container) ViewPager viewPager;
-    protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
-    protected @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
+    private ActivityPagerGenericBinding binding;
 
     private MessagePageAdapter messagePageAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pager_generic);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        binding = ActivityPagerGenericBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mSearchView = binding.customToolbar.searchView;
+        setSupportActionBar(binding.customToolbar.toolbar);
         setPresenter(new BasePresenter(this));
         setViewModel(true);
     }
@@ -62,9 +52,9 @@ public class MessageActivity extends ActivityBase<FeedList, BasePresenter> {
 
     @Override
     protected void updateUI() {
-        viewPager.setAdapter(messagePageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
-        smartTabLayout.setViewPager(viewPager);
+        binding.contentMain.pageContainer.setAdapter(messagePageAdapter);
+        binding.contentMain.pageContainer.setOffscreenPageLimit(offScreenLimit);
+        binding.customTab.smartTab.setViewPager(binding.contentMain.pageContainer);
     }
 
     @Override

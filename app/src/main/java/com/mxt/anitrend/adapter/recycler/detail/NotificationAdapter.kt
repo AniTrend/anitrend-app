@@ -5,8 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.Filter
-import butterknife.OnClick
-import butterknife.OnLongClick
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder
@@ -94,6 +92,11 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
     inner class NotificationHolder(
             private val binding: AdapterNotificationBinding
     ) : RecyclerViewHolder<Notification>(binding.root) {
+
+        init {
+            bindClickListeners(R.id.container, R.id.notification_img)
+            bindLongClickListeners(R.id.container)
+        }
 
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
@@ -216,12 +219,10 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
             binding.unbind()
         }
 
-        @OnClick(R.id.container, R.id.notification_img)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @OnLongClick(R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }

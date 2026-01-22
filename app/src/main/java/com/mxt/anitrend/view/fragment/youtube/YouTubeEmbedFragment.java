@@ -24,7 +24,6 @@ import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.markdown.RegexUtil;
 
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresenter, MediaTrailer> {
@@ -71,7 +70,6 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = AdapterFeedSlideBinding.inflate(inflater, container, false);
-        unbinder = ButterKnife.bind(this, binding.getRoot());
         return binding.getRoot();
     }
 
@@ -122,5 +120,11 @@ public class YouTubeEmbedFragment extends FragmentBase<MediaTrailer, BasePresent
     @Override
     public void onChanged(@Nullable MediaTrailer model) {
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

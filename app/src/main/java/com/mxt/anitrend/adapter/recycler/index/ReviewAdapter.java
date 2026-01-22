@@ -16,9 +16,6 @@ import com.mxt.anitrend.databinding.AdapterReviewBinding;
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding;
 import com.mxt.anitrend.model.entity.anilist.Review;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 /**
  * Created by max on 2017/10/30.
  * Media review adapter
@@ -62,6 +59,8 @@ public class ReviewAdapter extends RecyclerViewAdapter<Review> {
         public ReviewBanner(AdapterReviewBinding view) {
             super(view.getRoot());
             binding = view;
+            bindClickListeners(R.id.series_image, R.id.review_read_more);
+            bindLongClickListeners(R.id.series_image);
         }
 
         /**
@@ -93,12 +92,12 @@ public class ReviewAdapter extends RecyclerViewAdapter<Review> {
             binding.unbind();
         }
 
-        @Override @OnClick({R.id.series_image, R.id.review_read_more})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.series_image)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }
@@ -116,6 +115,8 @@ public class ReviewAdapter extends RecyclerViewAdapter<Review> {
         public ReviewDefault(AdapterSeriesReviewBinding view) {
             super(view.getRoot());
             binding = view;
+            bindClickListeners(R.id.review_read_more, R.id.user_avatar);
+            bindLongClickListeners(R.id.series_image);
         }
 
         /**
@@ -147,12 +148,12 @@ public class ReviewAdapter extends RecyclerViewAdapter<Review> {
             binding.unbind();
         }
 
-        @Override @OnClick({R.id.review_read_more, R.id.user_avatar})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.series_image)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }

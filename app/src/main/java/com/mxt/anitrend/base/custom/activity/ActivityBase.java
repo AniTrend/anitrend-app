@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 
@@ -67,7 +66,7 @@ public abstract class ActivityBase<M, P extends CommonPresenter> extends AppComp
 
     protected String TAG;
 
-    protected @Nullable @BindView(R.id.search_view) MaterialSearchView mSearchView;
+    protected @Nullable MaterialSearchView mSearchView;
 
     private ViewModelBase<M> viewModel;
 

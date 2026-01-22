@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import butterknife.ButterKnife
 import com.afollestad.materialdialogs.DialogAction
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
@@ -59,7 +58,6 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSeriesOverviewBinding.inflate(inflater, container, false).apply {
-            unbinder = ButterKnife.bind(this, root)
             stateLayout.showLoading()
 
             genreRecycler.layoutManager = StaggeredGridLayoutManager(resources.getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL)
@@ -80,6 +78,11 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         }
 
         return binding?.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     override fun onStart() {

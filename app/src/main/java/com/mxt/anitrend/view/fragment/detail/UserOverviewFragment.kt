@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
@@ -31,7 +29,8 @@ import java.util.*
 
 class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
 
-    private lateinit var binding: FragmentUserAboutBinding
+    private var _binding: FragmentUserAboutBinding? = null
+    private val binding get() = _binding!!
     private var model: User? = null
 
     private val userId by extras(KeyUtil.arg_id, 0)
@@ -65,8 +64,9 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      * @return Return the View for the fragment's UI, or null.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentUserAboutBinding.inflate(inflater, container, false)
-        unbinder = ButterKnife.bind(this, binding.root)
+        _binding = FragmentUserAboutBinding.inflate(inflater, container, false)
+        binding.userAvatar.setOnClickListener(this)
+        binding.userStatsContainer.setOnClickListener(this)
         binding.stateLayout.showLoading()
         return binding.root
     }
@@ -141,6 +141,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
     override fun onDestroyView() {
         binding.userAboutPanelWidget.onViewRecycled()
         super.onDestroyView()
+        _binding = null
     }
 
     private fun generateStatsData(): List<StatsRing> {
@@ -180,7 +181,6 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      *
      * @param view The view that was clicked.
      */
-    @OnClick(R.id.user_avatar, R.id.user_stats_container)
     override fun onClick(view: View) {
         when (view.id) {
             R.id.user_avatar -> CompatUtil.imagePreview(view, model?.avatar?.large, R.string.image_preview_error_user_avatar)
