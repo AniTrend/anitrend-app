@@ -34,10 +34,11 @@ import java.io.File
  *
  * @return true if this is a low-RAM device.
  */
-fun Context?.isLowRamDevice() = this?.let {
-    val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+fun Context?.isLowRamDevice(): Boolean {
+    val targetContext = this ?: return false
+    val activityManager = targetContext.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager ?: return false
     return ActivityManagerCompat.isLowRamDevice(activityManager)
-} ?: false
+}
 
 /**
  * Start a new activity from context and avoid potential crashes from early API levels
@@ -74,7 +75,7 @@ fun View.getLayoutInflater(): LayoutInflater =
     context.getLayoutInflater()
 
 fun Context.getLayoutInflater(): LayoutInflater =
-    getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater ?: LayoutInflater.from(this)
 
 /**
  * Gets the size of the display, in pixels. Value returned by this method does
@@ -85,7 +86,7 @@ fun Context.getLayoutInflater(): LayoutInflater =
  */
 fun Context.getScreenDimens(): Point {
     val deviceDimens = Point()
-    (getSystemService(Context.WINDOW_SERVICE) as WindowManager).apply {
+    (getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.apply {
         defaultDisplay?.getSize(deviceDimens)
     }
     return deviceDimens

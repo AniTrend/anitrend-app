@@ -13,9 +13,11 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withResumed
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.index.AiringPageAdapter
 import com.mxt.anitrend.adapter.pager.index.FeedPageAdapter
@@ -34,6 +36,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getCompatDrawable
@@ -102,6 +105,8 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     private var selectedTitle: Int = 0
 
     private var mPageIndex: Int = 0
+
+    private var tabMediator: TabLayoutMediator? = null
 
     private lateinit var menuItems: Menu
 
@@ -272,33 +277,37 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
             R.id.nav_home_feed -> {
                 mToolbar.title = getString(R.string.drawer_title_home)
                 selectedItem = menu
-                mViewPager.adapter = FeedPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = FeedPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
             }
             R.id.nav_anime -> {
                 mToolbar.title = getString(R.string.drawer_title_anime)
                 selectedItem = menu
-                mViewPager.adapter = SeasonPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = SeasonPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
                 mViewPager.setCurrentItem(mPageIndex, false)
             }
             R.id.nav_manga -> {
                 mToolbar.title = getString(R.string.drawer_title_manga)
                 selectedItem = menu
-                mViewPager.adapter = MangaPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = MangaPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
             }
             R.id.nav_trending -> {
                 mToolbar.title = getString(R.string.drawer_title_trending)
                 selectedItem = menu
-                mViewPager.adapter =
-                    TrendingPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = TrendingPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
             }
             R.id.nav_airing -> {
                 mToolbar.title = getString(R.string.drawer_title_airing)
-                mViewPager.adapter = AiringPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = AiringPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
                 selectedItem = menu
             }
             R.id.nav_myanime -> {
@@ -308,12 +317,12 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                 animeParams.putLong(KeyUtil.arg_id, presenter.database.currentUser?.id ?: 0)
 
                 val animeListPageAdapter =
-                    MediaListPageAdapter(supportFragmentManager, applicationContext)
+                    MediaListPageAdapter(this, applicationContext)
                 animeListPageAdapter.params = animeParams
 
                 mToolbar.title = getString(R.string.drawer_title_myanime)
                 mViewPager.adapter = animeListPageAdapter
-                mNavigationTabStrip.setViewPager(mViewPager)
+                attachTabs(animeListPageAdapter)
                 selectedItem = menu
             }
             R.id.nav_mymanga -> {
@@ -323,25 +332,27 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                 mangaParams.putLong(KeyUtil.arg_id, presenter.database.currentUser?.id ?: 0)
 
                 val mangaListPageAdapter =
-                    MediaListPageAdapter(supportFragmentManager, applicationContext)
+                    MediaListPageAdapter(this, applicationContext)
                 mangaListPageAdapter.params = mangaParams
 
                 mToolbar.title = getString(R.string.drawer_title_mymanga)
                 mViewPager.adapter = mangaListPageAdapter
-                mNavigationTabStrip.setViewPager(mViewPager)
+                attachTabs(mangaListPageAdapter)
                 selectedItem = menu
             }
             R.id.nav_hub -> {
                 mToolbar.title = getString(R.string.drawer_title_hub)
-                mViewPager.adapter = HubPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = HubPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
                 selectedItem = menu
             }
             R.id.nav_reviews -> {
                 mToolbar.title = getString(R.string.drawer_title_reviews)
                 selectedItem = menu
-                mViewPager.adapter = ReviewPageAdapter(supportFragmentManager, applicationContext)
-                mNavigationTabStrip.setViewPager(mViewPager)
+                val adapter = ReviewPageAdapter(this, applicationContext)
+                mViewPager.adapter = adapter
+                attachTabs(adapter)
             }
             R.id.nav_sign_in -> startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             R.id.nav_sign_out -> {
@@ -367,6 +378,14 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
             R.id.nav_check_update -> checkUpdate()
             else -> { }
         }
+    }
+
+    private fun attachTabs(adapter: BaseStatePageAdapter) {
+        tabMediator?.detach()
+        tabMediator = TabLayoutMediator(mNavigationTabStrip, mViewPager) { tab, position ->
+            tab.text = adapter.getPageTitle(position)
+        }
+        tabMediator?.attach()
     }
 
     /**
@@ -435,9 +454,9 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     private fun setupUserItems() {
         presenter.database.currentUser?.apply {
-            mUserName.text = name
+            mUserName.text = name.orEmpty()
             mUserAvatar.onInit()
-            mHeaderView.setImage(bannerImage)
+            mHeaderView.setImage(bannerImage.orEmpty())
             if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(this@MainActivity, this)
                 presenter.settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
@@ -448,7 +467,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                     .build()
                 showBottomSheet()
             }
-            koinOf<ISupportAnalytics>().setCrashAnalyticUser(name)
+            koinOf<ISupportAnalytics>().setCrashAnalyticUser(name.orEmpty())
         }
         mAccountLogin.isVisible = false
 
@@ -484,7 +503,7 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     }
 
     override fun onChanged(model: User?) {
-        if (isAlive && model != null) {
+        if (model != null && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             presenter.database.currentUser = model
             updateUI()
         }

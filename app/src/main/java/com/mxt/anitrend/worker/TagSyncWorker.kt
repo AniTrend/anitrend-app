@@ -26,11 +26,10 @@ class TagSyncWorker(
             GraphUtil.getDefaultQuery(false)
         ).execute()
 
-        @Suppress("UNCHECKED_CAST")
-        val data = response.body() as? List<MediaTag>
+        val data = response.body()?.data?.result
 
-        if (response.isSuccessful && data != null) {
-            return data.orEmpty()
+        if (response.isSuccessful && !data.isNullOrEmpty()) {
+            return data
         } else
             Timber.e(response.apiError())
 

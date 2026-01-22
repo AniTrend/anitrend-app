@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.group.RecyclerHeaderItem" />
-    </data>
-
-    <FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_margin="@dimen/lg_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -17,7 +11,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:text="@{model.title}"
             tools:text="Adaptations" />
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -26,8 +19,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:text="@{String.valueOf(safeUnbox(model.size))}"
             tools:text="20" />
     </FrameLayout>
-
-</layout>

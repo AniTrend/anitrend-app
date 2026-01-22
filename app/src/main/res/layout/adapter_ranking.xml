@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mxt.anitrend.base.custom.view.container.CardViewBase xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.MediaRank" />
-    </data>
-
-    <com.mxt.anitrend.base.custom.view.container.CardViewBase
+    xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/container"
         android:clickable="true"
         android:focusable="true"
@@ -40,12 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                app:textHtml="@{model.typeHtml}"
                 tools:textStyle="bold"
                 tools:text="#64 Highest Rated 2015"/>
 
         </LinearLayout>
 
     </com.mxt.anitrend.base.custom.view.container.CardViewBase>
-
-</layout>

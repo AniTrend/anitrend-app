@@ -5,11 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
+import com.mxt.anitrend.base.custom.view.image.AspectImageView
+import com.mxt.anitrend.base.custom.view.text.AiringTextView
+import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
+import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+import com.mxt.anitrend.binding.setAverageRating
 import com.mxt.anitrend.databinding.*
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -21,13 +26,13 @@ import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
  * Created by max on 2017/10/25.
  * Media adapter
  */
-class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
-    RecyclerViewAdapter<MediaBase?>(context) {
+class MediaAdapter(context: Context, private val isCompatType: Boolean) :
+    RecyclerViewAdapter<MediaBase>(context) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         @RecyclerViewType viewType: Int
-    ): RecyclerViewHolder<MediaBase?> {
+    ): RecyclerViewHolder<MediaBase> {
         if (isCompatType)
             return MediaViewHolder(AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false))
 
@@ -65,7 +70,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
 
     @RecyclerViewType
     override fun getItemViewType(position: Int): Int {
-        return if (data[position]!!.type == KeyUtil.ANIME)
+        return if (data[position].type == KeyUtil.ANIME)
             KeyUtil.RECYCLER_TYPE_ANIME
         else
             KeyUtil.RECYCLER_TYPE_MANGA
@@ -81,8 +86,8 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
      *
      * @param binding
      * @see ButterKnife
-     */ internal constructor(private val binding: ViewDataBinding) :
-        RecyclerViewHolder<MediaBase?>(binding.root) {
+      */ internal constructor(private val binding: ViewBinding) :
+        RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
             bindClickListeners(R.id.container)
@@ -96,14 +101,22 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
          * @param model Is the model at the current adapter position
          * @see Media
          */
-        override fun onBindViewHolder(model: MediaBase?) {
+        override fun onBindViewHolder(model: MediaBase) {
             when (binding) {
                 is AdapterAnimeBinding -> {
-                    binding.model = model
+                    AspectImageView.setImage(binding.seriesImage, model.coverImage)
+                    SeriesStatusWidget.setStatus(binding.seriesStatus, model)
+                    AiringTextView.setAiring(binding.seriesAiring, model)
+                    SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
+                    binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
                 }
                 is AdapterAnimeCompactBinding -> {
-                    binding.model = model
+                    AspectImageView.setImage(binding.seriesImage, model.coverImage)
+                    SeriesStatusWidget.setStatus(binding.seriesStatus, model)
+                    AiringTextView.setAiring(binding.seriesAiring, model)
+                    SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
+                    binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
 
                     if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
@@ -112,7 +125,6 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
                 }
                 else -> {}
             }
-            binding.executePendingBindings()
         }
 
         /**
@@ -127,7 +139,6 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
                 Glide.with(context).clear(binding.seriesImage)
             else if (binding is AdapterAnimeCompactBinding)
                 Glide.with(context).clear(binding.seriesImage)
-            binding.unbind()
         }
 
         /**
@@ -151,8 +162,8 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
      * Default constructor which includes binding with butter knife
      *
      * @param view
-     */ internal constructor(private val binding: ViewDataBinding) :
-        RecyclerViewHolder<MediaBase?>(binding.root) {
+      */ internal constructor(private val binding: ViewBinding) :
+        RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
             bindClickListeners(R.id.container)
@@ -166,14 +177,20 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
          * @param model Is the model at the current adapter position
          * @see Media
          */
-        override fun onBindViewHolder(model: MediaBase?) {
+        override fun onBindViewHolder(model: MediaBase) {
             when (binding) {
                 is AdapterMangaBinding -> {
-                    binding.model = model
+                    AspectImageView.setImage(binding.seriesImage, model.coverImage)
+                    SeriesStatusWidget.setStatus(binding.seriesStatus, model)
+                    SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
+                    binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
                 }
                 is AdapterMangaCompactBinding -> {
-                    binding.model = model
+                    AspectImageView.setImage(binding.seriesImage, model.coverImage)
+                    SeriesStatusWidget.setStatus(binding.seriesStatus, model)
+                    SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
+                    binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
 
                     if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
@@ -182,7 +199,6 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
                 }
                 else -> {}
             }
-            binding.executePendingBindings()
         }
 
         /**
@@ -197,8 +213,6 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
                 Glide.with(context).clear(binding.seriesImage)
             else if (binding is AdapterMangaCompactBinding)
                 Glide.with(context).clear(binding.seriesImage)
-
-            binding.unbind()
         }
 
         override fun onClick(v: View) {
@@ -217,7 +231,7 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
      *
      * @param binding
      */ (private val binding: AdapterSeriesBinding) :
-        RecyclerViewHolder<MediaBase?>(binding.root) {
+        RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
             bindClickListeners(R.id.container)
@@ -230,10 +244,12 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
          *
          * @param model Is the model at the current adapter position
          */
-        override fun onBindViewHolder(model: MediaBase?) {
-            binding.model = model
+        override fun onBindViewHolder(model: MediaBase) {
+            AspectImageView.setImage(binding.seriesImage, model.coverImage)
+            SeriesStatusWidget.setStatus(binding.seriesStatus, model)
+            SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
+            binding.customRatingWidget.setAverageRating(model)
             binding.seriesTitle.setTitle(model)
-            binding.executePendingBindings()
         }
 
         /**
@@ -245,7 +261,6 @@ class MediaAdapter(context: Context?, private val isCompatType: Boolean) :
          */
         override fun onViewRecycled() {
             Glide.with(context).clear(binding.seriesImage)
-            binding.unbind()
         }
 
         override fun onClick(v: View) {

@@ -37,11 +37,13 @@ object MediaListUtil {
         if (model.advancedScores != null)
             queryContainer.putVariable(KeyUtil.arg_listAdvancedScore, model.advancedScores)
 
-        if (!CompatUtil.isEmpty(model.customLists)) {
-            val enabledCustomLists = Stream.of(model.customLists)
-                    .filter { it.isEnabled }
-                    .map { it.name }
-                    .toList()
+        val customLists = model.customLists.orEmpty()
+        if (!CompatUtil.isEmpty(customLists)) {
+            val enabledCustomLists = Stream.of(customLists)
+                .filter { it.isEnabled }
+                .map { it.name.orEmpty() }
+                .filter { it.isNotEmpty() }
+                .toList()
             queryContainer.putVariable(KeyUtil.arg_listCustom, enabledCustomLists)
         }
 
@@ -68,7 +70,8 @@ object MediaListUtil {
      * Checks if the current list items progress can be incremented beyond what it is currently at
      */
     fun isProgressUpdatable(mediaList: MediaList): Boolean {
-        return mediaList.media.nextAiringEpisode != null && mediaList.media.nextAiringEpisode!!.episode - mediaList.progress >= 1
+        val nextEpisode = mediaList.media.nextAiringEpisode ?: return false
+        return nextEpisode.episode - mediaList.progress >= 1
     }
 
     /**

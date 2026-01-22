@@ -11,6 +11,7 @@ import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.NotificationHistory
+import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
@@ -68,16 +69,17 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
     }
 
     private fun requestUser(): User? {
-        val userGraphContainer = userEndpoint.getCurrentUser(
+        val result = userEndpoint.getCurrentUser(
             GraphUtil.getDefaultQuery(false)
-        ).execute().body() as User?
-
-        return (userGraphContainer).let {
-            it?.also { user ->
-                presenter.database.currentUser = user
-            }
-            it
+        ).execute()
+        if (!result.isSuccessful) {
+            return null
         }
+        val user = unwrapBody<User>(result.body())
+        user?.also {
+            presenter.database.currentUser = it
+        }
+        return user
     }
 
     private fun clearNotifications(): Boolean {
@@ -88,7 +90,7 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
         ).execute()
 
         if (result.isSuccessful) {
-            val notifications = result.body() as PageContainer<Notification>?
+            val notifications = unwrapBody<PageContainer<Notification>>(result.body())
             if (notifications != null) {
                 val notificationHistories = Stream.of(notifications.pageData)
                     .map { notification -> NotificationHistory(notification.id) }
@@ -101,6 +103,15 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
         }
 
         return false
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> unwrapBody(body: Any?): T? {
+        return when (body) {
+            null -> null
+            is AniListContainer<*> -> body.data?.result as? T
+            else -> body as? T
+        }
     }
 
     companion object {

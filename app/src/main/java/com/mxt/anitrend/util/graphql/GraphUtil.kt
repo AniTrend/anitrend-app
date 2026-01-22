@@ -51,7 +51,7 @@ object GraphUtil {
         val filteredList = Stream.of(feedLists)
                 .filter { f -> !f?.type.isNullOrBlank() }
                 .toList()
-        presenter.pageInfo?.perPage = filteredList.size
+        presenter.getPageInfo()?.perPage = filteredList.size
         return filteredList
     }
 
@@ -63,8 +63,8 @@ object GraphUtil {
         val filteredList = Stream.of(notifications)
                 .filter { f -> !f?.type.isNullOrBlank() }
                 .toList()
-        if (presenter.pageInfo != null)
-            presenter.pageInfo?.perPage = filteredList.size
+        if (presenter.getPageInfo() != null)
+            presenter.getPageInfo()?.perPage = filteredList.size
         return filteredList
     }
 }

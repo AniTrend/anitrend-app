@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.User" />
-    </data>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="150dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="150dp">
 
         <GridLayout
             android:layout_width="wrap_content"
@@ -30,7 +24,6 @@
                 android:layout_height="@dimen/avatar_size"
                 android:layout_margin="@dimen/xl_margin"
                 android:layout_rowSpan="2"
-                app:avatarUrl="@{model.avatar}"
                 tools:src="@tools:sample/avatars" />
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -40,12 +33,11 @@
                 android:text="@string/logged_in_as" />
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/user_name"
                 android:layout_marginEnd="@dimen/xl_margin"
                 android:paddingTop="@dimen/md_margin"
-                android:text="@{model.name}"
                 tools:text="wax911" />
 
         </GridLayout>
 
     </FrameLayout>
-</layout>

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-        <com.mxt.anitrend.base.custom.view.container.NotificationCardView
-            android:clickable="true"
-            android:focusable="true"
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lg_margin"
-            android:foreground="?selectableItemBackground">
+<com.mxt.anitrend.base.custom.view.container.NotificationCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/lg_margin"
+    android:foreground="?selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -87,5 +85,3 @@
             </LinearLayout>
 
         </com.mxt.anitrend.base.custom.view.container.NotificationCardView>
-
-</layout>

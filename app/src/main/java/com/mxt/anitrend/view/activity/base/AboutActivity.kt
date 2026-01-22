@@ -34,10 +34,10 @@ class AboutActivity : ActivityBase<Void, BasePresenter>() {
     }
 
     override fun updateUI() {
-        if (mFragment != null) {
+        mFragment?.let { fragment ->
             val fragmentManager = supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.content_frame, mFragment, mFragment.TAG)
+            fragmentTransaction.replace(R.id.content_frame, fragment, fragment.TAG)
             fragmentTransaction.commit()
         }
     }

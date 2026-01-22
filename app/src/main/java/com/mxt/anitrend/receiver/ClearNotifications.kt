@@ -12,15 +12,20 @@ import com.mxt.anitrend.util.Settings
 class ClearNotifications : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
+        val extras = intent?.extras ?: return
         val notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE
-        ) as NotificationManager?
-        notificationManager?.cancel(intent?.extras?.getInt(KeyUtil.NOTIFICATION_ID)!!)
+        ) as? NotificationManager
+        if (extras.containsKey(KeyUtil.NOTIFICATION_ID)) {
+            notificationManager?.cancel(extras.getInt(KeyUtil.NOTIFICATION_ID))
+        }
 
         val settings = koinOf<Settings>()
-        settings.lastDismissedNotificationId = intent?.extras?.getLong(KeyUtil.NOTIFICATION_ID_REMOTE)!!
+        if (extras.containsKey(KeyUtil.NOTIFICATION_ID_REMOTE)) {
+            settings.lastDismissedNotificationId = extras.getLong(KeyUtil.NOTIFICATION_ID_REMOTE)
+        }
 
-        when (intent.extras?.getString(KeyUtil.NOTIFICATION_ACTION)!!) {
+        when (extras.getString(KeyUtil.NOTIFICATION_ACTION)) {
             KeyUtil.NOTIFICATION_ACTION_DISMISS -> {
                 if (!settings.clearNotificationOnDismiss)
                     return

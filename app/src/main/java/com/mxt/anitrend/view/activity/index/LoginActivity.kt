@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
@@ -16,6 +16,7 @@ import androidx.work.WorkManager
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
+import com.mxt.anitrend.binding.basicText
 import com.mxt.anitrend.databinding.ActivityLoginBinding
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.entity.anilist.User
@@ -41,13 +42,20 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
         if (workInfo != null && workInfo.state.isFinished) {
             val outputData = workInfo.outputData
             if (outputData.getBoolean(KeyUtil.arg_model, false)) {
-                viewModel.params.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false))
-                viewModel.requestData(KeyUtil.USER_CURRENT_REQ, applicationContext)
+                viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false))
+                viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, applicationContext)
             } else {
-                if (!TextUtils.isEmpty(outputData.getString(KeyUtil.arg_uri_error)) && !TextUtils.isEmpty(outputData.getString(KeyUtil.arg_uri_error_description)))
-                    NotifyUtil.createAlerter(this@LoginActivity, outputData.getString(KeyUtil.arg_uri_error)!!,
-                            outputData.getString(KeyUtil.arg_uri_error_description)!!, R.drawable.ic_warning_white_18dp,
-                            R.color.colorStateOrange, KeyUtil.DURATION_LONG)
+                val error = outputData.getString(KeyUtil.arg_uri_error)
+                val errorDescription = outputData.getString(KeyUtil.arg_uri_error_description)
+                if (!TextUtils.isEmpty(error) && !TextUtils.isEmpty(errorDescription))
+                    NotifyUtil.createAlerter(
+                            this@LoginActivity,
+                            error.orEmpty(),
+                            errorDescription.orEmpty(),
+                            R.drawable.ic_warning_white_18dp,
+                            R.color.colorStateOrange,
+                            KeyUtil.DURATION_LONG
+                    )
                 else
                     NotifyUtil.createAlerter(this@LoginActivity, R.string.login_error_title,
                             R.string.text_error_auth_login, R.drawable.ic_warning_white_18dp,
@@ -75,14 +83,17 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        binding.onClickListener = this
+        binding.container.setOnClickListener(this)
+        binding.authSignIn.setOnClickListener(this)
+        binding.createAccountText.basicText(getString(R.string.create_new_account))
         onActivityReady()
     }
 
@@ -141,7 +152,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
 
     override fun onChanged(model: User?) {
         this.model = model
-        if (isAlive && model != null) {
+        if (model != null && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             presenter.database.currentUser = model
             updateUI()
         }
@@ -168,7 +179,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     }
 
     override fun showError(error: String) {
-        if (isAlive) {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             WebTokenRequest.invalidateInstance(applicationContext)
             NotifyUtil.createAlerter(this, getString(R.string.text_error_auth_login),
                     error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG)
@@ -178,7 +189,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     }
 
     override fun showEmpty(message: String) {
-        if (isAlive) {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             WebTokenRequest.invalidateInstance(applicationContext)
             NotifyUtil.createAlerter(this, getString(R.string.text_error_auth_login),
                     message, R.drawable.ic_warning_white_18dp, R.color.colorStateOrange, KeyUtil.DURATION_LONG)
@@ -196,7 +207,7 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
 
     private fun checkNewIntent(intent: Intent?) {
         if (intent != null && intent.data != null) {
-            if (isAlive) {
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                 if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE)
                     binding.widgetFlipper.showNext()
 

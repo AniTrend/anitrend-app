@@ -1,6 +1,5 @@
 package com.mxt.anitrend.util
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.util.TypedValue
 import android.view.Gravity
@@ -14,7 +13,9 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 
 import com.google.android.material.snackbar.Snackbar
+import com.afollestad.materialdialogs.MaterialDialog
 import com.mxt.anitrend.R
+import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.CustomAuthToastBinding
 import com.mxt.anitrend.databinding.CustomToastBinding
 import com.mxt.anitrend.extension.*
@@ -34,7 +35,9 @@ object NotifyUtil {
     fun createAlerter(activity: FragmentActivity, title: String, text: String, @DrawableRes icon: Int,
                       @ColorRes backgroundColor: Int, @KeyUtil.AlerterDuration duration: Long) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(activity.getCompatDrawable(icon, R.color.white)!!)
+                .apply {
+                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+                }
                 .setProgressColorInt(activity.getCompatColor(R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
@@ -49,7 +52,9 @@ object NotifyUtil {
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int,
                       @ColorRes backgroundColor: Int, @KeyUtil.AlerterDuration duration: Long) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(activity.getCompatDrawable(icon, R.color.white)!!)
+                .apply {
+                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+                }
                 .setProgressColorInt(activity.getCompatColor(R.color.white))
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
@@ -63,7 +68,9 @@ object NotifyUtil {
      */
     fun createAlerter(activity: FragmentActivity, title: String, text: String, @DrawableRes icon: Int, @ColorRes backgroundColor: Int) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(activity.getCompatDrawable(icon, R.color.white)!!)
+                .apply {
+                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+                }
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
@@ -75,7 +82,9 @@ object NotifyUtil {
      */
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int, @ColorRes backgroundColor: Int) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(activity.getCompatDrawable(icon, R.color.white)!!)
+                .apply {
+                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+                }
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
@@ -87,7 +96,9 @@ object NotifyUtil {
      */
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int, @ColorRes backgroundColor: Int, clickListener: View.OnClickListener) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .setIcon(activity.getCompatDrawable(icon, R.color.white)!!)
+                .apply {
+                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+                }
                 .setBackgroundColorRes(backgroundColor)
                 .enableIconPulse(true).enableSwipeToDismiss()
                 .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
@@ -101,7 +112,8 @@ object NotifyUtil {
     fun createLoginToast(context: FragmentActivity, user: User) {
         val notification = Toast(context)
         val binding = CustomAuthToastBinding.inflate(context.layoutInflater)
-        binding.model = user
+        binding.userAvatar.setImage(user.avatar)
+        binding.userName.text = user.name
         notification.view = binding.root
         notification.setGravity(Gravity.BOTTOM or Gravity.FILL_HORIZONTAL, 0, 0)
         notification.duration = Toast.LENGTH_LONG
@@ -176,10 +188,12 @@ object NotifyUtil {
         return snackbar
     }
 
-    @Suppress("DEPRECATION")
-    fun createProgressDialog(context: Context, @StringRes stringRes: Int): ProgressDialog {
-        val progressDialog = ProgressDialog(context)
-        progressDialog.setMessage(context.getString(stringRes))
-        return progressDialog
+    fun createProgressDialog(context: Context, @StringRes stringRes: Int): MaterialDialog {
+        return DialogUtil.createDefaultDialog(context)
+            .content(stringRes)
+            .progress(true, 0)
+            .cancelable(false)
+            .autoDismiss(false)
+            .build()
     }
 }

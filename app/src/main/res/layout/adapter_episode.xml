@@ -1,79 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    android:layout_margin="@dimen/lg_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="?cardColor"
+    app:cardElevation="@dimen/sm_margin"
+    app:cardCornerRadius="@dimen/lg_margin">
 
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.crunchy.Episode" />
-        <variable name="presenter" type="com.mxt.anitrend.presenter.base.BasePresenter" />
-    </data>
-
-    <androidx.cardview.widget.CardView
+    <com.mxt.anitrend.base.custom.view.image.WideImageView
+        android:id="@+id/series_image"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:layout_margin="@dimen/lg_margin"
+        android:background="?selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardPreventCornerOverlap="false"
-        app:cardBackgroundColor="?cardColor"
-        app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/lg_margin">
+        tools:layout_height="@dimen/app_bar_height"
+        tools:scaleType="centerCrop"
+        tools:src="@sample/darling" />
 
-        <com.mxt.anitrend.base.custom.view.image.WideImageView
-            android:id="@+id/series_image"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?selectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:imageUrl="@{presenter.getThumbnail(model.thumbnail)}"
-            tools:layout_height="@dimen/app_bar_height"
-            tools:scaleType="centerCrop"
-            tools:src="@sample/darling" />
+    <LinearLayout
+        android:layout_gravity="top|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_margin="@dimen/lg_margin"
+        android:background="@drawable/bubble_background">
 
-        <LinearLayout
-            android:layout_gravity="top|end"
+        <TextView
+            android:id="@+id/series_duration"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:layout_margin="@dimen/lg_margin"
-            android:background="@drawable/bubble_background">
+            tools:text="23:45"/>
 
-            <TextView
-                android:id="@+id/series_duration"
-                android:textColor="@color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{presenter.getDuration(model.content)}"
-                tools:text="23:45"/>
+        <androidx.legacy.widget.Space
+            android:layout_width="@dimen/md_margin"
+            android:layout_height="wrap_content" />
 
-            <androidx.legacy.widget.Space
-                android:layout_width="@dimen/md_margin"
-                android:layout_height="wrap_content" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_time_white_18dp"/>
-
-        </LinearLayout>
-
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-            android:id="@+id/series_title"
-            android:background="@drawable/gradient_shadow"
-            android:layout_gravity="bottom|center_horizontal"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-condensed"
-            android:padding="@dimen/lg_margin"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{model.title}"
-            tools:text="Boku no Hero Accademia"/>
+            app:srcCompat="@drawable/ic_time_white_18dp"/>
 
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
-</layout>
+    <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        android:id="@+id/series_title"
+        android:background="@drawable/gradient_shadow"
+        android:layout_gravity="bottom|center_horizontal"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-condensed"
+        android:padding="@dimen/lg_margin"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Boku no Hero Accademia"/>
+
+</androidx.cardview.widget.CardView>

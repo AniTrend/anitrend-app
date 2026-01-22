@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".view.activity.index.LoginActivity">
-
-    <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener" />
-    </data>
-
-    <FrameLayout
-        android:onClickListener="@{onClickListener}"
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <com.mxt.anitrend.base.custom.view.container.LoginCardView
             android:layout_width="wrap_content"
@@ -63,7 +55,6 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:onClickListener="@{onClickListener}"
                         android:foreground="?selectableItemBackground"
                         app:cardBackgroundColor="?attr/colorPrimaryDark"
                         app:cardPreventCornerOverlap="true"
@@ -95,6 +86,7 @@
                     android:layout_height="@dimen/lg_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                    android:id="@+id/create_account_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -103,12 +95,9 @@
                     android:textStyle="italic"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:padding="@dimen/md_margin"
-                    app:basicHtml="@{@string/create_new_account}"
                     tools:text="@string/create_account"/>
             </LinearLayout>
 
         </com.mxt.anitrend.base.custom.view.container.LoginCardView>
 
     </FrameLayout>
-
-</layout>

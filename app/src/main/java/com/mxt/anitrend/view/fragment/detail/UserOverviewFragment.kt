@@ -12,6 +12,8 @@ import com.mxt.anitrend.databinding.FragmentUserAboutBinding
 import com.mxt.anitrend.extension.empty
 import com.mxt.anitrend.extension.extras
 import com.mxt.anitrend.extension.getCompatColorAttr
+import com.mxt.anitrend.binding.richMarkDown
+import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.StatsRing
@@ -30,7 +32,8 @@ import java.util.*
 class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
 
     private var _binding: FragmentUserAboutBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentUserAboutBinding
+        get() = requireNotNull(_binding)
     private var model: User? = null
 
     private val userId by extras(KeyUtil.arg_id, 0)
@@ -39,7 +42,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isMenuDisabled = true
-        setPresenter(BasePresenter(context))
+        setPresenter(BasePresenter(requireContext()))
         setViewModel(true)
     }
 
@@ -80,21 +83,23 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     override fun updateUI() {
-        model?.apply {
-            binding.model = this
-            binding.stateLayout.showContent()
-            if (!presenter.settings.experimentalMarkdown) {
-                binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setTextData(about)
-            } else {
-                binding.widgetStatus.visibility = View.GONE
-            }
-
-            binding.userFollowStateWidget.setUserModel(model)
-            binding.userAboutPanelWidget.setFragmentActivity(activity)
-            binding.userAboutPanelWidget.setUserId(id, lifecycle)
-            showRingStats()
+        val currentModel = model ?: return
+        val viewBinding = _binding ?: return
+        viewBinding.stateLayout.showContent()
+        viewBinding.userAvatar.setImage(currentModel.avatar)
+        viewBinding.userNameText.text = currentModel.name
+        viewBinding.widgetStatusText.richMarkDown(currentModel.about)
+        if (!presenter.settings.experimentalMarkdown) {
+            viewBinding.widgetStatus.visibility = View.VISIBLE
+            viewBinding.widgetStatus.setTextData(currentModel.about)
+        } else {
+            viewBinding.widgetStatus.visibility = View.GONE
         }
+
+        viewBinding.userFollowStateWidget.setUserModel(currentModel)
+        viewBinding.userAboutPanelWidget.setFragmentActivity(activity)
+        viewBinding.userAboutPanelWidget.setUserId(currentModel.id, lifecycle)
+        showRingStats()
     }
 
     /**
@@ -106,10 +111,10 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
             queryContainer.putVariable(KeyUtil.arg_userName, userName)
         if (userId > 0)
             queryContainer.putVariable(KeyUtil.arg_id, userId)
-        getViewModel().params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
-        context?.apply {
-            getViewModel().requestData(KeyUtil.USER_OVERVIEW_REQ, this)
-        }
+        val model = viewModel ?: return
+        val ctx = context ?: return
+        model.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        model.requestData(KeyUtil.USER_OVERVIEW_REQ, ctx)
     }
 
     /**
@@ -118,13 +123,14 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      * @param model The new data
      */
     override fun onChanged(model: User?) {
+        val viewBinding = _binding ?: return
         if (model != null) {
             this.model = model
             updateUI()
         } else
-            binding.stateLayout.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
+            viewBinding.stateLayout.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
                     getString(R.string.layout_empty_response), getString(R.string.try_again)) {
-                binding.stateLayout.showLoading()
+                viewBinding.stateLayout.showLoading()
                 makeRequest()
             }
     }
@@ -164,14 +170,15 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
     }
 
     private fun showRingStats() {
+        val viewBinding = _binding ?: return
         context?.apply {
             val ringList = generateStatsData()
             if (ringList.size > 1) {
-                binding.userStats.setDrawBg(
+                viewBinding.userStats.setDrawBg(
                     CompatUtil.isLightTheme(presenter.settings),
                     getCompatColorAttr(R.attr.subtitleColor)
                 )
-                binding.userStats.setData(ringList, 500)
+                viewBinding.userStats.setData(ringList, 500)
             }
         }
     }
@@ -182,17 +189,18 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      * @param view The view that was clicked.
      */
     override fun onClick(view: View) {
+        val viewBinding = _binding ?: return
         when (view.id) {
             R.id.user_avatar -> CompatUtil.imagePreview(view, model?.avatar?.large, R.string.image_preview_error_user_avatar)
             R.id.user_stats_container -> {
                 val ringList = generateStatsData()
                 if (ringList.size > 1) {
                     context?.apply {
-                        binding.userStats.setDrawBg(
+                        viewBinding.userStats.setDrawBg(
                             CompatUtil.isLightTheme(presenter.settings),
                             getCompatColorAttr(R.attr.subtitleColor)
                         )
-                        binding.userStats.setData(ringList, 500)
+                        viewBinding.userStats.setData(ringList, 500)
                     }
                 } else
                     activity?.apply {

@@ -47,11 +47,11 @@ internal class WorkManagerFactory : WorkerFactory(), KoinComponent {
         workerParameters: WorkerParameters
     ): ListenableWorker? = when (workerClassName) {
         "com.mxt.anitrend.service.JobDispatcherService" -> resolveDependency(
-            NotificationWorker::class.java.canonicalName!!,
+            NotificationWorker::class.java.name,
             workerParameters
         )
         "com.mxt.anitrend.service.ClearNotificationService" -> resolveDependency(
-            ClearNotificationWorker::class.java.canonicalName!!,
+            ClearNotificationWorker::class.java.name,
             workerParameters
         )
         else -> runCatching {

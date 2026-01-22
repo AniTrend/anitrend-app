@@ -133,7 +133,7 @@ private fun BaseAppModuleExtension.configureBuildFlavours(logger: Logger) {
 private fun BaseAppModuleExtension.setUpWith(project: Project) {
     project.createSigningConfiguration(this)
     buildFeatures {
-        dataBinding = true
+        dataBinding = false
         viewBinding = true
         buildConfig = true
     }
@@ -226,12 +226,8 @@ internal fun Project.applyAndroidConfiguration() {
     tasks.withType(KotlinCompile::class.java) {
         val compilerArgumentOptions = mutableListOf(
             "-opt-in=kotlin.ExperimentalStdlibApi",
-            "-opt-in=kotlin.Experimental",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview",
-            "-opt-in=org.koin.core.component.KoinExperimentalAPI",
-            "-opt-in=org.koin.core.component.KoinApiExtension",
-            "-opt-in=org.koin.core.KoinExperimentalAPI"
+            "-opt-in=kotlinx.coroutines.FlowPreview"
         )
 
         compilerOptions {

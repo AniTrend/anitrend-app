@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener" />
-    </data>
-
-    <LinearLayout
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:padding="@dimen/md_margin"
         android:layout_width="match_parent"
@@ -49,7 +43,6 @@
                 android:layout_height="wrap_content">
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/insert_image"
                     android:layout_gravity="center"
                     android:clickable="true"
@@ -66,7 +59,6 @@
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/insert_webm"
                     android:layout_gravity="center"
                     android:clickable="true"
@@ -83,7 +75,6 @@
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/insert_link"
                     android:layout_gravity="center"
                     android:clickable="true"
@@ -100,7 +91,6 @@
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/insert_youtube"
                     android:layout_gravity="center"
                     android:clickable="true"
@@ -121,7 +111,6 @@
                 android:layout_height="wrap_content">
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/insert_gif"
                     android:layout_gravity="center"
                     android:clickable="true"
@@ -156,7 +145,6 @@
                     android:layout_height="wrap_content" />
 
                 <ViewFlipper
-                    android:onClickListener="@{onClickListener}"
                     android:id="@+id/widget_flipper"
                     android:layout_gravity="center"
                     android:clickable="true"
@@ -188,6 +176,4 @@
 
         </FrameLayout>
 
-    </LinearLayout>
-
-</layout>
+</LinearLayout>

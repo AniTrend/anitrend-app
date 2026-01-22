@@ -20,9 +20,10 @@ class AuthInterceptor(
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         if (settings.isAuthenticated) {
-            if (WebTokenRequest.getInstance() != null) {
+            val token = WebTokenRequest.getInstance()
+            if (token != null) {
                 val builder = chain.request().newBuilder()
-                        .header(BuildConfig.HEADER_KEY, WebTokenRequest.getInstance().header)
+                    .header(BuildConfig.HEADER_KEY, token.header)
                 val request = builder.build()
                 return chain.proceed(request)
             } else

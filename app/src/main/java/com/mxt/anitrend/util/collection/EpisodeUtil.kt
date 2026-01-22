@@ -13,11 +13,13 @@ object EpisodeUtil {
     private const val feedStandard = "feedburner"
 
     fun episodeSupport(links: List<ExternalLink>): String? {
-        for (link in links)
-            if (link.url.contains(crunchyStandard))
-                return linkStripper(link.url)
-            else if (link.url.contains(feedStandard))
-                return link.url
+        for (link in links) {
+            val url = link.url
+            if (url?.contains(crunchyStandard) == true)
+                return linkStripper(url)
+            else if (url?.contains(feedStandard) == true)
+                return url
+        }
         return null
     }
 

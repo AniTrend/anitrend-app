@@ -17,7 +17,8 @@ class App : MultiDexApplication() {
      * Timber logging tree depending on the build type we plant the appropriate tree
      */
     private fun plantAnalyticsTree() {
-        Timber.plant(get<ISupportAnalytics>() as Timber.Tree)
+        val analyticsTree = get<ISupportAnalytics>() as? Timber.Tree ?: return
+        Timber.plant(analyticsTree)
     }
 
     private fun createUncaughtExceptionHandler() {

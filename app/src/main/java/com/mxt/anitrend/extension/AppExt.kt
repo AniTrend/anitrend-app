@@ -28,8 +28,8 @@ fun FragmentActivity.applyConfiguredTheme() {
  * have the input window hidden.
  */
 fun FragmentActivity?.hideKeyboard() = this?.apply {
-    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+    inputMethodManager?.hideSoftInputFromWindow(window.decorView.windowToken, 0)
 }
 
 /**
@@ -70,13 +70,11 @@ fun LifecycleOwner.isStateAtLeast(state: Lifecycle.State) =
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> FragmentActivity.extras(key: String, default: T) = lazy(LAZY_MODE_PUBLICATION) {
     try {
-        if (intent?.extras?.containsKey(key) == true)
-            intent?.extras?.get(key) as T
-        else
-            default
+        val value = if (intent?.extras?.containsKey(key) == true) intent?.extras?.get(key) else null
+        (value as? T) ?: default
     } catch (e: Exception) {
         Timber.tag("AppExt.extras").e(e)
-        error(e)
+        default
     }
 }
 
@@ -91,12 +89,10 @@ fun <T : Any> FragmentActivity.extras(key: String, default: T) = lazy(LAZY_MODE_
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> Fragment.extras(key: String, default: T) = lazy(LAZY_MODE_PUBLICATION) {
     try {
-        if (arguments?.containsKey(key) == true)
-            arguments?.get(key) as T
-        else
-            default
+        val value = if (arguments?.containsKey(key) == true) arguments?.get(key) else null
+        (value as? T) ?: default
     } catch (e: Exception) {
         Timber.tag("AppExt.extras").e(e)
-        error(e)
+        default
     }
 }

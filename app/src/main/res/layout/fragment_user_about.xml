@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nguyenhoanglam.progresslayout.ProgressLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.User" />
-    </data>
-
-    <com.nguyenhoanglam.progresslayout.ProgressLayout
-        android:id="@+id/stateLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:fillViewport="true"
@@ -45,7 +39,6 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:padding="@dimen/md_margin"
-                                app:avatarUrl="@{model.avatar.large}"
                                 tools:src="@drawable/ic_player" />
 
                             <com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget
@@ -61,11 +54,11 @@
                             android:layout_height="wrap_content">
 
                             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                                android:id="@+id/user_name_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/md_margin"
                                 android:layout_gravity="start|center_vertical"
-                                android:text="@{model.name}"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 tools:text="wax911" />
 
@@ -92,7 +85,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/md_margin"
-                            app:richMarkDown="@{model.about}"
                             tools:text="@string/text_error_login" />
 
                         <androidx.legacy.widget.Space
@@ -153,4 +145,3 @@
         </androidx.core.widget.NestedScrollView>
 
     </com.nguyenhoanglam.progresslayout.ProgressLayout>
-</layout>

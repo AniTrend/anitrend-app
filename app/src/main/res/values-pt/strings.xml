@@ -250,6 +250,7 @@
     <string name="pref_header_general_summary">Configurar o comportamento básico do aplicativo</string>
 
     <string name="pref_title_startup_page">Página de Inicialização</string>
+    <string name="pref_title_update_channel">Canal de atualização</string>
 
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notificações</string>

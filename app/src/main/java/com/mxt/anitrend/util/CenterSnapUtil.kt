@@ -17,8 +17,9 @@ class CenterSnapUtil(private var positionChangeListener: PositionChangeListener?
 
     override fun findTargetSnapPosition(layoutManager: RecyclerView.LayoutManager, velocityX: Int, velocityY: Int): Int {
         val position = super.findTargetSnapPosition(layoutManager, velocityX, velocityY)
-        if (positionChangeListener != null && position != RecyclerView.NO_POSITION)
-            positionChangeListener!!.onPageChanged(position + 1)
+        if (position != RecyclerView.NO_POSITION) {
+            positionChangeListener?.onPageChanged(position + 1)
+        }
         return position
     }
 

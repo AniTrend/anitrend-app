@@ -50,7 +50,7 @@ class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseC
 
     override fun onInit() {
         binding = WidgetAvatarIndicatorBinding.inflate(context.getLayoutInflater(), this, true)
-        binding.onClickListener = this
+        binding.userAvatar.setOnClickListener(this)
         checkLastSyncTime()
     }
 

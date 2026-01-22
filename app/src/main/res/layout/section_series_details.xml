@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mxt.anitrend.base.custom.view.container.CardViewBase xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.Media" />
-        <variable name="presenter" type="com.mxt.anitrend.presenter.fragment.MediaPresenter" />
-    </data>
-
-    <com.mxt.anitrend.base.custom.view.container.CardViewBase
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/lg_margin">
 
         <LinearLayout
         android:layout_width="match_parent"
@@ -38,10 +31,10 @@
                     android:text="@string/title_series_season" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_season_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getMediaSeason(model)}"
                     android:textIsSelectable="true"
                     tools:text="2015 Fall" />
 
@@ -59,10 +52,10 @@
                     android:text="@string/title_series_origin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_origin_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getMediaSource(model)}"
                     android:textIsSelectable="true"
                     tools:text="Manga" />
             </LinearLayout>
@@ -70,16 +63,20 @@
         </LinearLayout>
 
         <androidx.legacy.widget.Space
-            android:visibility="@{presenter.isManga(model)}"
+            android:id="@+id/manga_section_space"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/xl_margin" />
+            android:layout_height="@dimen/xl_margin"
+            tools:visibility="visible" />
 
         <LinearLayout
-            android:visibility="@{presenter.isManga(model)}"
+            android:id="@+id/manga_section"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,10 +90,10 @@
                     android:text="@string/title_total_chapters" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/total_chapters_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getChapterCount(model)}"
                     android:textIsSelectable="true"
                     tools:text="12 Chapters" />
             </LinearLayout>
@@ -113,10 +110,10 @@
                     android:text="@string/title_total_volumes" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/total_volumes_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getVolumeCount(model)}"
                     android:textIsSelectable="true"
                     tools:text="24 Volumes" />
             </LinearLayout>
@@ -124,16 +121,20 @@
         </LinearLayout>
 
         <androidx.legacy.widget.Space
-            android:visibility="@{presenter.isAnime(model)}"
+            android:id="@+id/anime_section_space"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/xl_margin" />
+            android:layout_height="@dimen/xl_margin"
+            tools:visibility="visible" />
 
         <LinearLayout
-            android:visibility="@{presenter.isAnime(model)}"
+            android:id="@+id/anime_section"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,10 +148,10 @@
                     android:text="@string/title_total_episodes" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/total_episodes_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getEpisodeCount(model)}"
                     android:textIsSelectable="true"
                     tools:text="12 Episodes" />
             </LinearLayout>
@@ -167,10 +168,10 @@
                     android:text="@string/title_episode_duration" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/episode_duration_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getEpisodeDuration(model)}"
                     android:textIsSelectable="true"
                     tools:text="24 Minutes" />
             </LinearLayout>
@@ -199,10 +200,10 @@
                     android:text="@string/title_hash_tag" />
 
                 <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                    android:id="@+id/hash_tag_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getHashTag(model)}"
                     android:textIsSelectable="true"
                     tools:text="#onepunchman" />
             </LinearLayout>
@@ -219,10 +220,10 @@
                 android:text="@string/title_series_score" />
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/series_score_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed-light"
-                android:text="@{presenter.getMediaScore(model)}"
                 android:textIsSelectable="true"
                 tools:text="85% Mean" />
         </LinearLayout>
@@ -230,16 +231,20 @@
         </LinearLayout>
 
         <androidx.legacy.widget.Space
-            android:visibility="@{presenter.isAnime(model)}"
+            android:id="@+id/anime_details_space"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/xl_margin" />
+            android:layout_height="@dimen/xl_margin"
+            tools:visibility="visible" />
 
         <LinearLayout
-            android:visibility="@{presenter.isAnime(model)}"
+            android:id="@+id/anime_details_section"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/anime_main_studio_container"
@@ -257,10 +262,10 @@
                     android:text="@string/title_main_studio" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/main_studio_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:text="@{presenter.getMainStudio(model)}"
                     android:textIsSelectable="true"
                     android:textColor="?colorAccent"
                     tools:text="MADHOUSE" />
@@ -279,11 +284,11 @@
                     android:text="@string/title_next_episode" />
 
                 <com.mxt.anitrend.base.custom.view.text.AiringTextView
+                    android:id="@+id/next_episode_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:textIsSelectable="true"
-                    app:airingDate="@{model}"
                     tools:text="EP 3 Airing In 2 days" />
             </LinearLayout>
 
@@ -310,11 +315,11 @@
                     android:text="@string/title_series_status" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_status_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{presenter.getMediaStatus(model)}"
                     android:textIsSelectable="true"
                     tools:text="Not Released" />
 
@@ -325,5 +330,3 @@
     </LinearLayout>
 
     </com.mxt.anitrend.base.custom.view.container.CardViewBase>
-
-</layout>

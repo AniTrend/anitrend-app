@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  * Network cache injector interceptor
  */
 
-class NetworkCacheInterceptor(private val context: Context?, private val forceCache: Boolean = false) : Interceptor {
+class NetworkCacheInterceptor(private val context: Context, private val forceCache: Boolean = false) : Interceptor {
 
     // re-write response header to force use of cache
     private val cacheControl by lazy {

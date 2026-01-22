@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<ViewFlipper xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickEvent" type="android.view.View.OnClickListener" />
-    </data>
-
-    <ViewFlipper
-        android:id="@+id/widget_flipper"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_margin="@dimen/md_margin"
-        android:inAnimation="@android:anim/slide_in_left"
-        android:outAnimation="@android:anim/slide_out_right"
-        android:foreground="?selectableItemBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClickListener="@{onClickEvent}"
-        android:background="@drawable/material_curve_black">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_flipper"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_margin="@dimen/md_margin"
+    android:inAnimation="@android:anim/slide_in_left"
+    android:outAnimation="@android:anim/slide_out_right"
+    android:foreground="?selectableItemBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/material_curve_black">
 
         <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
             android:id="@+id/series_progress_increment"
@@ -39,5 +32,3 @@
             app:cpv_indeterminate="true" />
 
     </ViewFlipper>
-
-</layout>

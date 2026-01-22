@@ -23,7 +23,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.KeyUtil.*
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
@@ -132,7 +132,7 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         // filters = arrayOf<InputFilter>(emojiInputFilter)
         isVerticalScrollBarEnabled = true
         customSelectionActionModeCallback = this
-        maxHeight = CompatUtil.dipToPx(PEEK_HEIGHT)
+        maxHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
         setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL)
     }
@@ -183,15 +183,15 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         var end = selectionEnd
         val initialEnd = selectionEnd
         when (selection) {
-            R.id.menu_bold -> end += MD_BOLD.length
-            R.id.menu_italic -> end += MD_ITALIC.length
-            R.id.menu_strike -> end += MD_STRIKE.length
-            R.id.menu_list -> end += MD_NUMBER.length
-            R.id.menu_bullet -> end += MD_BULLET.length
-            R.id.menu_heading -> end += MD_HEADING.length
-            R.id.menu_center -> end += MD_CENTER_ALIGN.length
-            R.id.menu_quote -> end += MD_QUOTE.length
-            R.id.menu_code -> end += MD_CODE.length
+            R.id.menu_bold -> end += KeyUtil.MD_BOLD.length
+            R.id.menu_italic -> end += KeyUtil.MD_ITALIC.length
+            R.id.menu_strike -> end += KeyUtil.MD_STRIKE.length
+            R.id.menu_list -> end += KeyUtil.MD_NUMBER.length
+            R.id.menu_bullet -> end += KeyUtil.MD_BULLET.length
+            R.id.menu_heading -> end += KeyUtil.MD_HEADING.length
+            R.id.menu_center -> end += KeyUtil.MD_CENTER_ALIGN.length
+            R.id.menu_quote -> end += KeyUtil.MD_QUOTE.length
+            R.id.menu_code -> end += KeyUtil.MD_CODE.length
         }
         // Rare case but if it ever happens reduce end by 1
         val textLength = text?.length
@@ -215,52 +215,52 @@ class MarkdownInputEditor : TextInputEditText, CustomView, ActionMode.Callback, 
         val end = getSelectionEnd(item.itemId)
         when (item.itemId) {
             R.id.menu_bold -> {
-                text?.insert(start, MD_BOLD)
-                text?.insert(end, MD_BOLD, 0, MD_BOLD.length)
+                text?.insert(start, KeyUtil.MD_BOLD)
+                text?.insert(end, KeyUtil.MD_BOLD, 0, KeyUtil.MD_BOLD.length)
                 mode.finish()
                 return true
             }
             R.id.menu_italic -> {
-                text?.insert(start, MD_ITALIC)
-                text?.insert(end, MD_ITALIC, 0, MD_ITALIC.length)
+                text?.insert(start, KeyUtil.MD_ITALIC)
+                text?.insert(end, KeyUtil.MD_ITALIC, 0, KeyUtil.MD_ITALIC.length)
                 mode.finish()
                 return true
             }
             R.id.menu_strike -> {
-                text?.insert(start, MD_STRIKE)
-                text?.insert(end, MD_STRIKE, 0, MD_STRIKE.length)
+                text?.insert(start, KeyUtil.MD_STRIKE)
+                text?.insert(end, KeyUtil.MD_STRIKE, 0, KeyUtil.MD_STRIKE.length)
                 mode.finish()
                 return true
             }
             R.id.menu_list -> {
-                text?.insert(start, MD_NUMBER)
+                text?.insert(start, KeyUtil.MD_NUMBER)
                 mode.finish()
                 return true
             }
             R.id.menu_bullet -> {
-                text?.insert(start, MD_BULLET)
+                text?.insert(start, KeyUtil.MD_BULLET)
                 mode.finish()
                 return true
             }
             R.id.menu_heading -> {
-                text?.insert(start, MD_HEADING)
+                text?.insert(start, KeyUtil.MD_HEADING)
                 mode.finish()
                 return true
             }
             R.id.menu_center -> {
-                text?.insert(start, MD_CENTER_ALIGN)
-                text?.insert(end, MD_CENTER_ALIGN, 0, MD_CENTER_ALIGN.length)
+                text?.insert(start, KeyUtil.MD_CENTER_ALIGN)
+                text?.insert(end, KeyUtil.MD_CENTER_ALIGN, 0, KeyUtil.MD_CENTER_ALIGN.length)
                 mode.finish()
                 return true
             }
             R.id.menu_quote -> {
-                text?.insert(start, MD_QUOTE)
+                text?.insert(start, KeyUtil.MD_QUOTE)
                 mode.finish()
                 return true
             }
             R.id.menu_code -> {
-                text?.insert(start, MD_CODE)
-                text?.insert(end, MD_CODE, 0, MD_CODE.length)
+                text?.insert(start, KeyUtil.MD_CODE)
+                text?.insert(end, KeyUtil.MD_CODE, 0, KeyUtil.MD_CODE.length)
                 mode.finish()
                 return true
             }

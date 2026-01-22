@@ -80,7 +80,7 @@ object WebFactory {
      *
      * @param context A valid application, fragment or activity context but must be application context
      */
-    fun <S> createService(serviceClass: Class<S>, context: Context?): S {
+    fun <S> createService(serviceClass: Class<S>, context: Context): S {
         WebTokenRequest.getToken(context)
         if (mRetrofit == null) {
             val httpClient = createHttpClient(
@@ -95,41 +95,43 @@ object WebFactory {
                 .baseUrl(BuildConfig.API_LINK)
                 .build()
         }
-        return mRetrofit!!.create(serviceClass)
+        return requireNotNull(mRetrofit).create(serviceClass)
     }
 
-    fun createCrunchyService(feeds: Boolean, context: Context?): EpisodeModel {
+    fun createCrunchyService(feeds: Boolean, context: Context): EpisodeModel {
+        val appContext = context.applicationContext
+        val httpClient = createHttpClient(
+            CacheInterceptor(appContext, true),
+            logLevel = HttpLoggingInterceptor.Level.HEADERS
+        ).apply {
+            addNetworkInterceptor(NetworkCacheInterceptor(appContext, true))
+            cache(cacheProvider(appContext))
+        }
         val retrofit = Retrofit.Builder()
             .baseUrl(if (feeds) BuildConfig.FEEDS_LINK else BuildConfig.CRUNCHY_LINK)
             .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
-            .client(
-                createHttpClient(
-                    CacheInterceptor(context, true),
-                    logLevel = HttpLoggingInterceptor.Level.HEADERS
-                )
-                    .addNetworkInterceptor(NetworkCacheInterceptor(context, true))
-                    .cache(cacheProvider(context!!)).build()
-            )
+            .client(httpClient.build())
             .build()
         return retrofit.create(EpisodeModel::class.java)
     }
 
-    fun createGiphyService(context: Context?): GiphyModel {
+    fun createGiphyService(context: Context): GiphyModel {
         if (mGiphy == null) {
+            val appContext = context.applicationContext
+            val httpClient = createHttpClient(
+                CacheInterceptor(appContext, true),
+                koinOf<ClientInterceptor>(),
+                logLevel = HttpLoggingInterceptor.Level.HEADERS
+            ).apply {
+                addNetworkInterceptor(NetworkCacheInterceptor(appContext, true))
+                cache(cacheProvider(appContext))
+            }
             mGiphy = Retrofit.Builder().baseUrl(BuildConfig.GIPHY_LINK)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(
-                    createHttpClient(
-                        CacheInterceptor(context, true),
-                        koinOf<ClientInterceptor>(),
-                        logLevel = HttpLoggingInterceptor.Level.HEADERS
-                    )
-                        .addNetworkInterceptor(NetworkCacheInterceptor(context, true))
-                        .cache(cacheProvider(context!!)).build()
-                )
+                .client(httpClient.build())
                 .build()
         }
-        return mGiphy!!.create(GiphyModel::class.java)
+        return requireNotNull(mGiphy).create(GiphyModel::class.java)
     }
 
     fun createRepositoryService(): RepositoryModel {

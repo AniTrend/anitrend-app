@@ -147,3 +147,8 @@ playstore-service-account.json
 
 .idea/studiobot.xml
 /.idea/AndroidProjectSystem.xml
+
+# Local worktrees
+.worktrees/
+# Added by code-review-graph
+.code-review-graph/

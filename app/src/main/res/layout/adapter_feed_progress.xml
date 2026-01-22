@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.mxt.anitrend.base.custom.view.container.CardViewBase xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.anilist.FeedList" />
-        <import type="com.mxt.anitrend.util.date.DateUtil" />
-    </data>
-
-    <com.mxt.anitrend.base.custom.view.container.CardViewBase
-        android:clickable="true"
-        android:focusable="true"
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
-        android:foreground="?selectableItemBackground">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/lg_margin"
+    android:foreground="?selectableItemBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +25,6 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="@dimen/avatar_ripple_radius"
                     android:layout_height="@dimen/avatar_ripple_radius"
-                    app:avatarUrl="@{model.user.avatar}"
                     tools:src="@drawable/ic_player" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -41,7 +34,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@{model.user.name}"
                     tools:text="wax911" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
@@ -51,7 +43,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:textAlignment="viewEnd"
-                    android:text="@{DateUtil.INSTANCE.getPrettyDateUnix(model.createdAt)}"
                     tools:text="25 minutes ago" />
 
             </LinearLayout>
@@ -79,9 +70,9 @@
                         android:layout_height="wrap_content">
 
                         <com.mxt.anitrend.base.custom.view.text.FeedHeadlineTextView
+                            android:id="@+id/feed_headline"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:feedHeadline="@{model}"
                             tools:text="plans to read: Aggressive Restuko" />
 
                         <androidx.legacy.widget.Space
@@ -89,9 +80,9 @@
                             android:layout_height="@dimen/xl_margin" />
 
                         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:id="@+id/media_title_english"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{model.media.title.english}"
                             tools:text="Aggressive Restuko" />
 
                         <androidx.legacy.widget.Space
@@ -99,11 +90,11 @@
                             android:layout_height="@dimen/lg_margin" />
 
                         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                            android:id="@+id/media_title_original"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textIsSelectable="true"
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                            android:text="@{model.media.title.original}"
                             tools:text="アグレッシブ烈子"
                             />
 
@@ -162,7 +153,6 @@
                     android:id="@+id/series_image"
                     android:layout_width="@dimen/series_image_xs"
                     android:layout_height="wrap_content"
-                    app:imageUrl="@{model.media.coverImage}"
                     tools:src="@sample/gintama" />
 
             </LinearLayout>
@@ -170,4 +160,3 @@
         </LinearLayout>
 
     </com.mxt.anitrend.base.custom.view.container.CardViewBase>
-</layout>

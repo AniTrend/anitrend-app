@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener" />
-    </data>
-
-    <FrameLayout
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_height="wrap_content">
@@ -18,7 +12,6 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
-            android:onClickListener="@{onClickListener}"
             android:background="?selectableItemBackground"
             tools:layout_height="@dimen/wide_image_md"
             tools:scaleType="centerCrop"
@@ -33,6 +26,5 @@
             android:background="@drawable/bubble_background"
             app:srcCompat="@drawable/ic_play_circle_outline_white_24dp" />
 
-    </FrameLayout>
 
-</layout>
+</FrameLayout>
