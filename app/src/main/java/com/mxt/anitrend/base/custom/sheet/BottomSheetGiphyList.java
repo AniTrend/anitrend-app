@@ -26,8 +26,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
-import butterknife.BindView;
-
 /**
  * Created by max on 2017/12/09.
  * giphy loading list bottom sheet
@@ -38,8 +36,8 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
 
     protected GiphyContainer container;
 
-    protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
-    protected @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
+    protected ProgressLayout stateLayout;
+    protected StatefulRecyclerView recyclerView;
 
     protected RecyclerViewAdapter<Giphy> mAdapter;
     protected StaggeredGridLayoutManager mLayoutManager;
@@ -134,6 +132,11 @@ public abstract class BottomSheetGiphyList extends BottomSheetBase implements It
     protected void removeScrollLoadTrigger() {
         if (isPager)
             recyclerView.clearOnScrollListeners();
+    }
+
+    protected void bindListViews(View rootView) {
+        stateLayout = rootView.findViewById(R.id.stateLayout);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
     }
 
     @Override

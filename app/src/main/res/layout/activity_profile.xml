@@ -33,7 +33,9 @@
                     app:layout_collapseParallaxMultiplier="0.4"
                     tools:src="@sample/darling" />
 
-                <include layout="@layout/custom_toolbar_transparent" />
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/custom_toolbar_transparent" />
 
                 <com.mxt.anitrend.base.custom.view.widget.ProfileStatsWidget
                     android:id="@+id/profile_stats_widget"
@@ -43,11 +45,15 @@
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <include layout="@layout/custom_tab" />
+            <include
+                android:id="@+id/smart_tab"
+                layout="@layout/custom_tab" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <include layout="@layout/content_view_pager" />
+        <include
+            android:id="@+id/page_container"
+            layout="@layout/content_view_pager" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

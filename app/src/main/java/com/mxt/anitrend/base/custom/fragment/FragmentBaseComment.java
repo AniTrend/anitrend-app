@@ -21,6 +21,7 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.databinding.FragmentCommentBinding;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.presenter.widget.WidgetPresenter;
@@ -33,9 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by max on 2017/12/02.
  * Comment fragment base class style
@@ -44,11 +42,13 @@ import butterknife.ButterKnife;
 public abstract class FragmentBaseComment extends FragmentBase<FeedReply, WidgetPresenter<FeedList>, FeedList> implements
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    protected @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
-    protected @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
-    protected @BindView(R.id.comment_origin) StatefulRecyclerView originRecycler;
-    protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
-    protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
+    protected CustomSwipeRefreshLayout swipeRefreshLayout;
+    protected StatefulRecyclerView recyclerView;
+    protected StatefulRecyclerView originRecycler;
+    protected ProgressLayout stateLayout;
+    protected ComposerWidget composerWidget;
+
+    private FragmentCommentBinding binding;
 
     protected long userActivityId;
     protected FeedList feedList;
@@ -90,8 +90,13 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_comment, container, false);
-        unbinder = ButterKnife.bind(this, root);
+        binding = FragmentCommentBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        swipeRefreshLayout = binding.refreshLayout;
+        recyclerView = binding.recyclerView;
+        originRecycler = binding.commentOrigin;
+        stateLayout = binding.stateLayout;
+        composerWidget = binding.composerWidget;
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(false); //set to false if somethings fail to work properly
         mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL);
@@ -103,6 +108,12 @@ public abstract class FragmentBaseComment extends FragmentBase<FeedReply, Widget
         originRecycler.setNestedScrollingEnabled(false); //set to false if somethings fail to work properly
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     /**

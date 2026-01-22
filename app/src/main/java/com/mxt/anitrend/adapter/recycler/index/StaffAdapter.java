@@ -15,8 +15,6 @@ import com.mxt.anitrend.databinding.AdapterStaffBinding;
 import com.mxt.anitrend.model.entity.base.StaffBase;
 import com.mxt.anitrend.util.CompatUtil;
 
-import butterknife.OnClick;
-
 /**
  * Created by max on 2017/12/20.
  * StaffAdapter
@@ -51,6 +49,7 @@ public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
         public StaffViewHolder(AdapterStaffBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
         }
 
         /**
@@ -82,7 +81,7 @@ public class StaffAdapter extends RecyclerViewAdapter<StaffBase> {
             binding.unbind();
         }
 
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }

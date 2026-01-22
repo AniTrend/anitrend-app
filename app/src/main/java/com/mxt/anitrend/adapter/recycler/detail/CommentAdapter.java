@@ -16,8 +16,6 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import butterknife.OnClick;
-
 /**
  * Created by max on 2017/12/03.
  * comment activity adapter
@@ -52,6 +50,7 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
         public CommentViewHolder(AdapterCommentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_mention);
         }
 
         /**
@@ -111,7 +110,7 @@ public class CommentAdapter extends RecyclerViewAdapter<FeedReply> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick({R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_mention})
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }

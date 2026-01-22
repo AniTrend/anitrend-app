@@ -16,18 +16,14 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.github.chrisbanes.photoview.PhotoView;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
-import com.mxt.anitrend.base.custom.view.image.WideImageView;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.databinding.ActivityGiphyPreviewBinding;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by max on 2017/12/22.
@@ -36,9 +32,7 @@ import butterknife.ButterKnife;
 
 public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> implements RequestListener<Drawable> {
 
-    @BindView(R.id.preview_image) PhotoView previewImage;
-    @BindView(R.id.preview_progress) CircularProgressView previewProgress;
-    @BindView(R.id.preview_credits) WideImageView previewCredits;
+    private ActivityGiphyPreviewBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +40,8 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_giphy_preview);
-        ButterKnife.bind(this);
+        binding = ActivityGiphyPreviewBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setPresenter(new BasePresenter(this));
     }
 
@@ -56,7 +50,7 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
         super.onPostCreate(savedInstanceState);
         if(getIntent().hasExtra(KeyUtil.arg_model) && !TextUtils.isEmpty(getIntent().getStringExtra(KeyUtil.arg_model)))
             Glide.with(this).load(getIntent().getStringExtra(KeyUtil.arg_model))
-                    .listener(this).into(previewImage);
+                    .listener(this).into(binding.previewImage);
         else
             NotifyUtil.INSTANCE.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
         onActivityReady();
@@ -68,7 +62,7 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
      */
     @Override
     protected void onActivityReady() {
-        previewCredits.setImageResource(
+        binding.previewCredits.setImageResource(
                 !CompatUtil.INSTANCE.isLightTheme(getPresenter().getSettings()) ?
                         R.drawable.powered_by_giphy_light :
                         R.drawable.powered_by_giphy_dark
@@ -140,7 +134,7 @@ public class GiphyPreviewActivity extends ActivityBase<Void, BasePresenter> impl
     @Override
     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
         if(isAlive())
-            previewProgress.setVisibility(View.GONE);
+            binding.previewProgress.setVisibility(View.GONE);
         return false;
     }
 }

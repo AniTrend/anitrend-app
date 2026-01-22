@@ -21,13 +21,12 @@ import com.nguyenhoanglam.progresslayout.ProgressLayout;
 
 import java.util.List;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetBase<List<T>> implements ItemClickListener<T>, Observer<List<T>>, RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
-    protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
-    protected @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
+    protected ProgressLayout stateLayout;
+    protected StatefulRecyclerView recyclerView;
 
     protected RecyclerViewAdapter<T> mAdapter;
     protected StaggeredGridLayoutManager mLayoutManager;
@@ -67,6 +66,11 @@ public abstract class BottomSheetList<T extends Parcelable> extends BottomSheetB
     protected void removeScrollLoadTrigger() {
         if (isPager)
             recyclerView.clearOnScrollListeners();
+    }
+
+    protected void bindListViews(View rootView) {
+        stateLayout = rootView.findViewById(R.id.stateLayout);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
     }
 
     @Override

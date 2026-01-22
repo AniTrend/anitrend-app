@@ -15,8 +15,6 @@ import com.mxt.anitrend.databinding.AdapterLinkBinding;
 import com.mxt.anitrend.model.entity.anilist.ExternalLink;
 import com.mxt.anitrend.util.CompatUtil;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 /**
  * Created by max on 2018/01/02.
@@ -51,6 +49,8 @@ public class LinkAdapter extends RecyclerViewAdapter<ExternalLink> {
         public LinkViewHolder(AdapterLinkBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
+            bindLongClickListeners(R.id.container);
         }
 
         /**
@@ -84,12 +84,12 @@ public class LinkAdapter extends RecyclerViewAdapter<ExternalLink> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.container)
+        @Override
         public boolean onLongClick(View view) {
             return performLongClick(clickListener, data, view);
         }

@@ -21,7 +21,9 @@
             android:background="?attr/cardColor"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <include layout="@layout/custom_sheet_toolbar" />
+            <include
+                android:id="@+id/custom_sheet_toolbar"
+                layout="@layout/custom_sheet_toolbar" />
 
             <LinearLayout
                 android:orientation="vertical"

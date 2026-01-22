@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.LinearLayout.LayoutParams
 import androidx.databinding.ViewDataBinding
-import butterknife.OnClick
-import butterknife.OnLongClick
-import butterknife.Optional
 import com.annimon.stream.Stream
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
@@ -91,6 +88,11 @@ class MediaListAdapter(context: Context?) :
      */(private val binding: ViewDataBinding) :
         RecyclerViewHolder<MediaList?>(binding.root) {
 
+        init {
+            bindClickListeners(R.id.series_image, R.id.container)
+            bindLongClickListeners(R.id.series_image, R.id.container)
+        }
+
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br></br>
@@ -152,14 +154,10 @@ class MediaListAdapter(context: Context?) :
             binding.unbind()
         }
 
-        @Optional
-        @OnClick(R.id.series_image, R.id.container)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @Optional
-        @OnLongClick(R.id.series_image, R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }

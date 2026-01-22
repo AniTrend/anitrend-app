@@ -16,20 +16,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
-import com.github.chrisbanes.photoview.PhotoView;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.databinding.ActivityImagePreviewBinding;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -39,8 +36,7 @@ import timber.log.Timber;
 
 public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
 
-    @BindView(R.id.preview_image) PhotoView mImageView;
-    @BindView(R.id.toolbar_preview_image) Toolbar mToolbar;
+    private ActivityImagePreviewBinding binding;
 
     private String mImageUri;
 
@@ -50,15 +46,15 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_preview);
-        ButterKnife.bind(this);
+        binding = ActivityImagePreviewBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(binding.toolbarPreviewImage);
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("");
 
-        mImageView.setOnClickListener(view -> mToolbar.animate()
-                .alpha(mToolbar.getAlpha() == 1 ? 0: 1)
+        binding.previewImage.setOnClickListener(view -> binding.toolbarPreviewImage.animate()
+                .alpha(binding.toolbarPreviewImage.getAlpha() == 1 ? 0: 1)
                 .setDuration(500)
                 .setInterpolator(new DecelerateInterpolator()));
     }
@@ -68,7 +64,7 @@ public class ImagePreviewActivity extends ActivityBase<Void, BasePresenter> {
         super.onPostCreate(savedInstanceState);
         if(getIntent().hasExtra(KeyUtil.arg_model) && !TextUtils.isEmpty(getIntent().getStringExtra(KeyUtil.arg_model))) {
             mImageUri = getIntent().getStringExtra(KeyUtil.arg_model);
-            Glide.with(this).load(mImageUri).into(mImageView);
+            Glide.with(this).load(mImageUri).into(binding.previewImage);
         } else
             NotifyUtil.INSTANCE.makeText(this, R.string.layout_empty_response, R.drawable.ic_warning_white_18dp, Toast.LENGTH_SHORT).show();
     }

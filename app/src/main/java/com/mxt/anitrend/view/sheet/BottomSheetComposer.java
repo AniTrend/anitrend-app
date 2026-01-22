@@ -14,9 +14,11 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase;
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
+import com.mxt.anitrend.databinding.BottomSheetComposerBinding;
 import com.mxt.anitrend.extension.AppExtKt;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
 import com.mxt.anitrend.model.entity.base.UserBase;
+import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.DialogUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -25,16 +27,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by max on 2017/12/13.
  */
 
 public class BottomSheetComposer extends BottomSheetBase implements ItemClickListener<Object>, BaseConsumer.onRequestModelChange<FeedList> {
 
-    protected @BindView(R.id.composer_widget) ComposerWidget composerWidget;
+    private BottomSheetComposerBinding binding;
+    protected ComposerWidget composerWidget;
 
     private @KeyUtil.RequestType int requestType;
 
@@ -75,10 +75,11 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        View contentView = View.inflate(getContext(), R.layout.bottom_sheet_composer, null);
-        dialog.setContentView(contentView);
-        unbinder = ButterKnife.bind(this, dialog);
-        createBottomSheetBehavior(contentView);
+        binding = BottomSheetComposerBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
+        dialog.setContentView(binding.getRoot());
+        bindToolbarViews(binding.getRoot());
+        createBottomSheetBehavior(binding.getRoot());
+        composerWidget = binding.composerWidget;
         return dialog;
     }
 
@@ -125,6 +126,7 @@ public class BottomSheetComposer extends BottomSheetBase implements ItemClickLis
         if(mBottomSheet != null)
             mBottomSheet.closeDialog();
         super.onDestroyView();
+        binding = null;
     }
 
     /**

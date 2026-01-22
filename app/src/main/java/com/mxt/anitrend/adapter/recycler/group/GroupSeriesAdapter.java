@@ -19,8 +19,6 @@ import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 /**
  * Created by max on 2017/12/31.
@@ -63,6 +61,8 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<RecyclerItem> {
         public SeriesViewHolder(AdapterSeriesBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
+            bindLongClickListeners(R.id.container);
         }
 
         /**
@@ -92,12 +92,12 @@ public class GroupSeriesAdapter extends RecyclerViewAdapter<RecyclerItem> {
             binding.unbind();
         }
 
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.container)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }

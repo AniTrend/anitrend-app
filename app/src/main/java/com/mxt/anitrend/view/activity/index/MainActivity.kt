@@ -12,14 +12,9 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withResumed
-import androidx.viewpager.widget.ViewPager
-import butterknife.ButterKnife
 import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.index.AiringPageAdapter
@@ -39,6 +34,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
+import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
@@ -56,7 +52,6 @@ import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
-import com.ogaclejapan.smarttablayout.SmartTabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -72,23 +67,25 @@ import timber.log.Timber
 class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     BaseConsumer.onRequestModelChange<User>, NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var binding: ActivityMainBinding
+
     private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
-        findViewById<Toolbar>(R.id.toolbar)
+        binding.appBarMain.customToolbar.toolbar
     }
     private val mViewPager by lazy(LazyThreadSafetyMode.NONE) {
-        findViewById<ViewPager>(R.id.page_container)
+        binding.appBarMain.contentMain.pageContainer
     }
     private val mNavigationTabStrip by lazy(LazyThreadSafetyMode.NONE) {
-        findViewById<SmartTabLayout>(R.id.smart_tab)
+        binding.appBarMain.customTab.smartTab
     }
     private val coordinatorLayout by lazy(LazyThreadSafetyMode.NONE) {
-        findViewById<CoordinatorLayout>(R.id.coordinator)
+        binding.appBarMain.coordinator
     }
     private val mDrawerLayout by lazy(LazyThreadSafetyMode.NONE) {
-        findViewById<DrawerLayout>(R.id.drawer_layout)
+        binding.drawerLayout
     }
     private val mNavigationView by lazy(LazyThreadSafetyMode.NONE) {
-        findViewById<NavigationView>(R.id.nav_view)
+        binding.navView
     }
 
     private val mDrawerToggle by lazy(LAZY_MODE_UNSAFE) {
@@ -129,8 +126,9 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        mSearchView = binding.appBarMain.customToolbar.searchView
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
@@ -501,4 +499,3 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
             )
     }
 }
-

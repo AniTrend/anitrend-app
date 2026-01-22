@@ -3,11 +3,9 @@ package com.mxt.anitrend.view.activity.index
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
-import com.mxt.anitrend.base.custom.view.image.WideImageView
+import com.mxt.anitrend.databinding.ActivitySplashBinding
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -25,20 +23,19 @@ import kotlinx.coroutines.delay
 
 class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
 
-    @BindView(R.id.preview_credits)
-    lateinit var giphyCitation: WideImageView
+    private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-        ButterKnife.bind(this)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setPresenter(BasePresenter(this))
         setViewModel(true)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        giphyCitation.setImageResource(
+        binding.previewCredits.setImageResource(
             if (!CompatUtil.isLightTheme(presenter.settings))
             R.drawable.powered_by_giphy_light
         else

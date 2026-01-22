@@ -15,9 +15,8 @@ import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
+import com.mxt.anitrend.databinding.ActivityVideoPlayerBinding;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import timber.log.Timber;
@@ -25,17 +24,15 @@ import timber.log.Timber;
 public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> implements View.OnClickListener {
 
     private String contentLink;
-
-    @BindView(R.id.video_player)
-    Jzvd player;
+    private ActivityVideoPlayerBinding binding;
 
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_player);
-        ButterKnife.bind(this);
+        binding = ActivityVideoPlayerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         if (getIntent().hasExtra(KeyUtil.arg_model)) {
             contentLink = getIntent().getStringExtra(KeyUtil.arg_model);
             onActivityReady();
@@ -59,7 +56,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
     @Override
     public void onBackPressed() {
         try {
-            player.cancelProgressTimer();
+            binding.videoPlayer.cancelProgressTimer();
         } catch (Exception e) {
             Timber.e(e);
         }
@@ -77,11 +74,11 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
     @Override
     protected void onActivityReady() {
         JZDataSource dataSource = new JZDataSource(contentLink);
-        player.setUp(dataSource, Jzvd.SCREEN_FULLSCREEN);
+        binding.videoPlayer.setUp(dataSource, Jzvd.SCREEN_FULLSCREEN);
         // player.backButton.setOnClickListener(this);
         // player.tinyBackImageView.setVisibility(View.INVISIBLE);
-        player.fullscreenButton.setImageResource(R.drawable.jz_shrink);
-        player.fullscreenButton.setOnClickListener(this);
+        binding.videoPlayer.fullscreenButton.setImageResource(R.drawable.jz_shrink);
+        binding.videoPlayer.fullscreenButton.setOnClickListener(this);
         // player.clarity.setVisibility(View.GONE);
         //player.setSystemTimeAndBattery();
         updateUI();
@@ -89,7 +86,7 @@ public class VideoPlayerActivity extends ActivityBase<Void, BasePresenter> imple
 
     @Override
     protected void updateUI() {
-        player.startButton.performClick();
+        binding.videoPlayer.startButton.performClick();
     }
 
     @Override

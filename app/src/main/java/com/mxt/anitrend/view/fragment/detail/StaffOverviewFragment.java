@@ -17,8 +17,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.graphql.GraphUtil;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
@@ -51,8 +49,8 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentStaffOverviewBinding.inflate(inflater, container, false);
-        unbinder = ButterKnife.bind(this, binding.getRoot());
         binding.stateLayout.showLoading();
+        binding.staffImg.setOnClickListener(this);
         return binding.getRoot();
     }
 
@@ -89,7 +87,7 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
      *
      * @param view The view that was clicked.
      */
-    @Override @OnClick(R.id.staff_img)
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.staff_img:
@@ -99,6 +97,12 @@ public class StaffOverviewFragment extends FragmentBase<StaffBase, BasePresenter
                 super.onClick(view);
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override

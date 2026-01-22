@@ -15,8 +15,6 @@ import com.mxt.anitrend.databinding.AdapterTagBinding;
 import com.mxt.anitrend.model.entity.anilist.MediaTag;
 import com.mxt.anitrend.util.CompatUtil;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 /**
  * Created by max on 2018/01/01.
@@ -51,6 +49,8 @@ public class TagAdapter extends RecyclerViewAdapter<MediaTag> {
         public TagViewHolder(AdapterTagBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
+            bindLongClickListeners(R.id.container);
         }
 
         /**
@@ -85,12 +85,12 @@ public class TagAdapter extends RecyclerViewAdapter<MediaTag> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.container)
+        @Override
         public boolean onLongClick(View v) {
             return performLongClick(clickListener, data, v);
         }

@@ -2,27 +2,23 @@ package com.mxt.anitrend.view.activity.base;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ShareCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.annimon.stream.IntPair;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.textfield.TextInputEditText;
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer;
-import com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView;
-import com.mxt.anitrend.base.custom.view.text.SingleLineTextView;
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener;
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener;
 import com.mxt.anitrend.databinding.ActivityShareContentBinding;
+import com.mxt.anitrend.databinding.CustomSheetToolbarBinding;
 import com.mxt.anitrend.extension.AppExtKt;
 import com.mxt.anitrend.extension.KoinExt;
 import com.mxt.anitrend.model.entity.anilist.FeedList;
@@ -42,10 +38,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * Created by max on 2017/12/14.
  * share content intent activity
@@ -55,6 +47,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         BaseConsumer.onRequestModelChange<FeedList>, ItemClickListener<Object> {
 
     private ActivityShareContentBinding binding;
+    private CustomSheetToolbarBinding toolbarBinding;
     private BottomSheetBehavior bottomSheetBehavior;
     private BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
@@ -79,14 +72,6 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
 
         }
     };
-
-    protected @BindView(R.id.toolbar_title) SingleLineTextView toolbarTitle;
-    protected @BindView(R.id.toolbar_state) AppCompatImageView toolbarState;
-    protected @BindView(R.id.toolbar_search) AppCompatImageView toolbarSearch;
-
-    protected @BindView(R.id.sheet_shared_resource) TextInputEditText sharedResource;
-    protected @BindView(R.id.sheet_share_post_type) Spinner sharedResourceType;
-    protected @BindView(R.id.sheet_share_post_type_approve) AppCompatTintImageView sharedResourceApprove;
 
     private Map<Integer, Integer> indexIconMap = new HashMap<Integer, Integer>() {{
         put(0, R.drawable.ic_textsms_white_24dp);
@@ -116,7 +101,9 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         binding = DataBindingUtil.setContentView(this, R.layout.activity_share_content);
         bottomSheetBehavior = BottomSheetBehavior.from(binding.designBottomSheet);
         setPresenter(new BasePresenter(getApplicationContext()));
-        ButterKnife.bind(this);
+        toolbarBinding = binding.customSheetToolbar;
+        mSearchView = toolbarBinding.searchView;
+        binding.sheetSharePostTypeApprove.setOnClickListener(view -> getItemSelected());
         setViewModel(true);
     }
 
@@ -130,7 +117,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
                 R.layout.adapter_spinner_item, R.id.spinner_text,
                 CompatUtil.INSTANCE.getStringList(this, R.array.post_share_types));
         iconArrayAdapter.setIndexIconMap(indexIconMap);
-        sharedResourceType.setAdapter(iconArrayAdapter);
+        binding.sheetSharePostType.setAdapter(iconArrayAdapter);
         onActivityReady();
     }
 
@@ -147,13 +134,13 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
      */
     @Override
     protected void onActivityReady() {
-        toolbarSearch.setVisibility(View.GONE);
-        toolbarTitle.setText(R.string.menu_title_new_activity_post);
+        toolbarBinding.toolbarSearch.setVisibility(View.GONE);
+        toolbarBinding.toolbarTitle.setText(R.string.menu_title_new_activity_post);
         if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-            toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
+            toolbarBinding.toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
         else
-            toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
-        toolbarState.setOnClickListener(view -> {
+            toolbarBinding.toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
+        toolbarBinding.toolbarState.setOnClickListener(view -> {
             switch (bottomSheetBehavior.getState()) {
                 case BottomSheetBehavior.STATE_EXPANDED:
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -173,7 +160,7 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
     protected void updateUI() {
         ShareCompat.IntentReader reader = intentBundleUtil.getSharedIntent();
         if(reader != null) {
-            sharedResource.setText(reader.getText());
+            binding.sheetSharedResource.setText(reader.getText());
             if(!reader.getText().equals(reader.getSubject())) {
                 if(binding != null && binding.composerWidget != null)
                     binding.composerWidget.setText(reader.getSubject());
@@ -188,12 +175,12 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
 
     @Override
     public void onStateCollapsed() {
-        toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
+        toolbarBinding.toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_close_grey_600_24dp));
     }
 
     @Override
     public void onStateExpanded() {
-        toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
+        toolbarBinding.toolbarState.setImageDrawable(CompatUtil.INSTANCE.getTintedDrawable(this, R.drawable.ic_keyboard_arrow_down_grey_600_24dp));
     }
 
     @Override @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
@@ -204,10 +191,9 @@ public class SharedContentActivity extends ActivityBase<FeedList, BasePresenter>
         }
     }
 
-    @OnClick(R.id.sheet_share_post_type_approve)
     public void getItemSelected() {
-        String text = sharedResource.getText().toString();
-        @KeyUtil.ShareType int position = sharedResourceType.getSelectedItemPosition();
+        String text = binding.sheetSharedResource.getText().toString();
+        @KeyUtil.ShareType int position = binding.sheetSharePostType.getSelectedItemPosition();
         switch (position) {
             case KeyUtil.IMAGE_TYPE:
                 binding.composerWidget.setText(MarkDownUtil.INSTANCE.convertImage(text));

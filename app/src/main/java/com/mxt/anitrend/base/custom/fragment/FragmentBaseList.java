@@ -20,6 +20,7 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter;
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView;
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout;
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener;
+import com.mxt.anitrend.databinding.FragmentListBinding;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.NotifyUtil;
@@ -32,9 +33,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by max on 2017/09/12.
  * Abstract fragment list base class
@@ -43,9 +41,11 @@ import butterknife.ButterKnife;
 public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends FragmentBase<M, P, C> implements
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    protected @BindView(R.id.refreshLayout) CustomSwipeRefreshLayout swipeRefreshLayout;
-    protected @BindView(R.id.recyclerView) StatefulRecyclerView recyclerView;
-    protected @BindView(R.id.stateLayout) ProgressLayout stateLayout;
+    protected CustomSwipeRefreshLayout swipeRefreshLayout;
+    protected StatefulRecyclerView recyclerView;
+    protected ProgressLayout stateLayout;
+
+    private FragmentListBinding binding;
 
     protected String query;
 
@@ -87,8 +87,11 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_list, container, false);
-        unbinder = ButterKnife.bind(this, root);
+        binding = FragmentListBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        swipeRefreshLayout = binding.refreshLayout;
+        recyclerView = binding.recyclerView;
+        stateLayout = binding.stateLayout;
         recyclerView.setHasFixedSize(true); //originally set to fixed size true
         recyclerView.setNestedScrollingEnabled(true); //set to false if somethings fail to work properly
         mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL);
@@ -96,6 +99,12 @@ public abstract class FragmentBaseList<M, C, P extends CommonPresenter> extends 
         swipeRefreshLayout.setOnRefreshAndLoadListener(this);
         CompatUtil.INSTANCE.configureSwipeRefreshLayout(swipeRefreshLayout, getActivity());
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     /**

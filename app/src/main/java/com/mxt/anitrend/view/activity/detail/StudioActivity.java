@@ -7,13 +7,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget;
+import com.mxt.anitrend.databinding.ActivityFrameGenericBinding;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.util.KeyUtil;
@@ -23,8 +23,6 @@ import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment;
 
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
@@ -34,8 +32,7 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
 
-    protected @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    private ActivityFrameGenericBinding binding;
 
     private StudioBase model;
 
@@ -44,9 +41,10 @@ public class StudioActivity extends ActivityBase<StudioBase, BasePresenter> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frame_generic);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        binding = ActivityFrameGenericBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mSearchView = binding.customToolbar.searchView;
+        setSupportActionBar(binding.customToolbar.toolbar);
         setViewModel(true);
         setPresenter(new BasePresenter(this));
         if(getIntent().hasExtra(KeyUtil.arg_id))

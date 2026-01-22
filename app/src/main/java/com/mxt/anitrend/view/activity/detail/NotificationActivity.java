@@ -4,18 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
+import com.mxt.anitrend.databinding.ActivityFrameGenericBinding;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.view.activity.index.MainActivity;
 import com.mxt.anitrend.view.fragment.detail.NotificationFragment;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by max on 2017/10/25.
@@ -23,15 +20,15 @@ import butterknife.ButterKnife;
 
 public class NotificationActivity extends ActivityBase<Void, BasePresenter> {
 
-    protected @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    private ActivityFrameGenericBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frame_generic);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        binding = ActivityFrameGenericBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mSearchView = binding.customToolbar.searchView;
+        setSupportActionBar(binding.customToolbar.toolbar);
     }
 
     @Override

@@ -21,8 +21,6 @@ import com.mxt.anitrend.util.KeyUtil;
 
 import java.util.HashMap;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 /**
  * Created by max on 2017/12/09.
@@ -58,6 +56,7 @@ public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
             super(binding.getRoot());
             this.binding = binding;
             binding.setOnClickListener(this);
+            bindLongClickListeners(R.id.giphy_image);
         }
 
         /**
@@ -103,12 +102,12 @@ public class GiphyAdapter extends RecyclerViewAdapter<Giphy> {
          * @param v the view that has been clicked
          * @see View.OnClickListener
          */
-        @Override @OnClick(R.id.giphy_image)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }
 
-        @Override @OnLongClick(R.id.giphy_image)
+        @Override
         public boolean onLongClick(View view) {
             return performLongClick(clickListener, data, view);
         }

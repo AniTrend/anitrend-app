@@ -20,7 +20,6 @@ import com.mxt.anitrend.model.entity.group.RecyclerItem;
 import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 
-import butterknife.OnClick;
 
 /**
  * Created by LuK1337 on 2021/05/05.
@@ -71,6 +70,7 @@ public class GroupCharacterStaffAdapter extends RecyclerViewAdapter<RecyclerItem
         public CharacterViewHolder(AdapterCharacterStaffBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
         }
 
         /**
@@ -103,7 +103,7 @@ public class GroupCharacterStaffAdapter extends RecyclerViewAdapter<RecyclerItem
             binding.unbind();
         }
 
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }

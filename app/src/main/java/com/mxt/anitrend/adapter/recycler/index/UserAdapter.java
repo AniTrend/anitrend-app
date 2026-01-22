@@ -21,8 +21,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.OnClick;
-
 /**
  * Created by max on 2017/11/10.
  */
@@ -82,6 +80,7 @@ public class UserAdapter extends RecyclerViewAdapter<UserBase> {
         public UserViewHolder(AdapterUserBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
         }
 
         /**
@@ -111,7 +110,7 @@ public class UserAdapter extends RecyclerViewAdapter<UserBase> {
             binding.unbind();
         }
 
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }

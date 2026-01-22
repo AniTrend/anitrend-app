@@ -15,8 +15,6 @@ import com.mxt.anitrend.databinding.AdapterStudioBinding;
 import com.mxt.anitrend.model.entity.base.StudioBase;
 import com.mxt.anitrend.util.CompatUtil;
 
-import butterknife.OnClick;
-
 /**
  * Created by max on 2017/12/20.
  */
@@ -50,6 +48,7 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
         public StudioViewHolder(AdapterStudioBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            bindClickListeners(R.id.container);
         }
 
         /**
@@ -76,7 +75,7 @@ public class StudioAdapter extends RecyclerViewAdapter<StudioBase> {
             binding.unbind();
         }
 
-        @Override @OnClick(R.id.container)
+        @Override
         public void onClick(View v) {
             performClick(clickListener, data, v);
         }

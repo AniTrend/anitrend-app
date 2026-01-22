@@ -8,9 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
-import androidx.viewpager.widget.ViewPager;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter;
@@ -27,12 +25,8 @@ import com.mxt.anitrend.util.NotifyUtil;
 import com.mxt.anitrend.util.TutorialUtil;
 import com.mxt.anitrend.util.graphql.GraphUtil;
 import com.mxt.anitrend.view.sheet.BottomSheetComposer;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 /**
@@ -42,10 +36,6 @@ import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> implements View.OnClickListener {
 
-    protected @BindView(R.id.toolbar) Toolbar toolbar;
-    protected @BindView(R.id.page_container) ViewPager viewPager;
-    protected @BindView(R.id.smart_tab) SmartTabLayout smartTabLayout;
-
     private ActivityProfileBinding binding;
     private String userName;
 
@@ -54,8 +44,7 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
         setPresenter(new BasePresenter(getApplicationContext()));
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar.toolbar);
         disableToolbarTitle();
         setViewModel(true);
         if(getIntent().hasExtra(KeyUtil.arg_id))
@@ -76,9 +65,9 @@ public class ProfileActivity extends ActivityBase<UserBase, BasePresenter> imple
         mActionBar.setHomeAsUpIndicator(CompatUtil.INSTANCE.getDrawable(this, R.drawable.ic_arrow_back_white_24dp));
         ProfilePageAdapter profilePageAdapter = new ProfilePageAdapter(getSupportFragmentManager(), getApplicationContext());
         profilePageAdapter.setParams(getIntent().getExtras());
-        viewPager.setAdapter(profilePageAdapter);
-        viewPager.setOffscreenPageLimit(offScreenLimit);
-        smartTabLayout.setViewPager(viewPager);
+        binding.pageContainer.pageContainer.setAdapter(profilePageAdapter);
+        binding.pageContainer.pageContainer.setOffscreenPageLimit(offScreenLimit);
+        binding.smartTab.smartTab.setViewPager(binding.pageContainer.pageContainer);
     }
 
     @Override

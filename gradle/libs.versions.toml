@@ -39,7 +39,6 @@ timber = "4.7.1"
 treesSence = "1.0.4"
 prettyTime = "5.0.8.Final"
 betterLinkMovement = "2.2.0"
-butterKnife = "10.2.3"
 multidex = "2.0.1"
 materialDialogs = "0.9.6.0"
 tapTarget = "3.3.2"
@@ -65,8 +64,6 @@ alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
 android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "aboutPage" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 betterLinkMovement = "me.saket:better-link-movement-method:2.2.0"
-butterknife = { module = "com.jakewharton:butterknife", version.ref = "butterKnife" }
-butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", version.ref = "butterKnife" }
 circularprogressview = { module = "com.github.rahatarmanahmed:circularprogressview", version.ref = "circularProgressView" }
 material-dialogs-core = { module = "com.afollestad.material-dialogs:core", version.ref = "materialDialogs" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventBus" }

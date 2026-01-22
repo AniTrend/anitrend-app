@@ -34,17 +34,13 @@ import com.nguyenhoanglam.progresslayout.ProgressLayout;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.github.wax911.library.model.request.QueryContainerBuilder;
 
 public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase>> implements ItemClickListener<UserBase>, Observer<PageContainer<UserBase>>,
         RecyclerLoadListener, CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
 
-    protected @BindView(R.id.stateLayout)
-    ProgressLayout stateLayout;
-    protected @BindView(R.id.recyclerView)
-    StatefulRecyclerView recyclerView;
+    protected ProgressLayout stateLayout;
+    protected StatefulRecyclerView recyclerView;
 
     protected RecyclerViewAdapter<UserBase> mAdapter;
     protected StaggeredGridLayoutManager mLayoutManager;
@@ -93,7 +89,9 @@ public class BottomSheetListUsers extends BottomSheetBase<PageContainer<UserBase
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         BottomSheetListBinding binding = BottomSheetListBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
-        unbinder = ButterKnife.bind(this, dialog);
+        bindToolbarViews(binding.getRoot());
+        stateLayout = binding.stateLayout;
+        recyclerView = binding.recyclerView;
         createBottomSheetBehavior(binding.getRoot());
         mLayoutManager = new StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL);
         return dialog;

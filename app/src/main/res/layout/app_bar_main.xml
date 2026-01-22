@@ -12,12 +12,18 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppThemeLight.AppBarOverlay">
 
-        <include layout="@layout/custom_toolbar" />
+        <include
+            android:id="@+id/custom_toolbar"
+            layout="@layout/custom_toolbar" />
 
-        <include layout="@layout/custom_tab" />
+        <include
+            android:id="@+id/custom_tab"
+            layout="@layout/custom_tab" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/content_main"
+        layout="@layout/content_main" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

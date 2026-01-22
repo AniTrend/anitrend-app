@@ -4,21 +4,18 @@ import android.os.Bundle;
 import android.text.Spanned;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mxt.anitrend.R;
 import com.mxt.anitrend.base.custom.activity.ActivityBase;
+import com.mxt.anitrend.databinding.ActivityFrameGenericBinding;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.presenter.base.BasePresenter;
 import com.mxt.anitrend.presenter.fragment.MediaPresenter;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.util.markdown.MarkDownUtil;
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by max on 2018/01/27.
@@ -27,14 +24,15 @@ import butterknife.ButterKnife;
 
 public class MediaBrowseActivity extends ActivityBase<MediaBase, MediaPresenter> {
 
-    protected @BindView(R.id.toolbar) Toolbar toolbar;
+    private ActivityFrameGenericBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frame_generic);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        binding = ActivityFrameGenericBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        mSearchView = binding.customToolbar.searchView;
+        setSupportActionBar(binding.customToolbar.toolbar);
         setViewModel(true);
         setPresenter(new BasePresenter(this));
     }

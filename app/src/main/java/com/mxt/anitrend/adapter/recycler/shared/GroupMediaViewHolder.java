@@ -11,8 +11,6 @@ import com.mxt.anitrend.databinding.AdapterMediaHeaderBinding;
 import com.mxt.anitrend.model.entity.base.MediaBase;
 import com.mxt.anitrend.model.entity.group.RecyclerItem;
 
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 
 /**
  * Created by max on 2018/03/26.
@@ -33,6 +31,8 @@ public class GroupMediaViewHolder extends RecyclerViewHolder<RecyclerItem> {
         super(binding.getRoot());
         this.binding = binding;
         this.clickListener = clickListener;
+        bindClickListeners(R.id.container);
+        bindLongClickListeners(R.id.container);
     }
 
     /**
@@ -62,14 +62,14 @@ public class GroupMediaViewHolder extends RecyclerViewHolder<RecyclerItem> {
         binding.unbind();
     }
 
-    @Override @OnClick(R.id.container)
+    @Override
     public void onClick(View v) {
         IntPair<Boolean> pair = isValidIndexPair();
         if(binding != null && binding.getModel() != null && isClickable(binding.getModel()) && pair.getSecond())
             clickListener.onItemClick(v, new IntPair<>(pair.getFirst(), binding.getModel()));
     }
 
-    @Override @OnLongClick(R.id.container)
+    @Override
     public boolean onLongClick(View v) {
         IntPair<Boolean> pair = isValidIndexPair();
         if(binding != null && binding.getModel() != null && isLongClickable(binding.getModel()) && pair.getSecond()) {

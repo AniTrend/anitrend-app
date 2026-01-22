@@ -17,9 +17,6 @@ import com.mxt.anitrend.util.CompatUtil;
 import com.mxt.anitrend.util.KeyUtil;
 import com.mxt.anitrend.view.activity.detail.ProfileActivity;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by max on 2017/11/05.
  * Review reader bottom sheet
@@ -29,12 +26,8 @@ public class BottomReviewReader extends BottomSheetBase {
 
     private Review model;
     private BottomSheetReviewBinding binding;
-
-    protected @BindView(R.id.series_title)
-    SeriesTitleView seriesTitleView;
-
-    protected @BindView(R.id.user_avatar)
-    AvatarImageView userAvatar;
+    private SeriesTitleView seriesTitleView;
+    private AvatarImageView userAvatar;
 
     public static BottomReviewReader newInstance(Bundle bundle) {
         BottomReviewReader fragment = new BottomReviewReader();
@@ -66,7 +59,9 @@ public class BottomReviewReader extends BottomSheetBase {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         binding = BottomSheetReviewBinding.inflate(CompatUtil.INSTANCE.getLayoutInflater(getActivity()));
         dialog.setContentView(binding.getRoot());
-        unbinder = ButterKnife.bind(this, dialog);
+        bindToolbarViews(binding.getRoot());
+        seriesTitleView = binding.getRoot().findViewById(R.id.series_title);
+        userAvatar = binding.getRoot().findViewById(R.id.user_avatar);
         createBottomSheetBehavior(binding.getRoot());
         return dialog;
     }
@@ -82,6 +77,12 @@ public class BottomReviewReader extends BottomSheetBase {
             intent.putExtra(KeyUtil.arg_id, model.getUser().getId());
             CompatUtil.INSTANCE.startRevealAnim(getActivity(), v, intent);
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     public static class Builder extends BottomSheetBuilder {
