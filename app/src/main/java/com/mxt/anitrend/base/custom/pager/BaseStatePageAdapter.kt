@@ -2,10 +2,10 @@ package com.mxt.anitrend.base.custom.pager
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.annotation.ArrayRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getStringList
 import com.mxt.anitrend.extension.koinOf
@@ -17,9 +17,9 @@ import com.mxt.anitrend.util.locale.LocaleUtil
  * Base page state adapter
  */
 abstract class BaseStatePageAdapter(
-    fragmentManager: FragmentManager,
+    fragmentActivity: FragmentActivity,
     private val context: Context
-) : FragmentStatePagerAdapter(fragmentManager) {
+) : FragmentStateAdapter(fragmentActivity) {
 
     var params: Bundle = Bundle.EMPTY
 
@@ -37,14 +37,14 @@ abstract class BaseStatePageAdapter(
     /**
      * Return the number of views available.
      */
-    override fun getCount(): Int = pagerTitles.size
+    override fun getItemCount(): Int = pagerTitles.size
 
     /**
      * Return the Fragment associated with a specified position.
      *
      * @param position
      */
-    abstract override fun getItem(position: Int): Fragment
+    abstract override fun createFragment(position: Int): Fragment
 
     /**
      * This method may be called by the ViewPager to obtain a title string
@@ -55,7 +55,7 @@ abstract class BaseStatePageAdapter(
      * @param position The position of the title requested
      * @return A title for the requested page
      */
-    override fun getPageTitle(position: Int): CharSequence? {
+    fun getPageTitle(position: Int): CharSequence {
         val locale = LocaleUtil.scopeLocale(settings)
         return pagerTitles[position].uppercase(locale)
     }

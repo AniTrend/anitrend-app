@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <LinearLayout
-        android:background="@drawable/rating_bubble"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rating_bubble"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:id="@+id/rating_value"
@@ -35,5 +33,3 @@
             tools:srcCompat="@drawable/ic_bookmark_white_24dp"/>
 
     </LinearLayout>
-    
-</layout>

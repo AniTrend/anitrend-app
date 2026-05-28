@@ -1,9 +1,8 @@
 package com.mxt.anitrend.util.markdown
 
-import android.os.Build
-import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import androidx.core.text.HtmlCompat
 import com.github.rjeschke.txtmark.Processor
 import timber.log.Timber
 
@@ -17,12 +16,9 @@ object MarkDownUtil {
     private fun fromMD(content: String): SpannableStringBuilder {
         return try {
             val processedText = Processor.process(content)
-            when {
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ->
-                    Html.fromHtml(processedText, Html.FROM_HTML_MODE_LEGACY)
-                else ->
-                    Html.fromHtml(processedText)
-            } as SpannableStringBuilder
+            SpannableStringBuilder.valueOf(
+                HtmlCompat.fromHtml(processedText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            )
         } catch (e: Exception) {
             Timber.e(e)
             SpannableStringBuilder("Unable to process content")
@@ -42,7 +38,7 @@ object MarkDownUtil {
         try {
             if (result.isNotEmpty())
                 while (result.last() == '\n')
-                    result = result.delete(result.lastIndex - 1, result.length)
+                    result = result.delete(result.lastIndex, result.length)
         } catch (e: Exception) {
             Timber.tag("convert(input)").w(e)
         }

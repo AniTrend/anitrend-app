@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model"  type="com.mxt.anitrend.model.entity.base.CharacterBase" />
-        <import type="android.text.TextUtils" />
-        <import type="android.view.View" />
-    </data>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/container"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:layout_margin="@dimen/lg_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardPreventCornerOverlap="false"
-        app:cardBackgroundColor="?cardColor"
-        app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/lg_margin"
-        tools:layout_width="@dimen/series_image_lg">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    android:layout_margin="@dimen/lg_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="?cardColor"
+    app:cardElevation="@dimen/sm_margin"
+    app:cardCornerRadius="@dimen/lg_margin"
+    tools:layout_width="@dimen/series_image_lg">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,8 +26,7 @@
                 android:id="@+id/character_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:src="@sample/gintama"
-                app:imageUrl="@{model.image}"/>
+                tools:src="@sample/gintama"/>
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -43,9 +35,9 @@
                 android:layout_height="wrap_content">
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/character_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{model.name.fullName}"
                     tools:text="Gintoki Something"/>
 
             </LinearLayout>
@@ -64,5 +56,3 @@
             app:srcCompat="@drawable/ic_star_grey_600_24dp" />
 
     </androidx.cardview.widget.CardView>
-
-</layout>

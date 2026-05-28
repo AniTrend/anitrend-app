@@ -10,6 +10,14 @@ internal fun Project.configurePlugins() {
     plugins.apply("kotlin-parcelize")
     plugins.apply("kotlin-kapt")
     plugins.apply("io.objectbox")
+
+    tasks.matching { it.name.startsWith("objectbox") }.configureEach {
+        notCompatibleWithConfigurationCache("ObjectBox PrepareTask cannot serialize Project reference")
+    }
+
+    tasks.matching { it.name.startsWith("dataBinding") }.configureEach {
+        notCompatibleWithConfigurationCache("AGP DataBinding task cannot serialize ResolutionBackedFileCollection")
+    }
 }
 
 internal fun Project.configureAdditionalPlugins() {

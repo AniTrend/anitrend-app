@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
-import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit
  * General presenter for most objects
  */
 
-open class BasePresenter(context: Context?) : CommonPresenter(context) {
+open class BasePresenter(context: Context) : CommonPresenter(context) {
 
     private var favouriteGenres: List<String>? = null
     private var favouriteTags: List<String>? = null
@@ -89,13 +88,11 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
     }
 
     fun getDuration(mediaContent: MediaContent?): String {
-        if (mediaContent?.duration != null) {
-            val timeSpan = Integer.valueOf(mediaContent.duration).toLong()
-            val minutes = TimeUnit.SECONDS.toMinutes(timeSpan)
-            val seconds = timeSpan - TimeUnit.MINUTES.toSeconds(minutes)
-            return String.format(Locale.getDefault(), if (seconds < 10) "%d:0%d" else "%d:%d", minutes, seconds)
-        }
-        return "00:00"
+        val duration = mediaContent?.duration ?: return "00:00"
+        val timeSpan = duration.toLongOrNull() ?: return "00:00"
+        val minutes = TimeUnit.SECONDS.toMinutes(timeSpan)
+        val seconds = timeSpan - TimeUnit.MINUTES.toSeconds(minutes)
+        return String.format(Locale.getDefault(), if (seconds < 10) "%d:0%d" else "%d:%d", minutes, seconds)
     }
 
     fun getTopFavouriteGenres(limit: Int): List<String>? {
@@ -106,11 +103,8 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
                     favouriteGenres = userStats.anime.genres
                             .sortedByDescending {
                                 it.count
-                            }.filter {
-                                it.genre != null
-                            }.map {
-                                it.genre!!
-                            }.take(limit)
+                            }.mapNotNull { it.genre }
+                            .take(limit)
                 }
             }
         }
@@ -122,17 +116,12 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
             val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.tags.isNullOrEmpty()) {
-                    favouriteTags = Stream.of(userStats.anime.tags)
-                            .sortBy { (_, _, count) -> -count }
-                            .filter { (tag) -> tag != null }
-                            .map { (tag) -> tag!!.name }
-                            .limit(limit.toLong()).toList()
                     favouriteTags = userStats.anime.tags.sortedByDescending {
                         it.count
                     }.filter {
                         it.tag != null
-                    }.map {
-                        it.tag!!.name
+                    }.mapNotNull {
+                        it.tag?.name
                     }.take(limit)
                 }
             }
@@ -148,10 +137,8 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
                     favouriteYears = userStats.anime.releaseYears
                             .sortedByDescending {
                                 it.count
-                            }.filter {
-                                it.releaseYear != null
-                            }.map {
-                                it.releaseYear?.toString()!!
+                            }.mapNotNull { releaseYear ->
+                                releaseYear.releaseYear?.toString()
                             }.take(limit)
                 }
             }
@@ -167,11 +154,8 @@ open class BasePresenter(context: Context?) : CommonPresenter(context) {
                     favouriteFormats = userStats.anime.formats
                             .sortedByDescending {
                                 it.count
-                            }.filter {
-                                it.format != null
-                            }.map {
-                                it.format!!
-                            }.take(limit)
+                            }.mapNotNull { it.format }
+                            .take(limit)
                 }
             }
         }

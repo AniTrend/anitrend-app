@@ -26,13 +26,10 @@ class GenreSyncWorker(
             GraphUtil.getDefaultQuery(false)
         ).execute()
 
-        @Suppress("UNCHECKED_CAST")
-        val data = response.body() as? List<String>
+        val data = response.body()?.data?.result
 
-        if (response.isSuccessful && data != null) {
-            return data.map {
-                Genre(it)
-            }
+        if (response.isSuccessful && !data.isNullOrEmpty()) {
+            return data.map(::Genre)
         } else
             Timber.e(response.apiError())
 

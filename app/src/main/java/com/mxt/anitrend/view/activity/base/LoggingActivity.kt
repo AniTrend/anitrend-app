@@ -8,24 +8,18 @@ import android.text.Html
 import android.text.SpannableStringBuilder
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.core.text.color
 import androidx.core.text.toHtml
 import androidx.lifecycle.lifecycleScope
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
-import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+import com.mxt.anitrend.databinding.ActivityLoggingBinding
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.NotifyUtil
-import com.nguyenhoanglam.progresslayout.ProgressLayout
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.io.File
@@ -34,19 +28,11 @@ import java.io.InputStreamReader
 
 class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by MainScope() {
 
-    @BindView(R.id.toolbar)
-    lateinit var toolbar: Toolbar
+    private lateinit var binding: ActivityLoggingBinding
 
-    @BindView(R.id.report_display)
-    lateinit var reportLogTextView: AppCompatTextView
-
-    @BindView(R.id.application_version)
-    lateinit var applicationVersionTextView: SingleLineTextView
-
-    @BindView(R.id.stateLayout)
-    lateinit var progressLayout: ProgressLayout
-
-    private var binder: Unbinder? = null
+    private val reportLogTextView get() = binding.contentLogging.reportDisplay
+    private val applicationVersionTextView get() = binding.contentLogging.applicationVersion
+    private val progressLayout get() = binding.contentLogging.stateLayout
 
     private val spannableLogBuilder = SpannableStringBuilder()
     private val red by lazy { applicationContext.getCompatColor(R.color.colorStateRed) }
@@ -55,9 +41,10 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_logging)
-        binder = ButterKnife.bind(this)
-        setSupportActionBar(toolbar)
+        binding = ActivityLoggingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        mSearchView = binding.customToolbar.searchView
+        setSupportActionBar(binding.customToolbar.toolbar)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -202,6 +189,5 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     override fun onDestroy() {
         super.onDestroy()
-        binder?.unbind()
     }
 }

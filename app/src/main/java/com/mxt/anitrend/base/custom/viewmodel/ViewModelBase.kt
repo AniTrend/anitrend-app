@@ -1,7 +1,6 @@
 package com.mxt.anitrend.base.custom.viewmodel
 
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,9 +27,9 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
 
     private var mLoader: RequestHandler<T>? = null
 
-    private lateinit var emptyMessage: String
-    private lateinit var errorMessage: String
-    private lateinit var tokenMessage: String
+    private var emptyMessage: String = "No data available"
+    private var errorMessage: String = "Request failed"
+    private var tokenMessage: String = "Authentication token is invalid"
 
     val params = Bundle()
 
@@ -39,12 +38,10 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      */
     fun snapshot(): T? = model.value
 
-    fun setContext(context: Context?) {
-        context?.apply {
-            emptyMessage = getString(R.string.layout_empty_response)
-            errorMessage = getString(R.string.text_error_request)
-            tokenMessage = getString(R.string.text_error_auth_token)
-        }
+    fun setContext(context: Context) {
+        emptyMessage = context.getString(R.string.layout_empty_response)
+        errorMessage = context.getString(R.string.text_error_request)
+        tokenMessage = context.getString(R.string.text_error_auth_token)
     }
 
     /**
@@ -53,8 +50,9 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * @param request_type the type of request to execute
      */
     fun requestData(@KeyUtil.RequestType request_type: Int, context: Context) {
-        mLoader = RequestHandler(params, this, request_type)
-        mLoader?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context)
+        mLoader = RequestHandler(params, this, request_type).also {
+            it.execute(context)
+        }
     }
 
     /**
@@ -65,8 +63,7 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * prevent a leak of this ViewModel.
      */
     override fun onCleared() {
-        if (mLoader?.status != AsyncTask.Status.FINISHED)
-            mLoader?.cancel(true)
+        mLoader?.cancel()
         mLoader = null
         state = null
         super.onCleared()

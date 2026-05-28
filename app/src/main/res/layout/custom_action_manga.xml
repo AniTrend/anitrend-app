@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <data>
-
-        <variable
-            name="model"
-            type="com.mxt.anitrend.model.entity.anilist.MediaList" />
-    </data>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -198,7 +189,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/dialog_hint_enter_your_notes"
                 android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect"
-                android:text="@{model.notes}"
                 android:textSize="@dimen/subtitle_text_size" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -210,5 +200,3 @@
             android:layerType="software" />
 
     </LinearLayout>
-
-</layout>

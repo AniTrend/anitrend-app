@@ -2,18 +2,15 @@ package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
-import butterknife.BindView
-import butterknife.ButterKnife
-import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
 import com.mxt.anitrend.binding.richMarkDown
+import com.mxt.anitrend.databinding.BottomSheetSpoilerBinding
+import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 
 class BottomSheetSpoiler : BottomSheetBase<Unit>() {
 
-    private lateinit var richMarkdownTextView: RichMarkdownTextView
+    private var binding: BottomSheetSpoilerBinding? = null
 
     private val text by lazy(LazyThreadSafetyMode.NONE) {
         arguments?.getString(KeyUtil.arg_text)
@@ -27,17 +24,21 @@ class BottomSheetSpoiler : BottomSheetBase<Unit>() {
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        val contentView = View.inflate(context, R.layout.bottom_sheet_spoiler, null)
-        dialog.setContentView(contentView)
-        unbinder = ButterKnife.bind(this, dialog)
-        richMarkdownTextView = contentView.findViewById(R.id.bottom_text)
-        createBottomSheetBehavior(contentView)
+        binding = BottomSheetSpoilerBinding.inflate(CompatUtil.getLayoutInflater(requireContext()))
+        dialog.setContentView(requireNotNull(binding).root)
+        bindToolbarViews(requireNotNull(binding).root)
+        createBottomSheetBehavior(requireNotNull(binding).root)
         return dialog
     }
 
     override fun onStart() {
         super.onStart()
-        richMarkdownTextView.richMarkDown(text)
+        binding?.bottomText?.richMarkDown(text)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     class Builder : BottomSheetBuilder() {

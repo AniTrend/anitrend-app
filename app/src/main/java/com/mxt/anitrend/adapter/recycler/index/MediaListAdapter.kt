@@ -7,15 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.LinearLayout.LayoutParams
-import androidx.databinding.ViewDataBinding
-import butterknife.OnClick
-import butterknife.OnLongClick
-import butterknife.Optional
+import androidx.viewbinding.ViewBinding
 import com.annimon.stream.Stream
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
+import com.mxt.anitrend.base.custom.view.image.AspectImageView
+import com.mxt.anitrend.base.custom.view.text.AiringTextView
+import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
+import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+import com.mxt.anitrend.binding.setAverageRating
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding
 import com.mxt.anitrend.databinding.AdapterSeriesAiringCompactBinding
 import com.mxt.anitrend.model.entity.anilist.MediaList
@@ -28,15 +30,14 @@ import java.util.*
  * Created by max on 2017/11/03.
  * adapter for series lists
  */
-@Suppress("UNCHECKED_CAST")
-class MediaListAdapter(context: Context?) :
-    RecyclerViewAdapter<MediaList?>(context) {
+class MediaListAdapter(context: Context) :
+    RecyclerViewAdapter<MediaList>(context) {
     private var currentUser: String? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RecyclerViewHolder<MediaList?> {
+    ): RecyclerViewHolder<MediaList> {
         val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
@@ -62,8 +63,8 @@ class MediaListAdapter(context: Context?) :
                     clone = null
                 } else {
                     results.values = Stream.of<MediaList>(clone.orEmpty())
-                        .filter { c: MediaList? ->
-                            isFilterMatch(c!!, filter)
+                        .filter { c: MediaList ->
+                            isFilterMatch(c, filter)
                         }
                         .toList()
                 }
@@ -71,10 +72,9 @@ class MediaListAdapter(context: Context?) :
             }
 
             override fun publishResults(constraint: CharSequence, results: FilterResults) {
-                if (results.values != null) {
-                    data = results.values as List<MediaList?>
-                    notifyDataSetChanged()
-                }
+                val filtered = (results.values as? List<*>)?.filterIsInstance<MediaList>() ?: return
+                data = filtered.toMutableList()
+                notifyDataSetChanged()
             }
         }
     }
@@ -88,8 +88,13 @@ class MediaListAdapter(context: Context?) :
      * Default constructor which includes binding with butter knife
      *
      * @param binding
-     */(private val binding: ViewDataBinding) :
-        RecyclerViewHolder<MediaList?>(binding.root) {
+      */(private val binding: ViewBinding) :
+        RecyclerViewHolder<MediaList>(binding.root) {
+
+        init {
+            bindClickListeners(R.id.series_image, R.id.container)
+            bindLongClickListeners(R.id.series_image, R.id.container)
+        }
 
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
@@ -97,22 +102,30 @@ class MediaListAdapter(context: Context?) :
          *
          * @param model Is the model at the current adapter position
          */
-        override fun onBindViewHolder(model: MediaList?) {
+        override fun onBindViewHolder(model: MediaList) {
             when (binding) {
                 is AdapterSeriesAiringBinding -> {
-                    binding.model = model
+                    AspectImageView.setImage(binding.seriesImage, model.media.coverImage)
+                    SeriesStatusWidget.setAiringStatus(binding.seriesStatus, model)
+                    AiringTextView.setAiring(binding.seriesAiring, model.media)
+                    SeriesYearTypeTextView.htmlText(binding.seriesYearType, model.media)
+                    binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
                     binding.seriesEpisodes.setModel(model, currentUser)
                 }
                 is AdapterSeriesAiringCompactBinding -> {
-                    binding.model = model
+                    AspectImageView.setImage(binding.seriesImage, model.media.coverImage)
+                    SeriesStatusWidget.setAiringStatus(binding.seriesStatus, model)
+                    AiringTextView.setAiring(binding.seriesAiring, model.media)
+                    SeriesYearTypeTextView.htmlText(binding.seriesYearType, model.media)
+                    binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
                     binding.seriesEpisodes.setModel(model, currentUser)
 
                     when (presenter.settings.mediaListStyle) {
                         KeyUtil.LIST_VIEW_STYLE_COMPACT_X1 -> {
                             val margin = context.resources.getDimension(R.dimen.series_title_margin)
-                            val layout = (binding.seriesTitle.layoutParams as LayoutParams)
+                            val layout = binding.seriesTitle.layoutParams as? LayoutParams ?: return
                             layout.marginEnd = margin.toInt()
                         }
                         KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
@@ -124,8 +137,6 @@ class MediaListAdapter(context: Context?) :
                 }
                 else -> {}
             }
-
-            binding.executePendingBindings()
         }
 
         /**
@@ -149,17 +160,12 @@ class MediaListAdapter(context: Context?) :
                 }
                 else -> {}
             }
-            binding.unbind()
         }
 
-        @Optional
-        @OnClick(R.id.series_image, R.id.container)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @Optional
-        @OnLongClick(R.id.series_image, R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }

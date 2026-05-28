@@ -14,9 +14,6 @@ android {
 }
 
 dependencies {
-    /** Butter Knife Libraries */
-    implementation(libs.butterknife)
-    kapt(libs.butterknife.compiler)
 
     /** Material Dialogs */
     implementation(libs.material.dialogs.core)
@@ -47,9 +44,6 @@ dependencies {
 
     /** Material Search View */
     implementation(libs.materialsearchview)
-
-    /** State Layout Library */
-    implementation(libs.progresslayout)
 
     /** Event Bus Library */
     implementation(libs.eventbus)

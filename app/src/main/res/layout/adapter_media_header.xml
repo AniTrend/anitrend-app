@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
-        <import type="com.mxt.anitrend.util.CompatUtil" />
-    </data>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/container"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:layout_margin="@dimen/lg_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardPreventCornerOverlap="false"
-        app:cardBackgroundColor="?cardColor"
-        app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/lg_margin">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    android:layout_margin="@dimen/lg_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="?cardColor"
+    app:cardElevation="@dimen/sm_margin"
+    app:cardCornerRadius="@dimen/lg_margin">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -30,8 +24,7 @@
                 android:id="@+id/series_image"
                 android:layout_width="@dimen/avatar_size_xl"
                 android:layout_height="wrap_content"
-                tools:src="@sample/gintama"
-                app:imageUrl="@{model.coverImage}"/>
+                tools:src="@sample/gintama"/>
 
             <androidx.legacy.widget.Space
                 android:layout_width="@dimen/md_margin"
@@ -47,7 +40,6 @@
                     android:id="@+id/series_status"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/sm_margin"
-                    app:seriesStatus="@{model}"
                     tools:background="@color/colorStateBlue"/>
 
                 <androidx.legacy.widget.Space
@@ -65,10 +57,10 @@
                     android:layout_height="@dimen/md_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_subgroup_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.subGroupTitle)}"
                     tools:text="Supporting" />
 
                 <androidx.legacy.widget.Space
@@ -76,10 +68,10 @@
                     android:layout_height="@dimen/md_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/series_format"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.format)}"
                     tools:text="OVA" />
 
             </LinearLayout>
@@ -87,5 +79,3 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-</layout>

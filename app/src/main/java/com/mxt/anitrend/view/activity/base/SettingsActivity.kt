@@ -4,16 +4,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.Toolbar
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
+import com.mxt.anitrend.databinding.SettingsActivityBinding
 import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.DialogUtil
@@ -25,14 +23,13 @@ import timber.log.Timber
 
 class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
 
-    @BindView(R.id.toolbar)
-    lateinit var toolbar: Toolbar
+    private lateinit var binding: SettingsActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_activity)
-        ButterKnife.bind(this)
-        setSupportActionBar(toolbar)
+        binding = SettingsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

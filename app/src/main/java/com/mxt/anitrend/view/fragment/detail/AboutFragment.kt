@@ -22,7 +22,7 @@ import mehdi.sakout.aboutpage.Element
 class AboutFragment : FragmentBase<Void, BasePresenter, Void>() {
 
     private val aboutPage by lazy(LazyThreadSafetyMode.NONE) {
-        AboutPage(activity)
+        AboutPage(requireContext())
                 .setImage(R.mipmap.ic_launcher)
                 .addGroup(getString(R.string.text_about_general_information))
                 .setDescription(getString(R.string.app_description))
@@ -33,7 +33,7 @@ class AboutFragment : FragmentBase<Void, BasePresenter, Void>() {
                 .addGitHub("AniTrend")
                 .addWebsite("https://anitrend.co")
                 .addItem(Element().setTitle(getString(R.string.text_what_is_new))
-                        .setOnClickListener { DialogUtil.createChangeLog(activity) }
+                        .setOnClickListener { DialogUtil.createChangeLog(requireContext()) }
                         .setIconDrawable(R.drawable.ic_fiber_new_white_24dp))
                 .addItem(Element().setTitle(getString(R.string.text_about_frequently_asked_questions))
                         .setIconDrawable(R.drawable.ic_help_grey_600_24dp)
@@ -60,7 +60,7 @@ class AboutFragment : FragmentBase<Void, BasePresenter, Void>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setPresenter(BasePresenter(context))
+        setPresenter(BasePresenter(requireContext()))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

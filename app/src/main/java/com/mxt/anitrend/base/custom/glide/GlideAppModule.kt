@@ -42,8 +42,9 @@ class GlideAppModule : AppGlideModule() {
         val memoryCacheSize = (1.25 * calculator.memoryCacheSize).toInt()
         val bitmapPoolSize = (1.25 * calculator.bitmapPoolSize).toInt()
         var storageCacheSize = 1024 * 1024 * 350
-        if (context.externalCacheDir != null) {
-            val total = context.externalCacheDir!!.totalSpace
+        val externalCacheDir = context.externalCacheDir
+        if (externalCacheDir != null) {
+            val total = externalCacheDir.totalSpace
             storageCacheSize = (total * 0.2).toInt()
         }
 

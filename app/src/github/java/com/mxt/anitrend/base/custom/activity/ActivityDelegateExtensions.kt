@@ -37,7 +37,7 @@ private fun MainActivity.onUpdateChecked(silent: Boolean, menuItems: Menu) {
     val remoteVersion = presenter.database.remoteVersion
 
     if (remoteVersion != null) {
-        if (remoteVersion.isNewerVersion) {
+        if (remoteVersion.isNewerVersion()) {
             // If a new version of the application is available on GitHub
             val mAppUpdateWidget = menuItems.findItem(R.id.nav_check_update)
                 .actionView?.findViewById<TextView>(R.id.app_update_info)
@@ -77,7 +77,7 @@ fun MainActivity.checkUpdate() {
         .buildWithCallback(object : BottomSheetChoice {
             override fun onPositiveButton() {
                 val versionBase = presenter.database.remoteVersion
-                if (versionBase != null && versionBase.isNewerVersion)
+                if (versionBase != null && versionBase.isNewerVersion())
                     DownloaderService.downloadNewVersion(
                         this@checkUpdate,
                         versionBase

@@ -62,7 +62,7 @@ object DateUtil {
     val menuSelect: Int
         @IntRange(from = 0, to = 4) get() {
             val season = seasons[Calendar.getInstance().get(Calendar.MONTH)]
-            return CompatUtil.constructListFrom(*KeyUtil.MediaSeason)
+            return CompatUtil.constructListFrom(*KeyUtil.MediaSeasonValues)
                 .indexOf(season)
         }
 

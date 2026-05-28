@@ -97,7 +97,12 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        binding.onClickListener = this
+        binding.insertImage.setOnClickListener(this)
+        binding.insertWebm.setOnClickListener(this)
+        binding.insertLink.setOnClickListener(this)
+        binding.insertYoutube.setOnClickListener(this)
+        binding.insertGif.setOnClickListener(this)
+        binding.widgetFlipper.setOnClickListener(this)
     }
 
     private fun resetFlipperState() {
@@ -138,9 +143,10 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
             presenter.onDestroy()
+        }
         itemClickListener = null
     }
 
@@ -161,7 +167,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
                 }
                 KeyUtil.MUT_SAVE_FEED_REPLY -> {
                     if (feedReply != null) {
-                        feedReply?.setText(binding.comment.formattedText)
+                        feedReply?.text = binding.comment.formattedText
                         queryContainer.putVariable(KeyUtil.arg_id, feedReply?.id)
                     }
                     queryContainer.putVariable(KeyUtil.arg_activityId, feedList?.id)
@@ -185,7 +191,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
 
     override fun onClick(view: View) {
         if (itemClickListener != null) {
-            itemClickListener?.onItemClick(view, null)
+            itemClickListener?.onItemClick(view, IntPair(0, view as Any))
             when (view.id) {
                 R.id.widget_flipper -> if (!binding.comment.isEmpty)
                     startRequestData()
@@ -263,14 +269,14 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
         val editor = binding.comment
         val start = editor.selectionStart
         pair.second.images[index]?.apply {
-            editor.editableText.insert(start, MarkDownUtil.convertImage(url))
+            editor.editableText.insert(start, MarkDownUtil.convertImage(url.orEmpty()))
         }
     }
 
     fun appendText(textValue: String?) {
         val start = binding.comment.selectionStart
         val editable = binding.comment.editableText
-        editable.insert(start, textValue)
+        editable.insert(start, textValue.orEmpty())
     }
 
     fun setText(textValue: String?) {
@@ -293,7 +299,7 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
     }
 
     fun mentionUserFrom(feedReply: FeedReply) {
-        val user = feedReply.user.name
-        appendText(String.format(Locale.getDefault(), "@%s ", user))
+        val userName = feedReply.user?.name.orEmpty()
+        appendText(String.format(Locale.getDefault(), "@%s ", userName))
     }
 }

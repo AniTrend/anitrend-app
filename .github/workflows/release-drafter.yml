@@ -1,31 +1,26 @@
-name: release-drafter
+name: Release Drafter
 
 on:
   push:
-    branches:
-      - 'develop'
-  pull_request_target:
-    # Only following types are handled by the action, but one can default to all as well
-    types: [ opened, reopened, synchronize ]
+    branches: [develop]
 
 permissions:
   contents: read
 
 jobs:
-  update-draft-release:
+  update-release-draft:
     permissions:
       contents: write
-      pull-requests: write
+      pull-requests: read
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - name: Release Drafter
+        uses: release-drafter/release-drafter@v7
         id: release_drafter
         with:
           config-name: release-drafter-config.yml
-          disable-autolabeler: false
           commitish: develop
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v4
         with:

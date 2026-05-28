@@ -90,11 +90,11 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
 }
 
 private fun BaseExtension.setUpWith(project: Project) {
-    compileSdkVersion(35)
+    compileSdkVersion(36)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = project.props[PropertyTypes.CODE].toInt()
         versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -133,7 +133,7 @@ private fun BaseAppModuleExtension.configureBuildFlavours(logger: Logger) {
 private fun BaseAppModuleExtension.setUpWith(project: Project) {
     project.createSigningConfiguration(this)
     buildFeatures {
-        dataBinding = true
+        dataBinding = false
         viewBinding = true
         buildConfig = true
     }
@@ -226,12 +226,8 @@ internal fun Project.applyAndroidConfiguration() {
     tasks.withType(KotlinCompile::class.java) {
         val compilerArgumentOptions = mutableListOf(
             "-opt-in=kotlin.ExperimentalStdlibApi",
-            "-opt-in=kotlin.Experimental",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview",
-            "-opt-in=org.koin.core.component.KoinExperimentalAPI",
-            "-opt-in=org.koin.core.component.KoinApiExtension",
-            "-opt-in=org.koin.core.KoinExperimentalAPI"
+            "-opt-in=kotlinx.coroutines.FlowPreview"
         )
 
         compilerOptions {

@@ -9,6 +9,7 @@ import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
@@ -69,22 +70,37 @@ class NotificationWorker(
     }
 
     private fun requestUser(): User? {
-        val userGraphContainer = userEndpoint.getCurrentUser(
+        val response = userEndpoint.getCurrentUser(
                 GraphUtil.getDefaultQuery(false)
-        ).execute().body() as? User?
-
-        return userGraphContainer?.let {
+        ).execute()
+        if (!response.isSuccessful) {
+            return null
+        }
+        return unwrapBody<User>(response.body())?.let {
             presenter.database.currentUser = it
             it
         }
     }
 
     private fun requestNotifications(user: User) {
-        val notificationsContainer = userEndpoint.getUserNotifications(
+        val response = userEndpoint.getUserNotifications(
             GraphUtil.getDefaultQuery(false)
-        ).execute().body() as? PageContainer<Notification>?
+        ).execute()
+        if (!response.isSuccessful) {
+            return
+        }
+        val notificationsContainer = unwrapBody<PageContainer<Notification>>(response.body())
 
         if (user.unreadNotificationCount > 0 && notificationsContainer != null)
             notificationUtil.createNotification(user, notificationsContainer)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> unwrapBody(body: Any?): T? {
+        return when (body) {
+            null -> null
+            is AniListContainer<*> -> body.data?.result as? T
+            else -> body as? T
+        }
     }
 }

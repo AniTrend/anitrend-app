@@ -10,10 +10,14 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppThemeLight.AppBarOverlay">
 
-        <include layout="@layout/custom_toolbar" />
+        <include
+            android:id="@+id/custom_toolbar"
+            layout="@layout/custom_toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_logging" />
+    <include
+        android:id="@+id/content_logging"
+        layout="@layout/content_logging" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

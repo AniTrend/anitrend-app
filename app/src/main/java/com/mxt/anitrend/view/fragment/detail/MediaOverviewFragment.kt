@@ -6,15 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import butterknife.ButterKnife
 import com.afollestad.materialdialogs.DialogAction
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter
 import com.mxt.anitrend.adapter.recycler.detail.TagAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
+import com.mxt.anitrend.base.custom.view.image.AspectImageView
+import com.mxt.anitrend.base.custom.view.text.AiringTextView
+import com.mxt.anitrend.base.custom.view.text.RangeDateTextView
+import com.mxt.anitrend.base.custom.view.text.SeriesTypeView
+import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
+import com.mxt.anitrend.binding.htmlText
 import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding
+import com.mxt.anitrend.databinding.SectionSeriesDescriptionBinding
+import com.mxt.anitrend.databinding.SectionSeriesDetailsBinding
+import com.mxt.anitrend.databinding.SectionSeriesInfoBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.Media
@@ -47,19 +55,19 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val ctx = requireContext()
         if (arguments != null) {
             mediaId = arguments?.getLong(KeyUtil.arg_id) ?: 0
             mediaType = arguments?.getString(KeyUtil.arg_mediaType)
         }
         isMenuDisabled = true
         mColumnSize = R.integer.grid_list_x2
-        setPresenter(MediaPresenter(context))
+        setPresenter(MediaPresenter(ctx))
         setViewModel(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSeriesOverviewBinding.inflate(inflater, container, false).apply {
-            unbinder = ButterKnife.bind(this, root)
             stateLayout.showLoading()
 
             genreRecycler.layoutManager = StaggeredGridLayoutManager(resources.getInteger(mColumnSize), StaggeredGridLayoutManager.VERTICAL)
@@ -82,6 +90,11 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         return binding?.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onStart() {
         super.onStart()
         makeRequest()
@@ -91,14 +104,23 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     override fun updateUI() {
-        if (activity != null && model?.trailer != null && CompatUtil.equals(model?.trailer?.site, "youtube")) {
+        val ctx = context ?: return
+        val trailer = model?.trailer
+        if (activity != null && trailer != null && CompatUtil.equals(trailer.site, "youtube")) {
             childFragmentManager.beginTransaction()
-                    .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(model?.trailer))
+                    .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(trailer))
                     .commit()
         } else
             binding?.youtubeView?.visibility = View.GONE
-        binding?.presenter = presenter
-        binding?.model = model
+
+        binding?.seriesInfoSection?.let { bindSeriesInfo(it, model) }
+        binding?.seriesDescriptionSection?.let { bindSeriesDescription(it, model) }
+        binding?.seriesDetailsSection?.let { bindSeriesDetails(it, model) }
+
+        binding?.genreRecycler?.visibility =
+            if (!CompatUtil.isEmpty(model?.genres)) View.VISIBLE else View.GONE
+        binding?.tagsRecycler?.visibility =
+            if (!CompatUtil.isEmpty(model?.tags)) View.VISIBLE else View.GONE
 
 
         if (model?.tags != null && model?.tagsNoSpoilers != null) {
@@ -109,14 +131,15 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         }
 
         if (genreAdapter == null) {
-            genreAdapter = GenreAdapter(context)
+            genreAdapter = GenreAdapter(ctx)
             genreAdapter?.onItemsInserted(presenter.buildGenres(model))
             genreAdapter?.setClickListener(object : ItemClickListener<Genre> {
                 override fun onItemClick(target: View, data: IntPair<Genre>) {
                     when (target.id) {
                         R.id.container -> {
+                            val host = activity ?: return
                             val args = Bundle()
-                            val intent = Intent(activity, MediaBrowseActivity::class.java)
+                            val intent = Intent(host, MediaBrowseActivity::class.java)
                             args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
                                     .putVariable(KeyUtil.arg_type, mediaType)
                                     .putVariable(KeyUtil.arg_genres, data.second.genre))
@@ -139,26 +162,40 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding?.genreRecycler?.adapter = genreAdapter
         model?.tagsNoSpoilers?.also {
             if (tagAdapter == null) {
-                tagAdapter = TagAdapter(context)
+                tagAdapter = TagAdapter(ctx)
                 tagAdapter?.onItemsInserted(it)
                 tagAdapter?.setClickListener(object : ItemClickListener<MediaTag> {
                     override fun onItemClick(target: View, data: IntPair<MediaTag>) {
                         when (target.id) {
-                            R.id.container -> DialogUtil.createTagMessage(activity, data.second.name, data.second.description, data.second.isMediaSpoiler,
-                                    R.string.More, R.string.Close) { _, which ->
-                                if (which == DialogAction.POSITIVE) {
-                                    val args = Bundle()
-                                    val intent = Intent(activity, MediaBrowseActivity::class.java)
-                                    args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                                            .putVariable(KeyUtil.arg_type, mediaType)
-                                            .putVariable(KeyUtil.arg_tags, data.second.name))
-                                    args.putString(KeyUtil.arg_activity_tag, data.second.name)
-                                    args.putParcelable(KeyUtil.arg_media_util, MediaBrowseUtil()
-                                            .setCompactType(true)
-                                            .setBasicFilter(true)
-                                            .setFilterEnabled(true))
-                                    intent.putExtras(args)
-                                    startActivity(intent)
+                            R.id.container -> activity?.let { host ->
+                                DialogUtil.createTagMessage(
+                                    host,
+                                    data.second.name.orEmpty(),
+                                    data.second.description.orEmpty(),
+                                    data.second.isMediaSpoiler,
+                                    R.string.More,
+                                    R.string.Close
+                                ) { _, which ->
+                                    if (which == DialogAction.POSITIVE) {
+                                        val args = Bundle()
+                                        val intent = Intent(host, MediaBrowseActivity::class.java)
+                                        args.putParcelable(
+                                            KeyUtil.arg_graph_params,
+                                            GraphUtil.getDefaultQuery(true)
+                                                .putVariable(KeyUtil.arg_type, mediaType)
+                                                .putVariable(KeyUtil.arg_tags, data.second.name.orEmpty())
+                                        )
+                                        args.putString(KeyUtil.arg_activity_tag, data.second.name.orEmpty())
+                                        args.putParcelable(
+                                            KeyUtil.arg_media_util,
+                                            MediaBrowseUtil()
+                                                .setCompactType(true)
+                                                .setBasicFilter(true)
+                                                .setFilterEnabled(true)
+                                        )
+                                        intent.putExtras(args)
+                                        startActivity(intent)
+                                    }
                                 }
                             }
                         }
@@ -182,8 +219,10 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         val queryContainer = GraphUtil.getDefaultQuery(isPager)
                 .putVariable(KeyUtil.arg_id, mediaId)
                 .putVariable(KeyUtil.arg_type, mediaType)
-        getViewModel().params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
-        getViewModel().requestData(KeyUtil.MEDIA_OVERVIEW_REQ, context!!)
+        val model = viewModel ?: return
+        val ctx = context ?: return
+        model.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        model.requestData(KeyUtil.MEDIA_OVERVIEW_REQ, ctx)
     }
 
     /**
@@ -215,7 +254,8 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             R.id.anime_main_studio_container -> {
                 val studioBase = presenter.getMainStudioObject(model)
                 if (studioBase != null) {
-                    intent = Intent(activity, StudioActivity::class.java)
+                    val host = activity ?: return
+                    intent = Intent(host, StudioActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, studioBase.id)
                     startActivity(intent)
                 }
@@ -229,6 +269,46 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             }
             else -> super.onClick(v)
         }
+    }
+
+    private fun bindSeriesInfo(sectionBinding: SectionSeriesInfoBinding, media: Media?) {
+        val title = media?.title
+        sectionBinding.seriesTitleRomaji.text = title?.romaji.orEmpty()
+        sectionBinding.seriesTitleEnglish.text = title?.english.orEmpty()
+        SeriesTypeView.setSeriesType(sectionBinding.seriesType, presenter.getMediaFormat(media))
+        SeriesStatusWidget.setStatus(sectionBinding.seriesStatus, media)
+        AspectImageView.setImage(sectionBinding.seriesImage, media?.coverImage)
+    }
+
+    private fun bindSeriesDescription(sectionBinding: SectionSeriesDescriptionBinding, media: Media?) {
+        RangeDateTextView.setStartDate(sectionBinding.seriesStartDate, media?.startDate)
+        RangeDateTextView.setEndDate(sectionBinding.seriesEndDate, media?.endDate)
+        sectionBinding.seriesTitleOriginal.text = media?.title?.original.orEmpty()
+        sectionBinding.seriesDescriptionText.htmlText(media?.description)
+    }
+
+    private fun bindSeriesDetails(sectionBinding: SectionSeriesDetailsBinding, media: Media?) {
+        val mangaVisibility = presenter.isManga(media)
+        val animeVisibility = presenter.isAnime(media)
+
+        sectionBinding.mangaSectionSpace.visibility = mangaVisibility
+        sectionBinding.mangaSection.visibility = mangaVisibility
+        sectionBinding.animeSectionSpace.visibility = animeVisibility
+        sectionBinding.animeSection.visibility = animeVisibility
+        sectionBinding.animeDetailsSpace.visibility = animeVisibility
+        sectionBinding.animeDetailsSection.visibility = animeVisibility
+
+        sectionBinding.seriesSeasonValue.text = presenter.getMediaSeason(media)
+        sectionBinding.seriesOriginValue.text = presenter.getMediaSource(media)
+        sectionBinding.totalChaptersValue.text = presenter.getChapterCount(media)
+        sectionBinding.totalVolumesValue.text = presenter.getVolumeCount(media)
+        sectionBinding.totalEpisodesValue.text = presenter.getEpisodeCount(media)
+        sectionBinding.episodeDurationValue.text = presenter.getEpisodeDuration(media)
+        sectionBinding.hashTagValue.text = presenter.getHashTag(media)
+        sectionBinding.seriesScoreValue.text = presenter.getMediaScore(media)
+        sectionBinding.mainStudioValue.text = presenter.getMainStudio(media)
+        sectionBinding.seriesStatusValue.text = presenter.getMediaStatus(media)
+        AiringTextView.setAiring(sectionBinding.nextEpisodeValue, media)
     }
 
     companion object {

@@ -1,15 +1,9 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickEvent" type="android.view.View.OnClickListener" />
-    </data>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
         <ViewFlipper
             android:id="@+id/widget_thumb_up_flipper"
@@ -20,8 +14,7 @@
             android:padding="@dimen/spacing_small"
             android:foreground="?selectableItemBackground"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClickListener="@{onClickEvent}">
+            android:layout_height="wrap_content">
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                 android:id="@+id/widget_thumb_up"
@@ -57,8 +50,7 @@
             android:padding="@dimen/spacing_small"
             android:foreground="?selectableItemBackground"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClickListener="@{onClickEvent}">
+            android:layout_height="wrap_content">
 
             <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                 android:id="@+id/widget_thumb_down"
@@ -82,5 +74,3 @@
         </ViewFlipper>
 
     </LinearLayout>
-
-</layout>

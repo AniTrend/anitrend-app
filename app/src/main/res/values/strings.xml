@@ -287,6 +287,7 @@
 
     <string name="info_login_req">Please sign in to access this feature!</string>
     <string name="button_try_again">Try Again</string>
+    <string name="try_again">@string/button_try_again</string>
 
     <string name="dialog_add_title">
         <![CDATA[

@@ -43,11 +43,12 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val ctx = requireContext()
         mColumnSize = R.integer.single_list_x1
         isPager = true
         setInflateMenu(R.menu.notification_menu)
-        mAdapter = NotificationAdapter(requireContext())
-        setPresenter(BasePresenter(context))
+        mAdapter = NotificationAdapter(ctx)
+        setPresenter(BasePresenter(ctx))
         setViewModel(true)
     }
 
@@ -71,7 +72,9 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         /*presenter.database.currentUser?.let {
             it.unreadNotificationCount = 3
             koinOf<Settings>().lastDismissedNotificationId = -1
-            koinOf<NotificationUtil>().createNotification(it, viewModel.model.value!!)
+            viewModel.model.value?.let { model ->
+                koinOf<NotificationUtil>().createNotification(it, model)
+            }
         }*/
     }
 
@@ -98,14 +101,14 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
 
     override fun onResume() {
         super.onResume()
-        if (mAdapter != null)
+        if (this::mAdapter.isInitialized)
             mAdapter.notifyDataSetChanged()
     }
 
     override fun onChanged(content: PageContainer<Notification>?) {
         if (content != null) {
             if (content.hasPageInfo())
-                presenter.pageInfo = content.pageInfo
+                presenter.setPageInfo(content.pageInfo)
             if (!content.isEmpty) {
                 val notifications = GraphUtil.filterNotificationList(
                         presenter, content.pageData
@@ -127,8 +130,9 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 .putVariable(KeyUtil.arg_page, presenter.currentPage)
                 .putVariable(KeyUtil.arg_resetNotificationCount, true)
 
-        getViewModel().params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
-        getViewModel().requestData(KeyUtil.USER_NOTIFICATION_REQ, requireContext())
+        val model = viewModel ?: return
+        model.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        model.requestData(KeyUtil.USER_NOTIFICATION_REQ, requireContext())
     }
 
     /**
@@ -168,7 +172,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 .put(notificationHistories)
 
         activity?.runOnUiThread {
-            if (mAdapter != null)
+            if (this::mAdapter.isInitialized)
                 mAdapter.notifyDataSetChanged()
         }
     }
@@ -182,6 +186,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * @param data   the model that at the click index
      */
     override fun onItemClick(target: View, data: IntPair<Notification>) {
+        val host = activity ?: return
         val intent: Intent
         setItemAsRead(data.second)
         if (target.id == R.id.notification_img &&
@@ -191,23 +196,23 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DELETION) &&
                 !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_MERGE)
         ) {
-            intent = Intent(activity, ProfileActivity::class.java)
+            intent = Intent(host, ProfileActivity::class.java)
             intent.putExtra(KeyUtil.arg_id, data.second.user.id)
             startActivity(intent)
         } else
             when (data.second.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
-                    intent = Intent(activity, CommentActivity::class.java)
+                    intent = Intent(host, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.FOLLOWING -> {
-                    intent = Intent(activity, ProfileActivity::class.java)
+                    intent = Intent(host, ProfileActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.user.id)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
-                    intent = Intent(activity, CommentActivity::class.java)
+                    intent = Intent(host, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
@@ -216,7 +221,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 KeyUtil.MEDIA_DATA_CHANGE,
                 KeyUtil.MEDIA_DELETION,
                 KeyUtil.MEDIA_MERGE -> {
-                    intent = Intent(activity, MediaActivity::class.java)
+                    intent = Intent(host, MediaActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.media?.id)
                     intent.putExtra(KeyUtil.arg_mediaType, data.second.media?.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -224,17 +229,17 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                         startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
-                    intent = Intent(activity, CommentActivity::class.java)
+                    intent = Intent(host, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
-                    intent = Intent(activity, CommentActivity::class.java)
+                    intent = Intent(host, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
-                    intent = Intent(activity, CommentActivity::class.java)
+                    intent = Intent(host, CommentActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.activityId)
                     startActivity(intent)
                 }
@@ -271,8 +276,9 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
             setItemAsRead(data.second)
             data.second.media?.also {
                 if (presenter.settings.isAuthenticated) {
+                    val host = activity ?: return
                     mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(it.id).build(activity)
+                        .setId(it.id).build(host)
                     mediaActionUtil.startSeriesAction()
                 }
             }

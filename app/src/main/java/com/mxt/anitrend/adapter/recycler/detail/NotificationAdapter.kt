@@ -5,8 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.Filter
-import butterknife.OnClick
-import butterknife.OnLongClick
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder
@@ -95,6 +93,11 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
             private val binding: AdapterNotificationBinding
     ) : RecyclerViewHolder<Notification>(binding.root) {
 
+        init {
+            bindClickListeners(R.id.container, R.id.notification_img)
+            bindLongClickListeners(R.id.container)
+        }
+
         /**
          * Load image, text, buttons, etc. in this method from the given parameter
          * <br></br>
@@ -113,40 +116,40 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
 
             binding.notificationTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
 
-            if (model.user != null && model.user.avatar != null)
-                AspectImageView.setImage(binding.notificationImg, model.user.avatar.large)
-            else if (model.media != null && model.media?.coverImage != null)
+            if (model.user?.avatar?.large != null)
+                AspectImageView.setImage(binding.notificationImg, model.user?.avatar?.large)
+            else if (model.media?.coverImage?.extraLarge != null)
                 AspectImageView.setImage(binding.notificationImg, model.media?.coverImage?.extraLarge)
 
             when (model.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
                     binding.notificationSubject.setText(R.string.notification_user_activity_message)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.FOLLOWING -> {
                     binding.notificationSubject.setText(R.string.notification_user_follow_activity)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
                     binding.notificationSubject.setText(R.string.notification_user_activity_mention)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.THREAD_COMMENT_MENTION -> {
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.THREAD_SUBSCRIBED -> {
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.THREAD_COMMENT_REPLY -> {
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.AIRING -> {
@@ -157,12 +160,12 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     binding.notificationSubject.setText(R.string.notification_user_like_activity)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
                     binding.notificationSubject.setText(R.string.notification_user_reply_activity)
-                    binding.notificationHeader.text = model.user.name
+                    binding.notificationHeader.text = model.user?.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
@@ -201,7 +204,6 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                     binding.notificationContent.text = model.context
                 }
             }
-            binding.executePendingBindings()
         }
 
         /**
@@ -213,15 +215,12 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
          */
         override fun onViewRecycled() {
             Glide.with(context).clear(binding.notificationImg)
-            binding.unbind()
         }
 
-        @OnClick(R.id.container, R.id.notification_img)
         override fun onClick(v: View) {
             performClick(clickListener, data, v)
         }
 
-        @OnLongClick(R.id.container)
         override fun onLongClick(v: View): Boolean {
             return performLongClick(clickListener, data, v)
         }

@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener" />
-    </data>
-
-    <LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -14,7 +8,6 @@
         android:weightSum="3">
 
         <LinearLayout
-            android:onClickListener="@{onClickListener}"
             android:id="@+id/user_following_container"
             android:clickable="true"
             android:focusable="true"
@@ -42,7 +35,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:onClickListener="@{onClickListener}"
             android:id="@+id/user_followers_container"
             android:clickable="true"
             android:focusable="true"
@@ -70,7 +62,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:onClickListener="@{onClickListener}"
             android:id="@+id/user_favourites_container"
             android:clickable="true"
             android:focusable="true"
@@ -97,5 +88,4 @@
 
         </LinearLayout>
 
-    </LinearLayout>
-</layout>
+</LinearLayout>

@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener" />
-    </data>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
         <com.mxt.anitrend.base.custom.view.image.AvatarImageView
-            android:onClickListener="@{onClickListener}"
             android:clickable="true"
             android:focusable="true"
             android:id="@+id/user_avatar"
@@ -50,4 +43,3 @@
         </FrameLayout>
 
     </FrameLayout>
-</layout>

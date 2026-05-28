@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickEvent" type="android.view.View.OnClickListener" />
-    </data>
-
-    <ViewFlipper
-        android:id="@+id/widget_flipper"
-        android:inAnimation="@android:anim/slide_in_left"
-        android:outAnimation="@android:anim/slide_out_right"
-        android:padding="@dimen/spacing_small"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClickListener="@{onClickEvent}">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_flipper"
+    android:inAnimation="@android:anim/slide_in_left"
+    android:outAnimation="@android:anim/slide_out_right"
+    android:padding="@dimen/spacing_small"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
         <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
             android:id="@+id/widget_delete"
@@ -35,5 +28,3 @@
             app:cpv_indeterminate="true" />
 
     </ViewFlipper>
-
-</layout>

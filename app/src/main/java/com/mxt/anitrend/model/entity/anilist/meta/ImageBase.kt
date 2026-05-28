@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.entity.anilist.meta
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Created by max on 2018/03/20.

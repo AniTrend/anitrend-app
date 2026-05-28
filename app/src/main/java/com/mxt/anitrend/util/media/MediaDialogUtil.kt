@@ -1,0 +1,248 @@
+package com.mxt.anitrend.util.media
+
+import android.content.Context
+import android.os.Bundle
+import android.widget.Toast
+import androidx.core.text.HtmlCompat
+import com.afollestad.materialdialogs.DialogAction
+import com.afollestad.materialdialogs.MaterialDialog
+import com.mxt.anitrend.R
+import com.mxt.anitrend.base.custom.consumer.BaseConsumer
+import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage
+import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
+import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage
+import com.mxt.anitrend.base.interfaces.event.RetroCallback
+import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
+import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.graphql.apiError
+import retrofit2.Call
+import retrofit2.Response
+import timber.log.Timber
+
+/**
+ * Created by max on 2018/01/20.
+ * dialog utils for series entities
+ */
+internal object MediaDialogUtil {
+
+    private val tagName = MediaDialogUtil::class.java.simpleName
+
+    /**
+     * General series managing template dialog builder which sets the text and icon based on the criteria,
+     * new or old series entries.
+     *
+     * @param context from a fragment activity derived class
+     * @param mediaBase non-null series model object off or on the users list
+     */
+    @JvmStatic
+    fun createSeriesManage(context: Context, mediaBase: MediaBase) {
+        val seriesType = mediaBase.type ?: KeyUtil.ANIME
+        val seriesManageBase = buildManagerType(context, seriesType)
+        seriesManageBase.setModel(mediaBase)
+
+        val isNewEntry = mediaBase.mediaListEntry == null
+
+        val materialBuilder = createSeriesManageDialog(
+            context,
+            isNewEntry,
+            MediaUtil.getMediaTitle(mediaBase)
+        )
+        materialBuilder.customView(seriesManageBase, true)
+        materialBuilder.onAny { dialog, which ->
+            when (which) {
+                DialogAction.POSITIVE -> onDialogPositive(context, seriesManageBase, dialog)
+                DialogAction.NEUTRAL -> dialog.dismiss()
+                DialogAction.NEGATIVE -> onDialogNegative(context, seriesManageBase, dialog)
+            }
+        }
+        materialBuilder.show()
+    }
+
+    /**
+     * Dialog negative or delete handler method
+     */
+    private fun onDialogPositive(
+        context: Context,
+        seriesManageBase: CustomSeriesManageBase,
+        dialog: MaterialDialog
+    ) {
+        dialog.dismiss()
+
+        val progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request)
+        progressDialog.show()
+
+        val presenter = WidgetPresenter<MediaList>(context)
+        val params = seriesManageBase.persistChanges()
+        presenter.params = params
+
+        @KeyUtil.RequestType
+        val requestType = KeyUtil.MUT_SAVE_MEDIA_LIST
+
+        presenter.requestData(requestType, context, object : RetroCallback<MediaList> {
+            override fun onResponse(call: Call<MediaList>, response: Response<MediaList>) {
+                try {
+                    progressDialog.dismiss()
+                    val modelClone = seriesManageBase.getModel().clone()
+                    val responseBody = response.body()
+                    if (response.isSuccessful && responseBody != null) {
+                        responseBody.media = modelClone.media
+                        presenter.notifyAllListeners(BaseConsumer(requestType, responseBody), false)
+                        NotifyUtil.makeText(
+                            context,
+                            context.getString(R.string.text_changes_saved),
+                            R.drawable.ic_check_circle_white_24dp,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Timber.tag(tagName).w(response.apiError())
+                        NotifyUtil.makeText(
+                            context,
+                            context.getString(R.string.text_error_request),
+                            R.drawable.ic_warning_white_18dp,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Timber.w(e)
+                }
+            }
+
+            override fun onFailure(call: Call<MediaList>, throwable: Throwable) {
+                Timber.e(throwable)
+                try {
+                    progressDialog.dismiss()
+                    NotifyUtil.makeText(
+                        context,
+                        context.getString(R.string.text_error_request),
+                        R.drawable.ic_warning_white_18dp,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        })
+    }
+
+    /**
+     * Dialog negative or delete handler method
+     */
+    private fun onDialogNegative(
+        context: Context,
+        seriesManageBase: CustomSeriesManageBase,
+        dialog: MaterialDialog
+    ) {
+        dialog.dismiss()
+
+        val progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request)
+        progressDialog.show()
+
+        seriesManageBase.persistChanges()
+
+        val presenter = WidgetPresenter<DeleteState>(context)
+        val params: Bundle = seriesManageBase.persistChanges()
+        presenter.params = params
+
+        @KeyUtil.RequestType
+        val requestType = KeyUtil.MUT_DELETE_MEDIA_LIST
+
+        presenter.requestData(requestType, context, object : RetroCallback<DeleteState> {
+            override fun onResponse(call: Call<DeleteState>, response: Response<DeleteState>) {
+                try {
+                    progressDialog.dismiss()
+                    val deleteState = response.body()
+                    if (response.isSuccessful && deleteState != null) {
+                        if (deleteState.isDeleted) {
+                            presenter.notifyAllListeners(
+                                BaseConsumer<MediaList>(requestType, seriesManageBase.getModel()),
+                                false
+                            )
+                            NotifyUtil.makeText(
+                                context,
+                                context.getString(R.string.text_changes_saved),
+                                R.drawable.ic_check_circle_white_24dp,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        Timber.tag(tagName).w(response.apiError())
+                        NotifyUtil.makeText(
+                            context,
+                            context.getString(R.string.text_error_request),
+                            R.drawable.ic_warning_white_18dp,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+
+            override fun onFailure(call: Call<DeleteState>, throwable: Throwable) {
+                Timber.w(throwable)
+                try {
+                    progressDialog.dismiss()
+                    NotifyUtil.makeText(
+                        context,
+                        context.getString(R.string.text_error_request),
+                        R.drawable.ic_warning_white_18dp,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        })
+    }
+
+    /**
+     * Creates manager view class for both anime and manga depending on
+     */
+    private fun buildManagerType(context: Context, @KeyUtil.MediaType seriesType: String): CustomSeriesManageBase {
+        return if (seriesType == KeyUtil.ANIME) {
+            CustomSeriesAnimeManage(context)
+        } else {
+            CustomSeriesMangaManage(context)
+        }
+    }
+
+    /**
+     * Dialog builder helper for series entities
+     */
+    private fun createSeriesManageDialog(
+        context: Context,
+        isNewEntry: Boolean,
+        title: String
+    ): MaterialDialog.Builder {
+        val materialBuilder = DialogUtil.createDefaultDialog(context)
+            .icon(
+                CompatUtil.getDrawableTintAttr(
+                    context,
+                    if (isNewEntry) R.drawable.ic_fiber_new_white_24dp else R.drawable.ic_border_color_white_24dp,
+                    R.attr.colorAccent
+                )
+            )
+            .title(
+                HtmlCompat.fromHtml(
+                    context.getString(
+                        if (isNewEntry) R.string.dialog_add_title else R.string.dialog_edit_title,
+                        title
+                    ),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
+            )
+            .positiveText(if (isNewEntry) R.string.Add else R.string.Update)
+            .neutralText(R.string.Cancel)
+            .autoDismiss(false)
+        if (!isNewEntry) {
+            materialBuilder.negativeText(R.string.Delete)
+        }
+        return materialBuilder
+    }
+}

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <LinearLayout
-        android:id="@+id/container"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/spacing_lg">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_lg">
 
         <com.mxt.anitrend.base.custom.view.widget.CustomProgress
             android:id="@+id/loading_progress"
@@ -23,4 +21,3 @@
             android:text="@string/Loading" />
 
     </LinearLayout>
-</layout>

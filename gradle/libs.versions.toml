@@ -19,12 +19,12 @@ androidx-work = "2.11.1"
 
 bumptech-glide = "5.0.5"
 
-io-koin = "4.1.1"
+io-koin = "4.2.1"
 io-objectbox = "5.2.0"
 io-mockk = "1.14.9"
 
 jetbrains-dokka = "1.7.20"
-jetbrains-kotlin = "2.3.10"
+jetbrains-kotlin = "2.3.21"
 jetbrains-kotlinx-coroutines = "1.10.2"
 jetbrains-kotlinx-serialization = "1.10.0"
 
@@ -39,7 +39,6 @@ timber = "4.7.1"
 treesSence = "1.0.4"
 prettyTime = "5.0.8.Final"
 betterLinkMovement = "2.2.0"
-butterKnife = "10.2.3"
 multidex = "2.0.1"
 materialDialogs = "0.9.6.0"
 tapTarget = "3.3.2"
@@ -49,14 +48,13 @@ onboarder = "1.0.4"
 mpAndroidChart = "3.1.0"
 aboutPage = "1.3"
 materialSearchView = "1.4.20"
-progressLayout = "master-SNAPSHOT"
 eventBus = "3.3.1"
 alerter = "7.2.4"
 stream = "1.2.2"
 circularProgressView = "2.5.0"
 hamcrest = "2.2"
 txtmark = "0.16"
-chuncker = "4.2.0"
+chuncker = "4.3.1"
 
 anitrend-android-emoji = "2.2.0"
 
@@ -65,8 +63,6 @@ alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
 android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "aboutPage" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 betterLinkMovement = "me.saket:better-link-movement-method:2.2.0"
-butterknife = { module = "com.jakewharton:butterknife", version.ref = "butterKnife" }
-butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", version.ref = "butterKnife" }
 circularprogressview = { module = "com.github.rahatarmanahmed:circularprogressview", version.ref = "circularProgressView" }
 material-dialogs-core = { module = "com.afollestad.material-dialogs:core", version.ref = "materialDialogs" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventBus" }
@@ -79,7 +75,6 @@ mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "
 onboarder = { module = "com.codemybrainsout.onboarding:onboarder", version.ref = "onboarder" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
 prettyTime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettyTime" }
-progresslayout = { module = "com.github.nguyenhoanglam:ProgressLayout", version.ref = "progressLayout" }
 stream = { module = "com.annimon:stream", version.ref = "stream" }
 threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.9"
 treessence = "com.github.bastienpaulfr:Treessence:1.1.2"
@@ -97,12 +92,10 @@ androidx-collectionKtx = "androidx.collection:collection-ktx:1.5.0"
 androidx-coreKtx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx.constraintlayout" }
-androidx-constraintLayout-solver = { module = "androidx.constraintlayout:constraintlayout-solver", version.ref = "androidx.constraintlayout" }
 
 androidx-fragmentKtx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment" }
 androidx-fragment-test = { module = "androidx.fragment:fragment-testing", version.ref = "androidx-fragment" }
 
-androidx-lifecycle-extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
 androidx-lifecycle-runTimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-liveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-viewModelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androix-lifecycle" }
@@ -130,7 +123,7 @@ androidx-work-test = { module = "androidx.work:work-test", version.ref = "androi
 anitrend-android-emoji = { module = "com.github.anitrend.android-emojify:emojify", version.ref = "anitrend-android-emoji" }
 anitrend-android-emoji-contract = { module = "com.github.anitrend.android-emojify:contract", version.ref = "anitrend-android-emoji" }
 anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gson", version.ref = "anitrend-android-emoji" }
-anitrend-support-markwon = "com.github.AniTrend:support-markdown:0.12.1-alpha01"
+anitrend-support-markwon = "com.github.anitrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql = "com.github.anitrend:retrofit-graphql:0.11.13"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.1"

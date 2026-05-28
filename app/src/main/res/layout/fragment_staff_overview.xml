@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mxt.anitrend.widget.ProgressLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.base.StaffBase" />
-        <import type="com.mxt.anitrend.util.CompatUtil" />
-    </data>
-
-    <com.nguyenhoanglam.progresslayout.ProgressLayout
-        android:id="@+id/stateLayout"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateLayout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -47,7 +39,6 @@
                             android:foreground="?selectableItemBackground"
                             android:layout_width="@dimen/series_image_xs"
                             android:layout_height="wrap_content"
-                            app:imageUrl="@{model.image}"
                             tools:src="@sample/gintama"/>
 
                         <LinearLayout
@@ -57,13 +48,13 @@
                             android:layout_height="match_parent">
 
                             <TextView
+                                android:id="@+id/staff_name_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:maxLines="2"
                                 android:ellipsize="end"
                                 android:textStyle="bold"
                                 android:textIsSelectable="true"
-                                android:text="@{model.name.fullName}"
                                 tools:text="Tomokazu Sugita"/>
 
                             <androidx.legacy.widget.Space
@@ -86,9 +77,9 @@
                                 android:text="@string/title_language"/>
 
                             <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/staff_language_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{CompatUtil.INSTANCE.capitalizeWords(model.language)}"
                                 android:fontFamily="sans-serif-light"
                                 android:maxLines="2"
                                 android:ellipsize="end"
@@ -124,10 +115,10 @@
                             android:layout_height="@dimen/md_margin" />
 
                         <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                            android:id="@+id/staff_summary_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
-                            app:textHtml="@{model.description}"
                             tools:text="The Amanto, aliens from outer space, have invaded Earth and taken over feudal Japan."/>
 
                     </LinearLayout>
@@ -138,6 +129,4 @@
 
         </androidx.core.widget.NestedScrollView>
 
-    </com.nguyenhoanglam.progresslayout.ProgressLayout>
-
-</layout>
+    </com.mxt.anitrend.widget.ProgressLayout>

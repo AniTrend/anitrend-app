@@ -8,7 +8,8 @@ import android.content.res.Resources
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.NetworkCapabilities
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -16,7 +17,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.app.ActivityManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
@@ -52,15 +52,17 @@ object CompatUtil {
             level = DeprecationLevel.ERROR
     )
     fun hideKeyboard(activity: FragmentActivity?) {
-            val inputMethodManager = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager?
-            inputMethodManager?.hideSoftInputFromWindow(activity?.window?.decorView?.windowToken, 0)
+            val targetActivity = activity ?: return
+            val inputMethodManager = targetActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(targetActivity.window?.decorView?.windowToken, 0)
     }
 
-    @Suppress("DEPRECATION")
     fun isOnline(context: Context?): Boolean {
-        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        val networkInfo: NetworkInfo? = connectivityManager?.activeNetworkInfo
-        return networkInfo != null && networkInfo.isAvailable && networkInfo.isConnected
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+            ?: return false
+        val network = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     fun cacheProvider(context: Context): Cache? {
@@ -240,8 +242,8 @@ object CompatUtil {
      * Get screen dimensions for the current device configuration
      */
     fun getScreenDimens(deviceDimens: Point, context: Context?) {
-        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
-        windowManager?.defaultDisplay?.getSize(deviceDimens)
+        val displayMetrics = context?.resources?.displayMetrics ?: return
+        deviceDimens.set(displayMetrics.widthPixels, displayMetrics.heightPixels)
     }
 
     /**
@@ -252,7 +254,6 @@ object CompatUtil {
      * @param finish true to allow the calling activity to be finished
      * @param data Intent data for the target activity to receive
      */
-    @Deprecated("Please use standard startActivity calls", level = DeprecationLevel.WARNING)
     @JvmOverloads
     fun startRevealAnim(activity: FragmentActivity?, target: View, data: Intent, finish: Boolean = false) {
         activity?.startActivity(data)
@@ -276,8 +277,11 @@ object CompatUtil {
     }
 
     fun spToPx(spValue: Float): Int {
-        val scaledDensity = Resources.getSystem().displayMetrics.scaledDensity
-        return (spValue * scaledDensity).roundToInt()
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            spValue,
+            Resources.getSystem().displayMetrics
+        ).roundToInt()
     }
 
     /**
@@ -322,7 +326,8 @@ object CompatUtil {
             level = DeprecationLevel.WARNING
     )
     fun getLayoutInflater(context: Context): LayoutInflater {
-        return context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        return (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater)
+            ?: LayoutInflater.from(context)
     }
 
     /**
@@ -482,8 +487,8 @@ object CompatUtil {
     }
 
     fun isLowRamDevice(context: Context?): Boolean {
-        val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        return ActivityManagerCompat.isLowRamDevice(activityManager)
+        val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+        return activityManager?.isLowRamDevice == true
     }
 
     /**
@@ -528,7 +533,7 @@ object CompatUtil {
     }
 
     fun <T : Collection<*>> sizeOf(collection: T?): Int {
-        return if (isEmpty(collection)) 0 else collection!!.size
+        return collection?.size ?: 0
     }
 
     fun equals(a: Any?, b: Any): Boolean {

@@ -55,7 +55,6 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.androidx.work.runtimeKtx)
     dependencies.implementation(libs.androidx.startupRuntime)
 
-    dependencies.implementation(libs.androidx.lifecycle.extensions)
     dependencies.implementation(libs.androidx.lifecycle.runTimeKtx)
     dependencies.implementation(libs.androidx.lifecycle.liveDataKtx)
     dependencies.implementation(libs.androidx.lifecycle.viewModelKtx)

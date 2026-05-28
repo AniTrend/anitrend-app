@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="model" type="com.mxt.anitrend.model.entity.base.MediaBase" />
-    </data>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/container"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground"
-        android:layout_margin="@dimen/lg_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardPreventCornerOverlap="false"
-        app:cardBackgroundColor="?cardColor"
-        app:cardElevation="@dimen/sm_margin"
-        app:cardCornerRadius="@dimen/lg_margin">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    android:layout_margin="@dimen/lg_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="?cardColor"
+    app:cardElevation="@dimen/sm_margin"
+    app:cardCornerRadius="@dimen/lg_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,15 +25,13 @@
                 android:id="@+id/series_status"
                 android:layout_width="@dimen/md_margin"
                 android:layout_height="match_parent"
-                app:seriesStatus="@{model}"
                 tools:background="@color/colorStateBlue"/>
 
             <com.mxt.anitrend.base.custom.view.image.AspectImageView
                 android:id="@+id/series_image"
                 android:layout_width="@dimen/avatar_size_lg"
                 android:layout_height="wrap_content"
-                tools:src="@sample/gintama"
-                app:imageUrl="@{model.coverImage}" />
+                tools:src="@sample/gintama" />
 
             <LinearLayout
                 android:padding="@dimen/lg_margin"
@@ -63,7 +56,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    app:airingDate="@{model}"
                     tools:text="EP 31: 4 days from now"/>
 
                 <androidx.legacy.widget.Space
@@ -71,10 +63,10 @@
                     android:layout_height="@dimen/sm_margin" />
 
                 <com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
+                    android:id="@+id/series_year_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    app:media="@{model}"
                     tools:text="2015 - TV" />
 
             </LinearLayout>
@@ -86,9 +78,6 @@
             android:layout_gravity="bottom|end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/md_margin"
-            app:rating="@{model}"/>
+            android:layout_margin="@dimen/md_margin"/>
 
     </androidx.cardview.widget.CardView>
-
-</layout>

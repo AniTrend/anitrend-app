@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener" />
-    </data>
-
-    <ViewFlipper
-        android:id="@+id/widget_flipper"
-        android:clickable="true"
-        android:focusable="true"
-        android:inAnimation="@android:anim/slide_in_left"
-        android:outAnimation="@android:anim/slide_out_right"
-        android:foreground="?selectableItemBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClickListener="@{onClickListener}">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_flipper"
+    android:clickable="true"
+    android:focusable="true"
+    android:inAnimation="@android:anim/slide_in_left"
+    android:outAnimation="@android:anim/slide_out_right"
+    android:foreground="?selectableItemBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/button_state_container"
@@ -44,5 +37,3 @@
             app:cpv_indeterminate="true" />
 
     </ViewFlipper>
-
-</layout>
