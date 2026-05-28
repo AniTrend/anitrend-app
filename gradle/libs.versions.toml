@@ -54,7 +54,7 @@ stream = "1.2.2"
 circularProgressView = "2.5.0"
 hamcrest = "2.2"
 txtmark = "0.16"
-chuncker = "4.2.0"
+chuncker = "4.3.1"
 
 anitrend-android-emoji = "2.2.0"
 
