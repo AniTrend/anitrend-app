@@ -11,10 +11,8 @@ internal fun Project.configurePlugins() {
     plugins.apply("kotlin-kapt")
     plugins.apply("io.objectbox")
 
-    afterEvaluate {
-        tasks.matching { it.name.startsWith("objectbox") }.configureEach {
-            notCompatibleWithConfigurationCache("ObjectBox PrepareTask cannot serialize Project reference")
-        }
+    tasks.matching { it.name.startsWith("objectbox") }.configureEach {
+        notCompatibleWithConfigurationCache("ObjectBox PrepareTask cannot serialize Project reference")
     }
 }
 
