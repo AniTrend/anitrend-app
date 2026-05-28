@@ -9,7 +9,7 @@
 
         <include layout="@layout/custom_sheet_toolbar" />
 
-        <com.nguyenhoanglam.progresslayout.ProgressLayout
+        <com.mxt.anitrend.widget.ProgressLayout
             android:id="@+id/stateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -21,6 +21,6 @@
                 android:layoutAnimation="@anim/layout_animation_fall_down"
                 android:scrollbars="vertical"/>
 
-        </com.nguyenhoanglam.progresslayout.ProgressLayout>
+        </com.mxt.anitrend.widget.ProgressLayout>
 
     </LinearLayout>

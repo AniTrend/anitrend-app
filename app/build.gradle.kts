@@ -45,9 +45,6 @@ dependencies {
     /** Material Search View */
     implementation(libs.materialsearchview)
 
-    /** State Layout Library */
-    implementation(libs.progresslayout)
-
     /** Event Bus Library */
     implementation(libs.eventbus)
 

@@ -48,7 +48,6 @@ onboarder = "1.0.4"
 mpAndroidChart = "3.1.0"
 aboutPage = "1.3"
 materialSearchView = "1.4.20"
-progressLayout = "master-SNAPSHOT"
 eventBus = "3.3.1"
 alerter = "7.2.4"
 stream = "1.2.2"
@@ -76,7 +75,6 @@ mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "
 onboarder = { module = "com.codemybrainsout.onboarding:onboarder", version.ref = "onboarder" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
 prettyTime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettyTime" }
-progresslayout = { module = "com.github.nguyenhoanglam:ProgressLayout", version.ref = "progressLayout" }
 stream = { module = "com.annimon:stream", version.ref = "stream" }
 threeTenBp = "com.jakewharton.threetenabp:threetenabp:1.4.9"
 treessence = "com.github.bastienpaulfr:Treessence:1.1.2"

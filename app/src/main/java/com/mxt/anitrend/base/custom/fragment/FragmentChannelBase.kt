@@ -34,7 +34,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
 import com.mxt.anitrend.view.activity.index.SearchActivity
-import com.nguyenhoanglam.progresslayout.ProgressLayout
+import com.mxt.anitrend.widget.ProgressLayout
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber

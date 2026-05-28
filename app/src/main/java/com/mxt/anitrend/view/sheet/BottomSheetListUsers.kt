@@ -24,7 +24,7 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
-import com.nguyenhoanglam.progresslayout.ProgressLayout
+import com.mxt.anitrend.widget.ProgressLayout
 import io.github.wax911.library.model.request.QueryContainerBuilder
 
 class BottomSheetListUsers :
@@ -226,14 +226,14 @@ class BottomSheetListUsers :
         super.showError(error)
         stateLayout?.showLoading()
         val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_cry) ?: return
-        stateLayout?.showError(drawable, error, getString(R.string.try_again), stateLayoutOnClick)
+        stateLayout?.showError(drawable, error, getString(R.string.button_try_again), stateLayoutOnClick)
     }
 
     override fun showEmpty(message: String) {
         super.showEmpty(message)
         stateLayout?.showLoading()
         val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat) ?: return
-        stateLayout?.showError(drawable, message, getString(R.string.try_again), stateLayoutOnClick)
+        stateLayout?.showError(drawable, message, getString(R.string.button_try_again), stateLayoutOnClick)
     }
 
     override fun onItemClick(target: View, data: IntPair<UserBase>) {

@@ -42,7 +42,7 @@ class GroupingUtilTests {
     )
     private val languages = arrayOf("ENGLISH", "JAPANESE")
 
-    private val mediaOfAllFormats: List<MediaBase> = KeyUtil.MediaFormat
+    private val mediaOfAllFormats: List<MediaBase> = KeyUtil.MediaFormatValues
         .filterNotNull()
         .map { format ->
             mock(MediaBase::class.java).apply {
@@ -52,7 +52,7 @@ class GroupingUtilTests {
         .sortedBy { it.format }
 
     private val mediaFormatMap: Map<String, List<MediaBase>> = mediaOfAllFormats
-        .groupBy { it.format }
+        .groupBy { it.format.orEmpty() }
 
     private val staffOfAllLanguages: List<StaffBase> = languages
         .sorted()
@@ -63,7 +63,7 @@ class GroupingUtilTests {
         }
 
     private val staffLanguageMap: Map<String, List<StaffBase>> = staffOfAllLanguages
-        .groupBy { it.language }
+        .groupBy { it.language.orEmpty() }
 
     private val mediaOfAllRelations: List<MediaEdge> = relationTypes
         .sorted()
@@ -81,7 +81,7 @@ class GroupingUtilTests {
         }
 
     private val mediaRelationMap: Map<String, List<MediaBase>> = mediaOfAllRelations
-        .groupBy { it.relationType }
+        .groupBy { it.relationType.orEmpty() }
         .mapValues { entry ->
             entry.value.map { it.node }
         }
@@ -97,7 +97,7 @@ class GroupingUtilTests {
         }
 
     private val characterRoleMap: Map<String, List<CharacterBase>> = charactersOfAllRoles
-        .groupBy { it.role }
+        .groupBy { it.role.orEmpty() }
         .mapValues { entry ->
             entry.value.map { it.node }
         }
@@ -113,7 +113,7 @@ class GroupingUtilTests {
         }
 
     private val staffRoleMap: Map<String, List<StaffBase>> = staffOfAllRoles
-        .groupBy { it.role }
+        .groupBy { it.role.orEmpty() }
         .mapValues { entry ->
             entry.value.map { it.node }
         }
@@ -129,7 +129,7 @@ class GroupingUtilTests {
         }
 
     private val mediaStaffRoleMap: Map<String, List<MediaBase>> = mediaOfAllStaffRoles
-        .groupBy { it.staffRole }
+        .groupBy { it.staffRole.orEmpty() }
         .mapValues { entry ->
             entry.value.map { it.node }
         }
@@ -166,8 +166,9 @@ class GroupingUtilTests {
 
         val required = mediaFormatMap.keys
             .sorted()
-            .filter { format -> !existingFormats.contains(format) }
-            .flatMap(getRecyclerItemsMapperForMap(mediaFormatMap))
+            .flatMap(getRecyclerItemsMapperForMap(mediaFormatMap) { format ->
+                !existingFormats.contains(format)
+            })
 
         val results = GroupingUtil.groupMediaByFormat(mediaOfAllFormats, existingItems)
 
@@ -207,8 +208,9 @@ class GroupingUtilTests {
 
         val required = staffLanguageMap.keys
             .sorted()
-            .filter { language -> !existingLanguages.contains(language) }
-            .flatMap(getRecyclerItemsMapperForMap(staffLanguageMap))
+            .flatMap(getRecyclerItemsMapperForMap(staffLanguageMap) { language ->
+                !existingLanguages.contains(language)
+            })
 
         val results = GroupingUtil.groupStaffByLanguage(staffOfAllLanguages, existingItems)
 
@@ -240,7 +242,7 @@ class GroupingUtilTests {
         val required = mediaEdges.flatMap { edge ->
             val items = mutableListOf<RecyclerItem>()
             items.add(edge.node)
-            items.addAll(edge.voiceActors)
+            items.addAll(edge.voiceActors.orEmpty())
             items
         }
 
@@ -252,8 +254,8 @@ class GroupingUtilTests {
         val media = result.filterIsInstance<MediaBase>()
 
         media.forEachIndexed { index, item ->
-            verify(item).setSubGroupTitle(characterRoles[index])
-            verify(item).setContentType(KeyUtil.RECYCLER_TYPE_HEADER)
+            verify(item).subGroupTitle = characterRoles[index]
+            verify(item).contentType = KeyUtil.RECYCLER_TYPE_HEADER
         }
     }
 
@@ -304,8 +306,9 @@ class GroupingUtilTests {
 
         val required = characterRoleMap.keys
             .sorted()
-            .filter { role -> !existingRoles.contains(role) }
-            .flatMap(getRecyclerItemsMapperForMap(characterRoleMap))
+            .flatMap(getRecyclerItemsMapperForMap(characterRoleMap) { role ->
+                !existingRoles.contains(role)
+            })
 
         val results = GroupingUtil.groupCharactersByRole(charactersOfAllRoles, existingItems)
 
@@ -343,8 +346,9 @@ class GroupingUtilTests {
 
         val required = staffRoleMap.keys
             .sorted()
-            .filter { role -> !existingRoles.contains(role) }
-            .flatMap(getRecyclerItemsMapperForMap(staffRoleMap))
+            .flatMap(getRecyclerItemsMapperForMap(staffRoleMap) { role ->
+                !existingRoles.contains(role)
+            })
 
         val results = GroupingUtil.groupStaffByRole(staffOfAllRoles, existingItems)
 
@@ -382,8 +386,9 @@ class GroupingUtilTests {
 
         val required = mediaStaffRoleMap.keys
             .sorted()
-            .filter { role -> !existingRoles.contains(role) }
-            .flatMap(getRecyclerItemsMapperForMap(mediaStaffRoleMap))
+            .flatMap(getRecyclerItemsMapperForMap(mediaStaffRoleMap) { role ->
+                !existingRoles.contains(role)
+            })
 
         val results = GroupingUtil.groupMediaByStaffRole(mediaOfAllStaffRoles, existingItems)
 

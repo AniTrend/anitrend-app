@@ -52,6 +52,10 @@
     <dimen name="spacing_sm">24dp</dimen>
     <dimen name="spacing_xs">16dp</dimen>
 
+    <!-- Legacy aliases used by older layouts -->
+    <dimen name="spacing_medium">@dimen/spacing_md</dimen>
+    <dimen name="spacing_small">@dimen/spacing_sm</dimen>
+
     <dimen name="divider_height">1px</dimen>
 
     <dimen name="series_title_margin">36dp</dimen>

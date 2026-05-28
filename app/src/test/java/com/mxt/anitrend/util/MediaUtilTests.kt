@@ -9,7 +9,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.arrayContainingInAnyOrder
 import org.hamcrest.Matchers.empty
 import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.is
+import org.hamcrest.Matchers.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -46,36 +46,36 @@ class MediaUtilTests {
 
     @Test
     fun isAnimeType_givenNull_shouldReturnFalse() {
-        assertThat(MediaUtil.isAnimeType(null), is(false))
+        assertThat(MediaUtil.isAnimeType(null), `is`(false))
     }
 
     @Test
     fun isAnimeType_givenAnime_shouldReturnTrue() {
         `when`(media.type).thenReturn(KeyUtil.ANIME)
-        assertThat(MediaUtil.isAnimeType(media), is(true))
+        assertThat(MediaUtil.isAnimeType(media), `is`(true))
     }
 
     @Test
     fun isAnimeType_givenManga_shouldReturnFalse() {
         `when`(media.type).thenReturn(KeyUtil.MANGA)
-        assertThat(MediaUtil.isAnimeType(media), is(false))
+        assertThat(MediaUtil.isAnimeType(media), `is`(false))
     }
 
     @Test
     fun isMangaType_givenNull_shouldReturnFalse() {
-        assertThat(MediaUtil.isMangaType(null), is(false))
+        assertThat(MediaUtil.isMangaType(null), `is`(false))
     }
 
     @Test
     fun isMangaType_givenAnime_shouldReturnFalse() {
         `when`(media.type).thenReturn(KeyUtil.ANIME)
-        assertThat(MediaUtil.isMangaType(media), is(false))
+        assertThat(MediaUtil.isMangaType(media), `is`(false))
     }
 
     @Test
     fun isMangaType_givenManga_shouldReturnTrue() {
         `when`(media.type).thenReturn(KeyUtil.MANGA)
-        assertThat(MediaUtil.isMangaType(media), is(true))
+        assertThat(MediaUtil.isMangaType(media), `is`(true))
     }
 
     @Test
@@ -87,7 +87,7 @@ class MediaUtilTests {
         `when`(list.progress).thenReturn(progress)
         `when`(media.episodes).thenReturn(episodes)
 
-        assertThat(MediaUtil.isIncrementLimitReached(list), is(true))
+        assertThat(MediaUtil.isIncrementLimitReached(list), `is`(true))
     }
 
     @Test
@@ -99,7 +99,7 @@ class MediaUtilTests {
         `when`(list.progress).thenReturn(progress)
         `when`(media.episodes).thenReturn(episodes)
 
-        assertThat(MediaUtil.isIncrementLimitReached(list), is(false))
+        assertThat(MediaUtil.isIncrementLimitReached(list), `is`(false))
     }
 
     @Test
@@ -111,7 +111,7 @@ class MediaUtilTests {
         `when`(list.progress).thenReturn(progress)
         `when`(media.episodes).thenReturn(episodes)
 
-        assertThat(MediaUtil.isIncrementLimitReached(list), is(false))
+        assertThat(MediaUtil.isIncrementLimitReached(list), `is`(false))
     }
 
     @Test
@@ -123,7 +123,7 @@ class MediaUtilTests {
         `when`(list.progress).thenReturn(progress)
         `when`(media.chapters).thenReturn(chapters)
 
-        assertThat(MediaUtil.isIncrementLimitReached(list), is(true))
+        assertThat(MediaUtil.isIncrementLimitReached(list), `is`(true))
     }
 
     @Test
@@ -135,7 +135,7 @@ class MediaUtilTests {
         `when`(list.progress).thenReturn(progress)
         `when`(media.chapters).thenReturn(chapters)
 
-        assertThat(MediaUtil.isIncrementLimitReached(list), is(false))
+        assertThat(MediaUtil.isIncrementLimitReached(list), `is`(false))
     }
 
     @Test
@@ -147,24 +147,24 @@ class MediaUtilTests {
         `when`(list.progress).thenReturn(progress)
         `when`(media.chapters).thenReturn(chapters)
 
-        assertThat(MediaUtil.isIncrementLimitReached(list), is(false))
+        assertThat(MediaUtil.isIncrementLimitReached(list), `is`(false))
     }
 
     @Test
     fun isAllowedStatus_ifMediaIsNotYetReleased_shouldReturnFalse() {
         `when`(media.status).thenReturn(KeyUtil.NOT_YET_RELEASED)
-        assertThat(MediaUtil.isAllowedStatus(list), is(false))
+        assertThat(MediaUtil.isAllowedStatus(list), `is`(false))
     }
 
     @Test
     fun isAllowedStatus_forAnyOtherStatus_shouldReturnTrue() {
-        for (status in KeyUtil.MediaStatus) {
+        for (status in KeyUtil.MediaStatusValues.filterNotNull()) {
             if (KeyUtil.NOT_YET_RELEASED != status) {
                 `when`(media.status).thenReturn(status)
                 assertThat(
                     "Incrementing should be allowed for status: $status",
                     MediaUtil.isAllowedStatus(list),
-                    is(true)
+                    `is`(true)
                 )
             }
         }
@@ -223,7 +223,8 @@ class MediaUtilTests {
             `when`(list.media.status).thenReturn(KeyUtil.RELEASING)
         }
 
-        val notReleasing = KeyUtil.MediaStatus
+        val notReleasing = KeyUtil.MediaStatusValues
+            .filterNotNull()
             .filter { it != KeyUtil.RELEASING }
             .map { status ->
                 mock(MediaBase::class.java).apply {

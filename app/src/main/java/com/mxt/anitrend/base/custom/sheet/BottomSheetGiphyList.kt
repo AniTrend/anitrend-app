@@ -16,7 +16,7 @@ import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer
 import com.mxt.anitrend.util.KeyUtil
-import com.nguyenhoanglam.progresslayout.ProgressLayout
+import com.mxt.anitrend.widget.ProgressLayout
 
 /**
  * Created by max on 2017/12/09.

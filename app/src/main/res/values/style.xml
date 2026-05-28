@@ -1,4 +1,7 @@
 <resources>
+    <!-- Default Application Theme -->
+    <style name="AppTheme" parent="AppThemeLight" />
+
     <!-- Light Application Theme -->
     <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>

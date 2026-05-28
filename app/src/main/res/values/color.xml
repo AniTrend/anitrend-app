@@ -52,6 +52,9 @@
     <color name="colorTextDark">#424242</color>
     <color name="colorTextDark2nd">#757575</color>
     <color name="colorTextGrey">#9e9e9e</color>
+    <!-- Legacy aliases used by older styles/drawables -->
+    <color name="grey">@color/colorGrey600</color>
+    <color name="grey_light">@color/colorGreyLight</color>
 
     <color name="colorTextTitleDark">@color/colorTextLight</color>
     <color name="colorTextSubtitleDark">@color/colorTextGrey2nd</color>

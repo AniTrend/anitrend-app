@@ -12,7 +12,7 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.nguyenhoanglam.progresslayout.ProgressLayout
+import com.mxt.anitrend.widget.ProgressLayout
 import timber.log.Timber
 
 abstract class BottomSheetList<T : android.os.Parcelable> :

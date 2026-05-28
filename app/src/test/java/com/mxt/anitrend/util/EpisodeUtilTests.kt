@@ -6,7 +6,7 @@ import com.mxt.anitrend.util.collection.EpisodeUtil
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.is
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.nullValue
 import org.junit.Test
 import org.mockito.Mockito.`when`
@@ -51,7 +51,7 @@ class EpisodeUtilTests {
 
         assertThat(
             EpisodeUtil.episodeSupport(links),
-            is(
+            `is`(
                 anyOf(
                     equalTo(show + ".rss"),
                     equalTo(feedUrl)

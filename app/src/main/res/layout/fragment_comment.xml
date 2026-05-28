@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
 
-                <com.nguyenhoanglam.progresslayout.ProgressLayout
+                <com.mxt.anitrend.widget.ProgressLayout
                     android:id="@+id/stateLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -43,7 +43,7 @@
                         android:layoutAnimation="@anim/layout_animation_fall_down"
                         android:scrollbars="vertical" />
 
-                </com.nguyenhoanglam.progresslayout.ProgressLayout>
+                </com.mxt.anitrend.widget.ProgressLayout>
 
             </LinearLayout>
 
