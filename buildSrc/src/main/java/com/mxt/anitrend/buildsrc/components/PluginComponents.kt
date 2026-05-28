@@ -14,6 +14,10 @@ internal fun Project.configurePlugins() {
     tasks.matching { it.name.startsWith("objectbox") }.configureEach {
         notCompatibleWithConfigurationCache("ObjectBox PrepareTask cannot serialize Project reference")
     }
+
+    tasks.matching { it.name.startsWith("dataBinding") }.configureEach {
+        notCompatibleWithConfigurationCache("AGP DataBinding task cannot serialize ResolutionBackedFileCollection")
+    }
 }
 
 internal fun Project.configureAdditionalPlugins() {
