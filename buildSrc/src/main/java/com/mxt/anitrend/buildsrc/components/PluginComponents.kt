@@ -10,6 +10,12 @@ internal fun Project.configurePlugins() {
     plugins.apply("kotlin-parcelize")
     plugins.apply("kotlin-kapt")
     plugins.apply("io.objectbox")
+
+    afterEvaluate {
+        tasks.matching { it.name.startsWith("objectbox") }.configureEach {
+            notCompatibleWithConfigurationCache("ObjectBox PrepareTask cannot serialize Project reference")
+        }
+    }
 }
 
 internal fun Project.configureAdditionalPlugins() {
