@@ -92,7 +92,6 @@ androidx-collectionKtx = "androidx.collection:collection-ktx:1.5.0"
 androidx-coreKtx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 
 androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx.constraintlayout" }
-androidx-constraintLayout-solver = { module = "androidx.constraintlayout:constraintlayout-solver", version.ref = "androidx.constraintlayout" }
 
 androidx-fragmentKtx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment" }
 androidx-fragment-test = { module = "androidx.fragment:fragment-testing", version.ref = "androidx-fragment" }
