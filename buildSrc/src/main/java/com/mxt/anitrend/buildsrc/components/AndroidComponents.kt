@@ -90,11 +90,11 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
 }
 
 private fun BaseExtension.setUpWith(project: Project) {
-    compileSdkVersion(35)
+    compileSdkVersion(36)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = project.props[PropertyTypes.CODE].toInt()
         versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
