@@ -63,7 +63,7 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
     protected val viewModel: ViewModelBase<M>?
         get() = viewModelRef
 
-    protected var mBottomSheet: BottomSheetBase<*>? = null
+    internal var mBottomSheet: BottomSheetBase<*>? = null
     protected var mFragment: FragmentBase<*, *, *>? = null
     protected var mActionBar: ActionBar? = null
     protected lateinit var intentBundleUtil: IntentBundleUtil
@@ -367,7 +367,7 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
     }
 
     @get:JvmName("presenterInstance")
-    protected val presenter: P
+    internal val presenter: P
         get() = requireNotNull(presenterRef)
 
     @Suppress("UNCHECKED_CAST")
@@ -433,7 +433,7 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
         }
     }
 
-    protected fun showBottomSheet() {
+    internal fun showBottomSheet() {
         mBottomSheet?.let { sheet ->
             sheet.show(supportFragmentManager, sheet.tag)
         }
