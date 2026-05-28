@@ -96,7 +96,6 @@ androidx-constraintLayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-fragmentKtx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment" }
 androidx-fragment-test = { module = "androidx.fragment:fragment-testing", version.ref = "androidx-fragment" }
 
-androidx-lifecycle-extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
 androidx-lifecycle-runTimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-liveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-viewModelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androix-lifecycle" }
