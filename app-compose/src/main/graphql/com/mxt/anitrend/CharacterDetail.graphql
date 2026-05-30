@@ -1,0 +1,32 @@
+query CharacterDetail($id: Int!) {
+  Character(id: $id) {
+    id
+    name {
+      first
+      last
+      full
+      native
+    }
+    image {
+      large
+      medium
+    }
+    description(asHtml: false)
+    isFavourite
+    siteUrl
+    media(sort: POPULARITY_DESC) {
+      nodes {
+        id
+        title {
+          userPreferred
+        }
+        type
+        format
+        coverImage {
+          medium
+        }
+        meanScore
+      }
+    }
+  }
+}

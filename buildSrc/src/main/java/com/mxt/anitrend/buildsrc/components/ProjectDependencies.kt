@@ -116,6 +116,15 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.smarttablayout.library)
     dependencies.implementation(libs.smarttablayout.utils)
 
+    /** Apollo GraphQL */
+    dependencies.implementation(libs.apollo.runtime)
+    dependencies.implementation(libs.apollo.normalized.cache.sqlite)
+    dependencies.implementation(libs.apollo.annotations)
+
+    /** Room Database */
+    dependencies.implementation(libs.room.runtime)
+    dependencies.implementation(libs.room.ktx)
+
     /** Testing-only dependencies */
     dependencies.testImplementation(libs.junit)
     dependencies.testImplementation(libs.hamcrest)

@@ -1,0 +1,15 @@
+query WatchList($userId: Int, $userName: String, $type: MediaType, $status: MediaListStatus) {
+  MediaListCollection(userId: $userId, userName: $userName, type: $type) {
+    lists {
+      name status isCustomList
+      entries {
+        id status score progress progressVolumes
+        media {
+          id title { userPreferred } type format status(version: 2)
+          coverImage { medium } episodes chapters meanScore
+          nextAiringEpisode { airingAt episode }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+query AnimeTrending($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    media(type: ANIME, sort: TRENDING_DESC) {
+      id
+      title {
+        userPreferred
+      }
+      coverImage {
+        medium
+        large
+      }
+      meanScore
+      format
+      episodes
+    }
+  }
+}

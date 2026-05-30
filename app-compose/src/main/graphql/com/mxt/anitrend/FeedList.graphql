@@ -1,0 +1,83 @@
+query FeedList($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      currentPage
+      hasNextPage
+      lastPage
+      perPage
+      total
+    }
+    activities(sort: ID_DESC) {
+      __typename
+      ... on ListActivity {
+        id
+        status
+        progress
+        createdAt
+        type
+        replyCount
+        isLocked
+        siteUrl
+        media {
+          id
+          title {
+            userPreferred
+          }
+          type
+          format
+          status(version: 2)
+          coverImage {
+            large
+            medium
+          }
+          bannerImage
+          episodes
+          chapters
+          volumes
+          isAdult
+          meanScore
+          siteUrl
+        }
+        user {
+          id
+          name
+          avatar {
+            large
+            medium
+          }
+        }
+        likes {
+          id
+          name
+          avatar {
+            medium
+          }
+        }
+      }
+      ... on TextActivity {
+        id
+        text(asHtml: false)
+        createdAt
+        type
+        replyCount
+        isLocked
+        siteUrl
+        user {
+          id
+          name
+          avatar {
+            large
+            medium
+          }
+        }
+        likes {
+          id
+          name
+          avatar {
+            medium
+          }
+        }
+      }
+    }
+  }
+}

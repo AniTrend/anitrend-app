@@ -1,0 +1,12 @@
+query StaffSearch($search: String, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    staff(search: $search) {
+      id
+      name { full first last }
+      image { medium large }
+      language
+      isFavourite
+      siteUrl
+    }
+  }
+}

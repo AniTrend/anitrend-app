@@ -1,0 +1,32 @@
+query MediaSearch($search: String, $page: Int, $perPage: Int, $type: MediaType) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      currentPage
+      hasNextPage
+      total
+    }
+    media(search: $search, type: $type) {
+      id
+      title {
+        userPreferred
+      }
+      type
+      format
+      status(version: 2)
+      meanScore
+      coverImage {
+        medium
+        large
+      }
+      seasonYear
+      episodes
+      chapters
+      studios(isMain: true) {
+        nodes {
+          id
+          name
+        }
+      }
+    }
+  }
+}

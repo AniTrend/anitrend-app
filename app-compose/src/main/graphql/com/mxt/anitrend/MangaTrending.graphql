@@ -1,0 +1,17 @@
+query MangaTrending($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    media(type: MANGA, sort: TRENDING_DESC) {
+      id
+      title {
+        userPreferred
+      }
+      coverImage {
+        medium
+        large
+      }
+      meanScore
+      format
+      episodes
+    }
+  }
+}

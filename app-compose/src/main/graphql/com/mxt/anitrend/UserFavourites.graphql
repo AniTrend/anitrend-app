@@ -1,0 +1,11 @@
+query UserFavourites($userId: Int, $userName: String, $page: Int, $perPage: Int) {
+  User(id: $userId, name: $userName) {
+    favourites {
+      anime(page: $page, perPage: $perPage) { nodes { id title { userPreferred } type format coverImage { medium } meanScore } }
+      manga(page: $page, perPage: $perPage) { nodes { id title { userPreferred } type format coverImage { medium } meanScore } }
+      characters(page: $page, perPage: $perPage) { nodes { id name { full } image { medium } } }
+      staff(page: $page, perPage: $perPage) { nodes { id name { full } image { medium } } }
+      studios(page: $page, perPage: $perPage) { nodes { id name isAnimationStudio } }
+    }
+  }
+}

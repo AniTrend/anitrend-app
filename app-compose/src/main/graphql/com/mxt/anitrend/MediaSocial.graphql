@@ -1,0 +1,12 @@
+query MediaSocial($mediaId: Int!, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo { currentPage hasNextPage }
+    activities(mediaId: $mediaId, type: MEDIA_LIST, sort: ID_DESC) {
+      ... on ListActivity {
+        id status progress createdAt
+        user { id name avatar { medium } }
+        media { id title { userPreferred } coverImage { medium } type }
+      }
+    }
+  }
+}

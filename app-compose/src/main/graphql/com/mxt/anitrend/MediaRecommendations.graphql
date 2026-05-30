@@ -1,0 +1,11 @@
+query MediaRecommendations($id: Int!) {
+  Media(id: $id) {
+    recommendations(sort: [RATING_DESC, ID]) {
+      nodes {
+        mediaRecommendation {
+          id title { userPreferred } type format coverImage { medium } meanScore
+        }
+      }
+    }
+  }
+}

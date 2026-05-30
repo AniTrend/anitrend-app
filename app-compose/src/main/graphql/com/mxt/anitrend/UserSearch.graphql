@@ -1,0 +1,7 @@
+query UserSearch($search: String, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    users(search: $search) {
+      id name avatar { medium large } about(asHtml: false)
+    }
+  }
+}

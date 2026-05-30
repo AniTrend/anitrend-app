@@ -1,0 +1,11 @@
+query CharacterSearch($search: String, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    characters(search: $search) {
+      id
+      name { full first last }
+      image { medium large }
+      isFavourite
+      siteUrl
+    }
+  }
+}
