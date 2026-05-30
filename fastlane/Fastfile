@@ -48,19 +48,19 @@ platform :android do
     )
   end
 
-  # desc "Promote existing Beta build to Production on Google Play"
-  # lane :submit_prod do
-  #  upload_to_play_store(
-  #    track: 'beta',
-  #    track_promote_to: 'production',
-  #    track_promote_release_status: 'draft',
-  #    skip_upload_apk: true,
-  #    skip_upload_aab: true,
-  #    skip_upload_metadata: skip_metadata_upload,
-  #    skip_upload_images: skip_metadata_upload,
-  #    version_code: ENV['VERSION_CODE'],
-  #  )
-  # end
+  desc "Promote existing Beta build to Production on Google Play"
+  lane :submit_prod do
+   upload_to_play_store(
+     track: 'beta',
+     track_promote_to: 'production',
+     track_promote_release_status: 'draft',
+     skip_upload_apk: true,
+     skip_upload_aab: true,
+     skip_upload_metadata: skip_metadata_upload,
+     skip_upload_images: skip_metadata_upload,
+     version_code: ENV['VERSION_CODE'],
+   )
+  end
 
   desc "Deploy builds to Google Play"
   lane :deploy do |options|
@@ -70,7 +70,7 @@ platform :android do
 
     build
     submit_beta
-    submit_prod
+    # submit_prod
   end
 
 end

@@ -65,7 +65,7 @@ jobs:
         if: always() # always run even if the previous step fails
         run: |
           files=$(find app/build/outputs/apk/ -type f -name '*.apk')
-          gh release upload "${{ github.ref_name }}" $files
+          gh release upload "${{ github.ref_name }}" $files --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Test Report
