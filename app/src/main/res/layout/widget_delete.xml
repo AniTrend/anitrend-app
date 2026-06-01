@@ -5,7 +5,7 @@
     android:id="@+id/widget_flipper"
     android:inAnimation="@android:anim/slide_in_left"
     android:outAnimation="@android:anim/slide_out_right"
-    android:padding="@dimen/spacing_small"
+    android:padding="@dimen/lg_margin"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
