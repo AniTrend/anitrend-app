@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.MainThread
-import androidx.core.view.children
 import com.mxt.anitrend.R
 import com.mxt.anitrend.widget.progress.ProgressLayoutState
 
@@ -105,26 +104,36 @@ class ProgressLayout @JvmOverloads constructor(
 
     @MainThread
     private fun applyState() {
-        children.forEach { child ->
+        loadingView.visibility = if (state == ProgressLayoutState.LOADING) View.VISIBLE else View.GONE
+        errorView.visibility = if (state == ProgressLayoutState.ERROR) View.VISIBLE else View.GONE
+
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
             if (child.id !in overlayIds) {
                 when (state) {
                     ProgressLayoutState.CONTENT -> {
-                        val originalVisibility = contentViewVisibility.remove(child)
-                        if (originalVisibility != null) {
-                            child.visibility = originalVisibility
-                        }
+                        val saved = contentViewVisibility.remove(child)
+                        child.visibility = saved ?: View.VISIBLE
                     }
                     ProgressLayoutState.LOADING,
                     ProgressLayoutState.ERROR -> {
-                        contentViewVisibility.putIfAbsent(child, child.visibility)
+                        contentViewVisibility[child] = child.visibility
                         child.visibility = View.GONE
                     }
                 }
             }
         }
 
-        loadingView.visibility = if (state == ProgressLayoutState.LOADING) View.VISIBLE else View.GONE
-        errorView.visibility = if (state == ProgressLayoutState.ERROR) View.VISIBLE else View.GONE
+        if (state == ProgressLayoutState.CONTENT) {
+            post {
+                for (i in 0 until childCount) {
+                    val child = getChildAt(i)
+                    if (child.id !in overlayIds && child.visibility != View.VISIBLE) {
+                        child.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
     }
 
     private fun isMainThread(): Boolean {

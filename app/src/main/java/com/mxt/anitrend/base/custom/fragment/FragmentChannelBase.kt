@@ -183,16 +183,13 @@ abstract class FragmentChannelBase :
                 .setAction(R.string.try_again, snackBarOnClick)
             snackbar?.show()
         } else {
-            showLoading()
             val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_cry)
-            if (drawable != null) {
-                stateLayout.showError(
-                    drawable,
-                    error,
-                    getString(R.string.try_again),
-                    stateLayoutOnClick
-                )
-            }
+            stateLayout.showError(
+                drawable,
+                error,
+                getString(R.string.try_again),
+                stateLayoutOnClick
+            )
         }
     }
 
@@ -209,16 +206,13 @@ abstract class FragmentChannelBase :
                 .setAction(R.string.try_again, snackBarOnClick)
             snackbar?.show()
         } else {
-            showLoading()
             val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat)
-            if (drawable != null) {
-                stateLayout.showError(
-                    drawable,
-                    message,
-                    getString(R.string.try_again),
-                    stateLayoutOnClick
-                )
-            }
+            stateLayout.showError(
+                drawable,
+                message,
+                getString(R.string.try_again),
+                stateLayoutOnClick
+            )
         }
     }
 
