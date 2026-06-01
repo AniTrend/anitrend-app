@@ -26,7 +26,7 @@ class EntryPointRenderUnauthTest {
     fun renderEntryPoints() {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         EntryPointFixtures.unauthenticated(context).forEach { entry ->
-            ActivityScenario.launch(entry.intentProvider(context)).use {
+            ActivityScenario.launch<android.app.Activity>(entry.intentProvider(context)).use {
                 if (entry.assertUi) {
                     onView(isRoot()).check(matches(isDisplayed()))
                 }

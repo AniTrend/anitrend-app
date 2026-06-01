@@ -100,52 +100,50 @@
 
                     </LinearLayout>
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
 
                         <com.mxt.anitrend.base.custom.view.widget.UsersWidget
                             android:id="@+id/widget_users"
-                            android:layout_gravity="start"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?selectableItemBackground" />
 
-                        <LinearLayout
-                            android:layout_gravity="end"
-                            android:orientation="horizontal"
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
+                            android:id="@+id/widget_favourite"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"/>
 
-                            <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
-                                android:id="@+id/widget_favourite"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                        <com.mxt.anitrend.base.custom.view.widget.CommentWidget
+                            android:id="@+id/widget_comment"
+                            android:layout_marginStart="@dimen/lg_margin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?selectableItemBackground"
+                            tools:text=" 2"/>
 
-                            <com.mxt.anitrend.base.custom.view.widget.CommentWidget
-                                android:id="@+id/widget_comment"
-                                android:layout_marginStart="@dimen/lg_margin"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:foreground="?selectableItemBackground"
-                                tools:text=" 2"/>
+                        <com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
+                            android:id="@+id/widget_delete"
+                            android:layout_marginStart="@dimen/lg_margin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                            <com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
-                                android:id="@+id/widget_delete"
-                                android:layout_marginStart="@dimen/lg_margin"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                    </FrameLayout>
+                    </LinearLayout>
 
                 </RelativeLayout>
 

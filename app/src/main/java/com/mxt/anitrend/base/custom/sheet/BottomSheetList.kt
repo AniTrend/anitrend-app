@@ -139,15 +139,13 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
 
     override fun showError(error: String) {
         super.showError(error)
-        stateLayout?.showLoading()
-        val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_cry) ?: return
+        val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_cry)
         stateLayout?.showError(drawable, error, getString(R.string.try_again), stateLayoutOnClick)
     }
 
     override fun showEmpty(message: String) {
         super.showEmpty(message)
-        stateLayout?.showLoading()
-        val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat) ?: return
+        val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat)
         stateLayout?.showError(drawable, message, getString(R.string.try_again), stateLayoutOnClick)
     }
 }

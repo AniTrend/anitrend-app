@@ -7,7 +7,7 @@
     android:focusable="true"
     android:inAnimation="@android:anim/slide_in_left"
     android:outAnimation="@android:anim/slide_out_right"
-    android:padding="@dimen/spacing_small"
+    android:padding="@dimen/lg_margin"
     android:foreground="?selectableItemBackground"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">

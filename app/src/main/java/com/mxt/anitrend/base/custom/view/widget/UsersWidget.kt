@@ -21,7 +21,7 @@ class UsersWidget @JvmOverloads constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        val padding = resources.getDimensionPixelSize(R.dimen.spacing_small)
+        val padding = resources.getDimensionPixelSize(R.dimen.lg_margin)
         setPadding(padding, padding, padding, padding)
         setCompoundDrawablesWithIntrinsicBounds(
             context.getCompatTintedDrawable(
