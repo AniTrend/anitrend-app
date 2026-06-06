@@ -37,7 +37,7 @@ squareup-okhttp = "5.3.2"
 
 timber = "4.7.1"
 treesSence = "1.0.4"
-prettyTime = "5.0.8.Final"
+prettyTime = "5.0.9.Final"
 betterLinkMovement = "2.2.0"
 multidex = "2.0.1"
 materialDialogs = "0.9.6.0"
