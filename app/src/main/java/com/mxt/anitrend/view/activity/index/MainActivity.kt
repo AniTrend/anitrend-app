@@ -426,17 +426,21 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     }
 
     private fun checkNewInstallation() {
-        if (presenter.settings.isUpdated) {
-            DialogUtil.createChangeLog(this)
-            presenter.settings.setUpdated()
-        }
         if (presenter.settings.isFreshInstall) {
             presenter.settings.isFreshInstall = false
+            if (presenter.settings.isUpdated) {
+                presenter.settings.setUpdated()
+            }
             mBottomSheet = BottomSheetMessage.Builder()
                 .setText(R.string.app_intro_guide)
                 .setTitle(R.string.app_intro_title)
                 .setNegativeText(R.string.Ok).build()
             showBottomSheet()
+            return
+        }
+        if (presenter.settings.isUpdated) {
+            DialogUtil.createChangeLog(this)
+            presenter.settings.setUpdated()
         }
     }
 

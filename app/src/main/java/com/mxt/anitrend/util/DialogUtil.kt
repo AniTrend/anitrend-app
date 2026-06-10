@@ -309,16 +309,12 @@ object DialogUtil {
                 materialDialog.findViewById(R.id.changelog_version) as? SingleLineTextView
             singleLineTextView?.setText(String.format("v%s", BuildConfig.versionName))
 
-            val inputStream = context.assets.open("changelog.md")
-            val stringBuilder = StringBuilder()
-            var buffer = inputStream.read()
-            while (buffer != -1) {
-                stringBuilder.append(buffer.toChar())
-                buffer = inputStream.read()
-            }
+            val changelog = context.assets.open("changelog.md")
+                .bufferedReader()
+                .use { it.readText() }
             val richMarkdownTextView =
                 materialDialog.findViewById(R.id.changelog_information) as? RichMarkdownTextView
-            richMarkdownTextView?.richMarkDown(stringBuilder.toString())
+            richMarkdownTextView?.richMarkDown(changelog)
 
             materialDialog.show()
         } catch (e: IOException) {
