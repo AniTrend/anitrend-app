@@ -29,6 +29,16 @@ import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
 class MediaAdapter(context: Context, private val isCompatType: Boolean) :
     RecyclerViewAdapter<MediaBase>(context) {
 
+    private val cardInteractionIds = intArrayOf(
+        R.id.container,
+        R.id.series_image,
+        R.id.series_status,
+        R.id.series_airing,
+        R.id.series_title,
+        R.id.series_year_type,
+        R.id.custom_rating_widget
+    )
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         @RecyclerViewType viewType: Int
@@ -90,8 +100,8 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
-            bindClickListeners(R.id.container)
-            bindLongClickListeners(R.id.container)
+            bindClickListeners(*cardInteractionIds)
+            bindLongClickListeners(*cardInteractionIds)
         }
 
         /**
@@ -149,11 +159,11 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
          * @see View.OnClickListener
          */
         override fun onClick(v: View) {
-            performClick(clickListener, data, v)
+            performClick(clickListener, data, itemView)
         }
 
         override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
+            return performLongClick(clickListener, data, itemView)
         }
     }
 
@@ -166,8 +176,8 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
-            bindClickListeners(R.id.container)
-            bindLongClickListeners(R.id.container)
+            bindClickListeners(*cardInteractionIds)
+            bindLongClickListeners(*cardInteractionIds)
         }
 
         /**
@@ -216,11 +226,11 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         }
 
         override fun onClick(v: View) {
-            performClick(clickListener, data, v)
+            performClick(clickListener, data, itemView)
         }
 
         override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
+            return performLongClick(clickListener, data, itemView)
         }
 
     }
@@ -234,8 +244,8 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
-            bindClickListeners(R.id.container)
-            bindLongClickListeners(R.id.container)
+            bindClickListeners(*cardInteractionIds)
+            bindLongClickListeners(*cardInteractionIds)
         }
 
         /**
@@ -264,11 +274,11 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         }
 
         override fun onClick(v: View) {
-            performClick(clickListener, data, v)
+            performClick(clickListener, data, itemView)
         }
 
         override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
+            return performLongClick(clickListener, data, itemView)
         }
 
     }

@@ -90,7 +90,7 @@ class NotificationUtil(
                 KeyUtil.THREAD_LIKE,
                 KeyUtil.THREAD_COMMENT_LIKE -> {
                     builder.bold {
-                        builder.append(notification.user.name)
+                        builder.append(notification.user.name.orEmpty())
                     }
                     builder.append(": ")
                     builder.append(notification.context)
@@ -101,7 +101,7 @@ class NotificationUtil(
                     }
                     builder.append(": ")
                     builder.append(context.getString(R.string.notification_episode,
-                        notification.episode.toString(), notification.media?.title?.userPreferred))
+                        notification.episode.toString(), notification.media?.title?.userPreferred.orEmpty()))
                 }
                 KeyUtil.RELATED_MEDIA_ADDITION,
                 KeyUtil.MEDIA_DATA_CHANGE,
