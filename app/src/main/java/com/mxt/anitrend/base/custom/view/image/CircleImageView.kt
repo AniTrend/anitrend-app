@@ -36,6 +36,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     private var listener: Animation.AnimationListener? = null
+    private var activeAnimation: Animation? = null
     private var shadowRadius = 0
 
     constructor(context: Context, color: Int, radius: Float) : this(context) {
@@ -80,16 +81,14 @@ class CircleImageView @JvmOverloads constructor(
 
     override fun onAnimationStart() {
         super.onAnimationStart()
-        animation?.also {
-            listener?.onAnimationStart(it)
-        }
+        activeAnimation = animation ?: activeAnimation
+        activeAnimation?.also { listener?.onAnimationStart(it) }
     }
 
     override fun onAnimationEnd() {
         super.onAnimationEnd()
-        animation?.also {
-            listener?.onAnimationEnd(it)
-        }
+        activeAnimation?.also { listener?.onAnimationEnd(it) }
+        activeAnimation = null
     }
 
     /**

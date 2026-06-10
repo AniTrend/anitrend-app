@@ -143,7 +143,7 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
                 }
             }
         }
-        return favouriteTags
+        return favouriteYears
     }
 
     fun getTopFormats(limit: Int): List<String>? {

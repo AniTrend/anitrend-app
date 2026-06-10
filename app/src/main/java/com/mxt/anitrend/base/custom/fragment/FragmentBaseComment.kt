@@ -223,7 +223,7 @@ abstract class FragmentBaseComment :
     override fun onLoad() = Unit
 
     override fun onLoadMore() {
-        swipeRefreshLayout.setRefreshing(true)
+        swipeRefreshLayout.setLoading(true)
         makeRequest()
     }
 
