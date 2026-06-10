@@ -154,7 +154,6 @@ abstract class FragmentBaseComment :
 
     override fun showError(error: String) {
         super.showError(error)
-        showLoading()
         if (swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false)
         if (swipeRefreshLayout.isLoading())
