@@ -19,7 +19,7 @@ class WelcomeActivity : AhoyOnboarderActivity() {
     private lateinit var ahoyPages: List<AhoyOnboarderCard>
 
     private fun applyStyle(card: AhoyOnboarderCard): AhoyOnboarderCard {
-        card.setBackgroundColor(R.color.black_transparent)
+        card.setBackgroundColor(ContextCompat.getColor(this, R.color.black_transparent))
         card.setTitleColor(R.color.grey_200)
         card.setDescriptionColor(R.color.grey_300)
         return card
