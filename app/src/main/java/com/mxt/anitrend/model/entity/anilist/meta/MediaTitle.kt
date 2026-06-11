@@ -11,9 +11,11 @@ import kotlinx.parcelize.Parcelize
 class MediaTitle(
     @SerializedName("romaji")
     private val romajiRaw: String?,
+    @SerializedName("english")
     private val englishRaw: String?,
     @SerializedName("native")
     private val originalRaw: String?,
+    @SerializedName("userPreferred")
     private val userPreferredRaw: String?
 ) : Parcelable {
 

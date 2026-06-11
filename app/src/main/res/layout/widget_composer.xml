@@ -48,14 +48,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    android:padding="@dimen/spacing_small"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_crop_original_white_24dp" />
 
                 <androidx.legacy.widget.Space
-                    android:layout_width="@dimen/lg_margin"
+                    android:layout_width="@dimen/md_margin"
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
@@ -64,14 +64,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    android:padding="@dimen/spacing_small"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_slow_motion_video_white_24dp" />
 
                 <androidx.legacy.widget.Space
-                    android:layout_width="@dimen/lg_margin"
+                    android:layout_width="@dimen/md_margin"
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
@@ -80,14 +80,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    android:padding="@dimen/spacing_small"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_link_white_24dp" />
 
                 <androidx.legacy.widget.Space
-                    android:layout_width="@dimen/lg_margin"
+                    android:layout_width="@dimen/md_margin"
                     android:layout_height="wrap_content" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
@@ -96,7 +96,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    android:padding="@dimen/spacing_small"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tint="@color/colorStateRed"
@@ -116,14 +116,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    android:padding="@dimen/spacing_small"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_gif_white_24dp" />
 
                 <androidx.legacy.widget.Space
-                    android:layout_width="@dimen/lg_margin"
+                    android:layout_width="@dimen/md_margin"
                     android:visibility="gone"
                     android:layout_height="wrap_content" />
 
@@ -134,14 +134,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
-                    android:padding="@dimen/spacing_small"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tint="?colorAccent"
                     app:srcCompat="@drawable/ic_insert_emoticon_white_24dp" />
 
                 <androidx.legacy.widget.Space
-                    android:layout_width="@dimen/lg_margin"
+                    android:layout_width="@dimen/md_margin"
                     android:layout_height="wrap_content" />
 
                 <ViewFlipper
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content">
 
                     <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                        android:padding="@dimen/spacing_small"
+                        android:padding="@dimen/md_margin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:tint="?colorAccent"

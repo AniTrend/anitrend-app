@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.annimon.stream.IntPair
 import com.mxt.anitrend.adapter.recycler.detail.ImagePreviewAdapter
@@ -27,6 +28,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
+import android.view.MotionEvent
 import timber.log.Timber
 import java.util.ArrayList
 
@@ -66,6 +68,15 @@ class StatusContentWidget @JvmOverloads constructor(
         binding.widgetStatusRecycler.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.widgetStatusRecycler.isNestedScrollingEnabled = true
+        binding.widgetStatusRecycler.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                val action = e.actionMasked
+                if (action == MotionEvent.ACTION_MOVE) {
+                    rv.parent?.requestDisallowInterceptTouchEvent(true)
+                }
+                return false
+            }
+        })
         val snapHelper: SnapHelper = CenterSnapUtil(this)
         snapHelper.attachToRecyclerView(binding.widgetStatusRecycler)
     }
