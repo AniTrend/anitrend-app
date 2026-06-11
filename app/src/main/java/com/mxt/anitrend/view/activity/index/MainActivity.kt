@@ -108,6 +108,8 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     private var tabMediator: TabLayoutMediator? = null
 
+    private var hasCheckedInstallation = false
+
     private lateinit var menuItems: Menu
 
     private lateinit var mHomeFeed: MenuItem
@@ -426,11 +428,10 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     }
 
     private fun checkNewInstallation() {
+        if (hasCheckedInstallation) return
+        hasCheckedInstallation = true
         if (presenter.settings.isFreshInstall) {
             presenter.settings.isFreshInstall = false
-            if (presenter.settings.isUpdated) {
-                presenter.settings.setUpdated()
-            }
             mBottomSheet = BottomSheetMessage.Builder()
                 .setText(R.string.app_intro_guide)
                 .setTitle(R.string.app_intro_title)
