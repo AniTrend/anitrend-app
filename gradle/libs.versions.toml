@@ -19,7 +19,7 @@ androidx-work = "2.11.2"
 
 bumptech-glide = "5.0.7"
 
-io-koin = "4.2.1"
+io-koin = "4.2.2"
 io-objectbox = "5.4.2"
 io-mockk = "1.14.11"
 
