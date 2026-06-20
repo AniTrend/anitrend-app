@@ -140,7 +140,7 @@ google-android-flexbox = "com.google.android.flexbox:flexbox:3.0.0"
 
 google-android-material = "com.google.android.material:material:1.14.0"
 
-google-gsm-google-services = "com.google.gms:google-services:4.4.4"
+google-gsm-google-services = "com.google.gms:google-services:4.5.0"
 
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "bumptech-glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "bumptech-glide" }
