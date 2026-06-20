@@ -1,0 +1,34 @@
+query UserNotifications($page: Int, $perPage: Int, $resetNotificationCount: Boolean = true) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      currentPage
+      hasNextPage
+    }
+    notifications(resetNotificationCount: $resetNotificationCount) {
+      __typename
+      ... on AiringNotification {
+        id type createdAt contexts episode
+        media { id title { userPreferred } coverImage { medium } }
+      }
+      ... on FollowingNotification {
+        id type createdAt context
+        user { id name avatar { medium } }
+      }
+      ... on ActivityMessageNotification { id type createdAt context activityId user { id name avatar { medium } } }
+      ... on ActivityMentionNotification { id type createdAt context activityId user { id name avatar { medium } } }
+      ... on ActivityReplyNotification { id type createdAt context activityId user { id name avatar { medium } } }
+      ... on ActivityLikeNotification { id type createdAt context activityId user { id name avatar { medium } } }
+      ... on ActivityReplySubscribedNotification { id type createdAt context activityId user { id name avatar { medium } } }
+      ... on ActivityReplyLikeNotification { id type createdAt context activityId user { id name avatar { medium } } }
+      ... on ThreadCommentMentionNotification { id type createdAt context commentId thread { id } user { id name avatar { medium } } }
+      ... on ThreadCommentReplyNotification { id type createdAt context commentId thread { id } user { id name avatar { medium } } }
+      ... on ThreadCommentSubscribedNotification { id type createdAt context commentId thread { id } user { id name avatar { medium } } }
+      ... on ThreadCommentLikeNotification { id type createdAt context commentId thread { id } user { id name avatar { medium } } }
+      ... on ThreadLikeNotification { id type createdAt context thread { id } user { id name avatar { medium } } }
+      ... on RelatedMediaAdditionNotification { id type createdAt context media { id title { userPreferred } coverImage { medium } } }
+      ... on MediaDataChangeNotification { id type createdAt context reason media { id title { userPreferred } coverImage { medium } } }
+      ... on MediaMergeNotification { id type createdAt context reason deletedMediaTitles media { id title { userPreferred } coverImage { medium } } }
+      ... on MediaDeletionNotification { id type createdAt context reason deletedMediaTitle }
+    }
+  }
+}

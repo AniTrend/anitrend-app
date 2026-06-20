@@ -1,0 +1,54 @@
+query CurrentUser {
+  Viewer {
+    id
+    name
+    about(asHtml: false)
+    avatar {
+      large
+      medium
+    }
+    bannerImage
+    donatorTier
+    unreadNotificationCount
+    options {
+      titleLanguage
+      displayAdultContent
+      airingNotifications
+      profileColor
+    }
+    stats {
+      watchedTime
+      chaptersRead
+      animeStatusDistribution {
+        status
+        amount
+      }
+      mangaStatusDistribution {
+        status
+        amount
+      }
+      favouredGenres {
+        genre
+        amount
+        meanScore
+      }
+      favouredYears {
+        year
+        amount
+        meanScore
+      }
+    }
+    mediaListOptions {
+      scoreFormat
+      rowOrder
+      animeList {
+        sectionOrder
+        customLists
+      }
+      mangaList {
+        sectionOrder
+        customLists
+      }
+    }
+  }
+}

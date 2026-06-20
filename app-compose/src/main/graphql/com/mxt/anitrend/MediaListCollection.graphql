@@ -1,0 +1,26 @@
+query MediaListCollection($userId: Int, $userName: String, $type: MediaType) {
+  MediaListCollection(userId: $userId, userName: $userName, type: $type) {
+    lists {
+      name
+      isCustomList
+      entries {
+        id
+        status
+        score
+        progress
+        progressVolumes
+        media {
+          id
+          title { userPreferred }
+          type
+          format
+          status(version: 2)
+          coverImage { medium }
+          meanScore
+          episodes
+          chapters
+        }
+      }
+    }
+  }
+}

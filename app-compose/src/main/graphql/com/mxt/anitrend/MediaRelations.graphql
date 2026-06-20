@@ -1,0 +1,24 @@
+query MediaRelations($id: Int!) {
+  Media(id: $id) {
+    relations {
+      edges {
+        relationType(version: 2)
+        node {
+          id
+          title {
+            userPreferred
+          }
+          type
+          format
+          status(version: 2)
+          coverImage {
+            medium
+          }
+          meanScore
+          episodes
+          chapters
+        }
+      }
+    }
+  }
+}

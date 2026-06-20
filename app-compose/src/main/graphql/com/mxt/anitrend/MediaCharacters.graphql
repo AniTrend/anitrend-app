@@ -1,0 +1,24 @@
+query MediaCharacters($id: Int!) {
+  Media(id: $id) {
+    characters(sort: [ROLE, RELEVANCE, ID]) {
+      edges {
+        role
+        node {
+          id
+          name {
+            first
+            last
+            full
+            native
+          }
+          image {
+            large
+            medium
+          }
+          isFavourite
+          siteUrl
+        }
+      }
+    }
+  }
+}

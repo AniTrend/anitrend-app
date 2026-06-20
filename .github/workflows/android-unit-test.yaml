@@ -5,7 +5,8 @@ on:
     branches: [ develop ]
   pull_request:
     branches:
-      - '*'
+      - '**'
+  workflow_dispatch:
 
 jobs:
   android-unit-test:

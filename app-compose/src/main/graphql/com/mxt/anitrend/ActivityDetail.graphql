@@ -1,0 +1,82 @@
+query ActivityDetail($id: Int!) {
+  Activity(id: $id) {
+    __typename
+    ... on ListActivity {
+      id
+      type
+      createdAt
+      replyCount
+      isLocked
+      siteUrl
+      status
+      progress
+      media {
+        id
+        title {
+          userPreferred
+        }
+        coverImage {
+          medium
+        }
+        type
+      }
+      user {
+        id
+        name
+        avatar {
+          medium
+        }
+      }
+      replies {
+        id
+        text(asHtml: false)
+        createdAt
+        likeCount
+        user {
+          id
+          name
+          avatar {
+            medium
+          }
+        }
+        likes {
+          id
+          name
+        }
+      }
+    }
+    ... on TextActivity {
+      id
+      type
+      createdAt
+      replyCount
+      isLocked
+      siteUrl
+      text(asHtml: false)
+      user {
+        id
+        name
+        avatar {
+          medium
+        }
+      }
+      replies {
+        id
+        text(asHtml: false)
+        createdAt
+        likeCount
+        user {
+          id
+          name
+          avatar {
+            medium
+          }
+        }
+        likes {
+          id
+          name
+        }
+      }
+    }
+  }
+}

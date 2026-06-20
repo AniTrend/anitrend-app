@@ -1,0 +1,11 @@
+query StudioSearch($search: String, $page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    studios(search: $search) {
+      id
+      name
+      isAnimationStudio
+      isFavourite
+      siteUrl
+    }
+  }
+}

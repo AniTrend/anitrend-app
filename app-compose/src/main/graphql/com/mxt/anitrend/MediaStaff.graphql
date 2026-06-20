@@ -1,0 +1,25 @@
+query MediaStaff($id: Int!) {
+  Media(id: $id) {
+    staff(sort: [RELEVANCE, ID]) {
+      edges {
+        role
+        node {
+          id
+          name {
+            first
+            last
+            full
+            native
+          }
+          image {
+            large
+            medium
+          }
+          language
+          isFavourite
+          siteUrl
+        }
+      }
+    }
+  }
+}

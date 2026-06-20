@@ -1,0 +1,10 @@
+query ThreadBrowse($page: Int, $perPage: Int, $sort: [ThreadSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo { currentPage hasNextPage }
+    threads(sort: $sort) {
+      id title body(asHtml: false) createdAt replyCount viewCount
+      user { id name avatar { medium } }
+      categories { id name }
+    }
+  }
+}

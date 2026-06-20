@@ -1,0 +1,19 @@
+query StudioDetail($id: Int!) {
+  Studio(id: $id) {
+    id
+    name
+    isAnimationStudio
+    siteUrl
+    isFavourite
+    media(sort: POPULARITY_DESC) {
+      nodes {
+        id
+        title { userPreferred }
+        type
+        format
+        coverImage { medium }
+        meanScore
+      }
+    }
+  }
+}

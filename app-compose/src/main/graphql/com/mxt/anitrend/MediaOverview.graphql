@@ -1,0 +1,77 @@
+query MediaOverview($id: Int!) {
+  Media(id: $id) {
+    id
+    title {
+      userPreferred
+      romaji
+      english
+    }
+    type
+    format
+    status(version: 2)
+    description(asHtml: false)
+    genres
+    meanScore
+    averageScore
+    popularity
+    favourites
+    episodes
+    chapters
+    volumes
+    duration
+    season
+    seasonYear
+    isAdult
+    isFavourite
+    siteUrl
+    hashtag
+    source(version: 3)
+    bannerImage
+    coverImage {
+      extraLarge
+      large
+      medium
+    }
+    trailer {
+      id
+      site
+      thumbnail
+    }
+    studios(isMain: true) {
+      nodes {
+        id
+        name
+        siteUrl
+      }
+    }
+    tags {
+      id
+      name
+      description
+      rank
+      isMediaSpoiler
+    }
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    nextAiringEpisode {
+      airingAt
+      timeUntilAiring
+      episode
+    }
+    mediaListEntry {
+      id
+      status
+      score
+      progress
+      progressVolumes
+    }
+  }
+}
