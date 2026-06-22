@@ -28,7 +28,7 @@ import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity
 import com.mxt.anitrend.view.sheet.BottomSheetListUsers
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

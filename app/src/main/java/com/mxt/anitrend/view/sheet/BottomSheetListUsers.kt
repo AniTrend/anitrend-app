@@ -25,7 +25,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.widget.ProgressLayout
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 
 class BottomSheetListUsers :
     BottomSheetBase<PageContainer<UserBase>>(),

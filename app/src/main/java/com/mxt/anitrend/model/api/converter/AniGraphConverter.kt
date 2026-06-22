@@ -2,8 +2,8 @@ package com.mxt.anitrend.model.api.converter
 
 import com.google.gson.Gson
 import com.mxt.anitrend.model.api.converter.response.AniGraphResponseConverter
-import io.github.wax911.library.annotation.processor.contract.AbstractGraphProcessor
-import io.github.wax911.library.converter.GraphConverter
+import co.anitrend.retrofit.graphql.annotation.processor.contract.AbstractGraphProcessor
+import co.anitrend.retrofit.graphql.converter.GraphConverter
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit

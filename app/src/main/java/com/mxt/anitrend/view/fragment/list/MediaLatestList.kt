@@ -2,7 +2,7 @@ package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
 import com.mxt.anitrend.util.KeyUtil
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 
 class MediaLatestList : MediaBrowseFragment() {
 

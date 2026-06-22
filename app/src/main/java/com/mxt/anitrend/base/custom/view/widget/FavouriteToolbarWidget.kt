@@ -24,7 +24,7 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.util.media.MediaUtil
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response

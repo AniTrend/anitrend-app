@@ -7,7 +7,7 @@ import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.*
 import com.mxt.anitrend.util.KeyUtil
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import timber.log.Timber

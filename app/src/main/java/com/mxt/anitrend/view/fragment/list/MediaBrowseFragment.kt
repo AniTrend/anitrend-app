@@ -28,7 +28,7 @@ import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import java.util.Locale
 import java.util.WeakHashMap
 

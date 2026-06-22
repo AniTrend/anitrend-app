@@ -1,6 +1,6 @@
 package com.mxt.anitrend.util.graphql
 
-import io.github.wax911.library.util.getError
+import co.anitrend.retrofit.graphql.util.getError
 import retrofit2.Response
 import timber.log.Timber
 

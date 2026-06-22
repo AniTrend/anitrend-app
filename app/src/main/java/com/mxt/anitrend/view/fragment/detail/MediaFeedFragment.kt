@@ -3,7 +3,7 @@ package com.mxt.anitrend.view.fragment.detail
 import android.os.Bundle
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
-import io.github.wax911.library.model.request.QueryContainerBuilder
+import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 
 /**
  * Created by max on 2018/03/24.

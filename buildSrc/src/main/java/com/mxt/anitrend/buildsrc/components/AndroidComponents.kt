@@ -90,7 +90,7 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
 }
 
 private fun BaseExtension.setUpWith(project: Project) {
-    compileSdkVersion(36)
+    compileSdkVersion(37)
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = 23
@@ -136,6 +136,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         dataBinding = false
         viewBinding = true
         buildConfig = true
+        resValues = true
     }
     buildTypes {
         getByName("release") {
