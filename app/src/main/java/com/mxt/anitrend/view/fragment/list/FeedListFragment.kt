@@ -39,13 +39,13 @@ import org.greenrobot.eventbus.ThreadMode
 open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter>(),
     BaseConsumer.onRequestModelChange<FeedList> {
 
-    protected lateinit var queryContainer: io.github.wax911.library.model.request.QueryContainerBuilder
+    protected lateinit var queryContainer: co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 
     companion object {
         @JvmStatic
         fun newInstance(
             params: Bundle,
-            queryContainerBuilder: io.github.wax911.library.model.request.QueryContainerBuilder
+            queryContainerBuilder: co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
         ): FeedListFragment {
             val args = Bundle(params).apply {
                 putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder)

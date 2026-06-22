@@ -110,7 +110,10 @@ internal fun Project.configureDependencies() {
         exclude("stax", "stax-api")
         exclude("stax", "stax")
     }
-    dependencies.implementation(libs.anitrend.retrofit.graphql)
+    dependencies.implementation(libs.anitrend.retrofit.graphql.runtime)
+    dependencies.implementation(libs.anitrend.retrofit.graphql.api)
+    dependencies.implementation(libs.anitrend.retrofit.graphql.android.assets)
+    dependencies.implementation(libs.anitrend.retrofit.graphql.annotations)
 
     /** Smart Tab Layout */
     dependencies.implementation(libs.smarttablayout.library)

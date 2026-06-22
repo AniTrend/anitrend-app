@@ -40,10 +40,10 @@ import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.worker.*
-import io.github.wax911.library.annotation.processor.GraphProcessor
-import io.github.wax911.library.annotation.processor.plugin.AssetManagerDiscoveryPlugin
-import io.github.wax911.library.logger.contract.ILogger
-import io.github.wax911.library.logger.core.AbstractLogger
+import co.anitrend.retrofit.graphql.annotation.processor.GraphProcessor
+import co.anitrend.retrofit.graphql.annotation.processor.plugin.AssetManagerDiscoveryPlugin
+import co.anitrend.retrofit.graphql.logger.contract.ILogger
+import co.anitrend.retrofit.graphql.logger.core.AbstractLogger
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.handler.EmphasisEditHandler
