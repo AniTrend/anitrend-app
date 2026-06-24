@@ -216,7 +216,8 @@ fun Context.checkNotificationPermission(channelId: String?): Boolean {
 }
 
 fun FragmentActivity.requestNotificationsPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+        ContextCompat.checkSelfPermission(
             /* context = */
             this,
             /* permission = */

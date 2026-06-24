@@ -40,6 +40,5 @@ class AniGraphConverter(
         parameterAnnotations: Array<out Annotation>,
         methodAnnotations: Array<out Annotation>,
         retrofit: Retrofit,
-    ): Converter<*, RequestBody>? =
-        delegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
+    ): Converter<*, RequestBody>? = delegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
 }
