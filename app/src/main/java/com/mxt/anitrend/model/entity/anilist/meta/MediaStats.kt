@@ -11,5 +11,5 @@ import kotlinx.parcelize.Parcelize
 class MediaStats(
     var airingProgression: List<MediaTrend>? = null,
     var scoreDistribution: List<ScoreDistribution>? = null,
-    var statusDistribution: List<StatusDistribution>? = null
+    var statusDistribution: List<StatusDistribution>? = null,
 ) : Parcelable

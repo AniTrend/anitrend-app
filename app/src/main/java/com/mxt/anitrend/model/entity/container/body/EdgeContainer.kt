@@ -8,7 +8,6 @@ import com.mxt.anitrend.util.CompatUtil
  * T - Relation type
  */
 class EdgeContainer<T : Edge<*>> : Container() {
-
     var edges: List<T> = emptyList()
 
     override val isEmpty: Boolean

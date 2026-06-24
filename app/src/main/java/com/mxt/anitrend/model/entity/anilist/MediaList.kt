@@ -12,10 +12,13 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by Maxwell on 1/12/2017.
  */
-class MediaList() : RecyclerItem(), Parcelable, Cloneable {
-
+class MediaList() :
+    RecyclerItem(),
+    Parcelable,
+    Cloneable {
     var id: Long = 0
     var mediaId: Long = 0
+
     @KeyUtil.MediaListStatus var status: String? = null
     var score: Float = 0f
     var progress: Int = 0
@@ -23,6 +26,7 @@ class MediaList() : RecyclerItem(), Parcelable, Cloneable {
     var repeat: Int = 0
     var priority: Int = 0
     var notes: String? = null
+
     @SerializedName("private")
     var isHidden: Boolean = false
     var isHiddenFromStatusLists: Boolean = false
@@ -56,7 +60,10 @@ class MediaList() : RecyclerItem(), Parcelable, Cloneable {
         media = parcel.readParcelable(MediaBase::class.java.classLoader) ?: MediaBase()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(id)
         dest.writeLong(mediaId)
         dest.writeString(status)
@@ -78,12 +85,10 @@ class MediaList() : RecyclerItem(), Parcelable, Cloneable {
 
     override fun describeContents(): Int = 0
 
-    override fun equals(other: Any?): Boolean {
-        return when (other) {
-            is MediaList -> other.id == id && other.mediaId == mediaId
-            is MediaBase -> other.id == mediaId
-            else -> super.equals(other)
-        }
+    override fun equals(other: Any?): Boolean = when (other) {
+        is MediaList -> other.id == id && other.mediaId == mediaId
+        is MediaBase -> other.id == mediaId
+        else -> super.equals(other)
     }
 
     @Throws(CloneNotSupportedException::class)
@@ -94,10 +99,11 @@ class MediaList() : RecyclerItem(), Parcelable, Cloneable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<MediaList> = object : Parcelable.Creator<MediaList> {
-            override fun createFromParcel(parcel: Parcel): MediaList = MediaList(parcel)
+        val CREATOR: Parcelable.Creator<MediaList> =
+            object : Parcelable.Creator<MediaList> {
+                override fun createFromParcel(parcel: Parcel): MediaList = MediaList(parcel)
 
-            override fun newArray(size: Int): Array<MediaList?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<MediaList?> = arrayOfNulls(size)
+            }
     }
 }

@@ -1,2 +1,2 @@
-rootProject.name= "anitrend-app"
+rootProject.name = "anitrend-app"
 include(":app")

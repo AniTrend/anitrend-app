@@ -12,5 +12,5 @@ class Gif(
     val url: String? = null,
     val width: String? = null,
     val height: String? = null,
-    val size: Long = 0L
+    val size: Long = 0L,
 ) : Parcelable

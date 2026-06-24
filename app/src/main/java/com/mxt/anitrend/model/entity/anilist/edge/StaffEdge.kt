@@ -8,7 +8,6 @@ import com.mxt.anitrend.model.entity.container.attribute.Edge
  * StaffEdge
  */
 class StaffEdge : Edge<StaffBase>() {
-
     /**
      * The role of the staff member in the production of the media
      */

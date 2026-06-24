@@ -2,19 +2,16 @@ package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
-import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaListUtil
 
 /**
  * Created by max on 2017/11/03.
  */
 class AiringListFragment : MediaListFragment() {
-
     companion object {
         @JvmStatic
         fun newInstance(): AiringListFragment = AiringListFragment()
@@ -28,8 +25,7 @@ class AiringListFragment : MediaListFragment() {
         }
         mediaType = KeyUtil.ANIME
         (mAdapter as? MediaListAdapter)?.setCurrentUser(userName)
-        queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_statusIn, KeyUtil.CURRENT)
+        statusIn = KeyUtil.CURRENT
     }
 
     override fun updateUI() {
@@ -38,30 +34,38 @@ class AiringListFragment : MediaListFragment() {
 
     override fun onChanged(content: PageContainer<MediaListCollection>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
+            }
             if (!content.isEmpty) {
                 val mediaListCollection = content.pageData.firstOrNull()
                 if (mediaListCollection != null) {
-                    val mediaList = mediaListCollection.entries.orEmpty()
-                        .filter { entry ->
-                            CompatUtil.equals(entry.media.status, KeyUtil.RELEASING)
-                        }
+                    val mediaList =
+                        mediaListCollection.entries
+                            .orEmpty()
+                            .filter { entry ->
+                                CompatUtil.equals(entry.media.status, KeyUtil.RELEASING)
+                            }
 
                     val mediaListSort = presenter.settings.mediaListSort ?: KeyUtil.PROGRESS
-                    if (MediaListUtil.isTitleSort(mediaListSort))
+                    if (MediaListUtil.isTitleSort(mediaListSort)) {
                         sortMediaListByTitle(mediaList)
-                    else
+                    } else {
                         onPostProcessed(mediaList)
+                    }
                     mediaListCollectionBase = mediaListCollection
-                } else
+                } else {
                     onPostProcessed(emptyList())
-            } else
+                }
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
+        }
 
-        if (mAdapter.itemCount < 1)
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 }

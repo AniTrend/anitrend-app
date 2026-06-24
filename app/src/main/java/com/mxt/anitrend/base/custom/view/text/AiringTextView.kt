@@ -11,25 +11,30 @@ import com.mxt.anitrend.util.date.DateUtil
  * Created by max on 2017/10/27.
  * Shows information regarding airing
  */
-class AiringTextView @JvmOverloads constructor(
+class AiringTextView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : SingleLineTextView(context, attrs, defStyleAttr) {
-
     override fun onInit() {
         super.onInit()
     }
 
     companion object {
         @JvmStatic
-        fun setAiring(view: AiringTextView, mediaBase: MediaBase?) {
+        fun setAiring(
+            view: AiringTextView,
+            mediaBase: MediaBase?,
+        ) {
             if (mediaBase != null) {
                 val nextAiringEpisode = mediaBase.nextAiringEpisode
-                if (nextAiringEpisode != null)
+                if (nextAiringEpisode != null) {
                     view.text = DateUtil.getNextEpDate(nextAiringEpisode)
-                else
+                } else {
                     view.text = CompatUtil.capitalizeWords(mediaBase.status)
+                }
                 view.visibility = View.VISIBLE
             } else {
                 view.visibility = View.GONE

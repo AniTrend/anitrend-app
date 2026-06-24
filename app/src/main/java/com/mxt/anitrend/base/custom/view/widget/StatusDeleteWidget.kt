@@ -20,24 +20,24 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
 
-class StatusDeleteWidget @JvmOverloads constructor(
+class StatusDeleteWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
     RetroCallback<DeleteState>,
     View.OnClickListener {
-
     private lateinit var binding: WidgetDeleteBinding
     private var presenter: WidgetPresenter<DeleteState>? = null
+
     @KeyUtil.RequestType
     private var requestType: Int = 0
     private var feedList: FeedList? = null
@@ -57,24 +57,33 @@ class StatusDeleteWidget @JvmOverloads constructor(
             context.getCompatDrawable(R.drawable.ic_delete_red_600_18dp),
             null,
             null,
-            null
+            null,
         )
         binding.widgetFlipper.setOnClickListener(this)
     }
 
-    private fun setParameters(feedId: Long, @KeyUtil.RequestType requestType: Int) {
+    private fun setParameters(
+        feedId: Long,
+        @KeyUtil.RequestType requestType: Int,
+    ) {
         this.requestType = requestType
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, feedId)
-        presenter?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        presenter?.params?.apply {
+            putLong(KeyUtil.arg_id, feedId)
+        }
     }
 
-    fun setModel(feedList: FeedList, @KeyUtil.RequestType requestType: Int) {
+    fun setModel(
+        feedList: FeedList,
+        @KeyUtil.RequestType requestType: Int,
+    ) {
         setParameters(feedList.id, requestType)
         this.feedList = feedList
     }
 
-    fun setModel(feedReply: FeedReply, @KeyUtil.RequestType requestType: Int) {
+    fun setModel(
+        feedReply: FeedReply,
+        @KeyUtil.RequestType requestType: Int,
+    ) {
         setParameters(feedReply.id, requestType)
         this.feedReply = feedReply
     }
@@ -91,15 +100,16 @@ class StatusDeleteWidget @JvmOverloads constructor(
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
     }
 
     override fun onClick(view: View) {
         DialogUtil.createMessage(
             context,
             R.string.dialog_title_delete_activity,
-            R.string.dialog_message_delete_activity
+            R.string.dialog_message_delete_activity,
         ) { _, which ->
             when (which) {
                 DialogAction.POSITIVE -> {
@@ -108,20 +118,22 @@ class StatusDeleteWidget @JvmOverloads constructor(
                             binding.widgetFlipper.showNext()
                             presenter?.requestData(requestType, context, this)
                         } else {
-                            NotifyUtil.makeText(
-                                context,
-                                R.string.busy_please_wait,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            NotifyUtil
+                                .makeText(
+                                    context,
+                                    R.string.busy_please_wait,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
                         }
                     }
                 }
                 DialogAction.NEGATIVE -> {
-                    NotifyUtil.makeText(
-                        context,
-                        R.string.canceled_by_user,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    NotifyUtil
+                        .makeText(
+                            context,
+                            R.string.canceled_by_user,
+                            Toast.LENGTH_SHORT,
+                        ).show()
                 }
                 else -> Unit
             }
@@ -131,7 +143,10 @@ class StatusDeleteWidget @JvmOverloads constructor(
     /**
      * Invoked for a received HTTP response.
      */
-    override fun onResponse(call: Call<DeleteState>, response: Response<DeleteState>) {
+    override fun onResponse(
+        call: Call<DeleteState>,
+        response: Response<DeleteState>,
+    ) {
         try {
             val deleteState = response.body()
             if (response.isSuccessful && deleteState != null) {
@@ -144,11 +159,12 @@ class StatusDeleteWidget @JvmOverloads constructor(
                             presenter?.notifyAllListeners(BaseConsumer(requestType, feedReply), false)
                     }
                 } else {
-                    NotifyUtil.makeText(
-                        context,
-                        R.string.text_error_request,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    NotifyUtil
+                        .makeText(
+                            context,
+                            R.string.text_error_request,
+                            Toast.LENGTH_SHORT,
+                        ).show()
                 }
             } else {
                 Timber.w(response.apiError())
@@ -162,7 +178,10 @@ class StatusDeleteWidget @JvmOverloads constructor(
      * Invoked when a network exception occurred talking to the server or when an unexpected
      * exception occurred creating the request or processing the response.
      */
-    override fun onFailure(call: Call<DeleteState>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<DeleteState>,
+        throwable: Throwable,
+    ) {
         try {
             Timber.w(throwable)
             resetFlipperState()

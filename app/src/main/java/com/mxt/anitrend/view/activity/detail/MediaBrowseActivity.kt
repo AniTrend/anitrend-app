@@ -17,7 +17,6 @@ import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
  * browse activity for rankings, tags and genres.
  */
 class MediaBrowseActivity : ActivityBase<MediaBase, MediaPresenter>() {
-
     private lateinit var binding: ActivityFrameGenericBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

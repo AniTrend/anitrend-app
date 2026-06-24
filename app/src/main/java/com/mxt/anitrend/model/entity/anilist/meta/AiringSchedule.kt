@@ -10,5 +10,5 @@ import kotlinx.parcelize.Parcelize
 class AiringSchedule(
     var airingAt: Long = 0,
     var timeUntilAiring: Long = 0,
-    var episode: Int = 0
+    var episode: Int = 0,
 ) : Parcelable

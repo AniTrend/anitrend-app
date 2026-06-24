@@ -9,12 +9,14 @@ import kotlinx.parcelize.Parcelize
  * @see com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
  */
 @Parcelize
-class MediaBrowseUtil @JvmOverloads constructor(
-    private var filterEnabled: Boolean = false
+class MediaBrowseUtil
+@JvmOverloads
+constructor(
+    private var filterEnabled: Boolean = false,
 ) : Parcelable {
-
     @IgnoredOnParcel
     private var compactType: Boolean = false
+
     @IgnoredOnParcel
     private var basicFilter: Boolean = false
 
@@ -38,5 +40,4 @@ class MediaBrowseUtil @JvmOverloads constructor(
     fun setBasicFilter(basicFiltering: Boolean) = apply {
         this.basicFilter = basicFiltering
     }
-
 }

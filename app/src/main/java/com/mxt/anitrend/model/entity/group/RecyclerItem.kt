@@ -7,7 +7,6 @@ import com.mxt.anitrend.util.KeyUtil
  * EntityGroup for grouping items in a recycler view
  */
 open class RecyclerItem {
-
     @get:KeyUtil.RecyclerViewType
     @setparam:KeyUtil.RecyclerViewType
     var contentType: Int = 0

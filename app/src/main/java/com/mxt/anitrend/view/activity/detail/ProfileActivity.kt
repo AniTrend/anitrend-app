@@ -6,31 +6,30 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.mxt.anitrend.R
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.databinding.ActivityProfileBinding
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.TutorialUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import java.util.Locale
 
 /**
  * Created by max on 2017/11/14.
  * Profile activity
  */
-class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickListener {
-
+class ProfileActivity :
+    ActivityBase<UserBase, BasePresenter>(),
+    View.OnClickListener {
     private lateinit var binding: ActivityProfileBinding
     private var userName: String? = null
 
@@ -43,15 +42,18 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
         disableToolbarTitle()
         binding.profileBanner.setOnClickListener(this)
         setViewModel(true)
-        if (intent.hasExtra(KeyUtil.arg_id))
+        if (intent.hasExtra(KeyUtil.arg_id)) {
             id = intent.getLongExtra(KeyUtil.arg_id, -1)
-        if (intent.hasExtra(KeyUtil.arg_userName))
+        }
+        if (intent.hasExtra(KeyUtil.arg_userName)) {
             userName = intent.getStringExtra(KeyUtil.arg_userName)
+        }
         if (intent.hasExtra(KeyUtil.arg_mediaType)) {
-            val intent = Intent(this, MediaListActivity::class.java).apply {
-                putExtras(this@ProfileActivity.intent.extras ?: Bundle())
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+            val intent =
+                Intent(this, MediaListActivity::class.java).apply {
+                    putExtras(this@ProfileActivity.intent.extras ?: Bundle())
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
             startActivity(intent)
         }
     }
@@ -59,11 +61,12 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         mActionBar?.setHomeAsUpIndicator(
-            getCompatDrawable(R.drawable.ic_arrow_back_white_24dp)
+            getCompatDrawable(R.drawable.ic_arrow_back_white_24dp),
         )
-        val profilePageAdapter = ProfilePageAdapter(this, applicationContext).apply {
-            params = intent.extras ?: Bundle.EMPTY
-        }
+        val profilePageAdapter =
+            ProfilePageAdapter(this, applicationContext).apply {
+                params = intent.extras ?: Bundle.EMPTY
+            }
         binding.pageContainer.pageContainer.adapter = profilePageAdapter
         binding.pageContainer.pageContainer.offscreenPageLimit = offScreenLimit
         TabLayoutMediator(binding.smartTab.smartTab, binding.pageContainer.pageContainer) { tab, position ->
@@ -73,16 +76,18 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
 
     override fun onPostResume() {
         super.onPostResume()
-        if (getModel() == null)
+        if (getModel() == null) {
             onActivityReady()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.profile_menu, menu)
-        if (!presenter.isCurrentUser(id, userName))
+        if (!presenter.isCurrentUser(id, userName)) {
             menu.findItem(R.id.action_notification).isVisible = false
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -95,13 +100,16 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
             }
             R.id.action_message -> {
                 if (model != null) {
-                    if (presenter.isCurrentUser(model.id))
+                    if (presenter.isCurrentUser(model.id)) {
                         startActivity(Intent(this@ProfileActivity, MessageActivity::class.java))
-                    else {
-                        mBottomSheet = BottomSheetComposer.Builder().setUserModel(model)
-                            .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
-                            .setTitle(R.string.text_message_to)
-                            .build()
+                    } else {
+                        mBottomSheet =
+                            BottomSheetComposer
+                                .Builder()
+                                .setUserModel(model)
+                                .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
+                                .setTitle(R.string.text_message_to)
+                                .build()
                         mBottomSheet?.let { sheet ->
                             sheet.show(supportFragmentManager, sheet.tag)
                         }
@@ -113,13 +121,14 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
             }
             R.id.action_share -> {
                 if (model != null) {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            String.format(Locale.getDefault(), "https://anilist.co/user/%s", model.name)
-                        )
-                        type = "text/plain"
-                    }
+                    val intent =
+                        Intent(Intent.ACTION_SEND).apply {
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(Locale.getDefault(), "https://anilist.co/user/%s", model.name),
+                            )
+                            type = "text/plain"
+                        }
                     startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 } else {
                     NotifyUtil.makeText(this, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
@@ -135,16 +144,17 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        if (id == -1L && userName == null)
+        if (id == -1L && userName == null) {
             NotifyUtil.createAlerter(
                 this,
                 R.string.text_user_model,
                 R.string.layout_empty_response,
                 R.drawable.ic_warning_white_18dp,
-                R.color.colorStateRed
+                R.color.colorStateRed,
             )
-        else
+        } else {
             makeRequest()
+        }
     }
 
     override fun updateUI() {
@@ -152,24 +162,26 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
         val model = getModel() ?: return
         WideImageView.setImage(binding.profileBanner, model.bannerImage)
         if (presenter.isCurrentUser(model.id)) {
-            TutorialUtil().setContext(this)
+            TutorialUtil()
+                .setContext(this)
                 .setFocalColour(R.color.colorGrey600)
                 .setTapTarget(KeyUtil.KEY_NOTIFICATION_TIP)
                 .setSettings(presenter.settings)
                 .showTapTarget(
                     R.string.tip_notifications_title,
                     R.string.tip_notifications_text,
-                    R.id.action_notification
+                    R.id.action_notification,
                 )
         } else {
-            TutorialUtil().setContext(this)
+            TutorialUtil()
+                .setContext(this)
                 .setFocalColour(R.color.colorGrey600)
                 .setTapTarget(KeyUtil.KEY_MESSAGE_TIP)
                 .setSettings(presenter.settings)
                 .showTapTarget(
                     R.string.tip_compose_message_title,
                     R.string.tip_compose_message_text,
-                    R.id.action_message
+                    R.id.action_message,
                 )
         }
 
@@ -177,12 +189,14 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
     }
 
     override fun makeRequest() {
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_userName, userName)
-        if (id > 0)
-            queryContainer.putVariable(KeyUtil.arg_id, id)
-
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putString(KeyUtil.arg_userName, userName)
+            if (id > 0) {
+                putLong(KeyUtil.arg_id, id)
+            } else {
+                remove(KeyUtil.arg_id)
+            }
+        }
         viewModel?.requestData(KeyUtil.USER_BASE_REQ, applicationContext)
     }
 
@@ -197,7 +211,7 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
                 R.string.text_user_model,
                 R.string.layout_empty_response,
                 R.drawable.ic_warning_white_18dp,
-                R.color.colorStateRed
+                R.color.colorStateRed,
             )
         }
     }
@@ -210,7 +224,7 @@ class ProfileActivity : ActivityBase<UserBase, BasePresenter>(), View.OnClickLis
                     CompatUtil.imagePreview(
                         view,
                         model.bannerImage,
-                        R.string.image_preview_error_profile_banner
+                        R.string.image_preview_error_profile_banner,
                     )
                 }
             }

@@ -16,9 +16,8 @@ class MediaTitle(
     @SerializedName("native")
     private val originalRaw: String?,
     @SerializedName("userPreferred")
-    private val userPreferredRaw: String?
+    private val userPreferredRaw: String?,
 ) : Parcelable {
-
     val romaji: String?
         get() = romajiRaw ?: userPreferredRaw
 

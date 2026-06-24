@@ -22,27 +22,27 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by max on 2017/12/20.
  */
-class GroupCharacterAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(context) {
-
+class GroupCharacterAdapter(
+    context: Context,
+) : RecyclerViewAdapter<RecyclerItem>(context) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        @KeyUtil.RecyclerViewType viewType: Int
-    ): RecyclerViewHolder<RecyclerItem> {
-        return if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-            GroupTitleViewHolder(
-                AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        } else {
-            CharacterViewHolder(
-                AdapterCharacterBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        }
+        @KeyUtil.RecyclerViewType viewType: Int,
+    ): RecyclerViewHolder<RecyclerItem> = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
+        GroupTitleViewHolder(
+            AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
+    } else {
+        CharacterViewHolder(
+            AdapterCharacterBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
     }
 
     override fun onViewAttachedToWindow(holder: RecyclerViewHolder<RecyclerItem>) {
         super.onViewAttachedToWindow(holder)
-        val layoutParams = holder.itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams
-            ?: return
+        val layoutParams =
+            holder.itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams
+                ?: return
         val position = holder.bindingAdapterPosition
         if (position != RecyclerView.NO_POSITION &&
             getItemViewType(position) == KeyUtil.RECYCLER_TYPE_HEADER
@@ -52,15 +52,13 @@ class GroupCharacterAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem
     }
 
     @KeyUtil.RecyclerViewType
-    override fun getItemViewType(position: Int): Int {
-        return data[position].contentType
-    }
+    override fun getItemViewType(position: Int): Int = data[position].contentType
 
     override fun getFilter(): Filter? = null
 
-    inner class CharacterViewHolder(private val binding: AdapterCharacterBinding) :
-        RecyclerViewHolder<RecyclerItem>(binding.root) {
-
+    inner class CharacterViewHolder(
+        private val binding: AdapterCharacterBinding,
+    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
         init {
             bindClickListeners(R.id.container)
         }
@@ -81,8 +79,6 @@ class GroupCharacterAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

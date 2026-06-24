@@ -18,7 +18,6 @@ import com.mxt.anitrend.binding.setAverageRating
 import com.mxt.anitrend.databinding.*
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
 
@@ -26,8 +25,7 @@ import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
  * Created by max on 2017/10/25.
  * Media adapter
  */
-class MediaAdapter(context: Context, private val isCompatType: Boolean) :
-    RecyclerViewAdapter<MediaBase>(context) {
+class MediaAdapter(context: Context, private val isCompatType: Boolean) : RecyclerViewAdapter<MediaBase>(context) {
 
     private val cardInteractionIds = intArrayOf(
         R.id.container,
@@ -36,26 +34,29 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         R.id.series_airing,
         R.id.series_title,
         R.id.series_year_type,
-        R.id.custom_rating_widget
+        R.id.custom_rating_widget,
     )
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        @RecyclerViewType viewType: Int
+        @RecyclerViewType viewType: Int,
     ): RecyclerViewHolder<MediaBase> {
-        if (isCompatType)
+        if (isCompatType) {
             return MediaViewHolder(AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+        }
 
-        if (viewType == KeyUtil.RECYCLER_TYPE_ANIME)
+        if (viewType == KeyUtil.RECYCLER_TYPE_ANIME) {
             return createAnimeViewHolder(parent)
+        }
 
         return createMangaViewHolder(parent)
     }
 
-    private fun createAnimeViewHolder(parent: ViewGroup) : AnimeViewHolder {
+    private fun createAnimeViewHolder(parent: ViewGroup): AnimeViewHolder {
         val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
-            KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
+            KeyUtil.LIST_VIEW_STYLE_COMPACT_X2,
+            -> {
                 AdapterAnimeCompactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             }
             else -> {
@@ -65,10 +66,11 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
         return AnimeViewHolder(adapter)
     }
 
-    private fun createMangaViewHolder(parent: ViewGroup) : MangaViewHolder {
+    private fun createMangaViewHolder(parent: ViewGroup): MangaViewHolder {
         val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
-            KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
+            KeyUtil.LIST_VIEW_STYLE_COMPACT_X2,
+            -> {
                 AdapterMangaCompactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             }
             else -> {
@@ -79,16 +81,13 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
     }
 
     @RecyclerViewType
-    override fun getItemViewType(position: Int): Int {
-        return if (data[position].type == KeyUtil.ANIME)
-            KeyUtil.RECYCLER_TYPE_ANIME
-        else
-            KeyUtil.RECYCLER_TYPE_MANGA
+    override fun getItemViewType(position: Int): Int = if (data[position].type == KeyUtil.ANIME) {
+        KeyUtil.RECYCLER_TYPE_ANIME
+    } else {
+        KeyUtil.RECYCLER_TYPE_MANGA
     }
 
-    override fun getFilter(): Filter? {
-        return null
-    }
+    override fun getFilter(): Filter? = null
 
     inner class AnimeViewHolder
     /**
@@ -96,8 +95,10 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
      *
      * @param binding
      * @see ButterKnife
-      */ internal constructor(private val binding: ViewBinding) :
-        RecyclerViewHolder<MediaBase>(binding.root) {
+     */
+    internal constructor(
+        private val binding: ViewBinding,
+    ) : RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
             bindClickListeners(*cardInteractionIds)
@@ -145,10 +146,11 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
          * @see Glide
          */
         override fun onViewRecycled() {
-            if (binding is AdapterAnimeBinding)
+            if (binding is AdapterAnimeBinding) {
                 Glide.with(context).clear(binding.seriesImage)
-            else if (binding is AdapterAnimeCompactBinding)
+            } else if (binding is AdapterAnimeCompactBinding) {
                 Glide.with(context).clear(binding.seriesImage)
+            }
         }
 
         /**
@@ -162,9 +164,7 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
             performClick(clickListener, data, itemView)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, itemView)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, itemView)
     }
 
     inner class MangaViewHolder
@@ -172,8 +172,10 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
      * Default constructor which includes binding with butter knife
      *
      * @param view
-      */ internal constructor(private val binding: ViewBinding) :
-        RecyclerViewHolder<MediaBase>(binding.root) {
+     */
+    internal constructor(
+        private val binding: ViewBinding,
+    ) : RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
             bindClickListeners(*cardInteractionIds)
@@ -219,20 +221,18 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
          * @see Glide
          */
         override fun onViewRecycled() {
-            if (binding is AdapterMangaBinding)
+            if (binding is AdapterMangaBinding) {
                 Glide.with(context).clear(binding.seriesImage)
-            else if (binding is AdapterMangaCompactBinding)
+            } else if (binding is AdapterMangaCompactBinding) {
                 Glide.with(context).clear(binding.seriesImage)
+            }
         }
 
         override fun onClick(v: View) {
             performClick(clickListener, data, itemView)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, itemView)
-        }
-
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, itemView)
     }
 
     inner class MediaViewHolder
@@ -240,8 +240,10 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
      * Default constructor which includes binding with butter knife
      *
      * @param binding
-     */ (private val binding: AdapterSeriesBinding) :
-        RecyclerViewHolder<MediaBase>(binding.root) {
+     */
+    (
+        private val binding: AdapterSeriesBinding,
+    ) : RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
             bindClickListeners(*cardInteractionIds)
@@ -277,10 +279,6 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) :
             performClick(clickListener, data, itemView)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, itemView)
-        }
-
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, itemView)
     }
-
 }

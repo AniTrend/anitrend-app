@@ -12,7 +12,6 @@ import android.net.NetworkCapabilities
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.*
@@ -45,16 +44,17 @@ object CompatUtil {
     private const val CACHE_LIMIT = 1024 * 1024 * 250
 
     @Deprecated(
-            message = "Use extension functions present in [AppExt]",
-            replaceWith = ReplaceWith(
-                    expression = "activity.hideKeyboard()",
-                    imports = ["com.mxt.extension.AppExt.hideKeyboard"]),
-            level = DeprecationLevel.ERROR
+        message = "Use extension functions present in [AppExt]",
+        replaceWith = ReplaceWith(
+            expression = "activity.hideKeyboard()",
+            imports = ["com.mxt.extension.AppExt.hideKeyboard"],
+        ),
+        level = DeprecationLevel.ERROR,
     )
     fun hideKeyboard(activity: FragmentActivity?) {
-            val targetActivity = activity ?: return
-            val inputMethodManager = targetActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(targetActivity.window?.decorView?.windowToken, 0)
+        val targetActivity = activity ?: return
+        val inputMethodManager = targetActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(targetActivity.window?.decorView?.windowToken, 0)
     }
 
     fun isOnline(context: Context?): Boolean {
@@ -82,15 +82,18 @@ object CompatUtil {
             val intent = Intent(context, ImagePreviewActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(KeyUtil.arg_model, imageUri)
-            //if (context is FragmentActivity)
+            // if (context is FragmentActivity)
             //    startSharedImageTransition(context, view, intent, R.string.transition_image_preview)
             context.startActivity(intent)
         }
     }
 
     fun imagePreview(view: View, imageUri: String?, errorMessage: Int) {
-        if (!imageUri.isNullOrBlank()) imagePreview(view, imageUri)
-        else NotifyUtil.makeText(view.context, errorMessage, Toast.LENGTH_SHORT).show()
+        if (!imageUri.isNullOrBlank()) {
+            imagePreview(view, imageUri)
+        } else {
+            NotifyUtil.makeText(view.context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -108,15 +111,14 @@ object CompatUtil {
      * @see Drawable
      */
     @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getCompatDrawable(resource)",
-                    imports = ["com.mxt.extension.getCompatDrawable"]),
-            level = DeprecationLevel.ERROR
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getCompatDrawable(resource)",
+            imports = ["com.mxt.extension.getCompatDrawable"],
+        ),
+        level = DeprecationLevel.ERROR,
     )
-    fun getDrawable(context: Context, @DrawableRes resource: Int): Drawable? {
-        return AppCompatResources.getDrawable(context, resource)
-    }
+    fun getDrawable(context: Context, @DrawableRes resource: Int): Drawable? = AppCompatResources.getDrawable(context, resource)
 
     /**
      * Avoids resource not found when using vector drawables in API levels < Lollipop
@@ -136,11 +138,12 @@ object CompatUtil {
      * @see Drawable
      */
     @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getCompatTintedDrawable(resource)",
-                    imports = ["com.mxt.extension.getCompatTintedDrawable"]),
-            level = DeprecationLevel.ERROR
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getCompatTintedDrawable(resource)",
+            imports = ["com.mxt.extension.getCompatTintedDrawable"],
+        ),
+        level = DeprecationLevel.ERROR,
     )
     fun getTintedDrawable(context: Context, @DrawableRes resource: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
@@ -168,16 +171,18 @@ object CompatUtil {
      */
 
     @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getCompatDrawable(resource, tint)",
-                    imports = ["com.mxt.extension.getCompatDrawable"]),
-            level = DeprecationLevel.WARNING
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getCompatDrawable(resource, tint)",
+            imports = ["com.mxt.extension.getCompatDrawable"],
+        ),
+        level = DeprecationLevel.WARNING,
     )
     fun getDrawable(context: Context, @DrawableRes resource: Int, @ColorRes tint: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
-        if (tint != 0)
+        if (tint != 0) {
             DrawableCompat.setTint(drawable, context.getCompatColor(tint))
+        }
         return drawable
     }
 
@@ -200,11 +205,12 @@ object CompatUtil {
      * @see Drawable
      */
     @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getCompatTintedDrawable(resource)",
-                    imports = ["com.mxt.extension.getCompatTintedDrawable"]),
-            level = DeprecationLevel.WARNING
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getCompatTintedDrawable(resource)",
+            imports = ["com.mxt.extension.getCompatTintedDrawable"],
+        ),
+        level = DeprecationLevel.WARNING,
     )
     fun getDrawableTintAttr(context: Context, @DrawableRes resource: Int, @AttrRes attribute: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
@@ -224,15 +230,17 @@ object CompatUtil {
      * @return Color Integer
      */
     @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getCompatColorAttr(attr)",
-                    imports = ["com.mxt.extension.getCompatColorAttr"]),
-            level = DeprecationLevel.WARNING
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getCompatColorAttr(attr)",
+            imports = ["com.mxt.extension.getCompatColorAttr"],
+        ),
+        level = DeprecationLevel.WARNING,
     )
     @ColorInt
     fun getColorFromAttr(context: Context, @AttrRes attribute: Int): Int {
         val colorAttribute = context.obtainStyledAttributes(intArrayOf(attribute))
+
         @ColorInt val color = colorAttribute.getColor(0, 0)
         colorAttribute.recycle()
         return color
@@ -257,8 +265,9 @@ object CompatUtil {
     @JvmOverloads
     fun startRevealAnim(activity: FragmentActivity?, target: View, data: Intent, finish: Boolean = false) {
         activity?.startActivity(data)
-        if (finish)
+        if (finish) {
             activity?.finish()
+        }
     }
 
     fun isLightTheme(settings: Settings): Boolean {
@@ -276,13 +285,11 @@ object CompatUtil {
         return (pxValue / scale + 0.5f).toInt()
     }
 
-    fun spToPx(spValue: Float): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            spValue,
-            Resources.getSystem().displayMetrics
-        ).roundToInt()
-    }
+    fun spToPx(spValue: Float): Int = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        spValue,
+        Resources.getSystem().displayMetrics,
+    ).roundToInt()
 
     /**
      * Return true if the smallest width in DP of the device is equal or greater than the given
@@ -305,30 +312,26 @@ object CompatUtil {
         return screenWidth >= widthDp
     }
 
+    @Deprecated(
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getCompatColor(color)",
+            imports = ["com.mxt.extension.getCompatColor"],
+        ),
+        level = DeprecationLevel.WARNING,
+    )
+    fun getColor(context: Context, @ColorRes color: Int): Int = ContextCompat.getColor(context, color)
 
     @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getCompatColor(color)",
-                    imports = ["com.mxt.extension.getCompatColor"]),
-            level = DeprecationLevel.WARNING
+        message = "Use extension functions present in [ContextExt]",
+        replaceWith = ReplaceWith(
+            expression = "context.getLayoutInflater()",
+            imports = ["com.mxt.extension.getLayoutInflater"],
+        ),
+        level = DeprecationLevel.WARNING,
     )
-    fun getColor(context: Context, @ColorRes color: Int): Int {
-        return ContextCompat.getColor(context, color)
-    }
-
-
-    @Deprecated(
-            message = "Use extension functions present in [ContextExt]",
-            replaceWith = ReplaceWith(
-                    expression = "context.getLayoutInflater()",
-                    imports = ["com.mxt.extension.getLayoutInflater"]),
-            level = DeprecationLevel.WARNING
-    )
-    fun getLayoutInflater(context: Context): LayoutInflater {
-        return (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater)
-            ?: LayoutInflater.from(context)
-    }
+    fun getLayoutInflater(context: Context): LayoutInflater = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater)
+        ?: LayoutInflater.from(context)
 
     /**
      * Credits
@@ -338,8 +341,9 @@ object CompatUtil {
     fun getStatusBarHeight(resources: Resources): Int {
         var statusBarHeight = 0
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0)
+        if (resourceId > 0) {
             statusBarHeight = resources.getDimensionPixelSize(resourceId)
+        }
         return statusBarHeight
     }
 
@@ -350,12 +354,11 @@ object CompatUtil {
      */
     fun getActionBarHeight(fragmentActivity: FragmentActivity?): Int? {
         val styledAttributes = fragmentActivity?.theme?.obtainStyledAttributes(
-                intArrayOf(android.R.attr.actionBarSize)
+            intArrayOf(android.R.attr.actionBarSize),
         )
         styledAttributes?.recycle()
         return styledAttributes?.getDimension(0, 0f)?.toInt()
     }
-
 
     /**
      * Credits
@@ -365,8 +368,9 @@ object CompatUtil {
     private fun getNavigationBarHeight(resources: Resources): Int {
         var navigationBarHeight = 0
         val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (resourceId > 0)
+        if (resourceId > 0) {
             navigationBarHeight = resources.getDimensionPixelSize(resourceId)
+        }
         return navigationBarHeight
     }
 
@@ -390,8 +394,9 @@ object CompatUtil {
      */
     fun getStringList(context: Context?, @ArrayRes arrayRes: Int): List<String> {
         val array = context?.resources?.getStringArray(arrayRes)
-        if (array != null)
+        if (array != null) {
             return constructListFrom(*array)
+        }
         return Collections.emptyList()
     }
 
@@ -413,9 +418,10 @@ object CompatUtil {
     fun <T> getIndexOf(collection: Collection<T>?, target: T?): Int {
         if (collection != null && target != null) {
             val pairOptional = Stream.of(collection)
-                    .findIndexed { _, value -> value != null && value == target }
-            if (pairOptional.isPresent)
+                .findIndexed { _, value -> value != null && value == target }
+            if (pairOptional.isPresent) {
                 return pairOptional.get().first
+            }
         }
         return 0
     }
@@ -431,9 +437,10 @@ object CompatUtil {
     fun <T> getIndexOf(collection: Array<T>?, target: T?): Int {
         if (collection != null && target != null) {
             val pairOptional = Stream.of(*collection)
-                    .findIndexed { _, value -> value != null && value == target }
-            if (pairOptional.isPresent)
+                .findIndexed { _, value -> value != null && value == target }
+            if (pairOptional.isPresent) {
                 return pairOptional.get().first
+            }
         }
         return 0
     }
@@ -451,10 +458,12 @@ object CompatUtil {
      * @see Optional<T> for information on how to handle return
      *
      * @see IntPair
-    </T> */
-    fun <T> findIndexOf(collection: Collection<T>, target: T?): Optional<IntPair<T>> {
-        return if (!isEmpty(collection) && target != null) Stream.of(collection)
-                .findIndexed { _, value -> value != null && value == target } else Optional.empty()
+     </T> */
+    fun <T> findIndexOf(collection: Collection<T>, target: T?): Optional<IntPair<T>> = if (!isEmpty(collection) && target != null) {
+        Stream.of(collection)
+            .findIndexed { _, value -> value != null && value == target }
+    } else {
+        Optional.empty()
     }
 
     /**
@@ -470,21 +479,19 @@ object CompatUtil {
      * @see Optional<T> for information on how to handle return
      *
      * @see IntPair
-    </T> */
-    fun <T> findIndexOf(collection: Array<T>?, target: T?): Optional<IntPair<T>> {
-        return if (collection != null && target != null) Stream.of(*collection)
-                .findIndexed { _, value -> value != null && value == target }
-        else Optional.empty()
+     </T> */
+    fun <T> findIndexOf(collection: Array<T>?, target: T?): Optional<IntPair<T>> = if (collection != null && target != null) {
+        Stream.of(*collection)
+            .findIndexed { _, value -> value != null && value == target }
+    } else {
+        Optional.empty()
     }
-
 
     /**
      * Sorts a given map by the order of the of the keys in the map in descending order
      * @see ComparatorUtil.getKeyComparator
      */
-    fun <T> getKeyFilteredMap(map: Map<String, T>): List<Map.Entry<String, T>> {
-        return Stream.of(map).sorted(ComparatorUtil.getKeyComparator()).toList()
-    }
+    fun <T> getKeyFilteredMap(map: Map<String, T>): List<Map.Entry<String, T>> = Stream.of(map).sorted(ComparatorUtil.getKeyComparator()).toList()
 
     fun isLowRamDevice(context: Context?): Boolean {
         val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
@@ -499,21 +506,24 @@ object CompatUtil {
             val exceptions = constructListFrom(KeyUtil.TV, KeyUtil.ONA, KeyUtil.OVA)
             val result = StringBuilder(input.length)
             val words = input.split("_|\\s".toRegex())
-                    .dropLastWhile {
-                        it.isEmpty()
-                    }.toTypedArray()
+                .dropLastWhile {
+                    it.isEmpty()
+                }.toTypedArray()
             for ((index, word) in words.withIndex()) {
                 if (word.isNotEmpty()) {
-                    if (exceptions.contains(word))
+                    if (exceptions.contains(word)) {
                         result.append(word)
-                    else {
+                    } else {
                         val starting = Character.toUpperCase(word[0])
-                        result.append(starting).append(word.substring(1)
-                            .lowercase(Locale.getDefault()))
+                        result.append(starting).append(
+                            word.substring(1)
+                                .lowercase(Locale.getDefault()),
+                        )
                     }
                 }
-                if (index != word.length - 1)
+                if (index != word.length - 1) {
                     result.append(" ")
+                }
             }
             return result.toString()
         }
@@ -524,19 +534,11 @@ object CompatUtil {
      * Get a list from a given array of strings
      * @return list of capitalized strings
      */
-    fun capitalizeWords(strings: Array<String>): List<String> {
-        return strings.map { capitalizeWords(it)  }
-    }
+    fun capitalizeWords(strings: Array<String>): List<String> = strings.map { capitalizeWords(it) }
 
-    fun <T : Collection<*>> isEmpty(collection: T?): Boolean {
-        return collection.isNullOrEmpty()
-    }
+    fun <T : Collection<*>> isEmpty(collection: T?): Boolean = collection.isNullOrEmpty()
 
-    fun <T : Collection<*>> sizeOf(collection: T?): Int {
-        return collection?.size ?: 0
-    }
+    fun <T : Collection<*>> sizeOf(collection: T?): Int = collection?.size ?: 0
 
-    fun equals(a: Any?, b: Any): Boolean {
-        return a != null && a == b
-    }
+    fun equals(a: Any?, b: Any): Boolean = a != null && a == b
 }

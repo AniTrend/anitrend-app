@@ -12,7 +12,9 @@ import kotlinx.parcelize.Parcelize
  * Created by Maxwell on 11/12/2016.
  */
 @Parcelize
-class FeedList @JvmOverloads constructor(
+class FeedList
+@JvmOverloads
+constructor(
     var id: Long = 0,
     var replyCount: Int = 0,
     @param:KeyUtil.FeedType var type: String? = null,
@@ -25,17 +27,14 @@ class FeedList @JvmOverloads constructor(
     var messenger: UserBase? = null,
     var recipient: UserBase? = null,
     var likes: List<UserBase>? = null,
-    var siteUrl: String? = null
+    var siteUrl: String? = null,
 ) : Parcelable {
-
     @IgnoredOnParcel
     var replies: List<FeedReply>? = null
 
-    override fun equals(other: Any?): Boolean {
-        return when (other) {
-            is FeedReply -> other.id == id
-            is FeedList -> other.id == id
-            else -> super.equals(other)
-        }
+    override fun equals(other: Any?): Boolean = when (other) {
+        is FeedReply -> other.id == id
+        is FeedList -> other.id == id
+        else -> super.equals(other)
     }
 }

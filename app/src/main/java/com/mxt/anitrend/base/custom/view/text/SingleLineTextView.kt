@@ -10,12 +10,14 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
  * Created by max on 2017/06/24.
  * Single line text view widget
  */
-open class SingleLineTextView @JvmOverloads constructor(
+open class SingleLineTextView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatTextView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatTextView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }

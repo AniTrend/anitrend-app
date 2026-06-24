@@ -15,9 +15,7 @@ import com.mxt.anitrend.extension.getCompatColorAttr
  */
 
 class ChartUtil {
-
     class StepXAxisFormatter : ValueFormatter() {
-
         private lateinit var dataModel: List<Int>
         private lateinit var chartBase: BarChart
 
@@ -44,15 +42,16 @@ class ChartUtil {
         }
 
         fun build(context: Context) {
-            with (chartBase.xAxis) {
+            with(chartBase.xAxis) {
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawGridLines(false)
                 disableGridDashedLine()
                 disableAxisLineDashedLine()
                 setAvoidFirstLastClipping(true)
                 granularity = 1f
-                if (dataModel.size <= 10)
+                if (dataModel.size <= 10) {
                     labelCount = dataModel.size
+                }
                 textColor = context.getCompatColorAttr(R.attr.titleColor)
                 valueFormatter = this@StepXAxisFormatter
             }
@@ -60,7 +59,6 @@ class ChartUtil {
     }
 
     class StepYAxisFormatter : ValueFormatter() {
-
         private lateinit var chartBase: BarLineChartBase<*>
 
         fun setChartBase(chartBase: BarLineChartBase<*>): StepYAxisFormatter {
@@ -77,7 +75,10 @@ class ChartUtil {
          * @param axis  the axis the value belongs to
          * @return formatted label value
          */
-        override fun getFormattedValue(value: Float, axis: AxisBase): String {
+        override fun getFormattedValue(
+            value: Float,
+            axis: AxisBase,
+        ): String {
             val formatted = value.toInt()
             return formatted.toString()
         }
@@ -85,7 +86,7 @@ class ChartUtil {
         fun build(context: Context) {
             chartBase.legend.textColor = context.getCompatColorAttr(R.attr.titleColor)
 
-            with (chartBase.axisLeft) {
+            with(chartBase.axisLeft) {
                 setLabelCount(5, false)
                 spaceTop = 15f
                 axisMinimum = 0f

@@ -15,7 +15,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Deprecated("Deprecated in Java")
 @Parcelize
-class UserStats @JvmOverloads constructor(
+class UserStats
+@JvmOverloads
+constructor(
     var watchedTime: Int = 0,
     var chaptersRead: Int = 0,
     var animeStatusDistribution: List<StatusDistribution>? = null,
@@ -23,5 +25,5 @@ class UserStats @JvmOverloads constructor(
     var favouredGenres: List<GenreStats>? = null,
     var favouredTags: List<MediaTagStats>? = null,
     var favouredYears: List<YearStats>? = null,
-    var favouredFormats: List<FormatStats>? = null
+    var favouredFormats: List<FormatStats>? = null,
 ) : Parcelable

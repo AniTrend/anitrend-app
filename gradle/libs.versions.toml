@@ -1,5 +1,6 @@
 [versions]
 ktlint = "0.40.0"
+spotless = "7.2.1"
 
 gradle-plugin = "9.2.1"
 
@@ -59,6 +60,7 @@ chuncker = "4.3.1"
 anitrend-android-emoji = "2.2.0"
 
 [libraries]
+spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 alerter = { module = "com.github.tapadoo:alerter", version.ref = "alerter" }
 android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "aboutPage" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
@@ -124,10 +126,10 @@ anitrend-android-emoji = { module = "com.github.anitrend.android-emojify:emojify
 anitrend-android-emoji-contract = { module = "com.github.anitrend.android-emojify:contract", version.ref = "anitrend-android-emoji" }
 anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gson", version.ref = "anitrend-android-emoji" }
 anitrend-support-markwon = "com.github.anitrend:support-markdown:0.12.1-alpha01"
-anitrend-retrofit-graphql-runtime = "com.github.AniTrend.retrofit-graphql:runtime:60239ccf9b"
-anitrend-retrofit-graphql-api = "com.github.AniTrend.retrofit-graphql:api:60239ccf9b"
-anitrend-retrofit-graphql-android-assets = "com.github.AniTrend.retrofit-graphql:android-assets:60239ccf9b"
-anitrend-retrofit-graphql-annotations = "com.github.AniTrend.retrofit-graphql:annotations:60239ccf9b"
+anitrend-retrofit-graphql-runtime = "com.github.AniTrend.retrofit-graphql:runtime:0.12.0"
+anitrend-retrofit-graphql-api = "com.github.AniTrend.retrofit-graphql:api:0.12.0"
+anitrend-retrofit-graphql-android-assets = "com.github.AniTrend.retrofit-graphql:android-assets:0.12.0"
+anitrend-retrofit-graphql-gradle-plugin = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin:0.12.0"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.1"
 

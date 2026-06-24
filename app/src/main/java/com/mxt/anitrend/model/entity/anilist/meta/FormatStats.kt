@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class FormatStats(
     val format: String?,
-    val amount: Int
+    val amount: Int,
 ) : Parcelable

@@ -34,7 +34,7 @@ object DateUtil {
             KeyUtil.FALL,
             KeyUtil.FALL,
             KeyUtil.FALL,
-            KeyUtil.WINTER
+            KeyUtil.WINTER,
         )
     }
 
@@ -60,7 +60,8 @@ object DateUtil {
      * @return Season name
      */
     val menuSelect: Int
-        @IntRange(from = 0, to = 4) get() {
+        @IntRange(from = 0, to = 4)
+        get() {
             val season = seasons[Calendar.getInstance().get(Calendar.MONTH)]
             return CompatUtil.constructListFrom(*KeyUtil.MediaSeasonValues)
                 .indexOf(season)
@@ -70,14 +71,16 @@ object DateUtil {
      * Returns the current month
      */
     val month: Int
-        @IntRange(from = 0, to = 11) get() =
+        @IntRange(from = 0, to = 11)
+        get() =
             Calendar.getInstance().get(Calendar.MONTH)
 
     /**
      * Returns the current date
      */
     val date: Int
-        @IntRange(from = 0, to = 31) get() =
+        @IntRange(from = 0, to = 31)
+        get() =
             Calendar.getInstance().get(Calendar.DATE)
 
     /**
@@ -91,19 +94,23 @@ object DateUtil {
      */
     val currentDate: FuzzyDate
         get() = FuzzyDate(
-            date, month + 1,
-            year
+            date,
+            month + 1,
+            year,
         )
 
     fun getDateOutputFormat(fuzzyDate: FuzzyDate): String? {
-        if (fuzzyDate.day != 0 && fuzzyDate.month != 0 && fuzzyDate.year != 0)
+        if (fuzzyDate.day != 0 && fuzzyDate.month != 0 && fuzzyDate.year != 0) {
             return "MMM dd, yyyy"
+        }
 
-        if (fuzzyDate.month != 0 && fuzzyDate.year != 0)
+        if (fuzzyDate.month != 0 && fuzzyDate.year != 0) {
             return "MMM, yyyy"
+        }
 
-        if (fuzzyDate.year != 0)
+        if (fuzzyDate.year != 0) {
             return "yyyy"
+        }
 
         return null
     }
@@ -113,16 +120,21 @@ object DateUtil {
         try {
             val converted = format.parse(fuzzyDate.toString())
             val calendar = GregorianCalendar(Locale.getDefault())
-            if (converted != null)
+            if (converted != null) {
                 calendar.time = converted
-            return String.format(Locale.getDefault(), "%s %d",
+            }
+            return String.format(
+                Locale.getDefault(),
+                "%s %d",
                 CompatUtil.capitalizeWords(
-                    seasons[calendar.get(
-                        Calendar.MONTH
-                    )]
+                    seasons[
+                        calendar.get(
+                            Calendar.MONTH,
+                        ),
+                    ],
                 ),
-                    calendar.get(Calendar.YEAR))
-
+                calendar.get(Calendar.YEAR),
+            )
         } catch (e: ParseException) {
             Timber.e(e)
         }
@@ -137,10 +149,10 @@ object DateUtil {
      *
      * @return current year with a given delta
      */
-    fun getCurrentYear(delta: Int = 0): Int {
-        return if (month >= 11 && currentSeason == KeyUtil.WINTER)
-            year + delta
-        else year
+    fun getCurrentYear(delta: Int = 0): Int = if (month >= 11 && currentSeason == KeyUtil.WINTER) {
+        year + delta
+    } else {
+        year
     }
 
     /**
@@ -151,8 +163,9 @@ object DateUtil {
      */
     fun convertDate(value: Long): String? {
         try {
-            if (value != 0L)
+            if (value != 0L) {
                 return SimpleDateFormat(dateOutputFormat, Locale.getDefault()).format(Date(value * 1000L))
+            }
         } catch (e: Exception) {
             Timber.e(e)
         }
@@ -171,8 +184,9 @@ object DateUtil {
             if (fuzzyDate != null && fuzzyDate.isValidDate) {
                 val simpleDateFormat = SimpleDateFormat(dateInputFormat, Locale.getDefault())
                 val converted = simpleDateFormat.parse(fuzzyDate.toString())
-                if (converted != null)
+                if (converted != null) {
                     return SimpleDateFormat(getDateOutputFormat(fuzzyDate), Locale.getDefault()).format(converted)
+                }
             }
         } catch (e: Exception) {
             Timber.e(e)
@@ -197,8 +211,9 @@ object DateUtil {
      * @param fuzzyDate - fuzzy date
      */
     fun getEndTitle(fuzzyDate: FuzzyDate?): String {
-        if (fuzzyDate == null || !fuzzyDate.isValidDate)
+        if (fuzzyDate == null || !fuzzyDate.isValidDate) {
             return "Ends"
+        }
 
         try {
             return if (isNewerDate(fuzzyDate)) "Ends" else "Ended"
@@ -215,8 +230,9 @@ object DateUtil {
      * @param fuzzyDate - fuzzy date
      */
     fun getStartTitle(fuzzyDate: FuzzyDate?): String {
-        if (fuzzyDate == null || !fuzzyDate.isValidDate)
+        if (fuzzyDate == null || !fuzzyDate.isValidDate) {
             return "Starts"
+        }
 
         try {
             return if (isNewerDate(fuzzyDate)) "Starts" else "Started"
@@ -235,8 +251,10 @@ object DateUtil {
      */
     fun getNextEpDate(airingSchedule: AiringSchedule): String {
         val prettyTime = PrettyTime(Locale.getDefault())
-        val fromNow = prettyTime.format(Date(
-                System.currentTimeMillis() + airingSchedule.timeUntilAiring * 1000L)
+        val fromNow = prettyTime.format(
+            Date(
+                System.currentTimeMillis() + airingSchedule.timeUntilAiring * 1000L,
+            ),
         )
         return String.format(Locale.getDefault(), "EP %d: %s", airingSchedule.episode, fromNow)
     }
@@ -256,12 +274,11 @@ object DateUtil {
      * @param start Starting year
      * @param endDelta End difference plus or minus the current year
      */
-    fun getYearRanges(start: Int, endDelta: Int): List<Int> {
-        return IntStream.rangeClosed(start,
-            getCurrentYear(endDelta)
-        ).boxed().collect(Collectors.toList())
-            .orEmpty()
-    }
+    fun getYearRanges(start: Int, endDelta: Int): List<Int> = IntStream.rangeClosed(
+        start,
+        getCurrentYear(endDelta),
+    ).boxed().collect(Collectors.toList())
+        .orEmpty()
 
     /**
      * Checks if the time given has a difference greater than or equal to the target time

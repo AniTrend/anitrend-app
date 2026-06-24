@@ -8,7 +8,6 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.view.fragment.detail.AboutFragment
 
 class AboutActivity : ActivityBase<Void, BasePresenter>() {
-
     private val toolbar by lazy(LazyThreadSafetyMode.NONE) {
         findViewById<Toolbar?>(R.id.toolbar)
     }
@@ -43,6 +42,5 @@ class AboutActivity : ActivityBase<Void, BasePresenter>() {
     }
 
     override fun makeRequest() {
-
     }
 }

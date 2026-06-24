@@ -21,7 +21,6 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.sheet.BottomReviewReader
@@ -30,18 +29,19 @@ import com.mxt.anitrend.view.sheet.BottomReviewReader
  * Created by max on 2017/10/30.
  * Media review browse
  */
-class BrowseReviewFragment :
-    FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
-
+class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(@KeyUtil.MediaType mediaType: String): BrowseReviewFragment {
-            val args = Bundle().apply {
-                putString(KeyUtil.arg_mediaType, mediaType)
-            }
+        fun newInstance(
+            @KeyUtil.MediaType mediaType: String,
+        ): BrowseReviewFragment {
+            val args =
+                Bundle().apply {
+                    putString(KeyUtil.arg_mediaType, mediaType)
+                }
             return BrowseReviewFragment().apply {
                 arguments = args
             }
@@ -62,7 +62,10 @@ class BrowseReviewFragment :
         setViewModel(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -80,11 +83,12 @@ class BrowseReviewFragment :
                     ctx,
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(reviewSortTypes, presenter.settings.reviewSort),
-                    CompatUtil.capitalizeWords(reviewSortTypes)
+                    CompatUtil.capitalizeWords(reviewSortTypes),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE)
+                    if (which == DialogAction.POSITIVE) {
                         presenter.settings.reviewSort =
                             reviewSortTypes.getOrNull(dialog.selectedIndex)
+                    }
                 }
                 return true
             }
@@ -94,12 +98,13 @@ class BrowseReviewFragment :
                     ctx,
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
-                    CompatUtil.getStringList(ctx, R.array.order_by_types)
+                    CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE)
+                    if (which == DialogAction.POSITIVE) {
                         presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder
+                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
                         )
+                    }
                 }
                 return true
             }
@@ -114,65 +119,84 @@ class BrowseReviewFragment :
     override fun makeRequest() {
         val ctx = context ?: return
         val pref: Settings = presenter.settings
-        val queryContainer = GraphUtil.getDefaultQuery(true)
-            .putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-            .putVariable(KeyUtil.arg_sort, pref.reviewSort + pref.sortOrder)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+            putString(KeyUtil.arg_sort, pref.reviewSort + pref.sortOrder)
+            putBoolean(KeyUtil.arg_asHtml, false)
+        }
         viewModel?.requestData(KeyUtil.MEDIA_REVIEWS_REQ, ctx)
     }
 
     override fun onChanged(content: PageContainer<Review>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
-            if (!content.isEmpty)
+            }
+            if (!content.isEmpty) {
                 onPostProcessed(content.pageData)
-            else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<Review>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<Review>,
+    ) {
         when (target.id) {
             R.id.series_image -> {
                 val mediaBase: MediaBase = data.second.media
                 val host = activity ?: return
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, mediaBase.id)
-                    putExtra(KeyUtil.arg_mediaType, mediaBase.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, mediaBase.id)
+                        putExtra(KeyUtil.arg_mediaType, mediaBase.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
             R.id.review_read_more -> {
-                mBottomSheet = BottomReviewReader.Builder()
-                    .setReview(data.second)
-                    .setTitle(R.string.drawer_title_reviews)
-                    .build()
+                mBottomSheet =
+                    BottomReviewReader
+                        .Builder()
+                        .setReview(data.second)
+                        .setTitle(R.string.drawer_title_reviews)
+                        .build()
                 showBottomSheet()
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<Review>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<Review>,
+    ) {
         when (target.id) {
             R.id.series_image -> {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(data.second.media.id).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(data.second.media.id)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }

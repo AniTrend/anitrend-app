@@ -12,9 +12,8 @@ class IconArrayAdapter(
     context: Context,
     resource: Int,
     textViewResourceId: Int,
-    objects: List<String>
+    objects: List<String>,
 ) : ArrayAdapter<String>(context, resource, textViewResourceId, objects) {
-
     private lateinit var indexIconMap: Map<Int, Int>
 
     /**
@@ -25,13 +24,18 @@ class IconArrayAdapter(
         this.indexIconMap = indexIconMap
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup,
+    ): View {
         val view = super.getView(position, convertView, parent)
 
         val title = view.findViewById<SingleLineTextView>(R.id.spinner_text)
         val icon = view.findViewById<AppCompatTintImageView>(R.id.spinner_icon)
-        val drawable = indexIconMap[position]
-            ?: throw IllegalStateException("Missing icon for position $position")
+        val drawable =
+            indexIconMap[position]
+                ?: throw IllegalStateException("Missing icon for position $position")
 
         title.text = getItem(position)
         icon.setTintDrawableAttr(drawable, R.attr.titleColor)
@@ -39,13 +43,18 @@ class IconArrayAdapter(
         return view
     }
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun getDropDownView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup,
+    ): View {
         val view = super.getDropDownView(position, convertView, parent)
 
         val title = view.findViewById<SingleLineTextView>(R.id.spinner_text)
         val icon = view.findViewById<AppCompatTintImageView>(R.id.spinner_icon)
-        val drawable = indexIconMap[position]
-            ?: throw IllegalStateException("Missing icon for position $position")
+        val drawable =
+            indexIconMap[position]
+                ?: throw IllegalStateException("Missing icon for position $position")
 
         title.text = getItem(position)
         icon.setTintDrawableAttr(drawable, R.attr.titleColor)

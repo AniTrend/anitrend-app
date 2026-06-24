@@ -17,20 +17,19 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.CharacterActivity
 
 /**
  * Created by LuK1337 on 2021/05/05.
  * MediaAnimeRoleFragment
  */
-class MediaAnimeRoleFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
-
+class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
     private var id: Long = 0
     private var onList: Boolean? = null
+
     @KeyUtil.MediaType
     private var mediaType: String? = null
+
     @KeyUtil.RequestType
     private var requestType: Int = 0
 
@@ -39,12 +38,13 @@ class MediaAnimeRoleFragment :
         fun newInstance(
             params: Bundle,
             @KeyUtil.MediaType mediaType: String,
-            @KeyUtil.RequestType requestType: Int
+            @KeyUtil.RequestType requestType: Int,
         ): MediaAnimeRoleFragment {
-            val args = Bundle(params).apply {
-                putString(KeyUtil.arg_mediaType, mediaType)
-                putInt(KeyUtil.arg_request_type, requestType)
-            }
+            val args =
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, mediaType)
+                    putInt(KeyUtil.arg_request_type, requestType)
+                }
             return MediaAnimeRoleFragment().apply {
                 arguments = args
             }
@@ -74,12 +74,13 @@ class MediaAnimeRoleFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, id)
-            .putVariable(KeyUtil.arg_onList, onList)
-            .putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+            putSerializable(KeyUtil.arg_onList, onList)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        }
         viewModel?.requestData(requestType, ctx)
     }
 
@@ -87,31 +88,42 @@ class MediaAnimeRoleFragment :
         val edgeContainer = content?.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
-                if (edgeContainer.hasPageInfo())
+                if (edgeContainer.hasPageInfo()) {
                     presenter.setPageInfo(edgeContainer.pageInfo)
-                if (!edgeContainer.isEmpty)
+                }
+                if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupCharactersByYear(edgeContainer.edges, mAdapter.data))
-                else
+                } else {
                     onPostProcessed(emptyList())
+                }
             }
-        } else
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val model = data.second as? CharacterStaffBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, CharacterActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, model.character.id)
-                }
+                val intent =
+                    Intent(host, CharacterActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, model.character.id)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) = Unit
 }

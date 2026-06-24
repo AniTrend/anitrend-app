@@ -1,10 +1,14 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import com.mxt.anitrend.graphql.generated.CharacterSearchVariables
+import com.mxt.anitrend.graphql.generated.MediaSearchVariables
+import com.mxt.anitrend.graphql.generated.StaffSearchVariables
+import com.mxt.anitrend.graphql.generated.StudioSearchVariables
+import com.mxt.anitrend.graphql.generated.UserSearchVariables
 import com.mxt.anitrend.model.entity.base.*
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import co.anitrend.retrofit.graphql.annotation.GraphQuery
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -18,27 +22,22 @@ import retrofit2.http.POST
 interface SearchModel {
 
     @POST("/")
-    @GraphQuery("MediaSearch")
     @Headers("Content-Type: application/json")
-    fun getMediaSearch(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<MediaBase>>>
+    fun getMediaSearch(@Body request: GraphQLRequest<MediaSearchVariables>): Call<AniListContainer<PageContainer<MediaBase>>>
 
     @POST("/")
-    @GraphQuery("StudioSearch")
     @Headers("Content-Type: application/json")
-    fun getStudioSearch(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<StudioBase>>>
+    fun getStudioSearch(@Body request: GraphQLRequest<StudioSearchVariables>): Call<AniListContainer<PageContainer<StudioBase>>>
 
     @POST("/")
-    @GraphQuery("StaffSearch")
     @Headers("Content-Type: application/json")
-    fun getStaffSearch(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<StaffBase>>>
+    fun getStaffSearch(@Body request: GraphQLRequest<StaffSearchVariables>): Call<AniListContainer<PageContainer<StaffBase>>>
 
     @POST("/")
-    @GraphQuery("CharacterSearch")
     @Headers("Content-Type: application/json")
-    fun getCharacterSearch(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<CharacterBase>>>
+    fun getCharacterSearch(@Body request: GraphQLRequest<CharacterSearchVariables>): Call<AniListContainer<PageContainer<CharacterBase>>>
 
     @POST("/")
-    @GraphQuery("UserSearch")
     @Headers("Content-Type: application/json")
-    fun getUserSearch(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<UserBase>>>
+    fun getUserSearch(@Body request: GraphQLRequest<UserSearchVariables>): Call<AniListContainer<PageContainer<UserBase>>>
 }

@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
  */
 class DeleteState(
     @SerializedName("deleted")
-    val isDeleted: Boolean
+    val isDeleted: Boolean,
 )

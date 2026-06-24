@@ -13,14 +13,16 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by Maxwell on 10/2/2016.
  * Media extension
  */
-class Media() : MediaBase(), Parcelable {
-
+class Media() :
+    MediaBase(),
+    Parcelable {
     var description: String? = null
     var synonyms: List<String>? = null
     var genres: List<String>? = null
     var tags: List<MediaTag>? = null
     var trailer: MediaTrailer? = null
     var hashTag: String? = null
+
     @KeyUtil.MediaSource var source: String? = null
     var externalLinks: List<ExternalLink>? = null
     var studios: ConnectionContainer<List<StudioBase>>? = null
@@ -46,7 +48,10 @@ class Media() : MediaBase(), Parcelable {
         rankings = rankingsList
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         super.writeToParcel(dest, flags)
         dest.writeString(description)
         dest.writeStringList(synonyms)
@@ -67,10 +72,11 @@ class Media() : MediaBase(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<Media> = object : Parcelable.Creator<Media> {
-            override fun createFromParcel(parcel: Parcel): Media = Media(parcel)
+        val CREATOR: Parcelable.Creator<Media> =
+            object : Parcelable.Creator<Media> {
+                override fun createFromParcel(parcel: Parcel): Media = Media(parcel)
 
-            override fun newArray(size: Int): Array<Media?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<Media?> = arrayOfNulls(size)
+            }
     }
 }

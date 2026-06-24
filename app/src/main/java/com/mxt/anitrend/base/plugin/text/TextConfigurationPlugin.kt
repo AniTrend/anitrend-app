@@ -39,15 +39,15 @@ internal class TextConfigurationPlugin private constructor() : AbstractMarkwonPl
                         intent.putExtra(KeyUtil.arg_model, link)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         view.context.startActivity(intent)
-                    } else
+                    } else {
                         super.resolve(view, link)
+                    }
                 }
             }
         })
     }
 
     companion object {
-        fun create() =
-            TextConfigurationPlugin()
+        fun create() = TextConfigurationPlugin()
     }
 }

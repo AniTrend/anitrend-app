@@ -17,19 +17,21 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by max on 2018/01/01.
  */
-class RankAdapter(context: Context) : RecyclerViewAdapter<MediaRank>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<MediaRank> {
-        return RankViewHolder(
-            AdapterRankingBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class RankAdapter(
+    context: Context,
+) : RecyclerViewAdapter<MediaRank>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<MediaRank> = RankViewHolder(
+        AdapterRankingBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class RankViewHolder(private val binding: AdapterRankingBinding) :
-        RecyclerViewHolder<MediaRank>(binding.root) {
-
+    inner class RankViewHolder(
+        private val binding: AdapterRankingBinding,
+    ) : RecyclerViewHolder<MediaRank>(binding.root) {
         init {
             bindClickListeners(R.id.container, R.id.sub_container)
             bindLongClickListeners(R.id.container)
@@ -37,11 +39,12 @@ class RankAdapter(context: Context) : RecyclerViewAdapter<MediaRank>(context) {
 
         override fun onBindViewHolder(model: MediaRank) {
             binding.subContainer.htmlText(model.typeHtml)
-            val icon = if (model.type == KeyUtil.RATED) {
-                R.drawable.ic_star_yellow_700_24dp
-            } else {
-                R.drawable.ic_favorite_red_700_24dp
-            }
+            val icon =
+                if (model.type == KeyUtil.RATED) {
+                    R.drawable.ic_star_yellow_700_24dp
+                } else {
+                    R.drawable.ic_favorite_red_700_24dp
+                }
             binding.rankingType.setImageDrawable(getContext().getCompatDrawable(icon))
         }
 
@@ -52,8 +55,6 @@ class RankAdapter(context: Context) : RecyclerViewAdapter<MediaRank>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

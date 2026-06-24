@@ -15,7 +15,6 @@ import com.mxt.anitrend.view.activity.index.MainActivity
  * Created by max on 2017/11/09.
  */
 class WelcomeActivity : AhoyOnboarderActivity() {
-
     private lateinit var ahoyPages: List<AhoyOnboarderCard>
 
     private fun applyStyle(card: AhoyOnboarderCard): AhoyOnboarderCard {
@@ -32,28 +31,29 @@ class WelcomeActivity : AhoyOnboarderActivity() {
         val chartIcon = if (isModernIcons) R.drawable.ic_bubble_chart_white_24dp else R.drawable.ic_bubble_chart_white_48dp
         val searchIcon = if (isModernIcons) R.drawable.ic_search_white_24dp else R.drawable.ic_search_white_48dp
 
-        ahoyPages = listOf(
-            AhoyOnboarderCard(
-                getString(R.string.app_name),
-                "${getString(R.string.app_greeting)} ${getString(R.string.app_provider)}",
-                R.mipmap.ic_launcher
-            ),
-            AhoyOnboarderCard(
-                getString(R.string.app_intro_colors_title),
-                getString(R.string.app_intro_colors_text),
-                paintIcon
-            ),
-            AhoyOnboarderCard(
-                getString(R.string.app_intro_content_title),
-                getString(R.string.app_intro_content_text),
-                chartIcon
-            ),
-            AhoyOnboarderCard(
-                getString(R.string.app_intro_search_title),
-                getString(R.string.app_intro_search_text),
-                searchIcon
-            )
-        ).map(::applyStyle)
+        ahoyPages =
+            listOf(
+                AhoyOnboarderCard(
+                    getString(R.string.app_name),
+                    "${getString(R.string.app_greeting)} ${getString(R.string.app_provider)}",
+                    R.mipmap.ic_launcher,
+                ),
+                AhoyOnboarderCard(
+                    getString(R.string.app_intro_colors_title),
+                    getString(R.string.app_intro_colors_text),
+                    paintIcon,
+                ),
+                AhoyOnboarderCard(
+                    getString(R.string.app_intro_content_title),
+                    getString(R.string.app_intro_content_text),
+                    chartIcon,
+                ),
+                AhoyOnboarderCard(
+                    getString(R.string.app_intro_search_title),
+                    getString(R.string.app_intro_search_text),
+                    searchIcon,
+                ),
+            ).map(::applyStyle)
 
         setFinishButtonDrawableStyle(ContextCompat.getDrawable(this, R.drawable.finish_button_style))
     }
@@ -76,9 +76,9 @@ class WelcomeActivity : AhoyOnboarderActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && hasFocus) {
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
     }
 }

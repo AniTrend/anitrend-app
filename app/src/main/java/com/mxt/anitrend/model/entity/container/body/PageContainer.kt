@@ -8,7 +8,6 @@ import com.mxt.anitrend.util.CompatUtil
  * with a base implementation of page info
  */
 class PageContainer<T> : Container() {
-
     @SerializedName(
         value = "media",
         alternate = [
@@ -28,8 +27,8 @@ class PageContainer<T> : Container() {
             "staff",
             "studios",
             "lists",
-            "recommendations"
-        ]
+            "recommendations",
+        ],
     )
     var pageData: List<T> = emptyList()
 

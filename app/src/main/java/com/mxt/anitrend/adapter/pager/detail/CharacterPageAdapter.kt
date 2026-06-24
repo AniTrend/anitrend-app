@@ -15,20 +15,17 @@ import com.mxt.anitrend.view.fragment.group.MediaFormatFragment
  */
 class CharacterPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.character_page_titles)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> CharacterOverviewFragment.newInstance(params)
-            1 -> MediaFormatFragment.newInstance(params, KeyUtil.ANIME, KeyUtil.CHARACTER_MEDIA_REQ)
-            2 -> MediaFormatFragment.newInstance(params, KeyUtil.MANGA, KeyUtil.CHARACTER_MEDIA_REQ)
-            3 -> CharacterActorsFragment.newInstance(params)
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> CharacterOverviewFragment.newInstance(params)
+        1 -> MediaFormatFragment.newInstance(params, KeyUtil.ANIME, KeyUtil.CHARACTER_MEDIA_REQ)
+        2 -> MediaFormatFragment.newInstance(params, KeyUtil.MANGA, KeyUtil.CHARACTER_MEDIA_REQ)
+        3 -> CharacterActorsFragment.newInstance(params)
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

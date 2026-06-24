@@ -6,6 +6,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.annimon.stream.Stream
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
+import com.mxt.anitrend.graphql.generated.CurrentUser
+import com.mxt.anitrend.graphql.generated.UserNotifications
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
@@ -15,13 +17,15 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 
-class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
-
+class ClearNotificationWorker(
+    context: Context,
+    workerParams: WorkerParameters,
+) : Worker(context, workerParams),
+    KoinComponent {
     private val presenter by inject<BasePresenter>()
 
     private val userEndpoint by lazy(LazyThreadSafetyMode.NONE) {
@@ -52,9 +56,9 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
                     if (unreadNotificationCount != 0) {
                         presenter.notifyAllListeners(
                             BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
-                            false
+                            false,
                         )
-                        return when(clearNotifications()) {
+                        return when (clearNotifications()) {
                             true -> Result.success()
                             else -> Result.failure()
                         }
@@ -69,9 +73,11 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
     }
 
     private fun requestUser(): User? {
-        val result = userEndpoint.getCurrentUser(
-            GraphUtil.getDefaultQuery(false)
-        ).execute()
+        val result =
+            userEndpoint
+                .getCurrentUser(
+                    CurrentUser.request(asHtml = false),
+                ).execute()
         if (!result.isSuccessful) {
             return null
         }
@@ -83,20 +89,23 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
     }
 
     private fun clearNotifications(): Boolean {
-        val result = userEndpoint.getUserNotifications(
-            GraphUtil
-                .getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_resetNotificationCount, true)
-        ).execute()
+        val result =
+            userEndpoint
+                .getUserNotifications(
+                    UserNotifications.request(resetNotificationCount = true),
+                ).execute()
 
         if (result.isSuccessful) {
             val notifications = unwrapBody<PageContainer<Notification>>(result.body())
             if (notifications != null) {
-                val notificationHistories = Stream.of(notifications.pageData)
-                    .map { notification -> NotificationHistory(notification.id) }
-                    .toList()
+                val notificationHistories =
+                    Stream
+                        .of(notifications.pageData)
+                        .map { notification -> NotificationHistory(notification.id) }
+                        .toList()
 
-                presenter.database.getBoxStore(NotificationHistory::class.java)
+                presenter.database
+                    .getBoxStore(NotificationHistory::class.java)
                     .put(notificationHistories)
             }
             return true
@@ -106,12 +115,10 @@ class ClearNotificationWorker(context: Context, workerParams: WorkerParameters) 
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T> unwrapBody(body: Any?): T? {
-        return when (body) {
-            null -> null
-            is AniListContainer<*> -> body.data?.result as? T
-            else -> body as? T
-        }
+    private fun <T> unwrapBody(body: Any?): T? = when (body) {
+        null -> null
+        is AniListContainer<*> -> body.data?.result as? T
+        else -> body as? T
     }
 
     companion object {

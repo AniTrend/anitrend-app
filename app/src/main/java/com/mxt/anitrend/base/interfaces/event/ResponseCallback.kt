@@ -7,7 +7,6 @@ package com.mxt.anitrend.base.interfaces.event
  */
 
 interface ResponseCallback {
-
     fun showError(error: String)
 
     fun showEmpty(message: String)

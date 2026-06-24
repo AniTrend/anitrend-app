@@ -1,12 +1,12 @@
 package com.mxt.anitrend.adapter.pager.index
 
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
 import com.mxt.anitrend.view.fragment.list.MediaLatestList
 
@@ -16,27 +16,28 @@ import com.mxt.anitrend.view.fragment.list.MediaLatestList
  */
 class MangaPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.manga_title)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> MediaBrowseFragment.newInstance(
-                params,
-                GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 ->
+            MediaBrowseFragment.newInstance(
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                },
             )
-            1 -> MediaLatestList.newInstance(
-                params,
-                GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                    .putVariable(KeyUtil.arg_sort, KeyUtil.ID + KeyUtil.DESC)
+        1 ->
+            MediaLatestList.newInstance(
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                    putString(KeyUtil.arg_sort, KeyUtil.ID + KeyUtil.DESC)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                },
             )
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

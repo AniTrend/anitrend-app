@@ -13,5 +13,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class StatusDistribution(
     @param:KeyUtil.MediaListStatus var status: String? = null,
-    var amount: Int = 0
+    var amount: Int = 0,
 ) : Parcelable

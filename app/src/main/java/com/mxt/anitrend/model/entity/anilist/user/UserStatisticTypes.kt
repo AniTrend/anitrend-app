@@ -24,6 +24,6 @@ package com.mxt.anitrend.model.entity.anilist.user
  * @param manga TBA
  */
 data class UserStatisticTypes(
-        val anime: UserStatistics,
-        val manga: UserStatistics
+    val anime: UserStatistics,
+    val manga: UserStatistics,
 )

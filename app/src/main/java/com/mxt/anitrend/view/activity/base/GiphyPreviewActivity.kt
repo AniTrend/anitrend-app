@@ -12,7 +12,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityGiphyPreviewBinding
@@ -25,15 +24,16 @@ import com.mxt.anitrend.util.NotifyUtil
  * Created by max on 2017/12/22.
  * giphy preview activity
  */
-class GiphyPreviewActivity : ActivityBase<Void, BasePresenter>(), RequestListener<Drawable> {
-
+class GiphyPreviewActivity :
+    ActivityBase<Void, BasePresenter>(),
+    RequestListener<Drawable> {
     private lateinit var binding: ActivityGiphyPreviewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
         super.onCreate(savedInstanceState)
         binding = ActivityGiphyPreviewBinding.inflate(layoutInflater)
@@ -45,17 +45,19 @@ class GiphyPreviewActivity : ActivityBase<Void, BasePresenter>(), RequestListene
         super.onPostCreate(savedInstanceState)
         val modelUrl = intent.getStringExtra(KeyUtil.arg_model)
         if (!modelUrl.isNullOrEmpty()) {
-            Glide.with(this)
+            Glide
+                .with(this)
                 .load(modelUrl)
                 .listener(this)
                 .into(binding.previewImage)
         } else {
-            NotifyUtil.makeText(
-                this,
-                R.string.layout_empty_response,
-                R.drawable.ic_warning_white_18dp,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    this,
+                    R.string.layout_empty_response,
+                    R.drawable.ic_warning_white_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
         onActivityReady()
     }
@@ -66,10 +68,11 @@ class GiphyPreviewActivity : ActivityBase<Void, BasePresenter>(), RequestListene
      */
     override fun onActivityReady() {
         binding.previewCredits.setImageResource(
-            if (!CompatUtil.isLightTheme(presenter.settings))
+            if (!CompatUtil.isLightTheme(presenter.settings)) {
                 R.drawable.powered_by_giphy_light
-            else
+            } else {
                 R.drawable.powered_by_giphy_dark
+            },
         )
         updateUI()
     }
@@ -84,20 +87,19 @@ class GiphyPreviewActivity : ActivityBase<Void, BasePresenter>(), RequestListene
         e: GlideException?,
         model: Any,
         target: Target<Drawable>,
-        isFirstResource: Boolean
-    ): Boolean {
-        return false
-    }
+        isFirstResource: Boolean,
+    ): Boolean = false
 
     override fun onResourceReady(
         resource: Drawable,
         model: Any,
         target: Target<Drawable>,
         dataSource: DataSource,
-        isFirstResource: Boolean
+        isFirstResource: Boolean,
     ): Boolean {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             binding.previewProgress.visibility = View.GONE
+        }
         return false
     }
 }

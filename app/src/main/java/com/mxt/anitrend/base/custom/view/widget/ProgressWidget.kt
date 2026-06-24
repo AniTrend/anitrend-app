@@ -16,15 +16,16 @@ import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.extension.getLayoutInflater
 import java.util.Locale
 
-open class ProgressWidget @JvmOverloads constructor(
+open class ProgressWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
     View.OnClickListener,
     TextWatcher {
-
     private var progressMaximum: Int = 0
     var progressCurrent: Int = 0
         private set
@@ -42,7 +43,7 @@ open class ProgressWidget @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -95,8 +96,9 @@ open class ProgressWidget @JvmOverloads constructor(
     }
 
     private fun boundCheck(delta: Int): Boolean {
-        if (progressMaximum < 1)
+        if (progressMaximum < 1) {
             return delta > -1
+        }
         return delta > -1 && delta <= progressMaximum
     }
 
@@ -123,18 +125,30 @@ open class ProgressWidget @JvmOverloads constructor(
         }
     }
 
-    override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) = Unit
+    override fun beforeTextChanged(
+        charSequence: CharSequence,
+        start: Int,
+        count: Int,
+        after: Int,
+    ) = Unit
 
-    override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) = Unit
+    override fun onTextChanged(
+        charSequence: CharSequence,
+        start: Int,
+        before: Int,
+        count: Int,
+    ) = Unit
 
     override fun afterTextChanged(editable: Editable) {
-        if (isNotDirectInput)
+        if (isNotDirectInput) {
             return
+        }
         val currentChange = editable.toString()
         val temporaryValue = if (!TextUtils.isEmpty(currentChange)) currentChange.toInt() else 0
-        if (boundCheck(temporaryValue))
+        if (boundCheck(temporaryValue)) {
             progressCurrent = temporaryValue
-        else
+        } else {
             binding.progressCurrent.post { progressChange(progressCurrent) }
+        }
     }
 }

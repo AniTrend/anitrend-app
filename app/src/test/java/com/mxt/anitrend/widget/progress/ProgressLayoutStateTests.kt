@@ -1,11 +1,9 @@
 package com.mxt.anitrend.widget.progress
 
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Test
 
 class ProgressLayoutStateTests {
-
     @Test
     fun initialState_isContent() {
         assertSame(ProgressLayoutState.CONTENT, ProgressLayoutState.initial())
@@ -17,8 +15,8 @@ class ProgressLayoutStateTests {
             ProgressLayoutState.LOADING,
             ProgressLayoutState.transition(
                 from = ProgressLayoutState.CONTENT,
-                to = ProgressLayoutState.LOADING
-            )
+                to = ProgressLayoutState.LOADING,
+            ),
         )
     }
 
@@ -28,8 +26,8 @@ class ProgressLayoutStateTests {
             ProgressLayoutState.ERROR,
             ProgressLayoutState.transition(
                 from = ProgressLayoutState.LOADING,
-                to = ProgressLayoutState.ERROR
-            )
+                to = ProgressLayoutState.ERROR,
+            ),
         )
     }
 
@@ -39,8 +37,8 @@ class ProgressLayoutStateTests {
             ProgressLayoutState.CONTENT,
             ProgressLayoutState.transition(
                 from = ProgressLayoutState.ERROR,
-                to = ProgressLayoutState.CONTENT
-            )
+                to = ProgressLayoutState.CONTENT,
+            ),
         )
     }
 
@@ -50,8 +48,8 @@ class ProgressLayoutStateTests {
             ProgressLayoutState.LOADING,
             ProgressLayoutState.transition(
                 from = ProgressLayoutState.LOADING,
-                to = ProgressLayoutState.LOADING
-            )
+                to = ProgressLayoutState.LOADING,
+            ),
         )
     }
 }

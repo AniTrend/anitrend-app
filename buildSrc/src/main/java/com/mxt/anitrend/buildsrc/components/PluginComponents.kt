@@ -5,6 +5,8 @@ import org.gradle.api.Project
 
 internal fun Project.configurePlugins() {
     plugins.apply("com.android.application")
+    plugins.apply("com.diffplug.spotless")
+    plugins.apply("co.anitrend.retrofit.graphql.codegen")
     plugins.apply("kotlin-android")
     plugins.apply("kotlinx-serialization")
     plugins.apply("kotlin-parcelize")
@@ -28,7 +30,9 @@ internal fun Project.configureAdditionalPlugins() {
             if (file("google-services.json").exists()) {
                 plugins.apply("com.google.gms.google-services")
                 plugins.apply("com.google.firebase.crashlytics")
-            } else logger.lifecycle("google-services.json cannot be found and will not be using any of the google plugins")
+            } else {
+                logger.lifecycle("google-services.json cannot be found and will not be using any of the google plugins")
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ import org.junit.runners.Parameterized
 @RunWith(Parameterized::class)
 class EpisodeUtil_GetActualTitleTest(
     private val inputTitle: String,
-    private val actualTitle: String
+    private val actualTitle: String,
 ) {
 
     companion object {
@@ -19,7 +19,7 @@ class EpisodeUtil_GetActualTitleTest(
         fun data(): Iterable<Array<String>> = listOf(
             arrayOf("Boku no Hero Academia - Episode 23", "Boku no Hero Academia"),
             arrayOf("Haikyuu Season 3", "Haikyuu"),
-            arrayOf("Boku no Hero Academia Season 2 - Episode 19", "Boku no Hero Academia")
+            arrayOf("Boku no Hero Academia Season 2 - Episode 19", "Boku no Hero Academia"),
         )
     }
 

@@ -25,20 +25,20 @@ import java.util.Locale
  */
 class ImagePreviewAdapter(
     private val contentTypes: List<String>,
-    context: Context
+    context: Context,
 ) : RecyclerViewAdapter<String>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<String> {
-        return PreviewHolder(
-            AdapterFeedSlideBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<String> = PreviewHolder(
+        AdapterFeedSlideBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class PreviewHolder(protected val binding: AdapterFeedSlideBinding) :
-        RecyclerViewHolder<String>(binding.root) {
-
+    inner class PreviewHolder(
+        protected val binding: AdapterFeedSlideBinding,
+    ) : RecyclerViewHolder<String>(binding.root) {
         init {
             binding.feedStatusImage.setOnClickListener(this)
         }
@@ -69,11 +69,14 @@ class ImagePreviewAdapter(
                 }
             }
 
-            val roundedCorners = RoundedCorners(
-                this@ImagePreviewAdapter.context.resources.getDimensionPixelSize(R.dimen.md_margin)
-            )
+            val roundedCorners =
+                RoundedCorners(
+                    this@ImagePreviewAdapter.context.resources.getDimensionPixelSize(R.dimen.md_margin),
+                )
             val centerTransform = if (isCenterCrop) CenterCrop() else CenterInside()
-            Glide.with(getContext()).load(targetModel)
+            Glide
+                .with(getContext())
+                .load(targetModel)
                 .transition(DrawableTransitionOptions.withCrossFade(250))
                 .transform(centerTransform, roundedCorners)
                 .into(binding.feedStatusImage)
@@ -87,8 +90,6 @@ class ImagePreviewAdapter(
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

@@ -29,7 +29,6 @@ import timber.log.Timber
  * ImagePreviewActivity
  */
 class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
-
     private lateinit var binding: ActivityImagePreviewBinding
 
     private var imageUri: String? = null
@@ -38,7 +37,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
         super.onCreate(savedInstanceState)
         binding = ActivityImagePreviewBinding.inflate(layoutInflater)
@@ -48,7 +47,8 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
         supportActionBar?.title = ""
 
         binding.previewImage.setOnClickListener {
-            binding.toolbarPreviewImage.animate()
+            binding.toolbarPreviewImage
+                .animate()
                 .alpha(if (binding.toolbarPreviewImage.alpha == 1f) 0f else 1f)
                 .setDuration(500)
                 .setInterpolator(DecelerateInterpolator())
@@ -62,47 +62,52 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
             imageUri = modelUrl
             Glide.with(this).load(modelUrl).into(binding.previewImage)
         } else {
-            NotifyUtil.makeText(
-                this,
-                R.string.layout_empty_response,
-                R.drawable.ic_warning_white_18dp,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    this,
+                    R.string.layout_empty_response,
+                    R.drawable.ic_warning_white_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (!imageUri.isNullOrEmpty())
+        if (!imageUri.isNullOrEmpty()) {
             menuInflater.inflate(R.menu.image_preview_menu, menu)
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.image_preview_download -> {
-                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     downloadAttachment()
-                else if (ActivityCompat.shouldShowRequestPermissionRationale(
+                } else if (ActivityCompat.shouldShowRequestPermissionRationale(
                         this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     )
                 ) {
                     DialogUtil.createMessage(
                         this,
                         R.string.title_permission_write,
-                        R.string.text_permission_write
+                        R.string.text_permission_write,
                     ) { _, which ->
                         when (which) {
-                            DialogAction.POSITIVE -> ActivityCompat.requestPermissions(
-                                this,
-                                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                REQUEST_PERMISSION
-                            )
-                            DialogAction.NEGATIVE -> NotifyUtil.makeText(
-                                this,
-                                R.string.canceled_by_user,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            DialogAction.POSITIVE ->
+                                ActivityCompat.requestPermissions(
+                                    this,
+                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                    REQUEST_PERMISSION,
+                                )
+                            DialogAction.NEGATIVE ->
+                                NotifyUtil
+                                    .makeText(
+                                        this,
+                                        R.string.canceled_by_user,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
                             else -> Unit
                         }
                     }
@@ -110,19 +115,22 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                 return true
             }
             R.id.image_preview_share,
-            R.id.action_share -> {
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, imageUri)
-                }
+            R.id.action_share,
+            -> {
+                val intent =
+                    Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, imageUri)
+                    }
                 startActivity(Intent.createChooser(intent, resources.getText(R.string.image_preview_share)))
                 return true
             }
             R.id.image_preview_link -> {
                 return try {
-                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                        data = Uri.parse(imageUri)
-                    }
+                    val intent =
+                        Intent(Intent.ACTION_VIEW).apply {
+                            data = Uri.parse(imageUri)
+                        }
                     startActivity(intent)
                     true
                 } catch (e: Exception) {
@@ -152,10 +160,11 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
     private fun downloadAttachment() {
         val currentUri = imageUri ?: return
         val imageUri = Uri.parse(currentUri)
-        val request = DownloadManager.Request(imageUri).apply {
-            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.lastPathSegment)
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        }
+        val request =
+            DownloadManager.Request(imageUri).apply {
+                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.lastPathSegment)
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            }
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as? DownloadManager
         if (downloadManager != null) {
@@ -166,7 +175,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                 R.string.text_download_info,
                 R.drawable.ic_cloud_download_white_24dp,
                 R.color.colorStateGreen,
-                KeyUtil.DURATION_SHORT
+                KeyUtil.DURATION_SHORT,
             )
         } else {
             NotifyUtil.createAlerter(
@@ -175,14 +184,15 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                 R.string.text_unknown_error,
                 R.drawable.ic_cloud_download_white_24dp,
                 R.color.colorStateRed,
-                KeyUtil.DURATION_SHORT
+                KeyUtil.DURATION_SHORT,
             )
         }
     }
 
     override fun onPermissionGranted(permission: String) {
         super.onPermissionGranted(permission)
-        if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
             downloadAttachment()
+        }
     }
 }

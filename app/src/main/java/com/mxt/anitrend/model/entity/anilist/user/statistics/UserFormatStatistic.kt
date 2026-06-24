@@ -25,11 +25,11 @@ import com.mxt.anitrend.util.KeyUtil
  * @param format media format
  */
 data class UserFormatStatistic(
-        @get:KeyUtil.MediaFormat
-        val format: String?,
-        override val chaptersRead: Int,
-        override val count: Int,
-        override val meanScore: Float,
-        override val mediaIds: List<Int>,
-        override val minutesWatched: Int
+    @get:KeyUtil.MediaFormat
+    val format: String?,
+    override val chaptersRead: Int,
+    override val count: Int,
+    override val meanScore: Float,
+    override val mediaIds: List<Int>,
+    override val minutesWatched: Int,
 ) : IUserStatistic

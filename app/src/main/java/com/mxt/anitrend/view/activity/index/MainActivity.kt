@@ -33,10 +33,10 @@ import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
+import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
-import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getCompatDrawable
@@ -49,7 +49,6 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
@@ -67,9 +66,11 @@ import timber.log.Timber
  * Base main_menu activity to show case template
  */
 
-class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
-    BaseConsumer.onRequestModelChange<User>, NavigationView.OnNavigationItemSelectedListener {
-
+class MainActivity :
+    ActivityBase<User, BasePresenter>(),
+    View.OnClickListener,
+    BaseConsumer.onRequestModelChange<User>,
+    NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
@@ -92,15 +93,21 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     }
 
     private val mDrawerToggle by lazy(LAZY_MODE_UNSAFE) {
-        ActionBarDrawerToggle(this@MainActivity, mDrawerLayout, mToolbar,
-            R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        ActionBarDrawerToggle(
+            this@MainActivity,
+            mDrawerLayout,
+            mToolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close,
         )
     }
 
     @IdRes
     private var redirectShortcut: Int = 0
+
     @IdRes
     private var selectedItem: Int = 0
+
     @StringRes
     private var selectedTitle: Int = 0
 
@@ -139,8 +146,9 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
+        }
         mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
         mNavigationView.setNavigationItemSelectedListener(this)
         mViewPager.offscreenPageLimit = offScreenLimit
@@ -208,11 +216,22 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        if (selectedItem == 0)
-            selectedItem = if (presenter.settings.isAuthenticated)
-                if (redirectShortcut == 0) presenter.getNavigationItem() else redirectShortcut
-            else
-                if (redirectShortcut == 0) R.id.nav_anime else redirectShortcut
+        if (selectedItem == 0) {
+            selectedItem =
+                if (presenter.settings.isAuthenticated) {
+                    if (redirectShortcut == 0) {
+                        presenter.getNavigationItem()
+                    } else {
+                        redirectShortcut
+                    }
+                } else {
+                    if (redirectShortcut == 0) {
+                        R.id.nav_anime
+                    } else {
+                        redirectShortcut
+                    }
+                }
+        }
         mNavigationView.setCheckedItem(selectedItem)
         onNavigate(selectedItem)
         makeRequest()
@@ -257,8 +276,9 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
      */
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
+        }
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
         updateUI()
@@ -267,14 +287,18 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         @IdRes val menu = item.itemId
-        if (selectedItem != menu)
+        if (selectedItem != menu) {
             onNavigate(menu)
-        if (menu != R.id.nav_sign_in)
+        }
+        if (menu != R.id.nav_sign_in) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
+        }
         return true
     }
 
-    private fun onNavigate(@IdRes menu: Int) {
+    private fun onNavigate(
+        @IdRes menu: Int,
+    ) {
         when (menu) {
             R.id.nav_home_feed -> {
                 mToolbar.title = getString(R.string.drawer_title_home)
@@ -358,23 +382,26 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
             }
             R.id.nav_sign_in -> startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             R.id.nav_sign_out -> {
-                mBottomSheet = BottomSheetMessage.Builder()
-                    .setText(R.string.drawer_signout_text)
-                    .setTitle(R.string.drawer_signout_title)
-                    .setPositiveText(R.string.Yes)
-                    .setNegativeText(R.string.No)
-                    .buildWithCallback(object : BottomSheetChoice {
-                        override fun onPositiveButton() {
-                            WebTokenRequest.invalidateInstance(applicationContext)
-                            val intent = Intent(this@MainActivity, SplashActivity::class.java)
-                            finish()
-                            startActivity(intent)
-                        }
+                mBottomSheet =
+                    BottomSheetMessage
+                        .Builder()
+                        .setText(R.string.drawer_signout_text)
+                        .setTitle(R.string.drawer_signout_title)
+                        .setPositiveText(R.string.Yes)
+                        .setNegativeText(R.string.No)
+                        .buildWithCallback(
+                            object : BottomSheetChoice {
+                                override fun onPositiveButton() {
+                                    WebTokenRequest.invalidateInstance(applicationContext)
+                                    val intent = Intent(this@MainActivity, SplashActivity::class.java)
+                                    finish()
+                                    startActivity(intent)
+                                }
 
-                        override fun onNegativeButton() {
-
-                        }
-                    })
+                                override fun onNegativeButton() {
+                                }
+                            },
+                        )
                 showBottomSheet()
             }
             R.id.nav_check_update -> checkUpdate()
@@ -384,9 +411,10 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     private fun attachTabs(adapter: BaseStatePageAdapter) {
         tabMediator?.detach()
-        tabMediator = TabLayoutMediator(mNavigationTabStrip, mViewPager) { tab, position ->
-            tab.text = adapter.getPageTitle(position)
-        }
+        tabMediator =
+            TabLayoutMediator(mNavigationTabStrip, mViewPager) { tab, position ->
+                tab.text = adapter.getPageTitle(position)
+            }
         tabMediator?.attach()
     }
 
@@ -398,27 +426,29 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     override fun onPermissionGranted(permission: String) {
         super.onPermissionGranted(permission)
         try {
-            if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                 onNavigate(R.id.nav_check_update)
+            }
         } catch (e: Exception) {
             Timber.e(e)
         }
-
     }
 
     override fun updateUI() {
-         headerContainer
-             .findViewById<View>(R.id.banner_clickable).setOnClickListener(this)
+        headerContainer
+            .findViewById<View>(R.id.banner_clickable)
+            .setOnClickListener(this)
 
         mHomeFeed = menuItems.findItem(R.id.nav_home_feed)
         mAccountLogin = menuItems.findItem(R.id.nav_sign_in)
         mSignOutProfile = menuItems.findItem(R.id.nav_sign_out)
         mManageMenu = menuItems.findItem(R.id.nav_header_manage)
 
-        if (presenter.settings.isAuthenticated)
+        if (presenter.settings.isAuthenticated) {
             setupUserItems()
-        else
+        } else {
             mHeaderView.setImageResource(R.drawable.reg_bg)
+        }
 
         checkNewInstallation()
     }
@@ -432,10 +462,13 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
         hasCheckedInstallation = true
         if (presenter.settings.isFreshInstall) {
             presenter.settings.isFreshInstall = false
-            mBottomSheet = BottomSheetMessage.Builder()
-                .setText(R.string.app_intro_guide)
-                .setTitle(R.string.app_intro_title)
-                .setNegativeText(R.string.Ok).build()
+            mBottomSheet =
+                BottomSheetMessage
+                    .Builder()
+                    .setText(R.string.app_intro_guide)
+                    .setTitle(R.string.app_intro_title)
+                    .setNegativeText(R.string.Ok)
+                    .build()
             showBottomSheet()
             return
         }
@@ -448,10 +481,9 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
     private fun requestCurrentUser() {
         if (presenter.settings.isAuthenticated) {
             presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
-                viewModel?.params?.putParcelable(
-                    KeyUtil.arg_graph_params,
-                    GraphUtil.getDefaultQuery(false)
-                )
+                viewModel?.params?.apply {
+                    putBoolean(KeyUtil.arg_asHtml, false)
+                }
                 viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, this)
             }
         }
@@ -465,11 +497,13 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
             if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(this@MainActivity, this)
                 presenter.settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
-                mBottomSheet = BottomSheetMessage.Builder()
-                    .setText(R.string.login_message)
-                    .setTitle(R.string.login_title)
-                    .setNegativeText(R.string.Ok)
-                    .build()
+                mBottomSheet =
+                    BottomSheetMessage
+                        .Builder()
+                        .setText(R.string.login_message)
+                        .setTitle(R.string.login_title)
+                        .setNegativeText(R.string.Ok)
+                        .build()
                 showBottomSheet()
             }
             koinOf<ISupportAnalytics>().setCrashAnalyticUser(name.orEmpty())
@@ -489,16 +523,19 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
                     startNewActivity<ProfileActivity>(
                         Bundle().apply {
                             putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
-                        }
+                        },
                     )
-                } else
-                    NotifyUtil.makeText(
-                        applicationContext,
-                        R.string.text_error_login,
-                        Toast.LENGTH_SHORT
-                    ).show()
-            } else
+                } else {
+                    NotifyUtil
+                        .makeText(
+                            applicationContext,
+                            R.string.text_error_login,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                }
+            } else {
                 onNavigate(R.id.nav_sign_in)
+            }
         }
     }
 
@@ -516,10 +553,17 @@ class MainActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener,
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     override fun onModelChanged(consumer: BaseConsumer<User>) {
-        if (consumer.requestMode == KeyUtil.USER_CURRENT_REQ && consumer.changeModel != null && consumer.changeModel.unreadNotificationCount > 0)
+        if (consumer.requestMode == KeyUtil.USER_CURRENT_REQ &&
+            consumer.changeModel != null &&
+            consumer.changeModel.unreadNotificationCount > 0
+        ) {
             NotifyUtil.createAlerter(
-                this, R.string.alerter_notification_title, R.string.alerter_notification_text,
-                R.drawable.ic_notifications_active_white_24dp, R.color.colorAccent
+                this,
+                R.string.alerter_notification_title,
+                R.string.alerter_notification_text,
+                R.drawable.ic_notifications_active_white_24dp,
+                R.color.colorAccent,
             )
+        }
     }
 }

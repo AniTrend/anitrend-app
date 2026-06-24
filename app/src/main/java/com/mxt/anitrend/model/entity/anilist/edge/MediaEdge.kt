@@ -11,7 +11,6 @@ import com.mxt.anitrend.util.KeyUtil
  * MediaEdge
  */
 class MediaEdge : Edge<MediaBase>() {
-
     /**
      * The list of characters in the media
      */

@@ -23,7 +23,6 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.*
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.worker.AuthenticatorWorker
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -33,7 +32,9 @@ import timber.log.Timber
  * Authentication activity
  */
 
-class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener {
+class LoginActivity :
+    ActivityBase<User, BasePresenter>(),
+    View.OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
     private var model: User? = null
@@ -42,24 +43,32 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
         if (workInfo != null && workInfo.state.isFinished) {
             val outputData = workInfo.outputData
             if (outputData.getBoolean(KeyUtil.arg_model, false)) {
-                viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(false))
+                viewModel?.params?.apply {
+                    putBoolean(KeyUtil.arg_asHtml, false)
+                }
                 viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, applicationContext)
             } else {
                 val error = outputData.getString(KeyUtil.arg_uri_error)
                 val errorDescription = outputData.getString(KeyUtil.arg_uri_error_description)
-                if (!TextUtils.isEmpty(error) && !TextUtils.isEmpty(errorDescription))
+                if (!TextUtils.isEmpty(error) && !TextUtils.isEmpty(errorDescription)) {
                     NotifyUtil.createAlerter(
-                            this@LoginActivity,
-                            error.orEmpty(),
-                            errorDescription.orEmpty(),
-                            R.drawable.ic_warning_white_18dp,
-                            R.color.colorStateOrange,
-                            KeyUtil.DURATION_LONG
+                        this@LoginActivity,
+                        error.orEmpty(),
+                        errorDescription.orEmpty(),
+                        R.drawable.ic_warning_white_18dp,
+                        R.color.colorStateOrange,
+                        KeyUtil.DURATION_LONG,
                     )
-                else
-                    NotifyUtil.createAlerter(this@LoginActivity, R.string.login_error_title,
-                            R.string.text_error_auth_login, R.drawable.ic_warning_white_18dp,
-                            R.color.colorStateRed, KeyUtil.DURATION_LONG)
+                } else {
+                    NotifyUtil.createAlerter(
+                        this@LoginActivity,
+                        R.string.login_error_title,
+                        R.string.text_error_auth_login,
+                        R.drawable.ic_warning_white_18dp,
+                        R.color.colorStateRed,
+                        KeyUtil.DURATION_LONG,
+                    )
+                }
                 binding.widgetFlipper.showPrevious()
             }
         }
@@ -75,10 +84,13 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
      * @see ActivityBase.configureActivity
      */
     override fun configureActivity() {
-        setTheme(if (CompatUtil.isLightTheme(settings))
-            R.style.AppThemeLight_Translucent
-        else
-            R.style.AppThemeDark_Translucent)
+        setTheme(
+            if (CompatUtil.isLightTheme(settings)) {
+                R.style.AppThemeLight_Translucent
+            } else {
+                R.style.AppThemeDark_Translucent
+            },
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,10 +114,11 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        if (presenter.settings.isAuthenticated)
+        if (presenter.settings.isAuthenticated) {
             finish()
-        else
+        } else {
             checkNewIntent(intent)
+        }
     }
 
     override fun updateUI() {
@@ -127,27 +140,28 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
             val SHORTCUT_PROFILE_BUNDLE = Bundle()
             SHORTCUT_PROFILE_BUNDLE.putString(KeyUtil.arg_userName, model?.name)
 
-            ShortcutUtil.createShortcuts(this@LoginActivity,
-                    ShortcutUtil.ShortcutBuilder()
-                            .setShortcutType(KeyUtil.SHORTCUT_NOTIFICATION)
-                            .build(),
-                    ShortcutUtil.ShortcutBuilder()
-                            .setShortcutType(KeyUtil.SHORTCUT_MY_ANIME)
-                            .setShortcutParams(SHORTCUT_MY_ANIME_BUNDLE)
-                            .build(),
-                    ShortcutUtil.ShortcutBuilder()
-                            .setShortcutType(KeyUtil.SHORTCUT_MY_MANGA)
-                            .setShortcutParams(SHORTCUT_MY_MANGA_BUNDLE)
-                            .build(),
-                    ShortcutUtil.ShortcutBuilder()
-                            .setShortcutType(KeyUtil.SHORTCUT_PROFILE)
-                            .setShortcutParams(SHORTCUT_PROFILE_BUNDLE)
-                            .build())
+            ShortcutUtil.createShortcuts(
+                this@LoginActivity,
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_NOTIFICATION)
+                    .build(),
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_MY_ANIME)
+                    .setShortcutParams(SHORTCUT_MY_ANIME_BUNDLE)
+                    .build(),
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_MY_MANGA)
+                    .setShortcutParams(SHORTCUT_MY_MANGA_BUNDLE)
+                    .build(),
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_PROFILE)
+                    .setShortcutParams(SHORTCUT_PROFILE_BUNDLE)
+                    .build(),
+            )
         }
     }
 
     override fun makeRequest() {
-
     }
 
     override fun onChanged(model: User?) {
@@ -168,21 +182,28 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
                     Timber.e(e)
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
                 }
-
-            } else
+            } else {
                 NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
-            R.id.container -> if (binding.widgetFlipper.displayedChild != WidgetPresenter.LOADING_STATE)
+            }
+            R.id.container -> if (binding.widgetFlipper.displayedChild != WidgetPresenter.LOADING_STATE) {
                 finish()
-            else
+            } else {
                 NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     override fun showError(error: String) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             WebTokenRequest.invalidateInstance(applicationContext)
-            NotifyUtil.createAlerter(this, getString(R.string.text_error_auth_login),
-                    error, R.drawable.ic_warning_white_18dp, R.color.colorStateRed, KeyUtil.DURATION_LONG)
+            NotifyUtil.createAlerter(
+                this,
+                getString(R.string.text_error_auth_login),
+                error,
+                R.drawable.ic_warning_white_18dp,
+                R.color.colorStateRed,
+                KeyUtil.DURATION_LONG,
+            )
             binding.widgetFlipper.showPrevious()
             Timber.tag(TAG).e(error)
         }
@@ -191,8 +212,14 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     override fun showEmpty(message: String) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             WebTokenRequest.invalidateInstance(applicationContext)
-            NotifyUtil.createAlerter(this, getString(R.string.text_error_auth_login),
-                    message, R.drawable.ic_warning_white_18dp, R.color.colorStateOrange, KeyUtil.DURATION_LONG)
+            NotifyUtil.createAlerter(
+                this,
+                getString(R.string.text_error_auth_login),
+                message,
+                R.drawable.ic_warning_white_18dp,
+                R.color.colorStateOrange,
+                KeyUtil.DURATION_LONG,
+            )
             binding.widgetFlipper.showPrevious()
             Timber.tag(TAG).w(message)
         }
@@ -201,28 +228,30 @@ class LoginActivity : ActivityBase<User, BasePresenter>(), View.OnClickListener 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        if (!presenter.settings.isAuthenticated)
+        if (!presenter.settings.isAuthenticated) {
             checkNewIntent(intent)
+        }
     }
 
     private fun checkNewIntent(intent: Intent?) {
         if (intent != null && intent.data != null) {
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE)
+                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
+                }
 
                 val workerInputData = Data.Builder()
-                        .putString(KeyUtil.arg_model, intent.data.toString())
-                        .build()
+                    .putString(KeyUtil.arg_model, intent.data.toString())
+                    .build()
 
                 val authenticatorWorker = OneTimeWorkRequest.Builder(AuthenticatorWorker::class.java)
-                        .addTag(KeyUtil.WorkAuthenticatorTag)
-                        .setInputData(workerInputData)
-                        .build()
+                    .addTag(KeyUtil.WorkAuthenticatorTag)
+                    .setInputData(workerInputData)
+                    .build()
 
                 WorkManager.getInstance(applicationContext).enqueue(authenticatorWorker)
                 WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(authenticatorWorker.id)
-                        .observe(this, workInfoObserver)
+                    .observe(this, workInfoObserver)
             }
         }
     }

@@ -23,33 +23,30 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by max on 2017/12/31.
  */
-class GroupSeriesAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(context) {
-
+class GroupSeriesAdapter(
+    context: Context,
+) : RecyclerViewAdapter<RecyclerItem>(context) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        @KeyUtil.RecyclerViewType viewType: Int
-    ): RecyclerViewHolder<RecyclerItem> {
-        return if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-            GroupTitleViewHolder(
-                AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        } else {
-            SeriesViewHolder(
-                AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        }
+        @KeyUtil.RecyclerViewType viewType: Int,
+    ): RecyclerViewHolder<RecyclerItem> = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
+        GroupTitleViewHolder(
+            AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
+    } else {
+        SeriesViewHolder(
+            AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
     }
 
     @KeyUtil.RecyclerViewType
-    override fun getItemViewType(position: Int): Int {
-        return data[position].contentType
-    }
+    override fun getItemViewType(position: Int): Int = data[position].contentType
 
     override fun getFilter(): Filter? = null
 
-    inner class SeriesViewHolder(private val binding: AdapterSeriesBinding) :
-        RecyclerViewHolder<RecyclerItem>(binding.root) {
-
+    inner class SeriesViewHolder(
+        private val binding: AdapterSeriesBinding,
+    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
         init {
             bindClickListeners(R.id.container)
             bindLongClickListeners(R.id.container)
@@ -72,8 +69,6 @@ class GroupSeriesAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(c
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

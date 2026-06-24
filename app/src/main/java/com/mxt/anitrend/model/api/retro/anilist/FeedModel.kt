@@ -1,12 +1,19 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import com.mxt.anitrend.graphql.generated.DeleteActivityReplyVariables
+import com.mxt.anitrend.graphql.generated.DeleteActivityVariables
+import com.mxt.anitrend.graphql.generated.FeedListReplyVariables
+import com.mxt.anitrend.graphql.generated.FeedListVariables
+import com.mxt.anitrend.graphql.generated.FeedMessageVariables
+import com.mxt.anitrend.graphql.generated.SaveActivityReplyVariables
+import com.mxt.anitrend.graphql.generated.SaveMessageActivityVariables
+import com.mxt.anitrend.graphql.generated.SaveTextActivityVariables
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import co.anitrend.retrofit.graphql.annotation.GraphQuery
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -18,44 +25,51 @@ import retrofit2.http.POST
  */
 
 interface FeedModel {
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getFeedList(
+        @Body request: GraphQLRequest<FeedListVariables>,
+    ): Call<AniListContainer<PageContainer<FeedList>>>
 
     @POST("/")
-    @GraphQuery("FeedList")
     @Headers("Content-Type: application/json")
-    fun getFeedList(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<FeedList>>>
+    fun getFeedListReply(
+        @Body request: GraphQLRequest<FeedListReplyVariables>,
+    ): Call<AniListContainer<FeedList>>
 
     @POST("/")
-    @GraphQuery("FeedListReply")
     @Headers("Content-Type: application/json")
-    fun getFeedListReply(@Body request: QueryContainerBuilder?): Call<AniListContainer<FeedList>>
+    fun getFeedMessage(
+        @Body request: GraphQLRequest<FeedMessageVariables>,
+    ): Call<AniListContainer<PageContainer<FeedList>>>
 
     @POST("/")
-    @GraphQuery("FeedMessage")
     @Headers("Content-Type: application/json")
-    fun getFeedMessage(@Body request: QueryContainerBuilder?): Call<AniListContainer<PageContainer<FeedList>>>
+    fun saveTextActivity(
+        @Body request: GraphQLRequest<SaveTextActivityVariables>,
+    ): Call<AniListContainer<FeedList>>
 
     @POST("/")
-    @GraphQuery("SaveTextActivity")
     @Headers("Content-Type: application/json")
-    fun saveTextActivity(@Body request: QueryContainerBuilder?): Call<AniListContainer<FeedList>>
+    fun saveMessageActivity(
+        @Body request: GraphQLRequest<SaveMessageActivityVariables>,
+    ): Call<AniListContainer<FeedList>>
 
     @POST("/")
-    @GraphQuery("SaveMessageActivity")
     @Headers("Content-Type: application/json")
-    fun saveMessageActivity(@Body request: QueryContainerBuilder?): Call<AniListContainer<FeedList>>
+    fun saveActivityReply(
+        @Body request: GraphQLRequest<SaveActivityReplyVariables>,
+    ): Call<AniListContainer<FeedReply>>
 
     @POST("/")
-    @GraphQuery("SaveActivityReply")
     @Headers("Content-Type: application/json")
-    fun saveActivityReply(@Body request: QueryContainerBuilder?): Call<AniListContainer<FeedReply>>
+    fun deleteActivity(
+        @Body request: GraphQLRequest<DeleteActivityVariables>,
+    ): Call<AniListContainer<DeleteState>>
 
     @POST("/")
-    @GraphQuery("DeleteActivity")
     @Headers("Content-Type: application/json")
-    fun deleteActivity(@Body request: QueryContainerBuilder?): Call<AniListContainer<DeleteState>>
-
-    @POST("/")
-    @GraphQuery("DeleteActivityReply")
-    @Headers("Content-Type: application/json")
-    fun deleteActivityReply(@Body request: QueryContainerBuilder?): Call<AniListContainer<DeleteState>>
+    fun deleteActivityReply(
+        @Body request: GraphQLRequest<DeleteActivityReplyVariables>,
+    ): Call<AniListContainer<DeleteState>>
 }

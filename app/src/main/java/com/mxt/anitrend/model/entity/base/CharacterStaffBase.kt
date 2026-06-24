@@ -7,8 +7,9 @@ import com.mxt.anitrend.model.entity.group.RecyclerItem
 /**
  * Created by LuK1337 on 2021/05/05.
  */
-open class CharacterStaffBase() : RecyclerItem(), Parcelable {
-
+open class CharacterStaffBase() :
+    RecyclerItem(),
+    Parcelable {
     lateinit var character: CharacterBase
     lateinit var media: MediaBase
 
@@ -22,7 +23,10 @@ open class CharacterStaffBase() : RecyclerItem(), Parcelable {
         media = parcel.readParcelable(MediaBase::class.java.classLoader) ?: MediaBase()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeParcelable(character, flags)
         dest.writeParcelable(media, flags)
     }
@@ -40,8 +44,7 @@ open class CharacterStaffBase() : RecyclerItem(), Parcelable {
         @JvmField
         val CREATOR: Parcelable.Creator<CharacterStaffBase> =
             object : Parcelable.Creator<CharacterStaffBase> {
-                override fun createFromParcel(parcel: Parcel): CharacterStaffBase =
-                    CharacterStaffBase(parcel)
+                override fun createFromParcel(parcel: Parcel): CharacterStaffBase = CharacterStaffBase(parcel)
 
                 override fun newArray(size: Int): Array<CharacterStaffBase?> = arrayOfNulls(size)
             }

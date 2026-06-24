@@ -13,18 +13,23 @@ import java.util.concurrent.TimeUnit
  * cache injector interceptor
  */
 
-class CacheInterceptor(private val context: Context, private val forceCache: Boolean = false) : Interceptor {
-
+class CacheInterceptor(
+    private val context: Context,
+    private val forceCache: Boolean = false,
+) : Interceptor {
     private val cacheControl by lazy {
         CacheControl.Builder().maxStale(3, TimeUnit.HOURS).build()
     }
 
-
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         if (CompatUtil.isOnline(context) || forceCache) {
-            val original = chain.request().newBuilder()
-                    .cacheControl(cacheControl).build()
+            val original =
+                chain
+                    .request()
+                    .newBuilder()
+                    .cacheControl(cacheControl)
+                    .build()
             return chain.proceed(original)
         }
 

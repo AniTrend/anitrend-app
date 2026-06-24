@@ -9,17 +9,15 @@ import fr.bipi.treessence.file.FileLoggerTree
 import timber.log.Timber
 
 class TimberInitializer : Initializer<Unit> {
-
-    private fun createFileLoggingTree(context: Context): Timber.Tree {
-        return FileLoggerTree.Builder()
-            .withFileName("${context.packageName}.log")
-            .withDirName(context.logDirectory().absolutePath)
-            .withSizeLimit(FILE_SIZE_LIMIT)
-            .withFileLimit(FILE_CREATION_LIMIT)
-            .withMinPriority(MIN_LOG_LEVEL)
-            .appendToFile(true)
-            .build()
-    }
+    private fun createFileLoggingTree(context: Context): Timber.Tree = FileLoggerTree
+        .Builder()
+        .withFileName("${context.packageName}.log")
+        .withDirName(context.logDirectory().absolutePath)
+        .withSizeLimit(FILE_SIZE_LIMIT)
+        .withFileLimit(FILE_CREATION_LIMIT)
+        .withMinPriority(MIN_LOG_LEVEL)
+        .appendToFile(true)
+        .build()
 
     /**
      * Initializes and a component given the application [Context]
@@ -27,8 +25,9 @@ class TimberInitializer : Initializer<Unit> {
      * @param context The application context.
      */
     override fun create(context: Context) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        }
 
         runCatching {
             val fileTree = createFileLoggingTree(context)

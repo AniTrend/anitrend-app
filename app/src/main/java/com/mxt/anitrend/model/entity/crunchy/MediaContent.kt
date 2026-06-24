@@ -19,5 +19,5 @@ class MediaContent(
     @field:Attribute(name = "medium", required = false)
     var medium: String? = null,
     @field:Attribute(name = "duration", required = false)
-    var duration: String? = null
+    var duration: String? = null,
 ) : Parcelable

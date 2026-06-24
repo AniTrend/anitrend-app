@@ -6,11 +6,9 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.anilist.WebToken
 import com.mxt.anitrend.model.entity.base.AuthBase
 import com.mxt.anitrend.model.entity.base.VersionBase
-
 import io.objectbox.Box
 
 interface BoxQuery {
-
     /**
      * Gets current authenticated user
      */

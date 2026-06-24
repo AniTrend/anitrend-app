@@ -10,11 +10,12 @@ import com.mxt.anitrend.base.interfaces.base.BaseAnimation
 /**
  * Created by max on 2018/02/24.
  */
-class ScaleAnimation @JvmOverloads constructor(
+class ScaleAnimation
+@JvmOverloads
+constructor(
     private val from: Float = 0.85f,
-    private val to: Float = 1f
+    private val to: Float = 1f,
 ) : BaseAnimation {
-
     private val interpolator: Interpolator = LinearInterpolator()
 
     override fun getAnimators(view: View): Array<Animator> {

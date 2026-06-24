@@ -18,12 +18,14 @@ import com.mxt.anitrend.util.KeyUtil
  * either specify the width of the image and the height will be automatically calculated
  * or set to wrap content to automatically get the view width at runtime
  */
-class AspectImageView @JvmOverloads constructor(
+class AspectImageView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : androidx.appcompat.widget.AppCompatImageView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : androidx.appcompat.widget.AppCompatImageView(context, attrs, defStyleAttr),
+    CustomView {
     private var spanSize: Int = 0
     private var defaultMargin: Int = 0
     private val deviceDimens = Point()
@@ -32,7 +34,10 @@ class AspectImageView @JvmOverloads constructor(
         onInit()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         var width = MeasureSpec.getSize(widthMeasureSpec)
         if (width == 0) {
             width = (deviceDimens.x / spanSize) - defaultMargin
@@ -41,7 +46,7 @@ class AspectImageView @JvmOverloads constructor(
         val height = (width * KeyUtil.AspectRatio).toInt()
         super.onMeasure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY),
         )
     }
 
@@ -55,21 +60,30 @@ class AspectImageView @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        fun setImage(view: AspectImageView, url: String?) {
+        fun setImage(
+            view: AspectImageView,
+            url: String?,
+        ) {
             if (url.isNullOrBlank()) return
-            Glide.with(view.context).load(url)
+            Glide
+                .with(view.context)
+                .load(url)
                 .transition(DrawableTransitionOptions.withCrossFade(350))
                 .apply(RequestOptions.centerCropTransform())
                 .into(view)
         }
 
         @JvmStatic
-        fun setImage(view: AspectImageView, imageBase: ImageBase?) {
+        fun setImage(
+            view: AspectImageView,
+            imageBase: ImageBase?,
+        ) {
             if (imageBase != null) {
-                if (imageBase.extraLarge != null)
+                if (imageBase.extraLarge != null) {
                     setImage(view, imageBase.extraLarge)
-                else
+                } else {
                     setImage(view, imageBase.large)
+                }
             }
         }
     }

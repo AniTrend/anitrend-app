@@ -19,9 +19,8 @@ import com.mxt.anitrend.util.CompatUtil
  */
 class GroupMediaViewHolder(
     private val binding: AdapterMediaHeaderBinding,
-    private val clickListener: ItemClickListener<RecyclerItem>
+    private val clickListener: ItemClickListener<RecyclerItem>,
 ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
-
     private var boundModel: MediaBase? = null
 
     init {

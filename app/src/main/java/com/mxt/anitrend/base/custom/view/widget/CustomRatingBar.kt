@@ -9,12 +9,14 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
  * Created by max on 2017/10/27.
  * Custom rating bar
  */
-class CustomRatingBar @JvmOverloads constructor(
+class CustomRatingBar
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatRatingBar(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatRatingBar(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }
@@ -36,7 +38,10 @@ class CustomRatingBar @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        fun setAverageScore(view: CustomRatingBar, meanScore: Int) {
+        fun setAverageScore(
+            view: CustomRatingBar,
+            meanScore: Int,
+        ) {
             val rating = meanScore * view.max / 100f
             view.rating = rating
         }

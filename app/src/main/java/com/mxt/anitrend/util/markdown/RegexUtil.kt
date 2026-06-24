@@ -29,7 +29,6 @@ object RegexUtil {
 
     private const val PATTERN_TRAILING_SPACES = "(^[\\r\\n]+|[\\r\\n]+$)"
 
-
     init {
         pattern = Pattern.compile(PATTERN_MEDIA, Pattern.CASE_INSENSITIVE)
     }
@@ -37,13 +36,9 @@ object RegexUtil {
     /**
      * finds images and youtube videos
      */
-    fun findMedia(param: String): Matcher {
-        return pattern.matcher(param)
-    }
+    fun findMedia(param: String): Matcher = pattern.matcher(param)
 
-    private fun findImages(param: String): Matcher {
-        return Pattern.compile("(img|Img|IMG).*?(\\([^)]+\\))", Pattern.CASE_INSENSITIVE).matcher(param)
-    }
+    private fun findImages(param: String): Matcher = Pattern.compile("(img|Img|IMG).*?(\\([^)]+\\))", Pattern.CASE_INSENSITIVE).matcher(param)
 
     /**
      * Removes trailing white spaces from a given string and returns the
@@ -54,23 +49,24 @@ object RegexUtil {
      * @see String.trim
      */
     @Deprecated("")
-    fun removeTrailingWhiteSpaces(param: String): String? {
-        return if (param.isBlank()) null else Pattern.compile(PATTERN_TRAILING_SPACES).matcher(param).replaceAll("")
-    }
+    fun removeTrailingWhiteSpaces(param: String): String? = if (param.isBlank()) null else Pattern.compile(PATTERN_TRAILING_SPACES).matcher(param).replaceAll("")
 
     fun findUserTags(text: String?): String {
         var newText = text
-        if (newText.isNullOrBlank())
+        if (newText.isNullOrBlank()) {
             return "<b>No content available</b>"
+        }
         val matcher = Pattern.compile(PATTERN_USER_TAGS).matcher(newText)
         while (matcher.find()) {
             val match = matcher.group()
             val replacement = String.format(
-                USER_URL_LINK, match,
-                    match.replace("@", "")
+                USER_URL_LINK,
+                match,
+                match.replace("@", ""),
             )
-            if (newText?.contains(replacement, ignoreCase = false) == true)
+            if (newText?.contains(replacement, ignoreCase = false) == true) {
                 continue
+            }
             newText = newText?.replace(match, replacement)
         }
         return newText ?: "<b>No content available</b>"
@@ -90,32 +86,37 @@ object RegexUtil {
     /**
      * Builds a full youtube link from either an id or a valid youtube link
      */
-    fun buildYoutube(id: String): String {
-        return if (!id.contains("youtube")) {
-            if (id.contains(YoutubeShort)) Youtube + id.replace(
-                YoutubeShort, "") else Youtube + id
-        } else id
+    fun buildYoutube(id: String): String = if (!id.contains("youtube")) {
+        if (id.contains(YoutubeShort)) {
+            Youtube + id.replace(
+                YoutubeShort,
+                "",
+            )
+        } else {
+            Youtube + id
+        }
+    } else {
+        id
     }
 
     fun createYoutubeStandard(link: String): String {
-        if (!link.contains("youtube"))
-            if (link.contains(YoutubeShort))
-                return String.format("%s(%s)",
-                    KEY_YOU, link.replace(YoutubeShort, ""))
+        if (!link.contains("youtube")) {
+            if (link.contains(YoutubeShort)) {
+                return String.format(
+                    "%s(%s)",
+                    KEY_YOU,
+                    link.replace(YoutubeShort, ""),
+                )
+            }
+        }
         return String.format("%s(%s)", KEY_YOU, link)
     }
 
-    fun createLinkStandard(link: String): String {
-        return String.format("[%s](%s)", link, link)
-    }
+    fun createLinkStandard(link: String): String = String.format("[%s](%s)", link, link)
 
-    fun createWebMStandard(link: String): String {
-        return String.format("%s(%s)", KEY_WEB, link)
-    }
+    fun createWebMStandard(link: String): String = String.format("%s(%s)", KEY_WEB, link)
 
-    fun createImageStandard(link: String): String {
-        return String.format("%s250(%s)", KEY_IMG, link)
-    }
+    fun createImageStandard(link: String): String = String.format("%s250(%s)", KEY_IMG, link)
 
     /**
      * Get the thumbnail image of a youtube video
@@ -127,25 +128,24 @@ object RegexUtil {
         val matcher = Pattern.compile(PATTERN_YOUTUBE_EXTRACT).matcher(link)
         val temp: String?
 
-        if (matcher.find())
+        if (matcher.find()) {
             temp = matcher.group(matcher.groupCount())
-        else
+        } else {
             return NO_THUMBNAIL
+        }
         return String.format(VID_THUMB, temp)
     }
 
-    fun removeTags(value: String?): String? {
-        return when (value.isNullOrBlank()) {
-            true -> null
-            else -> findImages(
-                findMedia(value)
-                    .replaceAll("")
-            )
-                    .replaceAll("")
-                    .replace("!~","")
-                    .replace("~!","")
-                    .replace("~","")
-        }
+    fun removeTags(value: String?): String? = when (value.isNullOrBlank()) {
+        true -> null
+        else -> findImages(
+            findMedia(value)
+                .replaceAll(""),
+        )
+            .replaceAll("")
+            .replace("!~", "")
+            .replace("~!", "")
+            .replace("~", "")
     }
 
     fun convertToStandardMarkdown(value: String?): String {
@@ -176,7 +176,6 @@ object RegexUtil {
                             else -> substitute
                         }
                     }
-
                 }
             }
             substitute

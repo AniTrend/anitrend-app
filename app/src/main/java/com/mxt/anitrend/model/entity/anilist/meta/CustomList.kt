@@ -8,5 +8,5 @@ import kotlinx.parcelize.Parcelize
 class CustomList(
     val name: String?,
     @SerializedName("enabled")
-    val isEnabled: Boolean
+    val isEnabled: Boolean,
 ) : Parcelable

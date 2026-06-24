@@ -1,13 +1,10 @@
 package com.mxt.anitrend.presenter.base
 
 import android.content.Context
-import android.content.Intent
 import androidx.annotation.IdRes
-import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
-import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.crunchy.MediaContent
@@ -52,40 +49,36 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
     }
 
     @IdRes
-    fun getNavigationItem(): Int {
-        return when (settings.startupPage) {
-            "0" -> R.id.nav_home_feed
-            "1" -> R.id.nav_anime
-            "2" -> R.id.nav_manga
-            "3" -> R.id.nav_trending
-            "4" -> R.id.nav_airing
-            "5" -> R.id.nav_myanime
-            "6" -> R.id.nav_mymanga
-            "7" -> R.id.nav_hub
-            "8" -> R.id.nav_reviews
-            else -> R.id.nav_airing
-        }
+    fun getNavigationItem(): Int = when (settings.startupPage) {
+        "0" -> R.id.nav_home_feed
+        "1" -> R.id.nav_anime
+        "2" -> R.id.nav_manga
+        "3" -> R.id.nav_trending
+        "4" -> R.id.nav_airing
+        "5" -> R.id.nav_myanime
+        "6" -> R.id.nav_mymanga
+        "7" -> R.id.nav_hub
+        "8" -> R.id.nav_reviews
+        else -> R.id.nav_airing
     }
 
     fun checkIfMigrationIsNeeded(): Boolean {
         if (!settings.isFreshInstall) {
             val migrationUtil = MigrationUtil.Builder()
-                    .addMigration(Migrations.MIGRATION_101_108)
-                    .addMigration(Migrations.MIGRATION_109_134)
-                    .addMigration(Migrations.MIGRATION_135_136)
-                    .addMigration(Migrations.MIGRATION_18400_18500)
-                    .addMigration(Migrations.MIGRATION_1090700_1090800)
-                    .build(context)
+                .addMigration(Migrations.MIGRATION_101_108)
+                .addMigration(Migrations.MIGRATION_109_134)
+                .addMigration(Migrations.MIGRATION_135_136)
+                .addMigration(Migrations.MIGRATION_18400_18500)
+                .addMigration(Migrations.MIGRATION_1090700_1090800)
+                .build(context)
             return migrationUtil.applyMigration()
         }
         return true
     }
 
-    fun getThumbnail(thumbnails: List<Thumbnail>?): String? {
-        return runCatching {
-            thumbnails?.get(0)?.url
-        }.getOrNull()
-    }
+    fun getThumbnail(thumbnails: List<Thumbnail>?): String? = runCatching {
+        thumbnails?.get(0)?.url
+    }.getOrNull()
 
     fun getDuration(mediaContent: MediaContent?): String {
         val duration = mediaContent?.duration ?: return "00:00"
@@ -101,10 +94,10 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.genres.isNullOrEmpty()) {
                     favouriteGenres = userStats.anime.genres
-                            .sortedByDescending {
-                                it.count
-                            }.mapNotNull { it.genre }
-                            .take(limit)
+                        .sortedByDescending {
+                            it.count
+                        }.mapNotNull { it.genre }
+                        .take(limit)
                 }
             }
         }
@@ -135,11 +128,11 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.releaseYears.isNullOrEmpty()) {
                     favouriteYears = userStats.anime.releaseYears
-                            .sortedByDescending {
-                                it.count
-                            }.mapNotNull { releaseYear ->
-                                releaseYear.releaseYear?.toString()
-                            }.take(limit)
+                        .sortedByDescending {
+                            it.count
+                        }.mapNotNull { releaseYear ->
+                            releaseYear.releaseYear?.toString()
+                        }.take(limit)
                 }
             }
         }
@@ -152,33 +145,29 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
             if (database.currentUser != null && userStats != null) {
                 if (!userStats.anime.formats.isNullOrEmpty()) {
                     favouriteFormats = userStats.anime.formats
-                            .sortedByDescending {
-                                it.count
-                            }.mapNotNull { it.format }
-                            .take(limit)
+                        .sortedByDescending {
+                            it.count
+                        }.mapNotNull { it.format }
+                        .take(limit)
                 }
             }
         }
         return favouriteFormats
     }
 
-    fun isCurrentUser(userId: Long): Boolean {
-        return settings.isAuthenticated && database.currentUser != null &&
-                userId != 0L && database.currentUser?.id == userId
-    }
+    fun isCurrentUser(userId: Long): Boolean = settings.isAuthenticated &&
+        database.currentUser != null &&
+        userId != 0L &&
+        database.currentUser?.id == userId
 
-    fun isCurrentUser(userName: String?): Boolean {
-        return settings.isAuthenticated && database.currentUser != null &&
-                userName != null && database.currentUser?.name == userName
-    }
+    fun isCurrentUser(userName: String?): Boolean = settings.isAuthenticated &&
+        database.currentUser != null &&
+        userName != null &&
+        database.currentUser?.name == userName
 
-    fun isCurrentUser(userId: Long, userName: String?): Boolean {
-        return userName?.let { isCurrentUser(it) } ?: isCurrentUser(userId)
-    }
+    fun isCurrentUser(userId: Long, userName: String?): Boolean = userName?.let { isCurrentUser(it) } ?: isCurrentUser(userId)
 
-    fun isCurrentUser(userBase: UserBase?): Boolean {
-        return userBase != null && isCurrentUser(userBase.id)
-    }
+    fun isCurrentUser(userBase: UserBase?): Boolean = userBase != null && isCurrentUser(userBase.id)
 
     fun checkValidAuth() {
         if (settings.isAuthenticated) {

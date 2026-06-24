@@ -25,10 +25,10 @@ import com.mxt.anitrend.model.entity.anilist.user.statistics.contract.IUserStati
  * @param tag media tag
  */
 data class UserTagStatistic(
-        val tag: MediaTag?,
-        override val chaptersRead: Int,
-        override val count: Int,
-        override val meanScore: Float,
-        override val mediaIds: List<Int>,
-        override val minutesWatched: Int
+    val tag: MediaTag?,
+    override val chaptersRead: Int,
+    override val count: Int,
+    override val meanScore: Float,
+    override val mediaIds: List<Int>,
+    override val minutesWatched: Int,
 ) : IUserStatistic

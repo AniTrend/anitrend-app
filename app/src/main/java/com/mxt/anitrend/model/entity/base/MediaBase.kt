@@ -14,16 +14,21 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by Maxwell on 10/3/2016.
  * Media base entity
  */
-open class MediaBase() : RecyclerItem(), Parcelable {
-
+open class MediaBase() :
+    RecyclerItem(),
+    Parcelable {
     var id: Long = 0
     var idMal: Long = 0
     var title: MediaTitle? = null
     var coverImage: ImageBase? = null
     var bannerImage: String? = null
+
     @KeyUtil.MediaType var type: String? = null
+
     @KeyUtil.MediaFormat var format: String? = null
+
     @KeyUtil.MediaSeason var season: String? = null
+
     @KeyUtil.MediaStatus var status: String? = null
     var siteUrl: String? = null
     var meanScore: Int = 0
@@ -68,7 +73,10 @@ open class MediaBase() : RecyclerItem(), Parcelable {
         isFavourite = !isFavourite
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(id)
         dest.writeLong(idMal)
         dest.writeParcelable(title, flags)
@@ -104,10 +112,11 @@ open class MediaBase() : RecyclerItem(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<MediaBase> = object : Parcelable.Creator<MediaBase> {
-            override fun createFromParcel(parcel: Parcel): MediaBase = MediaBase(parcel)
+        val CREATOR: Parcelable.Creator<MediaBase> =
+            object : Parcelable.Creator<MediaBase> {
+                override fun createFromParcel(parcel: Parcel): MediaBase = MediaBase(parcel)
 
-            override fun newArray(size: Int): Array<MediaBase?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<MediaBase?> = arrayOfNulls(size)
+            }
     }
 }

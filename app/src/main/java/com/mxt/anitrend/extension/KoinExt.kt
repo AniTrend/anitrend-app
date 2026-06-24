@@ -13,16 +13,13 @@ import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 
 object KoinExt : KoinComponent {
-
     /**
      * Helper to retrieve dependencies by class definition
      *
      * @param `class` registered class in koin modules
      */
     @JvmStatic
-    fun <T : Any> get(`class`: Class<T>): T {
-        return getKoin().get(`class`.kotlin, null, null)
-    }
+    fun <T : Any> get(`class`: Class<T>): T = getKoin().get(`class`.kotlin, null, null)
 }
 
 /**
@@ -35,7 +32,7 @@ object KoinExt : KoinComponent {
  */
 inline fun <reified T> koinOf(
     qualifier: Qualifier? = null,
-    noinline parameters: ParametersDefinition? = null
+    noinline parameters: ParametersDefinition? = null,
 ): T {
     val koin = GlobalContext.get()
     return koin.get(qualifier, parameters)
@@ -43,16 +40,20 @@ inline fun <reified T> koinOf(
 
 private fun KoinApplication.createWorkManagerFactory() {
     val factory = DelegatingWorkerFactory()
-    with (factory) {
+    with(factory) {
         addFactory(WorkManagerFactory())
     }
 
-    val configuration = Configuration.Builder()
-        .setWorkerFactory(factory)
+    val configuration =
+        Configuration
+            .Builder()
+            .setWorkerFactory(factory)
 
-    if (BuildConfig.DEBUG)
+    if (BuildConfig.DEBUG) {
         configuration.setMinimumLoggingLevel(Log.VERBOSE)
-    else configuration.setMinimumLoggingLevel(Log.WARN)
+    } else {
+        configuration.setMinimumLoggingLevel(Log.WARN)
+    }
 
     WorkManager.initialize(koin.get(), configuration.build())
 }

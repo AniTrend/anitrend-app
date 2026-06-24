@@ -12,7 +12,6 @@ import com.mxt.anitrend.presenter.base.BasePresenter
  * Created by max on 2017/12/14.
  */
 class FavouriteActivity : ActivityBase<Favourite, BasePresenter>() {
-
     private lateinit var binding: ActivityPagerGenericBinding
 
     private lateinit var pageAdapter: FavouritePageAdapter
@@ -37,9 +36,10 @@ class FavouriteActivity : ActivityBase<Favourite, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        pageAdapter = FavouritePageAdapter(this, applicationContext).apply {
-            params = intent.extras ?: Bundle.EMPTY
-        }
+        pageAdapter =
+            FavouritePageAdapter(this, applicationContext).apply {
+                params = intent.extras ?: Bundle.EMPTY
+            }
         updateUI()
     }
 

@@ -15,21 +15,18 @@ import com.mxt.anitrend.view.fragment.list.WatchListFragment
  */
 class HubPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.hub_title)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> SuggestionListFragment.newInstance(params)
-            1 -> {
-                val externalLinks = arrayListOf(ExternalLink(BuildConfig.FEEDS_LINK, null))
-                WatchListFragment.newInstance(externalLinks, true)
-            }
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> SuggestionListFragment.newInstance(params)
+        1 -> {
+            val externalLinks = arrayListOf(ExternalLink(BuildConfig.FEEDS_LINK, null))
+            WatchListFragment.newInstance(externalLinks, true)
         }
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

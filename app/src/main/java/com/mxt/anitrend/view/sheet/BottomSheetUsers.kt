@@ -24,15 +24,12 @@ class BottomSheetUsers :
     BottomSheetList<UserBase>(),
     MaterialSearchView.OnQueryTextListener,
     MaterialSearchView.SearchViewListener {
-
     private var binding: BottomSheetListBinding? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle): BottomSheetUsers {
-            return BottomSheetUsers().apply {
-                arguments = bundle
-            }
+        fun newInstance(bundle: Bundle): BottomSheetUsers = BottomSheetUsers().apply {
+            arguments = bundle
         }
     }
 
@@ -43,8 +40,9 @@ class BottomSheetUsers :
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
         mAdapter = UserAdapter(ctx)
         val baseList = arguments?.parcelableArrayList<UserBase>(KeyUtil.arg_list_model)
-        if (!baseList.isNullOrEmpty())
+        if (!baseList.isNullOrEmpty()) {
             mAdapter.onItemsInserted(baseList)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -68,9 +66,7 @@ class BottomSheetUsers :
 
     override fun makeRequest() = Unit
 
-    override fun onQueryTextSubmit(query: String): Boolean {
-        return false
-    }
+    override fun onQueryTextSubmit(query: String): Boolean = false
 
     override fun onQueryTextChange(newText: String): Boolean {
         if (!TextUtils.isEmpty(newText) && mAdapter.filter != null) {
@@ -93,25 +89,30 @@ class BottomSheetUsers :
         binding = null
     }
 
-    override fun onItemClick(target: View, data: IntPair<UserBase>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<UserBase>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent = Intent(host, ProfileActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    putExtra(KeyUtil.arg_id, data.second.id)
-                }
+                val intent =
+                    Intent(host, ProfileActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        putExtra(KeyUtil.arg_id, data.second.id)
+                    }
                 host.startActivity(intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<UserBase>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<UserBase>,
+    ) = Unit
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
         fun setModel(model: List<UserBase>): Builder {
             bundle.putParcelableArrayList(KeyUtil.arg_list_model, ArrayList(model))

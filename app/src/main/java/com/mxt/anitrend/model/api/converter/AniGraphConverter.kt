@@ -1,18 +1,24 @@
 package com.mxt.anitrend.model.api.converter
 
+import co.anitrend.retrofit.graphql.converter.GraphConverter
+import co.anitrend.retrofit.graphql.model.GraphQLDocumentRegistry
 import com.google.gson.Gson
 import com.mxt.anitrend.model.api.converter.response.AniGraphResponseConverter
-import co.anitrend.retrofit.graphql.annotation.processor.contract.AbstractGraphProcessor
-import co.anitrend.retrofit.graphql.converter.GraphConverter
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
 
 class AniGraphConverter(
-    graphProcessor: AbstractGraphProcessor,
-    gson: Gson
-) : GraphConverter(graphProcessor, gson) {
+    private val gson: Gson,
+    registry: GraphQLDocumentRegistry,
+) : Converter.Factory() {
+    private val delegate: GraphConverter = GraphConverter.create(
+        gson = gson,
+        registry = registry,
+    )
+
     /**
      * Response body converter delegates logic processing to a child class that handles
      * wrapping and deserialization of the json response data.
@@ -26,6 +32,14 @@ class AniGraphConverter(
     override fun responseBodyConverter(
         type: Type,
         annotations: Array<out Annotation>,
-        retrofit: Retrofit
+        retrofit: Retrofit,
     ): Converter<ResponseBody, *> = AniGraphResponseConverter<Any>(type, gson)
+
+    override fun requestBodyConverter(
+        type: Type,
+        parameterAnnotations: Array<out Annotation>,
+        methodAnnotations: Array<out Annotation>,
+        retrofit: Retrofit,
+    ): Converter<*, RequestBody>? =
+        delegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
 }

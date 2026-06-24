@@ -25,6 +25,8 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Configure properties
         run: bash .github/scripts/setup-config.sh
+      - name: Spotless check
+        run: ./gradlew :app:spotlessCheck --stacktrace
       - name: Test with Gradle
         run: ./gradlew test --stacktrace
       - name: Publish Test Report

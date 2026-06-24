@@ -12,5 +12,5 @@ class Giphy(
     val id: String? = null,
     val url: String? = null,
     val title: String? = null,
-    val images: HashMap<String, Gif> = hashMapOf()
+    val images: HashMap<String, Gif> = hashMapOf(),
 ) : Parcelable

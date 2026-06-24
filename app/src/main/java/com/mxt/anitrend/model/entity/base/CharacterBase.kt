@@ -9,8 +9,9 @@ import com.mxt.anitrend.model.entity.group.RecyclerItem
 /**
  * Created by Maxwell on 10/4/2016.
  */
-open class CharacterBase() : RecyclerItem(), Parcelable {
-
+open class CharacterBase() :
+    RecyclerItem(),
+    Parcelable {
     var id: Long = 0
     var name: TitleBase? = null
     var image: ImageBase? = null
@@ -29,7 +30,10 @@ open class CharacterBase() : RecyclerItem(), Parcelable {
         isFavourite = !isFavourite
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(id)
         dest.writeParcelable(name, flags)
         dest.writeParcelable(image, flags)
@@ -48,10 +52,11 @@ open class CharacterBase() : RecyclerItem(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<CharacterBase> = object : Parcelable.Creator<CharacterBase> {
-            override fun createFromParcel(parcel: Parcel): CharacterBase = CharacterBase(parcel)
+        val CREATOR: Parcelable.Creator<CharacterBase> =
+            object : Parcelable.Creator<CharacterBase> {
+                override fun createFromParcel(parcel: Parcel): CharacterBase = CharacterBase(parcel)
 
-            override fun newArray(size: Int): Array<CharacterBase?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<CharacterBase?> = arrayOfNulls(size)
+            }
     }
 }

@@ -8,7 +8,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity
-class MediaTag @JvmOverloads constructor(
+class MediaTag
+@JvmOverloads
+constructor(
     var name: String? = null,
     var description: String? = null,
     var category: String? = null,
@@ -16,9 +18,8 @@ class MediaTag @JvmOverloads constructor(
     var isGeneralSpoiler: Boolean = false,
     var isMediaSpoiler: Boolean = false,
     var isAdult: Boolean = false,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
 ) : Parcelable {
-
     @IgnoredOnParcel
     @Id(assignable = true)
     var id: Long = 0

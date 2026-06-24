@@ -30,9 +30,8 @@ private enum class DependencyType(val configurationName: String) {
     RELEASE_IMPLEMENTATION("releaseImplementation"),
     RUNTIME("runtimeOnly"),
     TEST("testImplementation"),
-    ANDROID_TEST("androidTestImplementation")
+    ANDROID_TEST("androidTestImplementation"),
 }
-
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given expression.
@@ -45,12 +44,11 @@ private enum class DependencyType(val configurationName: String) {
 private inline fun <T : ModuleDependency> DependencyHandler.add(
     configuration: String,
     dependency: T,
-    dependencyConfiguration: T.() -> Unit
+    dependencyConfiguration: T.() -> Unit,
 ): T = dependency.apply {
     dependencyConfiguration()
     add(configuration, this)
 }
-
 
 /**
  * Adds a dependency to the given configuration, and configures the dependency using the given expression.
@@ -63,13 +61,12 @@ private inline fun <T : ModuleDependency> DependencyHandler.add(
 private inline fun DependencyHandler.add(
     configuration: String,
     dependencyNotation: String,
-    dependencyConfiguration: ExternalModuleDependency.() -> Unit
+    dependencyConfiguration: ExternalModuleDependency.() -> Unit,
 ): Dependency = add(
     configuration,
     create(dependencyNotation) as ExternalModuleDependency,
-    dependencyConfiguration
+    dependencyConfiguration,
 )
-
 
 /**
  * Adds an exclude rule to exclude transitive dependencies of this dependency.
@@ -94,19 +91,18 @@ private inline fun DependencyHandler.add(
  * @see [ModuleDependency.exclude]
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : ModuleDependency> T.exclude(group: String = "", module: String = ""): T =
-    exclude(mutableMapOf("group" to group, "module" to module)) as T
+fun <T : ModuleDependency> T.exclude(group: String = "", module: String = ""): T = exclude(mutableMapOf("group" to group, "module" to module)) as T
 
 private fun DependencyHandler.addDependency(
     dependencyNotation: Any,
     dependencyType: DependencyType,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = when (dependencyConfiguration) {
     null -> add(dependencyType.configurationName, dependencyNotation)
     else -> add(
         configuration = dependencyType.configurationName,
         dependencyNotation = dependencyNotation.toString(),
-        dependencyConfiguration = dependencyConfiguration
+        dependencyConfiguration = dependencyConfiguration,
     )
 }
 
@@ -120,7 +116,7 @@ private fun DependencyHandler.addDependency(
  */
 internal fun DependencyHandler.kapt(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.KAPT, dependencyConfiguration)
 
 /**
@@ -133,7 +129,7 @@ internal fun DependencyHandler.kapt(
  */
 internal fun DependencyHandler.api(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.API, dependencyConfiguration)
 
 /**
@@ -146,7 +142,7 @@ internal fun DependencyHandler.api(
  */
 internal fun DependencyHandler.compile(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.COMPILE, dependencyConfiguration)
 
 /**
@@ -159,7 +155,7 @@ internal fun DependencyHandler.compile(
  */
 internal fun DependencyHandler.debug(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.DEBUG, dependencyConfiguration)
 
 /**
@@ -172,7 +168,7 @@ internal fun DependencyHandler.debug(
  */
 internal fun DependencyHandler.implementation(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.IMPLEMENTATION, dependencyConfiguration)
 
 /**
@@ -185,7 +181,7 @@ internal fun DependencyHandler.implementation(
  */
 internal fun DependencyHandler.debugImplementation(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.DEBUG_IMPLEMENTATION, dependencyConfiguration)
 
 /**
@@ -198,7 +194,7 @@ internal fun DependencyHandler.debugImplementation(
  */
 internal fun DependencyHandler.releaseImplementation(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.RELEASE_IMPLEMENTATION, dependencyConfiguration)
 
 /**
@@ -211,7 +207,7 @@ internal fun DependencyHandler.releaseImplementation(
  */
 internal fun DependencyHandler.runtime(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.RUNTIME, dependencyConfiguration)
 
 /**
@@ -224,7 +220,7 @@ internal fun DependencyHandler.runtime(
  */
 internal fun DependencyHandler.testImplementation(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.TEST, dependencyConfiguration)
 
 /**
@@ -237,5 +233,5 @@ internal fun DependencyHandler.testImplementation(
  */
 internal fun DependencyHandler.androidTestImplementation(
     dependencyNotation: Any,
-    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null
+    dependencyConfiguration: (ExternalModuleDependency.() -> Unit)? = null,
 ) = addDependency(dependencyNotation, DependencyType.ANDROID_TEST, dependencyConfiguration)

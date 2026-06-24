@@ -8,11 +8,7 @@ import io.objectbox.converter.PropertyConverter
  * Created by max on 2018/03/22.
  */
 class MediaListOptionsConverter : PropertyConverter<MediaListOptions, String> {
-    override fun convertToEntityProperty(databaseValue: String?): MediaListOptions? {
-        return databaseValue?.let { WebFactory.gson.fromJson(it, MediaListOptions::class.java) }
-    }
+    override fun convertToEntityProperty(databaseValue: String?): MediaListOptions? = databaseValue?.let { WebFactory.gson.fromJson(it, MediaListOptions::class.java) }
 
-    override fun convertToDatabaseValue(entityProperty: MediaListOptions?): String? {
-        return entityProperty?.let { WebFactory.gson.toJson(it) }
-    }
+    override fun convertToDatabaseValue(entityProperty: MediaListOptions?): String? = entityProperty?.let { WebFactory.gson.toJson(it) }
 }

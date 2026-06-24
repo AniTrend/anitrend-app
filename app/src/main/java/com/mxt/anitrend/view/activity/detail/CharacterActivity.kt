@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.mxt.anitrend.R
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
@@ -15,8 +15,6 @@ import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import java.util.Locale
 
 /**
@@ -24,7 +22,6 @@ import java.util.Locale
  * character activity
  */
 class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
-
     private lateinit var binding: ActivityPagerGenericBinding
 
     private var favouriteWidget: FavouriteToolbarWidget? = null
@@ -37,8 +34,9 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
         setSupportActionBar(binding.customToolbar.toolbar)
         setPresenter(BasePresenter(this))
         setViewModel(true)
-        if (intent.hasExtra(KeyUtil.arg_id))
+        if (intent.hasExtra(KeyUtil.arg_id)) {
             id = intent.getLongExtra(KeyUtil.arg_id, -1)
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -70,27 +68,29 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
         if (model != null) {
             when (item.itemId) {
                 R.id.action_share -> {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                                model.name?.fullName ?: "",
-                                model.siteUrl ?: ""
+                    val intent =
+                        Intent(Intent.ACTION_SEND).apply {
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(
+                                    Locale.getDefault(),
+                                    "%s - %s",
+                                    model.name?.fullName ?: "",
+                                    model.siteUrl ?: "",
+                                ),
                             )
-                        )
-                        type = "text/plain"
-                    }
+                            type = "text/plain"
+                        }
                     startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 }
             }
         } else {
-            NotifyUtil.makeText(
-                applicationContext,
-                R.string.text_activity_loading,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    applicationContext,
+                    R.string.text_activity_loading,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -100,9 +100,10 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        val pageAdapter = CharacterPageAdapter(this, applicationContext).apply {
-            params = viewModel?.params ?: Bundle.EMPTY
-        }
+        val pageAdapter =
+            CharacterPageAdapter(this, applicationContext).apply {
+                params = viewModel?.params ?: Bundle.EMPTY
+            }
         binding.contentMain.pageContainer.adapter = pageAdapter
         binding.contentMain.pageContainer.offscreenPageLimit = offScreenLimit
         TabLayoutMediator(binding.customTab.smartTab, binding.contentMain.pageContainer) { tab, position ->
@@ -112,10 +113,11 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
 
     override fun onResume() {
         super.onResume()
-        if (getModel() == null)
+        if (getModel() == null) {
             makeRequest()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun updateUI() {
@@ -125,9 +127,9 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
     }
 
     override fun makeRequest() {
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, id)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+        }
         viewModel?.requestData(KeyUtil.CHARACTER_BASE_REQ, applicationContext)
     }
 

@@ -12,12 +12,14 @@ import com.mxt.anitrend.model.entity.base.MediaBase
  * Custom text view to display appropriate
  * series tittle according to user preferences
  */
-class SeriesTitleView @JvmOverloads constructor(
+class SeriesTitleView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : SingleLineTextView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : SingleLineTextView(context, attrs, defStyleAttr),
+    CustomView {
     override fun onInit() {
         super.onInit()
     }

@@ -9,16 +9,14 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetFavouriteBinding
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -27,15 +25,16 @@ import timber.log.Timber
  * Created by max on 2017/10/29.
  * Like or favourite view which manages state independently
  */
-class FavouriteWidget @JvmOverloads constructor(
+class FavouriteWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
     RetroCallback<List<UserBase>>,
     View.OnClickListener {
-
     private var presenter: WidgetPresenter<List<UserBase>>? = null
     private lateinit var binding: WidgetFavouriteBinding
     private var model: MutableList<UserBase>? = null
@@ -65,8 +64,9 @@ class FavouriteWidget @JvmOverloads constructor(
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
     }
 
     fun setModel(model: List<UserBase>?) {
@@ -74,11 +74,14 @@ class FavouriteWidget @JvmOverloads constructor(
         setIconType()
     }
 
-    fun setRequestParams(@KeyUtil.LikeType likeType: String, modelId: Long) {
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, modelId)
-            .putVariable(KeyUtil.arg_type, likeType)
-        presenter?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+    fun setRequestParams(
+        @KeyUtil.LikeType likeType: String,
+        modelId: Long,
+    ) {
+        presenter?.params?.apply {
+            putLong(KeyUtil.arg_id, modelId)
+            putString(KeyUtil.arg_type, likeType)
+        }
     }
 
     override fun onClick(view: View) {
@@ -88,11 +91,12 @@ class FavouriteWidget @JvmOverloads constructor(
                     binding.widgetFlipper.showNext()
                     presenter?.requestData(KeyUtil.MUT_TOGGLE_LIKE, context, this)
                 } else {
-                    NotifyUtil.makeText(
-                        context,
-                        R.string.busy_please_wait,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    NotifyUtil
+                        .makeText(
+                            context,
+                            R.string.busy_please_wait,
+                            Toast.LENGTH_SHORT,
+                        ).show()
                 }
             }
         }
@@ -106,14 +110,14 @@ class FavouriteWidget @JvmOverloads constructor(
                 context.getCompatDrawable(R.drawable.ic_favorite_grey_600_18dp, R.color.colorStateRed),
                 null,
                 null,
-                null
+                null,
             )
         } else {
             binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(
                 context.getCompatDrawable(R.drawable.ic_favorite_grey_600_18dp),
                 null,
                 null,
-                null
+                null,
             )
         }
         binding.widgetLike.text = WidgetPresenter.convertToText(CompatUtil.sizeOf(likes))
@@ -123,16 +127,20 @@ class FavouriteWidget @JvmOverloads constructor(
     /**
      * Invoked for a received HTTP response.
      */
-    override fun onResponse(call: Call<List<UserBase>>, response: Response<List<UserBase>>) {
+    override fun onResponse(
+        call: Call<List<UserBase>>,
+        response: Response<List<UserBase>>,
+    ) {
         try {
             if (response.isSuccessful) {
                 val currentUser = presenter?.database?.currentUser
                 if (currentUser != null) {
                     val likes = model ?: mutableListOf<UserBase>().also { model = it }
-                    if (!CompatUtil.isEmpty(likes) && likes.contains(currentUser))
+                    if (!CompatUtil.isEmpty(likes) && likes.contains(currentUser)) {
                         likes.remove(currentUser)
-                    else
+                    } else {
                         likes.add(currentUser)
+                    }
                 }
                 setIconType()
             } else {
@@ -148,7 +156,10 @@ class FavouriteWidget @JvmOverloads constructor(
      * Invoked when a network exception occurred talking to the server or when an unexpected
      * exception occurred creating the request or processing the response.
      */
-    override fun onFailure(call: Call<List<UserBase>>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<List<UserBase>>,
+        throwable: Throwable,
+    ) {
         try {
             Timber.w(throwable)
             resetFlipperState()

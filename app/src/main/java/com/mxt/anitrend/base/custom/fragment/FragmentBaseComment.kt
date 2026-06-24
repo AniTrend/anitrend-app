@@ -1,6 +1,5 @@
 package com.mxt.anitrend.base.custom.fragment
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
@@ -39,7 +38,6 @@ abstract class FragmentBaseComment :
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
-
     protected lateinit var swipeRefreshLayout: CustomSwipeRefreshLayout
     protected lateinit var recyclerView: StatefulRecyclerView
     protected lateinit var originRecycler: StatefulRecyclerView
@@ -57,26 +55,31 @@ abstract class FragmentBaseComment :
     protected lateinit var mAdapter: RecyclerViewAdapter<FeedReply>
     private lateinit var mLayoutManager: StaggeredGridLayoutManager
 
-    private val stateLayoutOnClick = View.OnClickListener {
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false)
-        showLoading()
-        onRefresh()
-    }
+    private val stateLayoutOnClick =
+        View.OnClickListener {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            }
+            showLoading()
+            onRefresh()
+        }
 
-    private val snackBarOnClick = View.OnClickListener {
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false)
-        if (snackbar?.isShown == true)
-            snackbar?.dismiss()
-        swipeRefreshLayout.setLoading(true)
-        makeRequest()
-    }
+    private val snackBarOnClick =
+        View.OnClickListener {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            }
+            if (snackbar?.isShown == true) {
+                snackbar?.dismiss()
+            }
+            swipeRefreshLayout.setLoading(true)
+            makeRequest()
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentCommentBinding.inflate(inflater, container, false)
         val root = requireNotNull(binding).root
@@ -87,10 +90,11 @@ abstract class FragmentBaseComment :
         composerWidget = requireNotNull(binding).composerWidget
         recyclerView.setHasFixedSize(true)
         recyclerView.isNestedScrollingEnabled = false
-        mLayoutManager = StaggeredGridLayoutManager(
-            resources.getInteger(mColumnSize),
-            StaggeredGridLayoutManager.VERTICAL
-        )
+        mLayoutManager =
+            StaggeredGridLayoutManager(
+                resources.getInteger(mColumnSize),
+                StaggeredGridLayoutManager.VERTICAL,
+            )
         recyclerView.layoutManager = mLayoutManager
         swipeRefreshLayout.setOnRefreshAndLoadListener(this)
         swipeRefreshLayout.setPermitLoad(false)
@@ -108,10 +112,11 @@ abstract class FragmentBaseComment :
     override fun onStart() {
         super.onStart()
         showLoading()
-        if (mAdapter.itemCount < 1)
+        if (mAdapter.itemCount < 1) {
             onRefresh()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -138,8 +143,9 @@ abstract class FragmentBaseComment :
     }
 
     protected fun removeScrollLoadTrigger() {
-        if (isPager)
+        if (isPager) {
             recyclerView.clearOnScrollListeners()
+        }
     }
 
     override fun onPause() {
@@ -154,15 +160,20 @@ abstract class FragmentBaseComment :
 
     override fun showError(error: String) {
         super.showError(error)
-        if (swipeRefreshLayout.isRefreshing())
+        if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false)
-        if (swipeRefreshLayout.isLoading())
+        }
+        if (swipeRefreshLayout.isLoading()) {
             swipeRefreshLayout.setLoading(false)
+        }
         if (presenter.currentPage > 1 && isPager) {
-            if (stateLayout.isLoading)
+            if (stateLayout.isLoading) {
                 stateLayout.showContent()
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.try_again, snackBarOnClick)
+            }
+            snackbar =
+                NotifyUtil
+                    .make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.try_again, snackBarOnClick)
             snackbar?.show()
         } else {
             val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_cry)
@@ -170,22 +181,27 @@ abstract class FragmentBaseComment :
                 drawable,
                 error,
                 getString(R.string.try_again),
-                stateLayoutOnClick
+                stateLayoutOnClick,
             )
         }
     }
 
     override fun showEmpty(message: String) {
         super.showEmpty(message)
-        if (swipeRefreshLayout.isRefreshing())
+        if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false)
-        if (swipeRefreshLayout.isLoading())
+        }
+        if (swipeRefreshLayout.isLoading()) {
             swipeRefreshLayout.setLoading(false)
+        }
         if (presenter.currentPage > 1 && isPager) {
-            if (stateLayout.isLoading)
+            if (stateLayout.isLoading) {
                 stateLayout.showContent()
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.try_again, snackBarOnClick)
+            }
+            snackbar =
+                NotifyUtil
+                    .make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.try_again, snackBarOnClick)
             snackbar?.show()
         } else {
             val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat)
@@ -193,7 +209,7 @@ abstract class FragmentBaseComment :
                 drawable,
                 message,
                 getString(R.string.try_again),
-                stateLayoutOnClick
+                stateLayoutOnClick,
             )
         }
     }
@@ -242,16 +258,19 @@ abstract class FragmentBaseComment :
                 actionMode?.let { mAdapter.setActionModeCallback(it) }
                 recyclerView.adapter = mAdapter
             } else {
-                if (swipeRefreshLayout.isRefreshing())
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false)
-                else if (swipeRefreshLayout.isLoading())
+                } else if (swipeRefreshLayout.isLoading()) {
                     swipeRefreshLayout.setLoading(false)
-                if (!TextUtils.isEmpty(query))
+                }
+                if (!TextUtils.isEmpty(query)) {
                     mAdapter.filter?.filter(query)
+                }
             }
             showContent()
-        } else
+        } else {
             showEmpty(getString(R.string.layout_empty_response))
+        }
     }
 
     override fun onChanged(content: FeedList?) {
@@ -259,22 +278,32 @@ abstract class FragmentBaseComment :
         if (!CompatUtil.isEmpty(replies)) {
             val items = replies ?: emptyList()
             if (isPager && !swipeRefreshLayout.isRefreshing()) {
-                if (mAdapter.itemCount < 1)
+                if (mAdapter.itemCount < 1) {
                     mAdapter.onItemsInserted(items)
-                else
+                } else {
                     mAdapter.onItemRangeInserted(items)
-            } else
+                }
+            } else {
                 mAdapter.onItemsInserted(items)
+            }
             updateUI()
         } else {
-            if (isPager)
+            if (isPager) {
                 setLimitReached()
-            if (mAdapter.itemCount < 1)
+            }
+            if (mAdapter.itemCount < 1) {
                 showEmpty(getString(R.string.layout_empty_response))
+            }
         }
     }
 
-    abstract override fun onItemClick(target: View, data: IntPair<FeedReply>)
+    abstract override fun onItemClick(
+        target: View,
+        data: IntPair<FeedReply>,
+    )
 
-    abstract override fun onItemLongClick(target: View, data: IntPair<FeedReply>)
+    abstract override fun onItemLongClick(
+        target: View,
+        data: IntPair<FeedReply>,
+    )
 }

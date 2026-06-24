@@ -1,13 +1,11 @@
 package com.mxt.anitrend.base.custom.fragment
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.annimon.stream.IntPair
@@ -37,7 +35,6 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
-
     protected lateinit var swipeRefreshLayout: CustomSwipeRefreshLayout
     protected lateinit var recyclerView: StatefulRecyclerView
     protected lateinit var stateLayout: ProgressLayout
@@ -51,28 +48,34 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     protected lateinit var mAdapter: RecyclerViewAdapter<M>
     protected lateinit var mLayoutManager: StaggeredGridLayoutManager
 
-    private val stateLayoutOnClick = View.OnClickListener {
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false)
-        if (snackbar?.isShown == true)
-            snackbar?.dismiss()
-        showLoading()
-        onRefresh()
-    }
+    private val stateLayoutOnClick =
+        View.OnClickListener {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            }
+            if (snackbar?.isShown == true) {
+                snackbar?.dismiss()
+            }
+            showLoading()
+            onRefresh()
+        }
 
-    private val snackBarOnClick = View.OnClickListener {
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false)
-        if (snackbar?.isShown == true)
-            snackbar?.dismiss()
-        swipeRefreshLayout.setLoading(true)
-        makeRequest()
-    }
+    private val snackBarOnClick =
+        View.OnClickListener {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            }
+            if (snackbar?.isShown == true) {
+                snackbar?.dismiss()
+            }
+            swipeRefreshLayout.setLoading(true)
+            makeRequest()
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentListBinding.inflate(inflater, container, false)
         val root = requireNotNull(binding).root
@@ -81,10 +84,11 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         stateLayout = requireNotNull(binding).stateLayout
         recyclerView.setHasFixedSize(true)
         recyclerView.isNestedScrollingEnabled = true
-        mLayoutManager = StaggeredGridLayoutManager(
-            resources.getInteger(mColumnSize),
-            StaggeredGridLayoutManager.VERTICAL
-        )
+        mLayoutManager =
+            StaggeredGridLayoutManager(
+                resources.getInteger(mColumnSize),
+                StaggeredGridLayoutManager.VERTICAL,
+            )
         recyclerView.layoutManager = mLayoutManager
         swipeRefreshLayout.setOnRefreshAndLoadListener(this)
         activity?.let { CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, it) }
@@ -99,10 +103,11 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     override fun onStart() {
         super.onStart()
         showLoading()
-        if (mAdapter.itemCount < 1)
+        if (mAdapter.itemCount < 1) {
             onRefresh()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -133,8 +138,9 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     }
 
     protected fun removeScrollLoadTrigger() {
-        if (isPager)
+        if (isPager) {
             recyclerView.clearOnScrollListeners()
+        }
     }
 
     override fun onPause() {
@@ -149,15 +155,20 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
 
     override fun showError(error: String) {
         super.showError(error)
-        if (swipeRefreshLayout.isRefreshing())
+        if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false)
-        if (swipeRefreshLayout.isLoading())
+        }
+        if (swipeRefreshLayout.isLoading()) {
             swipeRefreshLayout.setLoading(false)
+        }
         if (presenter.currentPage > 1 && isPager) {
-            if (stateLayout.isLoading)
+            if (stateLayout.isLoading) {
                 stateLayout.showContent()
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.try_again, snackBarOnClick)
+            }
+            snackbar =
+                NotifyUtil
+                    .make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.try_again, snackBarOnClick)
             snackbar?.show()
         } else {
             val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_cry)
@@ -165,22 +176,27 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
                 drawable,
                 error,
                 getString(R.string.try_again),
-                stateLayoutOnClick
+                stateLayoutOnClick,
             )
         }
     }
 
     override fun showEmpty(message: String) {
         super.showEmpty(message)
-        if (swipeRefreshLayout.isRefreshing())
+        if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false)
-        if (swipeRefreshLayout.isLoading())
+        }
+        if (swipeRefreshLayout.isLoading()) {
             swipeRefreshLayout.setLoading(false)
+        }
         if (presenter.currentPage > 1 && isPager) {
-            if (stateLayout.isLoading)
+            if (stateLayout.isLoading) {
                 stateLayout.showContent()
-            snackbar = NotifyUtil.make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.try_again, snackBarOnClick)
+            }
+            snackbar =
+                NotifyUtil
+                    .make(stateLayout, R.string.text_unable_to_load_next_page, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.try_again, snackBarOnClick)
             snackbar?.show()
         } else {
             val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat)
@@ -188,7 +204,7 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
                 drawable,
                 message,
                 getString(R.string.try_again),
-                stateLayoutOnClick
+                stateLayoutOnClick,
             )
         }
     }
@@ -208,7 +224,10 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
         if (key != null && isFilterableEnabled && GraphUtil.isKeyFilter(key)) {
             showLoading()
             mAdapter.clearDataSet()
@@ -251,40 +270,53 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
                 actionMode?.let { mAdapter.setActionModeCallback(it) }
                 recyclerView.adapter = mAdapter
             } else {
-                if (swipeRefreshLayout.isRefreshing())
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false)
-                else if (swipeRefreshLayout.isLoading())
+                } else if (swipeRefreshLayout.isLoading()) {
                     swipeRefreshLayout.setLoading(false)
-                if (!TextUtils.isEmpty(query))
+                }
+                if (!TextUtils.isEmpty(query)) {
                     mAdapter.filter?.filter(query)
+                }
             }
             showContent()
-        } else
+        } else {
             showEmpty(getString(R.string.layout_empty_response))
+        }
     }
 
     protected fun onPostProcessed(content: List<M>?) {
         if (!CompatUtil.isEmpty(content)) {
             val items = content ?: emptyList()
             if (isPager && !swipeRefreshLayout.isRefreshing()) {
-                if (mAdapter.itemCount < 1)
+                if (mAdapter.itemCount < 1) {
                     mAdapter.onItemsInserted(items)
-                else
+                } else {
                     mAdapter.onItemRangeInserted(items)
-            } else
+                }
+            } else {
                 mAdapter.onItemsInserted(items)
+            }
             updateUI()
         } else {
-            if (isPager)
+            if (isPager) {
                 setLimitReached()
-            if (mAdapter.itemCount < 1)
+            }
+            if (mAdapter.itemCount < 1) {
                 showEmpty(getString(R.string.layout_empty_response))
+            }
         }
     }
 
     abstract override fun onChanged(content: C?)
 
-    abstract override fun onItemClick(target: View, data: IntPair<M>)
+    abstract override fun onItemClick(
+        target: View,
+        data: IntPair<M>,
+    )
 
-    abstract override fun onItemLongClick(target: View, data: IntPair<M>)
+    abstract override fun onItemLongClick(
+        target: View,
+        data: IntPair<M>,
+    )
 }

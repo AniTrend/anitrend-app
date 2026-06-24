@@ -17,5 +17,5 @@ class UserOptions(
     @SerializedName("airingNotifications")
     val isAiringNotifications: Boolean,
     @param:KeyUtil.ProfileColor
-    val profileColor: String?
+    val profileColor: String?,
 ) : Parcelable

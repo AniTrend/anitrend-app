@@ -17,7 +17,6 @@ import com.mxt.anitrend.util.KeyUtil
  * Modified by max to accommodate grid and staggered layout managers and other custom properties
  */
 abstract class RecyclerScrollListener : RecyclerView.OnScrollListener() {
-
     private var previousTotal = 0 // The total number of items in the dataset after the last load
     private var loading = true // True if still waiting for the last set of data to load.
     var currentPage = 1
@@ -29,17 +28,27 @@ abstract class RecyclerScrollListener : RecyclerView.OnScrollListener() {
     private var gridLayoutManager: GridLayoutManager? = null
     private var staggeredGridLayoutManager: StaggeredGridLayoutManager? = null
 
-    fun initListener(gridLayoutManager: GridLayoutManager, loadListener: RecyclerLoadListener) {
+    fun initListener(
+        gridLayoutManager: GridLayoutManager,
+        loadListener: RecyclerLoadListener,
+    ) {
         this.gridLayoutManager = gridLayoutManager
         this.loadListener = loadListener
     }
 
-    fun initListener(staggeredGridLayoutManager: StaggeredGridLayoutManager, loadListener: RecyclerLoadListener) {
+    fun initListener(
+        staggeredGridLayoutManager: StaggeredGridLayoutManager,
+        loadListener: RecyclerLoadListener,
+    ) {
         this.staggeredGridLayoutManager = staggeredGridLayoutManager
         this.loadListener = loadListener
     }
 
-    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+    override fun onScrolled(
+        recyclerView: RecyclerView,
+        dx: Int,
+        dy: Int,
+    ) {
         super.onScrolled(recyclerView, dx, dy)
 
         var totalItemCount = 0
@@ -53,8 +62,9 @@ abstract class RecyclerScrollListener : RecyclerView.OnScrollListener() {
             staggeredGridLayoutManager != null -> {
                 totalItemCount = staggeredGridLayoutManager?.itemCount ?: 0
                 val firstPositions = staggeredGridLayoutManager?.findFirstVisibleItemPositions(null)
-                if (firstPositions != null && firstPositions.isNotEmpty())
+                if (firstPositions != null && firstPositions.isNotEmpty()) {
                     firstVisibleItem = firstPositions[0]
+                }
             }
         }
 

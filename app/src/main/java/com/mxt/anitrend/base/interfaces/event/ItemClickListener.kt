@@ -15,7 +15,10 @@ interface ItemClickListener<T> {
      * @param target view that has been clicked
      * @param data the model that at the clicked index
      */
-    fun onItemClick(target: View, data: IntPair<T>)
+    fun onItemClick(
+        target: View,
+        data: IntPair<T>,
+    )
 
     /**
      * When the target view from [View.OnLongClickListener]
@@ -24,5 +27,8 @@ interface ItemClickListener<T> {
      * @param target view that has been long clicked
      * @param data the model that at the long clicked index
      */
-    fun onItemLongClick(target: View, data: IntPair<T>)
+    fun onItemLongClick(
+        target: View,
+        data: IntPair<T>,
+    )
 }

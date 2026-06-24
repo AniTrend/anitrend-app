@@ -2,7 +2,6 @@ package com.mxt.anitrend.extension
 
 import java.util.*
 
-
 /**
  * No locks are used to synchronize an access to the [Lazy] instance value; if the instance is accessed from multiple threads,
  * its behavior is undefined.
@@ -29,7 +28,6 @@ val LAZY_MODE_SYNCHRONIZED = LazyThreadSafetyMode.SYNCHRONIZED
  */
 fun String.Companion.empty() = ""
 
-
 /**
  * Returns a copy of this strings having its first letter uppercase, or the original string,
  * if it's empty or already starts with an upper case letter.
@@ -43,21 +41,29 @@ fun String?.capitalizeWords(exceptions: List<String>? = null): String = when {
         for ((index, word) in words.withIndex()) {
             when (word.isNotEmpty()) {
                 true -> {
-                    if (!exceptions.isNullOrEmpty() && exceptions.contains(word)) result.append(word)
-                    else result.append(word.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.getDefault()
-                        ) else it.toString()
-                    })
+                    if (!exceptions.isNullOrEmpty() && exceptions.contains(word)) {
+                        result.append(word)
+                    } else {
+                        result.append(
+                            word.replaceFirstChar {
+                                if (it.isLowerCase()) {
+                                    it.titlecase(
+                                        Locale.getDefault(),
+                                    )
+                                } else {
+                                    it.toString()
+                                }
+                            },
+                        )
+                    }
                 }
                 else -> {}
             }
-            if (index != words.size - 1)
+            if (index != words.size - 1) {
                 result.append(" ")
+            }
         }
         result.toString()
     }
     else -> String.empty()
 }
-
-

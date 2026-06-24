@@ -30,11 +30,10 @@ import com.mxt.anitrend.view.activity.index.SplashActivity
 internal data class EntryPoint(
     val name: String,
     val intentProvider: (Context) -> Intent,
-    val assertUi: Boolean = true
+    val assertUi: Boolean = true,
 )
 
 internal object EntryPointFixtures {
-
     fun unauthenticated(context: Context): List<EntryPoint> = listOf(
         EntryPoint("SplashActivity", { Intent(it, SplashActivity::class.java) }, assertUi = false),
         EntryPoint("MainActivity", { Intent(it, MainActivity::class.java) }),
@@ -47,33 +46,57 @@ internal object EntryPointFixtures {
         EntryPoint("NotificationActivity", { Intent(it, NotificationActivity::class.java) }),
         EntryPoint("MessageActivity", { Intent(it, MessageActivity::class.java) }),
         EntryPoint("FavouriteActivity", { Intent(it, FavouriteActivity::class.java) }),
-        EntryPoint("MediaListActivity", { Intent(it, MediaListActivity::class.java)
-            .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME) }),
-        EntryPoint("MediaBrowseActivity", { Intent(it, MediaBrowseActivity::class.java)
-            .putExtra(KeyUtil.arg_activity_tag, "Test") }),
-        EntryPoint("MediaActivity", { Intent(it, MediaActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L)
-            .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME) }),
-        EntryPoint("ProfileActivity", { Intent(it, ProfileActivity::class.java)
-            .putExtra(KeyUtil.arg_userName, "test-user") }),
-        EntryPoint("CharacterActivity", { Intent(it, CharacterActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("StaffActivity", { Intent(it, StaffActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("StudioActivity", { Intent(it, StudioActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("CommentActivity", { Intent(it, CommentActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("ImagePreviewActivity", { Intent(it, ImagePreviewActivity::class.java)
-            .putExtra(KeyUtil.arg_model, "https://example.com/image.png") }),
-        EntryPoint("GiphyPreviewActivity", { Intent(it, GiphyPreviewActivity::class.java)
-            .putExtra(KeyUtil.arg_model, "https://example.com/preview.gif") }),
-        EntryPoint("VideoPlayerActivity", { Intent(it, VideoPlayerActivity::class.java)
-            .putExtra(KeyUtil.arg_model, "https://example.com/video.mp4") }),
-        EntryPoint("SharedContentActivity", { Intent(Intent.ACTION_SEND)
-            .setClass(it, SharedContentActivity::class.java)
-            .setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, "https://example.com") })
+        EntryPoint("MediaListActivity", {
+            Intent(it, MediaListActivity::class.java)
+                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+        }),
+        EntryPoint("MediaBrowseActivity", {
+            Intent(it, MediaBrowseActivity::class.java)
+                .putExtra(KeyUtil.arg_activity_tag, "Test")
+        }),
+        EntryPoint("MediaActivity", {
+            Intent(it, MediaActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+        }),
+        EntryPoint("ProfileActivity", {
+            Intent(it, ProfileActivity::class.java)
+                .putExtra(KeyUtil.arg_userName, "test-user")
+        }),
+        EntryPoint("CharacterActivity", {
+            Intent(it, CharacterActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("StaffActivity", {
+            Intent(it, StaffActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("StudioActivity", {
+            Intent(it, StudioActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("CommentActivity", {
+            Intent(it, CommentActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("ImagePreviewActivity", {
+            Intent(it, ImagePreviewActivity::class.java)
+                .putExtra(KeyUtil.arg_model, "https://example.com/image.png")
+        }),
+        EntryPoint("GiphyPreviewActivity", {
+            Intent(it, GiphyPreviewActivity::class.java)
+                .putExtra(KeyUtil.arg_model, "https://example.com/preview.gif")
+        }),
+        EntryPoint("VideoPlayerActivity", {
+            Intent(it, VideoPlayerActivity::class.java)
+                .putExtra(KeyUtil.arg_model, "https://example.com/video.mp4")
+        }),
+        EntryPoint("SharedContentActivity", {
+            Intent(Intent.ACTION_SEND)
+                .setClass(it, SharedContentActivity::class.java)
+                .setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, "https://example.com")
+        }),
     )
 
     fun authenticated(context: Context): List<EntryPoint> = listOf(
@@ -88,32 +111,56 @@ internal object EntryPointFixtures {
         EntryPoint("NotificationActivity", { Intent(it, NotificationActivity::class.java) }),
         EntryPoint("MessageActivity", { Intent(it, MessageActivity::class.java) }),
         EntryPoint("FavouriteActivity", { Intent(it, FavouriteActivity::class.java) }),
-        EntryPoint("MediaListActivity", { Intent(it, MediaListActivity::class.java)
-            .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME) }),
-        EntryPoint("MediaBrowseActivity", { Intent(it, MediaBrowseActivity::class.java)
-            .putExtra(KeyUtil.arg_activity_tag, "Test") }),
-        EntryPoint("MediaActivity", { Intent(it, MediaActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L)
-            .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME) }),
-        EntryPoint("ProfileActivity", { Intent(it, ProfileActivity::class.java)
-            .putExtra(KeyUtil.arg_userName, "test-user") }),
-        EntryPoint("CharacterActivity", { Intent(it, CharacterActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("StaffActivity", { Intent(it, StaffActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("StudioActivity", { Intent(it, StudioActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("CommentActivity", { Intent(it, CommentActivity::class.java)
-            .putExtra(KeyUtil.arg_id, 1L) }),
-        EntryPoint("ImagePreviewActivity", { Intent(it, ImagePreviewActivity::class.java)
-            .putExtra(KeyUtil.arg_model, "https://example.com/image.png") }),
-        EntryPoint("GiphyPreviewActivity", { Intent(it, GiphyPreviewActivity::class.java)
-            .putExtra(KeyUtil.arg_model, "https://example.com/preview.gif") }),
-        EntryPoint("VideoPlayerActivity", { Intent(it, VideoPlayerActivity::class.java)
-            .putExtra(KeyUtil.arg_model, "https://example.com/video.mp4") }),
-        EntryPoint("SharedContentActivity", { Intent(Intent.ACTION_SEND)
-            .setClass(it, SharedContentActivity::class.java)
-            .setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, "https://example.com") })
+        EntryPoint("MediaListActivity", {
+            Intent(it, MediaListActivity::class.java)
+                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+        }),
+        EntryPoint("MediaBrowseActivity", {
+            Intent(it, MediaBrowseActivity::class.java)
+                .putExtra(KeyUtil.arg_activity_tag, "Test")
+        }),
+        EntryPoint("MediaActivity", {
+            Intent(it, MediaActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+        }),
+        EntryPoint("ProfileActivity", {
+            Intent(it, ProfileActivity::class.java)
+                .putExtra(KeyUtil.arg_userName, "test-user")
+        }),
+        EntryPoint("CharacterActivity", {
+            Intent(it, CharacterActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("StaffActivity", {
+            Intent(it, StaffActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("StudioActivity", {
+            Intent(it, StudioActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("CommentActivity", {
+            Intent(it, CommentActivity::class.java)
+                .putExtra(KeyUtil.arg_id, 1L)
+        }),
+        EntryPoint("ImagePreviewActivity", {
+            Intent(it, ImagePreviewActivity::class.java)
+                .putExtra(KeyUtil.arg_model, "https://example.com/image.png")
+        }),
+        EntryPoint("GiphyPreviewActivity", {
+            Intent(it, GiphyPreviewActivity::class.java)
+                .putExtra(KeyUtil.arg_model, "https://example.com/preview.gif")
+        }),
+        EntryPoint("VideoPlayerActivity", {
+            Intent(it, VideoPlayerActivity::class.java)
+                .putExtra(KeyUtil.arg_model, "https://example.com/video.mp4")
+        }),
+        EntryPoint("SharedContentActivity", {
+            Intent(Intent.ACTION_SEND)
+                .setClass(it, SharedContentActivity::class.java)
+                .setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, "https://example.com")
+        }),
     )
 }

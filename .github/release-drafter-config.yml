@@ -10,7 +10,7 @@ categories:
       - 'bugfix'
       - 'hotfix'
   - title: '🧰 Maintenance'
-    labels: 
+    labels:
       - 'refactor'
       - 'dependencies'
 autolabeler:
@@ -55,5 +55,5 @@ template: |
   # What's Changed
 
   $CHANGES
-  
+
   **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION

@@ -2,7 +2,6 @@ package com.mxt.anitrend.base.custom.activity
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.Menu
@@ -48,7 +47,8 @@ import kotlin.jvm.JvmName
  * Created by max on 2017/06/09.
  * Activity base <M type of data model, P extends CommonPresenter>
  */
-abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
+abstract class ActivityBase<M, P : CommonPresenter> :
+    AppCompatActivity(),
     Observer<M?>,
     CommonPresenter.AbstractPresenter<P>,
     ResponseCallback,
@@ -86,8 +86,9 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
      * @see ConfigurationUtil
      */
     protected open fun configureActivity() {
-        if (configurationUtil == null)
+        if (configurationUtil == null) {
             configurationUtil = KoinExt.get(ConfigurationUtil::class.java)
+        }
         configurationUtil?.onCreateAttach(this)
     }
 
@@ -135,15 +136,17 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
         super.onSaveInstanceState(outState)
 
         val text = mSearchView?.findViewById<TextView>(R.id.searchTextView)?.text
-        if (!text.isNullOrEmpty())
+        if (!text.isNullOrEmpty()) {
             outState.putCharSequence(KEY_SEARCHVIEW_QUERY, text)
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        if (savedInstanceState.containsKey(KEY_SEARCHVIEW_QUERY))
+        if (savedInstanceState.containsKey(KEY_SEARCHVIEW_QUERY)) {
             onQueryTextChange(savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY).toString())
+        }
     }
 
     /**
@@ -234,21 +237,21 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        return super.onCreateOptionsMenu(menu)
-    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean = super.onCreateOptionsMenu(menu)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home)
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
+        }
         return super.onOptionsItemSelected(item)
     }
 
     protected fun requestPermissionIfMissing(permission: String): Boolean {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
             return true
-        } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission))
+        } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_PERMISSION)
+        }
         return false
     }
 
@@ -266,20 +269,21 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION) {
             for (i in permissions.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     onPermissionGranted(permissions[i])
-                else
+                } else {
                     NotifyUtil.makeText(
                         this,
                         R.string.text_permission_required,
                         R.drawable.ic_warning_white_18dp,
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
+                }
             }
         }
     }
@@ -298,8 +302,9 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
      */
     override fun onPause() {
         super.onPause()
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
+        }
         mediaActionUtil?.onPause(null)
         presenterRef?.onPause(null)
     }
@@ -327,8 +332,9 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
      * as appropriate.
      */
     override fun onBackPressed() {
-        if (mFragment?.onBackPress() == true)
+        if (mFragment?.onBackPress() == true) {
             return
+        }
         if (mSearchView?.isSearchOpen == true) {
             mSearchView?.closeSearch()
             return
@@ -337,7 +343,7 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
                 this,
                 R.string.text_confirm_exit,
                 R.drawable.ic_home_white_24dp,
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             isClosing = true
             return
@@ -359,8 +365,9 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
         if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
             val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
             val searchWord = matches?.firstOrNull()
-            if (!searchWord.isNullOrEmpty() && mSearchView != null)
+            if (!searchWord.isNullOrEmpty() && mSearchView != null) {
                 mSearchView?.setQuery(searchWord, false)
+            }
             return
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -383,16 +390,16 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
             val provider = ViewModelProvider(this)
             viewModelRef = provider.get(ViewModelBase::class.java) as ViewModelBase<M>
             viewModelRef?.setContext(this)
-            if (viewModelRef?.model?.hasActiveObservers() != true)
+            if (viewModelRef?.model?.hasActiveObservers() != true) {
                 viewModelRef?.model?.observe(this, this)
-            if (stateSupported)
+            }
+            if (stateSupported) {
                 viewModelRef?.state = this
+            }
         }
     }
 
-    protected fun getModel(): M? {
-        return viewModelRef?.snapshot()
-    }
+    protected fun getModel(): M? = viewModelRef?.snapshot()
 
     /**
      * Called when the model state is changed.
@@ -404,8 +411,9 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
     }
 
     override fun showError(error: String) {
-        if (error.isNotEmpty())
+        if (error.isNotEmpty()) {
             Timber.tag(TAG).w(error)
+        }
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             NotifyUtil.createAlerter(
                 this,
@@ -413,14 +421,15 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
                 error,
                 R.drawable.ic_warning_white_18dp,
                 R.color.colorStateOrange,
-                KeyUtil.DURATION_MEDIUM
+                KeyUtil.DURATION_MEDIUM,
             )
         }
     }
 
     override fun showEmpty(message: String) {
-        if (message.isNotEmpty())
+        if (message.isNotEmpty()) {
             Timber.tag(TAG).v(message)
+        }
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             NotifyUtil.createAlerter(
                 this,
@@ -428,7 +437,7 @@ abstract class ActivityBase<M, P : CommonPresenter> : AppCompatActivity(),
                 message,
                 R.drawable.ic_warning_white_18dp,
                 R.color.colorStateBlue,
-                KeyUtil.DURATION_MEDIUM
+                KeyUtil.DURATION_MEDIUM,
             )
         }
     }

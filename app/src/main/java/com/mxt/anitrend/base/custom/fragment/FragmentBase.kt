@@ -1,6 +1,5 @@
 package com.mxt.anitrend.base.custom.fragment
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
@@ -33,7 +32,8 @@ import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import kotlin.jvm.JvmName
 
-abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
+abstract class FragmentBase<M, P : CommonPresenter, VM> :
+    Fragment(),
     View.OnClickListener,
     ActionModeListener,
     SharedPreferences.OnSharedPreferenceChangeListener,
@@ -57,6 +57,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
 
     protected var snackbar: Snackbar? = null
     protected var mBottomSheet: BottomSheetBase<*>? = null
+
     @IntegerRes
     protected var mColumnSize: Int = 0
 
@@ -71,7 +72,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
 
     override fun getPresenter(): P = presenter
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.let { host ->
@@ -82,7 +82,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
     abstract override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View?
 
     override fun onDestroyView() {
@@ -96,15 +96,18 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
 
     override fun onStart() {
         super.onStart()
-        if (!EventBus.getDefault().isRegistered(this) && hasSubscriber)
+        if (!EventBus.getDefault().isRegistered(this) && hasSubscriber) {
             EventBus.getDefault().register(this)
-        if (!isMenuDisabled)
+        }
+        if (!isMenuDisabled) {
             setHasOptionsMenu(true)
+        }
     }
 
     override fun onStop() {
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
+        }
         super.onStop()
     }
 
@@ -125,9 +128,9 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (inflateMenu != 0)
+        if (inflateMenu != 0) {
             inflater.inflate(inflateMenu, menu)
-        else {
+        } else {
             inflater.inflate(R.menu.shared_menu, menu)
             menu.findItem(R.id.action_filter).isVisible = isFilterableEnabled
             menu.findItem(R.id.action_post).isVisible = isFeed
@@ -144,8 +147,9 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
 
     open fun onBackPress(): Boolean {
         val isBackAllowed = actionMode?.selectedItems?.isNotEmpty() == true
-        if (isBackAllowed)
+        if (isBackAllowed) {
             actionMode?.clearSelection()
+        }
         return isBackAllowed
     }
 
@@ -161,10 +165,12 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
             val provider = ViewModelProvider(this)
             viewModelRef = provider.get(ViewModelBase::class.java) as ViewModelBase<VM>
             viewModelRef?.setContext(requireContext())
-            if (viewModelRef?.model?.hasActiveObservers() == false)
+            if (viewModelRef?.model?.hasActiveObservers() == false) {
                 viewModelRef?.model?.observe(this, this)
-            if (stateSupported)
+            }
+            if (stateSupported) {
                 viewModelRef?.state = this
+            }
         }
     }
 
@@ -180,12 +186,11 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
         actionMode.title = getString(R.string.action_mode_selected, count)
     }
 
-    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        return if (activity != null) {
-            activity?.menuInflater?.inflate(R.menu.action_mode, menu)
-            true
-        } else
-            false
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean = if (activity != null) {
+        activity?.menuInflater?.inflate(R.menu.action_mode, menu)
+        true
+    } else {
+        false
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
@@ -197,18 +202,21 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> : Fragment(),
     }
 
     override fun showError(error: String) {
-        if (!TextUtils.isEmpty(error))
+        if (!TextUtils.isEmpty(error)) {
             Timber.tag(TAG).d(error)
+        }
     }
 
     override fun showEmpty(message: String) {
-        if (!TextUtils.isEmpty(message))
+        if (!TextUtils.isEmpty(message)) {
             Timber.tag(TAG).i(message)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
-        if (key != null)
+        if (key != null) {
             Timber.tag(TAG).i(key)
+        }
     }
 
     protected fun showBottomSheet() {

@@ -12,23 +12,18 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.StaffActivity
 
 /**
  * Created by max on 2017/12/20.
  */
-class StaffSearchFragment :
-    FragmentBaseList<StaffBase, PageContainer<StaffBase>, BasePresenter>() {
-
+class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>, BasePresenter>() {
     private var searchQuery: String? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): StaffSearchFragment {
-            return StaffSearchFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): StaffSearchFragment = StaffSearchFragment().apply {
+            arguments = args
         }
     }
 
@@ -52,39 +47,51 @@ class StaffSearchFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_search, searchQuery)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-            .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putString(KeyUtil.arg_search, searchQuery)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+            putString(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH)
+        }
         viewModel?.requestData(KeyUtil.STAFF_SEARCH_REQ, ctx)
     }
 
     override fun onChanged(content: PageContainer<StaffBase>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
-            if (!content.isEmpty)
+            }
+            if (!content.isEmpty) {
                 onPostProcessed(content.pageData)
-            else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<StaffBase>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<StaffBase>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent = Intent(host, StaffActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, data.second.id)
-                }
+                val intent =
+                    Intent(host, StaffActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, data.second.id)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<StaffBase>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<StaffBase>,
+    ) = Unit
 }

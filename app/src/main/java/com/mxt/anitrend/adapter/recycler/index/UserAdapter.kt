@@ -18,13 +18,15 @@ import java.util.Locale
 /**
  * Created by max on 2017/11/10.
  */
-class UserAdapter(context: Context) : RecyclerViewAdapter<UserBase>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<UserBase> {
-        return UserViewHolder(
-            AdapterUserBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class UserAdapter(
+    context: Context,
+) : RecyclerViewAdapter<UserBase>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<UserBase> = UserViewHolder(
+        AdapterUserBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter {
         return object : Filter() {
@@ -34,20 +36,24 @@ class UserAdapter(context: Context) : RecyclerViewAdapter<UserBase>(context) {
                     clone = data
                 }
                 val filter = constraint?.toString()?.lowercase(Locale.getDefault()).orEmpty()
-                results.values = if (filter.isBlank()) {
-                    val snapshot = ArrayList(clone ?: emptyList())
-                    clone = null
-                    snapshot
-                } else {
-                    (clone ?: emptyList()).filter { model ->
-                        model.name?.lowercase(Locale.getDefault())?.contains(filter) == true
+                results.values =
+                    if (filter.isBlank()) {
+                        val snapshot = ArrayList(clone ?: emptyList())
+                        clone = null
+                        snapshot
+                    } else {
+                        (clone ?: emptyList()).filter { model ->
+                            model.name?.lowercase(Locale.getDefault())?.contains(filter) == true
+                        }
                     }
-                }
                 return results
             }
 
             @Suppress("UNCHECKED_CAST")
-            override fun publishResults(constraint: CharSequence?, results: FilterResults) {
+            override fun publishResults(
+                constraint: CharSequence?,
+                results: FilterResults,
+            ) {
                 val filtered = results.values as? List<UserBase>
                 if (filtered != null) {
                     data = filtered.toMutableList()
@@ -57,9 +63,9 @@ class UserAdapter(context: Context) : RecyclerViewAdapter<UserBase>(context) {
         }
     }
 
-    inner class UserViewHolder(private val binding: AdapterUserBinding) :
-        RecyclerViewHolder<UserBase>(binding.root) {
-
+    inner class UserViewHolder(
+        private val binding: AdapterUserBinding,
+    ) : RecyclerViewHolder<UserBase>(binding.root) {
         init {
             bindClickListeners(R.id.container)
         }
@@ -79,8 +85,6 @@ class UserAdapter(context: Context) : RecyclerViewAdapter<UserBase>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

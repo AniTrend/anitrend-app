@@ -19,8 +19,9 @@ import timber.log.Timber
  * View model abstraction contains the generic data model
  */
 
-class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
-
+class ViewModelBase<T> :
+    ViewModel(),
+    RetroCallback<T> {
     val model = MutableLiveData<T?>()
 
     var state: ResponseCallback? = null
@@ -49,10 +50,14 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * <br></br>
      * @param request_type the type of request to execute
      */
-    fun requestData(@KeyUtil.RequestType request_type: Int, context: Context) {
-        mLoader = RequestHandler(params, this, request_type).also {
-            it.execute(context)
-        }
+    fun requestData(
+        @KeyUtil.RequestType request_type: Int,
+        context: Context,
+    ) {
+        mLoader =
+            RequestHandler(params, this, request_type).also {
+                it.execute(context)
+            }
     }
 
     /**
@@ -79,19 +84,23 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * @param call     the origination requesting object
      * @param response the response from the network
      */
-    override fun onResponse(call: Call<T>, response: Response<T>) {
+    override fun onResponse(
+        call: Call<T>,
+        response: Response<T>,
+    ) {
         val container: T? = response.body()
-        if (response.isSuccessful && container != null)
+        if (response.isSuccessful && container != null) {
             model.setValue(container)
-        else {
+        } else {
             val error = response.apiError()
             // Hacky fix that I'm ashamed of
-            if (response.code() == 400 && error.contains("Invalid token"))
+            if (response.code() == 400 && error.contains("Invalid token")) {
                 state?.showError(tokenMessage)
-            else if (response.code() == 401)
+            } else if (response.code() == 401) {
                 state?.showError(tokenMessage)
-            else
+            } else {
                 state?.showError(error)
+            }
         }
     }
 
@@ -102,7 +111,10 @@ class ViewModelBase<T>: ViewModel(), RetroCallback<T> {
      * @param call      the origination requesting object
      * @param throwable contains information about the error
      */
-    override fun onFailure(call: Call<T>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<T>,
+        throwable: Throwable,
+    ) {
         state?.showEmpty(throwable.message ?: errorMessage)
         Timber.e(throwable)
     }

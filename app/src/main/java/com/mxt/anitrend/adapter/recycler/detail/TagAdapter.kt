@@ -15,19 +15,21 @@ import com.mxt.anitrend.model.entity.anilist.MediaTag
 /**
  * Created by max on 2018/01/01.
  */
-class TagAdapter(context: Context) : RecyclerViewAdapter<MediaTag>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<MediaTag> {
-        return TagViewHolder(
-            AdapterTagBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class TagAdapter(
+    context: Context,
+) : RecyclerViewAdapter<MediaTag>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<MediaTag> = TagViewHolder(
+        AdapterTagBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class TagViewHolder(private val binding: AdapterTagBinding) :
-        RecyclerViewHolder<MediaTag>(binding.root) {
-
+    inner class TagViewHolder(
+        private val binding: AdapterTagBinding,
+    ) : RecyclerViewHolder<MediaTag>(binding.root) {
         init {
             bindClickListeners(R.id.container)
             bindLongClickListeners(R.id.container)
@@ -45,8 +47,6 @@ class TagAdapter(context: Context) : RecyclerViewAdapter<MediaTag>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

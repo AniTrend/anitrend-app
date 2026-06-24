@@ -11,14 +11,9 @@ import java.util.Locale
  * Helper class to handle series types
  */
 object MediaUtil {
+    fun <T : MediaBase> isAnimeType(series: T?): Boolean = series?.type == KeyUtil.ANIME
 
-    fun <T : MediaBase> isAnimeType(series: T?): Boolean {
-        return series?.type == KeyUtil.ANIME
-    }
-
-    fun <T : MediaBase> isMangaType(series: T?): Boolean {
-        return series?.type == KeyUtil.MANGA
-    }
+    fun <T : MediaBase> isMangaType(series: T?): Boolean = series?.type == KeyUtil.MANGA
 
     fun isIncrementLimitReached(model: MediaList): Boolean {
         val mediaBase = model.media
@@ -34,28 +29,20 @@ object MediaUtil {
         return mediaBase.status != KeyUtil.NOT_YET_RELEASED
     }
 
-    fun <T : MediaBase> getMediaTitle(series: T): String {
-        return series.title?.userPreferred.orEmpty()
-    }
+    fun <T : MediaBase> getMediaTitle(series: T): String = series.title?.userPreferred.orEmpty()
 
-    fun getMediaListTitle(mediaList: MediaList): String {
-        return getMediaTitle(mediaList.media)
-    }
+    fun getMediaListTitle(mediaList: MediaList): String = getMediaTitle(mediaList.media)
 
-    fun mapMediaTrend(mediaTrends: List<MediaTrend>?): List<MediaBase> {
-        return mediaTrends?.mapNotNull { it.media } ?: emptyList()
-    }
+    fun mapMediaTrend(mediaTrends: List<MediaTrend>?): List<MediaBase> = mediaTrends?.mapNotNull { it.media } ?: emptyList()
 
-    fun getAiringMedia(mediaLists: List<MediaList>?): List<MediaList> {
-        return mediaLists?.filter { it.media.status == KeyUtil.RELEASING } ?: emptyList()
-    }
+    fun getAiringMedia(mediaLists: List<MediaList>?): List<MediaList> = mediaLists?.filter {
+        it.media.status == KeyUtil.RELEASING
+    } ?: emptyList()
 
-    fun getFormattedCount(amount: Int): String {
-        return when {
-            amount >= 1000 ->
-                String.format(Locale.getDefault(), "%.1f K", amount.toFloat() / 1000)
-            amount < 1 -> "?"
-            else -> String.format(Locale.getDefault(), "%d", amount)
-        }
+    fun getFormattedCount(amount: Int): String = when {
+        amount >= 1000 ->
+            String.format(Locale.getDefault(), "%.1f K", amount.toFloat() / 1000)
+        amount < 1 -> "?"
+        else -> String.format(Locale.getDefault(), "%d", amount)
     }
 }

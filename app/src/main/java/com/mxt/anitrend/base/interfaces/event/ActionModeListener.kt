@@ -7,5 +7,8 @@ import android.view.ActionMode
  * Action mode trigger callback
  */
 interface ActionModeListener : ActionMode.Callback {
-    fun onSelectionChanged(actionMode: ActionMode, count: Int)
+    fun onSelectionChanged(
+        actionMode: ActionMode,
+        count: Int,
+    )
 }

@@ -13,12 +13,14 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by max on 2017/10/31.
  */
-class HeaderImageView @JvmOverloads constructor(
+class HeaderImageView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatImageView(context, attrs, defStyleAttr),
+    CustomView {
     private var defaultMargin = 0
     private var deviceDimens = 0
 
@@ -26,13 +28,16 @@ class HeaderImageView @JvmOverloads constructor(
         onInit()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = ((deviceDimens - defaultMargin) * KeyUtil.WideAspectRatio).toInt()
 
         super.onMeasure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY),
         )
     }
 
@@ -44,7 +49,9 @@ class HeaderImageView @JvmOverloads constructor(
     override fun onViewRecycled() = Unit
 
     fun setImage(url: String) {
-        Glide.with(context).load(url)
+        Glide
+            .with(context)
+            .load(url)
             .transition(DrawableTransitionOptions.withCrossFade(350))
             .apply(RequestOptions.centerCropTransform())
             .into(this)

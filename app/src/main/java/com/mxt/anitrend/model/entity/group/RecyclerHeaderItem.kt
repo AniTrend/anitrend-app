@@ -6,12 +6,13 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by max on 2018/02/18.
  */
-class RecyclerHeaderItem @JvmOverloads constructor(
+class RecyclerHeaderItem
+@JvmOverloads
+constructor(
     private var title: String,
     var size: Int = 0,
-    private var capitalize: Boolean = true
+    private var capitalize: Boolean = true,
 ) : RecyclerItem() {
-
     init {
         contentType = KeyUtil.RECYCLER_TYPE_HEADER
     }
@@ -22,11 +23,9 @@ class RecyclerHeaderItem @JvmOverloads constructor(
         title = value
     }
 
-    override fun equals(other: Any?): Boolean {
-        return if (other is RecyclerHeaderItem) {
-            CompatUtil.equals(other.title, title)
-        } else {
-            super.equals(other)
-        }
+    override fun equals(other: Any?): Boolean = if (other is RecyclerHeaderItem) {
+        CompatUtil.equals(other.title, title)
+    } else {
+        super.equals(other)
     }
 }

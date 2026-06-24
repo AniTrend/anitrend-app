@@ -1,17 +1,16 @@
 package com.mxt.anitrend.model.api.converter.response
 
+import co.anitrend.retrofit.graphql.converter.response.GraphResponseConverter
 import com.google.gson.Gson
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import co.anitrend.retrofit.graphql.converter.response.GraphResponseConverter
 import okhttp3.ResponseBody
 import timber.log.Timber
 import java.lang.reflect.Type
 
 class AniGraphResponseConverter<T>(
-        type: Type?,
-        gson: Gson
+    type: Type?,
+    gson: Gson,
 ) : GraphResponseConverter<T>(type, gson) {
-
     /**
      * Converter contains logic on how to handle responses, since GraphQL responses follow
      * the JsonAPI spec it makes sense to wrap our base query response data and errors response
@@ -28,18 +27,21 @@ class AniGraphResponseConverter<T>(
             responseBody.use {
                 jsonResponse = it.string()
             }
-            val container = gson.fromJson<AniListContainer<T?>>(
-                    jsonResponse, type
-            )
+            val container =
+                gson.fromJson<AniListContainer<T?>>(
+                    jsonResponse,
+                    type,
+                )
             if (container?.data != null) {
                 val dataContainer = container.data
                 targetResult = dataContainer.result
-            } else
+            } else {
                 container?.errors?.forEach {
                     Timber.e(it.message)
                 }
+            }
         } catch (e: Exception) {
-            Timber.e(e, jsonResponse?:"Json response is null")
+            Timber.e(e, jsonResponse ?: "Json response is null")
         }
         return targetResult
     }

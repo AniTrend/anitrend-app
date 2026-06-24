@@ -15,7 +15,6 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
@@ -26,17 +25,14 @@ import com.mxt.anitrend.view.sheet.BottomReviewReader
  * Reviews for a given series
  */
 class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
-
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): ReviewFragment {
-            return ReviewFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): ReviewFragment = ReviewFragment().apply {
+            arguments = args
         }
     }
 
@@ -59,87 +55,109 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePrese
     }
 
     override fun makeRequest() {
-        if (mediaId == 0L)
+        if (mediaId == 0L) {
             return
+        }
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_mediaId, mediaId)
-            .putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_mediaId, mediaId)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+            putBoolean(KeyUtil.arg_asHtml, false)
+        }
         viewModel?.requestData(KeyUtil.MEDIA_REVIEWS_REQ, ctx)
     }
 
     override fun onChanged(content: PageContainer<Review>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
-            if (!content.isEmpty)
+            }
+            if (!content.isEmpty) {
                 onPostProcessed(content.pageData)
-            else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<Review>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<Review>,
+    ) {
         when (target.id) {
             R.id.series_image -> {
                 val mediaBase: MediaBase = data.second.media
                 val host = activity ?: return
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, mediaBase.id)
-                    putExtra(KeyUtil.arg_mediaType, mediaBase.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, mediaBase.id)
+                        putExtra(KeyUtil.arg_mediaType, mediaBase.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
             R.id.user_avatar -> {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
-                    val intent = Intent(host, ProfileActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, data.second.user.id)
-                    }
+                    val intent =
+                        Intent(host, ProfileActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            putExtra(KeyUtil.arg_id, data.second.user.id)
+                        }
                     CompatUtil.startRevealAnim(host, target, intent)
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_warning_white_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_warning_white_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }
             R.id.review_read_more -> {
-                mBottomSheet = BottomReviewReader.Builder()
-                    .setReview(data.second)
-                    .setTitle(R.string.drawer_title_reviews)
-                    .build()
+                mBottomSheet =
+                    BottomReviewReader
+                        .Builder()
+                        .setReview(data.second)
+                        .setTitle(R.string.drawer_title_reviews)
+                        .build()
                 showBottomSheet()
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<Review>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<Review>,
+    ) {
         when (target.id) {
             R.id.series_image -> {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(data.second.media.id).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(data.second.media.id)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }

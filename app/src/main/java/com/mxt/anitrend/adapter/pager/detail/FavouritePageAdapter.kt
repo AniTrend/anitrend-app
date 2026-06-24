@@ -16,21 +16,18 @@ import com.mxt.anitrend.view.fragment.favourite.StudioFavouriteFragment
  */
 class FavouritePageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.favorites_page_titles)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> MediaFavouriteFragment.newInstance(params, KeyUtil.ANIME)
-            1 -> CharacterFavouriteFragment.newInstance(params)
-            2 -> MediaFavouriteFragment.newInstance(params, KeyUtil.MANGA)
-            3 -> StaffFavouriteFragment.newInstance(params)
-            4 -> StudioFavouriteFragment.newInstance(params)
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> MediaFavouriteFragment.newInstance(params, KeyUtil.ANIME)
+        1 -> CharacterFavouriteFragment.newInstance(params)
+        2 -> MediaFavouriteFragment.newInstance(params, KeyUtil.MANGA)
+        3 -> StaffFavouriteFragment.newInstance(params)
+        4 -> StudioFavouriteFragment.newInstance(params)
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

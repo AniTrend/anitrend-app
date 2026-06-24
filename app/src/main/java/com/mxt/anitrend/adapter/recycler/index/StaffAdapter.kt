@@ -18,19 +18,21 @@ import com.mxt.anitrend.util.CompatUtil
  * Created by max on 2017/12/20.
  * StaffAdapter
  */
-class StaffAdapter(context: Context) : RecyclerViewAdapter<StaffBase>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<StaffBase> {
-        return StaffViewHolder(
-            AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class StaffAdapter(
+    context: Context,
+) : RecyclerViewAdapter<StaffBase>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<StaffBase> = StaffViewHolder(
+        AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class StaffViewHolder(private val binding: AdapterStaffBinding) :
-        RecyclerViewHolder<StaffBase>(binding.root) {
-
+    inner class StaffViewHolder(
+        private val binding: AdapterStaffBinding,
+    ) : RecyclerViewHolder<StaffBase>(binding.root) {
         init {
             bindClickListeners(R.id.container)
         }
@@ -57,8 +59,6 @@ class StaffAdapter(context: Context) : RecyclerViewAdapter<StaffBase>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

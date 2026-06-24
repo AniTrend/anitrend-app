@@ -14,7 +14,6 @@ import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.activity.index.LoginActivity
@@ -30,16 +29,26 @@ import org.koin.core.component.inject
  * current notification count.
  */
 
-class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseConsumer.onRequestModelChange<User>, KoinComponent {
-
+class AvatarIndicatorView :
+    FrameLayout,
+    CustomView,
+    View.OnClickListener,
+    BaseConsumer.onRequestModelChange<User>,
+    KoinComponent {
     constructor(context: Context) :
-            super(context) { onInit() }
+        super(context) {
+        onInit()
+    }
 
     constructor(context: Context, attrs: AttributeSet) :
-            super(context, attrs) { onInit() }
+        super(context, attrs) {
+        onInit()
+    }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr) { onInit() }
+        super(context, attrs, defStyleAttr) {
+        onInit()
+    }
 
     private val presenter: WidgetPresenter<Any> by inject()
 
@@ -61,10 +70,12 @@ class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseC
                 if ((currentUser?.unreadNotificationCount ?: 0) > 0) {
                     binding.notificationCount.text = currentUser?.unreadNotificationCount.toString()
                     showNotificationWidget()
-                } else
+                } else {
                     hideNotificationCountWidget()
-            } else
+                }
+            } else {
                 hideNotificationCountWidget()
+            }
         }
     }
 
@@ -112,13 +123,15 @@ class AvatarIndicatorView : FrameLayout, CustomView, View.OnClickListener, BaseC
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
+        }
     }
 
     override fun onDetachedFromWindow() {
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
+        }
         super.onDetachedFromWindow()
     }
 }

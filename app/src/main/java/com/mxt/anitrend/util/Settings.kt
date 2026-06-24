@@ -20,7 +20,7 @@ class Settings(
     context: Context,
     private val resources: Resources = context.resources,
     private val preferences: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
+        PreferenceManager.getDefaultSharedPreferences(context),
 ) : SharedPreferences by preferences {
 
     /** Base Application Values  */
@@ -59,7 +59,9 @@ class Settings(
     // Returns the IDs of the startup page
     val startupPage: String?
         get() = getString(
-        resources.getString(R.string.pref_key_startup_page), "3")
+            resources.getString(R.string.pref_key_startup_page),
+            "3",
+        )
 
     var isFreshInstall: Boolean = true
         get() = getBoolean(_freshInstall, true)
@@ -71,8 +73,10 @@ class Settings(
         }
 
     var userLanguage: String? = null
-        get() = getString(resources.getString(R.string.pref_key_selected_language),
-        Locale.getDefault().language)
+        get() = getString(
+            resources.getString(R.string.pref_key_selected_language),
+            Locale.getDefault().language,
+        )
         set(value) {
             field = value
             edit {
@@ -89,10 +93,12 @@ class Settings(
             }
         }
 
-    //Returns amount of time in seconds
+    // Returns amount of time in seconds
     var syncTime: Int = 15
         get() = getString(
-                    resources.getString(R.string.pref_key_sync_frequency), "15")?.toInt() ?: 15
+            resources.getString(R.string.pref_key_sync_frequency),
+            "15",
+        )?.toInt() ?: 15
         set(value) {
             field = value
             edit {
@@ -158,7 +164,9 @@ class Settings(
     @get:KeyUtil.SortOrderType
     var sortOrder: String = KeyUtil.DESC
         get() = getString(
-                    _sortOrder, KeyUtil.DESC) ?: KeyUtil.DESC
+            _sortOrder,
+            KeyUtil.DESC,
+        ) ?: KeyUtil.DESC
         set(value) {
             field = value
             edit {
@@ -255,6 +263,7 @@ class Settings(
                 putString(_mediaSort, mediaSort)
             }
         }
+
     @set:KeyUtil.MediaTrendSort
     @get:KeyUtil.MediaTrendSort
     var mediaTrendSort: String?
@@ -314,7 +323,7 @@ class Settings(
         }
         set(selectedIndices) {
             val selected = GenreTagUtil()
-                    .convertToJson(selectedIndices)
+                .convertToJson(selectedIndices)
             edit {
                 putString(_genreFilter, selected)
             }
@@ -327,7 +336,7 @@ class Settings(
         }
         set(selectedIndices) {
             val selected = GenreTagUtil()
-                    .convertToJson(selectedIndices)
+                .convertToJson(selectedIndices)
             edit {
                 putString(_tagFilter, selected)
             }
@@ -355,10 +364,7 @@ class Settings(
         }
     }
 
-
-    fun shouldShowTipFor(@KeyUtil.TapTargetType tipType: String): Boolean {
-        return getBoolean(tipType, true)
-    }
+    fun shouldShowTipFor(@KeyUtil.TapTargetType tipType: String): Boolean = getBoolean(tipType, true)
 
     fun disableTipFor(@KeyUtil.TapTargetType tipType: String) {
         edit {

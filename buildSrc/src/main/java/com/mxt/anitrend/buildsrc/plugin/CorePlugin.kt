@@ -20,12 +20,13 @@ package com.mxt.anitrend.buildsrc.plugin
 import com.mxt.anitrend.buildsrc.components.applyAndroidConfiguration
 import com.mxt.anitrend.buildsrc.components.configureAdditionalPlugins
 import com.mxt.anitrend.buildsrc.components.configureDependencies
+import com.mxt.anitrend.buildsrc.components.configureGraphQLCodegen
 import com.mxt.anitrend.buildsrc.components.configurePlugins
+import com.mxt.anitrend.buildsrc.components.configureSpotless
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 open class CorePlugin : Plugin<Project> {
-
     /**
      * Apply this plugin to the given target object.
      *
@@ -34,7 +35,9 @@ open class CorePlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.configurePlugins()
         target.applyAndroidConfiguration()
+        target.configureGraphQLCodegen()
         target.configureDependencies()
         target.configureAdditionalPlugins()
+        target.configureSpotless()
     }
 }

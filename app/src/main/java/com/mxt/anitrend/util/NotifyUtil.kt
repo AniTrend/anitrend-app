@@ -6,14 +6,12 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
-
-import com.google.android.material.snackbar.Snackbar
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.CustomAuthToastBinding
@@ -32,35 +30,47 @@ object NotifyUtil {
     /**
      * Create an alert using the activity base
      */
-    fun createAlerter(activity: FragmentActivity, title: String, text: String, @DrawableRes icon: Int,
-                      @ColorRes backgroundColor: Int, @KeyUtil.AlerterDuration duration: Long) {
+    fun createAlerter(
+        activity: FragmentActivity,
+        title: String,
+        text: String,
+        @DrawableRes icon: Int,
+        @ColorRes backgroundColor: Int,
+        @KeyUtil.AlerterDuration duration: Long,
+    ) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .apply {
-                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-                }
-                .setProgressColorInt(activity.getCompatColor(R.color.white))
-                .setBackgroundColorRes(backgroundColor)
-                .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(if (duration == 0L) KeyUtil.DURATION_SHORT else duration)
-                .enableProgress(duration != 0L)
-                .show()
+            .apply {
+                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+            }
+            .setProgressColorInt(activity.getCompatColor(R.color.white))
+            .setBackgroundColorRes(backgroundColor)
+            .enableIconPulse(true).enableSwipeToDismiss()
+            .enableVibration(true).setDuration(if (duration == 0L) KeyUtil.DURATION_SHORT else duration)
+            .enableProgress(duration != 0L)
+            .show()
     }
 
     /**
      * Create an alert using the activity base
      */
-    fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int,
-                      @ColorRes backgroundColor: Int, @KeyUtil.AlerterDuration duration: Long) {
+    fun createAlerter(
+        activity: FragmentActivity,
+        @StringRes title: Int,
+        @StringRes text: Int,
+        @DrawableRes icon: Int,
+        @ColorRes backgroundColor: Int,
+        @KeyUtil.AlerterDuration duration: Long,
+    ) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .apply {
-                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-                }
-                .setProgressColorInt(activity.getCompatColor(R.color.white))
-                .setBackgroundColorRes(backgroundColor)
-                .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(if (duration == 0L) KeyUtil.DURATION_SHORT else duration)
-                .enableProgress(duration != 0L)
-                .show()
+            .apply {
+                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+            }
+            .setProgressColorInt(activity.getCompatColor(R.color.white))
+            .setBackgroundColorRes(backgroundColor)
+            .enableIconPulse(true).enableSwipeToDismiss()
+            .enableVibration(true).setDuration(if (duration == 0L) KeyUtil.DURATION_SHORT else duration)
+            .enableProgress(duration != 0L)
+            .show()
     }
 
     /**
@@ -68,13 +78,13 @@ object NotifyUtil {
      */
     fun createAlerter(activity: FragmentActivity, title: String, text: String, @DrawableRes icon: Int, @ColorRes backgroundColor: Int) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .apply {
-                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-                }
-                .setBackgroundColorRes(backgroundColor)
-                .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
-                .show()
+            .apply {
+                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+            }
+            .setBackgroundColorRes(backgroundColor)
+            .enableIconPulse(true).enableSwipeToDismiss()
+            .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
+            .show()
     }
 
     /**
@@ -82,13 +92,13 @@ object NotifyUtil {
      */
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int, @ColorRes backgroundColor: Int) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .apply {
-                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-                }
-                .setBackgroundColorRes(backgroundColor)
-                .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
-                .show()
+            .apply {
+                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+            }
+            .setBackgroundColorRes(backgroundColor)
+            .enableIconPulse(true).enableSwipeToDismiss()
+            .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
+            .show()
     }
 
     /**
@@ -96,14 +106,14 @@ object NotifyUtil {
      */
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int, @ColorRes backgroundColor: Int, clickListener: View.OnClickListener) {
         Alerter.create(activity).setTitle(title).setText(text)
-                .apply {
-                    activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-                }
-                .setBackgroundColorRes(backgroundColor)
-                .enableIconPulse(true).enableSwipeToDismiss()
-                .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
-                .setOnClickListener(clickListener)
-                .show()
+            .apply {
+                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
+            }
+            .setBackgroundColorRes(backgroundColor)
+            .enableIconPulse(true).enableSwipeToDismiss()
+            .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
+            .setOnClickListener(clickListener)
+            .show()
     }
 
     /**
@@ -188,12 +198,10 @@ object NotifyUtil {
         return snackbar
     }
 
-    fun createProgressDialog(context: Context, @StringRes stringRes: Int): MaterialDialog {
-        return DialogUtil.createDefaultDialog(context)
-            .content(stringRes)
-            .progress(true, 0)
-            .cancelable(false)
-            .autoDismiss(false)
-            .build()
-    }
+    fun createProgressDialog(context: Context, @StringRes stringRes: Int): MaterialDialog = DialogUtil.createDefaultDialog(context)
+        .content(stringRes)
+        .progress(true, 0)
+        .cancelable(false)
+        .autoDismiss(false)
+        .build()
 }

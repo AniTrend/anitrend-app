@@ -7,7 +7,6 @@ import android.os.Parcelable
  * Created by max on 11/12/2016.
  */
 open class StudioBase() : Parcelable {
-
     var id: Long = 0
     var name: String? = null
     var siteUrl: String? = null
@@ -24,7 +23,10 @@ open class StudioBase() : Parcelable {
         isFavourite = !isFavourite
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(id)
         dest.writeString(name)
         dest.writeString(siteUrl)
@@ -42,10 +44,11 @@ open class StudioBase() : Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<StudioBase> = object : Parcelable.Creator<StudioBase> {
-            override fun createFromParcel(parcel: Parcel): StudioBase = StudioBase(parcel)
+        val CREATOR: Parcelable.Creator<StudioBase> =
+            object : Parcelable.Creator<StudioBase> {
+                override fun createFromParcel(parcel: Parcel): StudioBase = StudioBase(parcel)
 
-            override fun newArray(size: Int): Array<StudioBase?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<StudioBase?> = arrayOfNulls(size)
+            }
     }
 }

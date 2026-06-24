@@ -7,12 +7,14 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.extension.getCompatDrawable
 
-class MentionWidget @JvmOverloads constructor(
+class MentionWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatImageView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }

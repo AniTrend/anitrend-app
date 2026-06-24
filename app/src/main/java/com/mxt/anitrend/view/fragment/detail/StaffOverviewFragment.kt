@@ -14,24 +14,20 @@ import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 
 /**
  * Created by max on 2018/01/30.
  * StaffOverviewFragment
  */
 class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>() {
-
     private var model: StaffBase? = null
     private var binding: FragmentStaffOverviewBinding? = null
     private var id: Long = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): StaffOverviewFragment {
-            return StaffOverviewFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): StaffOverviewFragment = StaffOverviewFragment().apply {
+            arguments = args
         }
     }
 
@@ -46,7 +42,7 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentStaffOverviewBinding.inflate(inflater, container, false)
         binding?.stateLayout?.showLoading()
@@ -67,24 +63,26 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
             binding.stateLayout.showError(
                 context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
                 getString(R.string.layout_empty_response),
-                getString(R.string.try_again)
+                getString(R.string.try_again),
             ) { makeRequest() }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        if (model != null)
+        if (model != null) {
             updateUI()
-        else
+        } else {
             makeRequest()
+        }
     }
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, id)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+            putBoolean(KeyUtil.arg_asHtml, false)
+        }
         viewModel?.requestData(KeyUtil.STAFF_OVERVIEW_REQ, ctx)
     }
 
@@ -94,7 +92,7 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
                 CompatUtil.imagePreview(
                     view,
                     model?.image?.large,
-                    R.string.image_preview_error_staff_image
+                    R.string.image_preview_error_staff_image,
                 )
             }
             else -> super.onClick(view)
@@ -107,8 +105,9 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
     }
 
     override fun onChanged(model: StaffBase?) {
-        if (model != null)
+        if (model != null) {
             this.model = model
+        }
         updateUI()
     }
 }

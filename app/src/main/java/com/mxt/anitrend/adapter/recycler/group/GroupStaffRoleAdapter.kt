@@ -22,33 +22,30 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by max on 2018/01/30.
  * Media staff roles which includes the staff or actor character involvement
  */
-class GroupStaffRoleAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(context) {
-
+class GroupStaffRoleAdapter(
+    context: Context,
+) : RecyclerViewAdapter<RecyclerItem>(context) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        @KeyUtil.RecyclerViewType viewType: Int
-    ): RecyclerViewHolder<RecyclerItem> {
-        return if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-            GroupTitleViewHolder(
-                AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        } else {
-            StaffViewHolder(
-                AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        }
+        @KeyUtil.RecyclerViewType viewType: Int,
+    ): RecyclerViewHolder<RecyclerItem> = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
+        GroupTitleViewHolder(
+            AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
+    } else {
+        StaffViewHolder(
+            AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
     }
 
     @KeyUtil.RecyclerViewType
-    override fun getItemViewType(position: Int): Int {
-        return data[position].contentType
-    }
+    override fun getItemViewType(position: Int): Int = data[position].contentType
 
     override fun getFilter(): Filter? = null
 
-    inner class StaffViewHolder(private val binding: AdapterStaffBinding) :
-        RecyclerViewHolder<RecyclerItem>(binding.root) {
-
+    inner class StaffViewHolder(
+        private val binding: AdapterStaffBinding,
+    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
         init {
             bindClickListeners(R.id.container)
         }
@@ -76,8 +73,6 @@ class GroupStaffRoleAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

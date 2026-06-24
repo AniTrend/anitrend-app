@@ -16,12 +16,14 @@ import com.mxt.anitrend.extension.getCompatColorAttr
  * Created by max on 2017/07/01.
  * Custom progressbar
  */
-class CustomProgress @JvmOverloads constructor(
+class CustomProgress
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ProgressBar(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : ProgressBar(context, attrs, defStyleAttr),
+    CustomView {
     private var colorFilter: PorterDuffColorFilter? = null
 
     init {
@@ -33,24 +35,26 @@ class CustomProgress @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        colorFilter = PorterDuffColorFilter(
-            context.getCompatColorAttr(R.attr.colorAccent),
-            PorterDuff.Mode.SRC_IN
-        )
+        colorFilter =
+            PorterDuffColorFilter(
+                context.getCompatColorAttr(R.attr.colorAccent),
+                PorterDuff.Mode.SRC_IN,
+            )
         applyColorFilter(progressDrawable)
         applyColorFilter(indeterminateDrawable)
     }
 
     private fun applyColorFilter(drawable: Drawable?) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && drawable != null)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && drawable != null) {
             drawable.colorFilter = colorFilter
+        }
     }
 
     override fun setProgressDrawable(drawable: Drawable) {

@@ -14,19 +14,21 @@ import com.mxt.anitrend.model.entity.base.StudioBase
 /**
  * Created by max on 2017/12/20.
  */
-class StudioAdapter(context: Context) : RecyclerViewAdapter<StudioBase>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<StudioBase> {
-        return StudioViewHolder(
-            AdapterStudioBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class StudioAdapter(
+    context: Context,
+) : RecyclerViewAdapter<StudioBase>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<StudioBase> = StudioViewHolder(
+        AdapterStudioBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class StudioViewHolder(private val binding: AdapterStudioBinding) :
-        RecyclerViewHolder<StudioBase>(binding.root) {
-
+    inner class StudioViewHolder(
+        private val binding: AdapterStudioBinding,
+    ) : RecyclerViewHolder<StudioBase>(binding.root) {
         init {
             bindClickListeners(R.id.container)
         }
@@ -42,8 +44,6 @@ class StudioAdapter(context: Context) : RecyclerViewAdapter<StudioBase>(context)
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

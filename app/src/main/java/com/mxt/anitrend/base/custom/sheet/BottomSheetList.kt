@@ -21,7 +21,6 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
     androidx.lifecycle.Observer<List<T>?>,
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
-
     protected var stateLayout: ProgressLayout? = null
     protected var recyclerView: StatefulRecyclerView? = null
 
@@ -32,10 +31,11 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
     protected var isPager: Boolean = false
     protected var isLimit: Boolean = false
 
-    private val stateLayoutOnClick = View.OnClickListener {
-        stateLayout?.showLoading()
-        onRefresh()
-    }
+    private val stateLayoutOnClick =
+        View.OnClickListener {
+            stateLayout?.showLoading()
+            onRefresh()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +45,11 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
     override fun onStart() {
         super.onStart()
         stateLayout?.showLoading()
-        if (mAdapter.itemCount < 1)
+        if (mAdapter.itemCount < 1) {
             onRefresh()
-        else
+        } else {
             updateUI()
+        }
     }
 
     protected fun addScrollLoadTrigger() {
@@ -62,8 +63,9 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
     }
 
     protected fun removeScrollLoadTrigger() {
-        if (isPager)
+        if (isPager) {
             recyclerView?.clearOnScrollListeners()
+        }
     }
 
     protected fun bindListViews(rootView: View) {
@@ -91,13 +93,15 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
             recycler.adapter = mAdapter
         }
         if (mAdapter.itemCount < 1) {
-            val drawable = context?.getCompatDrawable(
-                R.drawable.ic_new_releases_white_24dp,
-                R.color.colorStateBlue
-            ) ?: return
+            val drawable =
+                context?.getCompatDrawable(
+                    R.drawable.ic_new_releases_white_24dp,
+                    R.color.colorStateBlue,
+                ) ?: return
             stateLayout?.showEmpty(drawable, getString(R.string.layout_empty_response))
-        } else
+        } else {
             stateLayout?.showContent()
+        }
     }
 
     protected abstract fun updateUI()
@@ -107,21 +111,25 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
         if (viewModel == null) {
             viewModel = ViewModelProvider(this).get(ViewModelBase::class.java) as ViewModelBase<List<T>>
             viewModel?.setContext(requireContext())
-            if (viewModel?.model?.hasActiveObservers() == false)
+            if (viewModel?.model?.hasActiveObservers() == false) {
                 viewModel?.model?.observe(this, this)
-            if (stateSupported)
+            }
+            if (stateSupported) {
                 viewModel?.state = this
+            }
         }
     }
 
     fun setLimitReached() {
-        if (presenter.currentPage != 0)
+        if (presenter.currentPage != 0) {
             isLimit = true
+        }
     }
 
     override fun onRefresh() {
-        if (isPager)
+        if (isPager) {
             presenter.onRefreshPage()
+        }
         makeRequest()
     }
 

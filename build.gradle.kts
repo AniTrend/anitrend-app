@@ -40,7 +40,12 @@ fun Configuration.handleConflicts(project: Project): Unit = with(project) {
                     "kotlin-stdlib",
                     "kotlin-stdlib-common",
                     "kotlin-stdlib-jdk8",
-                    "kotlin-stdlib-jdk7" -> useVersion(libs.versions.jetbrains.kotlin.get())
+                    "kotlin-stdlib-jdk7",
+                    ->
+                        useVersion(
+                            libs.versions.jetbrains.kotlin
+                                .get(),
+                        )
                 }
             }
         }

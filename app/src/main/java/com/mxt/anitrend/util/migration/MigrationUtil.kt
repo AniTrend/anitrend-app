@@ -11,26 +11,28 @@ import timber.log.Timber
 
 class MigrationUtil private constructor(
     private val context: Context,
-    private val migrations: List<Migration>
-) : IMigrationUtil, KoinComponent {
-
+    private val migrations: List<Migration>,
+) : IMigrationUtil,
+    KoinComponent {
     private val settings by inject<Settings>()
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun getMigrationStrategies(): List<Migration> {
         val currentVersion = settings.versionCode
-        val minMigrations = migrations.filter { migration ->
-            IntRange(
+        val minMigrations =
+            migrations.filter { migration ->
+                IntRange(
                     migration.startVersion,
-                    migration.endVersion
-            ).contains(currentVersion)
-        }
-        val maxMigrations = migrations.filter { migration ->
-            IntRange(
+                    migration.endVersion,
+                ).contains(currentVersion)
+            }
+        val maxMigrations =
+            migrations.filter { migration ->
+                IntRange(
                     migration.startVersion,
-                    migration.endVersion
-            ).contains(BuildConfig.versionCode)
-        }
+                    migration.endVersion,
+                ).contains(BuildConfig.versionCode)
+            }
 
         return minMigrations + maxMigrations
     }
@@ -40,9 +42,11 @@ class MigrationUtil private constructor(
      */
     override fun applyMigration(): Boolean {
         if (settings.isUpdated) {
-            Timber.d("Application has been updated: from ${settings.versionCode} - ${BuildConfig.versionCode}, checking for migration scripts")
-            val strategies= getMigrationStrategies()
-            if (strategies.isNotEmpty())
+            Timber.d(
+                "Application has been updated: from ${settings.versionCode} - ${BuildConfig.versionCode}, checking for migration scripts",
+            )
+            val strategies = getMigrationStrategies()
+            if (strategies.isNotEmpty()) {
                 return try {
                     strategies.forEach { strategy ->
                         strategy.applyMigration(context, settings)
@@ -52,6 +56,7 @@ class MigrationUtil private constructor(
                     Timber.e(ex)
                     false
                 }
+            }
         }
         Timber.d("No migrations to run for this version of the application")
         return true
@@ -61,13 +66,12 @@ class MigrationUtil private constructor(
         private val migrations: MutableList<Migration> = ArrayList()
 
         fun addMigration(migration: Migration): Builder {
-            if (!migrations.contains(migration))
+            if (!migrations.contains(migration)) {
                 migrations.add(migration)
+            }
             return this
         }
 
-        fun build(context: Context): MigrationUtil {
-            return MigrationUtil(context, migrations)
-        }
+        fun build(context: Context): MigrationUtil = MigrationUtil(context, migrations)
     }
 }

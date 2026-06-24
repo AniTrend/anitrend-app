@@ -4,7 +4,6 @@ package com.mxt.anitrend.util
 import android.content.Context
 import androidx.work.*
 import com.mxt.anitrend.worker.*
-
 import java.util.concurrent.TimeUnit
 
 /**
@@ -15,17 +14,16 @@ import java.util.concurrent.TimeUnit
  */
 class JobSchedulerUtil(private val settings: Settings) {
 
-    private fun getConstraints() =
-        Constraints.Builder()
-            .setRequiresCharging(false)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
+    private fun getConstraints() = Constraints.Builder()
+        .setRequiresCharging(false)
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
 
     fun scheduleTagJob(context: Context) {
         val periodicWorkRequest = PeriodicWorkRequest.Builder(
             TagSyncWorker::class.java,
             settings.syncTime.toLong() * 8,
-            TimeUnit.MINUTES
+            TimeUnit.MINUTES,
         ).addTag(KeyUtil.WorkTagSyncId)
             .setConstraints(getConstraints())
             .build()
@@ -34,7 +32,7 @@ class JobSchedulerUtil(private val settings: Settings) {
             .enqueueUniquePeriodicWork(
                 KeyUtil.WorkTagSyncId,
                 ExistingPeriodicWorkPolicy.KEEP,
-                periodicWorkRequest
+                periodicWorkRequest,
             )
     }
 
@@ -42,7 +40,7 @@ class JobSchedulerUtil(private val settings: Settings) {
         val periodicWorkRequest = PeriodicWorkRequest.Builder(
             GenreSyncWorker::class.java,
             settings.syncTime.toLong() * 8,
-            TimeUnit.MINUTES
+            TimeUnit.MINUTES,
         ).addTag(KeyUtil.WorkGenreSyncId)
             .setConstraints(getConstraints())
             .build()
@@ -51,7 +49,7 @@ class JobSchedulerUtil(private val settings: Settings) {
             .enqueueUniquePeriodicWork(
                 KeyUtil.WorkGenreSyncId,
                 ExistingPeriodicWorkPolicy.KEEP,
-                periodicWorkRequest
+                periodicWorkRequest,
             )
     }
 
@@ -63,34 +61,34 @@ class JobSchedulerUtil(private val settings: Settings) {
             val periodicWorkRequest = PeriodicWorkRequest.Builder(
                 NotificationWorker::class.java,
                 settings.syncTime.toLong(),
-                TimeUnit.MINUTES
+                TimeUnit.MINUTES,
             ).setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
                 5,
-                TimeUnit.MINUTES
+                TimeUnit.MINUTES,
             )
                 .addTag(KeyUtil.WorkNotificationTag)
                 .setConstraints(getConstraints())
                 .build()
 
             WorkManager.getInstance(context)
-                    .enqueueUniquePeriodicWork(
-                        KeyUtil.WorkNotificationId,
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        periodicWorkRequest
-                    )
+                .enqueueUniquePeriodicWork(
+                    KeyUtil.WorkNotificationId,
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    periodicWorkRequest,
+                )
         }
     }
 
     fun scheduleClearNotificationJob(context: Context) {
         if (settings.isAuthenticated) {
             val workRequest = OneTimeWorkRequest.Builder(
-                ClearNotificationWorker::class.java
+                ClearNotificationWorker::class.java,
             )
                 .setBackoffCriteria(
                     BackoffPolicy.EXPONENTIAL,
                     5,
-                    TimeUnit.MINUTES
+                    TimeUnit.MINUTES,
                 )
                 .addTag(KeyUtil.WorkClearNotificationTag)
                 .setConstraints(getConstraints())
@@ -100,19 +98,19 @@ class JobSchedulerUtil(private val settings: Settings) {
                 .enqueueUniqueWork(
                     KeyUtil.WorkClearNotificationId,
                     ExistingWorkPolicy.REPLACE,
-                    workRequest
+                    workRequest,
                 )
         }
     }
 
     fun startUpdateJob(context: Context, silent: Boolean) {
         val workRequest = OneTimeWorkRequest.Builder(
-            UpdateWorker::class.java
+            UpdateWorker::class.java,
         )
             .setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
                 5,
-                TimeUnit.MINUTES
+                TimeUnit.MINUTES,
             )
             .setInputData(workDataOf(KeyUtil.WorkUpdaterSilentId to silent))
             .addTag(KeyUtil.WorkUpdaterId)
@@ -123,7 +121,7 @@ class JobSchedulerUtil(private val settings: Settings) {
             .enqueueUniqueWork(
                 KeyUtil.WorkUpdaterId,
                 ExistingWorkPolicy.KEEP,
-                workRequest
+                workRequest,
             )
     }
 
@@ -133,7 +131,7 @@ class JobSchedulerUtil(private val settings: Settings) {
     fun cancelNotificationJob(context: Context) {
         WorkManager.getInstance(context)
             .cancelUniqueWork(
-                KeyUtil.WorkNotificationId
+                KeyUtil.WorkNotificationId,
             )
     }
 
@@ -143,7 +141,7 @@ class JobSchedulerUtil(private val settings: Settings) {
     fun cancelTagJob(context: Context) {
         WorkManager.getInstance(context)
             .cancelUniqueWork(
-                KeyUtil.WorkTagSyncId
+                KeyUtil.WorkTagSyncId,
             )
     }
 
@@ -153,7 +151,7 @@ class JobSchedulerUtil(private val settings: Settings) {
     fun cancelGenreJob(context: Context) {
         WorkManager.getInstance(context)
             .cancelUniqueWork(
-                KeyUtil.WorkGenreSyncId
+                KeyUtil.WorkGenreSyncId,
             )
     }
 }

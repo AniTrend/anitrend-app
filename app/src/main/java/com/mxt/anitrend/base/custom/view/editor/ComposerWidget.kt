@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.view.editor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
@@ -26,7 +27,6 @@ import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import io.wax911.emojify.EmojiManager
@@ -45,12 +45,17 @@ import java.util.*
  * Composer widget for multiple feed types
  */
 
-class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallback<ResponseBody> {
+class ComposerWidget :
+    FrameLayout,
+    CustomView,
+    View.OnClickListener,
+    RetroCallback<ResponseBody> {
 
     private val binding by lazy {
         WidgetComposerBinding.inflate(
-                getLayoutInflater(),
-                this, true
+            getLayoutInflater(),
+            this,
+            true,
         )
     }
 
@@ -71,25 +76,35 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
         get() = binding.comment
 
     constructor(context: Context) :
-            super(context) { onInit() }
+        super(context) {
+        onInit()
+    }
     constructor(context: Context, attrs: AttributeSet?) :
-            super(context, attrs) { onInit() }
+        super(context, attrs) {
+        onInit()
+    }
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr) { onInit() }
+        super(context, attrs, defStyleAttr) {
+        onInit()
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
-            super(context, attrs, defStyleAttr, defStyleRes) { onInit() }
-
+        super(context, attrs, defStyleAttr, defStyleRes) {
+        onInit()
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
+        }
     }
 
     override fun onDetachedFromWindow() {
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
+        }
         super.onDetachedFromWindow()
     }
 
@@ -106,8 +121,9 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
     }
 
     fun setModel(feedList: FeedList, @KeyUtil.RequestType requestType: Int) {
@@ -155,57 +171,71 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
         if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
             binding.widgetFlipper.showNext()
 
-            val queryContainer = GraphUtil.getDefaultQuery(false)
+            val params = presenter.params
+            params.clearFeedMutationParams()
 
             when (requestType) {
                 KeyUtil.MUT_SAVE_TEXT_FEED -> {
                     if (feedList != null) {
                         feedList?.text = binding.comment.formattedText
-                        queryContainer.putVariable(KeyUtil.arg_id, feedList?.id)
+                        params.putLong(KeyUtil.arg_id, feedList?.id ?: 0)
                     }
-                    queryContainer.putVariable(KeyUtil.arg_text, binding.comment.formattedText)
+                    params.putString(KeyUtil.arg_text, binding.comment.formattedText)
                 }
                 KeyUtil.MUT_SAVE_FEED_REPLY -> {
                     if (feedReply != null) {
                         feedReply?.text = binding.comment.formattedText
-                        queryContainer.putVariable(KeyUtil.arg_id, feedReply?.id)
+                        params.putLong(KeyUtil.arg_id, feedReply?.id ?: 0)
                     }
-                    queryContainer.putVariable(KeyUtil.arg_activityId, feedList?.id)
-                            .putVariable(KeyUtil.arg_text, binding.comment.formattedText)
+                    params.putLong(KeyUtil.arg_activityId, feedList?.id ?: 0)
+                    params.putString(KeyUtil.arg_text, binding.comment.formattedText)
                 }
                 KeyUtil.MUT_SAVE_MESSAGE_FEED -> {
                     if (feedList != null) {
                         feedList?.text = binding.comment.formattedText
-                        queryContainer.putVariable(KeyUtil.arg_id, feedList?.id)
+                        params.putLong(KeyUtil.arg_id, feedList?.id ?: 0)
                     }
-                    queryContainer.putVariable(KeyUtil.arg_recipientId, recipient?.id)
-                    queryContainer.putVariable(KeyUtil.arg_message, binding.comment.formattedText)
+                    params.putLong(KeyUtil.arg_recipientId, recipient?.id ?: 0)
+                    params.putString(KeyUtil.arg_message, binding.comment.formattedText)
                 }
             }
 
-            presenter.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+            params.putBoolean(KeyUtil.arg_asHtml, false)
             presenter.requestData(requestType, context, this)
-        } else
+        } else {
             NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun Bundle.clearFeedMutationParams() {
+        remove(KeyUtil.arg_id)
+        remove(KeyUtil.arg_activityId)
+        remove(KeyUtil.arg_text)
+        remove(KeyUtil.arg_message)
+        remove(KeyUtil.arg_recipientId)
+        remove(KeyUtil.arg_asHtml)
     }
 
     override fun onClick(view: View) {
         if (itemClickListener != null) {
             itemClickListener?.onItemClick(view, IntPair(0, view as Any))
             when (view.id) {
-                R.id.widget_flipper -> if (!binding.comment.isEmpty)
+                R.id.widget_flipper -> if (!binding.comment.isEmpty) {
                     startRequestData()
-                else
+                } else {
                     NotifyUtil.makeText(context, R.string.warning_empty_input, Toast.LENGTH_SHORT).show()
+                }
             }
-        } else
+        } else {
             NotifyUtil.makeText(context, R.string.dialog_action_null, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun editBoxHasFocus(releaseFocus: Boolean): Boolean {
         val hasFocus = binding.comment.hasFocus()
-        if (hasFocus && releaseFocus)
+        if (hasFocus && releaseFocus) {
             binding.comment.clearFocus()
+        }
         return hasFocus
     }
 
@@ -225,21 +255,25 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
             if (response.isSuccessful) {
                 binding.comment.text?.clear()
                 when (requestType) {
-                    KeyUtil.MUT_SAVE_TEXT_FEED -> if (feedList != null)
+                    KeyUtil.MUT_SAVE_TEXT_FEED -> if (feedList != null) {
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
-                    else
+                    } else {
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
-                    KeyUtil.MUT_SAVE_FEED_REPLY -> if (feedReply != null)
+                    }
+                    KeyUtil.MUT_SAVE_FEED_REPLY -> if (feedReply != null) {
                         presenter.notifyAllListeners(BaseConsumer<FeedReply>(requestType, feedReply), false)
-                    else
+                    } else {
                         presenter.notifyAllListeners(BaseConsumer<FeedReply>(requestType), false)
-                    KeyUtil.MUT_SAVE_MESSAGE_FEED -> if (feedList != null)
+                    }
+                    KeyUtil.MUT_SAVE_MESSAGE_FEED -> if (feedList != null) {
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType, feedList), false)
-                    else
+                    } else {
                         presenter.notifyAllListeners(BaseConsumer<FeedList>(requestType), false)
+                    }
                 }
-            } else
+            } else {
                 NotifyUtil.makeText(context, response.apiError(), Toast.LENGTH_SHORT).show()
+            }
             presenter.onDestroy()
         }
     }
@@ -256,12 +290,14 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
             resetFlipperState()
             Timber.e(throwable)
             throwable.localizedMessage?.let {
-                NotifyUtil.makeText(context,
-                    it, Toast.LENGTH_SHORT).show()
+                NotifyUtil.makeText(
+                    context,
+                    it,
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onGiphyClicked(pair: IntPair<Giphy>) {
@@ -286,15 +322,17 @@ class ComposerWidget : FrameLayout, CustomView, View.OnClickListener, RetroCallb
             else -> null
         }
         if (binding.comment.text.isNullOrBlank()) {
-            if (!emojified.isNullOrBlank())
+            if (!emojified.isNullOrBlank()) {
                 binding.comment.setText(emojified)
-            else
+            } else {
                 binding.comment.setText(textValue)
+            }
         } else {
-            if (!emojified.isNullOrBlank())
+            if (!emojified.isNullOrBlank()) {
                 appendText(emojified)
-            else
+            } else {
                 appendText(textValue)
+            }
         }
     }
 

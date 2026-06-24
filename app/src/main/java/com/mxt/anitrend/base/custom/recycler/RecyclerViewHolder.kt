@@ -11,11 +11,11 @@ import com.mxt.anitrend.util.ActionModeUtil
  * Created by max on 2017/06/09.
  * Recycler view holder implementation
  */
-abstract class RecyclerViewHolder<T>(view: View) :
-    RecyclerView.ViewHolder(view),
+abstract class RecyclerViewHolder<T>(
+    view: View,
+) : RecyclerView.ViewHolder(view),
     View.OnClickListener,
     View.OnLongClickListener {
-
     private var callback: ActionModeUtil<T>? = null
 
     /**
@@ -41,8 +41,7 @@ abstract class RecyclerViewHolder<T>(view: View) :
      */
     abstract override fun onClick(v: View)
 
-    fun getContext(): Context =
-        itemView.context.applicationContext
+    fun getContext(): Context = itemView.context.applicationContext
 
     /**
      * Applying selection styling on the desired item
@@ -67,14 +66,20 @@ abstract class RecyclerViewHolder<T>(view: View) :
      * @param v the view that has been clicked
      * @see View.OnClickListener
      */
-    protected fun performClick(clickListener: ItemClickListener<T>?, data: List<T>, v: View) {
-        if (clickListener == null)
+    protected fun performClick(
+        clickListener: ItemClickListener<T>?,
+        data: List<T>,
+        v: View,
+    ) {
+        if (clickListener == null) {
             return
+        }
         val pair = isValidIndexPair()
         if (pair.second) {
             val model = data[pair.first]
-            if (isClickable(model))
+            if (isClickable(model)) {
                 clickListener.onItemClick(v, IntPair(pair.first, model))
+            }
         }
     }
 
@@ -84,9 +89,14 @@ abstract class RecyclerViewHolder<T>(view: View) :
      * @param v The view that was clicked and held.
      * @return true if the callback consumed the long click, false otherwise.
      */
-    protected fun performLongClick(clickListener: ItemClickListener<T>?, data: List<T>, v: View): Boolean {
-        if (clickListener == null)
+    protected fun performLongClick(
+        clickListener: ItemClickListener<T>?,
+        data: List<T>,
+        v: View,
+    ): Boolean {
+        if (clickListener == null) {
             return false
+        }
         val pair = isValidIndexPair()
         if (pair.second) {
             val model = data[pair.first]
@@ -98,11 +108,9 @@ abstract class RecyclerViewHolder<T>(view: View) :
         return false
     }
 
-    protected fun isClickable(clicked: T): Boolean =
-        callback?.onItemClick(this, clicked) != true
+    protected fun isClickable(clicked: T): Boolean = callback?.onItemClick(this, clicked) != true
 
-    protected fun isLongClickable(clicked: T): Boolean =
-        callback?.onItemLongClick(this, clicked) != true
+    protected fun isLongClickable(clicked: T): Boolean = callback?.onItemLongClick(this, clicked) != true
 
     protected fun bindClickListeners(vararg viewIds: Int) {
         for (viewId in viewIds) {

@@ -14,8 +14,6 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
 import com.mxt.anitrend.util.graphql.apiError
-import com.mxt.anitrend.util.graphql.GraphUtil
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -24,32 +22,42 @@ import timber.log.Timber
  * Created by max on 2017/11/03.
  * WatchListFragment for anime types
  */
-class WatchListFragment : FragmentChannelBase(), RetroCallback<ConnectionContainer<List<ExternalLink>>> {
-
+class WatchListFragment :
+    FragmentChannelBase(),
+    RetroCallback<ConnectionContainer<List<ExternalLink>>> {
     private var mediaId: Long = 0
+
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(params: Bundle, popular: Boolean): FragmentChannelBase {
-            val args = Bundle(params).apply {
-                putBoolean(KeyUtil.arg_popular, popular)
-            }
+        fun newInstance(
+            params: Bundle,
+            popular: Boolean,
+        ): FragmentChannelBase {
+            val args =
+                Bundle(params).apply {
+                    putBoolean(KeyUtil.arg_popular, popular)
+                }
             return WatchListFragment().apply {
                 arguments = args
             }
         }
 
         @JvmStatic
-        fun newInstance(externalLinks: List<ExternalLink>, popular: Boolean): FragmentChannelBase {
-            val args = Bundle().apply {
-                putParcelableArrayList(
-                    KeyUtil.arg_list_model,
-                    ArrayList<Parcelable>(externalLinks)
-                )
-                putBoolean(KeyUtil.arg_popular, popular)
-            }
+        fun newInstance(
+            externalLinks: List<ExternalLink>,
+            popular: Boolean,
+        ): FragmentChannelBase {
+            val args =
+                Bundle().apply {
+                    putParcelableArrayList(
+                        KeyUtil.arg_list_model,
+                        ArrayList<Parcelable>(externalLinks),
+                    )
+                    putBoolean(KeyUtil.arg_popular, popular)
+                }
             return WatchListFragment().apply {
                 arguments = args
             }
@@ -82,25 +90,33 @@ class WatchListFragment : FragmentChannelBase(), RetroCallback<ConnectionContain
             bundle.putBoolean(KeyUtil.arg_feed, feed)
             viewModel?.requestData(getRequestMode(feed), context)
         } else {
-            val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_id, mediaId)
-                .putVariable(KeyUtil.arg_type, mediaType)
-            presenter.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+            presenter.params.apply {
+                putLong(KeyUtil.arg_id, mediaId)
+                putString(KeyUtil.arg_mediaType, mediaType)
+                if (presenter.settings.displayAdultContent) {
+                    remove(KeyUtil.arg_isAdult)
+                } else {
+                    putBoolean(KeyUtil.arg_isAdult, false)
+                }
+            }
             presenter.requestData(KeyUtil.MEDIA_EPISODES_REQ, context, this)
         }
     }
 
     @KeyUtil.RequestType
-    private fun getRequestMode(feed: Boolean): Int {
-        return if (feed)
-            if (isPopular) KeyUtil.EPISODE_POPULAR_REQ else KeyUtil.EPISODE_LATEST_REQ
-        else
-            KeyUtil.EPISODE_FEED_REQ
+    private fun getRequestMode(feed: Boolean): Int = if (feed) {
+        if (isPopular) {
+            KeyUtil.EPISODE_POPULAR_REQ
+        } else {
+            KeyUtil.EPISODE_LATEST_REQ
+        }
+    } else {
+        KeyUtil.EPISODE_FEED_REQ
     }
 
     override fun onResponse(
         call: Call<ConnectionContainer<List<ExternalLink>>>,
-        response: Response<ConnectionContainer<List<ExternalLink>>>
+        response: Response<ConnectionContainer<List<ExternalLink>>>,
     ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             val connectionContainer = response.body()
@@ -108,12 +124,14 @@ class WatchListFragment : FragmentChannelBase(), RetroCallback<ConnectionContain
                 if (!connectionContainer.isEmpty) {
                     externalLinks = connectionContainer.connection
                     val links = externalLinks
-                    if (mAdapter?.itemCount ?: 0 < 1 && links != null)
+                    if (mAdapter?.itemCount ?: 0 < 1 && links != null) {
                         targetLink = EpisodeUtil.episodeSupport(links)
-                    if (targetLink == null)
+                    }
+                    if (targetLink == null) {
                         showEmpty(getString(R.string.waring_missing_episode_links))
-                    else
+                    } else {
                         makeRequest()
+                    }
                 }
             } else {
                 Timber.w(response.apiError())
@@ -123,7 +141,7 @@ class WatchListFragment : FragmentChannelBase(), RetroCallback<ConnectionContain
 
     override fun onFailure(
         call: Call<ConnectionContainer<List<ExternalLink>>>,
-        throwable: Throwable
+        throwable: Throwable,
     ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             Timber.w(throwable)

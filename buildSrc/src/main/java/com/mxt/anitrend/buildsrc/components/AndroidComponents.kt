@@ -18,19 +18,19 @@
 
 package com.mxt.anitrend.buildsrc.components
 
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.android.build.api.dsl.ApplicationBuildType
+import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.mxt.anitrend.buildsrc.extensions.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.logging.Logger
 import org.gradle.api.Project
+import org.gradle.api.logging.Logger
 import org.gradle.kotlin.dsl.exclude
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.util.*
 
 private fun Properties.applyToBuildConfigForBuild(buildType: ApplicationBuildType) {
@@ -57,8 +57,9 @@ private fun Project.createSigningConfiguration(extension: BaseExtension) {
                 }
             }
         }
+    } else {
+        logger.lifecycle("${keyStoreFile.absolutePath} could not be found, release may fail")
     }
-    else logger.lifecycle("${keyStoreFile.absolutePath} could not be found, release may fail")
 }
 
 private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(project: Project) {
@@ -70,22 +71,28 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
         buildType.buildConfigField("int", "versionCode", project.props[PropertyTypes.CODE])
 
         val secretsFile = project.file(".config/secrets.properties")
-        if (secretsFile.exists())
+        if (secretsFile.exists()) {
             secretsFile.inputStream().use { fis ->
                 Properties().run {
-                    load(fis); applyToBuildConfigForBuild(buildType)
+                    load(fis)
+                    applyToBuildConfigForBuild(buildType)
                 }
             }
-        else project.logger.lifecycle("${secretsFile.absolutePath} could not be found, build may fail")
+        } else {
+            project.logger.lifecycle("${secretsFile.absolutePath} could not be found, build may fail")
+        }
 
         val configurationFile = project.file(".config/configuration.properties")
-        if (configurationFile.exists())
+        if (configurationFile.exists()) {
             configurationFile.inputStream().use { fis ->
                 Properties().run {
-                    load(fis); applyToBuildConfigForBuild(buildType)
+                    load(fis)
+                    applyToBuildConfigForBuild(buildType)
                 }
             }
-        else project.logger.lifecycle("${configurationFile.absolutePath} could not be found, build may fail")
+        } else {
+            project.logger.lifecycle("${configurationFile.absolutePath} could not be found, build may fail")
+        }
     }
 }
 
@@ -121,9 +128,11 @@ private fun BaseAppModuleExtension.configureBuildFlavours(logger: Logger) {
     applicationVariants.all {
         outputs.map { it as BaseVariantOutputImpl }.forEach { output ->
             val original = output.outputFileName
-            val destination = if (output.name != "github-release")
+            val destination = if (output.name != "github-release") {
                 original.substring(4)
-            else original
+            } else {
+                original
+            }
             logger.lifecycle("Configuring build output build -> name: ${output.name} | output: $destination")
             output.outputFileName = destination
         }
@@ -143,7 +152,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             if (project.file(".config/keystore.properties").exists()) {
                 project.logger.lifecycle("Applying signing configuration for to build type: $name")
@@ -178,7 +187,7 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
     sourceSets {
         map { androidSourceSet ->
             androidSourceSet.java.srcDir(
-                "src/${androidSourceSet.name}/kotlin"
+                "src/${androidSourceSet.name}/kotlin",
             )
         }
     }
@@ -223,12 +232,11 @@ internal fun Project.applyAndroidConfiguration() {
         }
     }
 
-
     tasks.withType(KotlinCompile::class.java) {
         val compilerArgumentOptions = mutableListOf(
             "-opt-in=kotlin.ExperimentalStdlibApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview"
+            "-opt-in=kotlinx.coroutines.FlowPreview",
         )
 
         compilerOptions {

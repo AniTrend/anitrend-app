@@ -9,5 +9,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class ScoreDistribution(
     val score: Int,
-    val amount: Int
+    val amount: Int,
 ) : Parcelable

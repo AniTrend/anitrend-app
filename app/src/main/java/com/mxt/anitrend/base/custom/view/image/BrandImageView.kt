@@ -28,12 +28,14 @@ import com.mxt.anitrend.util.CompatUtil
  * always 4:3 aspect ratio images
  * borrowed functionality from plaid BadgedFourThreeImage
  */
-class BrandImageView @JvmOverloads constructor(
+class BrandImageView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatImageView(context, attrs, defStyleAttr),
+    CustomView {
     private var badge: Drawable = GifBadge(context)
     private var badgeBoundsSet = true
     private var badgeGravity = Gravity.END or Gravity.TOP
@@ -54,11 +56,14 @@ class BrandImageView @JvmOverloads constructor(
         badgePadding = resources.getDimensionPixelSize(R.dimen.lg_margin)
         badge.setColorFilter(
             CompatUtil.getColorFromAttr(context, R.attr.titleColor),
-            PorterDuff.Mode.SRC_IN
+            PorterDuff.Mode.SRC_IN,
         )
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         var width = MeasureSpec.getSize(widthMeasureSpec)
         if (width == 0) {
             width = (deviceDimens.x / spanSize) - badgePadding
@@ -67,7 +72,7 @@ class BrandImageView @JvmOverloads constructor(
         val height = (width * (3.3f / 4f)).toInt()
         super.onMeasure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY),
         )
     }
 
@@ -79,7 +84,12 @@ class BrandImageView @JvmOverloads constructor(
         badge.draw(canvas)
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         layoutBadge()
     }
@@ -93,7 +103,7 @@ class BrandImageView @JvmOverloads constructor(
             Rect(0, 0, width, height),
             badgePadding,
             badgePadding,
-            badgeBounds
+            badgeBounds,
         )
         badge.bounds = badgeBounds
         badgeBoundsSet = true
@@ -101,7 +111,9 @@ class BrandImageView @JvmOverloads constructor(
 
     override fun onViewRecycled() = Unit
 
-    private class GifBadge(context: Context) : Drawable() {
+    private class GifBadge(
+        context: Context,
+    ) : Drawable() {
         private val paint: Paint = Paint()
 
         override fun getIntrinsicWidth(): Int = width
@@ -134,6 +146,7 @@ class BrandImageView @JvmOverloads constructor(
             private var bitmap: Bitmap? = null
             private var width: Int
             private var height: Int
+
             init {
                 width = 0
                 height = 0
@@ -161,10 +174,11 @@ class BrandImageView @JvmOverloads constructor(
                     val canvas = Canvas(safeBitmap)
                     val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
                     backgroundPaint.color = BACKGROUND_COLOR
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(), cornerRadius, cornerRadius, backgroundPaint)
-                    else
+                    } else {
                         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
+                    }
                     textPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
                     canvas.drawText(GIF, padding, height - padding, textPaint)
                 }

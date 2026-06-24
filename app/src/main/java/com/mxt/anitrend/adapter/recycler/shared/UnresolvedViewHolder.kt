@@ -5,9 +5,8 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 
 class UnresolvedViewHolder<T>(
-    binding: CustomRecyclerUnresolvedBinding
+    binding: CustomRecyclerUnresolvedBinding,
 ) : RecyclerViewHolder<T>(binding.root) {
-
     override fun onBindViewHolder(model: T) = Unit
 
     override fun onViewRecycled() = Unit

@@ -12,24 +12,28 @@ import com.mxt.anitrend.model.entity.base.VersionBase
 import java.io.File
 
 object DownloaderService {
-
     /**
      * Handles downloading of new version of AniTrend
      * @see RepositoryModel.DOWNLOAD_LINK
      */
-    fun downloadNewVersion(context: Context?, versionBase: VersionBase) {
+    fun downloadNewVersion(
+        context: Context?,
+        versionBase: VersionBase,
+    ) {
         if (context == null) return
-        val versionSuffix = when (BuildConfig.FLAVOR) {
-            "github" -> "-github"
-            else -> ""
-        }
-        val downloadLink = Uri.parse(
-            String.format(
-                RepositoryModel.DOWNLOAD_LINK,
-                versionBase.version,
-                versionSuffix
+        val versionSuffix =
+            when (BuildConfig.FLAVOR) {
+                "github" -> "-github"
+                else -> ""
+            }
+        val downloadLink =
+            Uri.parse(
+                String.format(
+                    RepositoryModel.DOWNLOAD_LINK,
+                    versionBase.version,
+                    versionSuffix,
+                ),
             )
-        )
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
         val request = DownloadManager.Request(downloadLink)
         val title = "anitrend_v${versionBase.version}_${versionBase.code}.apk"
@@ -45,7 +49,7 @@ object DownloaderService {
             downloadManager?.enqueue(request)
         }.onFailure {
             context.startActivity(
-                Intent(Intent.ACTION_VIEW, downloadLink)
+                Intent(Intent.ACTION_VIEW, downloadLink),
             )
         }
     }

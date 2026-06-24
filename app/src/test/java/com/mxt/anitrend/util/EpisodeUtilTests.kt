@@ -9,11 +9,10 @@ import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.nullValue
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 
 class EpisodeUtilTests {
-
     @Test
     fun episodeSupport_givenCrunchyrollUrl_shouldReturnTheFeedUrl() {
         val show = "my-hero-academia"
@@ -54,9 +53,9 @@ class EpisodeUtilTests {
             `is`(
                 anyOf(
                     equalTo(show + ".rss"),
-                    equalTo(feedUrl)
-                )
-            )
+                    equalTo(feedUrl),
+                ),
+            ),
         )
     }
 

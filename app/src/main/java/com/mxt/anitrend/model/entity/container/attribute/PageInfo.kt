@@ -10,9 +10,8 @@ class PageInfo(
     var perPage: Int = 0,
     var currentPage: Int = 0,
     @SerializedName("hasNextPage")
-    private var hasNextPageValue: Boolean = false
+    private var hasNextPageValue: Boolean = false,
 ) : Parcelable {
-
     fun hasNextPage(): Boolean = hasNextPageValue
 
     fun setHasNextPage(value: Boolean) {

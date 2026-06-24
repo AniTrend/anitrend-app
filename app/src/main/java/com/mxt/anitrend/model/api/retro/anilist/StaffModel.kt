@@ -1,16 +1,18 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import com.mxt.anitrend.graphql.generated.StaffBaseVariables
+import com.mxt.anitrend.graphql.generated.StaffCharactersVariables
+import com.mxt.anitrend.graphql.generated.StaffMediaVariables
+import com.mxt.anitrend.graphql.generated.StaffOverviewVariables
+import com.mxt.anitrend.graphql.generated.StaffRolesVariables
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
-import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import co.anitrend.retrofit.graphql.annotation.GraphQuery
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -22,29 +24,33 @@ import retrofit2.http.POST
  */
 
 interface StaffModel {
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getStaffBase(
+        @Body request: GraphQLRequest<StaffBaseVariables>,
+    ): Call<AniListContainer<StaffBase>>
 
     @POST("/")
-    @GraphQuery("StaffBase")
     @Headers("Content-Type: application/json")
-    fun getStaffBase(@Body request: QueryContainerBuilder?): Call<AniListContainer<StaffBase>>
+    fun getStaffOverview(
+        @Body request: GraphQLRequest<StaffOverviewVariables>,
+    ): Call<AniListContainer<StaffBase>>
 
     @POST("/")
-    @GraphQuery("StaffOverview")
     @Headers("Content-Type: application/json")
-    fun getStaffOverview(@Body request: QueryContainerBuilder?): Call<AniListContainer<StaffBase>>
+    fun getStaffCharacters(
+        @Body request: GraphQLRequest<StaffCharactersVariables>,
+    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 
     @POST("/")
-    @GraphQuery("StaffCharacters")
     @Headers("Content-Type: application/json")
-    fun getStaffCharacters(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    fun getStaffMedia(
+        @Body request: GraphQLRequest<StaffMediaVariables>,
+    ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
 
     @POST("/")
-    @GraphQuery("StaffMedia")
     @Headers("Content-Type: application/json")
-    fun getStaffMedia(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
-
-    @POST("/")
-    @GraphQuery("StaffRoles")
-    @Headers("Content-Type: application/json")
-    fun getStaffRoles(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    fun getStaffRoles(
+        @Body request: GraphQLRequest<StaffRolesVariables>,
+    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 }

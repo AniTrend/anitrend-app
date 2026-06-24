@@ -8,6 +8,7 @@ import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
@@ -28,22 +29,22 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
-import android.view.MotionEvent
 import timber.log.Timber
 import java.util.ArrayList
 
 /**
  * Created by max on 2017/11/25.
  */
-class StatusContentWidget @JvmOverloads constructor(
+class StatusContentWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr),
     CustomView,
     ItemClickListener<String>,
     CenterSnapUtil.PositionChangeListener {
-
     private var contentLinks: MutableList<String>? = null
     private var contentTypes: MutableList<String>? = null
     private lateinit var binding: WidgetStatusBinding
@@ -57,7 +58,7 @@ class StatusContentWidget @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -68,15 +69,20 @@ class StatusContentWidget @JvmOverloads constructor(
         binding.widgetStatusRecycler.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.widgetStatusRecycler.isNestedScrollingEnabled = true
-        binding.widgetStatusRecycler.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                val action = e.actionMasked
-                if (action == MotionEvent.ACTION_MOVE) {
-                    rv.parent?.requestDisallowInterceptTouchEvent(true)
+        binding.widgetStatusRecycler.addOnItemTouchListener(
+            object : RecyclerView.SimpleOnItemTouchListener() {
+                override fun onInterceptTouchEvent(
+                    rv: RecyclerView,
+                    e: MotionEvent,
+                ): Boolean {
+                    val action = e.actionMasked
+                    if (action == MotionEvent.ACTION_MOVE) {
+                        rv.parent?.requestDisallowInterceptTouchEvent(true)
+                    }
+                    return false
                 }
-                return false
-            }
-        })
+            },
+        )
         val snapHelper: SnapHelper = CenterSnapUtil(this)
         snapHelper.attachToRecyclerView(binding.widgetStatusRecycler)
     }
@@ -113,10 +119,11 @@ class StatusContentWidget @JvmOverloads constructor(
                 val media = matcher.group(gc)
                 if (tag != null && media != null) {
                     contentTypes?.add(tag)
-                    if (RegexUtil.KEY_YOU == tag)
+                    if (RegexUtil.KEY_YOU == tag) {
                         contentLinks?.add(RegexUtil.buildYoutube(media.replace("(", "").replace(")", "")))
-                    else
+                    } else {
                         contentLinks?.add(media.replace("(", "").replace(")", ""))
+                    }
                 }
             }
         }
@@ -149,29 +156,35 @@ class StatusContentWidget @JvmOverloads constructor(
         binding.widgetStatusIndicator.setCurrentPosition(currentPage)
     }
 
-    override fun onItemClick(target: View, data: IntPair<String>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<String>,
+    ) {
         val type = contentTypes?.getOrNull(data.first)?.lowercase() ?: return
         val content = data.second
         when (type) {
             RegexUtil.KEY_IMG -> {
-                val intent = Intent(context, ImagePreviewActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_model, content)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                }
+                val intent =
+                    Intent(context, ImagePreviewActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_model, content)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
                 context.startActivity(intent)
             }
             RegexUtil.KEY_WEB -> {
-                val intent = Intent(context, VideoPlayerActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_model, content)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                }
+                val intent =
+                    Intent(context, VideoPlayerActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_model, content)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
                 context.startActivity(intent)
             }
             RegexUtil.KEY_YOU -> {
                 try {
-                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                        setData(Uri.parse(content))
-                    }
+                    val intent =
+                        Intent(Intent.ACTION_VIEW).apply {
+                            setData(Uri.parse(content))
+                        }
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     Timber.e(e)
@@ -180,5 +193,8 @@ class StatusContentWidget @JvmOverloads constructor(
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<String>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<String>,
+    ) = Unit
 }

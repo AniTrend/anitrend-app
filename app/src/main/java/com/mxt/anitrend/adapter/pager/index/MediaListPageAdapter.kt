@@ -1,12 +1,12 @@
 package com.mxt.anitrend.adapter.pager.index
 
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.fragment.list.MediaListFragment
 
 /**
@@ -15,17 +15,17 @@ import com.mxt.anitrend.view.fragment.list.MediaListFragment
  */
 class MediaListPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
-    private val mediaListStatuses = arrayOf(
-        KeyUtil.CURRENT,
-        KeyUtil.PLANNING,
-        KeyUtil.COMPLETED,
-        KeyUtil.DROPPED,
-        KeyUtil.PAUSED,
-        KeyUtil.REPEATING
-    )
+    private val mediaListStatuses =
+        arrayOf(
+            KeyUtil.CURRENT,
+            KeyUtil.PLANNING,
+            KeyUtil.COMPLETED,
+            KeyUtil.DROPPED,
+            KeyUtil.PAUSED,
+            KeyUtil.REPEATING,
+        )
 
     init {
         setPagerTitles(R.array.media_list_status)
@@ -36,9 +36,9 @@ class MediaListPageAdapter(
             throw IndexOutOfBoundsException("Invalid position: $position")
         }
         return MediaListFragment.newInstance(
-            params,
-            GraphUtil.getDefaultQuery(false)
-                .putVariable(KeyUtil.arg_statusIn, mediaListStatuses[position])
+            Bundle(params).apply {
+                putString(KeyUtil.arg_statusIn, mediaListStatuses[position])
+            },
         )
     }
 }

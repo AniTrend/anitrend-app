@@ -16,12 +16,13 @@ import java.util.concurrent.ExecutionException
 class AuthenticatorWorker(
     context: Context,
     workerParams: WorkerParameters,
-    private val presenter: BasePresenter
+    private val presenter: BasePresenter,
 ) : CoroutineWorker(context, workerParams) {
-
     private val authenticatorUri: Uri by lazy(LazyThreadSafetyMode.NONE) {
-        Uri.parse(workerParams.inputData
-                .getString(KeyUtil.arg_model))
+        Uri.parse(
+            workerParams.inputData
+                .getString(KeyUtil.arg_model),
+        )
     }
 
     /**
@@ -50,12 +51,15 @@ class AuthenticatorWorker(
             if (!authorizationCode.isNullOrBlank()) {
                 val isSuccess = WebTokenRequest.getToken(authorizationCode)
                 presenter.settings.isAuthenticated = isSuccess
-                val outputData = Data.Builder()
+                val outputData =
+                    Data
+                        .Builder()
                         .putBoolean(KeyUtil.arg_model, isSuccess)
                         .build()
                 return Result.success(outputData)
-            } else
+            } else {
                 Timber.tag(TAG).e("Authorization authenticatorUri was empty or null, cannot authenticate with the current state")
+            }
         } catch (e: ExecutionException) {
             Timber.e(e)
             errorDataBuilder.putString(KeyUtil.arg_exception_error, e.message)
@@ -64,12 +68,17 @@ class AuthenticatorWorker(
             errorDataBuilder.putString(KeyUtil.arg_exception_error, e.message)
         }
 
-        val workerErrorOutputData = errorDataBuilder
-                .putString(KeyUtil.arg_uri_error, authenticatorUri
-                        .getQueryParameter(KeyUtil.arg_uri_error))
-                .putString(KeyUtil.arg_uri_error_description, authenticatorUri
-                        .getQueryParameter(KeyUtil.arg_uri_error_description))
-                .build()
+        val workerErrorOutputData =
+            errorDataBuilder
+                .putString(
+                    KeyUtil.arg_uri_error,
+                    authenticatorUri
+                        .getQueryParameter(KeyUtil.arg_uri_error),
+                ).putString(
+                    KeyUtil.arg_uri_error_description,
+                    authenticatorUri
+                        .getQueryParameter(KeyUtil.arg_uri_error_description),
+                ).build()
         return Result.failure(workerErrorOutputData)
     }
 

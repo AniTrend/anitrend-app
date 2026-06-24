@@ -10,8 +10,9 @@ import java.util.Locale
 /**
  * Created by max on 2017/10/31.
  */
-class WidgetPresenter<T>(context: Context) : BasePresenter(context) {
-
+class WidgetPresenter<T>(
+    context: Context,
+) : BasePresenter(context) {
     private var loader: RequestHandler<T>? = null
 
     /**
@@ -22,11 +23,12 @@ class WidgetPresenter<T>(context: Context) : BasePresenter(context) {
     fun requestData(
         @KeyUtil.RequestType requestType: Int,
         context: Context,
-        callback: RetroCallback<T>
+        callback: RetroCallback<T>,
     ) {
-        loader = RequestHandler(params, callback, requestType).also {
-            it.execute(context)
-        }
+        loader =
+            RequestHandler(params, callback, requestType).also {
+                it.execute(context)
+            }
     }
 
     /**
@@ -43,16 +45,15 @@ class WidgetPresenter<T>(context: Context) : BasePresenter(context) {
         const val CONTENT_STATE = 0
         const val LOADING_STATE = 1
 
-        fun convertToText(count: Int): String {
-            return String.format(Locale.getDefault(), " %d ", count)
-        }
+        fun convertToText(count: Int): String = String.format(Locale.getDefault(), " %d ", count)
 
         fun valueFormatter(size: Int): String {
             if (size != 0) {
-                return if (size > 1000)
+                return if (size > 1000) {
                     String.format(Locale.getDefault(), "%.1f K", size / 1000f)
-                else
+                } else {
                     size.toString()
+                }
             }
             return "0"
         }

@@ -7,9 +7,7 @@ import java.util.concurrent.Executors
  */
 
 object ThreadPool {
-
     private val executorService = Executors.newCachedThreadPool()
 
-    fun execute(task: () -> Unit) =
-        executorService.execute(task)
+    fun execute(task: () -> Unit) = executorService.execute(task)
 }

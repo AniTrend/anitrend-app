@@ -46,7 +46,7 @@ fun Context?.isLowRamDevice(): Boolean {
 inline fun <reified T> Context?.startNewActivity(params: Bundle? = null) {
     try {
         val intent = Intent(this, T::class.java)
-        with (intent) {
+        with(intent) {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             params?.also { putExtras(it) }
         }
@@ -65,17 +65,15 @@ inline fun <reified T> Context?.startNewActivity(params: Bundle? = null) {
  * @return The string list associated with the resource.
  * @throws Exception if the given [arrayRes] does not exist.
  */
-fun Context.getStringList(@ArrayRes arrayRes : Int, settings: Settings): List<String> {
+fun Context.getStringList(@ArrayRes arrayRes: Int, settings: Settings): List<String> {
     val context = LocaleUtil.applyConfiguration(this, settings)
     val array = context.resources.getStringArray(arrayRes)
     return array.toList()
 }
 
-fun View.getLayoutInflater(): LayoutInflater =
-    context.getLayoutInflater()
+fun View.getLayoutInflater(): LayoutInflater = context.getLayoutInflater()
 
-fun Context.getLayoutInflater(): LayoutInflater =
-    getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater ?: LayoutInflater.from(this)
+fun Context.getLayoutInflater(): LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater ?: LayoutInflater.from(this)
 
 /**
  * Gets the size of the display, in pixels. Value returned by this method does
@@ -100,7 +98,7 @@ fun Context.getScreenDimens(): Point {
  * @throws UnsupportedOperationException if the attribute is defined but is
  *         not a color or drawable resource.
  */
-fun Context.getDrawableFromAttr(@AttrRes drawableAttr : Int): Drawable? {
+fun Context.getDrawableFromAttr(@AttrRes drawableAttr: Int): Drawable? {
     val drawableAttribute = obtainStyledAttributes(intArrayOf(drawableAttr))
     val drawable = drawableAttribute.getDrawable(0)
     drawableAttribute.recycle()
@@ -116,8 +114,9 @@ fun Context.getDrawableFromAttr(@AttrRes drawableAttr : Int): Drawable? {
  * @throws UnsupportedOperationException if the attribute is defined but is
  *         not a color or drawable resource.
  */
-fun Context.getCompatColorAttr(@AttrRes colorAttr : Int, defaultColor : Int = 0): Int {
+fun Context.getCompatColorAttr(@AttrRes colorAttr: Int, defaultColor: Int = 0): Int {
     val colorAttribute = obtainStyledAttributes(intArrayOf(colorAttr))
+
     @ColorInt val color = colorAttribute.getColor(0, defaultColor)
     colorAttribute.recycle()
     return color
@@ -130,8 +129,7 @@ fun Context.getCompatColorAttr(@AttrRes colorAttr : Int, defaultColor : Int = 0)
  * @see android.os.Build.VERSION_CODES.M
  * @return A single color value in the form 0xAARRGGBB.
  */
-fun Context.getCompatColor(@ColorRes colorRes: Int) =
-    ContextCompat.getColor(this, colorRes)
+fun Context.getCompatColor(@ColorRes colorRes: Int) = ContextCompat.getColor(this, colorRes)
 
 /**
  * Avoids resource not found when using vector drawables in API levels < Lollipop
@@ -145,8 +143,7 @@ fun Context.getCompatColor(@ColorRes colorRes: Int) =
  * @return Drawable An object that can be used to draw this resource.
  * @see Drawable
  */
-fun Context.getCompatDrawable(@DrawableRes resource : Int) =
-    AppCompatResources.getDrawable(this, resource)
+fun Context.getCompatDrawable(@DrawableRes resource: Int) = AppCompatResources.getDrawable(this, resource)
 
 /**
  * Avoids resource not found when using vector drawables in API levels < Lollipop
@@ -157,12 +154,13 @@ fun Context.getCompatDrawable(@DrawableRes resource : Int) =
  * @param tintColor A specific color to tint the drawable
  * @return Drawable tinted with the tint color
  */
-fun Context.getCompatDrawable(@DrawableRes resource : Int, @ColorRes tintColor : Int): Drawable? {
+fun Context.getCompatDrawable(@DrawableRes resource: Int, @ColorRes tintColor: Int): Drawable? {
     val drawableResource = AppCompatResources.getDrawable(this, resource)
     if (drawableResource != null) {
         val drawableResult = DrawableCompat.wrap(drawableResource).mutate()
-        if (tintColor != 0)
+        if (tintColor != 0) {
             DrawableCompat.setTint(drawableResult, getCompatColor(tintColor))
+        }
         return drawableResource
     }
     return null
@@ -178,9 +176,9 @@ fun Context.getCompatDrawable(@DrawableRes resource : Int, @ColorRes tintColor :
  * @param colorAttr A specific color to tint the drawable
  * @return Drawable tinted with the tint color
  */
-fun Context.getCompatTintedDrawable(@DrawableRes resource : Int, @AttrRes colorAttr : Int = R.attr.titleColor): Drawable? {
+fun Context.getCompatTintedDrawable(@DrawableRes resource: Int, @AttrRes colorAttr: Int = R.attr.titleColor): Drawable? {
     val originalDrawable = getCompatDrawable(resource)
-    var drawable : Drawable? = null
+    var drawable: Drawable? = null
     if (originalDrawable != null) {
         drawable = DrawableCompat.wrap(originalDrawable).mutate()
         DrawableCompat.setTint(drawable, getCompatColorAttr(colorAttr))
@@ -195,14 +193,12 @@ fun Context.logDirectory(): File {
 }
 
 fun Context.logFile(): File {
-    val log = File(logDirectory(), "${packageName}.log")
+    val log = File(logDirectory(), "$packageName.log")
     if (!log.exists()) log.mkdirs()
     return log
 }
 
-fun Context.supportsAutoUpdates(): Boolean {
-    return resources.getBoolean(R.bool.display_update_channel_pref)
-}
+fun Context.supportsAutoUpdates(): Boolean = resources.getBoolean(R.bool.display_update_channel_pref)
 
 fun Context.checkNotificationPermission(channelId: String?): Boolean {
     val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -221,14 +217,19 @@ fun Context.checkNotificationPermission(channelId: String?): Boolean {
 
 fun FragmentActivity.requestNotificationsPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
-            /* context = */ this,
-            /* permission = */ Manifest.permission.POST_NOTIFICATIONS,
+            /* context = */
+            this,
+            /* permission = */
+            Manifest.permission.POST_NOTIFICATIONS,
         ) != PERMISSION_GRANTED
     ) {
         ActivityCompat.requestPermissions(
-            /* activity = */ this,
-            /* permissions = */ arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-            /* requestCode = */ 1,
+            /* activity = */
+            this,
+            /* permissions = */
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            /* requestCode = */
+            1,
         )
     }
 }

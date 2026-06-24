@@ -8,7 +8,5 @@ import java.util.Comparator
  */
 object ComparatorUtil {
     @JvmStatic
-    fun <T> getKeyComparator(): Comparator<Map.Entry<String, T>> {
-        return Comparator { o1, o2 -> o1.key.compareTo(o2.key) }
-    }
+    fun <T> getKeyComparator(): Comparator<Map.Entry<String, T>> = Comparator { o1, o2 -> o1.key.compareTo(o2.key) }
 }

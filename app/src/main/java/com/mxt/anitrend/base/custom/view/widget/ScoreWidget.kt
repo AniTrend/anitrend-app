@@ -15,12 +15,13 @@ import java.text.DecimalFormatSymbols
 import java.text.ParseException
 import java.util.Locale
 
-class ScoreWidget @JvmOverloads constructor(
+class ScoreWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : ProgressWidget(context, attrs, defStyleAttr) {
-
     private var scoreMaximum: Float = 0f
     var scoreCurrent: Float = 0f
         private set
@@ -28,7 +29,9 @@ class ScoreWidget @JvmOverloads constructor(
     @KeyUtil.ScoreFormat
     private var scoreFormat: String? = null
 
-    fun setScoreFormat(@KeyUtil.ScoreFormat scoreFormat: String) {
+    fun setScoreFormat(
+        @KeyUtil.ScoreFormat scoreFormat: String,
+    ) {
         this.scoreFormat = scoreFormat
         when (scoreFormat) {
             KeyUtil.POINT_10_DECIMAL -> scoreMaximum = 10.0f
@@ -57,33 +60,37 @@ class ScoreWidget @JvmOverloads constructor(
 
     private fun setScoreMaximum() {
         binding.progressMaximum.visibility = VISIBLE
-        if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
+        if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL)) {
             binding.progressMaximum.text = String.format(Locale.getDefault(), "/ %.1f", scoreMaximum)
-        else
+        } else {
             binding.progressMaximum.text = String.format(Locale.getDefault(), "/ %d", scoreMaximum.toInt())
+        }
     }
 
     fun setScoreCurrent(scoreCurrent: Float) {
         this.scoreCurrent = scoreCurrent
-        if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
+        if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL)) {
             binding.progressCurrent.setText(String.format(Locale.getDefault(), "%.1f", scoreCurrent))
-        else
+        } else {
             binding.progressCurrent.setText(String.format(Locale.getDefault(), "%d", scoreCurrent.toInt()))
+        }
     }
 
     private fun boundCheck(delta: Float): Boolean {
-        if (scoreMaximum < 1f)
+        if (scoreMaximum < 1f) {
             return delta > -0.1f
+        }
         return delta > -0.1f && delta <= scoreMaximum
     }
 
     private fun scoreChange(delta: Float) {
         if (boundCheck(delta)) {
             scoreCurrent = delta
-            if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL))
+            if (CompatUtil.equals(scoreFormat, KeyUtil.POINT_10_DECIMAL)) {
                 binding.progressCurrent.setText(String.format(Locale.getDefault(), "%.1f", scoreCurrent))
-            else
+            } else {
                 binding.progressCurrent.setText(String.format(Locale.getDefault(), "%d", scoreCurrent.toInt()))
+            }
             binding.progressCurrent.setSelection(binding.progressCurrent.text.length)
         }
     }
@@ -109,15 +116,18 @@ class ScoreWidget @JvmOverloads constructor(
     }
 
     override fun afterTextChanged(editable: Editable) {
-        if (isNotDirectInput)
+        if (isNotDirectInput) {
             return
+        }
         val currentChange = editable.toString()
         var temporaryValue = 0f
         try {
-            temporaryValue = if (!TextUtils.isEmpty(currentChange))
-                DecimalFormat("#.#").parse(currentChange)?.toFloat() ?: 0f
-            else
-                0f
+            temporaryValue =
+                if (!TextUtils.isEmpty(currentChange)) {
+                    DecimalFormat("#.#").parse(currentChange)?.toFloat() ?: 0f
+                } else {
+                    0f
+                }
         } catch (e: ParseException) {
             Timber.e(e)
         }
@@ -126,9 +136,10 @@ class ScoreWidget @JvmOverloads constructor(
             scoreCurrent = temporaryValue
             binding.progressCurrent.post { scoreChange(scoreCurrent) }
         }
-        if (boundCheck(temporaryValue))
+        if (boundCheck(temporaryValue)) {
             scoreCurrent = temporaryValue
-        else
+        } else {
             binding.progressCurrent.post { scoreChange(scoreCurrent) }
+        }
     }
 }

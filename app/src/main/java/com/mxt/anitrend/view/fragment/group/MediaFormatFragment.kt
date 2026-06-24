@@ -18,7 +18,6 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
@@ -26,13 +25,13 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity
  * Created by max on 2018/01/27.
  * Shared fragment between media for staff and character
  */
-class MediaFormatFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
-
+class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
     private var id: Long = 0
     private var onList: Boolean? = null
+
     @KeyUtil.MediaType
     private var mediaType: String? = null
+
     @KeyUtil.RequestType
     private var requestType: Int = 0
 
@@ -41,12 +40,13 @@ class MediaFormatFragment :
         fun newInstance(
             params: Bundle,
             @KeyUtil.MediaType mediaType: String,
-            @KeyUtil.RequestType requestType: Int
+            @KeyUtil.RequestType requestType: Int,
         ): MediaFormatFragment {
-            val args = Bundle(params).apply {
-                putString(KeyUtil.arg_mediaType, mediaType)
-                putInt(KeyUtil.arg_request_type, requestType)
-            }
+            val args =
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, mediaType)
+                    putInt(KeyUtil.arg_request_type, requestType)
+                }
             return MediaFormatFragment().apply {
                 arguments = args
             }
@@ -76,12 +76,13 @@ class MediaFormatFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, id)
-            .putVariable(KeyUtil.arg_onList, onList)
-            .putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+            putSerializable(KeyUtil.arg_onList, onList)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        }
         viewModel?.requestData(requestType, ctx)
     }
 
@@ -89,50 +90,65 @@ class MediaFormatFragment :
         val pageContainer = content?.connection
         if (pageContainer != null) {
             if (!pageContainer.isEmpty) {
-                if (pageContainer.hasPageInfo())
+                if (pageContainer.hasPageInfo()) {
                     presenter.setPageInfo(pageContainer.pageInfo)
-                if (!pageContainer.isEmpty)
+                }
+                if (!pageContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupMediaByFormat(pageContainer.pageData, mAdapter.data))
-                else
+                } else {
                     onPostProcessed(emptyList())
+                }
             }
-        } else
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val media = data.second as? MediaBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, media.id)
-                    putExtra(KeyUtil.arg_mediaType, media.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, media.id)
+                        putExtra(KeyUtil.arg_mediaType, media.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 if (presenter.settings.isAuthenticated) {
                     val media = data.second as? MediaBase ?: return
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(media.id).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(media.id)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }

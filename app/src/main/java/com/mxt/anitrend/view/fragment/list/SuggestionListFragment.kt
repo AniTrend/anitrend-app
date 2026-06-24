@@ -10,25 +10,21 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.graphql.GraphUtil
 
 /**
  * Created by max on 2017/11/04.
  * Suggestions adapter
  */
 class SuggestionListFragment : MediaBrowseFragment() {
-
     companion object {
         @JvmStatic
         fun newInstance(params: Bundle): SuggestionListFragment {
-            val args = Bundle(params).apply {
-                putParcelable(
-                    KeyUtil.arg_graph_params,
-                    GraphUtil.getDefaultQuery(true)
-                        .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                        .putVariable(KeyUtil.arg_onList, false)
-                )
-            }
+            val args =
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                    putBoolean(KeyUtil.arg_onList, false)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                }
             return SuggestionListFragment().apply {
                 arguments = args
             }
@@ -38,16 +34,22 @@ class SuggestionListFragment : MediaBrowseFragment() {
     override fun makeRequest() {
         val ctx = context ?: return
         val pref: Settings = presenter.settings
-        val bundle = viewModel?.params ?: Bundle.EMPTY
-        queryContainer.putVariable(KeyUtil.arg_tagsInclude, presenter.getTopFavouriteTags(6))
-            .putVariable(KeyUtil.arg_genresInclude, presenter.getTopFavouriteGenres(4))
-            .putVariable(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-        bundle.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        val bundle = viewModel?.params ?: return
+        bundle.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+        bundle.putBoolean(KeyUtil.arg_onList, false)
+        bundle.putStringArrayList(KeyUtil.arg_tags, ArrayList(presenter.getTopFavouriteTags(6)))
+        bundle.putStringArrayList(KeyUtil.arg_genres, ArrayList(presenter.getTopFavouriteGenres(4)))
+        bundle.putString(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)
+        bundle.putInt(KeyUtil.arg_page, presenter.currentPage)
+        bundle.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        bundle.applyAdultContentPreference(displayAdultContent = pref.displayAdultContent)
         viewModel?.requestData(KeyUtil.MEDIA_BROWSE_REQ, ctx)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -64,10 +66,11 @@ class SuggestionListFragment : MediaBrowseFragment() {
                     ctx,
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaSortType, presenter.settings.mediaSort),
-                    CompatUtil.capitalizeWords(KeyUtil.MediaSortType)
+                    CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE)
+                    if (which == DialogAction.POSITIVE) {
                         presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
+                    }
                 }
                 return true
             }
@@ -77,12 +80,13 @@ class SuggestionListFragment : MediaBrowseFragment() {
                     ctx,
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
-                    CompatUtil.getStringList(ctx, R.array.order_by_types)
+                    CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE)
+                    if (which == DialogAction.POSITIVE) {
                         presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder
+                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
                         )
+                    }
                 }
                 return true
             }

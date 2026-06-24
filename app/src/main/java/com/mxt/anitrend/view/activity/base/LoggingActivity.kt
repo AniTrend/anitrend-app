@@ -26,7 +26,9 @@ import java.io.File
 import java.io.FileWriter
 import java.io.InputStreamReader
 
-class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by MainScope() {
+class LoggingActivity :
+    ActivityBase<Void, BasePresenter>(),
+    CoroutineScope by MainScope() {
 
     private lateinit var binding: ActivityLoggingBinding
 
@@ -36,7 +38,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
 
     private val spannableLogBuilder = SpannableStringBuilder()
     private val red by lazy { applicationContext.getCompatColor(R.color.colorStateRed) }
-    private val orange by lazy {  applicationContext.getCompatColor(R.color.colorStateOrange) }
+    private val orange by lazy { applicationContext.getCompatColor(R.color.colorStateOrange) }
     private val linePattern = Regex("\\s")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +52,8 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         applicationVersionTextView.text = getString(
-                R.string.text_about_application_version,
-                BuildConfig.versionName
+            R.string.text_about_application_version,
+            BuildConfig.versionName,
         )
     }
 
@@ -81,9 +83,9 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
                     runCatching {
                         val root = File(
                             Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_DOWNLOADS
+                                Environment.DIRECTORY_DOWNLOADS,
                             ),
-                            "AniTrend Logcat.txt"
+                            "AniTrend Logcat.txt",
                         )
                         applicationContext.logFile().copyTo(root, true)
                     }.onFailure {
@@ -94,7 +96,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
                             R.string.text_post_information,
                             R.string.bug_report_saved,
                             R.drawable.ic_insert_emoticon_white_24dp,
-                            R.color.colorStateGreen
+                            R.color.colorStateGreen,
                         )
                     }
                 }
@@ -103,11 +105,14 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
-                        applicationContext,
-                        "${applicationContext.packageName}.provider",
-                        applicationContext.logFile()
-                    ))
+                    putExtra(
+                        Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(
+                            applicationContext,
+                            "${applicationContext.packageName}.provider",
+                            applicationContext.logFile(),
+                        ),
+                    )
                     type = "text/plain"
                 }
                 startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
@@ -147,7 +152,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
     }
 
     private suspend fun loadLogFileContents() {
-        //val process = Runtime.getRuntime().exec("logcat -d -v threadtime com.mxt.anitrend:*")
+        // val process = Runtime.getRuntime().exec("logcat -d -v threadtime com.mxt.anitrend:*")
         withContext(Dispatchers.IO) {
             runCatching {
                 val logInputStream = applicationContext.logFile().inputStream()
@@ -169,8 +174,9 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>(), CoroutineScope by M
                                 }
                                 else -> spannableLogBuilder.appendLine(line)
                             }
-                        } else
+                        } else {
                             spannableLogBuilder.appendLine(line)
+                        }
                     }
                     inputStream.close()
                 }

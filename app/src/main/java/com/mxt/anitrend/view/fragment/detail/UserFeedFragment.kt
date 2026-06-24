@@ -5,7 +5,6 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -14,16 +13,13 @@ import org.greenrobot.eventbus.ThreadMode
  * user profile targeted feeds
  */
 class UserFeedFragment : FeedListFragment() {
-
     private var userId: Long = 0
     private var userName: String? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(params: Bundle, queryContainer: QueryContainerBuilder): UserFeedFragment {
-            val args = Bundle(params).apply {
-                putParcelable(KeyUtil.arg_graph_params, queryContainer)
-            }
+        fun newInstance(params: Bundle): UserFeedFragment {
+            val args = Bundle(params)
             return UserFeedFragment().apply {
                 arguments = args
             }
@@ -33,10 +29,11 @@ class UserFeedFragment : FeedListFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            if (args.containsKey(KeyUtil.arg_id))
+            if (args.containsKey(KeyUtil.arg_id)) {
                 userId = args.getLong(KeyUtil.arg_id)
-            else
+            } else {
                 userName = args.getString(KeyUtil.arg_userName)
+            }
         }
         isMenuDisabled = true
         isFeed = false
@@ -47,13 +44,14 @@ class UserFeedFragment : FeedListFragment() {
             userId = presenter.database.currentUser?.id ?: userId
         }
 
-        if (userId > 0)
-            queryContainer.putVariable(KeyUtil.arg_userId, userId)
-        else
-            queryContainer.putVariable(KeyUtil.arg_userName, userName)
-
-        if (queryContainer.containsKey(KeyUtil.arg_userId))
-            super.makeRequest()
+        if (userId > 0) {
+            val params = viewModel?.params ?: return
+            params.applyBaseFeedRequestArguments(arguments)
+            params.remove(KeyUtil.arg_userId)
+            params.putLong(KeyUtil.arg_userId, userId)
+            params.putInt(KeyUtil.arg_page, presenter.currentPage)
+            viewModel?.requestData(KeyUtil.FEED_LIST_REQ, context ?: return)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)

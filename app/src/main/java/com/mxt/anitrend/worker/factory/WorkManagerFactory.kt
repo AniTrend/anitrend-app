@@ -12,13 +12,14 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import timber.log.Timber
 
-internal class WorkManagerFactory : WorkerFactory(), KoinComponent {
-
+internal class WorkManagerFactory :
+    WorkerFactory(),
+    KoinComponent {
     private fun resolveDependency(
         workerClassName: String,
-        workerParameters: WorkerParameters
+        workerParameters: WorkerParameters,
     ): ListenableWorker = get(
-        qualifier = named(workerClassName)
+        qualifier = named(workerClassName),
     ) { parametersOf(workerParameters) }
 
     /**
@@ -44,21 +45,24 @@ internal class WorkManagerFactory : WorkerFactory(), KoinComponent {
     override fun createWorker(
         appContext: Context,
         workerClassName: String,
-        workerParameters: WorkerParameters
+        workerParameters: WorkerParameters,
     ): ListenableWorker? = when (workerClassName) {
-        "com.mxt.anitrend.service.JobDispatcherService" -> resolveDependency(
-            NotificationWorker::class.java.name,
-            workerParameters
-        )
-        "com.mxt.anitrend.service.ClearNotificationService" -> resolveDependency(
-            ClearNotificationWorker::class.java.name,
-            workerParameters
-        )
-        else -> runCatching {
-            Timber.d("Resolving requested worker: $workerClassName")
-            resolveDependency(workerClassName, workerParameters)
-        }.onFailure {
-            Timber.w(it, "Unable to resolve worker: $workerClassName")
-        }.getOrNull()
+        "com.mxt.anitrend.service.JobDispatcherService" ->
+            resolveDependency(
+                NotificationWorker::class.java.name,
+                workerParameters,
+            )
+        "com.mxt.anitrend.service.ClearNotificationService" ->
+            resolveDependency(
+                ClearNotificationWorker::class.java.name,
+                workerParameters,
+            )
+        else ->
+            runCatching {
+                Timber.d("Resolving requested worker: $workerClassName")
+                resolveDependency(workerClassName, workerParameters)
+            }.onFailure {
+                Timber.w(it, "Unable to resolve worker: $workerClassName")
+            }.getOrNull()
     }
 }

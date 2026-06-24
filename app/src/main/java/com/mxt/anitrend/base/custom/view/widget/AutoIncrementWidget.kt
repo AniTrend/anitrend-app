@@ -30,19 +30,21 @@ import timber.log.Timber
  * Created by max on 2018/02/22.
  * auto increment widget for changing series progress with just a tap
  */
-class AutoIncrementWidget @JvmOverloads constructor(
+class AutoIncrementWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr),
     CustomView,
     View.OnClickListener,
     RetroCallback<MediaList> {
-
     @KeyUtil.RequestType
     private var requestType: Int = KeyUtil.MUT_SAVE_MEDIA_LIST
     private lateinit var presenter: WidgetPresenter<MediaList>
     private lateinit var binding: WidgetAutoIncrementerBinding
+
     @KeyUtil.MediaListStatus
     private var status: String? = null
     private var model: MediaList? = null
@@ -59,7 +61,7 @@ class AutoIncrementWidget @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     override fun onInit() {
@@ -77,28 +79,34 @@ class AutoIncrementWidget @JvmOverloads constructor(
                         binding.widgetFlipper.showNext()
                         updateModelState()
                     } else {
-                        NotifyUtil.makeText(
-                            context,
-                            R.string.busy_please_wait,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                context,
+                                R.string.busy_please_wait,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             } else {
-                NotifyUtil.makeText(
-                    context,
-                    if (MediaUtil.isAnimeType(currentModel.media))
-                        R.string.text_unable_to_increment_episodes
-                    else
-                        R.string.text_unable_to_increment_chapters,
-                    R.drawable.ic_warning_white_18dp,
-                    Toast.LENGTH_SHORT
-                ).show()
+                NotifyUtil
+                    .makeText(
+                        context,
+                        if (MediaUtil.isAnimeType(currentModel.media)) {
+                            R.string.text_unable_to_increment_episodes
+                        } else {
+                            R.string.text_unable_to_increment_chapters
+                        },
+                        R.drawable.ic_warning_white_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
             }
         }
     }
 
-    fun setModel(model: MediaList, currentUser: String?) {
+    fun setModel(
+        model: MediaList,
+        currentUser: String?,
+    ) {
         this.model = model
         this.currentUser = currentUser
         status = model.status
@@ -112,11 +120,15 @@ class AutoIncrementWidget @JvmOverloads constructor(
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
     }
 
-    override fun onResponse(call: Call<MediaList>, response: Response<MediaList>) {
+    override fun onResponse(
+        call: Call<MediaList>,
+        response: Response<MediaList>,
+    ) {
         try {
             val responseModel = response.body()
             val modelClone = model?.clone()
@@ -127,19 +139,22 @@ class AutoIncrementWidget @JvmOverloads constructor(
                 model = updatedModel
                 binding.seriesProgressIncrement.setSeriesModel(
                     updatedModel,
-                    presenter.isCurrentUser(currentUser)
+                    presenter.isCurrentUser(currentUser),
                 )
                 if (isModelCategoryChanged || MediaListUtil.isProgressUpdatable(modelClone)) {
-                    if (isModelCategoryChanged)
-                        NotifyUtil.makeText(
-                            context,
-                            R.string.text_changes_saved,
-                            R.drawable.ic_check_circle_white_24dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    if (isModelCategoryChanged) {
+                        NotifyUtil
+                            .makeText(
+                                context,
+                                R.string.text_changes_saved,
+                                R.drawable.ic_check_circle_white_24dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }
                     presenter.notifyAllListeners(BaseConsumer(requestType, updatedModel), false)
-                } else
+                } else {
                     resetFlipperState()
+                }
             } else {
                 resetFlipperState()
                 Timber.tag(tagName).w(response.apiError())
@@ -150,7 +165,10 @@ class AutoIncrementWidget @JvmOverloads constructor(
         }
     }
 
-    override fun onFailure(call: Call<MediaList>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<MediaList>,
+        throwable: Throwable,
+    ) {
         try {
             Timber.w(throwable)
             resetFlipperState()
@@ -162,8 +180,10 @@ class AutoIncrementWidget @JvmOverloads constructor(
     private fun updateModelState() {
         val currentModel = model ?: return
         if (currentModel.progress < 1 &&
-            (CompatUtil.equals(currentModel.status, KeyUtil.PLANNING) ||
-                CompatUtil.equals(currentModel.status, KeyUtil.CURRENT))
+            (
+                CompatUtil.equals(currentModel.status, KeyUtil.PLANNING) ||
+                    CompatUtil.equals(currentModel.status, KeyUtil.CURRENT)
+                )
         ) {
             currentModel.status = KeyUtil.CURRENT
             currentModel.startedAt = DateUtil.currentDate
@@ -174,10 +194,11 @@ class AutoIncrementWidget @JvmOverloads constructor(
             currentModel.completedAt = DateUtil.currentDate
         }
         val user = presenter.database.currentUser ?: return
-        presenter.params = MediaListUtil.getMediaListParams(
-            currentModel,
-            user.mediaListOptions.scoreFormat
-        )
+        presenter.params =
+            MediaListUtil.getMediaListParams(
+                currentModel,
+                user.mediaListOptions.scoreFormat,
+            )
         presenter.requestData(requestType, context, this)
     }
 }

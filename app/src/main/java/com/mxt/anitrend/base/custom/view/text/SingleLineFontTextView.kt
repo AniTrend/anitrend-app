@@ -8,12 +8,13 @@ import android.util.AttributeSet
  * Created by max on 2017/12/24.
  * custom font single line text view
  */
-class SingleLineFontTextView @JvmOverloads constructor(
+class SingleLineFontTextView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : SingleLineTextView(context, attrs, defStyleAttr) {
-
     override fun onInit() {
         super.onInit()
         val assetManager = context.assets
@@ -22,7 +23,10 @@ class SingleLineFontTextView @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        fun setCustomFontType(singleLineTextView: SingleLineTextView, fontName: String) {
+        fun setCustomFontType(
+            singleLineTextView: SingleLineTextView,
+            fontName: String,
+        ) {
             val fontPath = String.format("fonts/%s", fontName)
             val assetManager = singleLineTextView.context.assets
             singleLineTextView.typeface = Typeface.createFromAsset(assetManager, fontPath)

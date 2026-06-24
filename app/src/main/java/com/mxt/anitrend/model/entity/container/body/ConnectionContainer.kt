@@ -3,7 +3,6 @@ package com.mxt.anitrend.model.entity.container.body
 import com.google.gson.annotations.SerializedName
 
 class ConnectionContainer<T : Any> {
-
     @SerializedName(
         value = "relations",
         alternate = [
@@ -19,8 +18,8 @@ class ConnectionContainer<T : Any> {
             "favourites",
             "nodes",
             "externalLinks",
-            "recommendations"
-        ]
+            "recommendations",
+        ],
     )
     lateinit var connection: T
 

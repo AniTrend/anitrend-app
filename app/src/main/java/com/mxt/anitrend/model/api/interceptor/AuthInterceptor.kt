@@ -14,20 +14,23 @@ import java.io.IOException
  */
 
 class AuthInterceptor(
-    private val settings: Settings
+    private val settings: Settings,
 ) : Interceptor {
-
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         if (settings.isAuthenticated) {
             val token = WebTokenRequest.getInstance()
             if (token != null) {
-                val builder = chain.request().newBuilder()
-                    .header(BuildConfig.HEADER_KEY, token.header)
+                val builder =
+                    chain
+                        .request()
+                        .newBuilder()
+                        .header(BuildConfig.HEADER_KEY, token.header)
                 val request = builder.build()
                 return chain.proceed(request)
-            } else
+            } else {
                 Timber.tag("AuthInterceptor").e("Authentication reference is null, this should not happen under normal conditions")
+            }
         }
         return chain.proceed(chain.request())
     }

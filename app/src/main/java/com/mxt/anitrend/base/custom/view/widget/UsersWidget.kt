@@ -7,12 +7,14 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 
-class UsersWidget @JvmOverloads constructor(
+class UsersWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : SingleLineTextView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : SingleLineTextView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }
@@ -26,11 +28,11 @@ class UsersWidget @JvmOverloads constructor(
         setCompoundDrawablesWithIntrinsicBounds(
             context.getCompatTintedDrawable(
                 R.drawable.ic_people_grey_600_18dp,
-                R.attr.colorAccent
+                R.attr.colorAccent,
             ),
             null,
             null,
-            null
+            null,
         )
     }
 

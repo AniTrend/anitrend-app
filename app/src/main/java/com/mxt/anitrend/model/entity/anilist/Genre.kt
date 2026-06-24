@@ -13,11 +13,12 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Entity
-class Genre @JvmOverloads constructor(
+class Genre
+@JvmOverloads
+constructor(
     @Index
-    var genre: String? = null
+    var genre: String? = null,
 ) : Parcelable {
-
     @IgnoredOnParcel
     @Id
     var id: Long = 0

@@ -16,5 +16,5 @@ class Thumbnail(
     @field:Attribute(name = "width")
     var width: Int = 0,
     @field:Attribute(name = "height")
-    var height: Int = 0
+    var height: Int = 0,
 ) : Parcelable

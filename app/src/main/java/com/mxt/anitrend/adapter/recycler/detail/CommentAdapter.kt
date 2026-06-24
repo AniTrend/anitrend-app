@@ -20,25 +20,27 @@ import com.mxt.anitrend.util.date.DateUtil
  * Created by max on 2017/12/03.
  * comment activity adapter
  */
-class CommentAdapter(context: Context) : RecyclerViewAdapter<FeedReply>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<FeedReply> {
-        return CommentViewHolder(
-            AdapterCommentBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class CommentAdapter(
+    context: Context,
+) : RecyclerViewAdapter<FeedReply>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<FeedReply> = CommentViewHolder(
+        AdapterCommentBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class CommentViewHolder(private val binding: AdapterCommentBinding) :
-        RecyclerViewHolder<FeedReply>(binding.root) {
-
+    inner class CommentViewHolder(
+        private val binding: AdapterCommentBinding,
+    ) : RecyclerViewHolder<FeedReply>(binding.root) {
         init {
             bindClickListeners(
                 R.id.widget_edit,
                 R.id.widget_users,
                 R.id.user_avatar,
-                R.id.widget_mention
+                R.id.widget_mention,
             )
         }
 
@@ -82,8 +84,6 @@ class CommentAdapter(context: Context) : RecyclerViewAdapter<FeedReply>(context)
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(view: View): Boolean {
-            return performLongClick(clickListener, data, view)
-        }
+        override fun onLongClick(view: View): Boolean = performLongClick(clickListener, data, view)
     }
 }

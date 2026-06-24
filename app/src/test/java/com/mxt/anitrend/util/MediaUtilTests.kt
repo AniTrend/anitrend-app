@@ -15,15 +15,14 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.reset
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.ArrayList
 
 @RunWith(MockitoJUnitRunner.StrictStubs::class)
 class MediaUtilTests {
-
     @Mock
     private lateinit var list: MediaList
 
@@ -164,7 +163,7 @@ class MediaUtilTests {
                 assertThat(
                     "Incrementing should be allowed for status: $status",
                     MediaUtil.isAllowedStatus(list),
-                    `is`(true)
+                    `is`(true),
                 )
             }
         }
@@ -191,15 +190,16 @@ class MediaUtilTests {
         val media3 = mock(MediaBase::class.java)
         val mediaList = listOf(media1, media2, media3)
 
-        val trendList = mediaList.map { media ->
-            mock(MediaTrend::class.java).apply {
-                `when`(this.media).thenReturn(media)
+        val trendList =
+            mediaList.map { media ->
+                mock(MediaTrend::class.java).apply {
+                    `when`(this.media).thenReturn(media)
+                }
             }
-        }
 
         assertThat(
             MediaUtil.mapMediaTrend(trendList).toTypedArray(),
-            arrayContainingInAnyOrder(media1, media2, media3)
+            arrayContainingInAnyOrder(media1, media2, media3),
         )
     }
 
@@ -210,39 +210,40 @@ class MediaUtilTests {
 
     @Test
     fun getAiringMedia_shouldReturnReleasingMediaOnly() {
-        val releasing = listOf(
-            mock(MediaBase::class.java),
-            mock(MediaBase::class.java)
-        ).map { media ->
-            mock(MediaList::class.java).apply {
-                `when`(this.media).thenReturn(media)
+        val releasing =
+            listOf(
+                mock(MediaBase::class.java),
+                mock(MediaBase::class.java),
+            ).map { media ->
+                mock(MediaList::class.java).apply {
+                    `when`(this.media).thenReturn(media)
+                }
             }
-        }
 
         releasing.forEach { list ->
             `when`(list.media.status).thenReturn(KeyUtil.RELEASING)
         }
 
-        val notReleasing = KeyUtil.MediaStatusValues
-            .filterNotNull()
-            .filter { it != KeyUtil.RELEASING }
-            .map { status ->
-                mock(MediaBase::class.java).apply {
-                    `when`(this.status).thenReturn(status)
+        val notReleasing =
+            KeyUtil.MediaStatusValues
+                .filterNotNull()
+                .filter { it != KeyUtil.RELEASING }
+                .map { status ->
+                    mock(MediaBase::class.java).apply {
+                        `when`(this.status).thenReturn(status)
+                    }
+                }.map { media ->
+                    mock(MediaList::class.java).apply {
+                        `when`(this.media).thenReturn(media)
+                    }
                 }
-            }
-            .map { media ->
-                mock(MediaList::class.java).apply {
-                    `when`(this.media).thenReturn(media)
-                }
-            }
 
         val allMedia = ArrayList<MediaList>(releasing)
         allMedia.addAll(notReleasing)
 
         assertThat(
             MediaUtil.getAiringMedia(allMedia).toTypedArray(),
-            equalTo(releasing.toTypedArray())
+            equalTo(releasing.toTypedArray()),
         )
     }
 

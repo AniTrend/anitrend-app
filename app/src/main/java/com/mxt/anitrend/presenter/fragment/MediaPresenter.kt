@@ -23,8 +23,9 @@ import java.util.Locale
 /**
  * Created by max on 2018/01/01.
  */
-class MediaPresenter(context: Context) : BasePresenter(context) {
-
+class MediaPresenter(
+    context: Context,
+) : BasePresenter(context) {
     fun getHashTag(media: Media?): Spanned {
         val hashTag = media?.hashTag
         return if (!hashTag.isNullOrEmpty()) {
@@ -32,8 +33,8 @@ class MediaPresenter(context: Context) : BasePresenter(context) {
                 String.format(
                     "<a href=\"https://twitter.com/search?q=%%23%s&src=typd\">%s</a>",
                     hashTag.replace("#", ""),
-                    hashTag
-                )
+                    hashTag,
+                ),
             )
         } else {
             val ctx = requireNotNull(context)
@@ -56,111 +57,115 @@ class MediaPresenter(context: Context) : BasePresenter(context) {
     fun getMediaStats(statusDistribution: List<StatusDistribution>): List<PieEntry> {
         val highestStatus = statusDistribution.maxOfOrNull { it.amount } ?: 0
         if (highestStatus > 0) {
-            return statusDistribution.map { status ->
-                PieEntry(
-                    (status.amount * 100f) / highestStatus,
-                    String.format(
-                        Locale.getDefault(),
-                        "%s: %s",
-                        CompatUtil.capitalizeWords(status.status),
-                        MediaUtil.getFormattedCount(status.amount)
+            return statusDistribution
+                .map { status ->
+                    PieEntry(
+                        (status.amount * 100f) / highestStatus,
+                        String.format(
+                            Locale.getDefault(),
+                            "%s: %s",
+                            CompatUtil.capitalizeWords(status.status),
+                            MediaUtil.getFormattedCount(status.amount),
+                        ),
                     )
-                )
-            }.sortedBy { it.label }
+                }.sortedBy { it.label }
         }
         return emptyList()
     }
 
-    fun getMediaScoreDistribution(scoreDistribution: List<ScoreDistribution>): List<BarEntry> {
-        return scoreDistribution.mapIndexed { index, score ->
-            BarEntry(index.toFloat(), score.amount.toFloat())
-        }
+    fun getMediaScoreDistribution(scoreDistribution: List<ScoreDistribution>): List<BarEntry> = scoreDistribution.mapIndexed { index, score ->
+        BarEntry(index.toFloat(), score.amount.toFloat())
     }
 
     fun getEpisodeDuration(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (media?.duration != null && media.duration > 0)
+        return if (media?.duration != null && media.duration > 0) {
             ctx.getString(R.string.text_anime_length, media.duration)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
     fun getMediaSeason(media: Media?): String {
         val ctx = requireNotNull(context)
         val startDate = media?.startDate
-        return if (startDate?.isValidDate == true)
+        return if (startDate?.isValidDate == true) {
             DateUtil.getMediaSeason(startDate)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
     fun getMediaSource(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (!media?.source.isNullOrEmpty())
+        return if (!media?.source.isNullOrEmpty()) {
             CompatUtil.capitalizeWords(media?.source)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
     fun getMediaStatus(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (!media?.status.isNullOrEmpty())
+        return if (!media?.status.isNullOrEmpty()) {
             CompatUtil.capitalizeWords(media?.status)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
     fun getEpisodeCount(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (media?.episodes != null && media.episodes > 0)
+        return if (media?.episodes != null && media.episodes > 0) {
             ctx.getString(R.string.text_anime_episodes, media.episodes)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
     fun getVolumeCount(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (media?.volumes != null && media.volumes > 0)
+        return if (media?.volumes != null && media.volumes > 0) {
             ctx.getString(R.string.text_manga_volumes, media.volumes)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
     fun getChapterCount(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (media?.chapters != null && media.chapters > 0)
+        return if (media?.chapters != null && media.chapters > 0) {
             ctx.getString(R.string.text_manga_chapters, media.chapters)
-        else
+        } else {
             ctx.getString(R.string.TBA)
+        }
     }
 
-    fun buildGenres(media: Media?): List<Genre> {
-        return media?.genres.orEmpty()
-            .takeWhile { !it.isNullOrEmpty() }
-            .map { Genre(it) }
-    }
+    fun buildGenres(media: Media?): List<Genre> = media
+        ?.genres
+        .orEmpty()
+        .takeWhile { !it.isNullOrEmpty() }
+        .map { Genre(it) }
 
     fun getMediaFormat(media: MediaBase?): String {
         val ctx = requireNotNull(context)
-        return if (!media?.format.isNullOrEmpty())
+        return if (!media?.format.isNullOrEmpty()) {
             CompatUtil.capitalizeWords(media?.format)
-        else
+        } else {
             ctx.getString(R.string.tba_placeholder)
+        }
     }
 
     fun getMediaScore(media: Media?): String {
         val ctx = requireNotNull(context)
-        return if (media != null)
+        return if (media != null) {
             ctx.getString(R.string.text_anime_score, media.meanScore)
-        else
+        } else {
             ctx.getString(R.string.tba_placeholder)
+        }
     }
 
-    fun isAnime(media: Media?): Int {
-        return if (MediaUtil.isAnimeType(media)) View.VISIBLE else View.GONE
-    }
+    fun isAnime(media: Media?): Int = if (MediaUtil.isAnimeType(media)) View.VISIBLE else View.GONE
 
-    fun isManga(media: Media?): Int {
-        return if (MediaUtil.isMangaType(media)) View.VISIBLE else View.GONE
-    }
+    fun isManga(media: Media?): Int = if (MediaUtil.isMangaType(media)) View.VISIBLE else View.GONE
 }

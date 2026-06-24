@@ -15,10 +15,11 @@ object EpisodeUtil {
     fun episodeSupport(links: List<ExternalLink>): String? {
         for (link in links) {
             val url = link.url
-            if (url?.contains(crunchyStandard) == true)
+            if (url?.contains(crunchyStandard) == true) {
                 return linkStripper(url)
-            else if (url?.contains(feedStandard) == true)
+            } else if (url?.contains(feedStandard) == true) {
                 return url
+            }
         }
         return null
     }
@@ -32,7 +33,5 @@ object EpisodeUtil {
     /**
      * Gets the series title without description
      */
-    fun getActualTile(episodeTitle: String): String {
-        return episodeTitle.replace("((.- Episode)|(.Season)).*".toRegex(), "")
-    }
+    fun getActualTile(episodeTitle: String): String = episodeTitle.replace("((.- Episode)|(.Season)).*".toRegex(), "")
 }

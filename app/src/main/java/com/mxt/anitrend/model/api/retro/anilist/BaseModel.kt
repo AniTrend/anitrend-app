@@ -1,10 +1,12 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
+import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import com.mxt.anitrend.graphql.generated.ToggleFavouriteVariables
+import com.mxt.anitrend.graphql.generated.ToggleLikeVariables
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import co.anitrend.retrofit.graphql.annotation.GraphQuery
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -16,24 +18,27 @@ import retrofit2.http.POST
  */
 
 interface BaseModel {
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getGenres(
+        @Body request: GraphQLRequest<EmptyGraphQLVariables>,
+    ): Call<AniListContainer<List<String>>>
 
     @POST("/")
-    @GraphQuery("GenreCollection")
     @Headers("Content-Type: application/json")
-    fun getGenres(@Body request: QueryContainerBuilder?): Call<AniListContainer<List<String>>>
+    fun getTags(
+        @Body request: GraphQLRequest<EmptyGraphQLVariables>,
+    ): Call<AniListContainer<List<MediaTag>>>
 
     @POST("/")
-    @GraphQuery("MediaTagCollection")
     @Headers("Content-Type: application/json")
-    fun getTags(@Body request: QueryContainerBuilder?): Call<AniListContainer<List<MediaTag>>>
+    fun toggleLike(
+        @Body request: GraphQLRequest<ToggleLikeVariables>,
+    ): Call<AniListContainer<List<UserBase>>>
 
     @POST("/")
-    @GraphQuery("ToggleLike")
     @Headers("Content-Type: application/json")
-    fun toggleLike(@Body request: QueryContainerBuilder?): Call<AniListContainer<List<UserBase>>>
-
-    @POST("/")
-    @GraphQuery("ToggleFavourite")
-    @Headers("Content-Type: application/json")
-    fun toggleFavourite(@Body request: QueryContainerBuilder?): Call<ResponseBody>
+    fun toggleFavourite(
+        @Body request: GraphQLRequest<ToggleFavouriteVariables>,
+    ): Call<ResponseBody>
 }

@@ -11,7 +11,10 @@ interface RecyclerChangeListener<T> {
 
     fun onItemRangeChanged(swap: List<T>)
 
-    fun onItemChanged(swap: T, position: Int)
+    fun onItemChanged(
+        swap: T,
+        position: Int,
+    )
 
     fun onItemRemoved(position: Int)
 }

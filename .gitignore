@@ -152,3 +152,6 @@ playstore-service-account.json
 .worktrees/
 # Added by code-review-graph
 .code-review-graph/
+
+# Deepwork session state
+.slim/deepwork/

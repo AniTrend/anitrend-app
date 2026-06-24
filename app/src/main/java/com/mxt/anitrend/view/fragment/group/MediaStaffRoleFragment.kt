@@ -19,7 +19,6 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
@@ -27,18 +26,14 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity
  * Created by max on 2018/01/30.
  * MediaStaffRoleFragment
  */
-class MediaStaffRoleFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
-
+class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
     private var id: Long = 0
     private var onList: Boolean? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): MediaStaffRoleFragment {
-            return MediaStaffRoleFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): MediaStaffRoleFragment = MediaStaffRoleFragment().apply {
+            arguments = args
         }
     }
 
@@ -58,11 +53,12 @@ class MediaStaffRoleFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, id)
-            .putVariable(KeyUtil.arg_onList, onList)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+            putSerializable(KeyUtil.arg_onList, onList)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        }
         viewModel?.requestData(KeyUtil.STAFF_ROLES_REQ, ctx)
     }
 
@@ -75,50 +71,65 @@ class MediaStaffRoleFragment :
         val edgeContainer = content?.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
-                if (edgeContainer.hasPageInfo())
+                if (edgeContainer.hasPageInfo()) {
                     presenter.setPageInfo(edgeContainer.pageInfo)
-                if (!edgeContainer.isEmpty)
+                }
+                if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupMediaByStaffRole(edgeContainer.edges, mAdapter.data))
-                else
+                } else {
                     onPostProcessed(emptyList())
+                }
             }
-        } else
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val media = data.second as? MediaBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, media.id)
-                    putExtra(KeyUtil.arg_mediaType, media.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, media.id)
+                        putExtra(KeyUtil.arg_mediaType, media.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 if (presenter.settings.isAuthenticated) {
                     val media = data.second as? MediaBase ?: return
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(media.id).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(media.id)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }

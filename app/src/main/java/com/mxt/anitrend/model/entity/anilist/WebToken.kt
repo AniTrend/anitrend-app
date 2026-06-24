@@ -19,14 +19,16 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Entity
-class WebToken @JvmOverloads constructor(
+class WebToken
+@JvmOverloads
+constructor(
     var access_token: String? = null,
     var token_type: String? = null,
     var expires_in: Long = 0,
     var expires: Long = 0,
-    var refresh_token: String? = null
-) : Parcelable, Cloneable {
-
+    var refresh_token: String? = null,
+) : Parcelable,
+    Cloneable {
     @IgnoredOnParcel
     @Id
     var id: Long = 0
@@ -39,15 +41,13 @@ class WebToken @JvmOverloads constructor(
         expires = (System.currentTimeMillis() - 8000L) + expires_in
     }
 
-    override fun toString(): String {
-        return "{" +
-            "id: " + id +
-            " access_token: " + access_token +
-            " token_type: " + token_type +
-            " expires_in: " + expires_in +
-            " refresh_token: " + refresh_token +
-            "}"
-    }
+    override fun toString(): String = "{" +
+        "id: " + id +
+        " access_token: " + access_token +
+        " token_type: " + token_type +
+        " expires_in: " + expires_in +
+        " refresh_token: " + refresh_token +
+        "}"
 
     public override fun clone(): WebToken {
         super.clone()

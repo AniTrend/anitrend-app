@@ -24,7 +24,6 @@ import com.mxt.anitrend.crash.contract.IExceptionCrashHandler
  * An uncaught exception handler for the application
  */
 internal class UncaughtExceptionHandler : Thread.UncaughtExceptionHandler {
-
     private val originalHandler: Thread.UncaughtExceptionHandler? =
         Thread.getDefaultUncaughtExceptionHandler()
 
@@ -39,7 +38,10 @@ internal class UncaughtExceptionHandler : Thread.UncaughtExceptionHandler {
      * @param thread the thread
      * @param throwable the exception
      */
-    override fun uncaughtException(thread: Thread, throwable: Throwable) {
+    override fun uncaughtException(
+        thread: Thread,
+        throwable: Throwable,
+    ) {
         exceptionHandler.onException(thread, throwable)
     }
 }
