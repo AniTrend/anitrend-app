@@ -11,7 +11,6 @@ import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
 class ApplicationInitializer : Initializer<Unit> {
-
     /**
      * Initializes and a component given the application [Context]
      *
@@ -20,23 +19,30 @@ class ApplicationInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         runCatching {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                val installerListener = object : ProviderInstaller.ProviderInstallListener {
-                    override fun onProviderInstalled() {
-                        Timber.i("Provider installed successfully")
-                    }
+                val installerListener =
+                    object : ProviderInstaller.ProviderInstallListener {
+                        override fun onProviderInstalled() {
+                            Timber.i("Provider installed successfully")
+                        }
 
-                    override fun onProviderInstallFailed(code: Int, intent: Intent?) {
-                        Timber.e("Provider installer failed to patch device -> code: $code, intent: $intent")
+                        override fun onProviderInstallFailed(
+                            code: Int,
+                            intent: Intent?,
+                        ) {
+                            Timber.e("Provider installer failed to patch device -> code: $code, intent: $intent")
+                        }
                     }
-                }
 
                 ProviderInstaller.installIfNeededAsync(
-                    context, installerListener
+                    context,
+                    installerListener,
                 )
             }
         }.exceptionOrNull()?.printStackTrace()
 
-        EventBus.builder().logNoSubscriberMessages(BuildConfig.DEBUG)
+        EventBus
+            .builder()
+            .logNoSubscriberMessages(BuildConfig.DEBUG)
             .sendNoSubscriberEvent(BuildConfig.DEBUG)
             .sendSubscriberExceptionEvent(BuildConfig.DEBUG)
             .throwSubscriberException(BuildConfig.DEBUG)
@@ -50,6 +56,5 @@ class ApplicationInitializer : Initializer<Unit> {
      * For e.g. if a [Initializer] `B` defines another
      * [Initializer] `A` as its dependency, then `A` gets initialized before `B`.
      */
-    override fun dependencies(): List<Class<out Initializer<*>>> =
-        listOf(TimberInitializer::class.java)
+    override fun dependencies(): List<Class<out Initializer<*>>> = listOf(TimberInitializer::class.java)
 }

@@ -14,31 +14,36 @@ import com.mxt.anitrend.util.Settings
 import timber.log.Timber
 
 @SuppressLint("MissingPermission")
-class AnalyticsLogging(context: Context, settings: Settings) : Timber.Tree(), ISupportAnalytics {
-
+class AnalyticsLogging(
+    context: Context,
+    settings: Settings,
+) : Timber.Tree(),
+    ISupportAnalytics {
     private val analytics by lazy(LazyThreadSafetyMode.NONE) {
         FirebaseApp.getApps(context).let {
-            if (it.isNotEmpty())
+            if (it.isNotEmpty()) {
                 FirebaseAnalytics.getInstance(context).apply {
                     setAnalyticsCollectionEnabled(
-                        settings.isUsageAnalyticsEnabled
+                        settings.isUsageAnalyticsEnabled,
                     )
                 }
-            else
+            } else {
                 null
+            }
         }
     }
 
     private val crashlytics by lazy(LazyThreadSafetyMode.NONE) {
         FirebaseApp.getApps(context).let {
-            if (it.isNotEmpty())
+            if (it.isNotEmpty()) {
                 FirebaseCrashlytics.getInstance().apply {
                     setCrashlyticsCollectionEnabled(
-                        settings.isCrashReportsEnabled
+                        settings.isCrashReportsEnabled,
                     )
                 }
-            else
+            } else {
                 null
+            }
         }
     }
 
@@ -50,9 +55,15 @@ class AnalyticsLogging(context: Context, settings: Settings) : Timber.Tree(), IS
      * @param message Formatted log message. May be `null`, but then `t` will not be.
      * @param throwable Accompanying exceptions. May be `null`, but then `message` will not be.
      */
-    override fun log(priority: Int, tag: String?, message: String, throwable: Throwable?) {
-        if (priority < Log.INFO)
+    override fun log(
+        priority: Int,
+        tag: String?,
+        message: String,
+        throwable: Throwable?,
+    ) {
+        if (priority < Log.INFO) {
             return
+        }
 
         runCatching {
             crashlytics?.setCustomKey(PRIORITY, priority)
@@ -66,13 +77,19 @@ class AnalyticsLogging(context: Context, settings: Settings) : Timber.Tree(), IS
         }
     }
 
-    override fun logCurrentScreen(context: FragmentActivity, tag: String) {
+    override fun logCurrentScreen(
+        context: FragmentActivity,
+        tag: String,
+    ) {
         runCatching {
             analytics?.setCurrentScreen(context, tag, null)
         }.exceptionOrNull()?.printStackTrace()
     }
 
-    override fun logCurrentState(tag: String, bundle: Bundle?) {
+    override fun logCurrentState(
+        tag: String,
+        bundle: Bundle?,
+    ) {
         runCatching {
             bundle?.also { analytics?.logEvent(tag, it) }
         }.exceptionOrNull()?.printStackTrace()
@@ -84,7 +101,11 @@ class AnalyticsLogging(context: Context, settings: Settings) : Timber.Tree(), IS
         }.exceptionOrNull()?.printStackTrace()
     }
 
-    override fun log(priority: Int, tag: String?, message: String) {
+    override fun log(
+        priority: Int,
+        tag: String?,
+        message: String,
+    ) {
         runCatching {
             crashlytics?.log(message)
         }.exceptionOrNull()?.printStackTrace()

@@ -15,5 +15,5 @@ class MediaListOptions(
     var rowOrder: String? = null,
     @get:JvmName("isUseLegacyLists") var useLegacyLists: Boolean = false,
     var animeList: MediaListTypeOptions? = null,
-    var mangaList: MediaListTypeOptions? = null
+    var mangaList: MediaListTypeOptions? = null,
 ) : Parcelable

@@ -25,7 +25,6 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.PromptSt
  *     );
  */
 class TutorialUtil {
-
     @KeyUtil.TapTargetType
     private var tapTarget: String? = null
 
@@ -53,7 +52,9 @@ class TutorialUtil {
      * @param tapTarget A type of string that represents the preference key for the target tip
      *                  @see KeyUtil.TapTargetType
      */
-    fun setTapTarget(@KeyUtil.TapTargetType tapTarget: String): TutorialUtil {
+    fun setTapTarget(
+        @KeyUtil.TapTargetType tapTarget: String,
+    ): TutorialUtil {
         this.tapTarget = tapTarget
         return this
     }
@@ -72,7 +73,9 @@ class TutorialUtil {
     /**
      * Mandatory color resource for the focal point of the tap target
      */
-    fun setFocalColour(@ColorRes focalColour: Int): TutorialUtil {
+    fun setFocalColour(
+        @ColorRes focalColour: Int,
+    ): TutorialUtil {
         this.focalColour = focalColour
         return this
     }
@@ -93,7 +96,9 @@ class TutorialUtil {
      *
      * @param resource Item that should be focused on by the application tip
      */
-    fun createTapTarget(@IdRes resource: Int): MaterialTapTargetPrompt.Builder? {
+    fun createTapTarget(
+        @IdRes resource: Int,
+    ): MaterialTapTargetPrompt.Builder? {
         val prefs = settings
         val activity = context
         val target = tapTarget
@@ -101,10 +106,12 @@ class TutorialUtil {
             Timber.tag(tagName).i("Did you forget to set the current application preferences?")
             return null
         }
-        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target))
-            return TapTargetUtil.buildDefault(activity, resource)
+        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
+            return TapTargetUtil
+                .buildDefault(activity, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
                 .setFocalColour(CompatUtil.getColor(activity, focalColour))
+        }
         return null
     }
 
@@ -118,7 +125,7 @@ class TutorialUtil {
     fun createTapTarget(
         @StringRes primary: Int,
         @StringRes secondary: Int,
-        @IdRes resource: Int
+        @IdRes resource: Int,
     ): MaterialTapTargetPrompt.Builder? {
         val prefs = settings
         val activity = context
@@ -127,10 +134,12 @@ class TutorialUtil {
             Timber.tag(tagName).i("Did you forget to set the current application preferences?")
             return null
         }
-        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target))
-            return TapTargetUtil.buildDefault(activity, primary, secondary, resource)
+        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
+            return TapTargetUtil
+                .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
                 .setFocalColour(CompatUtil.getColor(activity, focalColour))
+        }
         return null
     }
 
@@ -144,7 +153,7 @@ class TutorialUtil {
     fun createTapTarget(
         @StringRes primary: Int,
         @StringRes secondary: Int,
-        resource: View
+        resource: View,
     ): MaterialTapTargetPrompt.Builder? {
         val prefs = settings
         val activity = context
@@ -153,10 +162,12 @@ class TutorialUtil {
             Timber.tag(tagName).i("Did you forget to set the current application preferences?")
             return null
         }
-        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target))
-            return TapTargetUtil.buildDefault(activity, primary, secondary, resource)
+        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
+            return TapTargetUtil
+                .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
                 .setFocalColour(CompatUtil.getColor(activity, focalColour))
+        }
         return null
     }
 
@@ -165,7 +176,9 @@ class TutorialUtil {
      *
      * @param resource Item that should be focused on by the application tip
      */
-    fun showTapTarget(@IdRes resource: Int) {
+    fun showTapTarget(
+        @IdRes resource: Int,
+    ) {
         val prefs = settings
         val activity = context
         val target = tapTarget
@@ -173,11 +186,13 @@ class TutorialUtil {
             Timber.tag(tagName).i("Did you forget to set the current application preferences?")
             return
         }
-        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target))
-            TapTargetUtil.buildDefault(activity, resource)
+        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
+            TapTargetUtil
+                .buildDefault(activity, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
                 .setFocalColour(CompatUtil.getColor(activity, focalColour))
                 .show()
+        }
     }
 
     /**
@@ -187,7 +202,11 @@ class TutorialUtil {
      * @param secondary Sub Heading for the tip that should be displayed
      * @param resource Item that should be focused on by the application tip
      */
-    fun showTapTarget(@StringRes primary: Int, @StringRes secondary: Int, @IdRes resource: Int) {
+    fun showTapTarget(
+        @StringRes primary: Int,
+        @StringRes secondary: Int,
+        @IdRes resource: Int,
+    ) {
         val prefs = settings
         val activity = context
         val target = tapTarget
@@ -195,11 +214,13 @@ class TutorialUtil {
             Timber.tag(tagName).i("Did you forget to set the current application preferences?")
             return
         }
-        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target))
-            TapTargetUtil.buildDefault(activity, primary, secondary, resource)
+        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
+            TapTargetUtil
+                .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
                 .setFocalColour(CompatUtil.getColor(activity, focalColour))
                 .show()
+        }
     }
 
     /**
@@ -209,7 +230,11 @@ class TutorialUtil {
      * @param secondary Sub Heading for the tip that should be displayed
      * @param resource Item that should be focused on by the application tip
      */
-    fun showTapTarget(@StringRes primary: Int, @StringRes secondary: Int, resource: View) {
+    fun showTapTarget(
+        @StringRes primary: Int,
+        @StringRes secondary: Int,
+        resource: View,
+    ) {
         val prefs = settings
         val activity = context
         val target = tapTarget
@@ -217,26 +242,32 @@ class TutorialUtil {
             Timber.tag(tagName).i("Did you forget to set the current application preferences?")
             return
         }
-        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target))
-            TapTargetUtil.buildDefault(activity, primary, secondary, resource)
+        if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
+            TapTargetUtil
+                .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
                 .setFocalColour(CompatUtil.getColor(activity, focalColour))
                 .show()
+        }
     }
 
-    private val defaultStateChangeListener = PromptStateChangeListener { prompt, state ->
-        val target = tapTarget
-        when (state) {
-            MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED,
-            MaterialTapTargetPrompt.STATE_FOCAL_PRESSED -> {
-                if (target != null)
-                    settings?.disableTipFor(target)
+    private val defaultStateChangeListener =
+        PromptStateChangeListener { prompt, state ->
+            val target = tapTarget
+            when (state) {
+                MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED,
+                MaterialTapTargetPrompt.STATE_FOCAL_PRESSED,
+                -> {
+                    if (target != null) {
+                        settings?.disableTipFor(target)
+                    }
+                }
+                MaterialTapTargetPrompt.STATE_DISMISSED -> {
+                    if (target != null) {
+                        TapTargetUtil.setActive(target, true)
+                    }
+                }
             }
-            MaterialTapTargetPrompt.STATE_DISMISSED -> {
-                if (target != null)
-                    TapTargetUtil.setActive(target, true)
-            }
+            listener?.onPromptStateChanged(prompt, state)
         }
-        listener?.onPromptStateChanged(prompt, state)
-    }
 }

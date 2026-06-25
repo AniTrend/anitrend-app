@@ -7,12 +7,14 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.extension.getCompatDrawable
 
-class StatusEditWidget @JvmOverloads constructor(
+class StatusEditWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : SingleLineTextView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : SingleLineTextView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }
@@ -27,7 +29,7 @@ class StatusEditWidget @JvmOverloads constructor(
             context.getCompatDrawable(R.drawable.ic_edit_green_600_18dp),
             null,
             null,
-            null
+            null,
         )
     }
 

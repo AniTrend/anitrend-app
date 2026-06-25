@@ -13,18 +13,15 @@ import com.mxt.anitrend.view.fragment.detail.MessageFeedFragment
  */
 class MessagePageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.messages_page_titles)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> MessageFeedFragment.newInstance(params, KeyUtil.MESSAGE_TYPE_INBOX)
-            1 -> MessageFeedFragment.newInstance(params, KeyUtil.MESSAGE_TYPE_OUTBOX)
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> MessageFeedFragment.newInstance(params, KeyUtil.MESSAGE_TYPE_INBOX)
+        1 -> MessageFeedFragment.newInstance(params, KeyUtil.MESSAGE_TYPE_OUTBOX)
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

@@ -11,8 +11,9 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
  * Circle image view
  */
 
-class AvatarImageView : AppCompatImageView, CustomView {
-
+class AvatarImageView :
+    AppCompatImageView,
+    CustomView {
     constructor(context: Context) : super(context) {
         onInit()
     }
@@ -29,7 +30,6 @@ class AvatarImageView : AppCompatImageView, CustomView {
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-
     }
 
     /**

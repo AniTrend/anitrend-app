@@ -56,7 +56,6 @@ object KeyUtil {
     // GraphQL Variable Params Keys
     // ------------------------------------------------------------------------------------
 
-    const val arg_graph_params = "arg_graph_params"
     const val arg_media_trailer = "arg_media_trailer"
 
     const val arg_id = "id"
@@ -73,6 +72,7 @@ object KeyUtil {
 
     const val arg_text = "text"
     const val arg_message = "message"
+    const val arg_summary = "summary"
     const val arg_asHtml = "asHtml"
     const val arg_isMixed = "isMixed"
     const val arg_isFollowing = "isFollowing"
@@ -127,6 +127,7 @@ object KeyUtil {
     const val arg_statusIn = "statusIn"
 
     /** Review Keys */
+    const val arg_score = "score"
     const val arg_rating = "rating"
 
     /** Notification Keys */
@@ -285,7 +286,7 @@ object KeyUtil {
         MUT_TOGGLE_LIKE, MUT_TOGGLE_FAVOURITE, MUT_SAVE_MEDIA_LIST, MUT_UPDATE_MEDIA_LISTS, MUT_DELETE_MEDIA_LIST,
         MUT_RATE_REVIEW, MUT_SAVE_REVIEW, MUT_DELETE_REVIEW, MUT_TOGGLE_FOLLOW, MUT_SAVE_TEXT_FEED,
         MUT_SAVE_MESSAGE_FEED, MUT_SAVE_FEED_REPLY, MUT_DELETE_FEED, MUT_DELETE_FEED_REPLY,
-        MEDIA_RECOMMENDATION_REQ, RECOMMENDATIONS_REQ, MUT_RATE_RECOMMENDATION
+        MEDIA_RECOMMENDATION_REQ, RECOMMENDATIONS_REQ, MUT_RATE_RECOMMENDATION,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class RequestType
@@ -303,8 +304,14 @@ object KeyUtil {
     const val DEEP_LINK_ACTIVITY = "activity"
 
     @StringDef(
-        DEEP_LINK_USER, DEEP_LINK_MANGA, DEEP_LINK_ANIME, DEEP_LINK_CHARACTER,
-        DEEP_LINK_STAFF, DEEP_LINK_ACTOR, DEEP_LINK_STUDIO, DEEP_LINK_ACTIVITY
+        DEEP_LINK_USER,
+        DEEP_LINK_MANGA,
+        DEEP_LINK_ANIME,
+        DEEP_LINK_CHARACTER,
+        DEEP_LINK_STAFF,
+        DEEP_LINK_ACTOR,
+        DEEP_LINK_STUDIO,
+        DEEP_LINK_ACTIVITY,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class DeepLinkType
@@ -383,6 +390,7 @@ object KeyUtil {
 
     const val ASC = ""
     const val DESC = "_DESC"
+
     @StringDef(ASC, DESC)
     @Retention(AnnotationRetention.SOURCE)
     annotation class SortOrderType
@@ -401,7 +409,7 @@ object KeyUtil {
 
     @StringDef(
         ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING,
-        EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES
+        EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaSort
@@ -419,6 +427,7 @@ object KeyUtil {
     const val FINISHED_ON = "FINISHED_ON"
     const val ADDED_TIME = "ADDED_TIME"
     const val UPDATED_TIME = "UPDATED_TIME"
+
     @StringDef(TITLE, MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME, UPDATED_TIME)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaListSort
@@ -426,11 +435,13 @@ object KeyUtil {
     const val RATING = "RATING"
     const val CREATED_AT = "CREATED_AT"
     const val UPDATED_AT = "UPDATED_AT"
+
     @StringDef(ID, SCORE, RATING, CREATED_AT, UPDATED_AT)
     @Retention(AnnotationRetention.SOURCE)
     annotation class ReviewSort
 
     const val TIME = "TIME"
+
     @StringDef(ID, MEDIA_ID, TIME, EPISODE)
     @Retention(AnnotationRetention.SOURCE)
     annotation class AiringSort
@@ -449,21 +460,17 @@ object KeyUtil {
     @JvmField
     val MediaSortType = arrayOf(
         ID, TITLE_ROMAJI, TITLE_ENGLISH, TITLE_NATIVE, TYPE, FORMAT, START_DATE, END_DATE, SCORE, POPULARITY, TRENDING,
-        EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES
+        EPISODES, DURATION, STATUS, CHAPTERS, VOLUMES,
     )
-    // val MediaTrendSortType = arrayOf(ID, MEDIA_ID, DATE, SCORE, POPULARITY, TRENDING, EPISODE)
 
     @JvmField
     val MediaListSortType = arrayOf(
         TITLE, MEDIA_ID, SCORE, STATUS, PROGRESS, PROGRESS_VOLUMES, REPEAT, PRIORITY, STARTED_ON, FINISHED_ON, ADDED_TIME,
-        UPDATED_TIME
+        UPDATED_TIME,
     )
 
     @JvmField
     val ReviewSortType = arrayOf(ID, SCORE, RATING, CREATED_AT, UPDATED_AT)
-    // val AiringSortType = arrayOf(ID, MEDIA_ID, TIME, EPISODE)
-    // val CharacterSortType = arrayOf(ID, ROLE, SEARCH_MATCH)
-    // val StaffSortType = arrayOf(ID, ROLE, LANGUAGE, SEARCH_MATCH)
 
     const val LIST_VIEW_STYLE_DEFAULT = 0
     const val LIST_VIEW_STYLE_COMPACT_X1 = 1
@@ -475,6 +482,7 @@ object KeyUtil {
 
     const val ANIME = "ANIME"
     const val MANGA = "MANGA"
+
     @StringDef(ANIME, MANGA)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaType
@@ -483,6 +491,7 @@ object KeyUtil {
     const val SPRING = "SPRING"
     const val SUMMER = "SUMMER"
     const val FALL = "FALL"
+
     @StringDef(WINTER, SPRING, SUMMER, FALL)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaSeason
@@ -492,6 +501,7 @@ object KeyUtil {
     const val HIATUS = "HIATUS"
     const val NOT_YET_RELEASED = "NOT_YET_RELEASED"
     const val RELEASING = "RELEASING"
+
     @StringDef(CANCELLED, FINISHED, HIATUS, NOT_YET_RELEASED, RELEASING)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaStatus
@@ -509,9 +519,10 @@ object KeyUtil {
     const val COMIC = "COMIC"
     const val MULTIMEDIA_PROJECT = "MULTIMEDIA_PROJECT"
     const val PICTURE_BOOK = "PICTURE_BOOK"
+
     @StringDef(
         ANIME, DOUJINSHI, LIGHT_NOVEL, MANGA, NOVEL, ORIGINAL, OTHER, VIDEO_GAME, VISUAL_NOVEL,
-        WEB_NOVEL, LIVE_ACTION, GAME, COMIC, MULTIMEDIA_PROJECT, PICTURE_BOOK
+        WEB_NOVEL, LIVE_ACTION, GAME, COMIC, MULTIMEDIA_PROJECT, PICTURE_BOOK,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaSource
@@ -524,6 +535,7 @@ object KeyUtil {
     const val ONA = "ONA"
     const val MUSIC = "MUSIC"
     const val ONE_SHOT = "ONE_SHOT"
+
     @StringDef(TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaFormat
@@ -538,22 +550,29 @@ object KeyUtil {
 
     const val RATED = "RATED"
     const val POPULAR = "POPULAR"
+
     @StringDef(RATED, POPULAR)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaRankType
 
     @JvmField
     val MediaSeasonValues = arrayOf(WINTER, SPRING, SUMMER, FALL)
+
     @JvmField
     val MediaStatusValues: Array<String?> = arrayOf(null, FINISHED, RELEASING, NOT_YET_RELEASED, CANCELLED)
+
     @JvmField
     val MediaSourceValues: Array<String?> = arrayOf(null, ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, VIDEO_GAME, OTHER)
+
     @JvmField
     val MediaFormatValues: Array<String?> = arrayOf(null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC, MANGA, NOVEL, ONE_SHOT)
+
     @JvmField
     val AnimeFormatValues: Array<String?> = arrayOf(null, TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC)
+
     @JvmField
     val MangaFormatValues: Array<String?> = arrayOf(null, MANGA, NOVEL, ONE_SHOT)
+
     @JvmField
     val MediaRankTypeValues = arrayOf(RATED, POPULAR)
 
@@ -567,6 +586,7 @@ object KeyUtil {
     const val DROPPED = "DROPPED"
     const val PAUSED = "PAUSED"
     const val REPEATING = "REPEATING"
+
     @StringDef(CURRENT, PLANNING, COMPLETED, DROPPED, PAUSED, REPEATING)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MediaListStatus
@@ -576,12 +596,14 @@ object KeyUtil {
     const val POINT_10 = "POINT_10"
     const val POINT_5 = "POINT_5"
     const val POINT_3 = "POINT_3"
+
     @StringDef(POINT_100, POINT_10_DECIMAL, POINT_10, POINT_5, POINT_3)
     @Retention(AnnotationRetention.SOURCE)
     annotation class ScoreFormat
 
     @JvmField
     val MediaListStatusValues = arrayOf(CURRENT, PLANNING, COMPLETED, DROPPED, PAUSED, REPEATING)
+
     @JvmField
     val ScoreFormatValues = arrayOf(POINT_100, POINT_10_DECIMAL, POINT_10, POINT_5, POINT_3)
 
@@ -594,6 +616,7 @@ object KeyUtil {
     const val MANGA_LIST = "MANGA_LIST"
     const val MESSAGE = "MESSAGE"
     const val MEDIA_LIST = "MEDIA_LIST"
+
     @StringDef(TEXT, ANIME_LIST, MANGA_LIST, MESSAGE, MEDIA_LIST)
     @Retention(AnnotationRetention.SOURCE)
     annotation class FeedType
@@ -602,6 +625,7 @@ object KeyUtil {
     const val THREAD_COMMENT = "THREAD_COMMENT"
     const val ACTIVITY = "ACTIVITY"
     const val ACTIVITY_REPLY = "ACTIVITY_REPLY"
+
     @StringDef(THREAD, THREAD_COMMENT, ACTIVITY, ACTIVITY_REPLY)
     @Retention(AnnotationRetention.SOURCE)
     annotation class LikeType
@@ -613,6 +637,7 @@ object KeyUtil {
     const val NO_VOTE = "NO_VOTE"
     const val UP_VOTE = "UP_VOTE"
     const val DOWN_VOTE = "DOWN_VOTE"
+
     @StringDef(NO_VOTE, UP_VOTE, DOWN_VOTE)
     @Retention(AnnotationRetention.SOURCE)
     annotation class ReviewRating
@@ -642,7 +667,7 @@ object KeyUtil {
         ACTIVITY_MESSAGE, ACTIVITY_REPLY, ACTIVITY_REPLY_SUBSCRIBED, FOLLOWING, ACTIVITY_MENTION,
         THREAD_COMMENT_MENTION, THREAD_SUBSCRIBED, THREAD_COMMENT_REPLY, RELATED_MEDIA_ADDITION,
         AIRING, ACTIVITY_LIKE, ACTIVITY_REPLY_LIKE, THREAD_LIKE, THREAD_COMMENT_LIKE,
-        MEDIA_DATA_CHANGE, MEDIA_DELETION, MEDIA_MERGE
+        MEDIA_DATA_CHANGE, MEDIA_DELETION, MEDIA_MERGE,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class NotificationType
@@ -725,12 +750,25 @@ object KeyUtil {
 
     @JvmField
     val ShortcutTypes = arrayOf(
-        "SHORTCUT_SEARCH", "SHORTCUT_NOTIFICATION", "SHORTCUT_AIRING", "SHORTCUT_TRENDING",
-        "SHORTCUT_ANIME", "SHORTCUT_MANGA", "SHORTCUT_FEEDS", "SHORTCUT_PROFILE"
+        "SHORTCUT_SEARCH",
+        "SHORTCUT_NOTIFICATION",
+        "SHORTCUT_AIRING",
+        "SHORTCUT_TRENDING",
+        "SHORTCUT_ANIME",
+        "SHORTCUT_MANGA",
+        "SHORTCUT_FEEDS",
+        "SHORTCUT_PROFILE",
     )
+
     @IntDef(
-        SHORTCUT_SEARCH, SHORTCUT_NOTIFICATION, SHORTCUT_AIRING, SHORTCUT_TRENDING, SHORTCUT_MY_ANIME, SHORTCUT_MY_MANGA,
-        SHORTCUT_FEEDS, SHORTCUT_PROFILE
+        SHORTCUT_SEARCH,
+        SHORTCUT_NOTIFICATION,
+        SHORTCUT_AIRING,
+        SHORTCUT_TRENDING,
+        SHORTCUT_MY_ANIME,
+        SHORTCUT_MY_MANGA,
+        SHORTCUT_FEEDS,
+        SHORTCUT_PROFILE,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class ShortcutType
@@ -739,6 +777,7 @@ object KeyUtil {
     const val GIPHY_ORIGINAL_STILL = "original_still"
     const val GIPHY_ORIGINAL_ANIMATED = "original"
     const val GIPHY_PREVIEW = "preview_gif"
+
     @StringDef(GIPHY_LARGE_DOWN_SAMPLE, GIPHY_ORIGINAL_STILL, GIPHY_ORIGINAL_ANIMATED, GIPHY_PREVIEW)
     @Retention(AnnotationRetention.SOURCE)
     annotation class GiphyType
@@ -770,9 +809,13 @@ object KeyUtil {
     const val RECYCLER_TYPE_MANGA = 0x00001000
 
     @IntDef(
-        RECYCLER_TYPE_CONTENT, RECYCLER_TYPE_HEADER, RECYCLER_TYPE_LOADING,
-        RECYCLER_TYPE_EMPTY, RECYCLER_TYPE_ERROR, RECYCLER_TYPE_ANIME,
-        RECYCLER_TYPE_MANGA
+        RECYCLER_TYPE_CONTENT,
+        RECYCLER_TYPE_HEADER,
+        RECYCLER_TYPE_LOADING,
+        RECYCLER_TYPE_EMPTY,
+        RECYCLER_TYPE_ERROR,
+        RECYCLER_TYPE_ANIME,
+        RECYCLER_TYPE_MANGA,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class RecyclerViewType
@@ -794,7 +837,7 @@ object KeyUtil {
     @StringDef(
         KEY_MAIN_TIP, KEY_DETAIL_TIP, KEY_NOTIFICATION_TIP, KEY_MESSAGE_TIP, KEY_COMPOSE_TIP, KEY_CHARACTER_TIP,
         KEY_STAFF_TIP, KEY_STATUS_POST_TIP, KEY_USER_PROFILE_TIP, KEY_LOGIN_TIP, KEY_GIPHY_TIP,
-        KEY_POST_TYPE_TIP
+        KEY_POST_TYPE_TIP,
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class TapTargetType
@@ -806,6 +849,7 @@ object KeyUtil {
     const val NO_RATING = "NO_RATING"
     const val RATE_UP = "RATE_UP"
     const val RATE_DOWN = "RATE_DOWN"
+
     @StringDef(NO_RATING, RATE_DOWN, RATE_UP)
     @Retention(AnnotationRetention.SOURCE)
     annotation class RecommendationRating

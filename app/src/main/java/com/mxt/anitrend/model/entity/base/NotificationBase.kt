@@ -9,8 +9,9 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by max on 2018/02/24.
  * Notification base meta data class
  */
-open class NotificationBase() : RecyclerItem(), Parcelable {
-
+open class NotificationBase() :
+    RecyclerItem(),
+    Parcelable {
     var id: Long = 0
 
     @KeyUtil.NotificationType
@@ -28,7 +29,10 @@ open class NotificationBase() : RecyclerItem(), Parcelable {
         context = parcel.readString().orEmpty()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(id)
         dest.writeString(type)
         dest.writeLong(createdAt)
@@ -46,10 +50,11 @@ open class NotificationBase() : RecyclerItem(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<NotificationBase> = object : Parcelable.Creator<NotificationBase> {
-            override fun createFromParcel(parcel: Parcel): NotificationBase = NotificationBase(parcel)
+        val CREATOR: Parcelable.Creator<NotificationBase> =
+            object : Parcelable.Creator<NotificationBase> {
+                override fun createFromParcel(parcel: Parcel): NotificationBase = NotificationBase(parcel)
 
-            override fun newArray(size: Int): Array<NotificationBase?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<NotificationBase?> = arrayOfNulls(size)
+            }
     }
 }

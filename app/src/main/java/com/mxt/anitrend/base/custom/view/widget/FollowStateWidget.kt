@@ -16,9 +16,7 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -28,15 +26,16 @@ import timber.log.Timber
  * widget that represents the state of an
  * external user, either following or not
  */
-class FollowStateWidget @JvmOverloads constructor(
+class FollowStateWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
     View.OnClickListener,
     RetroCallback<UserBase> {
-
     private var model: UserBase? = null
     private lateinit var binding: WidgetButtonStateBinding
     private var presenter: WidgetPresenter<UserBase>? = null
@@ -59,10 +58,11 @@ class FollowStateWidget @JvmOverloads constructor(
         this.model = model
         val localPresenter = presenter
         if (localPresenter?.settings?.isAuthenticated == true) {
-            if (!localPresenter.isCurrentUser(model))
+            if (!localPresenter.isCurrentUser(model)) {
                 setControlText()
-            else
+            } else {
                 visibility = GONE
+            }
         } else {
             visibility = GONE
         }
@@ -72,12 +72,12 @@ class FollowStateWidget @JvmOverloads constructor(
         val currentModel = model ?: return
         if (currentModel.isFollowing) {
             binding.buttonStateContainer.setCardBackgroundColor(
-                context.getCompatColor(R.color.colorAccentDark)
+                context.getCompatColor(R.color.colorAccentDark),
             )
             binding.buttonStateText.setText(R.string.following)
         } else {
             binding.buttonStateContainer.setCardBackgroundColor(
-                context.getCompatColor(R.color.colorAccent)
+                context.getCompatColor(R.color.colorAccent),
             )
             binding.buttonStateText.setText(R.string.follow)
         }
@@ -94,8 +94,9 @@ class FollowStateWidget @JvmOverloads constructor(
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
     }
 
     override fun onClick(view: View) {
@@ -104,16 +105,17 @@ class FollowStateWidget @JvmOverloads constructor(
                 if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
                     val currentModel = model ?: return
-                    val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-                        .putVariable(KeyUtil.arg_userId, currentModel.id)
-                    presenter?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+                    presenter?.params?.apply {
+                        putLong(KeyUtil.arg_userId, currentModel.id)
+                    }
                     presenter?.requestData(KeyUtil.MUT_TOGGLE_FOLLOW, context, this)
                 } else {
-                    NotifyUtil.makeText(
-                        context,
-                        R.string.busy_please_wait,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    NotifyUtil
+                        .makeText(
+                            context,
+                            R.string.busy_please_wait,
+                            Toast.LENGTH_SHORT,
+                        ).show()
                 }
             }
         }
@@ -122,7 +124,10 @@ class FollowStateWidget @JvmOverloads constructor(
     /**
      * Invoked for a received HTTP response.
      */
-    override fun onResponse(call: Call<UserBase>, response: Response<UserBase>) {
+    override fun onResponse(
+        call: Call<UserBase>,
+        response: Response<UserBase>,
+    ) {
         try {
             if (response.isSuccessful) {
                 model?.toggleFollow()
@@ -141,7 +146,10 @@ class FollowStateWidget @JvmOverloads constructor(
      * Invoked when a network exception occurred talking to the server or when an unexpected
      * exception occurred creating the request or processing the response.
      */
-    override fun onFailure(call: Call<UserBase>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<UserBase>,
+        throwable: Throwable,
+    ) {
         try {
             Timber.w(throwable)
             setControlText()

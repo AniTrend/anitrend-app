@@ -18,25 +18,28 @@ import com.mxt.anitrend.view.fragment.group.MediaStaffRoleFragment
  */
 class StaffPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     private val isAuthenticated = koinOf<Settings>().isAuthenticated
 
     init {
         setPagerTitles(R.array.staff_page_titles)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> StaffOverviewFragment.newInstance(params)
-            1 -> MediaAnimeRoleFragment.newInstance(params, KeyUtil.ANIME, KeyUtil.STAFF_CHARACTERS_REQ)
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> StaffOverviewFragment.newInstance(params)
+        1 ->
+            MediaAnimeRoleFragment
+                .newInstance(params, KeyUtil.ANIME, KeyUtil.STAFF_CHARACTERS_REQ)
                 .apply { setFilterable(isAuthenticated) }
-            2 -> MediaFormatFragment.newInstance(params, KeyUtil.MANGA, KeyUtil.STAFF_MEDIA_REQ)
+        2 ->
+            MediaFormatFragment
+                .newInstance(params, KeyUtil.MANGA, KeyUtil.STAFF_MEDIA_REQ)
                 .apply { setFilterable(isAuthenticated) }
-            3 -> MediaStaffRoleFragment.newInstance(params)
+        3 ->
+            MediaStaffRoleFragment
+                .newInstance(params)
                 .apply { setFilterable(isAuthenticated) }
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

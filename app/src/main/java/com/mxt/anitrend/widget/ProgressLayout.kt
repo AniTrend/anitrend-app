@@ -14,12 +14,13 @@ import androidx.annotation.MainThread
 import com.mxt.anitrend.R
 import com.mxt.anitrend.widget.progress.ProgressLayoutState
 
-class ProgressLayout @JvmOverloads constructor(
+class ProgressLayout
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
     private var state: ProgressLayoutState = ProgressLayoutState.initial()
 
     private val loadingView: View
@@ -74,7 +75,7 @@ class ProgressLayout @JvmOverloads constructor(
         drawable: Drawable?,
         message: CharSequence?,
         actionText: CharSequence?,
-        action: OnClickListener?
+        action: OnClickListener?,
     ) {
         if (!isMainThread()) {
             post { showError(drawable, message, actionText, action) }
@@ -98,7 +99,10 @@ class ProgressLayout @JvmOverloads constructor(
         applyState()
     }
 
-    fun showEmpty(drawable: Drawable?, message: CharSequence?) {
+    fun showEmpty(
+        drawable: Drawable?,
+        message: CharSequence?,
+    ) {
         showError(drawable = drawable, message = message, actionText = null, action = null)
     }
 
@@ -116,7 +120,8 @@ class ProgressLayout @JvmOverloads constructor(
                         child.visibility = saved ?: View.VISIBLE
                     }
                     ProgressLayoutState.LOADING,
-                    ProgressLayoutState.ERROR -> {
+                    ProgressLayoutState.ERROR,
+                    -> {
                         contentViewVisibility[child] = child.visibility
                         child.visibility = View.GONE
                     }
@@ -136,7 +141,5 @@ class ProgressLayout @JvmOverloads constructor(
         }
     }
 
-    private fun isMainThread(): Boolean {
-        return Looper.myLooper() == Looper.getMainLooper()
-    }
+    private fun isMainThread(): Boolean = Looper.myLooper() == Looper.getMainLooper()
 }

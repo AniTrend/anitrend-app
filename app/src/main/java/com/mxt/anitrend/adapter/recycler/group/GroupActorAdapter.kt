@@ -24,12 +24,20 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by max on 2018/03/23.
  * Character Actor Adapter
  */
-class GroupActorAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(context) {
-
+class GroupActorAdapter(
+    context: Context,
+) : RecyclerViewAdapter<RecyclerItem>(context) {
     private var mediaClickListener: ItemClickListener<RecyclerItem> =
         object : ItemClickListener<RecyclerItem> {
-            override fun onItemClick(target: View, data: IntPair<RecyclerItem>) = Unit
-            override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) = Unit
+            override fun onItemClick(
+                target: View,
+                data: IntPair<RecyclerItem>,
+            ) = Unit
+
+            override fun onItemLongClick(
+                target: View,
+                data: IntPair<RecyclerItem>,
+            ) = Unit
         }
 
     fun setMediaClickListener(mediaClickListener: ItemClickListener<RecyclerItem>) {
@@ -38,30 +46,26 @@ class GroupActorAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(co
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        @KeyUtil.RecyclerViewType viewType: Int
-    ): RecyclerViewHolder<RecyclerItem> {
-        return if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-            GroupMediaViewHolder(
-                AdapterMediaHeaderBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-                mediaClickListener
-            )
-        } else {
-            StaffViewHolder(
-                AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        }
+        @KeyUtil.RecyclerViewType viewType: Int,
+    ): RecyclerViewHolder<RecyclerItem> = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
+        GroupMediaViewHolder(
+            AdapterMediaHeaderBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+            mediaClickListener,
+        )
+    } else {
+        StaffViewHolder(
+            AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
     }
 
     @KeyUtil.RecyclerViewType
-    override fun getItemViewType(position: Int): Int {
-        return data[position].contentType
-    }
+    override fun getItemViewType(position: Int): Int = data[position].contentType
 
     override fun getFilter(): Filter? = null
 
-    inner class StaffViewHolder(private val binding: AdapterStaffBinding) :
-        RecyclerViewHolder<RecyclerItem>(binding.root) {
-
+    inner class StaffViewHolder(
+        private val binding: AdapterStaffBinding,
+    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
         init {
             bindClickListeners(R.id.container)
         }
@@ -89,8 +93,6 @@ class GroupActorAdapter(context: Context) : RecyclerViewAdapter<RecyclerItem>(co
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

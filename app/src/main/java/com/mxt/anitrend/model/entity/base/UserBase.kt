@@ -15,13 +15,14 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Entity
-open class UserBase @JvmOverloads constructor(
+open class UserBase
+@JvmOverloads
+constructor(
     @Index
     var name: String? = null,
     var bannerImage: String? = null,
-    var isFollowing: Boolean = false
+    var isFollowing: Boolean = false,
 ) : Parcelable {
-
     @IgnoredOnParcel
     @Id(assignable = true)
     var id: Long = 0

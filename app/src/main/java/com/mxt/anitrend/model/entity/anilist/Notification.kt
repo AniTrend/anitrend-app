@@ -11,8 +11,9 @@ import com.mxt.anitrend.model.entity.base.UserBase
  * Created by max on 2018/03/25.
  * Notification
  */
-class Notification() : NotificationBase(), Parcelable {
-
+class Notification() :
+    NotificationBase(),
+    Parcelable {
     var activityId: Long = 0
     var commentId: Long = 0
     var user: UserBase = UserBase()
@@ -37,7 +38,10 @@ class Notification() : NotificationBase(), Parcelable {
         deletedMediaTitles = parcel.createStringArrayList().orEmpty()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         super.writeToParcel(dest, flags)
         dest.writeLong(activityId)
         dest.writeLong(commentId)
@@ -55,10 +59,11 @@ class Notification() : NotificationBase(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<Notification> = object : Parcelable.Creator<Notification> {
-            override fun createFromParcel(parcel: Parcel): Notification = Notification(parcel)
+        val CREATOR: Parcelable.Creator<Notification> =
+            object : Parcelable.Creator<Notification> {
+                override fun createFromParcel(parcel: Parcel): Notification = Notification(parcel)
 
-            override fun newArray(size: Int): Array<Notification?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<Notification?> = arrayOfNulls(size)
+            }
     }
 }

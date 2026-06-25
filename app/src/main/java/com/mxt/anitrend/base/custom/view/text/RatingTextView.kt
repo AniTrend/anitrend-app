@@ -27,7 +27,10 @@ import java.util.*
  * Special text base rating view
  */
 
-class RatingTextView : LinearLayout, CustomView, KoinComponent {
+class RatingTextView :
+    LinearLayout,
+    CustomView,
+    KoinComponent {
 
     private var mediaListOptions: MediaListOptions? = null
     private val presenter by inject<BasePresenter>()
@@ -57,8 +60,9 @@ class RatingTextView : LinearLayout, CustomView, KoinComponent {
      */
     override fun onInit() {
         val basePresenter = BasePresenter(context)
-        if (presenter.settings.isAuthenticated)
+        if (presenter.settings.isAuthenticated) {
             mediaListOptions = basePresenter.database.currentUser?.mediaListOptions
+        }
     }
 
     fun setFavourState(isFavourite: Boolean) {
@@ -71,21 +75,34 @@ class RatingTextView : LinearLayout, CustomView, KoinComponent {
         if (mediaBase.mediaListEntry != null) {
             binding.ratingListStatus.visibility = View.VISIBLE
             when (mediaBase.mediaListEntry?.status) {
-                KeyUtil.CURRENT -> binding.ratingListStatus.setTintDrawable(R.drawable.ic_remove_red_eye_white_18dp,
-                        R.color.white)
-                KeyUtil.PLANNING -> binding.ratingListStatus.setTintDrawable(R.drawable.ic_bookmark_white_24dp,
-                        R.color.white)
-                KeyUtil.COMPLETED -> binding.ratingListStatus.setTintDrawable(R.drawable.ic_done_all_grey_600_24dp,
-                        R.color.white)
-                KeyUtil.DROPPED -> binding.ratingListStatus.setTintDrawable(R.drawable.ic_delete_red_600_18dp,
-                        R.color.white)
-                KeyUtil.PAUSED -> binding.ratingListStatus.setTintDrawable(R.drawable.ic_pause_white_18dp,
-                        R.color.white)
-                KeyUtil.REPEATING -> binding.ratingListStatus.setTintDrawable(R.drawable.ic_repeat_white_18dp,
-                        R.color.white)
+                KeyUtil.CURRENT -> binding.ratingListStatus.setTintDrawable(
+                    R.drawable.ic_remove_red_eye_white_18dp,
+                    R.color.white,
+                )
+                KeyUtil.PLANNING -> binding.ratingListStatus.setTintDrawable(
+                    R.drawable.ic_bookmark_white_24dp,
+                    R.color.white,
+                )
+                KeyUtil.COMPLETED -> binding.ratingListStatus.setTintDrawable(
+                    R.drawable.ic_done_all_grey_600_24dp,
+                    R.color.white,
+                )
+                KeyUtil.DROPPED -> binding.ratingListStatus.setTintDrawable(
+                    R.drawable.ic_delete_red_600_18dp,
+                    R.color.white,
+                )
+                KeyUtil.PAUSED -> binding.ratingListStatus.setTintDrawable(
+                    R.drawable.ic_pause_white_18dp,
+                    R.color.white,
+                )
+                KeyUtil.REPEATING -> binding.ratingListStatus.setTintDrawable(
+                    R.drawable.ic_repeat_white_18dp,
+                    R.color.white,
+                )
             }
-        } else
+        } else {
             binding.ratingListStatus.visibility = View.GONE
+        }
     }
 
     fun setListStatus() {
@@ -93,7 +110,7 @@ class RatingTextView : LinearLayout, CustomView, KoinComponent {
     }
 
     fun setRating(mediaList: MediaList) {
-        if (mediaListOptions != null)
+        if (mediaListOptions != null) {
             when (mediaListOptions?.scoreFormat) {
                 KeyUtil.POINT_10_DECIMAL -> binding.ratingValue.text = String.format(Locale.getDefault(), "%.1f", mediaList.score)
                 KeyUtil.POINT_100, KeyUtil.POINT_10, KeyUtil.POINT_5 -> binding.ratingValue.text = String.format(Locale.getDefault(), "%d", mediaList.score.toInt())
@@ -107,13 +124,14 @@ class RatingTextView : LinearLayout, CustomView, KoinComponent {
                     }
                 }
             }
-        else
+        } else {
             binding.ratingValue.text = String.format(Locale.getDefault(), "%d", mediaList.score.toInt())
+        }
     }
 
     fun setRating(mediaBase: MediaBase) {
         var mediaScoreDefault = mediaBase.averageScore.toFloat() * 5 / 100f
-        if (mediaListOptions != null)
+        if (mediaListOptions != null) {
             when (mediaListOptions?.scoreFormat) {
                 KeyUtil.POINT_10_DECIMAL -> {
                     mediaScoreDefault = mediaBase.averageScore / 10f
@@ -127,8 +145,9 @@ class RatingTextView : LinearLayout, CustomView, KoinComponent {
                 KeyUtil.POINT_5 -> binding.ratingValue.text = String.format(Locale.getDefault(), "%d", mediaScoreDefault.toInt())
                 KeyUtil.POINT_3 -> {
                     binding.ratingValue.text = ""
-                    if (mediaBase.averageScore == 0)
+                    if (mediaBase.averageScore == 0) {
                         binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_face_white_18dp), null, null, null)
+                    }
                     when {
                         mediaBase.averageScore in 1..33 ->
                             binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null)
@@ -139,14 +158,14 @@ class RatingTextView : LinearLayout, CustomView, KoinComponent {
                     }
                 }
             }
-        else
+        } else {
             binding.ratingValue.text = String.format(Locale.getDefault(), "%d", mediaBase.averageScore)
+        }
     }
 
     /**
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
-
     }
 }

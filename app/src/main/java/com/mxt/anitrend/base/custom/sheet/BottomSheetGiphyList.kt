@@ -29,7 +29,6 @@ abstract class BottomSheetGiphyList :
     ResponseCallback,
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
-
     protected var container: GiphyContainer? = null
 
     protected var stateLayout: ProgressLayout? = null
@@ -42,10 +41,11 @@ abstract class BottomSheetGiphyList :
     protected var isPager: Boolean = false
     protected var isLimit: Boolean = false
 
-    private val stateLayoutOnClick = View.OnClickListener {
-        stateLayout?.showLoading()
-        onRefresh()
-    }
+    private val stateLayoutOnClick =
+        View.OnClickListener {
+            stateLayout?.showLoading()
+            onRefresh()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +55,11 @@ abstract class BottomSheetGiphyList :
     override fun onStart() {
         super.onStart()
         stateLayout?.showLoading()
-        if (mAdapter.itemCount < 1)
+        if (mAdapter.itemCount < 1) {
             onRefresh()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -90,8 +91,9 @@ abstract class BottomSheetGiphyList :
     }
 
     protected fun removeScrollLoadTrigger() {
-        if (isPager)
+        if (isPager) {
             recyclerView?.clearOnScrollListeners()
+        }
     }
 
     protected fun bindListViews(rootView: View) {
@@ -119,13 +121,15 @@ abstract class BottomSheetGiphyList :
             recycler.adapter = mAdapter
         }
         if (mAdapter.itemCount < 1) {
-            val drawable = context?.getCompatDrawable(
-                R.drawable.ic_new_releases_white_24dp,
-                R.color.colorStateBlue
-            ) ?: return
+            val drawable =
+                context?.getCompatDrawable(
+                    R.drawable.ic_new_releases_white_24dp,
+                    R.color.colorStateBlue,
+                ) ?: return
             stateLayout?.showEmpty(drawable, getString(R.string.layout_empty_response))
-        } else
+        } else {
             stateLayout?.showContent()
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -133,22 +137,26 @@ abstract class BottomSheetGiphyList :
         if (viewModel == null) {
             viewModel = ViewModelProvider(this).get(ViewModelBase::class.java) as ViewModelBase<GiphyContainer>
             viewModel?.setContext(requireContext())
-            if (viewModel?.model?.hasActiveObservers() == false)
+            if (viewModel?.model?.hasActiveObservers() == false) {
                 viewModel?.model?.observe(this, this)
-            if (stateSupported)
+            }
+            if (stateSupported) {
                 viewModel?.state = this
+            }
         }
     }
 
     fun setLimitReached() {
-        if (presenter.currentOffset != 0)
+        if (presenter.currentOffset != 0) {
             isLimit = true
+        }
     }
 
     override fun onRefresh() {
         mAdapter.clearDataSet()
-        if (isPager)
+        if (isPager) {
             presenter.onRefreshPage()
+        }
         makeRequest()
     }
 
@@ -165,18 +173,22 @@ abstract class BottomSheetGiphyList :
     override fun onChanged(content: GiphyContainer?) {
         if (content != null && !content.data.isNullOrEmpty()) {
             if (isPager) {
-                if (mAdapter.itemCount < 1)
+                if (mAdapter.itemCount < 1) {
                     mAdapter.onItemsInserted(content.data)
-                else
+                } else {
                     mAdapter.onItemRangeInserted(content.data)
-            } else
+                }
+            } else {
                 mAdapter.onItemsInserted(content.data)
+            }
             updateUI()
         } else {
-            if (isPager)
+            if (isPager) {
                 setLimitReached()
-            if (mAdapter.itemCount < 1)
+            }
+            if (mAdapter.itemCount < 1) {
                 showEmpty(getString(R.string.layout_empty_response))
+            }
         }
     }
 

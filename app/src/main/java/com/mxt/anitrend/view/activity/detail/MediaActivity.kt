@@ -7,8 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.mxt.anitrend.R
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.AnimePageAdapter
 import com.mxt.anitrend.adapter.pager.detail.MangaPageAdapter
 import com.mxt.anitrend.base.custom.activity.ActivityBase
@@ -16,25 +16,24 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.presenter.fragment.MediaPresenter
-import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.TapTargetUtil
 import com.mxt.anitrend.util.TutorialUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import java.util.Locale
 
 /**
  * Created by max on 2017/12/01.
  * Media activity
  */
-class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickListener {
-
+class MediaActivity :
+    ActivityBase<MediaBase, MediaPresenter>(),
+    View.OnClickListener {
     private lateinit var binding: ActivitySeriesBinding
 
     @KeyUtil.MediaType
@@ -53,10 +52,12 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
         disableToolbarTitle()
         binding.seriesBanner.setOnClickListener(this)
         setViewModel(true)
-        if (intent.hasExtra(KeyUtil.arg_id))
+        if (intent.hasExtra(KeyUtil.arg_id)) {
             id = intent.getLongExtra(KeyUtil.arg_id, -1)
-        if (intent.hasExtra(KeyUtil.arg_mediaType))
+        }
+        if (intent.hasExtra(KeyUtil.arg_mediaType)) {
             mediaType = intent.getStringExtra(KeyUtil.arg_mediaType)
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -95,44 +96,50 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
         if (model != null) {
             when (item.itemId) {
                 R.id.action_manage -> {
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(model.id).build(this)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(model.id)
+                            .build(this)
                     mediaActionUtil?.startSeriesAction()
                 }
                 R.id.action_share -> {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                            model.title?.userPreferred ?: "",
-                                model.siteUrl
+                    val intent =
+                        Intent(Intent.ACTION_SEND).apply {
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(
+                                    Locale.getDefault(),
+                                    "%s - %s",
+                                    model.title?.userPreferred ?: "",
+                                    model.siteUrl,
+                                ),
                             )
-                        )
-                        type = "text/plain"
-                    }
+                            type = "text/plain"
+                        }
                     startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 }
                 R.id.action_mal -> {
                     mediaType?.let { type ->
-                        val url = String.format(
-                            Locale.getDefault(),
-                            "https://myanimelist.net/%s/%d",
-                            type.lowercase(Locale.getDefault()),
-                            model.idMal
-                        )
+                        val url =
+                            String.format(
+                                Locale.getDefault(),
+                                "https://myanimelist.net/%s/%d",
+                                type.lowercase(Locale.getDefault()),
+                                model.idMal,
+                            )
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                         startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                     }
                 }
             }
         } else {
-            NotifyUtil.makeText(
-                applicationContext,
-                R.string.text_activity_loading,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    applicationContext,
+                    R.string.text_activity_loading,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -145,10 +152,11 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
         val type = mediaType
         if (type != null) {
             val baseStatePageAdapter: BaseStatePageAdapter =
-                if (!CompatUtil.equals(type, KeyUtil.ANIME))
+                if (!CompatUtil.equals(type, KeyUtil.ANIME)) {
                     MangaPageAdapter(this, applicationContext)
-                else
+                } else {
                     AnimePageAdapter(this, applicationContext)
+                }
             baseStatePageAdapter.params = intent.extras ?: Bundle.EMPTY
             binding.pageContainer.pageContainer.adapter = baseStatePageAdapter
             binding.pageContainer.pageContainer.offscreenPageLimit = offScreenLimit
@@ -161,17 +169,18 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
                 R.string.text_error_request,
                 R.string.text_unknown_error,
                 R.drawable.ic_warning_white_18dp,
-                R.color.colorStateRed
+                R.color.colorStateRed,
             )
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (getModel() == null)
+        if (getModel() == null) {
             makeRequest()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun updateUI() {
@@ -181,26 +190,32 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
             setFavouriteWidgetMenuItemIcon()
             setMenuItemIcons()
             if (presenter.settings.isAuthenticated) {
-                val favouritesPrompt = TutorialUtil().setContext(this)
-                    .setFocalColour(R.color.colorGrey600)
-                    .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
-                    .setSettings(presenter.settings)
-                    .createTapTarget(
-                        R.string.tip_series_options_title,
-                        R.string.tip_series_options_message,
-                        R.id.action_manage
-                    )
+                val favouritesPrompt =
+                    TutorialUtil()
+                        .setContext(this)
+                        .setFocalColour(R.color.colorGrey600)
+                        .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
+                        .setSettings(presenter.settings)
+                        .createTapTarget(
+                            R.string.tip_series_options_title,
+                            R.string.tip_series_options_message,
+                            R.id.action_manage,
+                        )
                 TapTargetUtil.showMultiplePrompts(favouritesPrompt)
             }
         }
     }
 
     override fun makeRequest() {
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_id, id)
-
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putLong(KeyUtil.arg_id, id)
+            if (presenter.settings.displayAdultContent) {
+                remove(KeyUtil.arg_isAdult)
+            } else {
+                putBoolean(KeyUtil.arg_isAdult, false)
+            }
+        }
         viewModel?.requestData(KeyUtil.MEDIA_BASE_REQ, applicationContext)
     }
 
@@ -217,7 +232,7 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
                     CompatUtil.imagePreview(
                         view,
                         model.bannerImage,
-                        R.string.image_preview_error_series_banner
+                        R.string.image_preview_error_series_banner,
                     )
                 }
             }
@@ -232,15 +247,17 @@ class MediaActivity : ActivityBase<MediaBase, MediaPresenter>(), View.OnClickLis
     private fun setMenuItemIcons() {
         val model = getModel()
         if (model != null) {
-            if (model.mediaListEntry != null && manageMenuItem != null)
+            if (model.mediaListEntry != null && manageMenuItem != null) {
                 manageMenuItem?.icon = getCompatDrawable(R.drawable.ic_mode_edit_white_24dp)
+            }
             malMenuItem?.isVisible = model.idMal > 0
         }
     }
 
     private fun setFavouriteWidgetMenuItemIcon() {
         val model = getModel()
-        if (model != null)
+        if (model != null) {
             favouriteWidget?.setModel(model)
+        }
     }
 }

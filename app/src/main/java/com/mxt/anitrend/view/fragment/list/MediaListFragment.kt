@@ -15,7 +15,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
@@ -32,7 +31,6 @@ import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -43,22 +41,20 @@ import org.greenrobot.eventbus.ThreadMode
 open class MediaListFragment :
     FragmentBaseList<MediaList, PageContainer<MediaListCollection>, MediaPresenter>(),
     BaseConsumer.onRequestModelChange<MediaList> {
-
     protected var userId: Long = 0
     protected var userName: String? = null
+
     @KeyUtil.MediaType
     protected var mediaType: String? = null
     protected var mediaListOptions: MediaListOptions? = null
+    protected var statusIn: String? = null
 
     protected var mediaListCollectionBase: MediaListCollectionBase? = null
-    protected lateinit var queryContainer: QueryContainerBuilder
 
     companion object {
         @JvmStatic
-        fun newInstance(params: Bundle, queryContainer: QueryContainerBuilder): MediaListFragment {
-            val args = Bundle(params).apply {
-                putParcelable(KeyUtil.arg_graph_params, queryContainer)
-            }
+        fun newInstance(params: Bundle): MediaListFragment {
+            val args = Bundle(params)
             return MediaListFragment().apply {
                 arguments = args
             }
@@ -70,31 +66,33 @@ open class MediaListFragment :
         arguments?.let { args ->
             userId = args.getLong(KeyUtil.arg_id)
             userName = args.getString(KeyUtil.arg_userName)
-            queryContainer = args.parcelable(KeyUtil.arg_graph_params)
-                ?: GraphUtil.getDefaultQuery(false)
+            statusIn = args.getString(KeyUtil.arg_statusIn)
             mediaType = args.getString(KeyUtil.arg_mediaType)
-        } ?: run {
-            queryContainer = GraphUtil.getDefaultQuery(false)
         }
 
         isFilterableEnabled = true
         isPager = false
         hasSubscriber = true
         val ctx = requireContext()
-        mAdapter = MediaListAdapter(ctx).apply {
-            setCurrentUser(userName)
-        }
+        mAdapter =
+            MediaListAdapter(ctx).apply {
+                setCurrentUser(userName)
+            }
         setPresenter(MediaPresenter(ctx))
         setViewModel(true)
 
-        mColumnSize = if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
-            R.integer.single_list_x1
-        } else {
-            R.integer.grid_list_x2
-        }
+        mColumnSize =
+            if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
+                R.integer.single_list_x1
+            } else {
+                R.integer.grid_list_x2
+            }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -111,10 +109,11 @@ open class MediaListFragment :
                     ctx,
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaListSortType, presenter.settings.mediaListSort),
-                    CompatUtil.capitalizeWords(KeyUtil.MediaListSortType)
+                    CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE)
+                    if (which == DialogAction.POSITIVE) {
                         presenter.settings.mediaListSort = KeyUtil.MediaListSortType[dialog.selectedIndex]
+                    }
                 }
                 return true
             }
@@ -124,12 +123,13 @@ open class MediaListFragment :
                     ctx,
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
-                    CompatUtil.getStringList(ctx, R.array.order_by_types)
+                    CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE)
+                    if (which == DialogAction.POSITIVE) {
                         presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder
+                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
                         )
+                    }
                 }
                 return true
             }
@@ -147,39 +147,49 @@ open class MediaListFragment :
             mediaListOptions = user.mediaListOptions
         }
         val mediaListSort = presenter.settings.mediaListSort ?: KeyUtil.PROGRESS
-        if (userId != 0L)
-            queryContainer.putVariable(KeyUtil.arg_userId, userId)
-        else
-            queryContainer.putVariable(KeyUtil.arg_userName, userName)
-
-        queryContainer.putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_forceSingleCompletedList, true)
-        mediaListOptions?.let { options ->
-            queryContainer.putVariable(KeyUtil.arg_scoreFormat, options.scoreFormat)
-        }
-
-        if (!MediaListUtil.isTitleSort(mediaListSort))
-            queryContainer.putVariable(
+        val params = viewModel?.params ?: return
+        params.apply {
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putBoolean(KeyUtil.arg_forceSingleCompletedList, true)
+            statusIn?.let {
+                putString(KeyUtil.arg_statusIn, it)
+            } ?: remove(KeyUtil.arg_statusIn)
+            if (userId != 0L) {
+                putLong(KeyUtil.arg_userId, userId)
+                remove(KeyUtil.arg_userName)
+            } else {
+                putString(KeyUtil.arg_userName, userName)
+                remove(KeyUtil.arg_userId)
+            }
+            mediaListOptions?.let { options ->
+                putString(KeyUtil.arg_scoreFormat, options.scoreFormat)
+            }
+            putString(
                 KeyUtil.arg_sort,
-                mediaListSort + presenter.settings.sortOrder
+                if (!MediaListUtil.isTitleSort(mediaListSort)) {
+                    mediaListSort + presenter.settings.sortOrder
+                } else {
+                    KeyUtil.MEDIA_ID + presenter.settings.sortOrder
+                },
             )
-        else
-            queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.MEDIA_ID + presenter.settings.sortOrder)
-
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        }
         context?.let { ctx ->
             viewModel?.requestData(KeyUtil.MEDIA_LIST_COLLECTION_REQ, ctx)
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
         if (key != null && isFilterableEnabled && GraphUtil.isKeyFilter(key)) {
             val mediaListSort = presenter.settings.mediaListSort ?: KeyUtil.PROGRESS
             if (CompatUtil.equals(key, Settings._mediaListSort) && MediaListUtil.isTitleSort(mediaListSort)) {
                 swipeRefreshLayout.setRefreshing(true)
                 sortMediaListByTitle(mAdapter.data)
-            } else
+            } else {
                 super.onSharedPreferenceChanged(sharedPreferences, key)
+            }
         }
     }
 
@@ -198,14 +208,16 @@ open class MediaListFragment :
                     val pairIndex = pair.first
                     when (consumer.requestMode) {
                         KeyUtil.MUT_SAVE_MEDIA_LIST -> {
-                            if (mediaListCollectionBase == null || CompatUtil.equals(
+                            if (mediaListCollectionBase == null ||
+                                CompatUtil.equals(
                                     mediaListCollectionBase?.status,
-                                    changeModel.status.orEmpty()
+                                    changeModel.status.orEmpty(),
                                 )
-                            )
+                            ) {
                                 mAdapter.onItemChanged(changeModel, pairIndex)
-                            else
+                            } else {
                                 mAdapter.onItemRemoved(pairIndex)
+                            }
                         }
                         KeyUtil.MUT_DELETE_MEDIA_LIST -> {
                             mAdapter.onItemRemoved(pairIndex)
@@ -213,83 +225,106 @@ open class MediaListFragment :
                     }
                 } else if (mediaListCollectionBase == null ||
                     CompatUtil.equals(mediaListCollectionBase?.status, changeModel.status.orEmpty())
-                )
+                ) {
                     onRefresh()
+                }
             }
         }
     }
 
     override fun onChanged(content: PageContainer<MediaListCollection>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
+            }
             if (!content.isEmpty) {
                 val mediaListCollection = content.pageData.firstOrNull()
                 if (mediaListCollection != null) {
                     val entries = mediaListCollection.entries.orEmpty()
                     val mediaListSort = presenter.settings.mediaListSort ?: KeyUtil.PROGRESS
-                    if (MediaListUtil.isTitleSort(mediaListSort))
+                    if (MediaListUtil.isTitleSort(mediaListSort)) {
                         sortMediaListByTitle(entries)
-                    else
+                    } else {
                         onPostProcessed(entries)
+                    }
                     mediaListCollectionBase = mediaListCollection
-                } else
+                } else {
                     onPostProcessed(emptyList())
-            } else
+                }
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<MediaList>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<MediaList>,
+    ) {
         when (target.id) {
             R.id.container,
-            R.id.series_image -> {
+            R.id.series_image,
+            -> {
                 val host = activity ?: return
                 val mediaBase = data.second.media
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, data.second.mediaId)
-                    putExtra(KeyUtil.arg_mediaType, mediaBase.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, data.second.mediaId)
+                        putExtra(KeyUtil.arg_mediaType, mediaBase.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<MediaList>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<MediaList>,
+    ) {
         when (target.id) {
             R.id.container,
-            R.id.series_image -> {
+            R.id.series_image,
+            -> {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(data.second.mediaId).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(data.second.mediaId)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
-                } else
+                } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
+                }
             }
         }
     }
 
     protected fun sortMediaListByTitle(mediaLists: List<MediaList>) {
         val sortOrder = presenter.settings.sortOrder
-        val sorted = mediaLists.sortedWith { first, second ->
-            val firstTitle = MediaUtil.getMediaTitle(first.media)
-            val secondTitle = MediaUtil.getMediaTitle(second.media)
-            if (CompatUtil.equals(sortOrder, KeyUtil.ASC))
-                firstTitle.compareTo(secondTitle)
-            else
-                secondTitle.compareTo(firstTitle)
-        }
+        val sorted =
+            mediaLists.sortedWith { first, second ->
+                val firstTitle = MediaUtil.getMediaTitle(first.media)
+                val secondTitle = MediaUtil.getMediaTitle(second.media)
+                if (CompatUtil.equals(sortOrder, KeyUtil.ASC)) {
+                    firstTitle.compareTo(secondTitle)
+                } else {
+                    secondTitle.compareTo(firstTitle)
+                }
+            }
         mAdapter.onItemsInserted(sorted)
         updateUI()
     }

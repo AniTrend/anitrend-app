@@ -1,37 +1,31 @@
-# Repository Guidelines
+# AniTrend Agent Notes
 
-## Project Structure & Module Organization
-- `app/` is the main Android application module.
-  - `app/src/main/java/` contains Kotlin/Java sources.
-  - `app/src/main/res/` holds Android resources (layouts, drawables, strings).
-  - `app/src/main/assets/` includes GraphQL queries and other assets.
-  - `app/src/test/java/` contains JVM unit tests.
-  - Flavor sources live in `app/src/app/` and `app/src/github/` (dimension: `version`).
-- `buildSrc/` hosts custom Gradle plugins and shared build logic.
-- Root `build.gradle.kts`, `settings.gradle.kts`, and `gradle/libs.versions.toml` define build configuration and dependency catalog.
+## Architecture and module boundaries
+- Real Gradle project is single-module `:app` (`settings.gradle.kts`); `app-compose/` exists in repo but is not included in the build.
+- App build logic is centralized in `buildSrc` via plugin `com.mxt.anitrend.plugin` (`app/build.gradle.kts`); prefer changing `buildSrc/src/main/java/com/mxt/anitrend/buildsrc/components/*` over adding ad-hoc module config.
+- Product flavors are `app` and `github` (`app/src/app/`, `app/src/github/`); preserve flavor behavior when editing build logic.
 
-## Build, Test, and Development Commands
-Use the Gradle wrapper from the repo root:
-- `./gradlew :app:assembleAppDebug` builds the Play Store flavor debug APK.
-- `./gradlew :app:assembleGithubDebug` builds the GitHub flavor debug APK.
-- `./gradlew :app:testAppDebugUnitTest` runs JVM unit tests for the app flavor.
-- `./gradlew :app:lint` runs Android lint (configured to not abort on error).
+## GraphQL migration state
+- GraphQL is codegen-first now: schema + operations live in `app/src/main/graphql/**`.
+- Generated operation API package is `com.mxt.anitrend.graphql.generated` (configured in `GraphQLComponents.kt`).
+- Use typed generated requests (`SomeOperation.request(...)` / `GraphQLRequest<...>`); do not reintroduce legacy `@GraphQuery` / `QueryContainerBuilder` patterns.
 
-## Coding Style & Naming Conventions
-- Kotlin and Java are both used; follow existing file patterns and Android Studio formatting (4-space indentation).
-- Use Android naming conventions for resources: `snake_case` for layouts, drawables, and IDs (for example, `activity_login.xml`, `ic_search_white_24dp.xml`).
-- Prefer dependency aliases from `gradle/libs.versions.toml` when updating Gradle files.
+## Build and verification commands
+- Java target is 21 (`.java-version` = `21.0.11`); CI also uses JDK 21.
+- Fast local verification after code changes:
+  - `./gradlew :app:compileAppDebugKotlin :app:assembleAppDebug --no-daemon`
+- Flavor APK builds:
+  - `./gradlew :app:assembleAppDebug`
+  - `./gradlew :app:assembleGithubDebug`
+- Unit tests used in CI:
+  - `bash .github/scripts/setup-config.sh` (creates placeholder `app/.config/secrets.properties`)
+  - `./gradlew test --stacktrace`
 
-## Testing Guidelines
-- Unit tests use JUnit4, Hamcrest, Mockito, and Koin test helpers.
-- Instrumented tests (if added) should live under `app/src/androidTest/java` and use AndroidX Test + Espresso.
-- Name tests after the behavior under test (for example, `EpisodeUtilTests`).
+## CI and release-specific gotchas
+- CI always runs `bash .github/scripts/validate-changelogs.sh`; any file in `fastlane/metadata/android/en-GB/changelogs/*.txt` must be `<= 500` chars.
+- Version metadata is automated by workflow `version-updater.yml` on branch `platform/update-version-meta-data`; check that branch/PR before manual version-file edits.
 
-## Commit & Pull Request Guidelines
-- Recent history follows Conventional Commit style, e.g. `fix(deps): ...`, `chore(deps): ...`.
-- Open an issue before large changes, especially new libraries or test refactors.
-- PRs should target the `develop` branch, include a clear description, and add screenshots when UI changes apply.
-
-## Security & Configuration Tips
-- Keep secrets in `.config/*.properties` or `local.properties`; do not hardcode keys in source.
-- `app/.config/` and signing files are environment-specific and should remain uncommitted unless explicitly requested.
+## Dependency and build-edit conventions
+- Use version catalog aliases from `gradle/libs.versions.toml`; do not hardcode dependency coordinates in module build files.
+- Keep current toolchain choices unless asked explicitly: AGP/Kotlin/JVM levels, KAPT (do not opportunistically migrate to KSP), ObjectBox/DataBinding compatibility settings.
+- Do not hardcode secrets; keep environment-specific values in `app/.config/*.properties` / local files and avoid committing them.

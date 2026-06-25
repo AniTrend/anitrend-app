@@ -10,5 +10,5 @@ class MediaTagStats(
     var tag: MediaTag? = null,
     var amount: Int = 0,
     var meanScore: Int = 0,
-    var timeWatched: Int = 0
+    var timeWatched: Int = 0,
 ) : Parcelable

@@ -13,29 +13,39 @@ fun RichMarkdownTextView.markDown(markdown: String?) {
         val strippedText = RegexUtil.removeTags(markdown)
         val markdownSpan = MarkDownUtil.convert(strippedText)
         setText(markdownSpan, TextView.BufferType.SPANNABLE)
-    } else richMarkDown(markdown)
+    } else {
+        richMarkDown(markdown)
+    }
 }
 
 fun RichMarkdownTextView.htmlText(html: String?) {
     if (!settings.experimentalMarkdown) {
         val markdownSpan = MarkDownUtil.convert(html)
         setText(markdownSpan, TextView.BufferType.SPANNABLE)
-    } else richMarkDown(html)
+    } else {
+        richMarkDown(html)
+    }
 }
 
 fun RichMarkdownTextView.basicText(html: String?) {
     if (!settings.experimentalMarkdown) {
         val htmlSpan = HtmlCompat.fromHtml(html.orEmpty(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         setText(htmlSpan, TextView.BufferType.SPANNABLE)
-    } else richMarkDown(html)
+    } else {
+        richMarkDown(html)
+    }
 }
 
-fun RichMarkdownTextView.htmlText(@StringRes resId: Int) {
+fun RichMarkdownTextView.htmlText(
+    @StringRes resId: Int,
+) {
     if (!settings.experimentalMarkdown) {
         val text = context.getString(resId)
         val markdownSpan = MarkDownUtil.convert(text)
         setText(markdownSpan, TextView.BufferType.SPANNABLE)
-    } else richMarkDown(context.getString(resId))
+    } else {
+        richMarkDown(context.getString(resId))
+    }
 }
 
 fun RichMarkdownTextView.richMarkDown(markdown: String?) {
@@ -43,8 +53,10 @@ fun RichMarkdownTextView.richMarkDown(markdown: String?) {
     if (!settings.experimentalMarkdown) {
         setSpannableFactory(NoCopySpannableFactory.getInstance())
         val tagsStripped = RegexUtil.removeTags(markdown)
-        //val userTagsConverted = RegexUtil.findUserTags(tagsStripped)
+        // val userTagsConverted = RegexUtil.findUserTags(tagsStripped)
         val standardMarkdown = RegexUtil.convertToStandardMarkdown(tagsStripped)
         markwon.setMarkdown(this, standardMarkdown)
-    } else setMarkDownText(markdown)
+    } else {
+        setMarkDownText(markdown)
+    }
 }

@@ -1,7 +1,6 @@
 package com.mxt.anitrend.model.api.retro.crunchy
 
 import com.mxt.anitrend.model.entity.crunchy.Rss
-
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,7 +10,6 @@ import retrofit2.http.Path
  */
 
 interface EpisodeModel {
-
     @get:GET("crunchyroll/rss/popular?format=xml")
     val popularFeed: Call<Rss>
 
@@ -20,6 +18,6 @@ interface EpisodeModel {
 
     @GET("/{path}")
     fun getRSS(
-            @Path("path") link: String?
+        @Path("path") link: String?,
     ): Call<Rss>
 }

@@ -11,7 +11,7 @@ import com.mxt.anitrend.util.KeyUtil
  */
 class BaseConsumer<T> @JvmOverloads constructor(
     @field:KeyUtil.RequestType val requestMode: Int,
-    val changeModel: T? = null
+    val changeModel: T? = null,
 ) {
 
     fun hasModel(): Boolean = changeModel != null

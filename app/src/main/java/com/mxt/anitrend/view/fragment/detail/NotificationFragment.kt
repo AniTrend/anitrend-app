@@ -20,7 +20,6 @@ import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
@@ -56,10 +55,11 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     override fun updateUI() {
-        with (presenter.database) {
+        with(presenter.database) {
             val historyItems = getBoxStore(NotificationHistory::class.java).count()
-            if (historyItems < 1)
+            if (historyItems < 1) {
                 markAllNotificationsAsRead()
+            }
             injectAdapter()
 
             currentUser?.also {
@@ -68,7 +68,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
             }
         }
 
-        //Testing notifications by forcing the notification dispatcher
+        // Testing notifications by forcing the notification dispatcher
         /*presenter.database.currentUser?.let {
             it.unreadNotificationCount = 3
             koinOf<Settings>().lastDismissedNotificationId = -1
@@ -90,8 +90,10 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
             R.id.action_mark_all -> {
                 if (mAdapter.itemCount > 0) {
                     ThreadPool.execute { markAllNotificationsAsRead() }
-                } else context?.also {
-                    NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT)
+                } else {
+                    context?.also {
+                        NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT)
+                    }
                 }
                 return true
             }
@@ -101,37 +103,43 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
 
     override fun onResume() {
         super.onResume()
-        if (this::mAdapter.isInitialized)
+        if (this::mAdapter.isInitialized) {
             mAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onChanged(content: PageContainer<Notification>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
+            }
             if (!content.isEmpty) {
                 val notifications = GraphUtil.filterNotificationList(
-                        presenter, content.pageData
+                    presenter,
+                    content.pageData,
                 )
                 onPostProcessed(notifications)
-            } else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
     /**
      * All new or updated network requests should be handled in this method
      */
     override fun makeRequest() {
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtil.arg_page, presenter.currentPage)
-                .putVariable(KeyUtil.arg_resetNotificationCount, true)
-
         val model = viewModel ?: return
-        model.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        model.params.apply {
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+            putBoolean(KeyUtil.arg_resetNotificationCount, true)
+        }
         model.requestData(KeyUtil.USER_NOTIFICATION_REQ, requireContext())
     }
 
@@ -142,19 +150,20 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
     private fun setItemAsRead(data: Notification) {
         ThreadPool.execute {
             val isNotificationRead = presenter.database.getBoxStore(NotificationHistory::class.java)
-                    .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
+                .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
             if (!isNotificationRead) {
                 val dismissibleNotifications = Stream.of(mAdapter.data)
-                        .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
-                        .map { item -> NotificationHistory(item.id) }
-                        .toList()
+                    .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
+                    .map { item -> NotificationHistory(item.id) }
+                    .toList()
 
-                if (!CompatUtil.isEmpty(dismissibleNotifications))
+                if (!CompatUtil.isEmpty(dismissibleNotifications)) {
                     presenter.database.getBoxStore(NotificationHistory::class.java)
-                            .put(dismissibleNotifications)
-                else
+                        .put(dismissibleNotifications)
+                } else {
                     presenter.database.getBoxStore(NotificationHistory::class.java)
-                            .put(NotificationHistory(data.id))
+                        .put(NotificationHistory(data.id))
+                }
             }
         }
     }
@@ -165,18 +174,18 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      */
     private fun markAllNotificationsAsRead() {
         val notificationHistories = Stream.of(mAdapter.data)
-                .map { notification -> NotificationHistory(notification.id) }
-                .toList()
+            .map { notification -> NotificationHistory(notification.id) }
+            .toList()
 
         presenter.database.getBoxStore(NotificationHistory::class.java)
-                .put(notificationHistories)
+            .put(notificationHistories)
 
         activity?.runOnUiThread {
-            if (this::mAdapter.isInitialized)
+            if (this::mAdapter.isInitialized) {
                 mAdapter.notifyDataSetChanged()
+            }
         }
     }
-
 
     /**
      * When the target view from [View.OnClickListener]
@@ -190,16 +199,16 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         val intent: Intent
         setItemAsRead(data.second)
         if (target.id == R.id.notification_img &&
-                !CompatUtil.equals(data.second.type, KeyUtil.AIRING) &&
-                !CompatUtil.equals(data.second.type, KeyUtil.RELATED_MEDIA_ADDITION) &&
-                !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DATA_CHANGE) &&
-                !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DELETION) &&
-                !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_MERGE)
+            !CompatUtil.equals(data.second.type, KeyUtil.AIRING) &&
+            !CompatUtil.equals(data.second.type, KeyUtil.RELATED_MEDIA_ADDITION) &&
+            !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DATA_CHANGE) &&
+            !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DELETION) &&
+            !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_MERGE)
         ) {
             intent = Intent(host, ProfileActivity::class.java)
             intent.putExtra(KeyUtil.arg_id, data.second.user.id)
             startActivity(intent)
-        } else
+        } else {
             when (data.second.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
                     intent = Intent(host, CommentActivity::class.java)
@@ -220,13 +229,15 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 KeyUtil.RELATED_MEDIA_ADDITION,
                 KeyUtil.MEDIA_DATA_CHANGE,
                 KeyUtil.MEDIA_DELETION,
-                KeyUtil.MEDIA_MERGE -> {
+                KeyUtil.MEDIA_MERGE,
+                -> {
                     intent = Intent(host, MediaActivity::class.java)
                     intent.putExtra(KeyUtil.arg_id, data.second.media?.id)
                     intent.putExtra(KeyUtil.arg_mediaType, data.second.media?.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    if (data.second.media != null)
+                    if (data.second.media != null) {
                         startActivity(intent)
+                    }
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     intent = Intent(host, CommentActivity::class.java)
@@ -244,24 +255,27 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     startActivity(intent)
                 }
                 KeyUtil.THREAD_SUBSCRIBED,
-                KeyUtil.THREAD_LIKE -> {
+                KeyUtil.THREAD_LIKE,
+                -> {
                     intent = Intent(Intent.ACTION_VIEW)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     intent.data = Uri.parse(
-                        "https://anilist.co/forum/thread/${data.second.thread.id}"
+                        "https://anilist.co/forum/thread/${data.second.thread.id}",
                     )
                     startActivity(intent)
                 }
                 KeyUtil.THREAD_COMMENT_MENTION,
                 KeyUtil.THREAD_COMMENT_REPLY,
-                KeyUtil.THREAD_COMMENT_LIKE -> {
+                KeyUtil.THREAD_COMMENT_LIKE,
+                -> {
                     intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(
-                        "https://anilist.co/forum/thread/${data.second.thread.id}/comment/${data.second.commentId}"
+                        "https://anilist.co/forum/thread/${data.second.thread.id}/comment/${data.second.commentId}",
                     )
                     startActivity(intent)
                 }
             }
+        }
     }
 
     /**
@@ -287,8 +301,6 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
 
     companion object {
 
-        fun newInstance(): NotificationFragment {
-            return NotificationFragment()
-        }
+        fun newInstance(): NotificationFragment = NotificationFragment()
     }
 }

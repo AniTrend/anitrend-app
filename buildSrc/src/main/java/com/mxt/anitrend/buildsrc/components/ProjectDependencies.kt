@@ -17,15 +17,15 @@
 
 package com.mxt.anitrend.buildsrc.components
 
-import org.gradle.api.Project
 import com.mxt.anitrend.buildsrc.extensions.*
+import org.gradle.api.Project
 
 internal fun Project.configureDependencies() {
     dependencies.add(
         "implementation",
         fileTree("libs") {
             include("*.jar")
-        }
+        },
     )
 
     dependencies.implementation(libs.jetbrains.kotlin.stdlib.jdk8)
@@ -112,8 +112,6 @@ internal fun Project.configureDependencies() {
     }
     dependencies.implementation(libs.anitrend.retrofit.graphql.runtime)
     dependencies.implementation(libs.anitrend.retrofit.graphql.api)
-    dependencies.implementation(libs.anitrend.retrofit.graphql.android.assets)
-    dependencies.implementation(libs.anitrend.retrofit.graphql.annotations)
 
     /** Smart Tab Layout */
     dependencies.implementation(libs.smarttablayout.library)

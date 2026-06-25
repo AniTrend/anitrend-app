@@ -19,10 +19,8 @@ import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.view.activity.detail.MediaListActivity
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -32,20 +30,20 @@ import java.util.Locale
  * Created by max on 2017/11/26.
  * status widget
  */
-class ProfileStatsWidget @JvmOverloads constructor(
+class ProfileStatsWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
     View.OnClickListener,
     RetroCallback<ConnectionContainer<UserStatisticTypes>> {
-
     private lateinit var binding: WidgetProfileStatsBinding
     private lateinit var presenter: WidgetPresenter<ConnectionContainer<UserStatisticTypes>>
 
     private var model: UserStatisticTypes? = null
-    private lateinit var queryContainer: QueryContainerBuilder
 
     private var bundle: Bundle? = null
     private val tagName = ProfileStatsWidget::class.java.simpleName
@@ -61,7 +59,7 @@ class ProfileStatsWidget @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -69,7 +67,6 @@ class ProfileStatsWidget @JvmOverloads constructor(
      */
     override fun onInit() {
         presenter = WidgetPresenter(context)
-        queryContainer = GraphUtil.getDefaultQuery(false)
         binding = WidgetProfileStatsBinding.inflate(LayoutInflater.from(context), this, true)
         // loading place holder data
         binding.userAnimeTime.text = placeHolder
@@ -99,11 +96,15 @@ class ProfileStatsWidget @JvmOverloads constructor(
 
     fun setParams(bundle: Bundle) {
         this.bundle = bundle
-        if (bundle.containsKey(KeyUtil.arg_id))
-            queryContainer.putVariable(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id))
-        else
-            queryContainer.putVariable(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName))
-        presenter.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        presenter.params.apply {
+            if (bundle.containsKey(KeyUtil.arg_id)) {
+                putLong(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id))
+                remove(KeyUtil.arg_userName)
+            } else {
+                putString(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName))
+                remove(KeyUtil.arg_id)
+            }
+        }
         presenter.requestData(KeyUtil.USER_STATS_REQ, context, this)
     }
 
@@ -119,41 +120,47 @@ class ProfileStatsWidget @JvmOverloads constructor(
         val stats = model
         when (view.id) {
             R.id.user_anime_time_container -> {
-                if (stats != null)
-                    Snackbar.make(
-                        this,
-                        context.getString(
-                            R.string.text_user_anime_time,
-                            getAnimeTime(stats.anime.minutesWatched)
-                        ),
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                if (stats != null) {
+                    Snackbar
+                        .make(
+                            this,
+                            context.getString(
+                                R.string.text_user_anime_time,
+                                getAnimeTime(stats.anime.minutesWatched),
+                            ),
+                            Snackbar.LENGTH_LONG,
+                        ).show()
+                }
             }
             R.id.user_manga_chaps_container -> {
-                if (stats != null)
-                    Snackbar.make(
-                        this,
-                        context.getString(
-                            R.string.text_user_manga_chapters,
-                            getMangaChaptersCount(stats.manga.chaptersRead)
-                        ),
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                if (stats != null) {
+                    Snackbar
+                        .make(
+                            this,
+                            context.getString(
+                                R.string.text_user_manga_chapters,
+                                getMangaChaptersCount(stats.manga.chaptersRead),
+                            ),
+                            Snackbar.LENGTH_LONG,
+                        ).show()
+                }
             }
             R.id.user_anime_total_container -> {
-                val intent = Intent(context, MediaListActivity::class.java).apply {
-                    putExtras(bundle ?: Bundle())
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                }
+                val intent =
+                    Intent(context, MediaListActivity::class.java).apply {
+                        putExtras(bundle ?: Bundle())
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                    }
                 context.startActivity(intent)
             }
             R.id.user_manga_total_container -> {
-                val intent = Intent(context, MediaListActivity::class.java).apply {
-                    putExtras(bundle ?: Bundle())
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                }
+                val intent =
+                    Intent(context, MediaListActivity::class.java).apply {
+                        putExtras(bundle ?: Bundle())
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                    }
                 context.startActivity(intent)
             }
         }
@@ -161,7 +168,7 @@ class ProfileStatsWidget @JvmOverloads constructor(
 
     override fun onResponse(
         call: Call<ConnectionContainer<UserStatisticTypes>>,
-        response: Response<ConnectionContainer<UserStatisticTypes>>
+        response: Response<ConnectionContainer<UserStatisticTypes>>,
     ) {
         try {
             val connectionContainer = response.body()
@@ -178,7 +185,10 @@ class ProfileStatsWidget @JvmOverloads constructor(
         }
     }
 
-    override fun onFailure(call: Call<ConnectionContainer<UserStatisticTypes>>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<ConnectionContainer<UserStatisticTypes>>,
+        throwable: Throwable,
+    ) {
         try {
             Timber.tag(tagName).w(throwable)
         } catch (e: Exception) {
@@ -187,29 +197,34 @@ class ProfileStatsWidget @JvmOverloads constructor(
     }
 
     fun getAnimeTime(animeTime: Int?): String {
-        if (animeTime == null || animeTime < 1)
+        if (animeTime == null || animeTime < 1) {
             return placeHolder
+        }
         var itemTime = animeTime / 60f
         if (itemTime > 60) {
             itemTime /= 24
-            if (itemTime > 365)
+            if (itemTime > 365) {
                 return context.getString(R.string.anime_time_years, itemTime / 365)
+            }
             return context.getString(R.string.anime_time_days, itemTime)
         }
         return context.getString(R.string.anime_time_hours, itemTime)
     }
 
     fun getMangaChaptersCount(mangaChap: Int?): String {
-        if (mangaChap == null || mangaChap < 1)
+        if (mangaChap == null || mangaChap < 1) {
             return placeHolder
-        if (mangaChap > 1000)
+        }
+        if (mangaChap > 1000) {
             return String.format(Locale.getDefault(), "%.1f K", mangaChap / 1000f)
+        }
         return String.format(Locale.getDefault(), "%d", mangaChap)
     }
 
     fun getCount(totalCount: Int): String {
-        if (totalCount >= 1000)
+        if (totalCount >= 1000) {
             return String.format(Locale.getDefault(), "%.1f K", totalCount / 1000f)
+        }
         return String.format(Locale.getDefault(), "%d", totalCount)
     }
 }

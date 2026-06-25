@@ -5,6 +5,5 @@ package com.mxt.anitrend.model.entity.container.attribute
  * Base or common type of edge
  */
 open class Edge<T : Any> {
-
-	lateinit var node: T
+    lateinit var node: T
 }

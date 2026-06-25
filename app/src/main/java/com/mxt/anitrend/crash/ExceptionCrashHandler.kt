@@ -24,10 +24,12 @@ import timber.log.Timber
 import kotlin.system.exitProcess
 
 internal class ExceptionCrashHandler(
-    private val handler: Thread.UncaughtExceptionHandler?
+    private val handler: Thread.UncaughtExceptionHandler?,
 ) : IExceptionCrashHandler {
-
-    private fun handleUncaughtCrashException(thread: Thread, throwable: Throwable) {
+    private fun handleUncaughtCrashException(
+        thread: Thread,
+        throwable: Throwable,
+    ) {
         Timber.e(throwable, thread.name)
     }
 
@@ -36,13 +38,24 @@ internal class ExceptionCrashHandler(
      * @param throwable Exception that was unhandled
      */
     @SuppressLint("LogNotTimber")
-    override fun onException(thread: Thread, throwable: Throwable) {
+    override fun onException(
+        thread: Thread,
+        throwable: Throwable,
+    ) {
         try {
             handleUncaughtCrashException(thread, throwable)
         } catch (e: Exception) {
             // Timber may not have been initialized, so will log into the android logger
-            Log.w("ExceptionCrashHandler", "Timber may not have been initialized yet, perhaps this crash happened before any DI configuration was complete", e)
-            Log.e("ExceptionCrashHandler", "Original exception before timber threw -> ${thread.name} threw an exception which was unhandled", e)
+            Log.w(
+                "ExceptionCrashHandler",
+                "Timber may not have been initialized yet, perhaps this crash happened before any DI configuration was complete",
+                e,
+            )
+            Log.e(
+                "ExceptionCrashHandler",
+                "Original exception before timber threw -> ${thread.name} threw an exception which was unhandled",
+                e,
+            )
         } finally {
             // terminate process after intercepting crash
             handler?.uncaughtException(thread, throwable)

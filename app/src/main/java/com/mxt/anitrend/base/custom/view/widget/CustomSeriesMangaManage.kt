@@ -20,12 +20,13 @@ import com.mxt.anitrend.util.media.MediaListUtil
 /**
  * Created by max on 2018/01/03.
  */
-class CustomSeriesMangaManage @JvmOverloads constructor(
+class CustomSeriesMangaManage
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : CustomSeriesManageBase(context, attrs, defStyleAttr) {
-
     private lateinit var binding: CustomActionMangaBinding
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -33,7 +34,7 @@ class CustomSeriesMangaManage @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -73,17 +74,20 @@ class CustomSeriesMangaManage @JvmOverloads constructor(
         binding.diaCurrentStatus.adapter = getIconArrayAdapter()
 
         val statusList = mediaListStatuses.toList()
-        if (!TextUtils.isEmpty(mediaListModel.status))
+        if (!TextUtils.isEmpty(mediaListModel.status)) {
             binding.diaCurrentStatus.setSelection(statusList.indexOf(mediaListModel.status))
-        else
+        } else {
             binding.diaCurrentStatus.setSelection(statusList.indexOf(KeyUtil.PLANNING))
+        }
 
         binding.diaCurrentPrivacy.isChecked = mediaListModel.isHidden
 
-        if (mediaListModel.media.volumes > 0)
+        if (mediaListModel.media.volumes > 0) {
             binding.diaCurrentVolumes.setProgressMaximum(mediaListModel.media.volumes)
-        if (mediaListModel.media.chapters > 0)
+        }
+        if (mediaListModel.media.chapters > 0) {
             binding.diaCurrentChapters.setProgressMaximum(mediaListModel.media.chapters)
+        }
 
         binding.diaCurrentScore.setScoreFormat(getMediaListOptions().scoreFormat)
         binding.diaCurrentScore.setScoreCurrent(mediaListModel.score)
@@ -104,18 +108,24 @@ class CustomSeriesMangaManage @JvmOverloads constructor(
         super.onViewRecycled()
     }
 
-    override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+    override fun onItemSelected(
+        adapterView: AdapterView<*>,
+        view: View,
+        i: Int,
+        l: Long,
+    ) {
         mediaListModel.status = mediaListStatuses[i]
         when (mediaListStatuses[i]) {
             KeyUtil.CURRENT -> {
-                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED)) {
                     NotifyUtil.makeText(context, R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show()
+                }
             }
             KeyUtil.PLANNING -> Unit
             KeyUtil.COMPLETED -> {
-                if (!CompatUtil.equals(getSeriesModel().status, KeyUtil.FINISHED))
+                if (!CompatUtil.equals(getSeriesModel().status, KeyUtil.FINISHED)) {
                     NotifyUtil.makeText(context, R.string.warning_manga_publishing, Toast.LENGTH_LONG).show()
-                else {
+                } else {
                     var total = getSeriesModel().chapters
                     mediaListModel.progress = total
                     binding.diaCurrentChapters.setProgressCurrent(total)
@@ -127,8 +137,9 @@ class CustomSeriesMangaManage @JvmOverloads constructor(
                 }
             }
             else -> {
-                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED)) {
                     NotifyUtil.makeText(context, R.string.warning_manga_not_publishing, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

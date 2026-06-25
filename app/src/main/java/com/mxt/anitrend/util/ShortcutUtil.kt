@@ -23,27 +23,32 @@ import com.mxt.anitrend.view.activity.index.SearchActivity
 @TargetApi(Build.VERSION_CODES.N_MR1)
 @RequiresApi(Build.VERSION_CODES.N_MR1)
 object ShortcutUtil {
-
-    private fun <S> createIntentAction(context: Context, targetActivity: Class<S>, param: Bundle): Intent =
-        Intent(context, targetActivity).apply {
-            putExtras(param)
-            action = Intent.ACTION_VIEW
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-
-    @JvmStatic
-    fun getShortcutManager(context: Context): ShortcutManager =
-        context.getSystemService(ShortcutManager::class.java)
+    private fun <S> createIntentAction(
+        context: Context,
+        targetActivity: Class<S>,
+        param: Bundle,
+    ): Intent = Intent(context, targetActivity).apply {
+        putExtras(param)
+        action = Intent.ACTION_VIEW
+        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
 
     @JvmStatic
-    fun createShortcuts(context: Context, vararg builders: ShortcutBuilder): Boolean {
+    fun getShortcutManager(context: Context): ShortcutManager = context.getSystemService(ShortcutManager::class.java)
+
+    @JvmStatic
+    fun createShortcuts(
+        context: Context,
+        vararg builders: ShortcutBuilder,
+    ): Boolean {
         val shortcutManager = getShortcutManager(context)
         val shortcutInfo = ArrayList<ShortcutInfo>(builders.size)
         for (shortcutBuilder in builders) {
             when (shortcutBuilder.shortcutType) {
                 KeyUtil.SHORTCUT_NOTIFICATION ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.menu_title_notifications))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_notifications))
@@ -51,14 +56,14 @@ object ShortcutUtil {
                                 createIntentAction(
                                     context,
                                     NotificationActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_AIRING ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.drawer_title_airing))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_airing))
@@ -66,14 +71,14 @@ object ShortcutUtil {
                                 createIntentAction(
                                     context,
                                     MainActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_MY_ANIME ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.drawer_title_myanime))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_anime))
@@ -81,14 +86,14 @@ object ShortcutUtil {
                                 createIntentAction(
                                     context,
                                     MediaListActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_MY_MANGA ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.drawer_title_mymanga))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_manga))
@@ -96,14 +101,14 @@ object ShortcutUtil {
                                 createIntentAction(
                                     context,
                                     MediaListActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_FEEDS ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.drawer_title_home))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_feeds))
@@ -111,14 +116,14 @@ object ShortcutUtil {
                                 createIntentAction(
                                     context,
                                     MainActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_PROFILE ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.drawer_title_profile))
                             .setDisabledMessage(context.getString(R.string.info_login_req))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_profile))
@@ -126,38 +131,37 @@ object ShortcutUtil {
                                 createIntentAction(
                                     context,
                                     ProfileActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_SEARCH ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.action_search))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_search))
                             .setIntent(
                                 createIntentAction(
                                     context,
                                     SearchActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 KeyUtil.SHORTCUT_TRENDING ->
                     shortcutInfo.add(
-                        ShortcutInfo.Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
+                        ShortcutInfo
+                            .Builder(context, KeyUtil.ShortcutTypes[shortcutBuilder.shortcutType])
                             .setShortLabel(context.getString(R.string.drawer_title_trending))
                             .setIcon(Icon.createWithResource(context, R.drawable.ic_shortcut_trending))
                             .setIntent(
                                 createIntentAction(
                                     context,
                                     MainActivity::class.java,
-                                    shortcutBuilder.params
-                                )
-                            )
-                            .build()
+                                    shortcutBuilder.params,
+                                ),
+                            ).build(),
                     )
                 else -> return false
             }
@@ -166,23 +170,34 @@ object ShortcutUtil {
     }
 
     @JvmStatic
-    fun disableShortcut(context: Context, @KeyUtil.ShortcutType vararg shortcuts: Int) {
+    fun disableShortcut(
+        context: Context,
+        @KeyUtil.ShortcutType vararg shortcuts: Int,
+    ) {
         val shortcutQueue = ArrayList<String>(shortcuts.size)
-        for (shortcut in shortcuts)
+        for (shortcut in shortcuts) {
             shortcutQueue.add(KeyUtil.ShortcutTypes[shortcut])
+        }
         getShortcutManager(context).disableShortcuts(shortcutQueue)
     }
 
     @JvmStatic
-    fun enableShortcuts(context: Context, @KeyUtil.ShortcutType vararg shortcuts: Int) {
+    fun enableShortcuts(
+        context: Context,
+        @KeyUtil.ShortcutType vararg shortcuts: Int,
+    ) {
         val shortcutQueue = ArrayList<String>(shortcuts.size)
-        for (shortcut in shortcuts)
+        for (shortcut in shortcuts) {
             shortcutQueue.add(KeyUtil.ShortcutTypes[shortcut])
+        }
         getShortcutManager(context).enableShortcuts(shortcutQueue)
     }
 
     @JvmStatic
-    fun reportShortcutUsage(context: Context, @KeyUtil.ShortcutType shortcutType: Int) {
+    fun reportShortcutUsage(
+        context: Context,
+        @KeyUtil.ShortcutType shortcutType: Int,
+    ) {
         getShortcutManager(context).reportShortcutUsed(KeyUtil.ShortcutTypes[shortcutType])
     }
 
@@ -193,7 +208,6 @@ object ShortcutUtil {
 
     /** Shortcut Builder Helper Class */
     class ShortcutBuilder {
-
         @KeyUtil.ShortcutType
         var shortcutType: Int = 0
             private set
@@ -206,7 +220,9 @@ object ShortcutUtil {
             return this
         }
 
-        fun setShortcutType(@KeyUtil.ShortcutType shortcutType: Int): ShortcutBuilder {
+        fun setShortcutType(
+            @KeyUtil.ShortcutType shortcutType: Int,
+        ): ShortcutBuilder {
             this.shortcutType = shortcutType
             return this
         }

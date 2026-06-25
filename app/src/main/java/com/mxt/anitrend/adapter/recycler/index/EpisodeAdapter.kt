@@ -16,19 +16,21 @@ import com.mxt.anitrend.model.entity.crunchy.Episode
 /**
  * Created by max on 2017/11/04.
  */
-class EpisodeAdapter(context: Context) : RecyclerViewAdapter<Episode>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<Episode> {
-        return EpisodeViewHolder(
-            AdapterEpisodeBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class EpisodeAdapter(
+    context: Context,
+) : RecyclerViewAdapter<Episode>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<Episode> = EpisodeViewHolder(
+        AdapterEpisodeBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class EpisodeViewHolder(private val binding: AdapterEpisodeBinding) :
-        RecyclerViewHolder<Episode>(binding.root) {
-
+    inner class EpisodeViewHolder(
+        private val binding: AdapterEpisodeBinding,
+    ) : RecyclerViewHolder<Episode>(binding.root) {
         init {
             bindClickListeners(R.id.series_image)
             bindLongClickListeners(R.id.series_image)
@@ -48,8 +50,6 @@ class EpisodeAdapter(context: Context) : RecyclerViewAdapter<Episode>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

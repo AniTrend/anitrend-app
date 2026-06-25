@@ -8,7 +8,6 @@ import com.mxt.anitrend.model.entity.base.CharacterBase
  * Created by Maxwell on 10/4/2016.
  */
 class MediaCharacter : CharacterBase {
-
     var description: String? = null
         private set
 
@@ -16,7 +15,10 @@ class MediaCharacter : CharacterBase {
         description = parcel.readString()
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
+    override fun writeToParcel(
+        parcel: Parcel,
+        flags: Int,
+    ) {
         super.writeToParcel(parcel, flags)
         parcel.writeString(description)
     }

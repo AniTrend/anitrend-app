@@ -20,12 +20,13 @@ import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
  *
  * A widget for [CustomSwipeRefreshLayout].
  */
-class CircleImageView @JvmOverloads constructor(
+class CircleImageView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
-
     companion object {
         private const val KEY_SHADOW_COLOR = 0x1E000000
         private const val FILL_SHADOW_COLOR = 0x3D000000
@@ -47,28 +48,30 @@ class CircleImageView @JvmOverloads constructor(
 
         shadowRadius = (density * SHADOW_RADIUS).toInt()
 
-        val circle: ShapeDrawable = if (elevationSupported()) {
-            val shape = ShapeDrawable(OvalShape())
-            ViewCompat.setElevation(this, SHADOW_ELEVATION * density)
-            shape
-        } else {
-            val oval = OvalShadow(shadowRadius, diameter)
-            val shape = ShapeDrawable(oval)
-            setLayerType(LAYER_TYPE_SOFTWARE, shape.paint)
-            shape.paint.setShadowLayer(shadowRadius.toFloat(), shadowXOffset.toFloat(), shadowYOffset.toFloat(), KEY_SHADOW_COLOR)
-            val padding = shadowRadius
-            setPadding(padding, padding, padding, padding)
-            shape
-        }
+        val circle: ShapeDrawable =
+            if (elevationSupported()) {
+                val shape = ShapeDrawable(OvalShape())
+                ViewCompat.setElevation(this, SHADOW_ELEVATION * density)
+                shape
+            } else {
+                val oval = OvalShadow(shadowRadius, diameter)
+                val shape = ShapeDrawable(oval)
+                setLayerType(LAYER_TYPE_SOFTWARE, shape.paint)
+                shape.paint.setShadowLayer(shadowRadius.toFloat(), shadowXOffset.toFloat(), shadowYOffset.toFloat(), KEY_SHADOW_COLOR)
+                val padding = shadowRadius
+                setPadding(padding, padding, padding, padding)
+                shape
+            }
         circle.paint.color = color
         background = circle
     }
 
-    private fun elevationSupported(): Boolean {
-        return android.os.Build.VERSION.SDK_INT >= 21
-    }
+    private fun elevationSupported(): Boolean = android.os.Build.VERSION.SDK_INT >= 21
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         if (!elevationSupported()) {
             setMeasuredDimension(measuredWidth + shadowRadius * 2, measuredHeight + shadowRadius * 2)
@@ -107,7 +110,10 @@ class CircleImageView @JvmOverloads constructor(
         }
     }
 
-    private inner class OvalShadow(shadowRadius: Int, circleDiameter: Int) : OvalShape() {
+    private inner class OvalShadow(
+        shadowRadius: Int,
+        circleDiameter: Int,
+    ) : OvalShape() {
         private val radialGradient: RadialGradient
         private val shadowPaint: Paint
         private val circleDiameter: Int
@@ -116,25 +122,29 @@ class CircleImageView @JvmOverloads constructor(
             shadowPaint = Paint()
             this@CircleImageView.shadowRadius = shadowRadius
             this.circleDiameter = circleDiameter
-            radialGradient = RadialGradient(
-                circleDiameter / 2f,
-                circleDiameter / 2f,
-                this@CircleImageView.shadowRadius.toFloat(),
-                intArrayOf(FILL_SHADOW_COLOR, Color.TRANSPARENT),
-                null,
-                Shader.TileMode.CLAMP
-            )
+            radialGradient =
+                RadialGradient(
+                    circleDiameter / 2f,
+                    circleDiameter / 2f,
+                    this@CircleImageView.shadowRadius.toFloat(),
+                    intArrayOf(FILL_SHADOW_COLOR, Color.TRANSPARENT),
+                    null,
+                    Shader.TileMode.CLAMP,
+                )
             shadowPaint.shader = radialGradient
         }
 
-        override fun draw(canvas: Canvas, paint: Paint) {
+        override fun draw(
+            canvas: Canvas,
+            paint: Paint,
+        ) {
             val viewWidth = this@CircleImageView.width
             val viewHeight = this@CircleImageView.height
             canvas.drawCircle(
                 viewWidth / 2f,
                 viewHeight / 2f,
                 (circleDiameter / 2f + shadowRadius),
-                shadowPaint
+                shadowPaint,
             )
             canvas.drawCircle(viewWidth / 2f, viewHeight / 2f, (circleDiameter / 2f), paint)
         }

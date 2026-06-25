@@ -14,7 +14,6 @@ import com.mxt.anitrend.util.KeyUtil
  * MessageActivity
  */
 class MessageActivity : ActivityBase<FeedList, BasePresenter>() {
-
     private lateinit var binding: ActivityPagerGenericBinding
 
     private lateinit var messagePageAdapter: MessagePageAdapter
@@ -42,9 +41,10 @@ class MessageActivity : ActivityBase<FeedList, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        messagePageAdapter = MessagePageAdapter(this, applicationContext).apply {
-            params = viewModel?.params ?: Bundle.EMPTY
-        }
+        messagePageAdapter =
+            MessagePageAdapter(this, applicationContext).apply {
+                params = viewModel?.params ?: Bundle.EMPTY
+            }
         updateUI()
     }
 

@@ -9,7 +9,6 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 
 class BottomSheetSpoiler : BottomSheetBase<Unit>() {
-
     private var binding: BottomSheetSpoilerBinding? = null
 
     private val text by lazy(LazyThreadSafetyMode.NONE) {
@@ -42,9 +41,7 @@ class BottomSheetSpoiler : BottomSheetBase<Unit>() {
     }
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
         fun setText(text: String?): BottomSheetBuilder {
             bundle.putString(KeyUtil.arg_text, text)

@@ -15,15 +15,15 @@ class TitleBase(
     val last: String?,
     @SerializedName("native")
     val original: String?,
-    val alternative: List<String>?
+    val alternative: List<String>?,
 ) : Parcelable {
-
     val alternativeFormatted: String?
         get() {
             if (alternative != null) {
                 val formatted = TextUtils.join(", ", alternative)
-                if (formatted.isNotEmpty())
+                if (formatted.isNotEmpty()) {
                     return formatted
+                }
             }
             return null
         }
@@ -32,10 +32,12 @@ class TitleBase(
         get() {
             var fullName = first
             if (!TextUtils.isEmpty(last)) {
-                fullName = if (!TextUtils.isEmpty(fullName))
-                    "$fullName $last"
-                else
-                    last
+                fullName =
+                    if (!TextUtils.isEmpty(fullName)) {
+                        "$fullName $last"
+                    } else {
+                        last
+                    }
             }
             return fullName
         }

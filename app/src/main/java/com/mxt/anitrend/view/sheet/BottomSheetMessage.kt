@@ -14,16 +14,15 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by max on 2017/11/03.
  * Displays messages with two buttons
  */
-class BottomSheetMessage : BottomSheetBase<Unit>(), View.OnClickListener {
-
+class BottomSheetMessage :
+    BottomSheetBase<Unit>(),
+    View.OnClickListener {
     private var binding: BottomSheetMessageBinding? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle): BottomSheetMessage {
-            return BottomSheetMessage().apply {
-                arguments = bundle
-            }
+        fun newInstance(bundle: Bundle): BottomSheetMessage = BottomSheetMessage().apply {
+            arguments = bundle
         }
     }
 
@@ -41,15 +40,17 @@ class BottomSheetMessage : BottomSheetBase<Unit>(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
         binding?.bottomText?.basicText(getString(mText))
-        if (mPositive != 0)
+        if (mPositive != 0) {
             binding?.bottomPositive?.setText(mPositive)
-        else
+        } else {
             binding?.bottomPositive?.visibility = View.GONE
+        }
 
-        if (mNegative != 0)
+        if (mNegative != 0) {
             binding?.bottomNegative?.setText(mNegative)
-        else
+        } else {
             binding?.bottomNegative?.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {
@@ -71,11 +72,11 @@ class BottomSheetMessage : BottomSheetBase<Unit>(), View.OnClickListener {
     }
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
-        fun setText(@StringRes text: Int): Builder {
+        fun setText(
+            @StringRes text: Int,
+        ): Builder {
             bundle.putInt(KeyUtil.arg_text, text)
             return this
         }

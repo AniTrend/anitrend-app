@@ -9,18 +9,17 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.mxt.anitrend.R
-import com.mxt.anitrend.test.R as TestR
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import com.mxt.anitrend.test.R as TestR
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class ProgressLayoutInstrumentationTest {
-
     @Test
     fun initialState_isContent() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
@@ -36,17 +35,17 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE initially",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Loading overlay should be GONE initially",
                     View.GONE,
-                    loadingView.visibility
+                    loadingView.visibility,
                 )
                 assertEquals(
                     "Error overlay should be GONE initially",
                     View.GONE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
             }
         }
@@ -69,17 +68,17 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be GONE after showLoading",
                     View.GONE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Loading overlay should be VISIBLE after showLoading",
                     View.VISIBLE,
-                    loadingView.visibility
+                    loadingView.visibility,
                 )
                 assertEquals(
                     "Error overlay should be GONE after showLoading",
                     View.GONE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
             }
         }
@@ -101,12 +100,12 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE after showContent",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Loading overlay should be GONE after showContent",
                     View.GONE,
-                    loadingView.visibility
+                    loadingView.visibility,
                 )
             }
         }
@@ -132,7 +131,7 @@ class ProgressLayoutInstrumentationTest {
                     drawable = drawable,
                     message = "Something went wrong",
                     actionText = "Retry",
-                    action = onClickListener
+                    action = onClickListener,
                 )
 
                 assertTrue("Expected state to be ERROR after showError", layout.isError)
@@ -141,38 +140,38 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be GONE after showError",
                     View.GONE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Loading overlay should be GONE after showError",
                     View.GONE,
-                    loadingView.visibility
+                    loadingView.visibility,
                 )
                 assertEquals(
                     "Error overlay should be VISIBLE after showError",
                     View.VISIBLE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
                 assertEquals(
                     "Error icon should be VISIBLE",
                     View.VISIBLE,
-                    errorIcon.visibility
+                    errorIcon.visibility,
                 )
                 assertNotNull("Error icon drawable should not be null", errorIcon.drawable)
                 assertEquals(
                     "Error message should be set",
                     "Something went wrong",
-                    errorText.text.toString()
+                    errorText.text.toString(),
                 )
                 assertEquals(
                     "Error action button should be VISIBLE",
                     View.VISIBLE,
-                    errorAction.visibility
+                    errorAction.visibility,
                 )
                 assertEquals(
                     "Error action button text should be set",
                     "Retry",
-                    errorAction.text.toString()
+                    errorAction.text.toString(),
                 )
 
                 // Verify action click works
@@ -199,27 +198,27 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Error overlay should be VISIBLE after showEmpty",
                     View.VISIBLE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
                 assertEquals(
                     "Error icon should be VISIBLE",
                     View.VISIBLE,
-                    errorIcon.visibility
+                    errorIcon.visibility,
                 )
                 assertEquals(
                     "Error message should be set",
                     "No data available",
-                    errorText.text.toString()
+                    errorText.text.toString(),
                 )
                 assertEquals(
                     "Error action button should be GONE",
                     View.GONE,
-                    errorAction.visibility
+                    errorAction.visibility,
                 )
                 assertEquals(
                     "Error action button text should be empty",
                     "",
-                    errorAction.text.toString()
+                    errorAction.text.toString(),
                 )
             }
         }
@@ -238,26 +237,26 @@ class ProgressLayoutInstrumentationTest {
                     drawable = ColorDrawable(0xFF0000.toInt()),
                     message = "Error after loading",
                     actionText = "OK",
-                    action = View.OnClickListener { }
+                    action = View.OnClickListener { },
                 )
 
                 assertTrue(
                     "Expected state to be ERROR after showLoading -> showError",
-                    layout.isError
+                    layout.isError,
                 )
                 assertFalse(
                     "Expected state NOT to be LOADING after showLoading -> showError",
-                    layout.isLoading
+                    layout.isLoading,
                 )
                 assertEquals(
                     "Error overlay should be VISIBLE",
                     View.VISIBLE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
                 assertEquals(
                     "Loading overlay should be GONE",
                     View.GONE,
-                    loadingView.visibility
+                    loadingView.visibility,
                 )
             }
         }
@@ -277,26 +276,26 @@ class ProgressLayoutInstrumentationTest {
 
                 assertTrue(
                     "Expected state to be ERROR after showLoading -> showEmpty",
-                    layout.isError
+                    layout.isError,
                 )
                 assertFalse(
                     "Expected state NOT to be LOADING after showLoading -> showEmpty",
-                    layout.isLoading
+                    layout.isLoading,
                 )
                 assertEquals(
                     "Error overlay should be VISIBLE",
                     View.VISIBLE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
                 assertEquals(
                     "Loading overlay should be GONE",
                     View.GONE,
-                    loadingView.visibility
+                    loadingView.visibility,
                 )
                 assertEquals(
                     "Error action button should be GONE",
                     View.GONE,
-                    errorAction.visibility
+                    errorAction.visibility,
                 )
             }
         }
@@ -314,23 +313,23 @@ class ProgressLayoutInstrumentationTest {
                     drawable = ColorDrawable(0xFF0000.toInt()),
                     message = "Error",
                     actionText = null,
-                    action = null
+                    action = null,
                 )
                 layout.showContent()
 
                 assertTrue(
                     "Expected state to be CONTENT after error -> showContent",
-                    layout.isContent
+                    layout.isContent,
                 )
                 assertEquals(
                     "Content child should be VISIBLE after error -> showContent",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Error overlay should be GONE after error -> showContent",
                     View.GONE,
-                    errorView.visibility
+                    errorView.visibility,
                 )
             }
         }
@@ -349,24 +348,24 @@ class ProgressLayoutInstrumentationTest {
                     drawable = null,
                     message = "Info message",
                     actionText = null,
-                    action = null
+                    action = null,
                 )
 
                 assertTrue("Expected state to be ERROR", layout.isError)
                 assertEquals(
                     "Error icon should be GONE when drawable is null",
                     View.GONE,
-                    errorIcon.visibility
+                    errorIcon.visibility,
                 )
                 assertEquals(
                     "Error action button should be GONE when action is null",
                     View.GONE,
-                    errorAction.visibility
+                    errorAction.visibility,
                 )
                 assertEquals(
                     "Error message text should be set even with null drawable",
                     "Info message",
-                    errorText.text.toString()
+                    errorText.text.toString(),
                 )
             }
         }
@@ -385,12 +384,12 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be GONE during loading",
                     View.GONE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Second child should be GONE during loading",
                     View.GONE,
-                    secondChild.visibility
+                    secondChild.visibility,
                 )
 
                 // Transition back to CONTENT
@@ -398,12 +397,12 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE after returning to content",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals(
                     "Second child should be VISIBLE after returning to content",
                     View.VISIBLE,
-                    secondChild.visibility
+                    secondChild.visibility,
                 )
             }
         }
@@ -426,7 +425,7 @@ class ProgressLayoutInstrumentationTest {
                     drawable = ColorDrawable(0xFF0000.toInt()),
                     message = "First error",
                     actionText = "Retry",
-                    action = View.OnClickListener { }
+                    action = View.OnClickListener { },
                 )
                 assertTrue("Expected ERROR after showLoading → showError", layout.isError)
                 layout.showContent()
@@ -434,7 +433,7 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE after first cycle",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
 
                 // Cycle 2: LOADING → ERROR → CONTENT (second time)
@@ -443,7 +442,7 @@ class ProgressLayoutInstrumentationTest {
                     drawable = ColorDrawable(0xFF0000.toInt()),
                     message = "Second error",
                     actionText = "Retry",
-                    action = View.OnClickListener { }
+                    action = View.OnClickListener { },
                 )
                 assertTrue("Expected ERROR after second showLoading → showError", layout.isError)
                 layout.showContent()
@@ -451,7 +450,7 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE after second cycle",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
 
                 // Cycle 3: Just LOADING → CONTENT
@@ -462,7 +461,7 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE after third cycle",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
             }
         }
@@ -485,7 +484,7 @@ class ProgressLayoutInstrumentationTest {
                     drawable = null,
                     message = "Error without icon",
                     actionText = null,
-                    action = null
+                    action = null,
                 )
                 assertTrue("Expected ERROR", layout.isError)
                 assertEquals("Content hidden during error", View.GONE, contentChild.visibility)
@@ -497,7 +496,7 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE after error → content",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
                 assertEquals("Error overlay hidden", View.GONE, errorView.visibility)
             }
@@ -522,7 +521,7 @@ class ProgressLayoutInstrumentationTest {
                 assertEquals(
                     "Content child should be VISIBLE synchronously after showContent",
                     View.VISIBLE,
-                    contentChild.visibility
+                    contentChild.visibility,
                 )
             }
         }

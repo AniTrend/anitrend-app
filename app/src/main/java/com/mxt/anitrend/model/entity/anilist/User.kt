@@ -18,8 +18,9 @@ import io.objectbox.annotation.Entity
  * User
  */
 @Entity
-class User() : UserBase(), Parcelable {
-
+class User() :
+    UserBase(),
+    Parcelable {
     var about: String? = null
 
     @field:Convert(converter = UserOptionsConverter::class, dbType = String::class)
@@ -45,7 +46,10 @@ class User() : UserBase(), Parcelable {
         unreadNotificationCount = parcel.readInt()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         super.writeToParcel(dest, flags)
         dest.writeString(about)
         dest.writeParcelable(options, flags)
@@ -58,10 +62,11 @@ class User() : UserBase(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<User> = object : Parcelable.Creator<User> {
-            override fun createFromParcel(parcel: Parcel): User = User(parcel)
+        val CREATOR: Parcelable.Creator<User> =
+            object : Parcelable.Creator<User> {
+                override fun createFromParcel(parcel: Parcel): User = User(parcel)
 
-            override fun newArray(size: Int): Array<User?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<User?> = arrayOfNulls(size)
+            }
     }
 }

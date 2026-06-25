@@ -12,7 +12,7 @@ Before opening a new issue, please take a moment to review our [**community guid
 https://github.com/AniTrend/anitrend-app/issues?q=is%3Aissue+is%3Aclosed
 
 
-## Feature Information 
+## Feature Information
 <!-- Is your feature request related to a problem? Please describe. -->
 
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

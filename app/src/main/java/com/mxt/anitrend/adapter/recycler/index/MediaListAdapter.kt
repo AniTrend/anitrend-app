@@ -30,17 +30,17 @@ import java.util.*
  * Created by max on 2017/11/03.
  * adapter for series lists
  */
-class MediaListAdapter(context: Context) :
-    RecyclerViewAdapter<MediaList>(context) {
+class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(context) {
     private var currentUser: String? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): RecyclerViewHolder<MediaList> {
         val adapter = when (presenter.settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
-            KeyUtil.LIST_VIEW_STYLE_COMPACT_X2 -> {
+            KeyUtil.LIST_VIEW_STYLE_COMPACT_X2,
+            -> {
                 AdapterSeriesAiringCompactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             }
             else -> {
@@ -88,8 +88,10 @@ class MediaListAdapter(context: Context) :
      * Default constructor which includes binding with butter knife
      *
      * @param binding
-      */(private val binding: ViewBinding) :
-        RecyclerViewHolder<MediaList>(binding.root) {
+     */
+    (
+        private val binding: ViewBinding,
+    ) : RecyclerViewHolder<MediaList>(binding.root) {
 
         init {
             bindClickListeners(R.id.series_image, R.id.container)
@@ -166,9 +168,6 @@ class MediaListAdapter(context: Context) :
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
-
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

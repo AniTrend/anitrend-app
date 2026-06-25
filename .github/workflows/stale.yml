@@ -19,4 +19,4 @@ jobs:
         days-before-close: 365
         exempt-issue-labels: 'awaiting-approval,work-in-progress'
         exempt-pr-labels: 'awaiting-approval,work-in-progress'
-        repo-token: ${{ secrets.GITHUB_TOKEN }} 
+        repo-token: ${{ secrets.GITHUB_TOKEN }}

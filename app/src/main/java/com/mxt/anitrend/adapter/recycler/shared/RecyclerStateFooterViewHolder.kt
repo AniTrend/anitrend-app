@@ -9,9 +9,8 @@ import com.mxt.anitrend.databinding.CustomRecyclerLoadingFooterBinding
  * LoadingFooterViewHolder
  */
 class RecyclerStateFooterViewHolder<T>(
-    binding: CustomRecyclerLoadingFooterBinding
+    binding: CustomRecyclerLoadingFooterBinding,
 ) : RecyclerViewHolder<T>(binding.root) {
-
     override fun onBindViewHolder(model: T) = Unit
 
     override fun onViewRecycled() = Unit

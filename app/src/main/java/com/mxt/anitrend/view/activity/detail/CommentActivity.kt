@@ -15,7 +15,6 @@ import com.mxt.anitrend.view.fragment.detail.CommentFragment
  * Comment activity for progress & feeds
  */
 class CommentActivity : ActivityBase<FeedList, BasePresenter>() {
-
     private lateinit var binding: ActivityFrameGenericBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -22,33 +22,36 @@ import com.mxt.anitrend.util.media.MediaListUtil
  * Created by max on 2018/01/20.
  * CustomSeriesManageBase for managing mediaLists
  */
-abstract class CustomSeriesManageBase @JvmOverloads constructor(
+abstract class CustomSeriesManageBase
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : RelativeLayout(context, attrs, defStyleAttr),
     CustomView,
     AdapterView.OnItemSelectedListener {
-
     protected lateinit var presenter: MediaPresenter
     protected lateinit var mediaListModel: MediaList
 
-    protected val indexIconMap: MutableMap<Int, Int> = hashMapOf(
-        0 to R.drawable.ic_remove_red_eye_white_18dp,
-        1 to R.drawable.ic_bookmark_white_24dp,
-        2 to R.drawable.ic_done_all_grey_600_24dp,
-        3 to R.drawable.ic_delete_red_600_18dp,
-        4 to R.drawable.ic_pause_white_18dp,
-        5 to R.drawable.ic_repeat_white_18dp
-    )
-    protected val mediaListStatuses = arrayOf(
-        KeyUtil.CURRENT,
-        KeyUtil.PLANNING,
-        KeyUtil.COMPLETED,
-        KeyUtil.DROPPED,
-        KeyUtil.PAUSED,
-        KeyUtil.REPEATING
-    )
+    protected val indexIconMap: MutableMap<Int, Int> =
+        hashMapOf(
+            0 to R.drawable.ic_remove_red_eye_white_18dp,
+            1 to R.drawable.ic_bookmark_white_24dp,
+            2 to R.drawable.ic_done_all_grey_600_24dp,
+            3 to R.drawable.ic_delete_red_600_18dp,
+            4 to R.drawable.ic_pause_white_18dp,
+            5 to R.drawable.ic_repeat_white_18dp,
+        )
+    protected val mediaListStatuses =
+        arrayOf(
+            KeyUtil.CURRENT,
+            KeyUtil.PLANNING,
+            KeyUtil.COMPLETED,
+            KeyUtil.DROPPED,
+            KeyUtil.PAUSED,
+            KeyUtil.REPEATING,
+        )
 
     init {
         onInit()
@@ -59,7 +62,7 @@ abstract class CustomSeriesManageBase @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -70,33 +73,33 @@ abstract class CustomSeriesManageBase @JvmOverloads constructor(
     }
 
     protected fun getIconArrayAdapter(): IconArrayAdapter {
-        val iconArrayAdapter = IconArrayAdapter(
-            context,
-            R.layout.adapter_spinner_item,
-            R.id.spinner_text,
-            CompatUtil.getStringList(context, R.array.media_list_status)
-        )
+        val iconArrayAdapter =
+            IconArrayAdapter(
+                context,
+                R.layout.adapter_spinner_item,
+                R.id.spinner_text,
+                CompatUtil.getStringList(context, R.array.media_list_status),
+            )
         iconArrayAdapter.setIndexIconMap(indexIconMap)
         return iconArrayAdapter
     }
 
     fun setModel(mediaBase: MediaBase) {
         val entry = mediaBase.mediaListEntry
-        mediaListModel = if (entry != null) {
-            entry.apply { media = mediaBase }
-        } else {
-            MediaList().apply {
-                mediaId = mediaBase.id
-                media = mediaBase
+        mediaListModel =
+            if (entry != null) {
+                entry.apply { media = mediaBase }
+            } else {
+                MediaList().apply {
+                    mediaId = mediaBase.id
+                    media = mediaBase
+                }
             }
-        }
         bindFields()
         populateFields()
     }
 
-    fun getMediaListOptions(): MediaListOptions {
-        return requireNotNull(presenter.database.currentUser).mediaListOptions
-    }
+    fun getMediaListOptions(): MediaListOptions = requireNotNull(presenter.database.currentUser).mediaListOptions
 
     fun getModel(): MediaList = mediaListModel
 
@@ -118,7 +121,5 @@ abstract class CustomSeriesManageBase @JvmOverloads constructor(
         presenter.onDestroy()
     }
 
-    protected fun getSeriesModel(): MediaBase {
-        return mediaListModel.media
-    }
+    protected fun getSeriesModel(): MediaBase = mediaListModel.media
 }

@@ -28,12 +28,14 @@ import java.util.ArrayList
  * Originally created by ldoublem
  * https://github.com/ldoublem/RingProgress
  */
-class RingProgress @JvmOverloads constructor(
+class RingProgress
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : View(context, attrs, defStyleAttr),
+    CustomView {
     private val paint = Paint()
     private var bitmapBg: Bitmap? = null
     private val paintText = Paint()
@@ -48,16 +50,33 @@ class RingProgress @JvmOverloads constructor(
     private var bgShadowColor = Color.argb(100, 0, 0, 0)
     private var bgColor = Color.rgb(141, 141, 141)
 
-    private val colorSetsStart = intArrayOf(
-        0x6fc1ea, 0x48c76d, 0xf7464a, 0x46bfbd,
-        0xfba640, 0x615ae8, 0xec89cb, 0x87837e, 0x8BC34A, 0x46529a
-    )
+    private val colorSetsStart =
+        intArrayOf(
+            0x6fc1ea,
+            0x48c76d,
+            0xf7464a,
+            0x46bfbd,
+            0xfba640,
+            0x615ae8,
+            0xec89cb,
+            0x87837e,
+            0x8BC34A,
+            0x46529a,
+        )
 
-    private val colorSetsEnd = intArrayOf(
-        0xf06fc1ea.toInt(), 0xf048c76d.toInt(), 0xf0f7464a.toInt(), 0xf046bfbd.toInt(),
-        0xf0fba640.toInt(), 0xf0615ae8.toInt(), 0xf0ec89cb.toInt(), 0xf087837e.toInt(),
-        0xf08BC34A.toInt(), 0xf046529a.toInt()
-    )
+    private val colorSetsEnd =
+        intArrayOf(
+            0xf06fc1ea.toInt(),
+            0xf048c76d.toInt(),
+            0xf0f7464a.toInt(),
+            0xf046bfbd.toInt(),
+            0xf0fba640.toInt(),
+            0xf0615ae8.toInt(),
+            0xf0ec89cb.toInt(),
+            0xf087837e.toInt(),
+            0xf08BC34A.toInt(),
+            0xf046529a.toInt(),
+        )
 
     private var listStatsRing: MutableList<StatsRing> = ArrayList()
     private val rectFBg = RectF()
@@ -82,7 +101,7 @@ class RingProgress @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -116,10 +135,11 @@ class RingProgress @JvmOverloads constructor(
 
     fun setSweepAngle(sweepAngle: Int) {
         var angle = sweepAngle
-        if (angle < 0)
+        if (angle < 0) {
             angle = 0
-        else if (angle > 360)
+        } else if (angle > 360) {
             angle = 360
+        }
         this.sweepAngle = angle
         bgChange = true
         invalidate()
@@ -129,10 +149,11 @@ class RingProgress @JvmOverloads constructor(
 
     fun setRotateAngle(rotateAngle: Int) {
         var angle = rotateAngle
-        if (angle < 0)
+        if (angle < 0) {
             angle = 0
-        else if (angle > 360)
+        } else if (angle > 360) {
             angle = 360
+        }
         this.rotateAngle = angle
         invalidate()
     }
@@ -153,7 +174,10 @@ class RingProgress @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setDrawBgShadow(drawBgShadow: Boolean, color: Int) {
+    fun setDrawBgShadow(
+        drawBgShadow: Boolean,
+        color: Int,
+    ) {
         isDrawBgShadow = drawBgShadow
         bgShadowColor = color
         bgChange = true
@@ -168,7 +192,10 @@ class RingProgress @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setDrawBg(drawBg: Boolean, color: Int) {
+    fun setDrawBg(
+        drawBg: Boolean,
+        color: Int,
+    ) {
         isDrawBg = drawBg
         bgColor = color
         bgChange = true
@@ -189,7 +216,10 @@ class RingProgress @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setData(list: List<StatsRing>, time: Int) {
+    fun setData(
+        list: List<StatsRing>,
+        time: Int,
+    ) {
         listStatsRing.clear()
         for (i in list.indices) {
             val r = RectF()
@@ -200,13 +230,17 @@ class RingProgress @JvmOverloads constructor(
             list[i].rectFRing = r
         }
         listStatsRing.addAll(list)
-        if (time > 0)
+        if (time > 0) {
             startAnim(time)
-        else
+        } else {
             invalidate()
+        }
     }
 
-    private fun setBitmapBg(paint: Paint, bitmapBg: Bitmap) {
+    private fun setBitmapBg(
+        paint: Paint,
+        bitmapBg: Bitmap,
+    ) {
         val canvas = Canvas(bitmapBg)
         for (i in listStatsRing.indices) {
             paint.reset()
@@ -242,11 +276,12 @@ class RingProgress @JvmOverloads constructor(
                     ringWidth / 3f,
                     0 - ringWidth / 4f,
                     0f,
-                    bgShadowColor
+                    bgShadowColor,
                 )
             }
-            if (isDrawBg)
+            if (isDrawBg) {
                 canvas.drawPath(pathBg, paint)
+            }
         }
         bgChange = false
     }
@@ -260,12 +295,18 @@ class RingProgress @JvmOverloads constructor(
         return requireNotNull(bitmapBg)
     }
 
-    private fun drawBg(canvas: Canvas, paint: Paint) {
+    private fun drawBg(
+        canvas: Canvas,
+        paint: Paint,
+    ) {
         paint.isAntiAlias = true
         canvas.drawBitmap(getBitmapBg(paint), 0f, 0f, paint)
     }
 
-    private fun drawProgress(canvas: Canvas, paint: Paint) {
+    private fun drawProgress(
+        canvas: Canvas,
+        paint: Paint,
+    ) {
         for (i in listStatsRing.indices) {
             paint.reset()
             paint.isAntiAlias = true
@@ -275,18 +316,19 @@ class RingProgress @JvmOverloads constructor(
             pathProgress.addArc(
                 listStatsRing[i].rectFRing,
                 0f,
-                (sweepAngle / 100f * listStatsRing[i].progress * animatedValue)
+                (sweepAngle / 100f * listStatsRing[i].progress * animatedValue),
             )
 
-            val shader: Shader = LinearGradient(
-                listStatsRing[i].rectFRing.left,
-                listStatsRing[i].rectFRing.top,
-                listStatsRing[i].rectFRing.left,
-                listStatsRing[i].rectFRing.bottom,
-                intArrayOf(colorSetsStart[i], colorSetsEnd[i]),
-                floatArrayOf(0f, 1f),
-                Shader.TileMode.CLAMP
-            )
+            val shader: Shader =
+                LinearGradient(
+                    listStatsRing[i].rectFRing.left,
+                    listStatsRing[i].rectFRing.top,
+                    listStatsRing[i].rectFRing.left,
+                    listStatsRing[i].rectFRing.bottom,
+                    intArrayOf(colorSetsStart[i], colorSetsEnd[i]),
+                    floatArrayOf(0f, 1f),
+                    Shader.TileMode.CLAMP,
+                )
 
             paint.shader = shader
             if (isCorner) {
@@ -300,8 +342,11 @@ class RingProgress @JvmOverloads constructor(
 
             val textValue = listStatsRing[i].value.toString()
 
-            val arcLength = (Math.PI * listStatsRing[i].rectFRing.width()
-                    * (listStatsRing[i].progress / 100f)).toFloat() * (sweepAngle / 360f)
+            val arcLength =
+                (
+                    Math.PI * listStatsRing[i].rectFRing.width() *
+                        (listStatsRing[i].progress / 100f)
+                    ).toFloat() * (sweepAngle / 360f)
 
             val textValueLength = getFontlength(paintText, textValue)
 
@@ -316,7 +361,7 @@ class RingProgress @JvmOverloads constructor(
                             pathProgress,
                             10f,
                             getFontHeight(paintText) / 3,
-                            paintText
+                            paintText,
                         )
                     } else {
                         var text = textValue.substring(0, 1)
@@ -329,7 +374,7 @@ class RingProgress @JvmOverloads constructor(
                             pathProgress,
                             10f,
                             getFontHeight(paintText) / 3,
-                            paintText
+                            paintText,
                         )
                     }
                 } else {
@@ -338,7 +383,7 @@ class RingProgress @JvmOverloads constructor(
                         pathProgress,
                         arcLength - textValueLength * 1.5f,
                         getFontHeight(paintText) / 3,
-                        paintText
+                        paintText,
                     )
                 }
             }
@@ -347,8 +392,9 @@ class RingProgress @JvmOverloads constructor(
             val textLength = getFontlength(paintText, text)
             val textLengthOne = textLength * 1.0f / text.length
             var showTextLength = arcLength - textValueLength * 1.8f
-            if (showTextLength < 0)
+            if (showTextLength < 0) {
                 showTextLength = 0f
+            }
 
             var textSize = showTextLength / textLengthOne
 
@@ -363,7 +409,7 @@ class RingProgress @JvmOverloads constructor(
                 pathProgress,
                 10f,
                 getFontHeight(paintText) / 3,
-                paintText
+                paintText,
             )
         }
     }
@@ -374,21 +420,25 @@ class RingProgress @JvmOverloads constructor(
         canvas.rotate(rotateAngle.toFloat(), measuredWidth / 2f, measuredHeight / 2f)
         canvas.save()
 
-        if (listStatsRing.isNotEmpty())
+        if (listStatsRing.isNotEmpty()) {
             ringWidth = (widthSize / 2f / (listStatsRing.size + 0.5f) * (1 - ringWidthScale)).toInt()
+        }
         padding = ringWidth
         rectFBg.set(
             measuredWidth / 2f - widthSize / 2f + padding,
             measuredHeight / 2f - widthSize / 2f + padding,
             measuredWidth / 2f + widthSize / 2f - padding,
-            measuredHeight / 2f + widthSize / 2f - padding
+            measuredHeight / 2f + widthSize / 2f - padding,
         )
         drawBg(canvas, paint)
         drawProgress(canvas, paint)
         canvas.restore()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val widthSpecMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -404,12 +454,20 @@ class RingProgress @JvmOverloads constructor(
         widthSize = if (measuredWidth > height) measuredHeight else measuredWidth
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         widthSize = if (w > h) h else w
     }
 
-    fun getFontlength(paint: Paint, str: String): Float = paint.measureText(str)
+    fun getFontlength(
+        paint: Paint,
+        str: String,
+    ): Float = paint.measureText(str)
 
     fun getFontHeight(paint: Paint): Float {
         val fm = paint.fontMetrics
@@ -436,33 +494,40 @@ class RingProgress @JvmOverloads constructor(
         }
     }
 
-    private fun startViewAnim(startF: Float, endF: Float, time: Long): ValueAnimator {
-        valueAnimator = ValueAnimator.ofFloat(startF, endF).apply {
-            duration = time
-            interpolator = LinearInterpolator()
-            repeatCount = 0
-            repeatMode = ValueAnimator.RESTART
-            addUpdateListener { animator ->
-                this@RingProgress.animatedValue = animator.animatedValue as Float
-                invalidate()
-            }
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
+    private fun startViewAnim(
+        startF: Float,
+        endF: Float,
+        time: Long,
+    ): ValueAnimator {
+        valueAnimator =
+            ValueAnimator.ofFloat(startF, endF).apply {
+                duration = time
+                interpolator = LinearInterpolator()
+                repeatCount = 0
+                repeatMode = ValueAnimator.RESTART
+                addUpdateListener { animator ->
+                    this@RingProgress.animatedValue = animator.animatedValue as Float
+                    invalidate()
                 }
+                addListener(
+                    object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                        }
 
-                override fun onAnimationStart(animation: Animator) {
-                    super.onAnimationStart(animation)
-                }
+                        override fun onAnimationStart(animation: Animator) {
+                            super.onAnimationStart(animation)
+                        }
 
-                override fun onAnimationRepeat(animation: Animator) {
-                    super.onAnimationRepeat(animation)
+                        override fun onAnimationRepeat(animation: Animator) {
+                            super.onAnimationRepeat(animation)
+                        }
+                    },
+                )
+                if (!isRunning) {
+                    start()
                 }
-            })
-            if (!isRunning) {
-                start()
             }
-        }
         return valueAnimator as ValueAnimator
     }
 }

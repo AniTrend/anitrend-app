@@ -17,12 +17,14 @@ import com.mxt.anitrend.util.CompatUtil
  * app:cardCornerRadius="@dimen/xs_margin"
  * app:cardBackgroundColor="?attr/cardColor"
  */
-open class CardViewBase @JvmOverloads constructor(
+open class CardViewBase
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : CardView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : CardView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }

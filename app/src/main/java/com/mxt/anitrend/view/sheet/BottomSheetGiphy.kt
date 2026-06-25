@@ -29,17 +29,15 @@ class BottomSheetGiphy :
     BottomSheetGiphyList(),
     MaterialSearchView.OnQueryTextListener,
     MaterialSearchView.SearchViewListener {
-
     private var binding: BottomSheetListBinding? = null
+
     @KeyUtil.RequestType
     private var requestType: Int = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle): BottomSheetGiphy {
-            return BottomSheetGiphy().apply {
-                arguments = bundle
-            }
+        fun newInstance(bundle: Bundle): BottomSheetGiphy = BottomSheetGiphy().apply {
+            arguments = bundle
         }
     }
 
@@ -77,7 +75,7 @@ class BottomSheetGiphy :
                     R.string.text_giphy_feature,
                     R.drawable.ic_gif_white_24dp,
                     R.color.colorStateBlue,
-                    KeyUtil.DURATION_LONG
+                    KeyUtil.DURATION_LONG,
                 )
             }
             presenter.settings.disableTipFor(KeyUtil.KEY_GIPHY_TIP)
@@ -90,8 +88,9 @@ class BottomSheetGiphy :
         val bundle = viewModel?.params ?: Bundle()
         bundle.putInt(KeyUtil.arg_page_offset, presenter.currentOffset)
         requestType = if (hasQuery) KeyUtil.GIPHY_SEARCH_REQ else KeyUtil.GIPHY_TRENDING_REQ
-        if (hasQuery)
+        if (hasQuery) {
             bundle.putString(KeyUtil.arg_search, searchQuery)
+        }
         viewModel?.requestData(requestType, ctx)
     }
 
@@ -102,14 +101,13 @@ class BottomSheetGiphy :
         return false
     }
 
-    override fun onQueryTextChange(newText: String): Boolean {
-        return false
-    }
+    override fun onQueryTextChange(newText: String): Boolean = false
 
     override fun onSearchViewShown() {
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-        if (!TextUtils.isEmpty(searchQuery))
+        if (!TextUtils.isEmpty(searchQuery)) {
             searchView?.setQuery(searchQuery, false)
+        }
     }
 
     override fun onSearchViewClosed() = Unit
@@ -119,25 +117,30 @@ class BottomSheetGiphy :
         binding = null
     }
 
-    override fun onItemClick(target: View, data: IntPair<Giphy>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<Giphy>,
+    ) {
         presenter.notifyAllListeners(data, false)
         closeDialog()
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<Giphy>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<Giphy>,
+    ) {
         activity?.let { host ->
             val index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE
             val giphySample: Gif? = data.second.images[index]
-            val intent = Intent(host, GiphyPreviewActivity::class.java).apply {
-                putExtra(KeyUtil.arg_model, giphySample?.url)
-            }
+            val intent =
+                Intent(host, GiphyPreviewActivity::class.java).apply {
+                    putExtra(KeyUtil.arg_model, giphySample?.url)
+                }
             host.startActivity(intent)
         }
     }
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
     }
 }

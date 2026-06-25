@@ -12,12 +12,14 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
  * @version 2016-03-15
  * Modified by max
  */
-open class StatefulRecyclerView @JvmOverloads constructor(
+open class StatefulRecyclerView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : RecyclerView(context, attrs, defStyle), CustomView {
-
+    defStyle: Int = 0,
+) : RecyclerView(context, attrs, defStyle),
+    CustomView {
     private var isListenerPresent = false
 
     init {
@@ -46,7 +48,7 @@ open class StatefulRecyclerView @JvmOverloads constructor(
         isListenerPresent = false
     }
 
-    /*To avoid multiple instances of scroll listener from being added*/
+    // To avoid multiple instances of scroll listener from being added
     fun hasOnScrollListener(): Boolean = isListenerPresent
 
     /**

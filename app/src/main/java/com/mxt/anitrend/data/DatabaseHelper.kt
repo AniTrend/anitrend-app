@@ -28,8 +28,7 @@ class DatabaseHelper : BoxQuery {
      * @param classType Type of class which must not be a list instance
      * @return Box of type class requested
      */
-    override fun <S> getBoxStore(classType: Class<S>): Box<S> =
-            koinOf<BoxStore>().boxFor(classType)
+    override fun <S> getBoxStore(classType: Class<S>): Box<S> = koinOf<BoxStore>().boxFor(classType)
 
     /**
      * Used when the application is logging out a user preferably
@@ -49,21 +48,23 @@ class DatabaseHelper : BoxQuery {
     override var currentUser: User? = null
         get() {
             return getBoxStore(User::class.java).query()
-                    .build().findFirst()
+                .build().findFirst()
         }
         set(value) {
             field = value
-            if (value != null)
+            if (value != null) {
                 getBoxStore(User::class.java).put(value)
+            }
         }
+
     /**
      * Get default authentication code
      */
     override var authCode: AuthBase? = null
         get() = getBoxStore(AuthBase::class.java)
-                .query()
-                .build()
-                .findFirst()
+            .query()
+            .build()
+            .findFirst()
         set(value) {
             field = value
             if (value != null) {
@@ -77,9 +78,9 @@ class DatabaseHelper : BoxQuery {
      */
     override var webToken: WebToken? = null
         get() = getBoxStore(WebToken::class.java)
-                .query()
-                .build()
-                .findFirst()
+            .query()
+            .build()
+            .findFirst()
         set(value) {
             field = value
             if (value != null) {
@@ -87,52 +88,58 @@ class DatabaseHelper : BoxQuery {
                 getBoxStore(WebToken::class.java).put(value)
             }
         }
+
     /**
      * Get the application version on github
      */
     override var remoteVersion: VersionBase? = null
         get() = getBoxStore(VersionBase::class.java)
-                .query().build().findFirst()
+            .query().build().findFirst()
         set(value) {
             field = value
             val versionBox = getBoxStore(VersionBase::class.java)
-            if (versionBox.count() != 0L)
+            if (versionBox.count() != 0L) {
                 versionBox.removeAll()
+            }
             if (value != null) {
                 value.lastChecked = System.currentTimeMillis()
                 versionBox.put(value)
             }
         }
+
     /**
      * Gets all saved tags
      */
     override var mediaTags: List<MediaTag> = Collections.emptyList()
         get() = getBoxStore(MediaTag::class.java)
-                .query()
-                .build()
-                .findLazy()
+            .query()
+            .build()
+            .findLazy()
         set(value) {
             field = value
             if (value.isNotEmpty()) {
                 val tagBox = getBoxStore(MediaTag::class.java)
-                if (tagBox.count() < value.size)
+                if (tagBox.count() < value.size) {
                     tagBox.put(value)
+                }
             }
         }
+
     /**
      * Gets all saved genres
      */
     override var genreCollection: List<Genre> = Collections.emptyList()
         get() = getBoxStore(Genre::class.java)
-                .query()
-                .build()
-                .findLazy()
+            .query()
+            .build()
+            .findLazy()
         set(value) {
             field = value
             if (value.isNotEmpty()) {
                 val genreBox = getBoxStore(Genre::class.java)
-                if (genreBox.count() < value.size)
+                if (genreBox.count() < value.size) {
                     genreBox.put(value)
+                }
             }
         }
 }

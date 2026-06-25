@@ -15,9 +15,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import java.util.Locale
 
 /**
@@ -25,7 +23,6 @@ import java.util.Locale
  * StudioActivity
  */
 class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
-
     private lateinit var binding: ActivityFrameGenericBinding
 
     private var model: StudioBase? = null
@@ -40,8 +37,9 @@ class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
         setSupportActionBar(binding.customToolbar.toolbar)
         setViewModel(true)
         setPresenter(BasePresenter(this))
-        if (intent.hasExtra(KeyUtil.arg_id))
+        if (intent.hasExtra(KeyUtil.arg_id)) {
             id = intent.getLongExtra(KeyUtil.arg_id, -1)
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -69,37 +67,40 @@ class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
         if (current != null) {
             when (item.itemId) {
                 R.id.action_share -> {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                                current.name,
-                                current.siteUrl
+                    val intent =
+                        Intent(Intent.ACTION_SEND).apply {
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(
+                                    Locale.getDefault(),
+                                    "%s - %s",
+                                    current.name,
+                                    current.siteUrl,
+                                ),
                             )
-                        )
-                        type = "text/plain"
-                    }
+                            type = "text/plain"
+                        }
                     startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 }
             }
         } else {
-            NotifyUtil.makeText(
-                applicationContext,
-                R.string.text_activity_loading,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    applicationContext,
+                    R.string.text_activity_loading,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
         super.onResume()
-        if (model == null)
+        if (model == null) {
             makeRequest()
-        else
+        } else {
             updateUI()
+        }
     }
 
     /**
@@ -124,9 +125,9 @@ class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
     }
 
     override fun makeRequest() {
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, id)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+        }
         viewModel?.requestData(KeyUtil.STUDIO_BASE_REQ, applicationContext)
     }
 

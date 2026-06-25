@@ -7,26 +7,28 @@ import android.widget.Filter
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
+import com.mxt.anitrend.databinding.AdapterGenreBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.Genre
-import com.mxt.anitrend.databinding.AdapterGenreBinding
 
 /**
  * Created by max on 2018/01/01.
  */
-class GenreAdapter(context: Context) : RecyclerViewAdapter<Genre>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<Genre> {
-        return GenreViewHolder(
-            AdapterGenreBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class GenreAdapter(
+    context: Context,
+) : RecyclerViewAdapter<Genre>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<Genre> = GenreViewHolder(
+        AdapterGenreBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class GenreViewHolder(private val binding: AdapterGenreBinding) :
-        RecyclerViewHolder<Genre>(binding.root) {
-
+    inner class GenreViewHolder(
+        private val binding: AdapterGenreBinding,
+    ) : RecyclerViewHolder<Genre>(binding.root) {
         init {
             bindClickListeners(R.id.container)
             bindLongClickListeners(R.id.container)
@@ -42,8 +44,6 @@ class GenreAdapter(context: Context) : RecyclerViewAdapter<Genre>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(view: View): Boolean {
-            return performLongClick(clickListener, data, view)
-        }
+        override fun onLongClick(view: View): Boolean = performLongClick(clickListener, data, view)
     }
 }

@@ -24,5 +24,5 @@ class Channel(
     @field:Element(name = "copyright", required = false)
     var copyright: String? = null,
     @field:ElementList(name = "episode", inline = true, required = false)
-    var episode: List<Episode> = mutableListOf()
+    var episode: List<Episode> = mutableListOf(),
 ) : Parcelable

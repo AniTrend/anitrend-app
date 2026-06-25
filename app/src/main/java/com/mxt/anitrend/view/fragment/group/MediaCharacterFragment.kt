@@ -16,25 +16,20 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.CharacterActivity
 
 /**
  * Created by max on 2018/01/18.
  */
-class MediaCharacterFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<CharacterEdge>>, MediaPresenter>() {
-
+class MediaCharacterFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<CharacterEdge>>, MediaPresenter>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): MediaCharacterFragment {
-            return MediaCharacterFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): MediaCharacterFragment = MediaCharacterFragment().apply {
+            arguments = args
         }
     }
 
@@ -59,12 +54,17 @@ class MediaCharacterFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, mediaId)
-            .putVariable(KeyUtil.arg_type, mediaType)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, mediaId)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+            if (presenter.settings.displayAdultContent) {
+                remove(KeyUtil.arg_isAdult)
+            } else {
+                putBoolean(KeyUtil.arg_isAdult, false)
+            }
+        }
         viewModel?.requestData(KeyUtil.MEDIA_CHARACTERS_REQ, ctx)
     }
 
@@ -72,31 +72,42 @@ class MediaCharacterFragment :
         val edgeContainer = content?.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
-                if (edgeContainer.hasPageInfo())
+                if (edgeContainer.hasPageInfo()) {
                     presenter.setPageInfo(edgeContainer.pageInfo)
-                if (!edgeContainer.isEmpty)
+                }
+                if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupCharactersByRole(edgeContainer.edges, mAdapter.data))
-                else
+                } else {
                     onPostProcessed(emptyList())
+                }
             }
-        } else
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val character = data.second as? CharacterBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, CharacterActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, character.id)
-                }
+                val intent =
+                    Intent(host, CharacterActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, character.id)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) = Unit
 }

@@ -62,6 +62,6 @@ This Code of Conduct is adapted from the [Contributor Covenant][homepage], versi
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/
- 
- 
+
+
 Thank you for your contribution!

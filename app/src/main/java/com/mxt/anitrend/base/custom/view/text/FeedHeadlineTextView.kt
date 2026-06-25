@@ -14,12 +14,14 @@ import java.util.Locale
  * Created by max on 2017/11/13.
  * Feeds including progress & status
  */
-class FeedHeadlineTextView @JvmOverloads constructor(
+class FeedHeadlineTextView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatTextView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatTextView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }
@@ -34,23 +36,33 @@ class FeedHeadlineTextView @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        fun setHeadline(headline: FeedHeadlineTextView, model: FeedList) {
-            val title = model.media?.title?.romaji.orEmpty()
-            if (model.text.isNullOrEmpty())
-                headline.text = String.format(
-                    Locale.getDefault(),
-                    "%s: %s",
-                    model.status,
-                    title
-                )
-            else
-                headline.text = String.format(
-                    Locale.getDefault(),
-                    "%s %s of: %s",
-                    model.status,
-                    model.text,
-                    title
-                )
+        fun setHeadline(
+            headline: FeedHeadlineTextView,
+            model: FeedList,
+        ) {
+            val title =
+                model.media
+                    ?.title
+                    ?.romaji
+                    .orEmpty()
+            if (model.text.isNullOrEmpty()) {
+                headline.text =
+                    String.format(
+                        Locale.getDefault(),
+                        "%s: %s",
+                        model.status,
+                        title,
+                    )
+            } else {
+                headline.text =
+                    String.format(
+                        Locale.getDefault(),
+                        "%s %s of: %s",
+                        model.status,
+                        model.text,
+                        title,
+                    )
+            }
         }
     }
 }

@@ -18,19 +18,21 @@ import com.mxt.anitrend.util.KeyUtil
 /**
  * Created by max on 2017/12/09.
  */
-class GiphyAdapter(context: Context) : RecyclerViewAdapter<Giphy>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<Giphy> {
-        return GiphyViewHolder(
-            AdapterGiphyBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class GiphyAdapter(
+    context: Context,
+) : RecyclerViewAdapter<Giphy>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<Giphy> = GiphyViewHolder(
+        AdapterGiphyBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class GiphyViewHolder(private val binding: AdapterGiphyBinding) :
-        RecyclerViewHolder<Giphy>(binding.root) {
-
+    inner class GiphyViewHolder(
+        private val binding: AdapterGiphyBinding,
+    ) : RecyclerViewHolder<Giphy>(binding.root) {
         init {
             bindClickListeners(R.id.giphy_image)
             bindLongClickListeners(R.id.giphy_image)
@@ -38,15 +40,17 @@ class GiphyAdapter(context: Context) : RecyclerViewAdapter<Giphy>(context) {
 
         override fun onBindViewHolder(model: Giphy) {
             val giphy = model.images
-            val giphyImage = giphy[KeyUtil.GIPHY_PREVIEW]
-                ?: giphy[KeyUtil.GIPHY_ORIGINAL_ANIMATED]
+            val giphyImage =
+                giphy[KeyUtil.GIPHY_PREVIEW]
+                    ?: giphy[KeyUtil.GIPHY_ORIGINAL_ANIMATED]
             if (giphyImage != null) {
-                Glide.with(getContext()).load(giphyImage.url)
+                Glide
+                    .with(getContext())
+                    .load(giphyImage.url)
                     .transition(DrawableTransitionOptions.withCrossFade(250))
                     .apply(RequestOptions.centerCropTransform())
                     .into(binding.giphyImage)
             }
-
         }
 
         override fun onViewRecycled() {
@@ -58,8 +62,6 @@ class GiphyAdapter(context: Context) : RecyclerViewAdapter<Giphy>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(view: View): Boolean {
-            return performLongClick(clickListener, data, view)
-        }
+        override fun onLongClick(view: View): Boolean = performLongClick(clickListener, data, view)
     }
 }

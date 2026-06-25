@@ -13,33 +13,39 @@ import java.util.Locale
  * Created by max on 2017/10/29.
  * Episode Text View with
  */
-class SeriesProgressTextView @JvmOverloads constructor(
+class SeriesProgressTextView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : SingleLineTextView(context, attrs, defStyleAttr) {
-
-    fun setSeriesModel(mediaList: MediaList, isCurrentUser: Boolean) {
+    fun setSeriesModel(
+        mediaList: MediaList,
+        isCurrentUser: Boolean,
+    ) {
         val model = mediaList.media
         if (MediaUtil.isAnimeType(model)) {
-            if (CompatUtil.equals(model.status, KeyUtil.NOT_YET_RELEASED))
+            if (CompatUtil.equals(model.status, KeyUtil.NOT_YET_RELEASED)) {
                 setText(R.string.TBA)
-            else {
+            } else {
                 val total: Any = if (model.episodes < 1) "?" else model.episodes
-                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))
+                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList)) {
                     text = String.format(Locale.getDefault(), "%s/%s +", mediaList.progress, total)
-                else
+                } else {
                     text = String.format(Locale.getDefault(), "%s/%s", mediaList.progress, total)
+                }
             }
         } else if (MediaUtil.isMangaType(model)) {
-            if (CompatUtil.equals(model.status, KeyUtil.NOT_YET_RELEASED))
+            if (CompatUtil.equals(model.status, KeyUtil.NOT_YET_RELEASED)) {
                 setText(R.string.TBA)
-            else {
+            } else {
                 val total: Any = if (model.chapters < 1) "?" else model.chapters
-                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList))
+                if (isCurrentUser && !MediaUtil.isIncrementLimitReached(mediaList)) {
                     text = String.format(Locale.getDefault(), "%s/%s +", mediaList.progress, total)
-                else
+                } else {
                     text = String.format(Locale.getDefault(), "%s/%s", mediaList.progress, total)
+                }
             }
         }
         invalidate()

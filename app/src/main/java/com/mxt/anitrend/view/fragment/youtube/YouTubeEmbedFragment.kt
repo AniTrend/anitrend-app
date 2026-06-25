@@ -23,7 +23,6 @@ import com.mxt.anitrend.util.markdown.RegexUtil
 import timber.log.Timber
 
 class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrailer>() {
-
     private var mediaTrailer: MediaTrailer? = null
 
     private var binding: AdapterFeedSlideBinding? = null
@@ -31,9 +30,10 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
     companion object {
         @JvmStatic
         fun newInstance(model: MediaTrailer): YouTubeEmbedFragment {
-            val args = Bundle().apply {
-                putParcelable(KeyUtil.arg_media_trailer, model)
-            }
+            val args =
+                Bundle().apply {
+                    putParcelable(KeyUtil.arg_media_trailer, model)
+                }
             return YouTubeEmbedFragment().apply {
                 arguments = args
             }
@@ -49,7 +49,7 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val viewBinding = AdapterFeedSlideBinding.inflate(inflater, container, false)
         binding = viewBinding
@@ -67,7 +67,9 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
         val thumbnailUrl = RegexUtil.getYoutubeThumb(youtubeLink)
         activity?.let { host ->
             binding?.let { viewBinding ->
-                Glide.with(host).load(thumbnailUrl)
+                Glide
+                    .with(host)
+                    .load(thumbnailUrl)
                     .transition(DrawableTransitionOptions.withCrossFade(250))
                     .apply(RequestOptions.centerCropTransform())
                     .into(viewBinding.feedStatusImage)
@@ -80,14 +82,16 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
         binding?.feedStatusImage?.setOnClickListener {
             try {
                 val youtubeLink = RegexUtil.buildYoutube(trailer.id.orEmpty())
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(youtubeLink)
-                }
+                val intent =
+                    Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse(youtubeLink)
+                    }
                 startActivity(intent)
             } catch (e: ActivityNotFoundException) {
                 Timber.e(e)
                 context?.let {
-                    NotifyUtil.makeText(it, R.string.init_youtube_missing, Toast.LENGTH_SHORT)
+                    NotifyUtil
+                        .makeText(it, R.string.init_youtube_missing, Toast.LENGTH_SHORT)
                         .show()
                 }
             }

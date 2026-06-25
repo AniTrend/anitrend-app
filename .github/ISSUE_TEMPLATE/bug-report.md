@@ -27,7 +27,7 @@ __Media Detail Pages__ with long titles are under the __Overview Tab__ are cropp
 ## Expected Behaviour
 <!--- A clear and concise description of what you expect to happen. -->
 
-Perhaps it would be best if anime/manga titles are not truncated 
+Perhaps it would be best if anime/manga titles are not truncated
 
 
 ## Screenshots/Videos

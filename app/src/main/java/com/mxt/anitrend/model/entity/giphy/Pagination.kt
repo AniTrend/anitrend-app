@@ -11,5 +11,5 @@ import kotlinx.parcelize.Parcelize
 class Pagination(
     val total_count: Int = 0,
     val count: Int = 0,
-    val offset: Int = 0
+    val offset: Int = 0,
 ) : Parcelable

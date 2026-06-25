@@ -46,8 +46,9 @@ object GroupingUtil {
 
         for ((key, value) in CompatUtil.getKeyFilteredMap(map)) {
             val recyclerHeaderItem = RecyclerHeaderItem(key, value.size)
-            if (!entityMap.contains(recyclerHeaderItem))
+            if (!entityMap.contains(recyclerHeaderItem)) {
                 entityMap.add(recyclerHeaderItem)
+            }
             entityMap.addAll(value)
         }
         return getDifference(model, entityMap)
@@ -103,14 +104,16 @@ object GroupingUtil {
         val entityMap = ArrayList<RecyclerItem>()
         for (edge in edges) {
             if (edge.node != null) {
-                if (!edge.characterRole.isNullOrBlank())
+                if (!edge.characterRole.isNullOrBlank()) {
                     edge.node.subGroupTitle = edge.characterRole
+                }
                 edge.node.contentType = KeyUtil.RECYCLER_TYPE_HEADER
                 entityMap.add(edge.node)
             }
             edge.voiceActors?.let { voiceActors ->
-                if (!CompatUtil.isEmpty(voiceActors))
+                if (!CompatUtil.isEmpty(voiceActors)) {
                     entityMap.addAll(voiceActors)
+                }
             }
         }
         return entityMap
@@ -131,13 +134,13 @@ object GroupingUtil {
             val recyclerHeaderItem = RecyclerHeaderItem(relationType)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.relationType.orEmpty() }
-                        .filter { role ->
-                            CompatUtil.equals(
-                                role,
-                                relationType
-                            )
-                        }
-                        .count()
+                    .filter { role ->
+                        CompatUtil.equals(
+                            role,
+                            relationType,
+                        )
+                    }
+                    .count()
                 recyclerHeaderItem.size = totalItems.toInt()
                 entityMap.add(recyclerHeaderItem)
             }
@@ -167,7 +170,7 @@ object GroupingUtil {
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.role.orEmpty() }
                     .filter { otherRole -> CompatUtil.equals(otherRole, role) }
-                        .count()
+                    .count()
                 recyclerHeaderItem.size = totalItems.toInt()
                 entityMap.add(recyclerHeaderItem)
             }
@@ -197,8 +200,9 @@ object GroupingUtil {
 
         for (year in years.reversed()) {
             val recyclerHeaderItem = RecyclerHeaderItem(year, 0, false)
-            if (!entityMap.contains(recyclerHeaderItem))
+            if (!entityMap.contains(recyclerHeaderItem)) {
                 entityMap.add(recyclerHeaderItem)
+            }
 
             val characters = edges.filter { mediaEdge ->
                 val startYear = mediaEdge.node.startDate?.year ?: 0
@@ -208,10 +212,11 @@ object GroupingUtil {
                 }
             }.flatMap { mediaEdge ->
                 mediaEdge.characters.orEmpty().mapNotNull { character ->
-                    if (character == null)
+                    if (character == null) {
                         null
-                    else
+                    } else {
                         CharacterStaffBase(character, mediaEdge.node)
+                    }
                 }
             }
             entityMap.addAll(characters)
@@ -234,8 +239,8 @@ object GroupingUtil {
             val recyclerHeaderItem = RecyclerHeaderItem(role)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.role.orEmpty() }
-                        .filter { otherRole -> CompatUtil.equals(otherRole, role) }
-                        .count()
+                    .filter { otherRole -> CompatUtil.equals(otherRole, role) }
+                    .count()
                 recyclerHeaderItem.size = totalItems.toInt()
                 entityMap.add(recyclerHeaderItem)
             }
@@ -258,13 +263,13 @@ object GroupingUtil {
             val recyclerHeaderItem = RecyclerHeaderItem(staffRole)
             if (!entityMap.contains(recyclerHeaderItem)) {
                 val totalItems = Stream.of(edges).map<String> { it.staffRole.orEmpty() }
-                        .filter { role ->
-                            CompatUtil.equals(
-                                role,
-                                staffRole
-                            )
-                        }
-                        .count()
+                    .filter { role ->
+                        CompatUtil.equals(
+                            role,
+                            staffRole,
+                        )
+                    }
+                    .count()
                 recyclerHeaderItem.size = totalItems.toInt()
                 entityMap.add(recyclerHeaderItem)
             }
@@ -285,7 +290,5 @@ object GroupingUtil {
         return if (currentSize < recyclerItems.size) recyclerItems.subList(currentSize, recyclerItems.size) else emptyList()
     }
 
-    fun <T : RecyclerItem> wrapInGroup(data: List<T>): List<RecyclerItem> {
-        return ArrayList<RecyclerItem>(data)
-    }
+    fun <T : RecyclerItem> wrapInGroup(data: List<T>): List<RecyclerItem> = ArrayList<RecyclerItem>(data)
 }

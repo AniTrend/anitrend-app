@@ -31,15 +31,20 @@ import kotlin.math.min
  *
  * A widget for [CustomSwipeRefreshLayout].
  */
-class MaterialProgressDrawable(context: Context, private val parent: View) : Drawable(), Animatable {
-
+class MaterialProgressDrawable(
+    context: Context,
+    private val parent: View,
+) : Drawable(),
+    Animatable {
     companion object {
         private val LINEAR_INTERPOLATOR: Interpolator = LinearInterpolator()
         private val MATERIAL_INTERPOLATOR: Interpolator = FastOutSlowInInterpolator()
 
         private const val FULL_ROTATION = 1080.0f
+
         // Maps to ProgressBar.Large style
         const val LARGE = 0
+
         // Maps to ProgressBar default style
         const val DEFAULT = 1
 
@@ -76,19 +81,27 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
 
     private val colors = intArrayOf(Color.BLACK)
 
-    private val callback: Callback = object : Callback {
-        override fun invalidateDrawable(d: Drawable) {
-            invalidateSelf()
-        }
+    private val callback: Callback =
+        object : Callback {
+            override fun invalidateDrawable(d: Drawable) {
+                invalidateSelf()
+            }
 
-        override fun scheduleDrawable(d: Drawable, what: Runnable, `when`: Long) {
-            scheduleSelf(what, `when`)
-        }
+            override fun scheduleDrawable(
+                d: Drawable,
+                what: Runnable,
+                `when`: Long,
+            ) {
+                scheduleSelf(what, `when`)
+            }
 
-        override fun unscheduleDrawable(d: Drawable, what: Runnable) {
-            unscheduleSelf(what)
+            override fun unscheduleDrawable(
+                d: Drawable,
+                what: Runnable,
+            ) {
+                unscheduleSelf(what)
+            }
         }
-    }
 
     private val animators = ArrayList<Animation>()
 
@@ -116,7 +129,7 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
         centerRadius: Double,
         strokeWidth: Double,
         arrowWidth: Float,
-        arrowHeight: Float
+        arrowHeight: Float,
     ) {
         val metrics: DisplayMetrics = resources.displayMetrics
         val screenDensity = metrics.density
@@ -130,7 +143,9 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
         ring.setInsets(width.toInt(), height.toInt())
     }
 
-    fun updateSizes(@ProgressDrawableSize size: Int) {
+    fun updateSizes(
+        @ProgressDrawableSize size: Int,
+    ) {
         if (size == LARGE) {
             setSizeParameters(
                 CIRCLE_DIAMETER_LARGE.toDouble(),
@@ -138,7 +153,7 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
                 CENTER_RADIUS_LARGE.toDouble(),
                 STROKE_WIDTH_LARGE.toDouble(),
                 ARROW_WIDTH_LARGE.toFloat(),
-                ARROW_HEIGHT_LARGE.toFloat()
+                ARROW_HEIGHT_LARGE.toFloat(),
             )
         } else {
             setSizeParameters(
@@ -147,7 +162,7 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
                 CENTER_RADIUS.toDouble(),
                 STROKE_WIDTH.toDouble(),
                 ARROW_WIDTH.toFloat(),
-                ARROW_HEIGHT.toFloat()
+                ARROW_HEIGHT.toFloat(),
             )
         }
     }
@@ -160,7 +175,10 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
         ring.setArrowScale(scale)
     }
 
-    fun setStartEndTrim(startAngle: Float, endAngle: Float) {
+    fun setStartEndTrim(
+        startAngle: Float,
+        endAngle: Float,
+    ) {
         ring.setStartTrim(startAngle)
         ring.setEndTrim(endAngle)
     }
@@ -244,12 +262,15 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
         ring.resetOriginals()
     }
 
-    private fun getMinProgressArc(ring: Ring): Float {
-        return Math.toRadians(ring.getStrokeWidth().toDouble() / (2 * Math.PI * ring.getCenterRadius()))
-            .toFloat()
-    }
+    private fun getMinProgressArc(ring: Ring): Float = Math
+        .toRadians(ring.getStrokeWidth().toDouble() / (2 * Math.PI * ring.getCenterRadius()))
+        .toFloat()
 
-    private fun evaluateColorChange(fraction: Float, startValue: Int, endValue: Int): Int {
+    private fun evaluateColorChange(
+        fraction: Float,
+        startValue: Int,
+        endValue: Int,
+    ): Int {
         val startA = startValue shr 24 and 0xff
         val startR = startValue shr 16 and 0xff
         val startG = startValue shr 8 and 0xff
@@ -266,98 +287,116 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
             (startB + (fraction * (endB - startB)).toInt())
     }
 
-    private fun updateRingColor(interpolatedTime: Float, ring: Ring) {
+    private fun updateRingColor(
+        interpolatedTime: Float,
+        ring: Ring,
+    ) {
         if (interpolatedTime > COLOR_START_DELAY_OFFSET) {
             ring.setColor(
                 evaluateColorChange(
                     (interpolatedTime - COLOR_START_DELAY_OFFSET) / (1.0f - COLOR_START_DELAY_OFFSET),
                     ring.getStartingColor(),
-                    ring.getNextColor()
-                )
+                    ring.getNextColor(),
+                ),
             )
         }
     }
 
-    private fun applyFinishTranslation(interpolatedTime: Float, ring: Ring) {
+    private fun applyFinishTranslation(
+        interpolatedTime: Float,
+        ring: Ring,
+    ) {
         updateRingColor(interpolatedTime, ring)
         val targetRotation = (floor(ring.getStartingRotation() / MAX_PROGRESS_ARC) + 1.0).toFloat()
         val minProgressArc = getMinProgressArc(ring)
-        val startTrim = ring.getStartingStartTrim() +
-            (ring.getStartingEndTrim() - minProgressArc - ring.getStartingStartTrim()) * interpolatedTime
+        val startTrim =
+            ring.getStartingStartTrim() +
+                (ring.getStartingEndTrim() - minProgressArc - ring.getStartingStartTrim()) * interpolatedTime
         ring.setStartTrim(startTrim)
         ring.setEndTrim(ring.getStartingEndTrim())
-        val rotation = ring.getStartingRotation() +
-            ((targetRotation - ring.getStartingRotation()) * interpolatedTime)
+        val rotation =
+            ring.getStartingRotation() +
+                ((targetRotation - ring.getStartingRotation()) * interpolatedTime)
         ring.setRotation(rotation)
     }
 
     private fun setupAnimators(): Animation {
         val ring = ring
-        val animation = object : Animation() {
-            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
-                if (finishing) {
-                    applyFinishTranslation(interpolatedTime, ring)
-                } else {
-                    val minProgressArc = getMinProgressArc(ring)
-                    val startingEndTrim = ring.getStartingEndTrim()
-                    val startingTrim = ring.getStartingStartTrim()
-                    val startingRotation = ring.getStartingRotation()
+        val animation =
+            object : Animation() {
+                override fun applyTransformation(
+                    interpolatedTime: Float,
+                    t: Transformation,
+                ) {
+                    if (finishing) {
+                        applyFinishTranslation(interpolatedTime, ring)
+                    } else {
+                        val minProgressArc = getMinProgressArc(ring)
+                        val startingEndTrim = ring.getStartingEndTrim()
+                        val startingTrim = ring.getStartingStartTrim()
+                        val startingRotation = ring.getStartingRotation()
 
-                    updateRingColor(interpolatedTime, ring)
+                        updateRingColor(interpolatedTime, ring)
 
-                    if (interpolatedTime <= START_TRIM_DURATION_OFFSET) {
-                        val scaledTime = interpolatedTime / (1.0f - START_TRIM_DURATION_OFFSET)
-                        val startTrim = startingTrim +
-                            ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(scaledTime))
-                        ring.setStartTrim(startTrim)
+                        if (interpolatedTime <= START_TRIM_DURATION_OFFSET) {
+                            val scaledTime = interpolatedTime / (1.0f - START_TRIM_DURATION_OFFSET)
+                            val startTrim =
+                                startingTrim +
+                                    ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(scaledTime))
+                            ring.setStartTrim(startTrim)
+                        }
+
+                        if (interpolatedTime > END_TRIM_START_DELAY_OFFSET) {
+                            val minArc = MAX_PROGRESS_ARC - minProgressArc
+                            val scaledTime =
+                                (interpolatedTime - START_TRIM_DURATION_OFFSET) / (1.0f - START_TRIM_DURATION_OFFSET)
+                            val endTrim =
+                                startingEndTrim +
+                                    (minArc * MATERIAL_INTERPOLATOR.getInterpolation(scaledTime))
+                            ring.setEndTrim(endTrim)
+                        }
+
+                        val rotation = startingRotation + (0.25f * interpolatedTime)
+                        ring.setRotation(rotation)
+
+                        val groupRotation =
+                            ((FULL_ROTATION / NUM_POINTS) * interpolatedTime) +
+                                (FULL_ROTATION * (rotationCount / NUM_POINTS))
+                        setRotation(groupRotation)
                     }
-
-                    if (interpolatedTime > END_TRIM_START_DELAY_OFFSET) {
-                        val minArc = MAX_PROGRESS_ARC - minProgressArc
-                        val scaledTime =
-                            (interpolatedTime - START_TRIM_DURATION_OFFSET) / (1.0f - START_TRIM_DURATION_OFFSET)
-                        val endTrim = startingEndTrim +
-                            (minArc * MATERIAL_INTERPOLATOR.getInterpolation(scaledTime))
-                        ring.setEndTrim(endTrim)
-                    }
-
-                    val rotation = startingRotation + (0.25f * interpolatedTime)
-                    ring.setRotation(rotation)
-
-                    val groupRotation =
-                        ((FULL_ROTATION / NUM_POINTS) * interpolatedTime) +
-                            (FULL_ROTATION * (rotationCount / NUM_POINTS))
-                    setRotation(groupRotation)
                 }
             }
-        }
         animation.repeatCount = Animation.INFINITE
         animation.repeatMode = Animation.RESTART
         animation.interpolator = LINEAR_INTERPOLATOR
-        animation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-                rotationCount = 0f
-            }
-
-            override fun onAnimationEnd(animation: Animation) = Unit
-
-            override fun onAnimationRepeat(animation: Animation) {
-                ring.storeOriginals()
-                ring.goToNextColor()
-                ring.setStartTrim(ring.getEndTrim())
-                if (finishing) {
-                    finishing = false
-                    animation.duration = ANIMATION_DURATION.toLong()
-                    ring.setShowArrow(false)
-                } else {
-                    rotationCount = (rotationCount + 1) % NUM_POINTS
+        animation.setAnimationListener(
+            object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    rotationCount = 0f
                 }
-            }
-        })
+
+                override fun onAnimationEnd(animation: Animation) = Unit
+
+                override fun onAnimationRepeat(animation: Animation) {
+                    ring.storeOriginals()
+                    ring.goToNextColor()
+                    ring.setStartTrim(ring.getEndTrim())
+                    if (finishing) {
+                        finishing = false
+                        animation.duration = ANIMATION_DURATION.toLong()
+                        ring.setShowArrow(false)
+                    } else {
+                        rotationCount = (rotationCount + 1) % NUM_POINTS
+                    }
+                }
+            },
+        )
         return animation
     }
 
-    private inner class Ring(private val callback: Callback) {
+    private inner class Ring(
+        private val callback: Callback,
+    ) {
         private val tempBounds = RectF()
         private val paint = Paint()
         private val arrowPaint = Paint()
@@ -397,12 +436,18 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
             backgroundColor = color
         }
 
-        fun setArrowDimensions(width: Float, height: Float) {
+        fun setArrowDimensions(
+            width: Float,
+            height: Float,
+        ) {
             arrowWidth = width.toInt()
             arrowHeight = height.toInt()
         }
 
-        fun draw(c: Canvas, bounds: Rect) {
+        fun draw(
+            c: Canvas,
+            bounds: Rect,
+        ) {
             val arcBounds = tempBounds
             arcBounds.set(bounds)
             arcBounds.inset(strokeInset, strokeInset)
@@ -423,7 +468,12 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
             }
         }
 
-        private fun drawTriangle(c: Canvas, startAngle: Float, sweepAngle: Float, bounds: Rect) {
+        private fun drawTriangle(
+            c: Canvas,
+            startAngle: Float,
+            sweepAngle: Float,
+            bounds: Rect,
+        ) {
             if (showArrow) {
                 if (arrow == null) {
                     arrow = Path().apply { fillType = Path.FillType.EVEN_ODD }
@@ -515,13 +565,17 @@ class MaterialProgressDrawable(context: Context, private val parent: View) : Dra
 
         fun getRotation(): Float = rotation
 
-        fun setInsets(width: Int, height: Int) {
+        fun setInsets(
+            width: Int,
+            height: Int,
+        ) {
             val minEdge = min(width, height).toFloat()
-            val insets = if (ringCenterRadius <= 0 || minEdge < 0) {
-                ceil(strokeWidth / 2.0f)
-            } else {
-                (minEdge / 2.0f - ringCenterRadius).toFloat()
-            }
+            val insets =
+                if (ringCenterRadius <= 0 || minEdge < 0) {
+                    ceil(strokeWidth / 2.0f)
+                } else {
+                    (minEdge / 2.0f - ringCenterRadius).toFloat()
+                }
             strokeInset = insets
         }
 

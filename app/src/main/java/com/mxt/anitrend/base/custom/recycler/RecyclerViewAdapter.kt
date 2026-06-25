@@ -21,18 +21,19 @@ import java.util.ArrayList
  * Created by max on 2017/06/09.
  * Recycler view adapter implementation
  */
-abstract class RecyclerViewAdapter<T>(context: Context) :
-    RecyclerView.Adapter<RecyclerViewHolder<T>>(),
+abstract class RecyclerViewAdapter<T>(
+    context: Context,
+) : RecyclerView.Adapter<RecyclerViewHolder<T>>(),
     Filterable,
     RecyclerChangeListener<T> {
-
     protected val context: Context = context.applicationContext
     var data: MutableList<T> = ArrayList()
         protected set
     protected var clone: MutableList<T>? = null
     protected val presenter: BasePresenter = BasePresenter(this.context)
     var clickListener: ItemClickListener<T>? = null
-        @JvmName("setClickListenerInternal") set
+        @JvmName("setClickListenerInternal")
+        set
 
     private var actionMode: ActionModeUtil<T>? = null
     private var customAnimation: BaseAnimation? = null
@@ -41,8 +42,9 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
     private val isLowRamDevice = CompatUtil.isLowRamDevice(this.context)
 
     override fun getItemId(position: Int): Long {
-        if (!hasStableIds())
+        if (!hasStableIds()) {
             return super.getItemId(position)
+        }
         return data[position].hashCode().toLong()
     }
 
@@ -64,10 +66,11 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
         val startRange = itemCount
         data.addAll(swap)
         val difference = itemCount - startRange
-        if (difference > 5)
+        if (difference > 5) {
             notifyItemRangeInserted(startRange, difference)
-        else if (difference != 0)
+        } else if (difference != 0) {
             notifyDataSetChanged()
+        }
     }
 
     override fun onItemRangeChanged(swap: List<T>) {
@@ -77,7 +80,10 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
         notifyItemRangeChanged(startRange, difference)
     }
 
-    override fun onItemChanged(swap: T, position: Int) {
+    override fun onItemChanged(
+        swap: T,
+        position: Int,
+    ) {
         data[position] = swap
         notifyItemChanged(position)
     }
@@ -87,13 +93,17 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
         notifyItemRemoved(position)
     }
 
-    abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<T>
+    abstract override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<T>
 
     override fun onViewAttachedToWindow(holder: RecyclerViewHolder<T>) {
         super.onViewAttachedToWindow(holder)
         val layoutParams = holder.itemView.layoutParams
-        if (layoutParams is StaggeredGridLayoutManager.LayoutParams)
+        if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
             setLayoutSpanSize(layoutParams, holder.bindingAdapterPosition)
+        }
     }
 
     override fun onViewDetachedFromWindow(holder: RecyclerViewHolder<T>) {
@@ -104,8 +114,9 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         val layoutManager = recyclerView.layoutManager
-        if (layoutManager is GridLayoutManager)
+        if (layoutManager is GridLayoutManager) {
             setLayoutSpanSize(layoutManager)
+        }
     }
 
     /**
@@ -114,7 +125,10 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
      *
      * default implementation is already done for you
      */
-    override fun onBindViewHolder(holder: RecyclerViewHolder<T>, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerViewHolder<T>,
+        position: Int,
+    ) {
         if (itemCount > 0) {
             animateViewHolder(holder, position)
             val model = data[position]
@@ -148,8 +162,9 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
      */
     fun clearDataSet() {
         data = ArrayList()
-        if (clone != null)
+        if (clone != null) {
             clone = ArrayList()
+        }
         notifyDataSetChanged()
     }
 
@@ -160,13 +175,15 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
      * @param layoutManager grid layout manage for your recycler
      */
     private fun setLayoutSpanSize(layoutManager: GridLayoutManager) {
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                if (isFullSpanItem(position))
-                    return 1
-                return layoutManager.spanCount
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    if (isFullSpanItem(position)) {
+                        return 1
+                    }
+                    return layoutManager.spanCount
+                }
             }
-        }
     }
 
     /**
@@ -175,9 +192,13 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
      *
      * @param layoutParams StaggeredGridLayoutManager.LayoutParams for your recycler
      */
-    private fun setLayoutSpanSize(layoutParams: StaggeredGridLayoutManager.LayoutParams, position: Int) {
-        if (isFullSpanItem(position))
+    private fun setLayoutSpanSize(
+        layoutParams: StaggeredGridLayoutManager.LayoutParams,
+        position: Int,
+    ) {
+        if (isFullSpanItem(position)) {
             layoutParams.isFullSpan = true
+        }
     }
 
     /**
@@ -187,9 +208,7 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
      *
      * @see BaseAnimation
      */
-    private fun getCustomAnimation(): BaseAnimation {
-        return customAnimation ?: SlideInAnimation().also { customAnimation = it }
-    }
+    private fun getCustomAnimation(): BaseAnimation = customAnimation ?: SlideInAnimation().also { customAnimation = it }
 
     /**
      * Set your own custom animation that will be used in
@@ -201,18 +220,22 @@ abstract class RecyclerViewAdapter<T>(context: Context) :
         this.customAnimation = customAnimation
     }
 
-    protected fun isRecyclerStateType(viewType: Int): Boolean =
-        viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
-            viewType == KeyUtil.RECYCLER_TYPE_LOADING ||
-            viewType == KeyUtil.RECYCLER_TYPE_ERROR
+    protected fun isRecyclerStateType(viewType: Int): Boolean = viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
+        viewType == KeyUtil.RECYCLER_TYPE_LOADING ||
+        viewType == KeyUtil.RECYCLER_TYPE_ERROR
 
     private fun isFullSpanItem(position: Int): Boolean {
         val viewType = if (position != RecyclerView.NO_POSITION) getItemViewType(position) else KeyUtil.RECYCLER_TYPE_ERROR
-        return viewType == KeyUtil.RECYCLER_TYPE_HEADER || viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
-            viewType == KeyUtil.RECYCLER_TYPE_LOADING || viewType == KeyUtil.RECYCLER_TYPE_ERROR
+        return viewType == KeyUtil.RECYCLER_TYPE_HEADER ||
+            viewType == KeyUtil.RECYCLER_TYPE_EMPTY ||
+            viewType == KeyUtil.RECYCLER_TYPE_LOADING ||
+            viewType == KeyUtil.RECYCLER_TYPE_ERROR
     }
 
-    private fun animateViewHolder(holder: RecyclerViewHolder<T>, position: Int) {
+    private fun animateViewHolder(
+        holder: RecyclerViewHolder<T>,
+        position: Int,
+    ) {
         if (!isLowRamDevice && position > lastPosition) {
             val animation = getCustomAnimation()
             val animators = animation.getAnimators(holder.itemView)

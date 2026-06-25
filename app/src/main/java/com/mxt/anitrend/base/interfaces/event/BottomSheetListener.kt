@@ -6,5 +6,6 @@ package com.mxt.anitrend.base.interfaces.event
  */
 interface BottomSheetListener {
     fun onStateCollapsed()
+
     fun onStateExpanded()
 }

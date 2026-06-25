@@ -22,10 +22,8 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.widget.ProgressLayout
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 
 class BottomSheetListUsers :
     BottomSheetBase<PageContainer<UserBase>>(),
@@ -33,7 +31,6 @@ class BottomSheetListUsers :
     androidx.lifecycle.Observer<PageContainer<UserBase>?>,
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
-
     private var stateLayout: ProgressLayout? = null
     private var recyclerView: StatefulRecyclerView? = null
 
@@ -46,20 +43,20 @@ class BottomSheetListUsers :
 
     private var count: Int = 0
     private var userId: Long = 0
+
     @KeyUtil.RequestType
     private var requestType: Int = 0
 
-    private val stateLayoutOnClick = View.OnClickListener {
-        stateLayout?.showLoading()
-        onRefresh()
-    }
+    private val stateLayoutOnClick =
+        View.OnClickListener {
+            stateLayout?.showLoading()
+            onRefresh()
+        }
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle): BottomSheetListUsers {
-            return BottomSheetListUsers().apply {
-                arguments = bundle
-            }
+        fun newInstance(bundle: Bundle): BottomSheetListUsers = BottomSheetListUsers().apply {
+            arguments = bundle
         }
     }
 
@@ -95,10 +92,11 @@ class BottomSheetListUsers :
         toolbarTitle?.text = getString(mTitle, count)
         searchView?.visibility = View.GONE
         stateLayout?.showLoading()
-        if (mAdapter.itemCount < 1)
+        if (mAdapter.itemCount < 1) {
             onRefresh()
-        else
+        } else {
             updateUI()
+        }
     }
 
     private fun addScrollLoadTrigger() {
@@ -112,8 +110,9 @@ class BottomSheetListUsers :
     }
 
     private fun removeScrollLoadTrigger() {
-        if (isPager)
+        if (isPager) {
             recyclerView?.clearOnScrollListeners()
+        }
     }
 
     override fun onPause() {
@@ -136,13 +135,15 @@ class BottomSheetListUsers :
             recycler.adapter = mAdapter
         }
         if (mAdapter.itemCount < 1) {
-            val drawable = context?.getCompatDrawable(
-                R.drawable.ic_new_releases_white_24dp,
-                R.color.colorStateBlue
-            ) ?: return
+            val drawable =
+                context?.getCompatDrawable(
+                    R.drawable.ic_new_releases_white_24dp,
+                    R.color.colorStateBlue,
+                ) ?: return
             stateLayout?.showEmpty(drawable, getString(R.string.layout_empty_response))
-        } else
+        } else {
             stateLayout?.showContent()
+        }
     }
 
     private fun updateUI() {
@@ -152,24 +153,29 @@ class BottomSheetListUsers :
     @Suppress("UNCHECKED_CAST")
     private fun setViewModel(stateSupported: Boolean) {
         if (viewModel == null) {
-            viewModel = androidx.lifecycle.ViewModelProvider(this).get(ViewModelBase::class.java)
-                as ViewModelBase<PageContainer<UserBase>>
+            viewModel =
+                androidx.lifecycle.ViewModelProvider(this).get(ViewModelBase::class.java)
+                    as ViewModelBase<PageContainer<UserBase>>
             viewModel?.setContext(requireContext())
-            if (viewModel?.model?.hasActiveObservers() == false)
+            if (viewModel?.model?.hasActiveObservers() == false) {
                 viewModel?.model?.observe(this, this)
-            if (stateSupported)
+            }
+            if (stateSupported) {
                 viewModel?.state = this
+            }
         }
     }
 
     private fun setLimitReached() {
-        if (presenter.currentPage != 0)
+        if (presenter.currentPage != 0) {
             isLimit = true
+        }
     }
 
     override fun onRefresh() {
-        if (isPager)
+        if (isPager) {
             presenter.onRefreshPage()
+        }
         makeRequest()
     }
 
@@ -181,11 +187,11 @@ class BottomSheetListUsers :
 
     fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, userId)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, userId)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        }
         viewModel?.requestData(requestType, ctx)
     }
 
@@ -193,33 +199,41 @@ class BottomSheetListUsers :
         val items = content ?: emptyList()
         if (!CompatUtil.isEmpty(items)) {
             if (isPager) {
-                if (mAdapter.itemCount < 1)
+                if (mAdapter.itemCount < 1) {
                     mAdapter.onItemsInserted(items)
-                else
+                } else {
                     mAdapter.onItemRangeInserted(items)
-            } else
+                }
+            } else {
                 mAdapter.onItemsInserted(items)
+            }
             updateUI()
         } else {
-            if (isPager)
+            if (isPager) {
                 setLimitReached()
-            if (mAdapter.itemCount < 1)
+            }
+            if (mAdapter.itemCount < 1) {
                 showEmpty(getString(R.string.layout_empty_response))
+            }
         }
     }
 
     override fun onChanged(content: PageContainer<UserBase>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
-            if (!content.isEmpty)
+            }
+            if (!content.isEmpty) {
                 onPostProcessed(content.pageData)
-            else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
     override fun showError(error: String) {
@@ -234,25 +248,30 @@ class BottomSheetListUsers :
         stateLayout?.showError(drawable, message, getString(R.string.button_try_again), stateLayoutOnClick)
     }
 
-    override fun onItemClick(target: View, data: IntPair<UserBase>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<UserBase>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent = Intent(host, ProfileActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    putExtra(KeyUtil.arg_id, data.second.id)
-                }
+                val intent =
+                    Intent(host, ProfileActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        putExtra(KeyUtil.arg_id, data.second.id)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<UserBase>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<UserBase>,
+    ) = Unit
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
         fun setUserId(userId: Long): Builder {
             bundle.putLong(KeyUtil.arg_userId, userId)
@@ -264,7 +283,9 @@ class BottomSheetListUsers :
             return this
         }
 
-        fun setRequestType(@KeyUtil.RequestType requestType: Int): Builder {
+        fun setRequestType(
+            @KeyUtil.RequestType requestType: Int,
+        ): Builder {
             bundle.putInt(KeyUtil.arg_request_type, requestType)
             return this
         }

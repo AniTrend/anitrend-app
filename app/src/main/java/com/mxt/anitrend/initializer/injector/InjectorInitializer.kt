@@ -17,7 +17,6 @@ import org.koin.core.logger.MESSAGE
 import timber.log.Timber
 
 class InjectorInitializer : Initializer<Unit> {
-
     /**
      * Initializes and a component given the application [Context]
      *
@@ -28,8 +27,8 @@ class InjectorInitializer : Initializer<Unit> {
             androidContext(
                 LocaleUtil.applyConfiguration(
                     context,
-                    Settings(context)
-                )
+                    Settings(context),
+                ),
             )
             logger(KoinLogger())
             workManagerFactory()
@@ -44,13 +43,15 @@ class InjectorInitializer : Initializer<Unit> {
      * For e.g. if a [Initializer] `B` defines another [Initializer] `A` as its dependency,
      * then `A` gets initialized before `B`.
      */
-    override fun dependencies(): List<Class<out Initializer<*>>> =
-        listOf(ApplicationInitializer::class.java)
+    override fun dependencies(): List<Class<out Initializer<*>>> = listOf(ApplicationInitializer::class.java)
 
     internal class KoinLogger(
-        logLevel: Level = if (BuildConfig.DEBUG) Level.DEBUG else Level.ERROR
+        logLevel: Level = if (BuildConfig.DEBUG) Level.DEBUG else Level.ERROR,
     ) : Logger(logLevel) {
-        override fun display(level: Level, msg: MESSAGE) {
+        override fun display(
+            level: Level,
+            msg: MESSAGE,
+        ) {
             when (level) {
                 Level.DEBUG -> Timber.tag(KOIN_TAG).v(msg)
                 Level.INFO -> Timber.tag(KOIN_TAG).i(msg)

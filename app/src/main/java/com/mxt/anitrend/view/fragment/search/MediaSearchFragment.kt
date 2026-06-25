@@ -14,7 +14,6 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
@@ -22,19 +21,22 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity
  * Created by max on 2017/12/20.
  * series searching fragment
  */
-class MediaSearchFragment :
-    FragmentBaseList<MediaBase, PageContainer<MediaBase>, BasePresenter>() {
-
+class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>, BasePresenter>() {
     private var searchQuery: String? = null
+
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle, @KeyUtil.MediaType mediaType: String): MediaSearchFragment {
-            val args = Bundle(bundle).apply {
-                putString(KeyUtil.arg_mediaType, mediaType)
-            }
+        fun newInstance(
+            bundle: Bundle,
+            @KeyUtil.MediaType mediaType: String,
+        ): MediaSearchFragment {
+            val args =
+                Bundle(bundle).apply {
+                    putString(KeyUtil.arg_mediaType, mediaType)
+                }
             return MediaSearchFragment().apply {
                 arguments = args
             }
@@ -61,58 +63,79 @@ class MediaSearchFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_search, searchQuery)
-            .putVariable(KeyUtil.arg_mediaType, mediaType)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-            .putVariable(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putString(KeyUtil.arg_search, searchQuery)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+            putString(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH)
+            if (presenter.settings.displayAdultContent) {
+                remove(KeyUtil.arg_isAdult)
+            } else {
+                putBoolean(KeyUtil.arg_isAdult, false)
+            }
+        }
         viewModel?.requestData(KeyUtil.MEDIA_SEARCH_REQ, ctx)
     }
 
     override fun onChanged(content: PageContainer<MediaBase>?) {
         if (content != null) {
-            if (content.hasPageInfo())
+            if (content.hasPageInfo()) {
                 presenter.setPageInfo(content.pageInfo)
-            if (!content.isEmpty)
+            }
+            if (!content.isEmpty) {
                 onPostProcessed(content.pageData)
-            else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<MediaBase>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<MediaBase>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, data.second.id)
-                    putExtra(KeyUtil.arg_mediaType, data.second.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, data.second.id)
+                        putExtra(KeyUtil.arg_mediaType, data.second.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<MediaBase>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<MediaBase>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(data.second.id).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(data.second.id)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }

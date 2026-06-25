@@ -20,12 +20,13 @@ import com.mxt.anitrend.util.media.MediaListUtil
 /**
  * Created by max on 2018/01/03.
  */
-class CustomSeriesAnimeManage @JvmOverloads constructor(
+class CustomSeriesAnimeManage
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : CustomSeriesManageBase(context, attrs, defStyleAttr) {
-
     private lateinit var binding: CustomActionAnimeBinding
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -33,7 +34,7 @@ class CustomSeriesAnimeManage @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -73,14 +74,16 @@ class CustomSeriesAnimeManage @JvmOverloads constructor(
         binding.diaCurrentStatus.adapter = getIconArrayAdapter()
 
         val statusList = mediaListStatuses.toList()
-        if (!TextUtils.isEmpty(mediaListModel.status))
+        if (!TextUtils.isEmpty(mediaListModel.status)) {
             binding.diaCurrentStatus.setSelection(statusList.indexOf(mediaListModel.status))
-        else
+        } else {
             binding.diaCurrentStatus.setSelection(statusList.indexOf(KeyUtil.PLANNING))
+        }
 
         binding.diaCurrentPrivacy.isChecked = mediaListModel.isHidden
-        if (mediaListModel.media.episodes > 0)
+        if (mediaListModel.media.episodes > 0) {
             binding.diaCurrentProgress.setProgressMaximum(mediaListModel.media.episodes)
+        }
 
         binding.diaCurrentScore.setScoreFormat(getMediaListOptions().scoreFormat)
         binding.diaCurrentScore.setScoreCurrent(mediaListModel.score)
@@ -100,26 +103,33 @@ class CustomSeriesAnimeManage @JvmOverloads constructor(
         super.onViewRecycled()
     }
 
-    override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+    override fun onItemSelected(
+        adapterView: AdapterView<*>,
+        view: View,
+        i: Int,
+        l: Long,
+    ) {
         mediaListModel.status = mediaListStatuses[i]
         when (mediaListStatuses[i]) {
             KeyUtil.CURRENT -> {
-                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED)) {
                     NotifyUtil.makeText(context, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show()
+                }
             }
             KeyUtil.PLANNING -> Unit
             KeyUtil.COMPLETED -> {
-                if (!CompatUtil.equals(getSeriesModel().status, KeyUtil.FINISHED))
+                if (!CompatUtil.equals(getSeriesModel().status, KeyUtil.FINISHED)) {
                     NotifyUtil.makeText(context, R.string.warning_anime_is_airing, Toast.LENGTH_LONG).show()
-                else {
+                } else {
                     val total = getSeriesModel().episodes
                     mediaListModel.progress = total
                     binding.diaCurrentProgress.setProgressCurrent(total)
                 }
             }
             else -> {
-                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED))
+                if (CompatUtil.equals(getSeriesModel().status, KeyUtil.NOT_YET_RELEASED)) {
                     NotifyUtil.makeText(context, R.string.warning_anime_not_airing, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

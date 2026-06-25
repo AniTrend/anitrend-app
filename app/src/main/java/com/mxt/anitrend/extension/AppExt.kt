@@ -15,8 +15,8 @@ import androidx.lifecycle.LifecycleOwner
 import timber.log.Timber
 
 fun FragmentActivity.applyConfiguredTheme() {
-    runCatching{
-        //ConfigurationUtil().applyApplicationTheme()
+    runCatching {
+        // ConfigurationUtil().applyApplicationTheme()
         recreate()
     }.exceptionOrNull()?.printStackTrace()
 }
@@ -38,10 +38,14 @@ fun FragmentActivity?.hideKeyboard() = this?.apply {
  * @param target The view from the calling activity with transition name
  * @param data Intent with bundle and or activity to start
  */
-fun FragmentActivity.startSharedTransitionActivity(target : View, data : Intent) {
+fun FragmentActivity.startSharedTransitionActivity(
+    target: View,
+    data: Intent,
+) {
     try {
         val participants = Pair(target, ViewCompat.getTransitionName(target))
-        val transitionActivityOptions = ActivityOptionsCompat
+        val transitionActivityOptions =
+            ActivityOptionsCompat
                 .makeSceneTransitionAnimation(this, participants)
         ActivityCompat.startActivity(this, data, transitionActivityOptions.toBundle())
     } catch (e: Exception) {
@@ -49,15 +53,13 @@ fun FragmentActivity.startSharedTransitionActivity(target : View, data : Intent)
     }
 }
 
-
 /**
  * Compares if this State is greater or equal to the given [Lifecycle.State].
  *
  * @param state State to compare with
  * @return true if this State is greater or equal to the given [Lifecycle.State]
  */
-fun LifecycleOwner.isStateAtLeast(state: Lifecycle.State) =
-        lifecycle.currentState.isAtLeast(state)
+fun LifecycleOwner.isStateAtLeast(state: Lifecycle.State) = lifecycle.currentState.isAtLeast(state)
 
 /**
  * Lazy intent parameters for fragment activities
@@ -68,7 +70,10 @@ fun LifecycleOwner.isStateAtLeast(state: Lifecycle.State) =
  * @return [Lazy] of the target type
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> FragmentActivity.extras(key: String, default: T) = lazy(LAZY_MODE_PUBLICATION) {
+fun <T : Any> FragmentActivity.extras(
+    key: String,
+    default: T,
+) = lazy(LAZY_MODE_PUBLICATION) {
     try {
         val value = if (intent?.extras?.containsKey(key) == true) intent?.extras?.get(key) else null
         (value as? T) ?: default
@@ -87,7 +92,10 @@ fun <T : Any> FragmentActivity.extras(key: String, default: T) = lazy(LAZY_MODE_
  * @return [Lazy] of the target type
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> Fragment.extras(key: String, default: T) = lazy(LAZY_MODE_PUBLICATION) {
+fun <T : Any> Fragment.extras(
+    key: String,
+    default: T,
+) = lazy(LAZY_MODE_PUBLICATION) {
     try {
         val value = if (arguments?.containsKey(key) == true) arguments?.get(key) else null
         (value as? T) ?: default

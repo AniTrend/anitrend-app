@@ -12,5 +12,5 @@ import org.simpleframework.xml.Root
 @Parcelize
 class Rss(
     @field:Element(name = "channel")
-    var channel: Channel? = null
+    var channel: Channel? = null,
 ) : Parcelable

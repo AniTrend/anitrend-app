@@ -25,10 +25,8 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity
 import com.mxt.anitrend.view.sheet.BottomSheetListUsers
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -40,23 +38,22 @@ import timber.log.Timber
  * Created by max on 2017/11/27.
  * following, followers & favourites
  */
-class AboutPanelWidget @JvmOverloads constructor(
+class AboutPanelWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
     View.OnClickListener,
     BaseConsumer.onRequestModelChange<UserBase> {
-
     private lateinit var binding: WidgetProfileAboutPanelBinding
     private var lifecycle: Lifecycle? = null
     private var userId: Long = 0L
     private val tag = AboutPanelWidget::class.java.simpleName
 
     private var lastSynced: Long = 0L
-
-    private var queryContainer: QueryContainerBuilder? = null
 
     private var followers: PageInfo? = null
     private var following: PageInfo? = null
@@ -84,12 +81,12 @@ class AboutPanelWidget @JvmOverloads constructor(
         binding.userFavouritesContainer.setOnClickListener(this)
     }
 
-    fun setUserId(userId: Long, lifecycle: Lifecycle) {
+    fun setUserId(
+        userId: Long,
+        lifecycle: Lifecycle,
+    ) {
         this.userId = userId
         this.lifecycle = lifecycle
-        queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, userId)
-            .putVariable(KeyUtil.arg_page_limit, 1)
 
         if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, lastSynced, 5)) {
             binding.userFavouritesCount.text = placeHolder
@@ -104,16 +101,18 @@ class AboutPanelWidget @JvmOverloads constructor(
     }
 
     private fun requestFollowers() {
-        val query = queryContainer ?: return
         val presenter = WidgetPresenter<PageContainer<UserBase>>(context)
-        presenter.params.putParcelable(KeyUtil.arg_graph_params, query)
+        presenter.params.apply {
+            putLong(KeyUtil.arg_id, userId)
+            putInt(KeyUtil.arg_page_limit, 1)
+        }
         presenter.requestData(
             KeyUtil.USER_FOLLOWERS_REQ,
             context,
             object : RetroCallback<PageContainer<UserBase>> {
                 override fun onResponse(
                     call: Call<PageContainer<UserBase>>,
-                    response: Response<PageContainer<UserBase>>
+                    response: Response<PageContainer<UserBase>>,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) != true) {
                         return
@@ -128,28 +127,30 @@ class AboutPanelWidget @JvmOverloads constructor(
 
                 override fun onFailure(
                     call: Call<PageContainer<UserBase>>,
-                    throwable: Throwable
+                    throwable: Throwable,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) == true) {
                         Timber.e(throwable)
                     }
                 }
-            }
+            },
         )
         usersPresenter = presenter
     }
 
     private fun requestFollowing() {
-        val query = queryContainer ?: return
         val presenter = WidgetPresenter<PageContainer<UserBase>>(context)
-        presenter.params.putParcelable(KeyUtil.arg_graph_params, query)
+        presenter.params.apply {
+            putLong(KeyUtil.arg_id, userId)
+            putInt(KeyUtil.arg_page_limit, 1)
+        }
         presenter.requestData(
             KeyUtil.USER_FOLLOWING_REQ,
             context,
             object : RetroCallback<PageContainer<UserBase>> {
                 override fun onResponse(
                     call: Call<PageContainer<UserBase>>,
-                    response: Response<PageContainer<UserBase>>
+                    response: Response<PageContainer<UserBase>>,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) != true) {
                         return
@@ -164,41 +165,44 @@ class AboutPanelWidget @JvmOverloads constructor(
 
                 override fun onFailure(
                     call: Call<PageContainer<UserBase>>,
-                    throwable: Throwable
+                    throwable: Throwable,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) == true) {
                         Timber.tag(tag).e(throwable)
                     }
                 }
-            }
+            },
         )
         usersPresenter = presenter
     }
 
     private fun requestFavourites() {
-        val query = queryContainer ?: return
         val presenter = WidgetPresenter<ConnectionContainer<Favourite>>(context)
-        presenter.params.putParcelable(KeyUtil.arg_graph_params, query)
+        presenter.params.apply {
+            putLong(KeyUtil.arg_id, userId)
+            putInt(KeyUtil.arg_page_limit, 1)
+        }
         presenter.requestData(
             KeyUtil.USER_FAVOURITES_COUNT_REQ,
             context,
             object : RetroCallback<ConnectionContainer<Favourite>> {
                 override fun onResponse(
                     call: Call<ConnectionContainer<Favourite>>,
-                    response: Response<ConnectionContainer<Favourite>>
+                    response: Response<ConnectionContainer<Favourite>>,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) != true) {
                         return
                     }
                     val connection = response.body()?.connection
                     if (response.isSuccessful && connection != null) {
-                        favourites = listOfNotNull(
-                            connection.anime?.pageInfo?.total,
-                            connection.manga?.pageInfo?.total,
-                            connection.characters?.pageInfo?.total,
-                            connection.staff?.pageInfo?.total,
-                            connection.studios?.pageInfo?.total
-                        ).sum()
+                        favourites =
+                            listOfNotNull(
+                                connection.anime?.pageInfo?.total,
+                                connection.manga?.pageInfo?.total,
+                                connection.characters?.pageInfo?.total,
+                                connection.staff?.pageInfo?.total,
+                                connection.studios?.pageInfo?.total,
+                            ).sum()
                         binding.userFavouritesCount.text =
                             WidgetPresenter.valueFormatter(favourites)
                     }
@@ -206,13 +210,13 @@ class AboutPanelWidget @JvmOverloads constructor(
 
                 override fun onFailure(
                     call: Call<ConnectionContainer<Favourite>>,
-                    throwable: Throwable
+                    throwable: Throwable,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) == true) {
                         Timber.e(throwable)
                     }
                 }
-            }
+            },
         )
         favouritePresenter = presenter
     }
@@ -232,41 +236,46 @@ class AboutPanelWidget @JvmOverloads constructor(
     override fun onClick(view: View) {
         when (view.id) {
             R.id.user_favourites_container -> {
-                if (favourites < 1)
+                if (favourites < 1) {
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                else {
-                    val intent = Intent(context, FavouriteActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, userId)
-                    }
+                } else {
+                    val intent =
+                        Intent(context, FavouriteActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            putExtra(KeyUtil.arg_id, userId)
+                        }
                     context.startActivity(intent)
                 }
             }
             R.id.user_followers_container -> {
-                if (followers == null || followers?.total ?: 0 < 1)
+                if (followers == null || followers?.total ?: 0 < 1) {
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                else {
+                } else {
                     val manager = fragmentManager ?: return
-                    bottomSheet = BottomSheetListUsers.Builder()
-                        .setUserId(userId)
-                        .setModelCount(followers?.total ?: 0)
-                        .setRequestType(KeyUtil.USER_FOLLOWERS_REQ)
-                        .setTitle(R.string.title_bottom_sheet_followers)
-                        .build()
+                    bottomSheet =
+                        BottomSheetListUsers
+                            .Builder()
+                            .setUserId(userId)
+                            .setModelCount(followers?.total ?: 0)
+                            .setRequestType(KeyUtil.USER_FOLLOWERS_REQ)
+                            .setTitle(R.string.title_bottom_sheet_followers)
+                            .build()
                     bottomSheet?.show(manager, bottomSheet?.tag)
                 }
             }
             R.id.user_following_container -> {
-                if (following == null || following?.total ?: 0 < 1)
+                if (following == null || following?.total ?: 0 < 1) {
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                else {
+                } else {
                     val manager = fragmentManager ?: return
-                    bottomSheet = BottomSheetListUsers.Builder()
-                        .setUserId(userId)
-                        .setModelCount(following?.total ?: 0)
-                        .setRequestType(KeyUtil.USER_FOLLOWING_REQ)
-                        .setTitle(R.string.title_bottom_sheet_following)
-                        .build()
+                    bottomSheet =
+                        BottomSheetListUsers
+                            .Builder()
+                            .setUserId(userId)
+                            .setModelCount(following?.total ?: 0)
+                            .setRequestType(KeyUtil.USER_FOLLOWING_REQ)
+                            .setTitle(R.string.title_bottom_sheet_following)
+                            .build()
                     bottomSheet?.show(manager, bottomSheet?.tag)
                 }
             }
@@ -297,13 +306,15 @@ class AboutPanelWidget @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
+        }
     }
 
     override fun onDetachedFromWindow() {
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
+        }
         super.onDetachedFromWindow()
     }
 }

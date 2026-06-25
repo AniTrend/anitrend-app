@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.sheet
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
@@ -23,16 +22,13 @@ import com.mxt.anitrend.view.activity.detail.ProfileActivity
  * Review reader bottom sheet
  */
 class BottomReviewReader : BottomSheetBase<Review>() {
-
     private var model: Review? = null
     private var binding: BottomSheetReviewBinding? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle): BottomReviewReader {
-            return BottomReviewReader().apply {
-                arguments = bundle
-            }
+        fun newInstance(bundle: Bundle): BottomReviewReader = BottomReviewReader().apply {
+            arguments = bundle
         }
     }
 
@@ -65,10 +61,11 @@ class BottomReviewReader : BottomSheetBase<Review>() {
         reviewTemplate.userAvatar.setOnClickListener { view ->
             val host = activity ?: return@setOnClickListener
             val userId = review.user?.id ?: return@setOnClickListener
-            val intent = Intent(host, ProfileActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                putExtra(KeyUtil.arg_id, userId)
-            }
+            val intent =
+                Intent(host, ProfileActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    putExtra(KeyUtil.arg_id, userId)
+                }
             CompatUtil.startRevealAnim(host, view, intent)
         }
     }
@@ -79,9 +76,7 @@ class BottomReviewReader : BottomSheetBase<Review>() {
     }
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
         fun setReview(review: Review): Builder {
             bundle.putParcelable(KeyUtil.arg_model, review)

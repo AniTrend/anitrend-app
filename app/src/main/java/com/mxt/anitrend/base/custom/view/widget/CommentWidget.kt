@@ -12,12 +12,14 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
  * Created by max on 2017/11/07.
  * Comment Widget
  */
-class CommentWidget @JvmOverloads constructor(
+class CommentWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : SingleLineTextView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : SingleLineTextView(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }
@@ -31,11 +33,11 @@ class CommentWidget @JvmOverloads constructor(
         setCompoundDrawablesWithIntrinsicBounds(
             context.getCompatTintedDrawable(
                 R.drawable.ic_mode_comment_grey_600_18dp,
-                R.attr.colorAccent
+                R.attr.colorAccent,
             ),
             null,
             null,
-            null
+            null,
         )
     }
 

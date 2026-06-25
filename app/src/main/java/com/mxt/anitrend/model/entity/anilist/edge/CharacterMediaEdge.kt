@@ -11,7 +11,6 @@ import com.mxt.anitrend.util.KeyUtil
  * CharacterMediaEdge
  */
 class CharacterMediaEdge : Edge<CharacterBase>() {
-
     /**
      * The characters role in the media
      */

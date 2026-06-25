@@ -4,7 +4,6 @@ import org.gradle.api.Project
 import java.io.File
 import java.util.*
 
-
 enum class PropertyTypes(val key: String) {
     CODE("code"),
     VERSION("version"),
@@ -24,8 +23,6 @@ class PropertiesReader(project: Project) {
         }
     }
 
-    operator fun get(type: PropertyTypes): String {
-        return properties.getProperty(type.key)
-            ?: throw IllegalStateException("$type properties were not initialized")
-    }
+    operator fun get(type: PropertyTypes): String = properties.getProperty(type.key)
+        ?: throw IllegalStateException("$type properties were not initialized")
 }

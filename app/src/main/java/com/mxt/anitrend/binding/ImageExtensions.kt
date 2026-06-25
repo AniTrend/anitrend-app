@@ -7,13 +7,15 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.image.AvatarImageView
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase
 
-
 fun AvatarImageView.setImage(url: String?) {
-    Glide.with(context).load(url).apply(RequestOptions.centerCropTransform())
-            .apply(RequestOptions.placeholderOf(R.drawable.avatar_placeholder))
-            .transition(DrawableTransitionOptions.withCrossFade(150))
-            .apply(RequestOptions.circleCropTransform())
-            .into(this)
+    Glide
+        .with(context)
+        .load(url)
+        .apply(RequestOptions.centerCropTransform())
+        .apply(RequestOptions.placeholderOf(R.drawable.avatar_placeholder))
+        .transition(DrawableTransitionOptions.withCrossFade(150))
+        .apply(RequestOptions.circleCropTransform())
+        .into(this)
 }
 
 fun AvatarImageView.setImage(imageBase: ImageBase?) {

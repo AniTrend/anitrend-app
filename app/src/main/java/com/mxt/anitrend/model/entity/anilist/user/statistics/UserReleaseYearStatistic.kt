@@ -29,5 +29,5 @@ data class UserReleaseYearStatistic(
     override val count: Int,
     override val meanScore: Float,
     override val mediaIds: List<Int>,
-    override val minutesWatched: Int
+    override val minutesWatched: Int,
 ) : IUserStatistic

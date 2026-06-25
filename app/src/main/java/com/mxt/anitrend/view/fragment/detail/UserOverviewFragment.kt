@@ -8,12 +8,12 @@ import android.widget.Toast
 import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
+import com.mxt.anitrend.binding.richMarkDown
+import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.FragmentUserAboutBinding
 import com.mxt.anitrend.extension.empty
 import com.mxt.anitrend.extension.extras
 import com.mxt.anitrend.extension.getCompatColorAttr
-import com.mxt.anitrend.binding.richMarkDown
-import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.StatsRing
@@ -21,7 +21,6 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import java.util.*
 
 /**
@@ -36,7 +35,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         get() = requireNotNull(_binding)
     private var model: User? = null
 
-    private val userId by extras(KeyUtil.arg_id, 0)
+    private val userId by extras(KeyUtil.arg_id, 0L)
     private val userName by extras(KeyUtil.arg_userName, String.empty())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,14 +105,21 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      * All new or updated network requests should be handled in this method
      */
     override fun makeRequest() {
-        val queryContainer = GraphUtil.getDefaultQuery(false)
-        if (userName.isNotBlank())
-            queryContainer.putVariable(KeyUtil.arg_userName, userName)
-        if (userId > 0)
-            queryContainer.putVariable(KeyUtil.arg_id, userId)
         val model = viewModel ?: return
         val ctx = context ?: return
-        model.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        model.params.apply {
+            if (userName.isNotBlank()) {
+                putString(KeyUtil.arg_userName, userName)
+            } else {
+                remove(KeyUtil.arg_userName)
+            }
+            if (userId > 0) {
+                putLong(KeyUtil.arg_id, userId)
+            } else {
+                remove(KeyUtil.arg_id)
+            }
+            putBoolean(KeyUtil.arg_asHtml, false)
+        }
         model.requestData(KeyUtil.USER_OVERVIEW_REQ, ctx)
     }
 
@@ -127,12 +133,16 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         if (model != null) {
             this.model = model
             updateUI()
-        } else
-            viewBinding.stateLayout.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                    getString(R.string.layout_empty_response), getString(R.string.try_again)) {
+        } else {
+            viewBinding.stateLayout.showError(
+                context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
+                getString(R.string.layout_empty_response),
+                getString(R.string.try_again),
+            ) {
                 viewBinding.stateLayout.showLoading()
                 makeRequest()
             }
+        }
     }
 
     /**
@@ -156,14 +166,14 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         val genres = statistics?.anime?.genres
         if (statistics != null && genres != null && genres.isNotEmpty()) {
             val highestValue = Stream.of(genres)
-                    .max { o1, o2 -> if (o1.count > o2.count) 1 else 0 }
-                    .get().count
+                .max { o1, o2 -> if (o1.count > o2.count) 1 else 0 }
+                .get().count
 
             userGenreStats = Stream.of(genres)
-                    .sortBy { s -> -s.count }.map { genreStats ->
-                        val percentage = genreStats.count.toFloat() / highestValue.toFloat() * 100f
-                        StatsRing(percentage.toInt(), genreStats.genre, genreStats.count.toString())
-                    }.limit(5).toList()
+                .sortBy { s -> -s.count }.map { genreStats ->
+                    val percentage = genreStats.count.toFloat() / highestValue.toFloat() * 100f
+                    StatsRing(percentage.toInt(), genreStats.genre, genreStats.count.toString())
+                }.limit(5).toList()
         }
 
         return userGenreStats
@@ -176,7 +186,7 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
             if (ringList.size > 1) {
                 viewBinding.userStats.setDrawBg(
                     CompatUtil.isLightTheme(presenter.settings),
-                    getCompatColorAttr(R.attr.subtitleColor)
+                    getCompatColorAttr(R.attr.subtitleColor),
                 )
                 viewBinding.userStats.setData(ringList, 500)
             }
@@ -198,14 +208,15 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
                     context?.apply {
                         viewBinding.userStats.setDrawBg(
                             CompatUtil.isLightTheme(presenter.settings),
-                            getCompatColorAttr(R.attr.subtitleColor)
+                            getCompatColorAttr(R.attr.subtitleColor),
                         )
                         viewBinding.userStats.setData(ringList, 500)
                     }
-                } else
+                } else {
                     activity?.apply {
                         NotifyUtil.makeText(this, R.string.text_error_request, Toast.LENGTH_SHORT).show()
                     }
+                }
             }
         }
     }

@@ -27,7 +27,10 @@ import timber.log.Timber
  * Created by max on 2017/11/02.
  * Custom bottom sheet base implementation
  */
-abstract class BottomSheetBase<T> : BottomSheetDialogFragment(), BottomSheetListener, ResponseCallback {
+abstract class BottomSheetBase<T> :
+    BottomSheetDialogFragment(),
+    BottomSheetListener,
+    ResponseCallback {
 
     var TAG: String? = null
 
@@ -41,10 +44,13 @@ abstract class BottomSheetBase<T> : BottomSheetDialogFragment(), BottomSheetList
 
     @StringRes
     protected var mTitle: Int = 0
+
     @StringRes
     protected var mText: Int = 0
+
     @StringRes
     protected var mPositive: Int = 0
+
     @StringRes
     protected var mNegative: Int = 0
     protected var searchQuery: String? = null
@@ -83,9 +89,7 @@ abstract class BottomSheetBase<T> : BottomSheetDialogFragment(), BottomSheetList
         presenter = BasePresenter(requireContext())
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = super.onCreateDialog(savedInstanceState)
 
     override fun onStart() {
         super.onStart()
@@ -93,10 +97,11 @@ abstract class BottomSheetBase<T> : BottomSheetDialogFragment(), BottomSheetList
         val ctx = context
         val arrowDown = ctx?.getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp)
         val closeIcon = ctx?.getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp)
-        if (bottomSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED)
+        if (bottomSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED) {
             toolbarState?.setImageDrawable(arrowDown)
-        else
+        } else {
             toolbarState?.setImageDrawable(closeIcon)
+        }
         toolbarState?.setOnClickListener {
             when (bottomSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_EXPANDED ->
@@ -110,8 +115,9 @@ abstract class BottomSheetBase<T> : BottomSheetDialogFragment(), BottomSheetList
     }
 
     override fun onStop() {
-        if (EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
+        }
         super.onStop()
     }
 
@@ -152,13 +158,13 @@ abstract class BottomSheetBase<T> : BottomSheetDialogFragment(), BottomSheetList
 
     override fun onStateCollapsed() {
         toolbarState?.setImageDrawable(
-            context?.getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp)
+            context?.getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp),
         )
     }
 
     override fun onStateExpanded() {
         toolbarState?.setImageDrawable(
-            context?.getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp)
+            context?.getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp),
         )
     }
 

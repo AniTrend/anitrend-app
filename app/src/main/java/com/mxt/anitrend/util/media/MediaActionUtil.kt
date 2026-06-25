@@ -13,9 +13,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -26,9 +24,9 @@ import timber.log.Timber
  * for a given media
  */
 class MediaActionUtil private constructor(
-    private val context: FragmentActivity
-) : RetroCallback<MediaBase>, LifecycleListener {
-
+    private val context: FragmentActivity,
+) : RetroCallback<MediaBase>,
+    LifecycleListener {
     private var progressDialog: MaterialDialog? = null
     private val presenter = WidgetPresenter<MediaBase>(context)
     private val lifecycle: Lifecycle = context.lifecycle
@@ -40,20 +38,18 @@ class MediaActionUtil private constructor(
     }
 
     private fun actionPicker() {
-        val currentUser = presenter.database.currentUser ?: run {
-            dismissProgress()
-            NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
-            return
-        }
+        val currentUser =
+            presenter.database.currentUser ?: run {
+                dismissProgress()
+                NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
+                return
+            }
         val mediaListOptions: MediaListOptions = currentUser.mediaListOptions
 
-        // No need to add the parameter onList otherwise we'd have to handle an error code 404,
-        // Instead we'd rather check if the the media has a non null mediaList item
-        val queryContainerBuilder: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, mediaId)
-            .putVariable(KeyUtil.arg_scoreFormat, mediaListOptions.scoreFormat)
-
-        presenter.params.putParcelable(KeyUtil.arg_graph_params, queryContainerBuilder)
+        presenter.params.apply {
+            putLong(KeyUtil.arg_id, mediaId)
+            putString(KeyUtil.arg_scoreFormat, mediaListOptions.scoreFormat)
+        }
         presenter.requestData(KeyUtil.MEDIA_WITH_LIST_REQ, context, this)
     }
 
@@ -75,7 +71,10 @@ class MediaActionUtil private constructor(
         }
     }
 
-    override fun onResponse(call: Call<MediaBase>, response: Response<MediaBase>) {
+    override fun onResponse(
+        call: Call<MediaBase>,
+        response: Response<MediaBase>,
+    ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             val mediaBase = response.body()
             if (response.isSuccessful && mediaBase != null) {
@@ -88,7 +87,10 @@ class MediaActionUtil private constructor(
         }
     }
 
-    override fun onFailure(call: Call<MediaBase>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<MediaBase>,
+        throwable: Throwable,
+    ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress()
             Timber.tag(tagName).e(throwable)
@@ -111,7 +113,6 @@ class MediaActionUtil private constructor(
     }
 
     class Builder {
-
         private var mediaId: Long = 0
 
         fun setId(mediaId: Long) = apply {

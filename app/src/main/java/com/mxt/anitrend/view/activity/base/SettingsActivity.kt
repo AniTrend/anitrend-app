@@ -22,7 +22,6 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
-
     private lateinit var binding: SettingsActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,20 +50,22 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
             .commit()
-
     }
 
     override fun makeRequest() {
-
     }
 
-    class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-
+    class SettingsFragment :
+        PreferenceFragmentCompat(),
+        SharedPreferences.OnSharedPreferenceChangeListener {
         private val settings by inject<Settings>()
         private val scheduler by inject<JobSchedulerUtil>()
         private val presenter by inject<BasePresenter>()
 
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        override fun onCreatePreferences(
+            savedInstanceState: Bundle?,
+            rootKey: String?,
+        ) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             // Hide privacy category if Firebase is not initialized
@@ -94,21 +95,26 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
         }
 
         private fun requireRestartNotice(fragmentActivity: FragmentActivity) {
-            DialogUtil.createDefaultDialog(fragmentActivity)
+            DialogUtil
+                .createDefaultDialog(fragmentActivity)
                 .autoDismiss(true)
                 .positiveText(R.string.Ok)
                 .content(R.string.text_application_restart_required)
                 .show()
         }
 
-        override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
+        override fun onSharedPreferenceChanged(
+            preferences: SharedPreferences?,
+            key: String?,
+        ) {
             activity?.apply {
                 when (key) {
                     getString(R.string.pref_key_experimental_markdown),
                     getString(R.string.pref_key_display_adult_content),
                     getString(R.string.pref_key_crash_reports),
                     getString(R.string.pref_key_usage_analytics),
-                    getString(R.string.pref_key_list_view_style)-> {
+                    getString(R.string.pref_key_list_view_style),
+                    -> {
                         requireRestartNotice(this)
                     }
                     getString(R.string.pref_key_selected_language) -> {
@@ -116,10 +122,11 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         AppCompatDelegate.setApplicationLocales(locales)
                     }
                     getString(R.string.pref_key_startup_page) -> {
-                        if (!settings.isAuthenticated)
+                        if (!settings.isAuthenticated) {
                             NotifyUtil.makeText(this, R.string.info_login_req, Toast.LENGTH_SHORT).show()
-                        else
+                        } else {
                             requireRestartNotice(this)
+                        }
                     }
                     getString(R.string.pref_key_app_theme) -> {
                         applyConfiguredTheme()
@@ -134,10 +141,11 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         scheduler.scheduleTagJob(applicationContext)
                     }
                     getString(R.string.pref_key_new_message_notifications) -> {
-                        if (settings.isNotificationEnabled)
+                        if (settings.isNotificationEnabled) {
                             scheduler.scheduleNotificationJob(applicationContext)
-                        else
+                        } else {
                             scheduler.cancelNotificationJob(applicationContext)
+                        }
                     }
                     getString(R.string.pref_key_update_channel) -> {
                         presenter.database.remoteVersion = null

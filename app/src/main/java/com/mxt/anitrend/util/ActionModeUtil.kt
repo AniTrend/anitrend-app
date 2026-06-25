@@ -15,9 +15,8 @@ import com.mxt.anitrend.base.interfaces.event.ActionModeListener
  */
 class ActionModeUtil<T>(
     private val modeListener: ActionModeListener?,
-    private val isEnabled: Boolean
+    private val isEnabled: Boolean,
 ) {
-
     private var actionMode: ActionMode? = null
     private lateinit var recyclerAdapter: RecyclerView.Adapter<*>
     val selectedItems: MutableList<T> = mutableListOf()
@@ -45,7 +44,10 @@ class ActionModeUtil<T>(
         recyclerAdapter.notifyDataSetChanged()
     }
 
-    private fun selectItem(viewHolder: RecyclerViewHolder<T>, objectItem: T) {
+    private fun selectItem(
+        viewHolder: RecyclerViewHolder<T>,
+        objectItem: T,
+    ) {
         startActionMode(viewHolder)
 
         selectedItems.add(objectItem)
@@ -53,61 +55,83 @@ class ActionModeUtil<T>(
         setBackgroundColor(viewHolder, true)
 
         val mode = actionMode
-        if (modeListener != null && mode != null)
+        if (modeListener != null && mode != null) {
             modeListener.onSelectionChanged(mode, selectedItems.size)
+        }
     }
 
-    private fun deselectItem(viewHolder: RecyclerViewHolder<T>, objectItem: T) {
+    private fun deselectItem(
+        viewHolder: RecyclerViewHolder<T>,
+        objectItem: T,
+    ) {
         selectedItems.remove(objectItem)
 
         setBackgroundColor(viewHolder, false)
 
         val mode = actionMode
-        if (modeListener != null && mode != null)
+        if (modeListener != null && mode != null) {
             if (selectedItems.isEmpty()) {
                 mode.finish()
                 actionMode = null
-            } else
+            } else {
                 modeListener.onSelectionChanged(mode, selectedItems.size)
+            }
+        }
     }
 
-    fun onItemClick(viewHolder: RecyclerViewHolder<T>, objectItem: T): Boolean {
+    fun onItemClick(
+        viewHolder: RecyclerViewHolder<T>,
+        objectItem: T,
+    ): Boolean {
         if (!isEnabled || selectedItems.isEmpty()) {
             return false
         }
-        if (isSelected(objectItem))
+        if (isSelected(objectItem)) {
             deselectItem(viewHolder, objectItem)
-        else
+        } else {
             selectItem(viewHolder, objectItem)
+        }
         return true
     }
 
-    fun onItemLongClick(viewHolder: RecyclerViewHolder<T>, objectItem: T): Boolean {
-        if (!isEnabled)
+    fun onItemLongClick(
+        viewHolder: RecyclerViewHolder<T>,
+        objectItem: T,
+    ): Boolean {
+        if (!isEnabled) {
             return false
-        if (isSelected(objectItem))
+        }
+        if (isSelected(objectItem)) {
             deselectItem(viewHolder, objectItem)
-        else
+        } else {
             selectItem(viewHolder, objectItem)
+        }
         return true
     }
 
-    fun setBackgroundColor(viewHolder: RecyclerViewHolder<T>, isSelected: Boolean) {
+    fun setBackgroundColor(
+        viewHolder: RecyclerViewHolder<T>,
+        isSelected: Boolean,
+    ) {
         when {
-            isSelected -> when (val itemView = viewHolder.itemView) {
-                is CardView -> itemView.setCardBackgroundColor(
-                    ContextCompat.getColor(viewHolder.getContext(), R.color.colorTextGrey2nd)
-                )
-                is CheckBox -> itemView.isChecked = true
-                else -> itemView.setBackgroundResource(R.drawable.selection_frame)
-            }
-            else -> when (val itemView = viewHolder.itemView) {
-                is CardView -> itemView.setCardBackgroundColor(
-                    CompatUtil.getColorFromAttr(viewHolder.getContext(), R.attr.cardColor)
-                )
-                is CheckBox -> itemView.isChecked = false
-                else -> itemView.setBackgroundResource(0)
-            }
+            isSelected ->
+                when (val itemView = viewHolder.itemView) {
+                    is CardView ->
+                        itemView.setCardBackgroundColor(
+                            ContextCompat.getColor(viewHolder.getContext(), R.color.colorTextGrey2nd),
+                        )
+                    is CheckBox -> itemView.isChecked = true
+                    else -> itemView.setBackgroundResource(R.drawable.selection_frame)
+                }
+            else ->
+                when (val itemView = viewHolder.itemView) {
+                    is CardView ->
+                        itemView.setCardBackgroundColor(
+                            CompatUtil.getColorFromAttr(viewHolder.getContext(), R.attr.cardColor),
+                        )
+                    is CheckBox -> itemView.isChecked = false
+                    else -> itemView.setBackgroundResource(0)
+                }
         }
     }
 
@@ -116,8 +140,9 @@ class ActionModeUtil<T>(
         selectedItems.addAll(selectableItems)
         recyclerAdapter.notifyDataSetChanged()
         val mode = actionMode
-        if (modeListener != null && mode != null)
+        if (modeListener != null && mode != null) {
             modeListener.onSelectionChanged(mode, selectedItems.size)
+        }
     }
 
     fun getSelectionCount(): Int = selectedItems.size

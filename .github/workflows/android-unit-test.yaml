@@ -19,12 +19,17 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Build retrofit-graphql plugin from source
+        run: |
+          git clone --depth 1 --branch 0.12.1 https://github.com/AniTrend/retrofit-graphql.git ../retrofit-graphql
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Configure properties
         run: bash .github/scripts/setup-config.sh
+      - name: Spotless check
+        run: ./gradlew :app:spotlessCheck --stacktrace
       - name: Test with Gradle
         run: ./gradlew test --stacktrace
       - name: Publish Test Report

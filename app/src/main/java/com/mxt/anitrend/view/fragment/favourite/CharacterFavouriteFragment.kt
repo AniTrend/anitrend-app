@@ -10,22 +10,18 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.activity.detail.CharacterActivity
 
 /**
  * Created by max on 2018/03/25.
  * CharacterFavouriteFragment
  */
-class CharacterFavouriteFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>, BasePresenter>() {
-
+class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>, BasePresenter>() {
     private var userId: Long = 0
 
     companion object {
@@ -58,10 +54,11 @@ class CharacterFavouriteFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, userId)
-            .putVariable(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, userId)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        }
         viewModel?.requestData(KeyUtil.USER_CHARACTER_FAVOURITES_REQ, ctx)
     }
 
@@ -70,32 +67,43 @@ class CharacterFavouriteFragment :
             if (!content.isEmpty) {
                 val pageContainer = content.connection.characters
                 if (pageContainer != null) {
-                    if (pageContainer.hasPageInfo())
+                    if (pageContainer.hasPageInfo()) {
                         presenter.setPageInfo(pageContainer.pageInfo)
+                    }
                     onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.pageData))
                 } else {
                     onPostProcessed(emptyList())
                 }
-            } else
+            } else {
                 onPostProcessed(emptyList())
-        } else
+            }
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val character = data.second as? CharacterBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, CharacterActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, character.id)
-                }
+                val intent =
+                    Intent(host, CharacterActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, character.id)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) = Unit
 }

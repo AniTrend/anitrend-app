@@ -13,11 +13,11 @@ import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
 import com.mxt.anitrend.binding.markDown
 import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.databinding.AdapterReviewBinding
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.Review
+import com.mxt.anitrend.util.date.DateUtil
 
 /**
  * Created by max on 2017/10/30.
@@ -25,26 +25,26 @@ import com.mxt.anitrend.model.entity.anilist.Review
  */
 class ReviewAdapter(
     context: Context,
-    private val isMediaType: Boolean = false
+    private val isMediaType: Boolean = false,
 ) : RecyclerViewAdapter<Review>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<Review> {
-        return if (!isMediaType) {
-            ReviewBanner(
-                AdapterReviewBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        } else {
-            ReviewDefault(
-                AdapterSeriesReviewBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-        }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<Review> = if (!isMediaType) {
+        ReviewBanner(
+            AdapterReviewBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
+    } else {
+        ReviewDefault(
+            AdapterSeriesReviewBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        )
     }
 
     override fun getFilter(): Filter? = null
 
-    inner class ReviewBanner(private val binding: AdapterReviewBinding) :
-        RecyclerViewHolder<Review>(binding.root) {
-
+    inner class ReviewBanner(
+        private val binding: AdapterReviewBinding,
+    ) : RecyclerViewHolder<Review>(binding.root) {
         init {
             bindClickListeners(R.id.series_image, R.id.review_read_more)
             bindLongClickListeners(R.id.series_image)
@@ -68,14 +68,12 @@ class ReviewAdapter(
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 
-    inner class ReviewDefault(private val binding: AdapterSeriesReviewBinding) :
-        RecyclerViewHolder<Review>(binding.root) {
-
+    inner class ReviewDefault(
+        private val binding: AdapterSeriesReviewBinding,
+    ) : RecyclerViewHolder<Review>(binding.root) {
         init {
             bindClickListeners(R.id.review_read_more, R.id.user_avatar)
             bindLongClickListeners(R.id.series_image)
@@ -101,8 +99,6 @@ class ReviewAdapter(
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

@@ -17,23 +17,18 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
-class MediaRecommendationsFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<RecommendationBase>>, MediaPresenter>() {
-
+class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<RecommendationBase>>, MediaPresenter>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): MediaRecommendationsFragment {
-            return MediaRecommendationsFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): MediaRecommendationsFragment = MediaRecommendationsFragment().apply {
+            arguments = args
         }
     }
 
@@ -57,59 +52,78 @@ class MediaRecommendationsFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-            .putVariable(KeyUtil.arg_id, mediaId)
-            .putVariable(KeyUtil.arg_type, mediaType)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, mediaId)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            if (presenter.settings.displayAdultContent) {
+                remove(KeyUtil.arg_isAdult)
+            } else {
+                putBoolean(KeyUtil.arg_isAdult, false)
+            }
+        }
         viewModel?.requestData(KeyUtil.MEDIA_RECOMMENDATION_REQ, ctx)
     }
 
     override fun onChanged(content: ConnectionContainer<PageContainer<RecommendationBase>>?) {
         if (content != null) {
             if (!content.isEmpty) {
-                if (content.connection.hasPageInfo())
+                if (content.connection.hasPageInfo()) {
                     presenter.setPageInfo(content.connection.pageInfo)
+                }
                 val entityMap: List<RecyclerItem> =
                     content.connection.pageData.mapNotNull { it.mediaRecommendation }
                 onPostProcessed(entityMap)
             }
-        } else
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val media = data.second as? MediaBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, MediaActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, media.id)
-                    putExtra(KeyUtil.arg_mediaType, media.type)
-                }
+                val intent =
+                    Intent(host, MediaActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, media.id)
+                        putExtra(KeyUtil.arg_mediaType, media.type)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 if (presenter.settings.isAuthenticated) {
                     val media = data.second as? MediaBase ?: return
                     val host = activity ?: return
-                    mediaActionUtil = MediaActionUtil.Builder()
-                        .setId(media.id).build(host)
+                    mediaActionUtil =
+                        MediaActionUtil
+                            .Builder()
+                            .setId(media.id)
+                            .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
                     context?.let {
-                        NotifyUtil.makeText(
-                            it,
-                            R.string.info_login_req,
-                            R.drawable.ic_group_add_grey_600_18dp,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                it,
+                                R.string.info_login_req,
+                                R.drawable.ic_group_add_grey_600_18dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }

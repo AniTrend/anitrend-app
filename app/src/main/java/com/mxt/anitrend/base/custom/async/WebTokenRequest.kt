@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutionException
  * Web token requester
  */
 object WebTokenRequest {
-
     private const val TAG = "WebTokenRequest"
     private val lock = Any()
 
@@ -44,8 +43,9 @@ object WebTokenRequest {
         KoinExt.get(JobSchedulerUtil::class.java).cancelNotificationJob(context)
         WebFactory.invalidate()
         token = null
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             ShortcutUtil.removeAllDynamicShortcuts(context)
+        }
         KoinExt.get(ISupportAnalytics::class.java).clearUserSession()
     }
 
@@ -53,7 +53,10 @@ object WebTokenRequest {
      * Double checks to assure that multiple threads attempting to access
      * the token don't invoke multiple refresh token requests all at once
      */
-    private fun checkTokenState(context: Context, presenter: BasePresenter) {
+    private fun checkTokenState(
+        context: Context,
+        presenter: BasePresenter,
+    ) {
         val now = System.currentTimeMillis() / 1000L
         if (token == null || (token?.expires ?: 0) < now) {
             val authCode = presenter.database.authCode?.code
@@ -66,8 +69,9 @@ object WebTokenRequest {
                 createNewTokenReference(response)
                 presenter.database.webToken = response
                 Timber.tag(TAG).d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L)
-            } else
+            } else {
                 Timber.tag(TAG).e("Token had an invalid instance from context: %s", context)
+            }
         }
     }
 
@@ -122,8 +126,6 @@ object WebTokenRequest {
     }
 
     private class AuthenticationCodeAsync : AsyncTask<String, Void, WebToken>() {
-        override fun doInBackground(vararg codes: String): WebToken? {
-            return WebFactory.requestCodeTokenSync(codes[0])
-        }
+        override fun doInBackground(vararg codes: String): WebToken? = WebFactory.requestCodeTokenSync(codes[0])
     }
 }

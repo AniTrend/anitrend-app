@@ -5,6 +5,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
+import com.mxt.anitrend.graphql.generated.CurrentUser
+import com.mxt.anitrend.graphql.generated.UserNotifications
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
@@ -14,7 +16,6 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotificationUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import timber.log.Timber
 
 /**
@@ -24,9 +25,8 @@ class NotificationWorker(
     context: Context,
     workerParams: WorkerParameters,
     private val presenter: BasePresenter,
-    private val notificationUtil: NotificationUtil
+    private val notificationUtil: NotificationUtil,
 ) : CoroutineWorker(context, workerParams) {
-
     private val userEndpoint by lazy(LazyThreadSafetyMode.NONE) {
         WebFactory.createService(UserModel::class.java, applicationContext)
     }
@@ -54,8 +54,8 @@ class NotificationWorker(
                 requestUser()?.apply {
                     if (unreadNotificationCount != 0) {
                         presenter.notifyAllListeners(
-                                BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
-                                false
+                            BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
+                            false,
                         )
                         requestNotifications(this)
                     }
@@ -70,9 +70,11 @@ class NotificationWorker(
     }
 
     private fun requestUser(): User? {
-        val response = userEndpoint.getCurrentUser(
-                GraphUtil.getDefaultQuery(false)
-        ).execute()
+        val response =
+            userEndpoint
+                .getCurrentUser(
+                    CurrentUser.request(asHtml = false),
+                ).execute()
         if (!response.isSuccessful) {
             return null
         }
@@ -83,24 +85,25 @@ class NotificationWorker(
     }
 
     private fun requestNotifications(user: User) {
-        val response = userEndpoint.getUserNotifications(
-            GraphUtil.getDefaultQuery(false)
-        ).execute()
+        val response =
+            userEndpoint
+                .getUserNotifications(
+                    UserNotifications.request(resetNotificationCount = false),
+                ).execute()
         if (!response.isSuccessful) {
             return
         }
         val notificationsContainer = unwrapBody<PageContainer<Notification>>(response.body())
 
-        if (user.unreadNotificationCount > 0 && notificationsContainer != null)
+        if (user.unreadNotificationCount > 0 && notificationsContainer != null) {
             notificationUtil.createNotification(user, notificationsContainer)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T> unwrapBody(body: Any?): T? {
-        return when (body) {
-            null -> null
-            is AniListContainer<*> -> body.data?.result as? T
-            else -> body as? T
-        }
+    private fun <T> unwrapBody(body: Any?): T? = when (body) {
+        null -> null
+        is AniListContainer<*> -> body.data?.result as? T
+        else -> body as? T
     }
 }

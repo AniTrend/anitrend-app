@@ -1,5 +1,10 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import com.mxt.anitrend.graphql.generated.CharacterActorsVariables
+import com.mxt.anitrend.graphql.generated.CharacterBaseVariables
+import com.mxt.anitrend.graphql.generated.CharacterMediaVariables
+import com.mxt.anitrend.graphql.generated.CharacterOverviewVariables
 import com.mxt.anitrend.model.entity.anilist.MediaCharacter
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.base.CharacterBase
@@ -8,8 +13,6 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import co.anitrend.retrofit.graphql.annotation.GraphQuery
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -21,24 +24,27 @@ import retrofit2.http.POST
  */
 
 interface CharacterModel {
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getCharacterBase(
+        @Body request: GraphQLRequest<CharacterBaseVariables>,
+    ): Call<AniListContainer<CharacterBase>>
 
     @POST("/")
-    @GraphQuery("CharacterBase")
     @Headers("Content-Type: application/json")
-    fun getCharacterBase(@Body request: QueryContainerBuilder?): Call<AniListContainer<CharacterBase>>
+    fun getCharacterOverview(
+        @Body request: GraphQLRequest<CharacterOverviewVariables>,
+    ): Call<AniListContainer<MediaCharacter>>
 
     @POST("/")
-    @GraphQuery("CharacterOverview")
     @Headers("Content-Type: application/json")
-    fun getCharacterOverview(@Body request: QueryContainerBuilder?): Call<AniListContainer<MediaCharacter>>
+    fun getCharacterMedia(
+        @Body request: GraphQLRequest<CharacterMediaVariables>,
+    ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
 
     @POST("/")
-    @GraphQuery("CharacterMedia")
     @Headers("Content-Type: application/json")
-    fun getCharacterMedia(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
-
-    @POST("/")
-    @GraphQuery("CharacterActors")
-    @Headers("Content-Type: application/json")
-    fun getCharacterActors(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    fun getCharacterActors(
+        @Body request: GraphQLRequest<CharacterActorsVariables>,
+    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 }

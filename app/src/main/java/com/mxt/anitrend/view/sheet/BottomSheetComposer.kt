@@ -29,7 +29,6 @@ class BottomSheetComposer :
     BottomSheetBase<FeedList>(),
     ItemClickListener<Any>,
     BaseConsumer.onRequestModelChange<FeedList> {
-
     private var binding: BottomSheetComposerBinding? = null
     private var composerWidget: ComposerWidget? = null
 
@@ -43,10 +42,8 @@ class BottomSheetComposer :
 
     companion object {
         @JvmStatic
-        fun newInstance(bundle: Bundle): BottomSheetComposer {
-            return BottomSheetComposer().apply {
-                arguments = bundle
-            }
+        fun newInstance(bundle: Bundle): BottomSheetComposer = BottomSheetComposer().apply {
+            arguments = bundle
         }
     }
 
@@ -71,16 +68,18 @@ class BottomSheetComposer :
 
     override fun onStart() {
         super.onStart()
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
+        }
         when (requestType) {
             KeyUtil.MUT_SAVE_TEXT_FEED -> {
                 val currentFeed = feedList
                 if (currentFeed != null) {
                     composerWidget?.setModel(currentFeed, KeyUtil.MUT_SAVE_TEXT_FEED)
                     composerWidget?.setText(currentFeed.text)
-                } else
+                } else {
                     composerWidget?.requestType = KeyUtil.MUT_SAVE_TEXT_FEED
+                }
             }
             KeyUtil.MUT_SAVE_MESSAGE_FEED -> {
                 toolbarTitle?.text = getString(mTitle, user?.name ?: "")
@@ -105,7 +104,7 @@ class BottomSheetComposer :
                 R.string.text_post_information,
                 R.string.completed_success,
                 R.drawable.ic_insert_emoticon_white_24dp,
-                R.color.colorStateGreen
+                R.color.colorStateGreen,
             )
         }
         closeDialog()
@@ -118,13 +117,18 @@ class BottomSheetComposer :
         binding = null
     }
 
-    override fun onItemClick(target: View, data: IntPair<Any>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<Any>,
+    ) {
         when (target.id) {
             R.id.insert_emoticon -> Unit
             R.id.insert_gif -> {
-                mBottomSheet = BottomSheetGiphy.Builder()
-                    .setTitle(R.string.title_bottom_sheet_giphy)
-                    .build()
+                mBottomSheet =
+                    BottomSheetGiphy
+                        .Builder()
+                        .setTitle(R.string.title_bottom_sheet_giphy)
+                        .build()
                 activity?.let { host ->
                     mBottomSheet?.show(host.supportFragmentManager, mBottomSheet?.tag)
                 }
@@ -139,14 +143,17 @@ class BottomSheetComposer :
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<Any>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<Any>,
+    ) = Unit
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> {
-            return newInstance(bundle)
-        }
+        override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
-        fun setRequestMode(@KeyUtil.RequestType requestType: Int): Builder {
+        fun setRequestMode(
+            @KeyUtil.RequestType requestType: Int,
+        ): Builder {
             bundle.putInt(KeyUtil.arg_request_type, requestType)
             return this
         }

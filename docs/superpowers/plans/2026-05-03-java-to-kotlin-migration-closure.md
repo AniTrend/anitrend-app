@@ -215,12 +215,12 @@ git commit -m "refactor(activity): improve shared search handling and migrate ab
 
 **Files:**
 - Modify: `app/src/main/java/com/mxt/anitrend/adapter/recycler/index/MediaAdapter.kt`
-- Modify: `.github/instructions/copilot-instructions.md`
+- Modify: `AGENTS.md`
 
 - [ ] **Step 1: Write failing verification check (red)**
 
 Run: `bash .github/scripts/verify-viewbinding-migration.sh`
-Expected: FAIL with stale references in `MediaAdapter.kt` and `.github/instructions/copilot-instructions.md`.
+Expected: FAIL with stale references in `MediaAdapter.kt` and `AGENTS.md`.
 
 - [ ] **Step 2: Remove stale ButterKnife comment references from adapter**
 
@@ -243,7 +243,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add app/src/main/java/com/mxt/anitrend/adapter/recycler/index/MediaAdapter.kt .github/instructions/copilot-instructions.md
+git add app/src/main/java/com/mxt/anitrend/adapter/recycler/index/MediaAdapter.kt AGENTS.md
 git commit -m "docs(refactor): remove stale butterknife references"
 ```
 

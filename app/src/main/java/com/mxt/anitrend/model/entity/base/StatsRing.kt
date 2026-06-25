@@ -7,7 +7,6 @@ import android.graphics.RectF
  * StatsRing data holder
  */
 class StatsRing() {
-
     var progress: Int = 0
     var name: String? = null
     var value: String? = null

@@ -19,26 +19,26 @@ import com.mxt.anitrend.view.fragment.search.UserSearchFragment
  */
 class SearchPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         val settings = koinOf<Settings>()
         setPagerTitles(
-            if (settings.isAuthenticated) R.array.search_titles_auth
-            else R.array.search_titles
+            if (settings.isAuthenticated) {
+                R.array.search_titles_auth
+            } else {
+                R.array.search_titles
+            },
         )
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> MediaSearchFragment.newInstance(params, KeyUtil.ANIME)
-            1 -> MediaSearchFragment.newInstance(params, KeyUtil.MANGA)
-            2 -> StudioSearchFragment.newInstance(params)
-            3 -> StaffSearchFragment.newInstance(params)
-            4 -> CharacterSearchFragment.newInstance(params)
-            5 -> UserSearchFragment.newInstance(params)
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> MediaSearchFragment.newInstance(params, KeyUtil.ANIME)
+        1 -> MediaSearchFragment.newInstance(params, KeyUtil.MANGA)
+        2 -> StudioSearchFragment.newInstance(params)
+        3 -> StaffSearchFragment.newInstance(params)
+        4 -> CharacterSearchFragment.newInstance(params)
+        5 -> UserSearchFragment.newInstance(params)
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

@@ -25,13 +25,13 @@ class Episode(
     @field:Element(name = "content", required = false)
     var content: MediaContent? = null,
     @field:ElementList(name = "thumbnail", inline = true, required = false)
-    var thumbnail: List<Thumbnail> = mutableListOf()
+    var thumbnail: List<Thumbnail> = mutableListOf(),
 ) : Parcelable {
-
     fun getDescription(): String {
-        val safeDescription = description
-            .replace("(<img[^>]*>)".toRegex(), "")
-            .replaceFirst("(<br[^>]*>)".toRegex(), "")
+        val safeDescription =
+            description
+                .replace("(<img[^>]*>)".toRegex(), "")
+                .replaceFirst("(<br[^>]*>)".toRegex(), "")
         return if (safeDescription.isEmpty()) {
             "$title has no summary information at the moment."
         } else {

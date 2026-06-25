@@ -11,11 +11,9 @@ import com.mxt.anitrend.base.interfaces.base.BaseAnimation
  * Created by max on 2018/02/26.
  */
 class SlideInAnimation : BaseAnimation {
-
     private val interpolator: Interpolator = LinearInterpolator()
 
-    override fun getAnimators(view: View): Array<Animator> =
-        arrayOf(ObjectAnimator.ofFloat(view, "translationY", view.measuredHeight.toFloat(), 0f))
+    override fun getAnimators(view: View): Array<Animator> = arrayOf(ObjectAnimator.ofFloat(view, "translationY", view.measuredHeight.toFloat(), 0f))
 
     override fun getInterpolator(): Interpolator = interpolator
 

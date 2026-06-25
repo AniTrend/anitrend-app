@@ -9,5 +9,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class MediaTrailer(
     val id: String?,
-    val site: String?
+    val site: String?,
 ) : Parcelable

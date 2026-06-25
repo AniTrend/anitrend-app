@@ -31,7 +31,6 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
 import com.mxt.anitrend.view.activity.detail.StudioActivity
@@ -50,6 +49,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
     private var tagAdapter: TagAdapter? = null
 
     private var mediaId: Long = 0
+
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
@@ -79,9 +79,9 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             tagsRecycler.setHasFixedSize(true)
 
             listOf(
-                    R.id.series_image,
-                    R.id.anime_main_studio_container,
-                    R.id.show_spoiler_tags
+                R.id.series_image,
+                R.id.anime_main_studio_container,
+                R.id.show_spoiler_tags,
             ).map {
                 root.findViewById<View>(it)
             }.forEach { it?.setOnClickListener(this@MediaOverviewFragment) }
@@ -108,10 +108,11 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         val trailer = model?.trailer
         if (activity != null && trailer != null && CompatUtil.equals(trailer.site, "youtube")) {
             childFragmentManager.beginTransaction()
-                    .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(trailer))
-                    .commit()
-        } else
+                .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(trailer))
+                .commit()
+        } else {
             binding?.youtubeView?.visibility = View.GONE
+        }
 
         binding?.seriesInfoSection?.let { bindSeriesInfo(it, model) }
         binding?.seriesDescriptionSection?.let { bindSeriesDescription(it, model) }
@@ -122,12 +123,12 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding?.tagsRecycler?.visibility =
             if (!CompatUtil.isEmpty(model?.tags)) View.VISIBLE else View.GONE
 
-
         if (model?.tags != null && model?.tagsNoSpoilers != null) {
-            if (model?.tagsNoSpoilers?.size == model?.tags?.size)
+            if (model?.tagsNoSpoilers?.size == model?.tags?.size) {
                 binding?.showSpoilerTags?.visibility = View.GONE
-            else
+            } else {
                 binding?.showSpoilerTags?.visibility = View.VISIBLE
+            }
         }
 
         if (genreAdapter == null) {
@@ -140,14 +141,20 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                             val host = activity ?: return
                             val args = Bundle()
                             val intent = Intent(host, MediaBrowseActivity::class.java)
-                            args.putParcelable(KeyUtil.arg_graph_params, GraphUtil.getDefaultQuery(true)
-                                    .putVariable(KeyUtil.arg_type, mediaType)
-                                    .putVariable(KeyUtil.arg_genres, data.second.genre))
+                            args.putString(KeyUtil.arg_mediaType, mediaType)
+                            args.putStringArrayList(KeyUtil.arg_genres, arrayListOf(data.second.genre))
+                            args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                            if (!presenter.settings.displayAdultContent) {
+                                args.putBoolean(KeyUtil.arg_isAdult, false)
+                            }
                             args.putString(KeyUtil.arg_activity_tag, data.second.genre)
-                            args.putParcelable(KeyUtil.arg_media_util, MediaBrowseUtil()
+                            args.putParcelable(
+                                KeyUtil.arg_media_util,
+                                MediaBrowseUtil()
                                     .setCompactType(true)
                                     .setBasicFilter(true)
-                                    .setFilterEnabled(true))
+                                    .setFilterEnabled(true),
+                            )
                             intent.putExtras(args)
                             startActivity(intent)
                         }
@@ -155,7 +162,6 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                 }
 
                 override fun onItemLongClick(target: View, data: IntPair<Genre>) {
-
                 }
             })
         }
@@ -174,24 +180,27 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                                     data.second.description.orEmpty(),
                                     data.second.isMediaSpoiler,
                                     R.string.More,
-                                    R.string.Close
+                                    R.string.Close,
                                 ) { _, which ->
                                     if (which == DialogAction.POSITIVE) {
                                         val args = Bundle()
                                         val intent = Intent(host, MediaBrowseActivity::class.java)
-                                        args.putParcelable(
-                                            KeyUtil.arg_graph_params,
-                                            GraphUtil.getDefaultQuery(true)
-                                                .putVariable(KeyUtil.arg_type, mediaType)
-                                                .putVariable(KeyUtil.arg_tags, data.second.name.orEmpty())
+                                        args.putString(KeyUtil.arg_mediaType, mediaType)
+                                        args.putStringArrayList(
+                                            KeyUtil.arg_tags,
+                                            arrayListOf(data.second.name.orEmpty()),
                                         )
+                                        args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                                        if (!presenter.settings.displayAdultContent) {
+                                            args.putBoolean(KeyUtil.arg_isAdult, false)
+                                        }
                                         args.putString(KeyUtil.arg_activity_tag, data.second.name.orEmpty())
                                         args.putParcelable(
                                             KeyUtil.arg_media_util,
                                             MediaBrowseUtil()
                                                 .setCompactType(true)
                                                 .setBasicFilter(true)
-                                                .setFilterEnabled(true)
+                                                .setFilterEnabled(true),
                                         )
                                         intent.putExtras(args)
                                         startActivity(intent)
@@ -202,7 +211,6 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                     }
 
                     override fun onItemLongClick(target: View, data: IntPair<MediaTag>) {
-
                     }
                 })
             }
@@ -216,12 +224,18 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
      * All new or updated network requests should be handled in this method
      */
     override fun makeRequest() {
-        val queryContainer = GraphUtil.getDefaultQuery(isPager)
-                .putVariable(KeyUtil.arg_id, mediaId)
-                .putVariable(KeyUtil.arg_type, mediaType)
         val model = viewModel ?: return
         val ctx = context ?: return
-        model.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        model.params.apply {
+            putLong(KeyUtil.arg_id, mediaId)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            putBoolean(KeyUtil.arg_asHtml, false)
+            if (presenter.settings.displayAdultContent) {
+                remove(KeyUtil.arg_isAdult)
+            } else {
+                putBoolean(KeyUtil.arg_isAdult, false)
+            }
+        }
         model.requestData(KeyUtil.MEDIA_OVERVIEW_REQ, ctx)
     }
 
@@ -234,12 +248,16 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
         if (model != null) {
             this.model = model
             updateUI()
-        } else
-            binding?.stateLayout?.showError(context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                    getString(R.string.layout_empty_response), getString(R.string.try_again)) { _ ->
+        } else {
+            binding?.stateLayout?.showError(
+                context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
+                getString(R.string.layout_empty_response),
+                getString(R.string.try_again),
+            ) { _ ->
                 binding?.stateLayout?.showLoading()
                 makeRequest()
             }
+        }
     }
 
     /**

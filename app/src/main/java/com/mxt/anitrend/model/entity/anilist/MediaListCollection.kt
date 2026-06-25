@@ -5,7 +5,6 @@ import android.os.Parcelable
 import com.mxt.anitrend.model.entity.base.MediaListCollectionBase
 
 class MediaListCollection : MediaListCollectionBase {
-
     var entries: List<MediaList>? = null
         private set
 
@@ -13,7 +12,10 @@ class MediaListCollection : MediaListCollectionBase {
         entries = parcel.createTypedArrayList(MediaList.CREATOR)
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         super.writeToParcel(dest, flags)
         dest.writeTypedList(entries)
     }

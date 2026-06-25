@@ -5,7 +5,6 @@ import io.objectbox.annotation.Id
 
 @Entity
 class NotificationHistory() {
-
     @Id(assignable = true)
     var id: Long = 0
     var read: Boolean = false

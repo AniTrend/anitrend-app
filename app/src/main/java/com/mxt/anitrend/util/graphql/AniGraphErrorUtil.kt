@@ -39,4 +39,3 @@ fun Response<*>?.apiError(): String {
 
     return "Unable to provide information regarding error"
 }
-

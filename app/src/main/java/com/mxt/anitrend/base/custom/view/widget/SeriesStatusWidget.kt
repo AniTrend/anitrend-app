@@ -17,12 +17,14 @@ import com.mxt.anitrend.util.KeyUtil
  * Created by max on 2017/10/27.
  * Custom status view of airing or publishing status
  */
-class SeriesStatusWidget @JvmOverloads constructor(
+class SeriesStatusWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : FrameLayout(context, attrs, defStyleAttr),
+    CustomView {
     init {
         onInit()
     }
@@ -32,7 +34,7 @@ class SeriesStatusWidget @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
     /**
@@ -46,38 +48,54 @@ class SeriesStatusWidget @JvmOverloads constructor(
     override fun onViewRecycled() = Unit
 
     companion object {
-        private fun applyStatus(view: SeriesStatusWidget, model: MediaBase?) {
+        private fun applyStatus(
+            view: SeriesStatusWidget,
+            model: MediaBase?,
+        ) {
             val mediaStatus = model?.status ?: KeyUtil.NOT_YET_RELEASED
-            val colorRes = when (mediaStatus) {
-                KeyUtil.RELEASING -> R.color.colorStateBlue
-                KeyUtil.FINISHED -> R.color.colorStateGreen
-                KeyUtil.NOT_YET_RELEASED -> R.color.colorStateOrange
-                else -> R.color.colorStateRed
-            }
+            val colorRes =
+                when (mediaStatus) {
+                    KeyUtil.RELEASING -> R.color.colorStateBlue
+                    KeyUtil.FINISHED -> R.color.colorStateGreen
+                    KeyUtil.NOT_YET_RELEASED -> R.color.colorStateOrange
+                    else -> R.color.colorStateRed
+                }
             view.setBackgroundColor(view.context.getCompatColor(colorRes))
         }
 
         /** Give the current airing status of the series */
         @JvmStatic
-        fun setStatus(view: SeriesStatusWidget, model: MediaBase?) {
+        fun setStatus(
+            view: SeriesStatusWidget,
+            model: MediaBase?,
+        ) {
             applyStatus(view, model)
         }
 
         /** Give the current airing status of the series */
         @JvmStatic
-        fun setStatus(view: SeriesStatusWidget, model: Media?) {
+        fun setStatus(
+            view: SeriesStatusWidget,
+            model: Media?,
+        ) {
             applyStatus(view, model)
         }
 
         /** Give the current airing status of the series */
         @JvmStatic
-        fun setStatus(view: SeriesStatusWidget, mediaList: MediaList?) {
+        fun setStatus(
+            view: SeriesStatusWidget,
+            mediaList: MediaList?,
+        ) {
             setStatus(view, mediaList?.media)
         }
 
         /** Give the current airing status of the series */
         @JvmStatic
-        fun setAiringStatus(view: SeriesStatusWidget, mediaList: MediaList?) {
+        fun setAiringStatus(
+            view: SeriesStatusWidget,
+            mediaList: MediaList?,
+        ) {
             val media = mediaList?.media
             val nextAiring = media?.nextAiringEpisode
             if (mediaList != null && nextAiring != null) {

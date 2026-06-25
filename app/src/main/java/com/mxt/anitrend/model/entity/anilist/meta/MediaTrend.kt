@@ -17,5 +17,5 @@ class MediaTrend(
     var popularity: Int = 0,
     @get:JvmName("isReleasing") var releasing: Boolean = false,
     var episode: Float = 0f,
-    var media: MediaBase? = null
+    var media: MediaBase? = null,
 ) : Parcelable

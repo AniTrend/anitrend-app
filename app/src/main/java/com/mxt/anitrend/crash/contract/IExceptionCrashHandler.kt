@@ -20,10 +20,12 @@ package com.mxt.anitrend.crash.contract
  * Contract for handling crash event
  */
 internal interface IExceptionCrashHandler {
-
     /**
      * @param thread Origin of crash
      * @param throwable Exception that was unhandled
      */
-    fun onException(thread: Thread, throwable: Throwable)
+    fun onException(
+        thread: Thread,
+        throwable: Throwable,
+    )
 }

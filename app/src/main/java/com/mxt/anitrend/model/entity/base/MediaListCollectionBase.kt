@@ -5,7 +5,6 @@ import android.os.Parcelable
 import com.mxt.anitrend.util.KeyUtil
 
 open class MediaListCollectionBase() : Parcelable {
-
     var name: String? = null
     var isCustomList: Boolean = false
     var isSplitCompletedList: Boolean = false
@@ -20,7 +19,10 @@ open class MediaListCollectionBase() : Parcelable {
         status = parcel.readString()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeString(name)
         dest.writeByte((if (isCustomList) 1 else 0).toByte())
         dest.writeByte((if (isSplitCompletedList) 1 else 0).toByte())
@@ -33,8 +35,7 @@ open class MediaListCollectionBase() : Parcelable {
         @JvmField
         val CREATOR: Parcelable.Creator<MediaListCollectionBase> =
             object : Parcelable.Creator<MediaListCollectionBase> {
-                override fun createFromParcel(parcel: Parcel): MediaListCollectionBase =
-                    MediaListCollectionBase(parcel)
+                override fun createFromParcel(parcel: Parcel): MediaListCollectionBase = MediaListCollectionBase(parcel)
 
                 override fun newArray(size: Int): Array<MediaListCollectionBase?> = arrayOfNulls(size)
             }

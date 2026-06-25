@@ -10,17 +10,17 @@ import com.mxt.anitrend.model.entity.group.RecyclerItem
  * Created by max on 2018/02/18.
  */
 class GroupTitleViewHolder(
-    private val binding: AdapterEntityGroupBinding
+    private val binding: AdapterEntityGroupBinding,
 ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
-
     override fun onBindViewHolder(model: RecyclerItem) {
         val header = model as? RecyclerHeaderItem ?: return
         binding.catalogHeaderTitle.text = header.getTitle()
         binding.catalogHeaderCount.text = header.size.toString()
-        if (header.size < 1)
+        if (header.size < 1) {
             binding.catalogHeaderCount.visibility = View.GONE
-        else
+        } else {
             binding.catalogHeaderCount.visibility = View.VISIBLE
+        }
     }
 
     override fun onViewRecycled() {

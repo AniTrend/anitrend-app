@@ -10,7 +10,9 @@ import java.util.Locale
  * Created by Maxwell on 10/24/2016.
  */
 @Parcelize
-class MediaRank @JvmOverloads constructor(
+class MediaRank
+@JvmOverloads
+constructor(
     var id: Int = 0,
     var rank: Int = 0,
     @param:KeyUtil.MediaRankType var type: String = "",
@@ -18,9 +20,8 @@ class MediaRank @JvmOverloads constructor(
     var year: Int = 0,
     @param:KeyUtil.MediaSeason var season: String? = null,
     var isAllTime: Boolean = false,
-    var context: String = ""
+    var context: String = "",
 ) : Parcelable {
-
     val typeHtml: String
         get() {
             val upperContext = context.uppercase(Locale.getDefault())
@@ -34,7 +35,7 @@ class MediaRank @JvmOverloads constructor(
                         rank,
                         upperContext,
                         upperSeason,
-                        formattedFormat
+                        formattedFormat,
                     )
                 } else {
                     String.format(
@@ -42,7 +43,7 @@ class MediaRank @JvmOverloads constructor(
                         "<b>#%d %s</b> <small>(%s)</small>",
                         rank,
                         upperContext,
-                        formattedFormat
+                        formattedFormat,
                     )
                 }
             } else {
@@ -54,7 +55,7 @@ class MediaRank @JvmOverloads constructor(
                         upperContext,
                         upperSeason,
                         year,
-                        formattedFormat
+                        formattedFormat,
                     )
                 } else {
                     String.format(
@@ -63,7 +64,7 @@ class MediaRank @JvmOverloads constructor(
                         rank,
                         upperContext,
                         year,
-                        formattedFormat
+                        formattedFormat,
                     )
                 }
             }
@@ -81,14 +82,14 @@ class MediaRank @JvmOverloads constructor(
                         "%s <small>%s<small/> <small>(%s)</small>",
                         upperContext,
                         upperSeason,
-                        formattedFormat
+                        formattedFormat,
                     )
                 } else {
                     String.format(
                         Locale.getDefault(),
                         "%s <small>(%s)</small>",
                         upperContext,
-                        formattedFormat
+                        formattedFormat,
                     )
                 }
             } else {
@@ -99,7 +100,7 @@ class MediaRank @JvmOverloads constructor(
                         upperContext,
                         upperSeason,
                         year,
-                        formattedFormat
+                        formattedFormat,
                     )
                 } else {
                     String.format(
@@ -107,7 +108,7 @@ class MediaRank @JvmOverloads constructor(
                         "%s <small>%d</small> <small>(%s)</small>",
                         upperContext,
                         year,
-                        formattedFormat
+                        formattedFormat,
                     )
                 }
             }

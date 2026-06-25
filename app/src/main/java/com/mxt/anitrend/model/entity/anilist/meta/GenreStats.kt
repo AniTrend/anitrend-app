@@ -18,5 +18,5 @@ class GenreStats(
     /**
      * The amount of time in minutes the genre has been watched by the user
      */
-    val timeWatched: Int
+    val timeWatched: Int,
 ) : Parcelable

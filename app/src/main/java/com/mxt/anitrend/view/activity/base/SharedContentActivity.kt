@@ -34,43 +34,54 @@ import org.greenrobot.eventbus.ThreadMode
  * Created by max on 2017/12/14.
  * share content intent activity
  */
-class SharedContentActivity : ActivityBase<FeedList, BasePresenter>(), BottomSheetListener,
-    BaseConsumer.onRequestModelChange<FeedList>, ItemClickListener<Any> {
-
+class SharedContentActivity :
+    ActivityBase<FeedList, BasePresenter>(),
+    BottomSheetListener,
+    BaseConsumer.onRequestModelChange<FeedList>,
+    ItemClickListener<Any> {
     private lateinit var binding: ActivityShareContentBinding
     private lateinit var toolbarBinding: com.mxt.anitrend.databinding.CustomSheetToolbarBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
-    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> finish()
-                    BottomSheetBehavior.STATE_COLLAPSED -> onStateCollapsed()
-                    BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
+    private val bottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(
+                bottomSheet: View,
+                newState: Int,
+            ) {
+                if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> finish()
+                        BottomSheetBehavior.STATE_COLLAPSED -> onStateCollapsed()
+                        BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
+                    }
                 }
+            }
+
+            override fun onSlide(
+                bottomSheet: View,
+                slideOffset: Float,
+            ) {
             }
         }
 
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        }
-    }
-
-    private val indexIconMap = mutableMapOf(
-        0 to R.drawable.ic_textsms_white_24dp,
-        1 to R.drawable.ic_link_white_24dp,
-        2 to R.drawable.ic_crop_original_white_24dp,
-        3 to R.drawable.ic_youtube,
-        4 to R.drawable.ic_slow_motion_video_white_24dp
-    )
+    private val indexIconMap =
+        mutableMapOf(
+            0 to R.drawable.ic_textsms_white_24dp,
+            1 to R.drawable.ic_link_white_24dp,
+            2 to R.drawable.ic_crop_original_white_24dp,
+            3 to R.drawable.ic_youtube,
+            4 to R.drawable.ic_slow_motion_video_white_24dp,
+        )
 
     override fun configureActivity() {
         val settings = KoinExt.get(Settings::class.java)
         setTheme(
-            if (CompatUtil.isLightTheme(settings))
+            if (CompatUtil.isLightTheme(settings)) {
                 R.style.AppThemeLight_Translucent
-            else
+            } else {
                 R.style.AppThemeDark_Translucent
+            },
         )
     }
 
@@ -91,12 +102,13 @@ class SharedContentActivity : ActivityBase<FeedList, BasePresenter>(), BottomShe
         bottomSheetBehavior.peekHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        val iconArrayAdapter = IconArrayAdapter(
-            this,
-            R.layout.adapter_spinner_item,
-            R.id.spinner_text,
-            CompatUtil.getStringList(this, R.array.post_share_types)
-        )
+        val iconArrayAdapter =
+            IconArrayAdapter(
+                this,
+                R.layout.adapter_spinner_item,
+                R.id.spinner_text,
+                CompatUtil.getStringList(this, R.array.post_share_types),
+            )
         iconArrayAdapter.setIndexIconMap(indexIconMap)
         binding.sheetSharePostType.adapter = iconArrayAdapter
         onActivityReady()
@@ -104,8 +116,9 @@ class SharedContentActivity : ActivityBase<FeedList, BasePresenter>(), BottomShe
 
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
+        }
     }
 
     /**
@@ -115,14 +128,15 @@ class SharedContentActivity : ActivityBase<FeedList, BasePresenter>(), BottomShe
     override fun onActivityReady() {
         toolbarBinding.toolbarSearch.visibility = View.GONE
         toolbarBinding.toolbarTitle.setText(R.string.menu_title_new_activity_post)
-        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             toolbarBinding.toolbarState.setImageDrawable(
-                getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp)
+                getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp),
             )
-        else
+        } else {
             toolbarBinding.toolbarState.setImageDrawable(
-                getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp)
+                getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp),
             )
+        }
         toolbarBinding.toolbarState.setOnClickListener {
             when (bottomSheetBehavior.state) {
                 BottomSheetBehavior.STATE_EXPANDED ->
@@ -154,31 +168,33 @@ class SharedContentActivity : ActivityBase<FeedList, BasePresenter>(), BottomShe
 
     override fun onStateCollapsed() {
         toolbarBinding.toolbarState.setImageDrawable(
-            getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp)
+            getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp),
         )
     }
 
     override fun onStateExpanded() {
         toolbarBinding.toolbarState.setImageDrawable(
-            getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp)
+            getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp),
         )
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     override fun onModelChanged(consumer: BaseConsumer<FeedList>) {
         if (consumer.requestMode == KeyUtil.MUT_SAVE_TEXT_FEED) {
-            NotifyUtil.makeText(
-                this,
-                R.string.text_compose_success,
-                R.drawable.ic_insert_emoticon_white_24dp,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    this,
+                    R.string.text_compose_success,
+                    R.drawable.ic_insert_emoticon_white_24dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 
     fun getItemSelected() {
         val text = binding.sheetSharedResource.text.toString()
+
         @KeyUtil.ShareType val position = binding.sheetSharePostType.selectedItemPosition
         when (position) {
             KeyUtil.IMAGE_TYPE -> binding.composerWidget.setText(MarkDownUtil.convertImage(text))
@@ -189,26 +205,35 @@ class SharedContentActivity : ActivityBase<FeedList, BasePresenter>(), BottomShe
         }
     }
 
-    override fun onItemClick(target: View, data: IntPair<Any>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<Any>,
+    ) {
         when (target.id) {
             R.id.insert_emoticon -> Unit
             R.id.insert_gif -> {
-                mBottomSheet = BottomSheetGiphy.Builder()
-                    .setTitle(R.string.title_bottom_sheet_giphy)
-                    .build()
+                mBottomSheet =
+                    BottomSheetGiphy
+                        .Builder()
+                        .setTitle(R.string.title_bottom_sheet_giphy)
+                        .build()
                 mBottomSheet?.let { sheet ->
                     sheet.show(supportFragmentManager, sheet.tag)
                 }
             }
             R.id.widget_flipper -> hideKeyboard()
-            else -> DialogUtil.createDialogAttachMedia(
-                target.id,
-                binding.composerWidget.editor,
-                this
-            )
+            else ->
+                DialogUtil.createDialogAttachMedia(
+                    target.id,
+                    binding.composerWidget.editor,
+                    this,
+                )
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<Any>) {
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<Any>,
+    ) {
     }
 }

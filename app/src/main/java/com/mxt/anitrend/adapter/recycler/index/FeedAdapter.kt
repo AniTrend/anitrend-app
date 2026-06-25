@@ -25,8 +25,9 @@ import com.mxt.anitrend.util.date.DateUtil
 /**
  * Created by max on 2017/11/07.
  */
-class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
-
+class FeedAdapter(
+    context: Context,
+) : RecyclerViewAdapter<FeedList>(context) {
     private companion object {
         const val FEED_STATUS = 10
         const val FEED_MESSAGE = 11
@@ -37,29 +38,38 @@ class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
     @KeyUtil.MessageType
     private var messageType: Int = 0
 
-    fun setMessageType(@KeyUtil.MessageType messageType: Int) {
+    fun setMessageType(
+        @KeyUtil.MessageType messageType: Int,
+    ) {
         this.messageType = messageType
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<FeedList> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<FeedList> {
         if (viewType < FEED_STATUS) {
             return UnresolvedViewHolder(
-                CustomRecyclerUnresolvedBinding.inflate(parent.context.getLayoutInflater(), parent, false)
+                CustomRecyclerUnresolvedBinding.inflate(parent.context.getLayoutInflater(), parent, false),
             )
         }
         return when (viewType) {
-            FEED_STATUS -> StatusFeedViewHolder(
-                AdapterFeedStatusBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-            FEED_MESSAGE -> MessageFeedViewHolder(
-                AdapterFeedMessageBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-            FEED_LIST -> ListFeedViewHolder(
-                AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
-            else -> ProgressFeedViewHolder(
-                AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-            )
+            FEED_STATUS ->
+                StatusFeedViewHolder(
+                    AdapterFeedStatusBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+                )
+            FEED_MESSAGE ->
+                MessageFeedViewHolder(
+                    AdapterFeedMessageBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+                )
+            FEED_LIST ->
+                ListFeedViewHolder(
+                    AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+                )
+            else ->
+                ProgressFeedViewHolder(
+                    AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+                )
         }
     }
 
@@ -78,15 +88,15 @@ class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
 
     override fun getFilter(): Filter? = null
 
-    inner class ProgressFeedViewHolder(private val binding: AdapterFeedProgressBinding) :
-        RecyclerViewHolder<FeedList>(binding.root) {
-
+    inner class ProgressFeedViewHolder(
+        private val binding: AdapterFeedProgressBinding,
+    ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
             bindClickListeners(
                 R.id.widget_users,
                 R.id.user_avatar,
                 R.id.widget_comment,
-                R.id.series_image
+                R.id.series_image,
             )
             bindLongClickListeners(R.id.series_image)
         }
@@ -121,21 +131,19 @@ class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 
-    inner class StatusFeedViewHolder(private val binding: AdapterFeedStatusBinding) :
-        RecyclerViewHolder<FeedList>(binding.root) {
-
+    inner class StatusFeedViewHolder(
+        private val binding: AdapterFeedStatusBinding,
+    ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
             bindClickListeners(
                 R.id.container,
                 R.id.widget_edit,
                 R.id.widget_users,
                 R.id.user_avatar,
-                R.id.widget_comment
+                R.id.widget_comment,
             )
             bindLongClickListeners(R.id.container)
         }
@@ -178,21 +186,19 @@ class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 
-    inner class MessageFeedViewHolder(private val binding: AdapterFeedMessageBinding) :
-        RecyclerViewHolder<FeedList>(binding.root) {
-
+    inner class MessageFeedViewHolder(
+        private val binding: AdapterFeedMessageBinding,
+    ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
             bindClickListeners(
                 R.id.widget_edit,
                 R.id.widget_users,
                 R.id.messenger_avatar,
                 R.id.recipient_avatar,
-                R.id.widget_comment
+                R.id.widget_comment,
             )
         }
 
@@ -241,14 +247,12 @@ class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 
-    inner class ListFeedViewHolder(private val binding: AdapterFeedProgressBinding) :
-        RecyclerViewHolder<FeedList>(binding.root) {
-
+    inner class ListFeedViewHolder(
+        private val binding: AdapterFeedProgressBinding,
+    ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
             bindClickListeners(R.id.user_avatar, R.id.widget_comment)
         }
@@ -282,8 +286,6 @@ class FeedAdapter(context: Context) : RecyclerViewAdapter<FeedList>(context) {
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(v: View): Boolean {
-            return performLongClick(clickListener, data, v)
-        }
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
 }

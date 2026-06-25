@@ -1,12 +1,13 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import com.mxt.anitrend.graphql.generated.StudioBaseVariables
+import com.mxt.anitrend.graphql.generated.StudioMediaVariables
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import co.anitrend.retrofit.graphql.annotation.GraphQuery
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -18,14 +19,15 @@ import retrofit2.http.POST
  */
 
 interface StudioModel {
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getStudioBase(
+        @Body request: GraphQLRequest<StudioBaseVariables>,
+    ): Call<AniListContainer<StudioBase>>
 
     @POST("/")
-    @GraphQuery("StudioBase")
     @Headers("Content-Type: application/json")
-    fun getStudioBase(@Body request: QueryContainerBuilder?): Call<AniListContainer<StudioBase>>
-
-    @POST("/")
-    @GraphQuery("StudioMedia")
-    @Headers("Content-Type: application/json")
-    fun getStudioMedia(@Body request: QueryContainerBuilder?): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
+    fun getStudioMedia(
+        @Body request: GraphQLRequest<StudioMediaVariables>,
+    ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
 }

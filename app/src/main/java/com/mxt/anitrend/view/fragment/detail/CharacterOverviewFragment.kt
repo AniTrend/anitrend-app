@@ -14,24 +14,20 @@ import com.mxt.anitrend.model.entity.anilist.MediaCharacter
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 
 /**
  * Created by max on 2018/01/30.
  * CharacterOverviewFragment
  */
 class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, MediaCharacter>() {
-
     private var model: MediaCharacter? = null
     private var binding: FragmentCharacterOverviewBinding? = null
     private var id: Long = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): CharacterOverviewFragment {
-            return CharacterOverviewFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): CharacterOverviewFragment = CharacterOverviewFragment().apply {
+            arguments = args
         }
     }
 
@@ -46,7 +42,7 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentCharacterOverviewBinding.inflate(inflater, container, false)
         binding?.stateLayout?.showLoading()
@@ -68,24 +64,26 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
             binding.stateLayout.showError(
                 context?.getCompatDrawable(R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
                 getString(R.string.layout_empty_response),
-                getString(R.string.try_again)
+                getString(R.string.try_again),
             ) { makeRequest() }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        if (model != null)
+        if (model != null) {
             updateUI()
-        else
+        } else {
             makeRequest()
+        }
     }
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, id)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+            putBoolean(KeyUtil.arg_asHtml, false)
+        }
         viewModel?.requestData(KeyUtil.CHARACTER_OVERVIEW_REQ, ctx)
     }
 
@@ -95,7 +93,7 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
                 CompatUtil.imagePreview(
                     view,
                     model?.image?.large,
-                    R.string.image_preview_error_character_image
+                    R.string.image_preview_error_character_image,
                 )
             }
             else -> super.onClick(view)
@@ -108,8 +106,9 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
     }
 
     override fun onChanged(model: MediaCharacter?) {
-        if (model != null)
+        if (model != null) {
             this.model = model
+        }
         updateUI()
     }
 }

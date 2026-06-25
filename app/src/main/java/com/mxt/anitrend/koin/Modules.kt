@@ -3,6 +3,7 @@ package com.mxt.anitrend.koin
 import android.app.NotificationManager
 import android.content.Context
 import android.webkit.WebSettings
+import co.anitrend.retrofit.graphql.model.GraphQLDocumentRegistry
 import co.anitrend.support.markdown.center.CenterPlugin
 import co.anitrend.support.markdown.core.CorePlugin
 import co.anitrend.support.markdown.ephasis.EmphasisPlugin
@@ -19,8 +20,6 @@ import com.bumptech.glide.Glide
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.analytics.AnalyticsLogging
@@ -28,6 +27,7 @@ import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
 import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
+import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.api.interceptor.ClientInterceptor
@@ -40,10 +40,6 @@ import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.worker.*
-import co.anitrend.retrofit.graphql.annotation.processor.GraphProcessor
-import co.anitrend.retrofit.graphql.annotation.processor.plugin.AssetManagerDiscoveryPlugin
-import co.anitrend.retrofit.graphql.logger.contract.ILogger
-import co.anitrend.retrofit.graphql.logger.core.AbstractLogger
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.handler.EmphasisEditHandler
@@ -59,7 +55,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import timber.log.Timber
 
 private val coreModule = module {
     single {
@@ -71,25 +66,25 @@ private val coreModule = module {
     single<ISupportAnalytics> {
         AnalyticsLogging(
             context = androidContext(),
-            settings = get()
+            settings = get(),
         )
     }
 
     single {
         JobSchedulerUtil(
-            settings = get()
+            settings = get(),
         )
     }
 
     factory {
         Settings(
-            context = androidContext()
+            context = androidContext(),
         )
     }
 
     factory {
         ConfigurationUtil(
-            settings = get()
+            settings = get(),
         )
     }
 
@@ -99,19 +94,19 @@ private val coreModule = module {
             context = context,
             settings = get(),
             context.getSystemService(
-                Context.NOTIFICATION_SERVICE
-            ) as NotificationManager?
+                Context.NOTIFICATION_SERVICE,
+            ) as NotificationManager?,
         )
     }
     single(createdAtStart = true) {
         EmojiManager.create(
             context = androidContext(),
-            serializer = GsonDeserializer()
+            serializer = GsonDeserializer(),
         )
     }
     single(
         qualifier = named("ua"),
-        createdAtStart = true
+        createdAtStart = true,
     ) {
         WebSettings.getDefaultUserAgent(androidContext())
     }
@@ -140,9 +135,9 @@ private val widgetModule = module {
                 GlideImagesPlugin.create(
                     GlideImagePlugin.create(
                         Glide.with(get<Context>()),
-                        get(named("ua"))
-                    )
-                )
+                        get(named("ua")),
+                    ),
+                ),
             )
             .usePlugin(ImageConfigurationPlugin.create())
             .usePlugin(TextConfigurationPlugin.create())
@@ -161,7 +156,7 @@ private val workerModule = module {
         AuthenticatorWorker(
             context = androidContext(),
             workerParams = scope.get(),
-            presenter = get()
+            presenter = get(),
         )
     }
     worker { scope ->
@@ -169,13 +164,13 @@ private val workerModule = module {
             context = androidContext(),
             workerParams = scope.get(),
             presenter = get(),
-            notificationUtil = get()
+            notificationUtil = get(),
         )
     }
     worker { scope ->
         ClearNotificationWorker(
             context = androidContext(),
-            workerParams = scope.get()
+            workerParams = scope.get(),
         )
     }
     worker { scope ->
@@ -183,7 +178,7 @@ private val workerModule = module {
         GenreSyncWorker(
             context = context,
             workerParams = scope.get(),
-            presenter = WidgetPresenter(context)
+            presenter = WidgetPresenter(context),
         )
     }
     worker { scope ->
@@ -191,7 +186,7 @@ private val workerModule = module {
         TagSyncWorker(
             context = context,
             workerParams = scope.get(),
-            presenter = WidgetPresenter(context)
+            presenter = WidgetPresenter(context),
         )
     }
     worker { scope ->
@@ -199,7 +194,7 @@ private val workerModule = module {
         UpdateWorker(
             context = context,
             workerParams = scope.get(),
-            presenter = WidgetPresenter(context)
+            presenter = WidgetPresenter(context),
         )
     }
 }
@@ -217,9 +212,12 @@ private val presenterModule = module {
 }
 
 private val networkModule = module {
+    single<GraphQLDocumentRegistry> {
+        GeneratedGraphQLRegistry
+    }
     factory {
         AuthInterceptor(
-            settings = get()
+            settings = get(),
         )
     }
     factory {
@@ -228,83 +226,30 @@ private val networkModule = module {
                 collector = ChuckerCollector(
                     context = androidContext(),
                     showNotification = true,
-                    retentionPeriod = RetentionManager.Period.ONE_WEEK
-                )
+                    retentionPeriod = RetentionManager.Period.ONE_WEEK,
+                ),
             )
             .maxContentLength(
-                length = 250000L
+                length = 250000L,
             )
             .redactHeaders(
-                headerNames = setOf(BuildConfig.HEADER_KEY)
+                headerNames = setOf(BuildConfig.HEADER_KEY),
             )
             .alwaysReadResponseBody(false)
             .build()
     }
     single {
-        val logLevel = if (BuildConfig.DEBUG)
-            ILogger.Level.INFO
-        else ILogger.Level.ERROR
-
         AniGraphConverter(
-            graphProcessor = GraphProcessor(
-                discoveryPlugin = AssetManagerDiscoveryPlugin(
-                    assetManager = androidContext().assets
-                ),
-                logger = object : AbstractLogger(logLevel) {
-                    /**
-                     * Write a log message to its destination.
-                     *
-                     * @param level Filter used to determine the verbosity level of logs.
-                     * @param tag Used to identify the source of a log message. It usually
-                     * identifies the class or activity where the log call occurs.
-                     * @param message The message you would like logged.
-                     * @param throwable An exception to log
-                     */
-                    override fun log(
-                        level: ILogger.Level,
-                        tag: String,
-                        message: String,
-                        throwable: Throwable?
-                    ) {
-                        when (level) {
-                            ILogger.Level.VERBOSE -> Timber.tag(tag).v(throwable, message)
-                            ILogger.Level.DEBUG -> Timber.tag(tag).d(throwable, message)
-                            ILogger.Level.INFO -> Timber.tag(tag).i(throwable, message)
-                            ILogger.Level.WARNING -> Timber.tag(tag).w(throwable, message)
-                            ILogger.Level.ERROR -> Timber.e(throwable, message)
-                            ILogger.Level.NONE -> {
-                            }
-                        }
-                    }
-
-                }
-            ),
-            GsonBuilder()
-                .addSerializationExclusionStrategy(object : ExclusionStrategy {
-                    /**
-                     * @param clazz the class object that is under test
-                     * @return true if the class should be ignored; otherwise false
-                     */
-                    override fun shouldSkipClass(clazz: Class<*>?) = false
-
-                    /**
-                     * @param f the field object that is under test
-                     * @return true if the field should be ignored; otherwise false
-                     */
-                    override fun shouldSkipField(f: FieldAttributes?): Boolean {
-                        return f?.name?.equals("operationName") ?: false
-                                ||
-                                f?.name?.equals("extensions") ?: false
-                    }
-                })
+            gson = GsonBuilder()
                 .enableComplexMapKeySerialization()
                 .setLenient()
-                .create()
+                .create(),
+            registry = get(),
         )
     }
     single {
         ClientInterceptor(
-            agent = get(named("ua"))
+            agent = get(named("ua")),
         )
     }
 }
@@ -314,5 +259,5 @@ val appModules = listOf(
     widgetModule,
     workerModule,
     presenterModule,
-    networkModule
+    networkModule,
 )

@@ -10,15 +10,15 @@ import com.mxt.anitrend.base.interfaces.base.BaseAnimation
 /**
  * Created by max on 2018/02/24.
  */
-class AlphaAnimation @JvmOverloads constructor(
+class AlphaAnimation
+@JvmOverloads
+constructor(
     private val from: Float = 0.85f,
-    private val to: Float = 1f
+    private val to: Float = 1f,
 ) : BaseAnimation {
-
     private val interpolator: Interpolator = LinearInterpolator()
 
-    override fun getAnimators(view: View): Array<Animator> =
-        arrayOf(ObjectAnimator.ofFloat(view, "alpha", from, to))
+    override fun getAnimators(view: View): Array<Animator> = arrayOf(ObjectAnimator.ofFloat(view, "alpha", from, to))
 
     override fun getInterpolator(): Interpolator = interpolator
 

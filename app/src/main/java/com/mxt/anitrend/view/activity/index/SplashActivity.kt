@@ -7,12 +7,9 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivitySplashBinding
 import com.mxt.anitrend.extension.getCompatTintedDrawable
-import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
-import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.view.activity.base.WelcomeActivity
 import kotlinx.coroutines.delay
 
@@ -22,7 +19,6 @@ import kotlinx.coroutines.delay
  */
 
 class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
-
     private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +32,11 @@ class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         binding.previewCredits.setImageResource(
-            if (!CompatUtil.isLightTheme(presenter.settings))
-            R.drawable.powered_by_giphy_light
-        else
-            R.drawable.powered_by_giphy_dark
+            if (!CompatUtil.isLightTheme(presenter.settings)) {
+                R.drawable.powered_by_giphy_light
+            } else {
+                R.drawable.powered_by_giphy_dark
+            },
         )
         onActivityReady()
     }
@@ -59,36 +56,43 @@ class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
 
     override fun updateUI() {
         val freshInstall = presenter.settings.isFreshInstall
-        val intent = Intent(
-            this@SplashActivity,
-            if (freshInstall)
-                WelcomeActivity::class.java
-            else
-                MainActivity::class.java
-        )
+        val intent =
+            Intent(
+                this@SplashActivity,
+                if (freshInstall) {
+                    WelcomeActivity::class.java
+                } else {
+                    MainActivity::class.java
+                },
+            )
         startActivity(intent)
         finish()
     }
 
     override fun makeRequest() {
-        if(presenter.checkIfMigrationIsNeeded())
+        if (presenter.checkIfMigrationIsNeeded()) {
             updateUI()
-        else onMigrationFailed()
+        } else {
+            onMigrationFailed()
+        }
     }
 
     private fun onMigrationFailed() {
         val drawable = getCompatTintedDrawable(R.drawable.ic_system_update_grey_600_24dp)
-        val dialog = DialogUtil.createDefaultDialog(this)
-            .autoDismiss(false)
-            .positiveText(R.string.Ok)
-            .title(R.string.title_migration_failed)
-            .content(R.string.text_migration_failed)
-            .onAny { dialog, _ ->
-                dialog.dismiss()
-                finish()
-            }
-        if (drawable != null)
+        val dialog =
+            DialogUtil
+                .createDefaultDialog(this)
+                .autoDismiss(false)
+                .positiveText(R.string.Ok)
+                .title(R.string.title_migration_failed)
+                .content(R.string.text_migration_failed)
+                .onAny { dialog, _ ->
+                    dialog.dismiss()
+                    finish()
+                }
+        if (drawable != null) {
             dialog.icon(drawable)
+        }
         dialog.show()
     }
 }

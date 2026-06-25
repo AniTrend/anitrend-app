@@ -12,7 +12,6 @@ import io.objectbox.annotation.Id
  */
 @Entity
 class VersionBase() : Parcelable {
-
     @Id(assignable = true)
     var code: Long = 0
     var lastChecked: Long = 0
@@ -35,11 +34,12 @@ class VersionBase() : Parcelable {
         appId = parcel.readString()
     }
 
-    fun isNewerVersion(): Boolean {
-        return code > BuildConfig.versionCode
-    }
+    fun isNewerVersion(): Boolean = code > BuildConfig.versionCode
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(code)
         dest.writeLong(lastChecked)
         dest.writeByte((if (migration) 1 else 0).toByte())
@@ -52,10 +52,11 @@ class VersionBase() : Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<VersionBase> = object : Parcelable.Creator<VersionBase> {
-            override fun createFromParcel(parcel: Parcel): VersionBase = VersionBase(parcel)
+        val CREATOR: Parcelable.Creator<VersionBase> =
+            object : Parcelable.Creator<VersionBase> {
+                override fun createFromParcel(parcel: Parcel): VersionBase = VersionBase(parcel)
 
-            override fun newArray(size: Int): Array<VersionBase?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<VersionBase?> = arrayOfNulls(size)
+            }
     }
 }

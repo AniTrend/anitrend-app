@@ -8,7 +8,6 @@ import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
 import com.mxt.anitrend.presenter.base.BasePresenter
 
 class SearchActivity : ActivityBase<Void, BasePresenter>() {
-
     private lateinit var binding: ActivityPagerGenericBinding
 
     private lateinit var pageAdapter: SearchPageAdapter
@@ -33,9 +32,10 @@ class SearchActivity : ActivityBase<Void, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        pageAdapter = SearchPageAdapter(this, applicationContext).apply {
-            params = intent.extras ?: Bundle.EMPTY
-        }
+        pageAdapter =
+            SearchPageAdapter(this, applicationContext).apply {
+                params = intent.extras ?: Bundle.EMPTY
+            }
         updateUI()
     }
 

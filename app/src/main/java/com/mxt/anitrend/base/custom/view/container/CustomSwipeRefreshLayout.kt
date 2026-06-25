@@ -36,8 +36,10 @@ import com.mxt.anitrend.base.custom.view.image.CircleImageView
  */
 class CustomSwipeRefreshLayout @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : ViewGroup(context, attrs), NestedScrollingParent, NestedScrollingChild {
+    attrs: AttributeSet? = null,
+) : ViewGroup(context, attrs),
+    NestedScrollingParent,
+    NestedScrollingChild {
 
     companion object {
         const val DIRECTION_TOP = 0
@@ -65,6 +67,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
         // Default background for the progress spinner
         private const val CIRCLE_BG_LIGHT = 0xFFFAFAFA.toInt()
+
         // Default offset in dips from the top of the view to where the progress spinner should stop
         private const val DEFAULT_CIRCLE_TARGET = 64
 
@@ -125,11 +128,11 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
         circleViews = arrayOf(
             CircleImageView(context, CIRCLE_BG_LIGHT, CIRCLE_DIAMETER / 2f),
-            CircleImageView(context, CIRCLE_BG_LIGHT, CIRCLE_DIAMETER / 2f)
+            CircleImageView(context, CIRCLE_BG_LIGHT, CIRCLE_DIAMETER / 2f),
         )
         progress = arrayOf(
             MaterialProgressDrawable(context, this),
-            MaterialProgressDrawable(context, this)
+            MaterialProgressDrawable(context, this),
         )
         for (i in 0 until 2) {
             progress[i].setBackgroundColor(CIRCLE_BG_LIGHT)
@@ -180,18 +183,18 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         target?.measure(
             MeasureSpec.makeMeasureSpec(
                 measuredWidth - paddingLeft - paddingRight,
-                MeasureSpec.EXACTLY
+                MeasureSpec.EXACTLY,
             ),
             MeasureSpec.makeMeasureSpec(
                 measuredHeight - paddingTop - paddingBottom,
-                MeasureSpec.EXACTLY
-            )
+                MeasureSpec.EXACTLY,
+            ),
         )
 
         for (i in 0 until 2) {
             circleViews[i].measure(
                 MeasureSpec.makeMeasureSpec(circleWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(circleHeight, MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(circleHeight, MeasureSpec.EXACTLY),
             )
         }
         if (!originalOffsetCalculated) {
@@ -222,39 +225,39 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
                 (width / 2 - circleWidth / 2),
                 -circleHeight,
                 (width / 2 + circleWidth / 2),
-                0
+                0,
             )
             circleViews[1].layout(
                 (width / 2 - circleWidth / 2),
                 measuredHeight,
                 (width / 2 + circleWidth / 2),
-                measuredHeight + circleHeight
+                measuredHeight + circleHeight,
             )
         } else if (dragOffsetDistance > 0) {
             circleViews[0].layout(
                 (width / 2 - circleWidth / 2),
                 dragOffsetDistance - circleHeight,
                 (width / 2 + circleWidth / 2),
-                dragOffsetDistance
+                dragOffsetDistance,
             )
             circleViews[1].layout(
                 (width / 2 - circleWidth / 2),
                 measuredHeight,
                 (width / 2 + circleWidth / 2),
-                measuredHeight + circleHeight
+                measuredHeight + circleHeight,
             )
         } else if (dragOffsetDistance < 0) {
             circleViews[0].layout(
                 (width / 2 - circleWidth / 2),
                 -circleHeight,
                 (width / 2 + circleWidth / 2),
-                0
+                0,
             )
             circleViews[1].layout(
                 (width / 2 - circleWidth / 2),
                 measuredHeight + dragOffsetDistance,
                 (width / 2 + circleWidth / 2),
-                measuredHeight + circleHeight + dragOffsetDistance
+                measuredHeight + circleHeight + dragOffsetDistance,
             )
         }
     }
@@ -268,8 +271,11 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             returningToStart = false
         }
 
-        if (!isEnabled || returningToStart
-            || nestedScrollInProgress || isRefreshingFlag || isLoadingFlag
+        if (!isEnabled ||
+            returningToStart ||
+            nestedScrollInProgress ||
+            isRefreshingFlag ||
+            isLoadingFlag
         ) {
             return false
         }
@@ -301,7 +307,8 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_UP,
-            MotionEvent.ACTION_CANCEL -> {
+            MotionEvent.ACTION_CANCEL,
+            -> {
                 isBeingDragged = false
             }
         }
@@ -316,8 +323,11 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             returningToStart = false
         }
 
-        if (!isEnabled || returningToStart
-            || nestedScrollInProgress || isRefreshingFlag || isLoadingFlag
+        if (!isEnabled ||
+            returningToStart ||
+            nestedScrollInProgress ||
+            isRefreshingFlag ||
+            isLoadingFlag
         ) {
             return false
         }
@@ -366,7 +376,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         val extraOS = kotlin.math.abs(dragDistance) - dragTriggerDistances[dir]
         val tensionSlingshotPercent = kotlin.math.max(
             0f,
-            kotlin.math.min(extraOS, dragTriggerDistances[dir] * 2) / dragTriggerDistances[dir]
+            kotlin.math.min(extraOS, dragTriggerDistances[dir] * 2) / dragTriggerDistances[dir],
         )
         val slingshotPercent = tensionSlingshotPercent / 4f
         val tensionPercent = (slingshotPercent - (slingshotPercent * slingshotPercent)) * 2f
@@ -388,8 +398,8 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             setAnimationProgress(dir, kotlin.math.min(1f, kotlin.math.abs(dragDistance / dragTriggerDistances[dir])))
         }
         if (kotlin.math.abs(dragDistance) < dragTriggerDistances[dir]) {
-            if (progress[dir].alpha > STARTING_PROGRESS_ALPHA
-                && !isAnimationRunning(alphaStartAnimation)
+            if (progress[dir].alpha > STARTING_PROGRESS_ALPHA &&
+                !isAnimationRunning(alphaStartAnimation)
             ) {
                 startProgressAlphaStartAnimation(dir)
             }
@@ -438,22 +448,17 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         }
     }
 
-    private fun isAnimationRunning(animation: Animation?): Boolean {
-        return animation != null && animation.hasStarted() && !animation.hasEnded()
-    }
+    private fun isAnimationRunning(animation: Animation?): Boolean = animation != null && animation.hasStarted() && !animation.hasEnded()
 
-    fun canChildScrollUp(): Boolean {
-        return target?.let { ViewCompat.canScrollVertically(it, -1) } ?: false
-    }
+    fun canChildScrollUp(): Boolean = target?.let { ViewCompat.canScrollVertically(it, -1) } ?: false
 
-    fun canChildScrollDown(): Boolean {
-        return target?.let { ViewCompat.canScrollVertically(it, 1) } ?: false
-    }
+    fun canChildScrollDown(): Boolean = target?.let { ViewCompat.canScrollVertically(it, 1) } ?: false
 
     override fun requestDisallowInterceptTouchEvent(b: Boolean) {
         val targetView = target
-        if (android.os.Build.VERSION.SDK_INT < 21 && targetView is AbsListView
-            || (targetView != null && !ViewCompat.isNestedScrollingEnabled(targetView))
+        if (android.os.Build.VERSION.SDK_INT < 21 &&
+            targetView is AbsListView ||
+            (targetView != null && !ViewCompat.isNestedScrollingEnabled(targetView))
         ) {
             return
         } else {
@@ -470,7 +475,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             isRefreshingFlag = true
             setTargetOffsetTopAndBottom(
                 DIRECTION_TOP,
-                (dragTriggerDistances[DIRECTION_TOP] - dragOffsetDistance).toInt()
+                (dragTriggerDistances[DIRECTION_TOP] - dragOffsetDistance).toInt(),
             )
             notifyListener = false
             startScaleUpAnimation(DIRECTION_TOP, refreshListener)
@@ -488,7 +493,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             isLoadingFlag = true
             setTargetOffsetTopAndBottom(
                 DIRECTION_BOTTOM,
-                (-dragTriggerDistances[DIRECTION_BOTTOM] - dragOffsetDistance).toInt()
+                (-dragTriggerDistances[DIRECTION_BOTTOM] - dragOffsetDistance).toInt(),
             )
             notifyListener = false
             startScaleUpAnimation(DIRECTION_BOTTOM, loadListener)
@@ -529,13 +534,9 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         }
     }
 
-    fun isRefreshing(): Boolean {
-        return isRefreshingFlag
-    }
+    fun isRefreshing(): Boolean = isRefreshingFlag
 
-    fun isLoading(): Boolean {
-        return isLoadingFlag
-    }
+    fun isLoading(): Boolean = isLoadingFlag
 
     fun setPermitRefresh(permit: Boolean) {
         permitRefresh = permit
@@ -627,7 +628,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         }
         circleViews[dir].clearAnimation()
         circleViews[dir].startAnimation(
-            if (dir == DIRECTION_TOP) animateToTopCorrectPosition else animateToBottomCorrectPosition
+            if (dir == DIRECTION_TOP) animateToTopCorrectPosition else animateToBottomCorrectPosition,
         )
     }
 
@@ -635,7 +636,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
             setTargetOffsetTopAndBottom(
                 DIRECTION_TOP,
-                (from + (dragTriggerDistances[DIRECTION_TOP] - from) * interpolatedTime - dragOffsetDistance).toInt()
+                (from + (dragTriggerDistances[DIRECTION_TOP] - from) * interpolatedTime - dragOffsetDistance).toInt(),
             )
             progress[DIRECTION_TOP].setArrowScale(1 - interpolatedTime)
         }
@@ -645,7 +646,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
             setTargetOffsetTopAndBottom(
                 DIRECTION_BOTTOM,
-                (from + (-dragTriggerDistances[DIRECTION_BOTTOM] - from) * interpolatedTime - dragOffsetDistance).toInt()
+                (from + (-dragTriggerDistances[DIRECTION_BOTTOM] - from) * interpolatedTime - dragOffsetDistance).toInt(),
             )
             progress[DIRECTION_BOTTOM].setArrowScale(1 - interpolatedTime)
         }
@@ -674,7 +675,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             }
             circleViews[dir].clearAnimation()
             circleViews[dir].startAnimation(
-                if (dir == DIRECTION_TOP) animateToTopStartPosition else animateToBottomStartPosition
+                if (dir == DIRECTION_TOP) animateToTopStartPosition else animateToBottomStartPosition,
             )
         }
     }
@@ -774,7 +775,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         val alpha = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
                 progress[dir].setAlpha(
-                    (startingAlpha + ((endingAlpha - startingAlpha) * interpolatedTime)).toInt()
+                    (startingAlpha + ((endingAlpha - startingAlpha) * interpolatedTime)).toInt(),
                 )
             }
         }
@@ -794,12 +795,12 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         this.listener = listener
     }
 
-    override fun onStartNestedScroll(child: View, target: View, nestedScrollAxes: Int): Boolean {
-        return isEnabled
-            && !returningToStart && !isRefreshingFlag && !isLoadingFlag
-            && (permitRefresh || permitLoad)
-            && (nestedScrollAxes and ViewCompat.SCROLL_AXIS_VERTICAL) != 0
-    }
+    override fun onStartNestedScroll(child: View, target: View, nestedScrollAxes: Int): Boolean = isEnabled &&
+        !returningToStart &&
+        !isRefreshingFlag &&
+        !isLoadingFlag &&
+        (permitRefresh || permitLoad) &&
+        (nestedScrollAxes and ViewCompat.SCROLL_AXIS_VERTICAL) != 0
 
     override fun onNestedScrollAccepted(child: View, target: View, axes: Int) {
         nestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes)
@@ -836,23 +837,21 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         }
     }
 
-    override fun getNestedScrollAxes(): Int {
-        return nestedScrollingParentHelper.nestedScrollAxes
-    }
+    override fun getNestedScrollAxes(): Int = nestedScrollingParentHelper.nestedScrollAxes
 
     override fun onNestedScroll(
         target: View,
         dxConsumed: Int,
         dyConsumed: Int,
         dxUnconsumed: Int,
-        dyUnconsumed: Int
+        dyUnconsumed: Int,
     ) {
         dispatchNestedScroll(
             dxConsumed,
             dyConsumed,
             dxUnconsumed,
             dyUnconsumed,
-            parentOffsetInWindow
+            parentOffsetInWindow,
         )
 
         val dy = dyUnconsumed + parentOffsetInWindow[1]
@@ -865,13 +864,9 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         }
     }
 
-    override fun onNestedPreFling(target: View, velocityX: Float, velocityY: Float): Boolean {
-        return dispatchNestedPreFling(velocityX, velocityY)
-    }
+    override fun onNestedPreFling(target: View, velocityX: Float, velocityY: Float): Boolean = dispatchNestedPreFling(velocityX, velocityY)
 
-    override fun onNestedFling(target: View, velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
-        return dispatchNestedFling(velocityX, velocityY, consumed)
-    }
+    override fun onNestedFling(target: View, velocityX: Float, velocityY: Float, consumed: Boolean): Boolean = dispatchNestedFling(velocityX, velocityY, consumed)
 
     override fun onStopNestedScroll(target: View) {
         nestedScrollingParentHelper.onStopNestedScroll(target)
@@ -889,49 +884,35 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         nestedScrollingChildHelper.setNestedScrollingEnabled(enabled)
     }
 
-    override fun isNestedScrollingEnabled(): Boolean {
-        return nestedScrollingChildHelper.isNestedScrollingEnabled
-    }
+    override fun isNestedScrollingEnabled(): Boolean = nestedScrollingChildHelper.isNestedScrollingEnabled
 
-    override fun startNestedScroll(axes: Int): Boolean {
-        return nestedScrollingChildHelper.startNestedScroll(axes)
-    }
+    override fun startNestedScroll(axes: Int): Boolean = nestedScrollingChildHelper.startNestedScroll(axes)
 
     override fun stopNestedScroll() {
         nestedScrollingChildHelper.stopNestedScroll()
     }
 
-    override fun hasNestedScrollingParent(): Boolean {
-        return nestedScrollingChildHelper.hasNestedScrollingParent()
-    }
+    override fun hasNestedScrollingParent(): Boolean = nestedScrollingChildHelper.hasNestedScrollingParent()
 
     override fun dispatchNestedScroll(
         dxConsumed: Int,
         dyConsumed: Int,
         dxUnconsumed: Int,
         dyUnconsumed: Int,
-        offsetInWindow: IntArray?
-    ): Boolean {
-        return nestedScrollingChildHelper.dispatchNestedScroll(
-            dxConsumed,
-            dyConsumed,
-            dxUnconsumed,
-            dyUnconsumed,
-            offsetInWindow
-        )
-    }
+        offsetInWindow: IntArray?,
+    ): Boolean = nestedScrollingChildHelper.dispatchNestedScroll(
+        dxConsumed,
+        dyConsumed,
+        dxUnconsumed,
+        dyUnconsumed,
+        offsetInWindow,
+    )
 
-    override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?): Boolean {
-        return nestedScrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
-    }
+    override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?): Boolean = nestedScrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
-    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
-        return nestedScrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed)
-    }
+    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean = nestedScrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed)
 
-    override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean {
-        return nestedScrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY)
-    }
+    override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean = nestedScrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY)
 
     private val refreshListener = object : Animation.AnimationListener {
         override fun onAnimationStart(animation: Animation) = Unit

@@ -21,9 +21,7 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.graphql.apiError
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -32,19 +30,21 @@ import timber.log.Timber
  * Created by max on 2017/11/05.
  * Up Vote and Down Vote views
  */
-class VoteWidget @JvmOverloads constructor(
+class VoteWidget
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr),
     CustomView,
     View.OnClickListener,
     RetroCallback<Review> {
-
     private lateinit var presenter: WidgetPresenter<Review>
     private lateinit var binding: WidgetVoteBinding
     private var model: Review? = null
     private val tagName = VoteWidget::class.java.simpleName
+
     @ColorRes
     private var colorStyle: Int = 0
 
@@ -57,15 +57,18 @@ class VoteWidget @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : this(context, attrs, defStyleAttr)
 
-    private fun setParameters(@KeyUtil.ReviewRating ratingType: String) {
+    private fun setParameters(
+        @KeyUtil.ReviewRating ratingType: String,
+    ) {
         val currentModel = model ?: return
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, currentModel.id)
-            .putVariable(KeyUtil.arg_rating, ratingType)
-        presenter.params.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        presenter.params.apply {
+            putLong(KeyUtil.arg_id, currentModel.id)
+            putString(KeyUtil.arg_rating, ratingType)
+            putBoolean(KeyUtil.arg_asHtml, false)
+        }
         presenter.requestData(KeyUtil.MUT_RATE_REVIEW, context, this)
     }
 
@@ -79,11 +82,12 @@ class VoteWidget @JvmOverloads constructor(
                         val rating = if (current == KeyUtil.UP_VOTE) KeyUtil.NO_VOTE else KeyUtil.UP_VOTE
                         setParameters(rating)
                     } else {
-                        NotifyUtil.makeText(
-                            context,
-                            R.string.busy_please_wait,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                context,
+                                R.string.busy_please_wait,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
                 R.id.widget_thumb_down_flipper -> {
@@ -93,21 +97,23 @@ class VoteWidget @JvmOverloads constructor(
                         val rating = if (current == KeyUtil.DOWN_VOTE) KeyUtil.NO_VOTE else KeyUtil.DOWN_VOTE
                         setParameters(rating)
                     } else {
-                        NotifyUtil.makeText(
-                            context,
-                            R.string.busy_please_wait,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        NotifyUtil
+                            .makeText(
+                                context,
+                                R.string.busy_please_wait,
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
                 }
             }
         } else {
-            NotifyUtil.makeText(
-                context,
-                R.string.info_login_req,
-                R.drawable.ic_group_add_grey_600_18dp,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    context,
+                    R.string.info_login_req,
+                    R.drawable.ic_group_add_grey_600_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
     }
 
@@ -130,14 +136,19 @@ class VoteWidget @JvmOverloads constructor(
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetThumbUpFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetThumbUpFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetThumbUpFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
 
-        if (binding.widgetThumbDownFlipper.displayedChild == WidgetPresenter.LOADING_STATE)
+        if (binding.widgetThumbDownFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
             binding.widgetThumbDownFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        }
     }
 
-    fun setModel(model: Review, @ColorRes colorStyle: Int) {
+    fun setModel(
+        model: Review,
+        @ColorRes colorStyle: Int,
+    ) {
         this.model = model
         this.colorStyle = colorStyle
         resetFlipperState()
@@ -146,14 +157,14 @@ class VoteWidget @JvmOverloads constructor(
 
     private fun applyColorStyleTo(
         singleLineTextView: SingleLineTextView,
-        @DrawableRes drawableItem: Int
+        @DrawableRes drawableItem: Int,
     ) {
         if (colorStyle != 0) {
             singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(
                 CompatUtil.getDrawable(context, drawableItem, colorStyle),
                 null,
                 null,
-                null
+                null,
             )
             singleLineTextView.setTextColor(context.getCompatColor(colorStyle))
         } else {
@@ -161,7 +172,7 @@ class VoteWidget @JvmOverloads constructor(
                 CompatUtil.getDrawable(context, drawableItem, R.color.colorGrey600),
                 null,
                 null,
-                null
+                null,
             )
         }
     }
@@ -178,7 +189,7 @@ class VoteWidget @JvmOverloads constructor(
                     CompatUtil.getDrawable(context, R.drawable.ic_thumb_up_grey_600_18dp, R.color.colorStateGreen),
                     null,
                     null,
-                    null
+                    null,
                 )
                 applyColorStyleTo(binding.widgetThumbDown, R.drawable.ic_thumb_down_grey_600_18dp)
             }
@@ -187,7 +198,7 @@ class VoteWidget @JvmOverloads constructor(
                     CompatUtil.getDrawable(context, R.drawable.ic_thumb_down_grey_600_18dp, R.color.colorStateOrange),
                     null,
                     null,
-                    null
+                    null,
                 )
                 applyColorStyleTo(binding.widgetThumbUp, R.drawable.ic_thumb_up_grey_600_18dp)
             }
@@ -206,7 +217,10 @@ class VoteWidget @JvmOverloads constructor(
     /**
      * Invoked for a received HTTP response.
      */
-    override fun onResponse(call: Call<Review>, response: Response<Review>) {
+    override fun onResponse(
+        call: Call<Review>,
+        response: Response<Review>,
+    ) {
         try {
             val responseModel = response.body()
             if (response.isSuccessful && responseModel != null) {
@@ -229,7 +243,10 @@ class VoteWidget @JvmOverloads constructor(
      * Invoked when a network exception occurred talking to the server or when an unexpected
      * exception occurred creating the request or processing the response.
      */
-    override fun onFailure(call: Call<Review>, throwable: Throwable) {
+    override fun onFailure(
+        call: Call<Review>,
+        throwable: Throwable,
+    ) {
         try {
             Timber.tag(tagName).e(throwable)
             resetFlipperState()

@@ -9,9 +9,8 @@ import com.mxt.anitrend.databinding.CustomRecyclerLoadingBinding
  * LoadingViewHolder
  */
 class RecyclerStateViewHolder<T>(
-    private val binding: CustomRecyclerLoadingBinding
+    private val binding: CustomRecyclerLoadingBinding,
 ) : RecyclerViewHolder<T>(binding.root) {
-
     override fun onBindViewHolder(model: T) {
     }
 

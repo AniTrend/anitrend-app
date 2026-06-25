@@ -16,8 +16,10 @@ import org.greenrobot.eventbus.EventBus
  * Base presenter that will act as a template for all presenters
  * All preferences will be referenced from here.
  */
-abstract class CommonPresenter(val context: Context) : RecyclerScrollListener(), LifecycleListener {
-
+abstract class CommonPresenter(
+    val context: Context,
+) : RecyclerScrollListener(),
+    LifecycleListener {
     private var bundle: Bundle? = null
     private var databaseHelper: BoxQuery? = null
     private var settingsCache: Settings? = null
@@ -78,11 +80,15 @@ abstract class CommonPresenter(val context: Context) : RecyclerScrollListener(),
      * @param param the object of type T to send
      * @param sticky set true to make sticky post
      */
-    fun <T> notifyAllListeners(param: T, sticky: Boolean) {
-        if (sticky)
+    fun <T> notifyAllListeners(
+        param: T,
+        sticky: Boolean,
+    ) {
+        if (sticky) {
             EventBus.getDefault().postSticky(param)
-        else
+        } else {
             EventBus.getDefault().post(param)
+        }
     }
 
     interface AbstractPresenter<S : CommonPresenter> {

@@ -6,8 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.afollestad.materialdialogs.DialogAction
-import com.mxt.anitrend.R
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
@@ -19,8 +19,6 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 import java.util.Locale
 
 /**
@@ -28,7 +26,6 @@ import java.util.Locale
  * staff activity
  */
 class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
-
     private lateinit var binding: ActivityPagerGenericBinding
 
     private var onList: Boolean? = null
@@ -80,49 +77,53 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
         if (model != null) {
             when (item.itemId) {
                 R.id.action_share -> {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                                model.name?.fullName.orEmpty(),
-                                model.siteUrl.orEmpty()
+                    val intent =
+                        Intent(Intent.ACTION_SEND).apply {
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(
+                                    Locale.getDefault(),
+                                    "%s - %s",
+                                    model.name?.fullName.orEmpty(),
+                                    model.siteUrl.orEmpty(),
+                                ),
                             )
-                        )
-                        type = "text/plain"
-                    }
+                            type = "text/plain"
+                        }
                     startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 }
                 R.id.action_on_my_list -> {
-                    val selectedIndex = when (onList) {
-                        null -> 0
-                        false -> 1
-                        true -> 2
-                    }
+                    val selectedIndex =
+                        when (onList) {
+                            null -> 0
+                            false -> 1
+                            true -> 2
+                        }
                     DialogUtil.createSelection(
                         this,
                         R.string.app_filter_on_list,
                         selectedIndex,
-                        CompatUtil.getStringList(this, R.array.on_list_values)
+                        CompatUtil.getStringList(this, R.array.on_list_values),
                     ) { dialog, which ->
                         if (which == DialogAction.POSITIVE) {
-                            onList = when (dialog.selectedIndex) {
-                                0 -> null
-                                1 -> false
-                                else -> true
-                            }
+                            onList =
+                                when (dialog.selectedIndex) {
+                                    0 -> null
+                                    1 -> false
+                                    else -> true
+                                }
                             reloadViewPager()
                         }
                     }
                 }
             }
         } else {
-            NotifyUtil.makeText(
-                applicationContext,
-                R.string.text_activity_loading,
-                Toast.LENGTH_SHORT
-            ).show()
+            NotifyUtil
+                .makeText(
+                    applicationContext,
+                    R.string.text_activity_loading,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -132,9 +133,10 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        val pageAdapter = StaffPageAdapter(this, applicationContext).apply {
-            params = viewModel?.params ?: Bundle.EMPTY
-        }
+        val pageAdapter =
+            StaffPageAdapter(this, applicationContext).apply {
+                params = viewModel?.params ?: Bundle.EMPTY
+            }
         binding.contentMain.pageContainer.adapter = pageAdapter
         binding.contentMain.pageContainer.offscreenPageLimit = offScreenLimit
         attachTabs(pageAdapter)
@@ -142,10 +144,11 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
 
     override fun onResume() {
         super.onResume()
-        if (getModel() == null)
+        if (getModel() == null) {
             makeRequest()
-        else
+        } else {
             updateUI()
+        }
     }
 
     override fun updateUI() {
@@ -155,9 +158,9 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
     }
 
     override fun makeRequest() {
-        val queryContainer: QueryContainerBuilder = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, id)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+        }
         viewModel?.requestData(KeyUtil.STAFF_BASE_REQ, applicationContext)
     }
 
@@ -181,9 +184,10 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
 
     private fun attachTabs(adapter: StaffPageAdapter) {
         tabMediator?.detach()
-        tabMediator = TabLayoutMediator(binding.customTab.smartTab, binding.contentMain.pageContainer) { tab, position ->
-            tab.text = adapter.getPageTitle(position)
-        }
+        tabMediator =
+            TabLayoutMediator(binding.customTab.smartTab, binding.contentMain.pageContainer) { tab, position ->
+                tab.text = adapter.getPageTitle(position)
+            }
         tabMediator?.attach()
     }
 }

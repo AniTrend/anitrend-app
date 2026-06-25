@@ -16,5 +16,5 @@ class MediaListTypeOptions(
     val customLists: List<String>?,
     val advancedScoring: List<String>?,
     @SerializedName("advancedScoringEnabled")
-    val isAdvancedScoringEnabled: Boolean
+    val isAdvancedScoringEnabled: Boolean,
 ) : Parcelable

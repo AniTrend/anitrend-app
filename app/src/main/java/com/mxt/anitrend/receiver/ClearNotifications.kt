@@ -10,12 +10,15 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 
 class ClearNotifications : BroadcastReceiver() {
-
-    override fun onReceive(context: Context, intent: Intent?) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent?,
+    ) {
         val extras = intent?.extras ?: return
-        val notificationManager = context.getSystemService(
-            Context.NOTIFICATION_SERVICE
-        ) as? NotificationManager
+        val notificationManager =
+            context.getSystemService(
+                Context.NOTIFICATION_SERVICE,
+            ) as? NotificationManager
         if (extras.containsKey(KeyUtil.NOTIFICATION_ID)) {
             notificationManager?.cancel(extras.getInt(KeyUtil.NOTIFICATION_ID))
         }
@@ -27,8 +30,9 @@ class ClearNotifications : BroadcastReceiver() {
 
         when (extras.getString(KeyUtil.NOTIFICATION_ACTION)) {
             KeyUtil.NOTIFICATION_ACTION_DISMISS -> {
-                if (!settings.clearNotificationOnDismiss)
+                if (!settings.clearNotificationOnDismiss) {
                     return
+                }
             }
         }
 

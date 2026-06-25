@@ -13,20 +13,31 @@ import java.util.concurrent.TimeUnit
  * Network cache injector interceptor
  */
 
-class NetworkCacheInterceptor(private val context: Context, private val forceCache: Boolean = false) : Interceptor {
-
+class NetworkCacheInterceptor(
+    private val context: Context,
+    private val forceCache: Boolean = false,
+) : Interceptor {
     // re-write response header to force use of cache
     private val cacheControl by lazy {
-        CacheControl.Builder()
-                .maxAge(4, TimeUnit.HOURS)
-                .build()
+        CacheControl
+            .Builder()
+            .maxAge(4, TimeUnit.HOURS)
+            .build()
     }
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
-        return if (!CompatUtil.isOnline(context) || !forceCache) response.newBuilder().header(CACHE_CONTROL,
-                cacheControl.toString()).build() else response
+        return if (!CompatUtil.isOnline(context) || !forceCache) {
+            response
+                .newBuilder()
+                .header(
+                    CACHE_CONTROL,
+                    cacheControl.toString(),
+                ).build()
+        } else {
+            response
+        }
     }
 
     companion object {

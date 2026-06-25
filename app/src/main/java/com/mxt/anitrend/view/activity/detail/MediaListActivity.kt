@@ -2,9 +2,8 @@ package com.mxt.anitrend.view.activity.detail
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
-import com.mxt.anitrend.R
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
@@ -18,7 +17,6 @@ import com.mxt.anitrend.util.KeyUtil
  * users anime / manga list impl
  */
 class MediaListActivity : ActivityBase<User, BasePresenter>() {
-
     private lateinit var binding: ActivityPagerGenericBinding
 
     private lateinit var pageAdapter: MediaListPageAdapter
@@ -43,10 +41,11 @@ class MediaListActivity : ActivityBase<User, BasePresenter>() {
         super.onPostCreate(savedInstanceState)
         bundle?.let {
             setTitle(
-                if (CompatUtil.equals(mediaType, KeyUtil.ANIME))
+                if (CompatUtil.equals(mediaType, KeyUtil.ANIME)) {
                     R.string.title_anime_list
-                else
+                } else {
                     R.string.title_manga_list
+                },
             )
         }
         onActivityReady()
@@ -66,9 +65,10 @@ class MediaListActivity : ActivityBase<User, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        pageAdapter = MediaListPageAdapter(this, applicationContext).apply {
-            params = bundle ?: Bundle.EMPTY
-        }
+        pageAdapter =
+            MediaListPageAdapter(this, applicationContext).apply {
+                params = bundle ?: Bundle.EMPTY
+            }
         updateUI()
     }
 

@@ -6,8 +6,8 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.noties.markwon.image.AsyncDrawable
@@ -17,47 +17,52 @@ import java.net.URL
 
 internal class GlideImagePlugin private constructor(
     private val requestManager: RequestManager,
-    private val agent: String
+    private val agent: String,
 ) : GlideImagesPlugin.GlideStore {
+    private val requestListener =
+        object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable?>,
+                isFirstResource: Boolean,
+            ): Boolean {
+                if (e != null) {
+                    Timber.w(e, "Cannot load model -> $model")
+                }
+                return false
+            }
 
-    private val requestListener = object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable?>,
-            isFirstResource: Boolean
-        ): Boolean {
-            if (e != null)
-                Timber.w(e, "Cannot load model -> $model")
-            return false
+            override fun onResourceReady(
+                resource: Drawable,
+                model: Any,
+                target: Target<Drawable?>?,
+                dataSource: DataSource,
+                isFirstResource: Boolean,
+            ): Boolean {
+                if (resource is Animatable) {
+                    resource.start()
+                }
+                return false
+            }
         }
-
-        override fun onResourceReady(
-            resource: Drawable,
-            model: Any,
-            target: Target<Drawable?>?,
-            dataSource: DataSource,
-            isFirstResource: Boolean
-        ): Boolean {
-            if (resource is Animatable)
-                resource.start()
-            return false
-        }
-    }
 
     override fun load(drawable: AsyncDrawable): RequestBuilder<Drawable> {
         val headerBuilder = LazyHeaders.Builder()
 
-        val url = runCatching {
-            URL(drawable.destination)
-        }.getOrNull()
+        val url =
+            runCatching {
+                URL(drawable.destination)
+            }.getOrNull()
 
-        val model = runCatching {
-            val headers =  headerBuilder.addHeader("User-Agent", agent).build()
-            GlideUrl(url, headers)
-        }.getOrNull()
+        val model =
+            runCatching {
+                val headers = headerBuilder.addHeader("User-Agent", agent).build()
+                GlideUrl(url, headers)
+            }.getOrNull()
 
-        return requestManager.asDrawable()
+        return requestManager
+            .asDrawable()
             .addListener(requestListener)
             .load(model)
             .override(720)
@@ -69,7 +74,9 @@ internal class GlideImagePlugin private constructor(
     }
 
     companion object {
-        fun create(requestManager: RequestManager, agent: String) =
-            GlideImagePlugin(requestManager, agent)
+        fun create(
+            requestManager: RequestManager,
+            agent: String,
+        ) = GlideImagePlugin(requestManager, agent)
     }
 }

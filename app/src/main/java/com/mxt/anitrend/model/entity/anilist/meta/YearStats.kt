@@ -8,5 +8,5 @@ import kotlinx.parcelize.Parcelize
 class YearStats(
     var year: Int = 0,
     var amount: Int = 0,
-    var meanScore: Int = 0
+    var meanScore: Int = 0,
 ) : Parcelable

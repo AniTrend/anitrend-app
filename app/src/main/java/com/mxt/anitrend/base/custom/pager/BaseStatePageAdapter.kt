@@ -18,9 +18,8 @@ import com.mxt.anitrend.util.locale.LocaleUtil
  */
 abstract class BaseStatePageAdapter(
     fragmentActivity: FragmentActivity,
-    private val context: Context
+    private val context: Context,
 ) : FragmentStateAdapter(fragmentActivity) {
-
     var params: Bundle = Bundle.EMPTY
 
     lateinit var pagerTitles: List<String>
@@ -30,7 +29,9 @@ abstract class BaseStatePageAdapter(
         koinOf<Settings>()
     }
 
-    fun setPagerTitles(@ArrayRes mTitleRes: Int) {
+    fun setPagerTitles(
+        @ArrayRes mTitleRes: Int,
+    ) {
         pagerTitles = context.getStringList(mTitleRes, settings)
     }
 

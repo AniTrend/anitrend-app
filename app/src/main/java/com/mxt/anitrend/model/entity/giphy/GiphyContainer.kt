@@ -11,5 +11,5 @@ import kotlinx.parcelize.Parcelize
 class GiphyContainer(
     val data: List<Giphy> = emptyList(),
     val pagination: Pagination? = null,
-    val meta: Meta? = null
+    val meta: Meta? = null,
 ) : Parcelable

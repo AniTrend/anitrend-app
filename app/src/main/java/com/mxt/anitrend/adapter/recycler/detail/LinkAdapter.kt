@@ -14,19 +14,21 @@ import com.mxt.anitrend.model.entity.anilist.ExternalLink
 /**
  * Created by max on 2018/01/02.
  */
-class LinkAdapter(context: Context) : RecyclerViewAdapter<ExternalLink>(context) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<ExternalLink> {
-        return LinkViewHolder(
-            AdapterLinkBinding.inflate(parent.context.getLayoutInflater(), parent, false)
-        )
-    }
+class LinkAdapter(
+    context: Context,
+) : RecyclerViewAdapter<ExternalLink>(context) {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerViewHolder<ExternalLink> = LinkViewHolder(
+        AdapterLinkBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+    )
 
     override fun getFilter(): Filter? = null
 
-    inner class LinkViewHolder(private val binding: AdapterLinkBinding) :
-        RecyclerViewHolder<ExternalLink>(binding.root) {
-
+    inner class LinkViewHolder(
+        private val binding: AdapterLinkBinding,
+    ) : RecyclerViewHolder<ExternalLink>(binding.root) {
         init {
             bindClickListeners(R.id.container)
             bindLongClickListeners(R.id.container)
@@ -43,8 +45,6 @@ class LinkAdapter(context: Context) : RecyclerViewAdapter<ExternalLink>(context)
             performClick(clickListener, data, v)
         }
 
-        override fun onLongClick(view: View): Boolean {
-            return performLongClick(clickListener, data, view)
-        }
+        override fun onLongClick(view: View): Boolean = performLongClick(clickListener, data, view)
     }
 }

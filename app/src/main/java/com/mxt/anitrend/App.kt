@@ -12,7 +12,6 @@ import timber.log.Timber
  */
 
 class App : MultiDexApplication() {
-
     /**
      * Timber logging tree depending on the build type we plant the appropriate tree
      */
@@ -23,7 +22,7 @@ class App : MultiDexApplication() {
 
     private fun createUncaughtExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler(
-            UncaughtExceptionHandler()
+            UncaughtExceptionHandler(),
         )
     }
 

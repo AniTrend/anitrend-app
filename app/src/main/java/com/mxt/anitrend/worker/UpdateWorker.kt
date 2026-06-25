@@ -2,7 +2,6 @@ package com.mxt.anitrend.worker
 
 import android.content.Context
 import androidx.work.CoroutineWorker
-import androidx.work.Data
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.mxt.anitrend.model.api.retro.WebFactory
@@ -16,9 +15,8 @@ import timber.log.Timber
 class UpdateWorker(
     context: Context,
     workerParams: WorkerParameters,
-    private val presenter: WidgetPresenter<VersionBase>
+    private val presenter: WidgetPresenter<VersionBase>,
 ) : CoroutineWorker(context, workerParams) {
-
     private val endpoint by lazy(LazyThreadSafetyMode.NONE) {
         WebFactory.createRepositoryService()
     }
@@ -26,26 +24,30 @@ class UpdateWorker(
     private fun shouldCheckForUpdate(): Boolean {
         val versionBase = presenter.database.remoteVersion
         // How frequent the application checks for updates on startup
-        return versionBase == null || DateUtil.timeDifferenceSatisfied(
-            KeyUtil.TIME_UNIT_MINUTES,
-            versionBase.lastChecked,
-            15
-        )
+        return versionBase == null ||
+            DateUtil.timeDifferenceSatisfied(
+                KeyUtil.TIME_UNIT_MINUTES,
+                versionBase.lastChecked,
+                15,
+            )
     }
 
-    private fun requestUpdateInformation(): VersionBase? {
-        return if (shouldCheckForUpdate()) {
-            val response = endpoint.checkVersion(
-                presenter.settings.updateChannel
-            ).execute()
+    private fun requestUpdateInformation(): VersionBase? = if (shouldCheckForUpdate()) {
+        val response =
+            endpoint
+                .checkVersion(
+                    presenter.settings.updateChannel,
+                ).execute()
 
-            val data = response.body()
+        val data = response.body()
 
-            if (response.isSuccessful)
-                data
-            else
-                throw HttpException(response)
-        } else null
+        if (response.isSuccessful) {
+            data
+        } else {
+            throw HttpException(response)
+        }
+    } else {
+        null
     }
 
     /**
@@ -60,20 +62,24 @@ class UpdateWorker(
      * dependent work will not execute if you return [ListenableWorker.Result.failure]
      */
     override suspend fun doWork(): Result {
-        val result = runCatching {
-            requestUpdateInformation()
-        }.onSuccess { versionBase ->
-            if (versionBase != null)
-                presenter.database.remoteVersion = versionBase
-        }.onFailure {
-            Timber.e(it)
-        }
+        val result =
+            runCatching {
+                requestUpdateInformation()
+            }.onSuccess { versionBase ->
+                if (versionBase != null) {
+                    presenter.database.remoteVersion = versionBase
+                }
+            }.onFailure {
+                Timber.e(it)
+            }
 
         val silent = inputData.getBoolean(KeyUtil.WorkUpdaterSilentId, false)
         val output = workDataOf(KeyUtil.WorkUpdaterSilentId to silent)
 
-        return if (result.isSuccess)
+        return if (result.isSuccess) {
             Result.success(output)
-        else Result.failure(output)
+        } else {
+            Result.failure(output)
+        }
     }
 }

@@ -10,12 +10,8 @@ import io.objectbox.converter.PropertyConverter
  */
 class UserStatsConverter : PropertyConverter<UserStats, String> {
     @Synchronized
-    override fun convertToEntityProperty(databaseValue: String?): UserStats? {
-        return databaseValue?.let { WebFactory.gson.fromJson(it, UserStats::class.java) }
-    }
+    override fun convertToEntityProperty(databaseValue: String?): UserStats? = databaseValue?.let { WebFactory.gson.fromJson(it, UserStats::class.java) }
 
     @Synchronized
-    override fun convertToDatabaseValue(entityProperty: UserStats?): String? {
-        return entityProperty?.let { WebFactory.gson.toJson(it) }
-    }
+    override fun convertToDatabaseValue(entityProperty: UserStats?): String? = entityProperty?.let { WebFactory.gson.toJson(it) }
 }

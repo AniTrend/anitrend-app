@@ -11,5 +11,5 @@ import kotlinx.parcelize.Parcelize
 class Meta(
     val status: Int = 0,
     val msg: String? = null,
-    val response_id: String? = null
+    val response_id: String? = null,
 ) : Parcelable

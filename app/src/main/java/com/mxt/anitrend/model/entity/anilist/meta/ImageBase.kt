@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 class ImageBase(
-        val extraLarge: String?,
-        val large: String?,
-        val medium: String?
+    val extraLarge: String?,
+    val large: String?,
+    val medium: String?,
 ) : Parcelable

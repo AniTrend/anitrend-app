@@ -23,7 +23,7 @@ class RegexUtilTests {
             val media = safeMatcher.group(gc)
             assertEquals(
                 "(https:\\/\\/static1.fjcdn.com\\/thumbnails\\/comments\\/Go+talk+to+our+friendly+fellows+on+the+anime+board+_496f62c2f231bc1c8a9b77a449bf628f.gif)",
-                media
+                media,
             )
             current += 1
         }

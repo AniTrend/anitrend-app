@@ -18,7 +18,10 @@ interface RetroCallback<T> : Callback<T> {
      * @param call the origination requesting object
      * @param response the response from the network
      */
-    override fun onResponse(call: Call<T>, response: Response<T>)
+    override fun onResponse(
+        call: Call<T>,
+        response: Response<T>,
+    )
 
     /**
      * Invoked when a network exception occurred talking to the server or when an unexpected
@@ -27,5 +30,8 @@ interface RetroCallback<T> : Callback<T> {
      * @param call the origination requesting object
      * @param throwable contains information about the error
      */
-    override fun onFailure(call: Call<T>, throwable: Throwable)
+    override fun onFailure(
+        call: Call<T>,
+        throwable: Throwable,
+    )
 }

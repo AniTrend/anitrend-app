@@ -15,12 +15,14 @@ import timber.log.Timber
  * Created by max on 2017/10/30.
  * 16 x 10 Aspect image view
  */
-class WideImageView @JvmOverloads constructor(
+class WideImageView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr), CustomView {
-
+    defStyleAttr: Int = 0,
+) : AppCompatImageView(context, attrs, defStyleAttr),
+    CustomView {
     private var defaultMargin = 0
     private var defaultDimens = 0
 
@@ -28,17 +30,21 @@ class WideImageView @JvmOverloads constructor(
         onInit()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         var height =
             ((MeasureSpec.getSize(heightMeasureSpec) - defaultMargin) * KeyUtil.WideAspectRatio).toInt()
 
-        if (heightMeasureSpec == 0)
+        if (heightMeasureSpec == 0) {
             height = ((defaultDimens - defaultMargin) * KeyUtil.WideAspectRatio).toInt()
+        }
 
         super.onMeasure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY),
         )
     }
 
@@ -51,18 +57,26 @@ class WideImageView @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        fun setImage(view: WideImageView, url: String?) {
+        fun setImage(
+            view: WideImageView,
+            url: String?,
+        ) {
             try {
-                if (url != null)
-                    Glide.with(view.context).load(url)
+                if (url != null) {
+                    Glide
+                        .with(view.context)
+                        .load(url)
                         .transition(DrawableTransitionOptions.withCrossFade(350))
                         .apply(RequestOptions.centerCropTransform())
                         .into(view)
-                else
-                    Glide.with(view.context).load(R.drawable.reg_bg)
+                } else {
+                    Glide
+                        .with(view.context)
+                        .load(R.drawable.reg_bg)
                         .transition(DrawableTransitionOptions.withCrossFade(350))
                         .apply(RequestOptions.centerCropTransform())
                         .into(view)
+                }
             } catch (e: Exception) {
                 Timber.e(e)
             }

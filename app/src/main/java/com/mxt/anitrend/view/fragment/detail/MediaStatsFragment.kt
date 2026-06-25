@@ -38,7 +38,6 @@ import com.mxt.anitrend.util.ChartUtil
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
@@ -48,7 +47,6 @@ import java.util.Locale
  * Created by max on 2017/12/28.
  */
 class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
-
     private var binding: FragmentSeriesStatsBinding? = null
     private var model: Media? = null
     private var clipboardManager: ClipboardManager? = null
@@ -57,15 +55,14 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
     private var linkAdapter: LinkAdapter? = null
 
     private var mediaId: Long = 0
+
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): MediaStatsFragment {
-            return MediaStatsFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): MediaStatsFragment = MediaStatsFragment().apply {
+            arguments = args
         }
     }
 
@@ -86,22 +83,24 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentSeriesStatsBinding.inflate(inflater, container, false)
         binding?.stateLayout?.showLoading()
         binding?.linksRecycler?.apply {
-            layoutManager = StaggeredGridLayoutManager(
-                resources.getInteger(mColumnSize),
-                StaggeredGridLayoutManager.VERTICAL
-            )
+            layoutManager =
+                StaggeredGridLayoutManager(
+                    resources.getInteger(mColumnSize),
+                    StaggeredGridLayoutManager.VERTICAL,
+                )
             setHasFixedSize(true)
         }
         binding?.rankingRecycler?.apply {
-            layoutManager = StaggeredGridLayoutManager(
-                resources.getInteger(mColumnSize),
-                StaggeredGridLayoutManager.VERTICAL
-            )
+            layoutManager =
+                StaggeredGridLayoutManager(
+                    resources.getInteger(mColumnSize),
+                    StaggeredGridLayoutManager.VERTICAL,
+                )
             setHasFixedSize(true)
         }
         return binding?.root
@@ -131,79 +130,102 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
             if (!CompatUtil.isEmpty(model.stats?.statusDistribution)) View.VISIBLE else View.GONE
 
         if (rankAdapter == null) {
-            rankAdapter = RankAdapter(ctx).apply {
-                onItemsInserted(model.rankings ?: emptyList())
-                setClickListener(object : ItemClickListener<MediaRank> {
-                    override fun onItemClick(target: View, data: IntPair<MediaRank>) {
-                        val host = activity ?: return
-                        val intent = Intent(host, MediaBrowseActivity::class.java)
-                        val args = Bundle()
-                        val queryContainer = GraphUtil.getDefaultQuery(true)
-                            .putVariable(KeyUtil.arg_type, mediaType)
-                            .putVariable(KeyUtil.arg_format, data.second.format)
+            rankAdapter =
+                RankAdapter(ctx).apply {
+                    onItemsInserted(model.rankings ?: emptyList())
+                    setClickListener(
+                        object : ItemClickListener<MediaRank> {
+                            override fun onItemClick(
+                                target: View,
+                                data: IntPair<MediaRank>,
+                            ) {
+                                val host = activity ?: return
+                                val intent = Intent(host, MediaBrowseActivity::class.java)
+                                val args = Bundle()
+                                args.putString(KeyUtil.arg_mediaType, mediaType)
+                                args.putString(KeyUtil.arg_format, data.second.format)
+                                args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                                if (!presenter.settings.displayAdultContent) {
+                                    args.putBoolean(KeyUtil.arg_isAdult, false)
+                                }
 
-                        if (MediaUtil.isAnimeType(model))
-                            queryContainer.putVariable(KeyUtil.arg_season, data.second.season)
+                                if (MediaUtil.isAnimeType(model)) {
+                                    args.putString(KeyUtil.arg_season, data.second.season)
+                                }
 
-                        if (!data.second.isAllTime) {
-                            if (MediaUtil.isAnimeType(model))
-                                queryContainer.putVariable(KeyUtil.arg_seasonYear, data.second.year)
-                            else
-                                queryContainer.putVariable(
-                                    KeyUtil.arg_startDateLike,
-                                    String.format(Locale.getDefault(), "%d%%", data.second.year)
+                                if (!data.second.isAllTime) {
+                                    if (MediaUtil.isAnimeType(model)) {
+                                        args.putInt(KeyUtil.arg_seasonYear, data.second.year)
+                                    } else {
+                                        args.putString(
+                                            KeyUtil.arg_startDateLike,
+                                            String.format(Locale.getDefault(), "%d%%", data.second.year),
+                                        )
+                                    }
+                                }
+
+                                when (data.second.type) {
+                                    KeyUtil.RATED ->
+                                        args.putString(KeyUtil.arg_sort, KeyUtil.SCORE + KeyUtil.DESC)
+                                    KeyUtil.POPULAR ->
+                                        args.putString(KeyUtil.arg_sort, KeyUtil.POPULARITY + KeyUtil.DESC)
+                                }
+                                args.putParcelable(
+                                    KeyUtil.arg_media_util,
+                                    MediaBrowseUtil().setCompactType(true).setFilterEnabled(false),
                                 )
-                        }
+                                args.putString(KeyUtil.arg_activity_tag, data.second.typeHtmlPlainTitle)
+                                intent.putExtras(args)
+                                startActivity(intent)
+                            }
 
-                        when (data.second.type) {
-                            KeyUtil.RATED ->
-                                queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.SCORE + KeyUtil.DESC)
-                            KeyUtil.POPULAR ->
-                                queryContainer.putVariable(KeyUtil.arg_sort, KeyUtil.POPULARITY + KeyUtil.DESC)
-                        }
-
-                        args.putParcelable(KeyUtil.arg_graph_params, queryContainer)
-                        args.putParcelable(
-                            KeyUtil.arg_media_util,
-                            MediaBrowseUtil().setCompactType(true).setFilterEnabled(false)
-                        )
-                        args.putString(KeyUtil.arg_activity_tag, data.second.typeHtmlPlainTitle)
-                        intent.putExtras(args)
-                        startActivity(intent)
-                    }
-
-                    override fun onItemLongClick(target: View, data: IntPair<MediaRank>) = Unit
-                })
-            }
+                            override fun onItemLongClick(
+                                target: View,
+                                data: IntPair<MediaRank>,
+                            ) = Unit
+                        },
+                    )
+                }
         }
 
         if (linkAdapter == null) {
-            linkAdapter = LinkAdapter(ctx).apply {
-                onItemsInserted(model.externalLinks ?: emptyList())
-                setClickListener(object : ItemClickListener<ExternalLink> {
-                    override fun onItemClick(target: View, data: IntPair<ExternalLink>) {
-                        val intent = Intent(Intent.ACTION_VIEW).apply {
-                            setData(Uri.parse(data.second.url))
-                        }
-                        startActivity(intent)
-                    }
-
-                    override fun onItemLongClick(target: View, data: IntPair<ExternalLink>) {
-                        clipboardManager?.setPrimaryClip(
-                            ClipData.newPlainText("", data.second.url)
-                        )
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                            context?.let {
-                                NotifyUtil.makeText(
-                                    it,
-                                    R.string.text_url_copied_to_clipboard,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+            linkAdapter =
+                LinkAdapter(ctx).apply {
+                    onItemsInserted(model.externalLinks ?: emptyList())
+                    setClickListener(
+                        object : ItemClickListener<ExternalLink> {
+                            override fun onItemClick(
+                                target: View,
+                                data: IntPair<ExternalLink>,
+                            ) {
+                                val intent =
+                                    Intent(Intent.ACTION_VIEW).apply {
+                                        setData(Uri.parse(data.second.url))
+                                    }
+                                startActivity(intent)
                             }
-                        }
-                    }
-                })
-            }
+
+                            override fun onItemLongClick(
+                                target: View,
+                                data: IntPair<ExternalLink>,
+                            ) {
+                                clipboardManager?.setPrimaryClip(
+                                    ClipData.newPlainText("", data.second.url),
+                                )
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                    context?.let {
+                                        NotifyUtil
+                                            .makeText(
+                                                it,
+                                                R.string.text_url_copied_to_clipboard,
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+                                    }
+                                }
+                            }
+                        },
+                    )
+                }
         }
 
         binding.stateLayout.showContent()
@@ -215,10 +237,15 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
 
     override fun makeRequest() {
         val ctx = context ?: return
-        val queryContainer = GraphUtil.getDefaultQuery(false)
-            .putVariable(KeyUtil.arg_id, mediaId)
-            .putVariable(KeyUtil.arg_type, mediaType)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, mediaId)
+            putString(KeyUtil.arg_mediaType, mediaType)
+            if (presenter.settings.displayAdultContent) {
+                remove(KeyUtil.arg_isAdult)
+            } else {
+                putBoolean(KeyUtil.arg_isAdult, false)
+            }
+        }
         viewModel?.requestData(KeyUtil.MEDIA_STATS_REQ, ctx)
     }
 
@@ -228,27 +255,29 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         val scoreDistribution = model?.stats?.scoreDistribution ?: return
 
         val barEntries = presenter.getMediaScoreDistribution(scoreDistribution)
-        val barDataSet = BarDataSet(barEntries, getString(R.string.title_score_distribution)).apply {
-            valueTextColor = ctx.getCompatColorAttr(R.attr.titleColor)
-            setColors(
-                Color.parseColor("#c26fc1ea"),
-                Color.parseColor("#c248c76d"),
-                Color.parseColor("#c2f7464a"),
-                Color.parseColor("#c29256f3"),
-                Color.parseColor("#c2fba640"),
-                Color.parseColor("#c26fc1ea"),
-                Color.parseColor("#c248c76d"),
-                Color.parseColor("#c2f7464a"),
-                Color.parseColor("#c29256f3"),
-                Color.parseColor("#c2fba640")
-            )
-        }
+        val barDataSet =
+            BarDataSet(barEntries, getString(R.string.title_score_distribution)).apply {
+                valueTextColor = ctx.getCompatColorAttr(R.attr.titleColor)
+                setColors(
+                    Color.parseColor("#c26fc1ea"),
+                    Color.parseColor("#c248c76d"),
+                    Color.parseColor("#c2f7464a"),
+                    Color.parseColor("#c29256f3"),
+                    Color.parseColor("#c2fba640"),
+                    Color.parseColor("#c26fc1ea"),
+                    Color.parseColor("#c248c76d"),
+                    Color.parseColor("#c2f7464a"),
+                    Color.parseColor("#c29256f3"),
+                    Color.parseColor("#c2fba640"),
+                )
+            }
 
         configureScoreDistribution(scoreDistribution)
 
-        val barData = BarData(barDataSet).apply {
-            barWidth = 0.6f
-        }
+        val barData =
+            BarData(barDataSet).apply {
+                barWidth = 0.6f
+            }
 
         binding.seriesScoreDist.setData(barData)
         binding.seriesScoreDist.disableScroll()
@@ -266,22 +295,24 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         configureSeriesStats()
 
         val pieEntries: List<PieEntry> = presenter.getMediaStats(statusDistribution)
-        val pieDataSet = PieDataSet(pieEntries, getString(R.string.title_series_stats)).apply {
-            sliceSpace = 3f
-            setColors(
-                Color.parseColor("#c26fc1ea"),
-                Color.parseColor("#c248c76d"),
-                Color.parseColor("#c2f7464a"),
-                Color.parseColor("#c29256f3"),
-                Color.parseColor("#c2fba640")
-            )
-        }
+        val pieDataSet =
+            PieDataSet(pieEntries, getString(R.string.title_series_stats)).apply {
+                sliceSpace = 3f
+                setColors(
+                    Color.parseColor("#c26fc1ea"),
+                    Color.parseColor("#c248c76d"),
+                    Color.parseColor("#c2f7464a"),
+                    Color.parseColor("#c29256f3"),
+                    Color.parseColor("#c2fba640"),
+                )
+            }
 
-        val pieData = PieData(pieDataSet).apply {
-            setValueTextColor(ctx.getCompatColorAttr(R.attr.titleColor))
-            setValueTextSize(9f)
-            setValueFormatter(PercentFormatter())
-        }
+        val pieData =
+            PieData(pieDataSet).apply {
+                setValueTextColor(ctx.getCompatColorAttr(R.attr.titleColor))
+                setValueTextSize(9f)
+                setValueFormatter(PercentFormatter())
+            }
 
         binding.seriesStats.legend.textColor = ctx.getCompatColorAttr(R.attr.titleColor)
         binding.seriesStats.setHoleColor(ctx.getCompatColorAttr(R.attr.color))
@@ -294,15 +325,16 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         if (model != null) {
             this.model = model
             updateUI()
-        } else
+        } else {
             binding.stateLayout.showError(
                 context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
                 getString(R.string.layout_empty_response),
-                getString(R.string.try_again)
+                getString(R.string.try_again),
             ) {
                 binding.stateLayout.showLoading()
                 makeRequest()
             }
+        }
     }
 
     private fun configureScoreDistribution(scoreDistributions: List<ScoreDistribution>) {
@@ -313,12 +345,14 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding.seriesScoreDist.setDrawBarShadow(false)
         binding.seriesScoreDist.setHighlightFullBarEnabled(true)
 
-        ChartUtil.StepXAxisFormatter()
+        ChartUtil
+            .StepXAxisFormatter()
             .setDataModel(scoreDistributions.map { it.score })
             .setChartBase(binding.seriesScoreDist)
             .build(ctx)
 
-        ChartUtil.StepYAxisFormatter()
+        ChartUtil
+            .StepYAxisFormatter()
             .setChartBase(binding.seriesScoreDist)
             .build(ctx)
     }

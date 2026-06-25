@@ -14,18 +14,15 @@ import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment
  */
 class ReviewPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.reviews_title)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> BrowseReviewFragment.newInstance(KeyUtil.ANIME)
-            1 -> BrowseReviewFragment.newInstance(KeyUtil.MANGA)
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 -> BrowseReviewFragment.newInstance(KeyUtil.ANIME)
+        1 -> BrowseReviewFragment.newInstance(KeyUtil.MANGA)
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

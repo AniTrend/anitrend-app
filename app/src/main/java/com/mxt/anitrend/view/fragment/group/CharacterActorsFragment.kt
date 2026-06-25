@@ -20,36 +20,29 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.StaffActivity
-import co.anitrend.retrofit.graphql.model.request.QueryContainerBuilder
 
 /**
  * Created by max on 2018/03/23.
  * Character actors with their respective media
  */
-class CharacterActorsFragment :
-    FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
-
-    private lateinit var queryContainer: QueryContainerBuilder
+class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
+    private var id: Long = 0
 
     companion object {
         @JvmStatic
-        fun newInstance(args: Bundle): CharacterActorsFragment {
-            return CharacterActorsFragment().apply {
-                arguments = args
-            }
+        fun newInstance(args: Bundle): CharacterActorsFragment = CharacterActorsFragment().apply {
+            arguments = args
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = arguments
-        queryContainer = GraphUtil.getDefaultQuery(true).apply {
-            if (args != null)
-                putVariable(KeyUtil.arg_id, args.getLong(KeyUtil.arg_id))
+        if (args != null) {
+            id = args.getLong(KeyUtil.arg_id)
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
@@ -58,44 +51,57 @@ class CharacterActorsFragment :
         setPresenter(MediaPresenter(ctx))
         setViewModel(true)
 
-        (mAdapter as? GroupActorAdapter)?.setMediaClickListener(object : ItemClickListener<RecyclerItem> {
-            override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
-                when (target.id) {
-                    R.id.container -> {
-                        val media = data.second as? MediaBase ?: return
-                        val host = activity ?: return
-                        val intent = Intent(host, MediaActivity::class.java).apply {
-                            putExtra(KeyUtil.arg_id, media.id)
-                            putExtra(KeyUtil.arg_mediaType, media.type)
-                        }
-                        CompatUtil.startRevealAnim(host, target, intent)
-                    }
-                }
-            }
-
-            override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) {
-                when (target.id) {
-                    R.id.container -> {
-                        if (presenter.settings.isAuthenticated) {
+        (mAdapter as? GroupActorAdapter)?.setMediaClickListener(
+            object : ItemClickListener<RecyclerItem> {
+                override fun onItemClick(
+                    target: View,
+                    data: IntPair<RecyclerItem>,
+                ) {
+                    when (target.id) {
+                        R.id.container -> {
                             val media = data.second as? MediaBase ?: return
                             val host = activity ?: return
-                            mediaActionUtil = MediaActionUtil.Builder()
-                                .setId(media.id).build(host)
-                            mediaActionUtil.startSeriesAction()
-                        } else {
-                            context?.let {
-                                NotifyUtil.makeText(
-                                    it,
-                                    R.string.info_login_req,
-                                    R.drawable.ic_group_add_grey_600_18dp,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            val intent =
+                                Intent(host, MediaActivity::class.java).apply {
+                                    putExtra(KeyUtil.arg_id, media.id)
+                                    putExtra(KeyUtil.arg_mediaType, media.type)
+                                }
+                            CompatUtil.startRevealAnim(host, target, intent)
+                        }
+                    }
+                }
+
+                override fun onItemLongClick(
+                    target: View,
+                    data: IntPair<RecyclerItem>,
+                ) {
+                    when (target.id) {
+                        R.id.container -> {
+                            if (presenter.settings.isAuthenticated) {
+                                val media = data.second as? MediaBase ?: return
+                                val host = activity ?: return
+                                mediaActionUtil =
+                                    MediaActionUtil
+                                        .Builder()
+                                        .setId(media.id)
+                                        .build(host)
+                                mediaActionUtil.startSeriesAction()
+                            } else {
+                                context?.let {
+                                    NotifyUtil
+                                        .makeText(
+                                            it,
+                                            R.string.info_login_req,
+                                            R.drawable.ic_group_add_grey_600_18dp,
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                }
                             }
                         }
                     }
                 }
-            }
-        })
+            },
+        )
     }
 
     override fun updateUI() {
@@ -105,8 +111,11 @@ class CharacterActorsFragment :
 
     override fun makeRequest() {
         val ctx = context ?: return
-        queryContainer.putVariable(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.params?.putParcelable(KeyUtil.arg_graph_params, queryContainer)
+        viewModel?.params?.apply {
+            putLong(KeyUtil.arg_id, id)
+            putInt(KeyUtil.arg_page, presenter.currentPage)
+            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        }
         viewModel?.requestData(KeyUtil.CHARACTER_ACTORS_REQ, ctx)
     }
 
@@ -114,31 +123,42 @@ class CharacterActorsFragment :
         val edgeContainer = content?.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
-                if (edgeContainer.hasPageInfo())
+                if (edgeContainer.hasPageInfo()) {
                     presenter.setPageInfo(edgeContainer.pageInfo)
-                if (!edgeContainer.isEmpty)
+                }
+                if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupActorMediaEdge(edgeContainer.edges))
-                else
+                } else {
                     onPostProcessed(emptyList())
+                }
             }
-        } else
+        } else {
             onPostProcessed(emptyList())
-        if (mAdapter.itemCount < 1)
+        }
+        if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
+        }
     }
 
-    override fun onItemClick(target: View, data: IntPair<RecyclerItem>) {
+    override fun onItemClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) {
         when (target.id) {
             R.id.container -> {
                 val staff = data.second as? StaffBase ?: return
                 val host = activity ?: return
-                val intent = Intent(host, StaffActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_id, staff.id)
-                }
+                val intent =
+                    Intent(host, StaffActivity::class.java).apply {
+                        putExtra(KeyUtil.arg_id, staff.id)
+                    }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }
     }
 
-    override fun onItemLongClick(target: View, data: IntPair<RecyclerItem>) = Unit
+    override fun onItemLongClick(
+        target: View,
+        data: IntPair<RecyclerItem>,
+    ) = Unit
 }

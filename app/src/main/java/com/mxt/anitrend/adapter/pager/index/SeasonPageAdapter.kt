@@ -1,12 +1,12 @@
 package com.mxt.anitrend.adapter.pager.index
 
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
 
 /**
@@ -14,40 +14,45 @@ import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
  */
 class SeasonPageAdapter(
     fragmentActivity: FragmentActivity,
-    context: Context
+    context: Context,
 ) : BaseStatePageAdapter(fragmentActivity, context) {
-
     init {
         setPagerTitles(R.array.seasons_titles)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> MediaBrowseFragment.newInstance(
-                params,
-                GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                    .putVariable(KeyUtil.arg_season, KeyUtil.WINTER)
+    override fun createFragment(position: Int): Fragment = when (position) {
+        0 ->
+            MediaBrowseFragment.newInstance(
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                    putString(KeyUtil.arg_season, KeyUtil.WINTER)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                },
             )
-            1 -> MediaBrowseFragment.newInstance(
-                params,
-                GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                    .putVariable(KeyUtil.arg_season, KeyUtil.SPRING)
+        1 ->
+            MediaBrowseFragment.newInstance(
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                    putString(KeyUtil.arg_season, KeyUtil.SPRING)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                },
             )
-            2 -> MediaBrowseFragment.newInstance(
-                params,
-                GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                    .putVariable(KeyUtil.arg_season, KeyUtil.SUMMER)
+        2 ->
+            MediaBrowseFragment.newInstance(
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                    putString(KeyUtil.arg_season, KeyUtil.SUMMER)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                },
             )
-            3 -> MediaBrowseFragment.newInstance(
-                params,
-                GraphUtil.getDefaultQuery(true)
-                    .putVariable(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                    .putVariable(KeyUtil.arg_season, KeyUtil.FALL)
+        3 ->
+            MediaBrowseFragment.newInstance(
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                    putString(KeyUtil.arg_season, KeyUtil.FALL)
+                    putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                },
             )
-            else -> throw IndexOutOfBoundsException("Invalid position: $position")
-        }
+        else -> throw IndexOutOfBoundsException("Invalid position: $position")
     }
 }

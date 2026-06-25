@@ -15,7 +15,6 @@ import com.mxt.anitrend.view.fragment.detail.NotificationFragment
  * Created by max on 2017/10/25.
  */
 class NotificationActivity : ActivityBase<Void, BasePresenter>() {
-
     private lateinit var binding: ActivityFrameGenericBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

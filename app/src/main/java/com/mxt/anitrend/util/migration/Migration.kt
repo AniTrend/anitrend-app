@@ -11,10 +11,13 @@ import timber.log.Timber
  * @param endVersion The end version of the application after this migration is applied.
  */
 abstract class Migration(
-        val startVersion: Int,
-        val endVersion: Int
+    val startVersion: Int,
+    val endVersion: Int,
 ) {
-    open fun applyMigration(context: Context, settings: Settings) {
+    open fun applyMigration(
+        context: Context,
+        settings: Settings,
+    ) {
         Timber.i("Applying migrations for $this")
     }
 
@@ -30,11 +33,9 @@ abstract class Migration(
      *
      * Read more about [equality](https://kotlinlang.org/docs/reference/equality.html) in Kotlin.
      */
-    override fun equals(other: Any?): Boolean {
-        return when (other) {
-            is Migration -> startVersion == other.startVersion && endVersion == other.endVersion
-            else -> super.equals(other)
-        }
+    override fun equals(other: Any?): Boolean = when (other) {
+        is Migration -> startVersion == other.startVersion && endVersion == other.endVersion
+        else -> super.equals(other)
     }
 
     override fun hashCode(): Int {

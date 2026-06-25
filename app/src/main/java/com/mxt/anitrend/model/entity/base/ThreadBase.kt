@@ -5,8 +5,9 @@ import android.os.Parcelable
 import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.util.KeyUtil
 
-open class ThreadBase() : RecyclerItem(), Parcelable {
-
+open class ThreadBase() :
+    RecyclerItem(),
+    Parcelable {
     var id: Long = 0
 
     @KeyUtil.NotificationType
@@ -17,7 +18,10 @@ open class ThreadBase() : RecyclerItem(), Parcelable {
         type = parcel.readString()
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeLong(id)
         dest.writeString(type)
     }
@@ -33,10 +37,11 @@ open class ThreadBase() : RecyclerItem(), Parcelable {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<ThreadBase> = object : Parcelable.Creator<ThreadBase> {
-            override fun createFromParcel(parcel: Parcel): ThreadBase = ThreadBase(parcel)
+        val CREATOR: Parcelable.Creator<ThreadBase> =
+            object : Parcelable.Creator<ThreadBase> {
+                override fun createFromParcel(parcel: Parcel): ThreadBase = ThreadBase(parcel)
 
-            override fun newArray(size: Int): Array<ThreadBase?> = arrayOfNulls(size)
-        }
+                override fun newArray(size: Int): Array<ThreadBase?> = arrayOfNulls(size)
+            }
     }
 }

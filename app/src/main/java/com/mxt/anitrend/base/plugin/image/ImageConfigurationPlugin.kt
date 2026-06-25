@@ -8,12 +8,11 @@ import io.noties.markwon.core.spans.LinkSpan
 import io.noties.markwon.image.ImageProps
 import org.commonmark.node.Image
 
-internal class ImageConfigurationPlugin private constructor(
-) : AbstractMarkwonPlugin() {
+internal class ImageConfigurationPlugin private constructor() : AbstractMarkwonPlugin() {
 
     override fun configure(registry: MarkwonPlugin.Registry) {
-        //val spacing = resources.getDimensionPixelSize(R.dimen.spacing_xl)
-        //val maxWidth = resources.displayMetrics.widthPixels - spacing
+        // val spacing = resources.getDimensionPixelSize(R.dimen.spacing_xl)
+        // val maxWidth = resources.displayMetrics.widthPixels - spacing
         /*registry.require(ImagesPlugin::class.java) { plugin ->
             plugin.defaultMediaDecoder(
                 DefaultDownScalingMediaDecoder.create(
@@ -32,8 +31,8 @@ internal class ImageConfigurationPlugin private constructor(
                 ImageProps.DESTINATION.require(props),
                 ImageLinkResolver(
                     CoreProps.LINK_DESTINATION.get(props),
-                    config.linkResolver()
-                )
+                    config.linkResolver(),
+                ),
             )
         }
     }
@@ -43,10 +42,11 @@ internal class ImageConfigurationPlugin private constructor(
         val original: LinkResolver,
     ) : LinkResolver {
         override fun resolve(view: View, link: String) {
-            if (linkDestination.isNullOrEmpty())
+            if (linkDestination.isNullOrEmpty()) {
                 CompatUtil.imagePreview(view, link)
-            else
+            } else {
                 original.resolve(view, linkDestination)
+            }
         }
     }
 

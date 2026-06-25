@@ -16,7 +16,9 @@ import java.util.*
  * Created by max on 2017/11/25.
  */
 
-class PageIndicator : AppCompatTextView, CustomView {
+class PageIndicator :
+    AppCompatTextView,
+    CustomView {
 
     var maximum: Int = 0
 
@@ -54,6 +56,5 @@ class PageIndicator : AppCompatTextView, CustomView {
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
-
     }
 }
