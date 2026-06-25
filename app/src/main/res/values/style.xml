@@ -73,7 +73,6 @@
 
         <!-- Custom theme attributes mapped to M3 color roles -->
         <item name="cardColor">@color/m3_light_surfaceContainerHighest</item>
-        <item name="drawerColor">@color/m3_light_surfaceContainer</item>
         <item name="rootColor">@color/m3_light_surface</item>
         <item name="titleColor">@color/m3_light_onSurface</item>
         <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
@@ -154,7 +153,6 @@
 
         <!-- Custom theme attributes mapped to M3 color roles -->
         <item name="cardColor">@color/m3_dark_surfaceContainerHighest</item>
-        <item name="drawerColor">@color/m3_dark_surfaceContainer</item>
         <item name="rootColor">@color/m3_dark_surface</item>
         <item name="titleColor">@color/m3_dark_onSurface</item>
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
@@ -173,8 +171,8 @@
 
 
     <!-- App bar and popup overlays (migrated to M3) -->
-    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.Material3.Dark" />
-    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
+    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.Material3.Light" />
+    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.Material3" />
     <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.Material3.Dark" />
     <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.Material3" />
 
@@ -242,7 +240,6 @@
 
         <!-- Custom theme attributes mapped to M3 color roles -->
         <item name="cardColor">@color/m3_black_surfaceContainerHighest</item>
-        <item name="drawerColor">@color/m3_black_surfaceContainer</item>
         <item name="rootColor">@color/m3_black_surface</item>
         <item name="titleColor">@color/m3_dark_onSurface</item>
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
