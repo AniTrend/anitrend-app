@@ -98,13 +98,9 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/SmallRating" />
 
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    <androidx.legacy.widget.Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/spacing_medium" />
 
                     <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                         android:id="@+id/review_read_more"
@@ -114,13 +110,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_read_more" />
 
-                    <com.mxt.anitrend.base.custom.view.widget.VoteWidget
-                        android:id="@+id/review_vote"
-                        android:layout_gravity="end|bottom"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                </LinearLayout>
 
-                </FrameLayout>
+                <com.mxt.anitrend.base.custom.view.widget.VoteWidget
+                    android:id="@+id/review_vote"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
                 </RelativeLayout>
 
