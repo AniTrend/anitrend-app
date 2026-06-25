@@ -324,11 +324,11 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 bundle.putString(KeyUtil.arg_status, pref.mediaStatus)
                 bundle.putStringArrayList(
                     KeyUtil.arg_genres,
-                    ArrayList(GenreTagUtil.getMappedValues(pref.selectedGenres)),
+                    ArrayList(GenreTagUtil.getMappedValues(pref.selectedGenres).orEmpty()),
                 )
                 bundle.putStringArrayList(
                     KeyUtil.arg_tags,
-                    ArrayList(GenreTagUtil.getMappedValues(pref.selectedTags)),
+                    ArrayList(GenreTagUtil.getMappedValues(pref.selectedTags).orEmpty()),
                 )
             }
             bundle.putString(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)

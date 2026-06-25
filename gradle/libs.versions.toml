@@ -126,10 +126,10 @@ anitrend-android-emoji = { module = "com.github.anitrend.android-emojify:emojify
 anitrend-android-emoji-contract = { module = "com.github.anitrend.android-emojify:contract", version.ref = "anitrend-android-emoji" }
 anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gson", version.ref = "anitrend-android-emoji" }
 anitrend-support-markwon = "com.github.anitrend:support-markdown:0.12.1-alpha01"
-anitrend-retrofit-graphql-runtime = "com.github.AniTrend.retrofit-graphql:runtime:0.12.0"
-anitrend-retrofit-graphql-api = "com.github.AniTrend.retrofit-graphql:api:0.12.0"
-anitrend-retrofit-graphql-android-assets = "com.github.AniTrend.retrofit-graphql:android-assets:0.12.0"
-anitrend-retrofit-graphql-gradle-plugin = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin:0.12.0"
+anitrend-retrofit-graphql-runtime = "com.github.AniTrend.retrofit-graphql:runtime:0.12.1"
+anitrend-retrofit-graphql-api = "com.github.AniTrend.retrofit-graphql:api:0.12.1"
+anitrend-retrofit-graphql-android-assets = "com.github.AniTrend.retrofit-graphql:android-assets:0.12.1"
+anitrend-retrofit-graphql-gradle-plugin = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin:0.12.1"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.1"
 
