@@ -19,6 +19,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Build retrofit-graphql plugin from source
+        run: |
+          git clone --depth 1 --branch 0.12.1 https://github.com/AniTrend/retrofit-graphql.git ../retrofit-graphql
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
