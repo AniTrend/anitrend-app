@@ -75,6 +75,15 @@
                 android:layout_height="wrap_content"
                 tools:text="One of the best Shonene shows you can ever ask for I also want..." />
 
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/review_read_more"
+                android:padding="@dimen/md_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="@string/text_read_more" />
+
         </LinearLayout>
 
         <com.mxt.anitrend.base.custom.view.widget.VoteWidget
@@ -83,15 +92,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/lg_margin"/>
-
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-            android:layout_gravity="bottom|end"
-            android:id="@+id/review_read_more"
-            android:padding="@dimen/lg_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="@string/text_read_more" />
-
     </com.google.android.material.card.MaterialCardView>
