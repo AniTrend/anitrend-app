@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Material3 shape theming.
+    Maps shapeAppearance tokens to corner sizes per M3 spec:
+    Small: 4dp (chips, snackbars, text fields)
+    Medium: 12dp (cards, dialogs, menus)
+    Large: 16dp (sheets, nav drawers, FABs)
+-->
+<resources>
+
+    <style name="ShapeAppearance.AniTrend.Small" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="ShapeAppearance.AniTrend.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.AniTrend.Large" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+</resources>

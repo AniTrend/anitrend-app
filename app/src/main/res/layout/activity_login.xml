@@ -49,7 +49,7 @@
                     android:inAnimation="@android:anim/fade_in"
                     android:outAnimation="@android:anim/fade_out">
 
-                    <androidx.cardview.widget.CardView
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/auth_sign_in"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:text="@string/sign_into_anilist"/>
 
-                    </androidx.cardview.widget.CardView>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <com.github.rahatarmanahmed.cpv.CircularProgressView
                         android:layout_width="@dimen/avatar_ripple_radius"

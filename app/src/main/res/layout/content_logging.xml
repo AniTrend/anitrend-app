@@ -33,7 +33,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 tools:text="Version 1.1.0" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/report_display"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

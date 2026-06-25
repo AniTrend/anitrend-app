@@ -2,19 +2,82 @@
     <!-- Default Application Theme -->
     <style name="AppTheme" parent="AppThemeLight" />
 
-    <!-- Light Application Theme -->
-    <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="cardColor">@color/colorPrimary</item>
-        <item name="drawerColor">@color/colorDark</item>
+    <!--
+        Theme base styles.
+        API-specific attrs (window transitions, status/nav bar colors) live in
+        values-v23/ overrides that extend these base styles.
+        minSdk = 23 so the v23 overrides always apply.
+    -->
 
-        <item name="rootColor">@color/colorRootLight</item>
-        <item name="lineColor">@color/colorLineLight</item>
-        <item name="titleColor">@color/colorTextTitleLight</item>
-        <item name="subtitleColor">@color/colorTextSubtitleLight</item>
-        <item name="contentColor">@color/colorTextContentLight</item>
+    <!-- Light theme shared attributes (no API-specific items) -->
+    <style name="AppThemeLightBase" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- M3 color roles (light scheme) -->
+        <item name="colorPrimary">@color/m3_light_primary</item>
+        <item name="colorOnPrimary">@color/m3_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/m3_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/m3_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/m3_light_secondary</item>
+        <item name="colorOnSecondary">@color/m3_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/m3_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/m3_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/m3_light_tertiary</item>
+        <item name="colorOnTertiary">@color/m3_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/m3_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/m3_light_onTertiaryContainer</item>
+        <item name="colorError">@color/m3_light_error</item>
+        <item name="colorOnError">@color/m3_light_onError</item>
+        <item name="colorErrorContainer">@color/m3_light_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/m3_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/m3_light_surface</item>
+        <item name="colorOnBackground">@color/m3_light_onSurface</item>
+        <item name="colorSurface">@color/m3_light_surface</item>
+        <item name="colorOnSurface">@color/m3_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/m3_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/m3_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/m3_light_outline</item>
+        <item name="colorOutlineVariant">@color/m3_light_outlineVariant</item>
+        <item name="colorPrimaryInverse">@color/m3_light_inversePrimary</item>
+        <item name="colorSurfaceInverse">@color/m3_light_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/m3_light_inverseOnSurface</item>
+        <item name="android:colorBackgroundFloating">@color/m3_light_surfaceContainerLow</item>
+
+        <!-- M3 surface container hierarchy (tonal elevation for cards, dialogs, sheets) -->
+        <item name="colorSurfaceContainerHighest">@color/m3_light_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerHigh">@color/m3_light_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainer">@color/m3_light_surfaceContainer</item>
+        <item name="colorSurfaceContainerLow">@color/m3_light_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/m3_light_surfaceContainerLowest</item>
+
+        <!-- M3 shape theming -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AniTrend.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AniTrend.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AniTrend.Large</item>
+
+        <!-- M3 typography (with condensed font) -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AniTrend.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AniTrend.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AniTrend.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AniTrend.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AniTrend.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AniTrend.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.AniTrend.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.AniTrend.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.AniTrend.LabelSmall</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.AniTrend.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.AniTrend.HeadlineSmall</item>
+
+        <!-- Legacy compat attrs (for AppCompat widgets and external libs) -->
+        <item name="colorPrimaryDark">@color/m3_light_primaryContainer</item>
+        <item name="colorAccent">@color/m3_light_primary</item>
+
+        <!-- Custom theme attributes mapped to M3 color roles -->
+        <item name="cardColor">@color/m3_light_surfaceContainerHighest</item>
+        <item name="drawerColor">@color/m3_light_surfaceContainer</item>
+        <item name="rootColor">@color/m3_light_surface</item>
+        <item name="titleColor">@color/m3_light_onSurface</item>
+        <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
+        <item name="contentColor">@color/m3_light_onSurfaceVariant</item>
 
         <item name="voiceDrawable">@drawable/ic_action_voice_search</item>
         <item name="closeDrawable">@drawable/ic_action_navigation_close</item>
@@ -23,65 +86,79 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="toolbarColor">@style/LightToolbarTheme</item>
-        <item name="android:textViewStyle">@style/TextFamily</item>
 
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="android:popupMenuStyle">@style/PopupThemeLight</item>
+        <item name="android:windowBackground">@color/m3_light_surface</item>
     </style>
 
-    <style name="TextFamily" parent="android:Widget.TextView">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
+    <!-- Dark theme shared attributes (no API-specific items) -->
+    <style name="AppThemeDarkBase" parent="Theme.Material3.Dark.NoActionBar">
 
-    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <!-- M3 color roles (dark scheme) -->
+        <item name="colorPrimary">@color/m3_dark_primary</item>
+        <item name="colorOnPrimary">@color/m3_dark_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/m3_dark_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/m3_dark_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/m3_dark_secondary</item>
+        <item name="colorOnSecondary">@color/m3_dark_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/m3_dark_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/m3_dark_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/m3_dark_tertiary</item>
+        <item name="colorOnTertiary">@color/m3_dark_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/m3_dark_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/m3_dark_onTertiaryContainer</item>
+        <item name="colorError">@color/m3_dark_error</item>
+        <item name="colorOnError">@color/m3_dark_onError</item>
+        <item name="colorErrorContainer">@color/m3_dark_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/m3_dark_onErrorContainer</item>
+        <item name="android:colorBackground">@color/m3_dark_surface</item>
+        <item name="colorOnBackground">@color/m3_dark_onSurface</item>
+        <item name="colorSurface">@color/m3_dark_surface</item>
+        <item name="colorOnSurface">@color/m3_dark_onSurface</item>
+        <item name="colorSurfaceVariant">@color/m3_dark_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/m3_dark_onSurfaceVariant</item>
+        <item name="colorOutline">@color/m3_dark_outline</item>
+        <item name="colorOutlineVariant">@color/m3_dark_outlineVariant</item>
+        <item name="colorPrimaryInverse">@color/m3_dark_inversePrimary</item>
+        <item name="colorSurfaceInverse">@color/m3_dark_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/m3_dark_inverseOnSurface</item>
+        <item name="android:colorBackgroundFloating">@color/m3_dark_surfaceContainerLow</item>
 
-    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+        <!-- M3 surface container hierarchy (tonal elevation for cards, dialogs, sheets) -->
+        <item name="colorSurfaceContainerHighest">@color/m3_dark_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerHigh">@color/m3_dark_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainer">@color/m3_dark_surfaceContainer</item>
+        <item name="colorSurfaceContainerLow">@color/m3_dark_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/m3_dark_surfaceContainerLowest</item>
 
-    <style name="PopupThemeLight" parent="@android:style/Widget.Holo.PopupMenu">
-        <item name="android:popupBackground">?attr/rootColor</item>
-    </style>
+        <!-- M3 shape theming -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AniTrend.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AniTrend.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AniTrend.Large</item>
 
-    <style name="LightToolbarTheme" parent="AppThemeLight">
-        <!-- android:textColorPrimary is the  color of the title text
-             in the Toolbar, in the Theme.AppCompat theme:  -->
-        <item name="android:textColorPrimary">?attr/titleColor</item>
+        <!-- M3 typography (with condensed font) -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AniTrend.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AniTrend.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AniTrend.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AniTrend.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AniTrend.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AniTrend.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.AniTrend.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.AniTrend.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.AniTrend.LabelSmall</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.AniTrend.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.AniTrend.HeadlineSmall</item>
 
-        <!-- android:textColorPrimaryInverse is the  color of the title
-             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
-        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+        <!-- Legacy compat attrs -->
+        <item name="colorPrimaryDark">@color/m3_dark_primaryContainer</item>
+        <item name="colorAccent">@color/m3_dark_primary</item>
 
-        <!-- android:actionMenuTextColor is the color of the text of
-              action (menu) items in the Toolbar, at least in the
-              Theme.AppCompat theme.
-              For some reason, they already get the textColorPrimary
-              when running on API 21, but not on older versions of
-              Android, so this is only necessary to support older
-              Android versions.-->
-        <item name="actionMenuTextColor">?attr/titleColor</item>
-        <!-- android:textColorSecondary is the color of the menu
-             overflow icon (three vertical dots) -->
-        <item name="android:textColorSecondary">?attr/subtitleColor</item>
-
-        <!-- This would set the toolbar's background color,
-              but setting this also changes the popup menu's background,
-              even if we define popupTheme for our <Toolbar> -->
-        <!-- <item name="android:background">@color/color_primary</item> -->
-    </style>
-
-    <!-- Dark Application Theme -->
-    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorDarker</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarker</item>
-        <item name="colorAccent">@color/colorAccentDark</item>
-        <item name="cardColor">@color/colorDarker</item>
-        <item name="drawerColor">@color/colorLight</item>
-
-        <item name="rootColor">@color/colorRootDark</item>
-        <item name="lineColor">@color/colorLineDark</item>
-        <item name="titleColor">@color/colorTextTitleDark</item>
-        <item name="subtitleColor">@color/colorTextSubtitleDark</item>
-        <item name="contentColor">@color/colorTextContentDark</item>
+        <!-- Custom theme attributes mapped to M3 color roles -->
+        <item name="cardColor">@color/m3_dark_surfaceContainerHighest</item>
+        <item name="drawerColor">@color/m3_dark_surfaceContainer</item>
+        <item name="rootColor">@color/m3_dark_surface</item>
+        <item name="titleColor">@color/m3_dark_onSurface</item>
+        <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
+        <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
 
         <item name="voiceDrawable">@drawable/ic_action_voice_search_inverted</item>
         <item name="closeDrawable">@drawable/ic_action_navigation_close_inverted</item>
@@ -90,30 +167,86 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="toolbarColor">@style/DarkToolbarTheme</item>
-        <item name="android:textViewStyle">@style/TextFamily</item>
 
-        <item name="android:windowBackground">@color/colorPrimaryDarker</item>
-        <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
-        <!--actionOverflowMenuStyle controls the state of the overflow popup window-->
-        <!--<item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>-->
+        <item name="android:windowBackground">@color/m3_dark_surface</item>
     </style>
 
-    <!-- AMOLED Dark Application Theme -->
-    <style name="AppThemeBlack" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryBlack</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryBlack</item>
-        <item name="colorAccent">@color/colorAccentDark</item>
 
-        <item name="cardColor">@color/colorPrimaryBlack</item>
-        <item name="drawerColor">@color/colorLight</item>
+    <!-- App bar and popup overlays (migrated to M3) -->
+    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.Material3.Dark" />
+    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
+    <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.Material3.Dark" />
+    <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.Material3" />
 
+    <!-- AMOLED Black theme (API-independent, already dark) -->
+    <style name="AppThemeBlack" parent="Theme.Material3.Dark.NoActionBar">
 
-        <item name="rootColor">@color/colorPrimaryBlack</item>
-        <item name="lineColor">@color/colorPrimaryBlack</item>
-        <item name="titleColor">@color/colorTextTitleDark</item>
-        <item name="subtitleColor">@color/colorTextSubtitleDark</item>
-        <item name="contentColor">@color/colorTextContentDark</item>
+        <!-- M3 color roles (dark scheme with black surface) -->
+        <item name="colorPrimary">@color/m3_dark_primary</item>
+        <item name="colorOnPrimary">@color/m3_dark_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/m3_dark_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/m3_dark_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/m3_dark_secondary</item>
+        <item name="colorOnSecondary">@color/m3_dark_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/m3_dark_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/m3_dark_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/m3_dark_tertiary</item>
+        <item name="colorOnTertiary">@color/m3_dark_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/m3_dark_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/m3_dark_onTertiaryContainer</item>
+        <item name="colorError">@color/m3_dark_error</item>
+        <item name="colorOnError">@color/m3_dark_onError</item>
+        <item name="colorErrorContainer">@color/m3_dark_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/m3_dark_onErrorContainer</item>
+        <item name="android:colorBackground">@color/m3_black_surface</item>
+        <item name="colorOnBackground">@color/m3_dark_onSurface</item>
+        <item name="colorSurface">@color/m3_black_surface</item>
+        <item name="colorOnSurface">@color/m3_dark_onSurface</item>
+        <item name="colorSurfaceVariant">@color/m3_dark_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/m3_dark_onSurfaceVariant</item>
+        <item name="colorOutline">@color/m3_dark_outline</item>
+        <item name="colorOutlineVariant">@color/m3_dark_outlineVariant</item>
+        <item name="colorPrimaryInverse">@color/m3_dark_inversePrimary</item>
+        <item name="colorSurfaceInverse">@color/m3_dark_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/m3_dark_inverseOnSurface</item>
+        <item name="android:colorBackgroundFloating">@color/m3_black_surface</item>
+
+        <!-- M3 surface container hierarchy (all black for AMOLED) -->
+        <item name="colorSurfaceContainerHighest">@color/m3_black_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerHigh">@color/m3_black_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainer">@color/m3_black_surfaceContainer</item>
+        <item name="colorSurfaceContainerLow">@color/m3_black_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/m3_black_surfaceContainerLowest</item>
+
+        <!-- M3 shape theming -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AniTrend.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AniTrend.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AniTrend.Large</item>
+
+        <!-- M3 typography -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AniTrend.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AniTrend.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AniTrend.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AniTrend.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AniTrend.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AniTrend.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.AniTrend.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.AniTrend.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.AniTrend.LabelSmall</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.AniTrend.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.AniTrend.HeadlineSmall</item>
+
+        <!-- Legacy compat attrs -->
+        <item name="colorPrimaryDark">@color/m3_black_surface</item>
+        <item name="colorAccent">@color/m3_dark_primary</item>
+
+        <!-- Custom theme attributes mapped to M3 color roles -->
+        <item name="cardColor">@color/m3_black_surfaceContainerHighest</item>
+        <item name="drawerColor">@color/m3_black_surfaceContainer</item>
+        <item name="rootColor">@color/m3_black_surface</item>
+        <item name="titleColor">@color/m3_dark_onSurface</item>
+        <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
+        <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
 
         <item name="voiceDrawable">@drawable/ic_action_voice_search_inverted</item>
         <item name="closeDrawable">@drawable/ic_action_navigation_close_inverted</item>
@@ -122,103 +255,51 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="toolbarColor">@style/BlackToolbarTheme</item>
-        <item name="android:textViewStyle">@style/TextFamily</item>
 
-        <item name="android:windowBackground">@color/colorPrimaryBlack</item>
-
-        <!--popupMenuStyle doesn't seem to be having any effect-->
-        <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
-
-        <!--actionOverflowMenuStyle controls the state of the overflow popup window-->
+        <item name="android:windowBackground">@color/m3_black_surface</item>
         <item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>
-
     </style>
 
-    <style name="DarkOverflowMenu" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <!--<item name="android:windowDisablePreview">true</item>-->
-        <!--<item name="overlapAnchor">false</item>-->
-        <item name="android:popupBackground">@color/colorBlack</item>
+    <style name="DarkOverflowMenu" parent="Widget.Material3.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/m3_black_surface</item>
     </style>
 
-    <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.AppCompat" />
-
-    <style name="PopupThemeDark" parent="@android:style/Widget.Holo.PopupMenu">
+    <!-- Popup menu styles (Material3 parent) -->
+    <style name="PopupThemeLight" parent="Widget.Material3.PopupMenu.Overflow">
         <item name="android:popupBackground">?attr/rootColor</item>
     </style>
 
-    <style name="DarkToolbarTheme" parent="AppThemeDark">
-        <!-- android:textColorPrimary is the  color of the title text
-             in the Toolbar, in the Theme.AppCompat theme:  -->
+    <style name="PopupThemeDark" parent="Widget.Material3.PopupMenu.Overflow">
+        <item name="android:popupBackground">?attr/rootColor</item>
+    </style>
+
+    <!-- Toolbar child themes -->
+    <style name="LightToolbarTheme" parent="AppThemeLight">
         <item name="android:textColorPrimary">?attr/titleColor</item>
-
-        <!-- android:textColorPrimaryInverse is the  color of the title
-             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
-        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
-
-        <!-- android:actionMenuTextColor is the color of the text of
-              action (menu) items in the Toolbar, at least in the
-              Theme.AppCompat theme.
-              For some reason, they already get the textColorPrimary
-              when running on API 21, but not on older versions of
-              Android, so this is only necessary to support older
-              Android versions.-->
         <item name="actionMenuTextColor">?attr/titleColor</item>
-        <!-- android:textColorSecondary is the color of the menu
-             overflow icon (three vertical dots) -->
         <item name="android:textColorSecondary">?attr/subtitleColor</item>
+    </style>
 
-        <!-- This would set the toolbar's background color,
-              but setting this also changes the popup menu's background,
-              even if we define popupTheme for our <Toolbar> -->
-        <!-- <item name="android:background">@color/color_primary</item> -->
+    <style name="DarkToolbarTheme" parent="AppThemeDark">
+        <item name="android:textColorPrimary">?attr/titleColor</item>
+        <item name="actionMenuTextColor">?attr/titleColor</item>
+        <item name="android:textColorSecondary">?attr/subtitleColor</item>
     </style>
 
     <style name="BlackToolbarTheme" parent="AppThemeBlack">
-        <!-- android:textColorPrimary is the  color of the title text
-             in the Toolbar, in the Theme.AppCompat theme:  -->
         <item name="android:textColorPrimary">?attr/titleColor</item>
-        <item name="android:textColor">@color/colorTextContentDark</item>
-
-        <!-- android:textColorPrimaryInverse is the  color of the title
-             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
-        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
-
-        <!-- android:actionMenuTextColor is the color of the text of
-              action (menu) items in the Toolbar, at least in the
-              Theme.AppCompat theme.
-              For some reason, they already get the textColorPrimary
-              when running on API 21, but not on older versions of
-              Android, so this is only necessary to support older
-              Android versions.-->
         <item name="actionMenuTextColor">?attr/titleColor</item>
-        <!-- android:textColorSecondary is the color of the menu
-             overflow icon (three vertical dots) -->
         <item name="android:textColorSecondary">?attr/subtitleColor</item>
-
-
-        <!-- This would set the toolbar's background color,
-              but setting this also changes the popup menu's background,
-              even if we define popupTheme for our <Toolbar> -->
-        <!--<item name="android:background">@color/colorPrimaryAMODark</item>-->
-
-        <item name="android:colorBackground">@color/colorPrimaryBlack</item>
     </style>
 
-    <style name="SmallRating" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/grey</item>
-        <item name="colorControlActivated">?attr/colorAccent</item>
+    <!-- Rating bar styles (migrated to M3) -->
+    <style name="SmallRating" parent="Theme.Material3.Light">
         <item name="ratingBarStyle">?android:attr/ratingBarStyleSmall</item>
     </style>
 
-    <style name="StandardRating" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/grey</item>
-        <item name="colorControlActivated">?attr/colorAccent</item>
-        <item name="ratingBarStyle">?android:attr/ratingBarStyle</item>
-    </style>
 
-    <style name="AppThemeDark.Translucent">
+    <!-- Translucent window themes (API-independent base attrs) -->
+    <style name="AppThemeDark.TranslucentBase">
         <item name="android:windowBackground">@color/scrim_transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -228,7 +309,7 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="AppThemeLight.Translucent">
+    <style name="AppThemeLight.TranslucentBase">
         <item name="android:windowBackground">@color/scrim_transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -238,24 +319,12 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="MaterialTipButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingTop">14dp</item>
-        <item name="android:paddingBottom">14dp</item>
-        <item name="android:layout_marginBottom">12dp</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
+    <!-- Misc widget styles -->
 
     <style name="ImagePreviewToolbar" parent="AppThemeBlack">
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorPrimary">?colorOnSurface</item>
+        <item name="android:textColor">?colorOnSurface</item>
+        <item name="android:textColorSecondary">?colorOnSurface</item>
     </style>
 
 </resources>

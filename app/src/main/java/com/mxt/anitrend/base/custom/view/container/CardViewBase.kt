@@ -2,7 +2,7 @@ package com.mxt.anitrend.base.custom.view.container
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.util.CompatUtil
@@ -23,7 +23,7 @@ constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : CardView(context, attrs, defStyleAttr),
+) : MaterialCardView(context, attrs, defStyleAttr),
     CustomView {
     init {
         onInit()

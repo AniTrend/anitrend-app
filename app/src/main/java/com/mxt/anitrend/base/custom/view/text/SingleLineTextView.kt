@@ -3,7 +3,7 @@ package com.mxt.anitrend.base.custom.view.text
 import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 
 /**
@@ -16,7 +16,7 @@ constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AppCompatTextView(context, attrs, defStyleAttr),
+) : MaterialTextView(context, attrs, defStyleAttr),
     CustomView {
     init {
         onInit()
