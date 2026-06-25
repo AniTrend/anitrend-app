@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        values-night provides dark theme support for Android 13+ per-app language
+        and system-following night mode. The app currently uses programmatic theme
+        switching via ConfigurationUtil.kt, but this file future-proofs for
+        MODE_NIGHT_FOLLOW_SYSTEM or per-app language features.
+        The definitions mirror AppThemeDark from values-v23/style.xml.
+    -->
+
+    <!-- Dark theme (night qualifier) - mirrors v23 AppThemeDark -->
+    <style name="AppThemeLight" parent="AppThemeDarkBase">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementsUseOverlay">true</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+
+        <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
+    </style>
+
+</resources>

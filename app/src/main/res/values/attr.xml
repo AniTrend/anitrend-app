@@ -4,13 +4,12 @@
     <!-- style -->
     <declare-styleable name="ThemeColor">
         <attr name="rootColor" format="reference|color" />
-        <attr name="lineColor" format="reference|color" />
         <attr name="titleColor" format="reference|color" />
         <attr name="subtitleColor" format="reference|color" />
         <attr name="contentColor" format="reference|color" />
         <attr name="cardColor" format="reference|color" />
         <attr name="drawerColor" format="reference|color" />
-        <attr name="toolbarColor" format="reference|color" />
+        <attr name="toolbarColor" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="MaterialSearch">
