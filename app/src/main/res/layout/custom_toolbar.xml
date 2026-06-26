@@ -9,6 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?colorSurface"
         android:theme="?attr/toolbarColor"
         app:popupTheme="@style/AppThemeLight.PopupOverlay" />
 
