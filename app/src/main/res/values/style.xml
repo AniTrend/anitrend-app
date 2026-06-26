@@ -254,6 +254,10 @@
         <item name="toolbarColor">@style/BlackToolbarTheme</item>
 
         <item name="android:windowBackground">@color/m3_black_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/m3_black_surface</item>
+        <item name="android:navigationBarColor">@color/m3_black_surface</item>
         <item name="actionOverflowMenuStyle">@style/DarkOverflowMenu</item>
     </style>
 
