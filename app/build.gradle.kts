@@ -34,9 +34,6 @@ dependencies {
     /** Charts */
     implementation(libs.mpandroidchart)
 
-    /** Material Search View */
-    implementation(libs.materialsearchview)
-
     /** Event Bus Library */
     implementation(libs.eventbus)
 }

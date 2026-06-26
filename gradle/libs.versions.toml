@@ -43,7 +43,6 @@ tapTarget = "3.3.2"
 photoView = "2.3.0"
 onboarder = "1.0.4"
 mpAndroidChart = "3.1.0"
-materialSearchView = "1.4.20"
 eventBus = "3.3.1"
 hamcrest = "2.2"
 chuncker = "4.3.1"
@@ -61,7 +60,6 @@ eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventBus" }
 hamcrest = "org.hamcrest:hamcrest-library:3.0"
 junit = "junit:junit:4.13.2"
 material-tap-target-prompt = { module = "uk.co.samuelwall:material-tap-target-prompt", version.ref = "tapTarget" }
-materialsearchview = { module = "com.github.ma-myair:MaterialSearchView", version.ref = "materialSearchView" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
 onboarder = { module = "com.codemybrainsout.onboarding:onboarder", version.ref = "onboarder" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }

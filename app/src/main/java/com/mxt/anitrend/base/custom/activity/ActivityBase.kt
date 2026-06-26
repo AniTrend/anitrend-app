@@ -3,12 +3,11 @@ package com.mxt.anitrend.base.custom.activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
-import android.widget.TextView
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -18,10 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.google.android.material.search.SearchBar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
@@ -51,13 +51,11 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     AppCompatActivity(),
     Observer<M?>,
     CommonPresenter.AbstractPresenter<P>,
-    ResponseCallback,
-    MaterialSearchView.SearchViewListener,
-    MaterialSearchView.OnQueryTextListener {
+    ResponseCallback {
 
     protected lateinit var TAG: String
 
-    protected var mSearchView: MaterialSearchView? = null
+    protected var mSearchBar: SearchBar? = null
     private var viewModelRef: ViewModelBase<M>? = null
 
     protected val viewModel: ViewModelBase<M>?
@@ -124,18 +122,36 @@ abstract class ActivityBase<M, P : CommonPresenter> :
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        mSearchView?.apply {
-            setVoiceSearch(true)
-            setOnQueryTextListener(this@ActivityBase)
-            setOnSearchViewListener(this@ActivityBase)
-            setCursorDrawable(R.drawable.material_search_cursor)
+        mSearchBar?.apply {
+            val editText = findViewById<android.widget.EditText>(
+                resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+            )
+            editText?.doOnTextChanged { text, _, _, _ ->
+                presenterRef?.notifyAllListeners(
+                    text?.toString()?.lowercase(Locale.getDefault()).orEmpty(), false
+                )
+            }
+            editText?.setOnEditorActionListener { v, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    val query = v.text.toString()
+                    if (query.isNotEmpty()) {
+                        val intent = Intent(this@ActivityBase, SearchActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.putExtra(KeyUtil.arg_search, query)
+                        CompatUtil.startRevealAnim(this@ActivityBase, this, intent)
+                    }
+                    true
+                } else {
+                    false
+                }
+            }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        val text = mSearchView?.findViewById<TextView>(R.id.searchTextView)?.text
+        val text = mSearchBar?.text
         if (!text.isNullOrEmpty()) {
             outState.putCharSequence(KEY_SEARCHVIEW_QUERY, text)
         }
@@ -145,7 +161,9 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         super.onRestoreInstanceState(savedInstanceState)
 
         if (savedInstanceState.containsKey(KEY_SEARCHVIEW_QUERY)) {
-            onQueryTextChange(savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY).toString())
+            val savedQuery = savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY)
+            mSearchBar?.setText(savedQuery)
+            presenterRef?.notifyAllListeners(savedQuery.toString().lowercase(Locale.getDefault()), false)
         }
     }
 
@@ -335,10 +353,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         if (mFragment?.onBackPress() == true) {
             return
         }
-        if (mSearchView?.isSearchOpen == true) {
-            mSearchView?.closeSearch()
-            return
-        } else if (this is MainActivity && !isClosing) {
+        if (this is MainActivity && !isClosing) {
             NotifyUtil.makeText(
                 this,
                 R.string.text_confirm_exit,
@@ -362,14 +377,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     protected abstract fun makeRequest()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
-            val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-            val searchWord = matches?.firstOrNull()
-            if (!searchWord.isNullOrEmpty() && mSearchView != null) {
-                mSearchView?.setQuery(searchWord, false)
-            }
-            return
-        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -448,48 +455,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         }
     }
 
-    /**
-     * Called when the user submits the query. This could be due to a key press on the
-     * keyboard or due to pressing a submit button.
-     * The listener can override the standard behavior by returning true
-     * to indicate that it has handled the submit request. Otherwise return false to
-     * let the SearchView handle the submission by launching any associated intent.
-     *
-     * @param query the query text that is to be submitted
-     * @return true if the query has been handled by the listener, false to let the
-     * SearchView perform the default action.
-     */
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        if (!query.isNullOrEmpty()) {
-            val intent = Intent(this, SearchActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(KeyUtil.arg_search, query)
-            mSearchView?.let { searchView ->
-                CompatUtil.startRevealAnim(this, searchView, intent)
-            } ?: startActivity(intent)
-            return true
-        }
-        NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show()
-        return false
-    }
-
-    /**
-     * Called when the query text is changed by the user.
-     *
-     * @param newText the new content of the query text field.
-     * @return false if the SearchView should perform the default action of showing any
-     * suggestions if available, true if the action was handled by the listener.
-     */
-    override fun onQueryTextChange(newText: String?): Boolean {
-        presenterRef?.notifyAllListeners(newText?.lowercase(Locale.getDefault()).orEmpty(), false)
-        return false
-    }
-
-    override fun onSearchViewShown() {}
-
-    override fun onSearchViewClosed() {
-        presenterRef?.notifyAllListeners("", false)
-    }
 
     companion object {
         private const val KEY_SEARCHVIEW_QUERY = "SEARCHVIEW_QUERY"

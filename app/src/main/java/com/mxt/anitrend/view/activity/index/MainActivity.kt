@@ -142,7 +142,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mSearchView = binding.appBarMain.customToolbar.searchView
+        mSearchBar = binding.appBarMain.customToolbar.searchBar
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
@@ -168,8 +168,6 @@ class MainActivity :
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        val searchItem = menu.findItem(R.id.action_search)
-        mSearchView?.setMenuItem(searchItem)
         return super.onCreateOptionsMenu(menu)
     }
 
