@@ -353,6 +353,10 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         if (mFragment?.onBackPress() == true) {
             return
         }
+        if (mSearchBar?.visibility == View.VISIBLE) {
+            mSearchBar?.visibility = View.GONE
+            return
+        }
         if (this is MainActivity && !isClosing) {
             NotifyUtil.makeText(
                 this,

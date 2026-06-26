@@ -205,6 +205,17 @@ class MainActivity :
                 startActivity(Intent(this@MainActivity, LoggingActivity::class.java))
                 return true
             }
+            R.id.action_search -> {
+                mSearchBar?.apply {
+                    visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                    if (visibility == View.VISIBLE) {
+                        findViewById<android.widget.EditText>(
+                            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+                        )?.requestFocus()
+                    }
+                }
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
