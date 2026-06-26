@@ -15,7 +15,6 @@ import androidx.annotation.MenuRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.annimon.stream.IntPair
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
@@ -225,7 +224,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         }
     }
 
-    override fun onItemClick(target: View, data: IntPair<M>) = Unit
+    override fun onItemClick(target: View, data: IndexedValue<M>) = Unit
 
-    override fun onItemLongClick(target: View, data: IntPair<M>) = Unit
+    override fun onItemLongClick(target: View, data: IndexedValue<M>) = Unit
 }

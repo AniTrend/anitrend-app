@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.annimon.stream.Stream
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.graphql.generated.CurrentUser
 import com.mxt.anitrend.graphql.generated.UserNotifications
@@ -99,10 +98,8 @@ class ClearNotificationWorker(
             val notifications = unwrapBody<PageContainer<Notification>>(result.body())
             if (notifications != null) {
                 val notificationHistories =
-                    Stream
-                        .of(notifications.pageData)
+                    notifications.pageData
                         .map { notification -> NotificationHistory(notification.id) }
-                        .toList()
 
                 presenter.database
                     .getBoxStore(NotificationHistory::class.java)

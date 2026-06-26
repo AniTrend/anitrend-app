@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
@@ -101,7 +100,7 @@ class CommentFragment :
             object : ItemClickListener<Any> {
                 override fun onItemClick(
                     target: View,
-                    data: IntPair<Any>,
+                    data: IndexedValue<Any>,
                 ) {
                     when (target.id) {
                         R.id.insert_emoticon -> Unit
@@ -125,7 +124,7 @@ class CommentFragment :
 
                 override fun onItemLongClick(
                     target: View,
-                    data: IntPair<Any>,
+                    data: IndexedValue<Any>,
                 ) = Unit
             }
         super.onStart()
@@ -167,11 +166,11 @@ class CommentFragment :
                 object : ItemClickListener<FeedList> {
                     override fun onItemClick(
                         target: View,
-                        data: IntPair<FeedList>,
+                        data: IndexedValue<FeedList>,
                     ) {
                         when (target.id) {
                             R.id.series_image -> {
-                                val media = data.second.media ?: return
+                                val media = data.value.media ?: return
                                 val host = activity ?: return
                                 val intent =
                                     Intent(host, MediaActivity::class.java).apply {
@@ -181,7 +180,7 @@ class CommentFragment :
                                 CompatUtil.startRevealAnim(host, target, intent)
                             }
                             R.id.widget_users -> {
-                                val likes = data.second.likes.orEmpty()
+                                val likes = data.value.likes.orEmpty()
                                 if (likes.isNotEmpty()) {
                                     mBottomSheet =
                                         BottomSheetUsers
@@ -197,7 +196,7 @@ class CommentFragment :
                                 }
                             }
                             R.id.user_avatar -> {
-                                data.second.user?.let { user ->
+                                data.value.user?.let { user ->
                                     val host = activity ?: return
                                     val intent =
                                         Intent(host, ProfileActivity::class.java).apply {
@@ -208,7 +207,7 @@ class CommentFragment :
                                 }
                             }
                             R.id.recipient_avatar -> {
-                                data.second.recipient?.let { recipient ->
+                                data.value.recipient?.let { recipient ->
                                     val host = activity ?: return
                                     val intent =
                                         Intent(host, ProfileActivity::class.java).apply {
@@ -219,7 +218,7 @@ class CommentFragment :
                                 }
                             }
                             R.id.messenger_avatar -> {
-                                data.second.messenger?.let { messenger ->
+                                data.value.messenger?.let { messenger ->
                                     val host = activity ?: return
                                     val intent =
                                         Intent(host, ProfileActivity::class.java).apply {
@@ -234,13 +233,13 @@ class CommentFragment :
 
                     override fun onItemLongClick(
                         target: View,
-                        data: IntPair<FeedList>,
+                        data: IndexedValue<FeedList>,
                     ) {
                         when (target.id) {
                             R.id.series_image -> {
                                 if (presenter.settings.isAuthenticated) {
                                     val host = activity ?: return
-                                    data.second.media?.let { media ->
+                                    data.value.media?.let { media ->
                                         mediaActionUtil =
                                             MediaActionUtil
                                                 .Builder()
@@ -280,17 +279,17 @@ class CommentFragment :
                     }
                     onRefresh()
                 } else {
-                    val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel).orElse(null)
+                    val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
                     if (pair != null) {
-                        val pairIndex = pair.first
+                        val pairIndex = pair.index
                         mAdapter.onItemChanged(consumer.changeModel, pairIndex)
                     }
                 }
             }
             KeyUtil.MUT_DELETE_FEED_REPLY -> {
-                val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel).orElse(null)
+                val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
                 if (pair != null) {
-                    val pairIndex = pair.first
+                    val pairIndex = pair.index
                     mAdapter.onItemRemoved(pairIndex)
                 }
             }
@@ -324,7 +323,7 @@ class CommentFragment :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<FeedReply>,
+        data: IndexedValue<FeedReply>,
     ) {
         val feedList = feedList ?: return
         when (target.id) {
@@ -338,13 +337,13 @@ class CommentFragment :
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
-            R.id.widget_mention -> composerWidget.mentionUserFrom(data.second)
+            R.id.widget_mention -> composerWidget.mentionUserFrom(data.value)
             R.id.widget_edit -> {
-                composerWidget.setModel(data.second, KeyUtil.MUT_SAVE_FEED_REPLY)
-                composerWidget.setText(data.second.reply)
+                composerWidget.setModel(data.value, KeyUtil.MUT_SAVE_FEED_REPLY)
+                composerWidget.setText(data.value.reply)
             }
             R.id.widget_users -> {
-                val likes = data.second.likes.orEmpty()
+                val likes = data.value.likes.orEmpty()
                 if (likes.isNotEmpty()) {
                     mBottomSheet =
                         BottomSheetUsers
@@ -360,7 +359,7 @@ class CommentFragment :
                 }
             }
             R.id.user_avatar -> {
-                data.second.user?.let { user ->
+                data.value.user?.let { user ->
                     val host = activity ?: return
                     val intent =
                         Intent(host, ProfileActivity::class.java).apply {
@@ -375,6 +374,6 @@ class CommentFragment :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<FeedReply>,
+        data: IndexedValue<FeedReply>,
     ) = Unit
 }

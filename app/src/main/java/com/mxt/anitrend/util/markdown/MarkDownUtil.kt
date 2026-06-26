@@ -1,9 +1,9 @@
 package com.mxt.anitrend.util.markdown
 
+import android.content.Context
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import androidx.core.text.HtmlCompat
-import com.github.rjeschke.txtmark.Processor
+import io.noties.markwon.Markwon
 import timber.log.Timber
 
 /**
@@ -11,22 +11,21 @@ import timber.log.Timber
  * Moved markdown processor to global location
  */
 object MarkDownUtil {
-    private fun fromMD(content: String): SpannableStringBuilder = try {
-        val processedText = Processor.process(content)
-        SpannableStringBuilder.valueOf(
-            HtmlCompat.fromHtml(processedText, HtmlCompat.FROM_HTML_MODE_LEGACY),
-        )
+    private fun fromMD(context: Context, content: String): SpannableStringBuilder = try {
+        val rendered = Markwon.create(context).toMarkdown(content)
+        SpannableStringBuilder.valueOf(rendered)
     } catch (e: Exception) {
         Timber.e(e)
         SpannableStringBuilder("Unable to process content")
     }
 
-    fun convert(input: String?): Spanned {
+    fun convert(context: Context, input: String?): Spanned {
         var result =
             when (input.isNullOrBlank()) {
-                true -> fromMD("<b>No content available</b>")
+                true -> fromMD(context, "<b>No content available</b>")
                 else ->
                     fromMD(
+                        context,
                         RegexUtil.findUserTags(
                             input,
                         ),

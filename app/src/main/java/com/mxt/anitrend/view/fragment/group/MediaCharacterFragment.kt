@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.fragment.group
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -91,11 +90,11 @@ class MediaCharacterFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
 
     override fun onItemClick(
         target: View,
-        data: IntPair<RecyclerItem>,
+        data: IndexedValue<RecyclerItem>,
     ) {
         when (target.id) {
             R.id.container -> {
-                val character = data.second as? CharacterBase ?: return
+                val character = data.value as? CharacterBase ?: return
                 val host = activity ?: return
                 val intent =
                     Intent(host, CharacterActivity::class.java).apply {
@@ -108,6 +107,6 @@ class MediaCharacterFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<RecyclerItem>,
+        data: IndexedValue<RecyclerItem>,
     ) = Unit
 }

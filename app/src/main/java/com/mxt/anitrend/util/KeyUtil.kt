@@ -730,14 +730,14 @@ object KeyUtil {
 
     // ------------------------------------------------------------------------------------
 
-    /** Alerter Durations */
+    /** Notification Durations */
     const val DURATION_SHORT = 2000L
     const val DURATION_MEDIUM = 3500L
     const val DURATION_LONG = 6500L
 
     @LongDef(DURATION_SHORT, DURATION_MEDIUM, DURATION_LONG)
     @Retention(AnnotationRetention.SOURCE)
-    annotation class AlerterDuration
+    annotation class NotificationDuration
 
     const val SHORTCUT_SEARCH = 0
     const val SHORTCUT_NOTIFICATION = 1

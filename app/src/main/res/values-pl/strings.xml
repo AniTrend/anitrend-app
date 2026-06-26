@@ -363,8 +363,8 @@
     <string name="text_notification">%d Powiadomienie</string>
     <string name="text_notifications">%d Powiadomienia</string>
 
-    <string name="alerter_notification_title">Dostępne Powiadomienia</string>
-    <string name="alerter_notification_text">Masz jedno lub więcej nieprzeczytanych powiadomień!</string>
+    <string name="notification_alert_title">Dostępne Powiadomienia</string>
+    <string name="notification_alert_text">Masz jedno lub więcej nieprzeczytanych powiadomień!</string>
 
     <string name="title_new_features">Nowe funkcje!</string>
 

@@ -16,8 +16,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/toast_icon"
-                    android:layout_width="@dimen/alerter_text_medium"
-                    android:layout_height="@dimen/alerter_text_medium"
+                    android:layout_width="@dimen/xl_margin"
+                    android:layout_height="@dimen/xl_margin"
                     tools:src="@drawable/ic_close_grey_600_24dp" />
 
                 <androidx.legacy.widget.Space

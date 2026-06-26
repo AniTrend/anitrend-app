@@ -1,11 +1,12 @@
 package com.mxt.anitrend.util.media
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
-import com.afollestad.materialdialogs.DialogAction
-import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage
@@ -50,21 +51,27 @@ internal object MediaDialogUtil {
 
         val isNewEntry = mediaBase.mediaListEntry == null
 
-        val materialBuilder =
+        val dialog =
             createSeriesManageDialog(
                 context,
                 isNewEntry,
                 MediaUtil.getMediaTitle(mediaBase),
             )
-        materialBuilder.customView(seriesManageBase, true)
-        materialBuilder.onAny { dialog, which ->
-            when (which) {
-                DialogAction.POSITIVE -> onDialogPositive(context, seriesManageBase, dialog)
-                DialogAction.NEUTRAL -> dialog.dismiss()
-                DialogAction.NEGATIVE -> onDialogNegative(context, seriesManageBase, dialog)
-            }
-        }
-        materialBuilder.show()
+                .setView(seriesManageBase)
+                .setPositiveButton(
+                    if (isNewEntry) R.string.Add else R.string.Update,
+                ) { d, _ ->
+                    onDialogPositive(context, seriesManageBase, d as AlertDialog)
+                }
+                .setNeutralButton(R.string.Cancel) { d, _ -> d.dismiss() }
+                .apply {
+                    if (!isNewEntry) {
+                        setNegativeButton(R.string.Delete) { d, _ ->
+                            onDialogNegative(context, seriesManageBase, d as AlertDialog)
+                        }
+                    }
+                }
+                .show()
     }
 
     /**
@@ -73,7 +80,7 @@ internal object MediaDialogUtil {
     private fun onDialogPositive(
         context: Context,
         seriesManageBase: CustomSeriesManageBase,
-        dialog: MaterialDialog,
+        dialog: AlertDialog,
     ) {
         dialog.dismiss()
 
@@ -152,7 +159,7 @@ internal object MediaDialogUtil {
     private fun onDialogNegative(
         context: Context,
         seriesManageBase: CustomSeriesManageBase,
-        dialog: MaterialDialog,
+        dialog: AlertDialog,
     ) {
         dialog.dismiss()
 
@@ -249,17 +256,17 @@ internal object MediaDialogUtil {
         context: Context,
         isNewEntry: Boolean,
         title: String,
-    ): MaterialDialog.Builder {
+    ): MaterialAlertDialogBuilder {
         val materialBuilder =
             DialogUtil
                 .createDefaultDialog(context)
-                .icon(
+                .setIcon(
                     CompatUtil.getDrawableTintAttr(
                         context,
                         if (isNewEntry) R.drawable.ic_fiber_new_white_24dp else R.drawable.ic_border_color_white_24dp,
                         R.attr.colorAccent,
                     ),
-                ).title(
+                ).setTitle(
                     HtmlCompat.fromHtml(
                         context.getString(
                             if (isNewEntry) R.string.dialog_add_title else R.string.dialog_edit_title,
@@ -267,12 +274,7 @@ internal object MediaDialogUtil {
                         ),
                         HtmlCompat.FROM_HTML_MODE_LEGACY,
                     ),
-                ).positiveText(if (isNewEntry) R.string.Add else R.string.Update)
-                .neutralText(R.string.Cancel)
-                .autoDismiss(false)
-        if (!isNewEntry) {
-            materialBuilder.negativeText(R.string.Delete)
-        }
+                )
         return materialBuilder
     }
 }

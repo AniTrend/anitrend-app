@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -119,7 +118,7 @@ class BottomSheetComposer :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<Any>,
+        data: IndexedValue<Any>,
     ) {
         when (target.id) {
             R.id.insert_emoticon -> Unit
@@ -145,7 +144,7 @@ class BottomSheetComposer :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<Any>,
+        data: IndexedValue<Any>,
     ) = Unit
 
     class Builder : BottomSheetBuilder() {

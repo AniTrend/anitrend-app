@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.fragment.detail
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -67,11 +66,11 @@ class MessageFeedFragment : FeedListFragment() {
 
     override fun onItemClick(
         target: View,
-        data: IntPair<FeedList>,
+        data: IndexedValue<FeedList>,
     ) {
         when (target.id) {
             R.id.messenger_avatar -> {
-                data.second.messenger?.let { messenger ->
+                data.value.messenger?.let { messenger ->
                     val host = activity ?: return
                     val intent =
                         Intent(host, ProfileActivity::class.java).apply {
@@ -82,7 +81,7 @@ class MessageFeedFragment : FeedListFragment() {
                 }
             }
             R.id.recipient_avatar -> {
-                data.second.recipient?.let { recipient ->
+                data.value.recipient?.let { recipient ->
                     val host = activity ?: return
                     val intent =
                         Intent(host, ProfileActivity::class.java).apply {
@@ -93,11 +92,11 @@ class MessageFeedFragment : FeedListFragment() {
                 }
             }
             R.id.widget_edit -> {
-                val recipient = data.second.recipient ?: return
+                val recipient = data.value.recipient ?: return
                 mBottomSheet =
                     BottomSheetComposer
                         .Builder()
-                        .setUserActivity(data.second)
+                        .setUserActivity(data.value)
                         .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
                         .setUserModel(recipient)
                         .setTitle(R.string.edit_status_title)

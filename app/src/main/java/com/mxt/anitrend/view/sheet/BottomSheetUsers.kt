@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.annimon.stream.IntPair
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.mxt.anitrend.R
@@ -91,7 +90,7 @@ class BottomSheetUsers :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<UserBase>,
+        data: IndexedValue<UserBase>,
     ) {
         when (target.id) {
             R.id.container -> {
@@ -99,7 +98,7 @@ class BottomSheetUsers :
                 val intent =
                     Intent(host, ProfileActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, data.second.id)
+                        putExtra(KeyUtil.arg_id, data.value.id)
                     }
                 host.startActivity(intent)
             }
@@ -108,7 +107,7 @@ class BottomSheetUsers :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<UserBase>,
+        data: IndexedValue<UserBase>,
     ) = Unit
 
     class Builder : BottomSheetBuilder() {

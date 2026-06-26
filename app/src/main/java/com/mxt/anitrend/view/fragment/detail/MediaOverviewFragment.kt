@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter
 import com.mxt.anitrend.adapter.recycler.detail.TagAdapter
@@ -135,19 +133,19 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
             genreAdapter = GenreAdapter(ctx)
             genreAdapter?.onItemsInserted(presenter.buildGenres(model))
             genreAdapter?.setClickListener(object : ItemClickListener<Genre> {
-                override fun onItemClick(target: View, data: IntPair<Genre>) {
+                override fun onItemClick(target: View, data: IndexedValue<Genre>) {
                     when (target.id) {
                         R.id.container -> {
                             val host = activity ?: return
                             val args = Bundle()
                             val intent = Intent(host, MediaBrowseActivity::class.java)
                             args.putString(KeyUtil.arg_mediaType, mediaType)
-                            args.putStringArrayList(KeyUtil.arg_genres, arrayListOf(data.second.genre))
+                            args.putStringArrayList(KeyUtil.arg_genres, arrayListOf(data.value.genre))
                             args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                             if (!presenter.settings.displayAdultContent) {
                                 args.putBoolean(KeyUtil.arg_isAdult, false)
                             }
-                            args.putString(KeyUtil.arg_activity_tag, data.second.genre)
+                            args.putString(KeyUtil.arg_activity_tag, data.value.genre)
                             args.putParcelable(
                                 KeyUtil.arg_media_util,
                                 MediaBrowseUtil()
@@ -161,7 +159,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                     }
                 }
 
-                override fun onItemLongClick(target: View, data: IntPair<Genre>) {
+                override fun onItemLongClick(target: View, data: IndexedValue<Genre>) {
                 }
             })
         }
@@ -171,46 +169,44 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                 tagAdapter = TagAdapter(ctx)
                 tagAdapter?.onItemsInserted(it)
                 tagAdapter?.setClickListener(object : ItemClickListener<MediaTag> {
-                    override fun onItemClick(target: View, data: IntPair<MediaTag>) {
+                    override fun onItemClick(target: View, data: IndexedValue<MediaTag>) {
                         when (target.id) {
                             R.id.container -> activity?.let { host ->
                                 DialogUtil.createTagMessage(
                                     host,
-                                    data.second.name.orEmpty(),
-                                    data.second.description.orEmpty(),
-                                    data.second.isMediaSpoiler,
+                                    data.value.name.orEmpty(),
+                                    data.value.description.orEmpty(),
+                                    data.value.isMediaSpoiler,
                                     R.string.More,
                                     R.string.Close,
-                                ) { _, which ->
-                                    if (which == DialogAction.POSITIVE) {
-                                        val args = Bundle()
-                                        val intent = Intent(host, MediaBrowseActivity::class.java)
-                                        args.putString(KeyUtil.arg_mediaType, mediaType)
-                                        args.putStringArrayList(
-                                            KeyUtil.arg_tags,
-                                            arrayListOf(data.second.name.orEmpty()),
-                                        )
-                                        args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-                                        if (!presenter.settings.displayAdultContent) {
-                                            args.putBoolean(KeyUtil.arg_isAdult, false)
-                                        }
-                                        args.putString(KeyUtil.arg_activity_tag, data.second.name.orEmpty())
-                                        args.putParcelable(
-                                            KeyUtil.arg_media_util,
-                                            MediaBrowseUtil()
-                                                .setCompactType(true)
-                                                .setBasicFilter(true)
-                                                .setFilterEnabled(true),
-                                        )
-                                        intent.putExtras(args)
-                                        startActivity(intent)
+                                ) { _, _ ->
+                                    val args = Bundle()
+                                    val intent = Intent(host, MediaBrowseActivity::class.java)
+                                    args.putString(KeyUtil.arg_mediaType, mediaType)
+                                    args.putStringArrayList(
+                                        KeyUtil.arg_tags,
+                                        arrayListOf(data.value.name.orEmpty()),
+                                    )
+                                    args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                                    if (!presenter.settings.displayAdultContent) {
+                                        args.putBoolean(KeyUtil.arg_isAdult, false)
                                     }
+                                    args.putString(KeyUtil.arg_activity_tag, data.value.name.orEmpty())
+                                    args.putParcelable(
+                                        KeyUtil.arg_media_util,
+                                        MediaBrowseUtil()
+                                            .setCompactType(true)
+                                            .setBasicFilter(true)
+                                            .setFilterEnabled(true),
+                                    )
+                                    intent.putExtras(args)
+                                    startActivity(intent)
                                 }
                             }
                         }
                     }
 
-                    override fun onItemLongClick(target: View, data: IntPair<MediaTag>) {
+                    override fun onItemLongClick(target: View, data: IndexedValue<MediaTag>) {
                     }
                 })
             }

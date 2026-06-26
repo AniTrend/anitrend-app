@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -98,15 +97,15 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
 
     override fun onItemClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.id)
-                        putExtra(KeyUtil.arg_mediaType, data.second.type)
+                        putExtra(KeyUtil.arg_id, data.value.id)
+                        putExtra(KeyUtil.arg_mediaType, data.value.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -115,7 +114,7 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
@@ -124,7 +123,7 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.id)
+                            .setId(data.value.id)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

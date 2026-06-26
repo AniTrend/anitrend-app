@@ -79,20 +79,18 @@ class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
 
     private fun onMigrationFailed() {
         val drawable = getCompatTintedDrawable(R.drawable.ic_system_update_grey_600_24dp)
-        val dialog =
+        val builder =
             DialogUtil
                 .createDefaultDialog(this)
-                .autoDismiss(false)
-                .positiveText(R.string.Ok)
-                .title(R.string.title_migration_failed)
-                .content(R.string.text_migration_failed)
-                .onAny { dialog, _ ->
-                    dialog.dismiss()
+                .setTitle(R.string.title_migration_failed)
+                .setMessage(R.string.text_migration_failed)
+                .setPositiveButton(R.string.Ok) { d, _ ->
+                    d.dismiss()
                     finish()
                 }
         if (drawable != null) {
-            dialog.icon(drawable)
+            builder.setIcon(drawable)
         }
-        dialog.show()
+        builder.show()
     }
 }

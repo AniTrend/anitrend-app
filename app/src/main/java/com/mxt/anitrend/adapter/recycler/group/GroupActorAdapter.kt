@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import com.annimon.stream.IntPair
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.GroupMediaViewHolder
@@ -31,12 +30,12 @@ class GroupActorAdapter(
         object : ItemClickListener<RecyclerItem> {
             override fun onItemClick(
                 target: View,
-                data: IntPair<RecyclerItem>,
+                data: IndexedValue<RecyclerItem>,
             ) = Unit
 
             override fun onItemLongClick(
                 target: View,
-                data: IntPair<RecyclerItem>,
+                data: IndexedValue<RecyclerItem>,
             ) = Unit
         }
 

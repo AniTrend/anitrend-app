@@ -20,12 +20,11 @@
             android:layout_height="@dimen/avatar_ripple_radius"
             tools:src="@drawable/ic_favorite_white_24dp" />
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="@dimen/widget_spinner_compact_size"
             android:layout_height="@dimen/widget_spinner_compact_size"
             android:layout_gravity="center"
-            app:cpv_animAutostart="true"
-            app:cpv_color="?colorAccent"
-            app:cpv_indeterminate="true" />
+            android:indeterminate="true"
+            app:indicatorColor="?colorAccent" />
 
     </ViewFlipper>

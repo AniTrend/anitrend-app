@@ -341,8 +341,8 @@
     <string name="text_notification">%d Notificatie</string>
     <string name="text_notifications">%d Notificaties</string>
 
-    <string name="alerter_notification_title">Notificaties beschikbaar</string>
-    <string name="alerter_notification_text">Je hebt één of meer ongelezen notificaties!</string>
+    <string name="notification_alert_title">Notificaties beschikbaar</string>
+    <string name="notification_alert_text">Je hebt één of meer ongelezen notificaties!</string>
 
     <string name="title_new_features">Nieuwe Functies!</string>
 

@@ -559,8 +559,8 @@ class MainActivity :
         ) {
             NotifyUtil.createAlerter(
                 this,
-                R.string.alerter_notification_title,
-                R.string.alerter_notification_text,
+                R.string.notification_alert_title,
+                R.string.notification_alert_text,
                 R.drawable.ic_notifications_active_white_24dp,
                 R.color.colorAccent,
             )

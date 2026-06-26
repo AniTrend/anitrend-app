@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.annimon.stream.IntPair
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.mxt.anitrend.R
@@ -119,7 +118,7 @@ class BottomSheetGiphy :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<Giphy>,
+        data: IndexedValue<Giphy>,
     ) {
         presenter.notifyAllListeners(data, false)
         closeDialog()
@@ -127,11 +126,11 @@ class BottomSheetGiphy :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<Giphy>,
+        data: IndexedValue<Giphy>,
     ) {
         activity?.let { host ->
             val index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE
-            val giphySample: Gif? = data.second.images[index]
+            val giphySample: Gif? = data.value.images[index]
             val intent =
                 Intent(host, GiphyPreviewActivity::class.java).apply {
                     putExtra(KeyUtil.arg_model, giphySample?.url)

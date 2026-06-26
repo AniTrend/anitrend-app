@@ -1,8 +1,6 @@
 package com.mxt.anitrend.util.date
 
 import androidx.annotation.IntRange
-import com.annimon.stream.Collectors
-import com.annimon.stream.IntStream
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.util.CompatUtil
@@ -274,11 +272,7 @@ object DateUtil {
      * @param start Starting year
      * @param endDelta End difference plus or minus the current year
      */
-    fun getYearRanges(start: Int, endDelta: Int): List<Int> = IntStream.rangeClosed(
-        start,
-        getCurrentYear(endDelta),
-    ).boxed().collect(Collectors.toList())
-        .orEmpty()
+    fun getYearRanges(start: Int, endDelta: Int): List<Int> = (start..getCurrentYear(endDelta)).toList()
 
     /**
      * Checks if the time given has a difference greater than or equal to the target time

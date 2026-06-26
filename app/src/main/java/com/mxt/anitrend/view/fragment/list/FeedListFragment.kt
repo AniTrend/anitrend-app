@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
@@ -131,17 +130,17 @@ open class FeedListFragment :
                     swipeRefreshLayout.setRefreshing(true)
                     onRefresh()
                 } else {
-                    val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel).orElse(null)
+                    val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
                     if (pair != null) {
-                        val pairIndex = pair.first
+                        val pairIndex = pair.index
                         mAdapter.onItemChanged(consumer.changeModel, pairIndex)
                     }
                 }
             }
             KeyUtil.MUT_DELETE_FEED -> {
-                val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel).orElse(null)
+                val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
                 if (pair != null) {
-                    val pairIndex = pair.first
+                    val pairIndex = pair.index
                     mAdapter.onItemRemoved(pairIndex)
                 }
             }
@@ -168,11 +167,11 @@ open class FeedListFragment :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<FeedList>,
+        data: IndexedValue<FeedList>,
     ) {
         when (target.id) {
             R.id.series_image -> {
-                val series = data.second.media ?: return
+                val series = data.value.media ?: return
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
@@ -185,7 +184,7 @@ open class FeedListFragment :
                 val host = activity ?: return
                 val intent =
                     Intent(host, CommentActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_model, data.second)
+                        putExtra(KeyUtil.arg_model, data.value)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -193,14 +192,14 @@ open class FeedListFragment :
                 mBottomSheet =
                     BottomSheetComposer
                         .Builder()
-                        .setUserActivity(data.second)
+                        .setUserActivity(data.value)
                         .setRequestMode(KeyUtil.MUT_SAVE_TEXT_FEED)
                         .setTitle(R.string.edit_status_title)
                         .build()
                 showBottomSheet()
             }
             R.id.widget_users -> {
-                val likes = data.second.likes.orEmpty()
+                val likes = data.value.likes.orEmpty()
                 if (likes.isNotEmpty()) {
                     mBottomSheet =
                         BottomSheetUsers
@@ -216,7 +215,7 @@ open class FeedListFragment :
                 }
             }
             R.id.user_avatar -> {
-                val user = data.second.user
+                val user = data.value.user
                 if (user != null) {
                     val host = activity ?: return
                     val intent =
@@ -232,13 +231,13 @@ open class FeedListFragment :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<FeedList>,
+        data: IndexedValue<FeedList>,
     ) {
         when (target.id) {
             R.id.series_image -> {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
-                    data.second.media?.let { media ->
+                    data.value.media?.let { media ->
                         mediaActionUtil =
                             MediaActionUtil
                                 .Builder()

@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
@@ -110,32 +109,19 @@ constructor(
             context,
             R.string.dialog_title_delete_activity,
             R.string.dialog_message_delete_activity,
-        ) { _, which ->
-            when (which) {
-                DialogAction.POSITIVE -> {
-                    if (view.id == R.id.widget_flipper) {
-                        if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
-                            binding.widgetFlipper.showNext()
-                            presenter?.requestData(requestType, context, this)
-                        } else {
-                            NotifyUtil
-                                .makeText(
-                                    context,
-                                    R.string.busy_please_wait,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                    }
-                }
-                DialogAction.NEGATIVE -> {
+        ) { _, _ ->
+            if (view.id == R.id.widget_flipper) {
+                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                    binding.widgetFlipper.showNext()
+                    presenter?.requestData(requestType, context, this)
+                } else {
                     NotifyUtil
                         .makeText(
                             context,
-                            R.string.canceled_by_user,
+                            R.string.busy_please_wait,
                             Toast.LENGTH_SHORT,
                         ).show()
                 }
-                else -> Unit
             }
         }
     }

@@ -97,9 +97,8 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
         private fun requireRestartNotice(fragmentActivity: FragmentActivity) {
             DialogUtil
                 .createDefaultDialog(fragmentActivity)
-                .autoDismiss(true)
-                .positiveText(R.string.Ok)
-                .content(R.string.text_application_restart_required)
+                .setPositiveButton(R.string.Ok) { d, _ -> d.dismiss() }
+                .setMessage(R.string.text_application_restart_required)
                 .show()
         }
 

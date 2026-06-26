@@ -1,7 +1,6 @@
 package com.mxt.anitrend.adapter.recycler.shared
 
 import android.view.View
-import com.annimon.stream.IntPair
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
@@ -50,16 +49,16 @@ class GroupMediaViewHolder(
     override fun onClick(v: View) {
         val pair = isValidIndexPair()
         val model = boundModel
-        if (model != null && isClickable(model) && pair.second) {
-            clickListener.onItemClick(v, IntPair(pair.first, model))
+        if (model != null && isClickable(model) && pair.value) {
+            clickListener.onItemClick(v, IndexedValue(pair.index, model))
         }
     }
 
     override fun onLongClick(v: View): Boolean {
         val pair = isValidIndexPair()
         val model = boundModel
-        if (model != null && isLongClickable(model) && pair.second) {
-            clickListener.onItemLongClick(v, IntPair(pair.first, model))
+        if (model != null && isLongClickable(model) && pair.value) {
+            clickListener.onItemLongClick(v, IndexedValue(pair.index, model))
             return true
         }
         return false

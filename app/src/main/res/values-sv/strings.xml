@@ -362,8 +362,8 @@
     <string name="text_notification">%d Underrättelse</string>
     <string name="text_notifications">%d Anmälningar</string>
 
-    <string name="alerter_notification_title">Meddelanden tillgängliga</string>
-    <string name="alerter_notification_text">Du har en eller flera olästa anmälningar!</string>
+    <string name="notification_alert_title">Meddelanden tillgängliga</string>
+    <string name="notification_alert_text">Du har en eller flera olästa anmälningar!</string>
 
     <string name="title_new_features">Nya egenskaper!</string>
 

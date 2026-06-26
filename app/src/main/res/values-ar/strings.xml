@@ -367,8 +367,8 @@
     <string name="text_notification">%d إشعار</string>
     <string name="text_notifications">%dإشعارات</string>
 
-    <string name="alerter_notification_title">إشعارات متوفرة</string>
-    <string name="alerter_notification_text">لديك إشعار أو اكثر غير مقروء</string>
+    <string name="notification_alert_title">إشعارات متوفرة</string>
+    <string name="notification_alert_text">لديك إشعار أو اكثر غير مقروء</string>
 
     <string name="title_new_features">خواص جديدة!</string>
 
