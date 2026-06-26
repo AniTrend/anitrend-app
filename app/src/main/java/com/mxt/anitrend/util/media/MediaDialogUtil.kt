@@ -48,6 +48,8 @@ internal object MediaDialogUtil {
         val seriesType = mediaBase.type ?: KeyUtil.ANIME
         val seriesManageBase = buildManagerType(context, seriesType)
         seriesManageBase.setModel(mediaBase)
+        val contentPadding = CompatUtil.dipToPx(16f)
+        seriesManageBase.setPadding(contentPadding, contentPadding, contentPadding, contentPadding)
 
         val isNewEntry = mediaBase.mediaListEntry == null
 
