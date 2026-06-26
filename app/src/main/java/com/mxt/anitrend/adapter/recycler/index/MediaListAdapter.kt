@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.LinearLayout.LayoutParams
 import androidx.viewbinding.ViewBinding
-import com.annimon.stream.Stream
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
@@ -62,11 +61,10 @@ class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(contex
                     results.values = ArrayList<MediaList>(clone.orEmpty())
                     clone = null
                 } else {
-                    results.values = Stream.of<MediaList>(clone.orEmpty())
+                    results.values = clone.orEmpty()
                         .filter { c: MediaList ->
                             isFilterMatch(c, filter)
                         }
-                        .toList()
                 }
                 return results
             }

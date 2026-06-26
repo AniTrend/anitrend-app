@@ -7,8 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -21,6 +19,7 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
@@ -74,11 +73,9 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(mediaSortTypes, presenter.settings.mediaSort),
                     CompatUtil.capitalizeWords(mediaSortTypes),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaSort =
-                            mediaSortTypes.getOrNull(dialog.selectedIndex)
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaSort =
+                        mediaSortTypes.getOrNull(dialog.selectedIndex)
                 }
                 return true
             }
@@ -89,12 +86,10 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }
@@ -142,15 +137,15 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
 
     override fun onItemClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.id)
-                        putExtra(KeyUtil.arg_mediaType, data.second.type)
+                        putExtra(KeyUtil.arg_id, data.value.id)
+                        putExtra(KeyUtil.arg_mediaType, data.value.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -159,7 +154,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
@@ -168,7 +163,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.id)
+                            .setId(data.value.id)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

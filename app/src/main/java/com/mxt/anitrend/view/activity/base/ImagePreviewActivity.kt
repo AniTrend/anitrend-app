@@ -13,7 +13,6 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.afollestad.materialdialogs.DialogAction
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
@@ -93,23 +92,12 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                         this,
                         R.string.title_permission_write,
                         R.string.text_permission_write,
-                    ) { _, which ->
-                        when (which) {
-                            DialogAction.POSITIVE ->
-                                ActivityCompat.requestPermissions(
-                                    this,
-                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                    REQUEST_PERMISSION,
-                                )
-                            DialogAction.NEGATIVE ->
-                                NotifyUtil
-                                    .makeText(
-                                        this,
-                                        R.string.canceled_by_user,
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            else -> Unit
-                        }
+                    ) { _, _ ->
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            REQUEST_PERMISSION,
+                        )
                     }
                 }
                 return true

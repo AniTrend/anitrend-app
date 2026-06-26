@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
@@ -218,7 +217,7 @@ class ComposerWidget :
 
     override fun onClick(view: View) {
         if (itemClickListener != null) {
-            itemClickListener?.onItemClick(view, IntPair(0, view as Any))
+            itemClickListener?.onItemClick(view, IndexedValue(0, view as Any))
             when (view.id) {
                 R.id.widget_flipper -> if (!binding.comment.isEmpty) {
                     startRequestData()
@@ -300,11 +299,11 @@ class ComposerWidget :
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onGiphyClicked(pair: IntPair<Giphy>) {
+    fun onGiphyClicked(pair: IndexedValue<Giphy>) {
         val index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE
         val editor = binding.comment
         val start = editor.selectionStart
-        pair.second.images[index]?.apply {
+        pair.value.images[index]?.apply {
             editor.editableText.insert(start, MarkDownUtil.convertImage(url.orEmpty()))
         }
     }

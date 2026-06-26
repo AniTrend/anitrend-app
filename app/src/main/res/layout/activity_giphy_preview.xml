@@ -13,14 +13,13 @@
         android:layout_height="match_parent"
         tools:src="@drawable/reg_bg" />
 
-    <com.github.rahatarmanahmed.cpv.CircularProgressView
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/preview_progress"
         android:layout_width="@dimen/avatar_size"
         android:layout_height="@dimen/avatar_size"
         android:layout_gravity="center"
-        app:cpv_animAutostart="true"
-        app:cpv_color="?colorAccent"
-        app:cpv_indeterminate="true"/>
+        android:indeterminate="true"
+        app:indicatorColor="?colorAccent"/>
 
     <com.mxt.anitrend.base.custom.view.image.WideImageView
         android:id="@+id/preview_credits"

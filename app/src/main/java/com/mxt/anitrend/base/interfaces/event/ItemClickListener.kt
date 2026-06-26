@@ -1,8 +1,6 @@
 package com.mxt.anitrend.base.interfaces.event
 
 import android.view.View
-import com.annimon.stream.IntPair
-
 /**
  * Created by max on 2017/11/15.
  * a click listener for view holders
@@ -17,7 +15,7 @@ interface ItemClickListener<T> {
      */
     fun onItemClick(
         target: View,
-        data: IntPair<T>,
+        data: IndexedValue<T>,
     )
 
     /**
@@ -29,6 +27,6 @@ interface ItemClickListener<T> {
      */
     fun onItemLongClick(
         target: View,
-        data: IntPair<T>,
+        data: IndexedValue<T>,
     )
 }

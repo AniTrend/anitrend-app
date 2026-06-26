@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.adapter.recycler.detail.ImagePreviewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
@@ -158,10 +157,10 @@ constructor(
 
     override fun onItemClick(
         target: View,
-        data: IntPair<String>,
+        data: IndexedValue<String>,
     ) {
-        val type = contentTypes?.getOrNull(data.first)?.lowercase() ?: return
-        val content = data.second
+        val type = contentTypes?.getOrNull(data.index)?.lowercase() ?: return
+        val content = data.value
         when (type) {
             RegexUtil.KEY_IMG -> {
                 val intent =
@@ -195,6 +194,6 @@ constructor(
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<String>,
+        data: IndexedValue<String>,
     ) = Unit
 }

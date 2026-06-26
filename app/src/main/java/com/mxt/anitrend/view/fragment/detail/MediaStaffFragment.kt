@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.fragment.detail
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupStaffRoleAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -91,11 +90,11 @@ class MediaStaffFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Ed
 
     override fun onItemClick(
         target: View,
-        data: IntPair<RecyclerItem>,
+        data: IndexedValue<RecyclerItem>,
     ) {
         when (target.id) {
             R.id.container -> {
-                val staff = data.second as? StaffBase ?: return
+                val staff = data.value as? StaffBase ?: return
                 val host = activity ?: return
                 val intent =
                     Intent(host, StaffActivity::class.java).apply {
@@ -108,6 +107,6 @@ class MediaStaffFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Ed
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<RecyclerItem>,
+        data: IndexedValue<RecyclerItem>,
     ) = Unit
 }

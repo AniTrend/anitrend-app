@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -89,11 +88,11 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePrese
 
     override fun onItemClick(
         target: View,
-        data: IntPair<Review>,
+        data: IndexedValue<Review>,
     ) {
         when (target.id) {
             R.id.series_image -> {
-                val mediaBase: MediaBase = data.second.media
+                val mediaBase: MediaBase = data.value.media
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
@@ -108,7 +107,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePrese
                     val intent =
                         Intent(host, ProfileActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra(KeyUtil.arg_id, data.second.user.id)
+                            putExtra(KeyUtil.arg_id, data.value.user.id)
                         }
                     CompatUtil.startRevealAnim(host, target, intent)
                 } else {
@@ -127,7 +126,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePrese
                 mBottomSheet =
                     BottomReviewReader
                         .Builder()
-                        .setReview(data.second)
+                        .setReview(data.value)
                         .setTitle(R.string.drawer_title_reviews)
                         .build()
                 showBottomSheet()
@@ -137,7 +136,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePrese
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<Review>,
+        data: IndexedValue<Review>,
     ) {
         when (target.id) {
             R.id.series_image -> {
@@ -146,7 +145,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePrese
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.media.id)
+                            .setId(data.value.media.id)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

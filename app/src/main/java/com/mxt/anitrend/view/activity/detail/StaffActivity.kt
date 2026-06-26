@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter
@@ -19,6 +18,7 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.selectedIndex
 import java.util.Locale
 
 /**
@@ -104,16 +104,14 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
                         R.string.app_filter_on_list,
                         selectedIndex,
                         CompatUtil.getStringList(this, R.array.on_list_values),
-                    ) { dialog, which ->
-                        if (which == DialogAction.POSITIVE) {
-                            onList =
-                                when (dialog.selectedIndex) {
-                                    0 -> null
-                                    1 -> false
-                                    else -> true
-                                }
-                            reloadViewPager()
-                        }
+                    ) { dialog, _ ->
+                        onList =
+                            when (dialog.selectedIndex) {
+                                0 -> null
+                                1 -> false
+                                else -> true
+                            }
+                        reloadViewPager()
                     }
                 }
             }

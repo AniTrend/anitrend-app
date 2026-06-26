@@ -1,6 +1,5 @@
 package com.mxt.anitrend.util.collection
 
-import com.annimon.stream.Stream
 import com.google.gson.reflect.TypeToken
 import com.mxt.anitrend.base.interfaces.base.PreferenceConverter
 import com.mxt.anitrend.model.api.retro.WebFactory
@@ -48,9 +47,8 @@ class GenreTagUtil : PreferenceConverter<Map<Int, String>> {
         @JvmStatic
         fun getMappedValues(selectedItems: Map<Int, String>?): List<String>? {
             if (!selectedItems.isNullOrEmpty()) {
-                return Stream
-                    .of(selectedItems)
-                    .map(Map.Entry<Int, String>::value)
+                return selectedItems
+                    .map { it.value }
                     .toList()
             }
             return null

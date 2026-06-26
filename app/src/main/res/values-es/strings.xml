@@ -365,8 +365,8 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_notification">%d Notificación</string>
     <string name="text_notifications">%d Notificaciones</string>
 
-    <string name="alerter_notification_title">Notificaciones disponibles</string>
-    <string name="alerter_notification_text">Tienes una o más notificaciones sin leer</string>
+    <string name="notification_alert_title">Notificaciones disponibles</string>
+    <string name="notification_alert_text">Tienes una o más notificaciones sin leer</string>
 
     <string name="title_new_features">¡Novedades!</string>
 

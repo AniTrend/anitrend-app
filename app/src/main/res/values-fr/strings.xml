@@ -347,8 +347,8 @@
     <string name="text_notification">%d Notification</string>
     <string name="text_notifications">%d Notifications</string>
 
-    <string name="alerter_notification_title">Notifications Disponibles</string>
-    <string name="alerter_notification_text">Vous avez une ou plus notifications non lues !</string>
+    <string name="notification_alert_title">Notifications Disponibles</string>
+    <string name="notification_alert_text">Vous avez une ou plus notifications non lues !</string>
 
     <string name="title_new_features">Nouvelles Fonctionnalités !</string>
 

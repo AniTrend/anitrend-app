@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import com.afollestad.materialdialogs.DialogAction
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.selectedIndex
 
 /**
  * Created by max on 2017/11/04.
@@ -67,10 +67,8 @@ class SuggestionListFragment : MediaBrowseFragment() {
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaSortType, presenter.settings.mediaSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
                 }
                 return true
             }
@@ -81,12 +79,10 @@ class SuggestionListFragment : MediaBrowseFragment() {
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }

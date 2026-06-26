@@ -4,13 +4,15 @@ import android.content.Context
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.binding.setImage
@@ -18,7 +20,7 @@ import com.mxt.anitrend.databinding.CustomAuthToastBinding
 import com.mxt.anitrend.databinding.CustomToastBinding
 import com.mxt.anitrend.extension.*
 import com.mxt.anitrend.model.entity.anilist.User
-import com.tapadoo.alerter.Alerter
+// Alerter library removed; replaced with Material3 Snackbar-based implementation
 
 /**
  * Created by max on 2017/11/04.
@@ -26,6 +28,16 @@ import com.tapadoo.alerter.Alerter
  */
 
 object NotifyUtil {
+
+    /**
+     * Translate notification duration constants to Snackbar duration constants.
+     */
+    private fun translateAlerterDuration(@KeyUtil.NotificationDuration duration: Long): Int = when (duration) {
+        0L, KeyUtil.DURATION_SHORT -> Snackbar.LENGTH_SHORT
+        KeyUtil.DURATION_MEDIUM -> Snackbar.LENGTH_LONG
+        KeyUtil.DURATION_LONG -> Snackbar.LENGTH_INDEFINITE
+        else -> Snackbar.LENGTH_SHORT
+    }
 
     /**
      * Create an alert using the activity base
@@ -36,17 +48,11 @@ object NotifyUtil {
         text: String,
         @DrawableRes icon: Int,
         @ColorRes backgroundColor: Int,
-        @KeyUtil.AlerterDuration duration: Long,
+        @KeyUtil.NotificationDuration duration: Long,
     ) {
-        Alerter.create(activity).setTitle(title).setText(text)
-            .apply {
-                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-            }
-            .setProgressColorInt(activity.getCompatColor(R.color.white))
-            .setBackgroundColorRes(backgroundColor)
-            .enableIconPulse(true).enableSwipeToDismiss()
-            .enableVibration(true).setDuration(if (duration == 0L) KeyUtil.DURATION_SHORT else duration)
-            .enableProgress(duration != 0L)
+        val container = activity.findViewById<View>(android.R.id.content) ?: return
+        Snackbar.make(container, "$title: $text", translateAlerterDuration(duration))
+            .setBackgroundTint(activity.getCompatColor(backgroundColor))
             .show()
     }
 
@@ -59,17 +65,12 @@ object NotifyUtil {
         @StringRes text: Int,
         @DrawableRes icon: Int,
         @ColorRes backgroundColor: Int,
-        @KeyUtil.AlerterDuration duration: Long,
+        @KeyUtil.NotificationDuration duration: Long,
     ) {
-        Alerter.create(activity).setTitle(title).setText(text)
-            .apply {
-                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-            }
-            .setProgressColorInt(activity.getCompatColor(R.color.white))
-            .setBackgroundColorRes(backgroundColor)
-            .enableIconPulse(true).enableSwipeToDismiss()
-            .enableVibration(true).setDuration(if (duration == 0L) KeyUtil.DURATION_SHORT else duration)
-            .enableProgress(duration != 0L)
+        val container = activity.findViewById<View>(android.R.id.content) ?: return
+        val message = "${activity.getString(title)}: ${activity.getString(text)}"
+        Snackbar.make(container, message, translateAlerterDuration(duration))
+            .setBackgroundTint(activity.getCompatColor(backgroundColor))
             .show()
     }
 
@@ -77,13 +78,9 @@ object NotifyUtil {
      * Create an alert using the activity base
      */
     fun createAlerter(activity: FragmentActivity, title: String, text: String, @DrawableRes icon: Int, @ColorRes backgroundColor: Int) {
-        Alerter.create(activity).setTitle(title).setText(text)
-            .apply {
-                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-            }
-            .setBackgroundColorRes(backgroundColor)
-            .enableIconPulse(true).enableSwipeToDismiss()
-            .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
+        val container = activity.findViewById<View>(android.R.id.content) ?: return
+        Snackbar.make(container, "$title: $text", Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(activity.getCompatColor(backgroundColor))
             .show()
     }
 
@@ -91,13 +88,10 @@ object NotifyUtil {
      * Create an alert using the activity base
      */
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int, @ColorRes backgroundColor: Int) {
-        Alerter.create(activity).setTitle(title).setText(text)
-            .apply {
-                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-            }
-            .setBackgroundColorRes(backgroundColor)
-            .enableIconPulse(true).enableSwipeToDismiss()
-            .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
+        val container = activity.findViewById<View>(android.R.id.content) ?: return
+        val message = "${activity.getString(title)}: ${activity.getString(text)}"
+        Snackbar.make(container, message, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(activity.getCompatColor(backgroundColor))
             .show()
     }
 
@@ -105,14 +99,11 @@ object NotifyUtil {
      * Create an alert using the activity base
      */
     fun createAlerter(activity: FragmentActivity, @StringRes title: Int, @StringRes text: Int, @DrawableRes icon: Int, @ColorRes backgroundColor: Int, clickListener: View.OnClickListener) {
-        Alerter.create(activity).setTitle(title).setText(text)
-            .apply {
-                activity.getCompatDrawable(icon, R.color.white)?.let(::setIcon)
-            }
-            .setBackgroundColorRes(backgroundColor)
-            .enableIconPulse(true).enableSwipeToDismiss()
-            .enableVibration(true).setDuration(KeyUtil.DURATION_SHORT)
-            .setOnClickListener(clickListener)
+        val container = activity.findViewById<View>(android.R.id.content) ?: return
+        val message = "${activity.getString(title)}: ${activity.getString(text)}"
+        Snackbar.make(container, message, Snackbar.LENGTH_SHORT)
+            .setAction(R.string.Close, clickListener)
+            .setBackgroundTint(activity.getCompatColor(backgroundColor))
             .show()
     }
 
@@ -198,10 +189,31 @@ object NotifyUtil {
         return snackbar
     }
 
-    fun createProgressDialog(context: Context, @StringRes stringRes: Int): MaterialDialog = DialogUtil.createDefaultDialog(context)
-        .content(stringRes)
-        .progress(true, 0)
-        .cancelable(false)
-        .autoDismiss(false)
-        .build()
+    fun createProgressDialog(context: Context, @StringRes stringRes: Int): AlertDialog {
+        val progressLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(
+                CompatUtil.dipToPx(24f),
+                CompatUtil.dipToPx(16f),
+                CompatUtil.dipToPx(24f),
+                CompatUtil.dipToPx(16f),
+            )
+            addView(
+                ProgressBar(context).apply {
+                    isIndeterminate = true
+                },
+            )
+            addView(
+                TextView(context).apply {
+                    text = context.getString(stringRes)
+                    setPadding(CompatUtil.dipToPx(16f), 0, 0, 0)
+                    gravity = Gravity.CENTER_VERTICAL
+                },
+            )
+        }
+        return DialogUtil.createDefaultDialog(context)
+            .setView(progressLayout)
+            .setCancelable(false)
+            .show() as AlertDialog
+    }
 }

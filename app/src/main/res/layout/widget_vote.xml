@@ -26,14 +26,13 @@
                 tools:drawableStart="@drawable/ic_thumb_up_grey_600_18dp"
                 tools:text=" 5"
                 />
-
-            <com.github.rahatarmanahmed.cpv.CircularProgressView
+            
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="@dimen/xl_margin"
                 android:layout_height="@dimen/xl_margin"
                 android:layout_gravity="center"
-                app:cpv_animAutostart="true"
-                app:cpv_color="?colorAccent"
-                app:cpv_indeterminate="true" />
+                android:indeterminate="true"
+                app:indicatorColor="?colorAccent" />
 
         </ViewFlipper>
 
@@ -62,14 +61,13 @@
                 tools:drawableStart="@drawable/ic_thumb_down_grey_600_18dp"
                 tools:text=" 5"
                 />
-
-            <com.github.rahatarmanahmed.cpv.CircularProgressView
+            
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="@dimen/xl_margin"
                 android:layout_height="@dimen/xl_margin"
                 android:layout_gravity="center"
-                app:cpv_animAutostart="true"
-                app:cpv_color="?colorAccent"
-                app:cpv_indeterminate="true" />
+                android:indeterminate="true"
+                app:indicatorColor="?colorAccent" />
 
         </ViewFlipper>
 

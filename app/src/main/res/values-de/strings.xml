@@ -324,8 +324,8 @@ Another message using a bit of html the p tags represent new paragraphs -->
     <string name="text_user_manga_chapters">"Hat insgesamt %s Manga Kapitel gelesen"</string>
     <string name="text_notification">"%d Benachrichtigung"</string>
     <string name="text_notifications">"%d Benachrichtigungen"</string>
-    <string name="alerter_notification_title">"Neue Benachrichtigungen"</string>
-    <string name="alerter_notification_text">"Du hast eine oder mehrere ungelesene Benachrichtigungen!"</string>
+    <string name="notification_alert_title">"Neue Benachrichtigungen"</string>
+    <string name="notification_alert_text">"Du hast eine oder mehrere ungelesene Benachrichtigungen!"</string>
     <string name="title_new_features">"Neue Features!"</string>
     <string name="text_new_features"><![CDATA[
         Die Listen der Follower und jenen, denen eine Person folgt kannst du dir ansehen, indem du auf die

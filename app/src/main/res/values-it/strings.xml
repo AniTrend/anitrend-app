@@ -356,8 +356,8 @@
     <string name="text_notification">%d Notifica</string>
     <string name="text_notifications">%d Notifiche</string>
 
-    <string name="alerter_notification_title">Nuove notifiche!</string>
-    <string name="alerter_notification_text">Hai una o piu\' notifiche non lette!</string>
+    <string name="notification_alert_title">Nuove notifiche!</string>
+    <string name="notification_alert_text">Hai una o piu\' notifiche non lette!</string>
 
     <string name="title_new_features">Nuove funzioni!</string>
 

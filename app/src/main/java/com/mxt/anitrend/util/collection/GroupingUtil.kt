@@ -1,6 +1,5 @@
 package com.mxt.anitrend.util.collection
 
-import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
@@ -133,7 +132,7 @@ object GroupingUtil {
             val relationType = edge.relationType.orEmpty()
             val recyclerHeaderItem = RecyclerHeaderItem(relationType)
             if (!entityMap.contains(recyclerHeaderItem)) {
-                val totalItems = Stream.of(edges).map<String> { it.relationType.orEmpty() }
+                val totalItems = edges.map { it.relationType.orEmpty() }
                     .filter { role ->
                         CompatUtil.equals(
                             role,
@@ -168,7 +167,7 @@ object GroupingUtil {
             val role = edge.role.orEmpty()
             val recyclerHeaderItem = RecyclerHeaderItem(role)
             if (!entityMap.contains(recyclerHeaderItem)) {
-                val totalItems = Stream.of(edges).map<String> { it.role.orEmpty() }
+                val totalItems = edges.map { it.role.orEmpty() }
                     .filter { otherRole -> CompatUtil.equals(otherRole, role) }
                     .count()
                 recyclerHeaderItem.size = totalItems.toInt()
@@ -238,7 +237,7 @@ object GroupingUtil {
             val role = edge.role.orEmpty()
             val recyclerHeaderItem = RecyclerHeaderItem(role)
             if (!entityMap.contains(recyclerHeaderItem)) {
-                val totalItems = Stream.of(edges).map<String> { it.role.orEmpty() }
+                val totalItems = edges.map { it.role.orEmpty() }
                     .filter { otherRole -> CompatUtil.equals(otherRole, role) }
                     .count()
                 recyclerHeaderItem.size = totalItems.toInt()
@@ -262,7 +261,7 @@ object GroupingUtil {
             val staffRole = edge.staffRole.orEmpty()
             val recyclerHeaderItem = RecyclerHeaderItem(staffRole)
             if (!entityMap.contains(recyclerHeaderItem)) {
-                val totalItems = Stream.of(edges).map<String> { it.staffRole.orEmpty() }
+                val totalItems = edges.map { it.staffRole.orEmpty() }
                     .filter { role ->
                         CompatUtil.equals(
                             role,

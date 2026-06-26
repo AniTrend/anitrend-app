@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
-import com.afollestad.materialdialogs.MaterialDialog
+import androidx.appcompat.app.AlertDialog
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
@@ -27,7 +27,7 @@ class MediaActionUtil private constructor(
     private val context: FragmentActivity,
 ) : RetroCallback<MediaBase>,
     LifecycleListener {
-    private var progressDialog: MaterialDialog? = null
+    private var progressDialog: AlertDialog? = null
     private val presenter = WidgetPresenter<MediaBase>(context)
     private val lifecycle: Lifecycle = context.lifecycle
     private var mediaId: Long = 0

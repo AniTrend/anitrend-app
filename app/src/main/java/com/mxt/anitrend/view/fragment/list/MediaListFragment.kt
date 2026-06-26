@@ -9,8 +9,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
@@ -26,6 +24,7 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
@@ -110,10 +109,8 @@ open class MediaListFragment :
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaListSortType, presenter.settings.mediaListSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaListSort = KeyUtil.MediaListSortType[dialog.selectedIndex]
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaListSort = KeyUtil.MediaListSortType[dialog.selectedIndex]
                 }
                 return true
             }
@@ -124,12 +121,10 @@ open class MediaListFragment :
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }
@@ -203,9 +198,9 @@ open class MediaListFragment :
                     onRefresh()
                     return
                 }
-                val pair = CompatUtil.findIndexOf(mAdapter.data, changeModel).orElse(null)
+                val pair = CompatUtil.findIndexOf(mAdapter.data, changeModel)
                 if (pair != null) {
-                    val pairIndex = pair.first
+                    val pairIndex = pair.index
                     when (consumer.requestMode) {
                         KeyUtil.MUT_SAVE_MEDIA_LIST -> {
                             if (mediaListCollectionBase == null ||
@@ -264,17 +259,17 @@ open class MediaListFragment :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<MediaList>,
+        data: IndexedValue<MediaList>,
     ) {
         when (target.id) {
             R.id.container,
             R.id.series_image,
             -> {
                 val host = activity ?: return
-                val mediaBase = data.second.media
+                val mediaBase = data.value.media
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.mediaId)
+                        putExtra(KeyUtil.arg_id, data.value.mediaId)
                         putExtra(KeyUtil.arg_mediaType, mediaBase.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
@@ -284,7 +279,7 @@ open class MediaListFragment :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<MediaList>,
+        data: IndexedValue<MediaList>,
     ) {
         when (target.id) {
             R.id.container,
@@ -295,7 +290,7 @@ open class MediaListFragment :
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.mediaId)
+                            .setId(data.value.mediaId)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
