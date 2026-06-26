@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GiphyAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -25,9 +24,7 @@ import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
  * giphy bottom sheet container
  */
 class BottomSheetGiphy :
-    BottomSheetGiphyList(),
-    MaterialSearchView.OnQueryTextListener,
-    MaterialSearchView.SearchViewListener {
+    BottomSheetGiphyList() {
     private var binding: BottomSheetListBinding? = null
 
     @KeyUtil.RequestType
@@ -63,8 +60,24 @@ class BottomSheetGiphy :
     override fun updateUI() {
         toolbarTitle?.text = getString(mTitle)
         toolbarSearch?.visibility = View.VISIBLE
-        searchView?.setOnSearchViewListener(this)
-        searchView?.setOnQueryTextListener(this)
+        val editText = searchBar?.findViewById<android.widget.EditText>(
+            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+        )
+        editText?.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+        editText?.setOnEditorActionListener { v: android.widget.TextView, actionId: Int, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                searchQuery = v.text.toString()
+                stateLayout?.showLoading()
+                onRefresh()
+                true
+            } else {
+                false
+            }
+        }
         injectAdapter()
         if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
             activity?.let {
@@ -92,24 +105,6 @@ class BottomSheetGiphy :
         }
         viewModel?.requestData(requestType, ctx)
     }
-
-    override fun onQueryTextSubmit(query: String): Boolean {
-        searchQuery = query
-        stateLayout?.showLoading()
-        onRefresh()
-        return false
-    }
-
-    override fun onQueryTextChange(newText: String): Boolean = false
-
-    override fun onSearchViewShown() {
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-        if (!TextUtils.isEmpty(searchQuery)) {
-            searchView?.setQuery(searchQuery, false)
-        }
-    }
-
-    override fun onSearchViewClosed() = Unit
 
     override fun onDestroyView() {
         super.onDestroyView()

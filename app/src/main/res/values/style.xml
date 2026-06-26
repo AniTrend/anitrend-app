@@ -78,11 +78,6 @@
         <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_light_onSurfaceVariant</item>
 
-        <item name="voiceDrawable">@drawable/ic_action_voice_search</item>
-        <item name="closeDrawable">@drawable/ic_action_navigation_close</item>
-        <item name="backDrawable">@drawable/ic_action_navigation_arrow_back</item>
-        <item name="suggestionDrawable">@drawable/ic_suggestion</item>
-
         <item name="windowActionModeOverlay">true</item>
         <item name="toolbarColor">@style/LightToolbarTheme</item>
 
@@ -157,11 +152,6 @@
         <item name="titleColor">@color/m3_dark_onSurface</item>
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
-
-        <item name="voiceDrawable">@drawable/ic_action_voice_search_inverted</item>
-        <item name="closeDrawable">@drawable/ic_action_navigation_close_inverted</item>
-        <item name="backDrawable">@drawable/ic_action_navigation_arrow_back_inverted</item>
-        <item name="suggestionDrawable">@drawable/ic_suggestion</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="toolbarColor">@style/DarkToolbarTheme</item>
@@ -244,11 +234,6 @@
         <item name="titleColor">@color/m3_dark_onSurface</item>
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
-
-        <item name="voiceDrawable">@drawable/ic_action_voice_search_inverted</item>
-        <item name="closeDrawable">@drawable/ic_action_navigation_close_inverted</item>
-        <item name="backDrawable">@drawable/ic_action_navigation_arrow_back_inverted</item>
-        <item name="suggestionDrawable">@drawable/ic_suggestion</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="toolbarColor">@style/BlackToolbarTheme</item>

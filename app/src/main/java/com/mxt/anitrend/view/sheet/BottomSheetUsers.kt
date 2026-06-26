@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -20,9 +19,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 
 class BottomSheetUsers :
-    BottomSheetList<UserBase>(),
-    MaterialSearchView.OnQueryTextListener,
-    MaterialSearchView.SearchViewListener {
+    BottomSheetList<UserBase>() {
     private var binding: BottomSheetListBinding? = null
 
     companion object {
@@ -58,29 +55,25 @@ class BottomSheetUsers :
     override fun updateUI() {
         toolbarTitle?.text = getString(mTitle, mAdapter.itemCount)
         toolbarSearch?.visibility = View.VISIBLE
-        searchView?.setOnQueryTextListener(this)
-        searchView?.setOnSearchViewListener(this)
         injectAdapter()
     }
 
     override fun makeRequest() = Unit
 
-    override fun onQueryTextSubmit(query: String): Boolean = false
-
-    override fun onQueryTextChange(newText: String): Boolean {
-        if (!TextUtils.isEmpty(newText) && mAdapter.filter != null) {
-            mAdapter.filter.filter(newText)
-            return true
-        }
-        return false
-    }
-
-    override fun onSearchViewShown() {
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    override fun onSearchViewClosed() {
-        mAdapter.filter?.filter("")
+    override fun onStart() {
+        super.onStart()
+        val editText = searchBar?.findViewById<android.widget.EditText>(
+            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+        )
+        editText?.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!TextUtils.isEmpty(s) && mAdapter.filter != null) {
+                    mAdapter.filter.filter(s)
+                }
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
     }
 
     override fun onDestroyView() {

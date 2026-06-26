@@ -89,7 +89,7 @@ class BottomSheetListUsers :
     override fun onStart() {
         super.onStart()
         toolbarTitle?.text = getString(mTitle, count)
-        searchView?.visibility = View.GONE
+        searchBar?.visibility = View.GONE
         stateLayout?.showLoading()
         if (mAdapter.itemCount < 1) {
             onRefresh()

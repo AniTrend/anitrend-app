@@ -9,7 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.google.android.material.search.SearchBar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
@@ -37,7 +37,7 @@ abstract class BottomSheetBase<T> :
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
     protected var toolbarSearch: AppCompatImageView? = null
-    protected var searchView: MaterialSearchView? = null
+    protected var searchBar: SearchBar? = null
 
     protected var viewModel: ViewModelBase<T>? = null
     protected var bottomSheetChoice: BottomSheetChoice? = null
@@ -110,8 +110,9 @@ abstract class BottomSheetBase<T> :
             }
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
-        toolbarSearch?.setOnClickListener { searchView?.showSearch(true) }
-        searchView?.setCursorDrawable(R.drawable.material_search_cursor)
+        toolbarSearch?.setOnClickListener {
+            searchBar?.visibility = if (searchBar?.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        }
     }
 
     override fun onStop() {
@@ -137,7 +138,7 @@ abstract class BottomSheetBase<T> :
         toolbarTitle = rootView.findViewById(R.id.toolbar_title)
         toolbarState = rootView.findViewById(R.id.toolbar_state)
         toolbarSearch = rootView.findViewById(R.id.toolbar_search)
-        searchView = rootView.findViewById(R.id.search_view)
+        searchBar = rootView.findViewById(R.id.search_bar)
     }
 
     fun closeDialog(): Boolean {

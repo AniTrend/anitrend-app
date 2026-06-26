@@ -91,7 +91,7 @@ class SharedContentActivity :
         bottomSheetBehavior = BottomSheetBehavior.from(binding.designBottomSheet)
         setPresenter(BasePresenter(applicationContext))
         toolbarBinding = binding.customSheetToolbar
-        mSearchView = toolbarBinding.searchView
+        mSearchBar = toolbarBinding.searchBar
         binding.sheetSharePostTypeApprove.setOnClickListener { getItemSelected() }
         setViewModel(true)
     }

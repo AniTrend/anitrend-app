@@ -45,7 +45,7 @@ class LoggingActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityLoggingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mSearchView = binding.customToolbar.searchView
+        mSearchBar = binding.customToolbar.searchBar
         setSupportActionBar(binding.customToolbar.toolbar)
     }
 
