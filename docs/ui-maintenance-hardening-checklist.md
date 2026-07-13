@@ -1,7 +1,4 @@
-UI Maintenance Hardening Checklist
-=================================
-
-Branch:
+Checklist branch:
 `feat/ui-maintenance-hardening`
 
 UI and UX concerns
