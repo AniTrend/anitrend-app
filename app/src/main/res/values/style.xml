@@ -252,6 +252,23 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="Widget.AniTrend.ProgressLayout.LoadingIndicator" parent="Widget.Material3.LoadingIndicator.Contained">
+        <item name="indicatorColor">?attr/colorAccent</item>
+        <item name="containerColor">?attr/cardColor</item>
+    </style>
+
+    <style name="ThemeOverlay.AniTrend.ProgressLayout.Material3" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">?attr/colorAccent</item>
+        <item name="colorSecondary">?attr/colorAccent</item>
+        <item name="colorSurface">?attr/cardColor</item>
+        <item name="colorSurfaceContainerHighest">?attr/cardColor</item>
+        <item name="colorOnSurface">?attr/titleColor</item>
+        <item name="colorOnSurfaceVariant">?attr/subtitleColor</item>
+        <item name="colorOutline">?attr/lineColor</item>
+        <item name="colorSecondaryContainer">?attr/cardColor</item>
+        <item name="colorOnSecondaryContainer">?attr/titleColor</item>
+    </style>
+
     <style name="ImagePreviewToolbar" parent="AppThemeBlack">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>

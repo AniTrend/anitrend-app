@@ -1,47 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/progressStateLoading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:theme="@style/ThemeOverlay.AniTrend.ProgressLayout.Material3"
+        android:foregroundGravity="center"
         android:visibility="gone">
 
-        <ProgressBar
+        <com.google.android.material.loadingindicator.LoadingIndicator
+            android:id="@+id/progressStateLoadingIndicator"
+            style="@style/Widget.AniTrend.ProgressLayout.LoadingIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:theme="@style/ThemeOverlay.AniTrend.ProgressLayout.Material3"
+            android:contentDescription="@string/busy_please_wait" />
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/progressStateError"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp"
+        android:theme="@style/ThemeOverlay.AniTrend.ProgressLayout.Material3"
+        android:foregroundGravity="center"
+        android:padding="@dimen/spacing_xs"
         android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/progressStateErrorIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/progressStateErrorText"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/progressStateErrorCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="" />
+            android:layout_gravity="center"
+            android:minWidth="280dp"
+            android:theme="@style/ThemeOverlay.AniTrend.ProgressLayout.Material3"
+            app:cardBackgroundColor="?attr/cardColor"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/lineColor"
+            app:strokeWidth="@dimen/divider_height">
 
-        <Button
-            android:id="@+id/progressStateErrorAction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:visibility="gone" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xs">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/progressStateErrorIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/progressStateErrorText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/lg_margin"
+                    android:gravity="center"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="?attr/titleColor"
+                    android:textSize="@dimen/content_text_size" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/progressStateErrorAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/lg_margin"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
 </merge>

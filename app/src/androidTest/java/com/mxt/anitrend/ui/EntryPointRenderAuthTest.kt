@@ -1,13 +1,11 @@
 package com.mxt.anitrend.ui
 
+import android.util.Log
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,9 +23,12 @@ class EntryPointRenderAuthTest {
     fun renderEntryPoints() {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         EntryPointFixtures.authenticated(context).forEach { entry ->
-            ActivityScenario.launch<android.app.Activity>(entry.intentProvider(context)).use {
+            Log.i("EntryPointRenderAuthTest", "Launching ${entry.name}")
+            ActivityScenario.launch<android.app.Activity>(entry.intentProvider(context)).use { scenario ->
                 if (entry.assertUi) {
-                    onView(isRoot()).check(matches(isDisplayed()))
+                    scenario.onActivity { activity ->
+                        assertTrue("Expected ${entry.name} decor view to be shown", activity.window.decorView.isShown)
+                    }
                 }
             }
         }

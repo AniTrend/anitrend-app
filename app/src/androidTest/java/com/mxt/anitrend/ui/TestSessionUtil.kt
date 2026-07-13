@@ -13,6 +13,7 @@ object TestSessionUtil {
     ) {
         val settings = Settings(context)
         settings.isAuthenticated = authenticated
+        settings.isFreshInstall = false
         val database = DatabaseHelper()
         if (authenticated) {
             val token =

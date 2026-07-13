@@ -153,13 +153,6 @@ private val widgetModule = module {
 
 private val workerModule = module {
     worker { scope ->
-        AuthenticatorWorker(
-            context = androidContext(),
-            workerParams = scope.get(),
-            presenter = get(),
-        )
-    }
-    worker { scope ->
         NotificationWorker(
             context = androidContext(),
             workerParams = scope.get(),
