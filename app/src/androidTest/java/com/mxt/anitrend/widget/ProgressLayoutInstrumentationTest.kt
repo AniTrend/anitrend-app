@@ -5,17 +5,19 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.loadingindicator.LoadingIndicator
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.mxt.anitrend.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.mxt.anitrend.test.R as TestR
+import com.mxt.anitrend.R
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -24,14 +26,24 @@ class ProgressLayoutInstrumentationTest {
     fun initialState_isContent() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
                 val loadingView = layout.findViewById<View>(R.id.progressStateLoading)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
+                val loadingIndicator = layout.findViewById<View>(R.id.progressStateLoadingIndicator)
+                val errorCard = layout.findViewById<View>(R.id.progressStateErrorCard)
 
                 assertTrue("Expected initial state to be CONTENT", layout.isContent)
                 assertFalse("Expected initial state not to be LOADING", layout.isLoading)
                 assertFalse("Expected initial state not to be ERROR", layout.isError)
+                assertTrue(
+                    "Loading indicator should use Material 3 LoadingIndicator",
+                    loadingIndicator is LoadingIndicator,
+                )
+                assertTrue(
+                    "Error surface should use Material 3 MaterialCardView",
+                    errorCard is MaterialCardView,
+                )
                 assertEquals(
                     "Content child should be VISIBLE initially",
                     View.VISIBLE,
@@ -55,8 +67,8 @@ class ProgressLayoutInstrumentationTest {
     fun showLoading_hidesContent_showsLoadingOverlay() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
                 val loadingView = layout.findViewById<View>(R.id.progressStateLoading)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
 
@@ -88,8 +100,8 @@ class ProgressLayoutInstrumentationTest {
     fun showContent_restoresContentVisibility() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
                 val loadingView = layout.findViewById<View>(R.id.progressStateLoading)
 
                 layout.showLoading()
@@ -115,13 +127,13 @@ class ProgressLayoutInstrumentationTest {
     fun showError_showsErrorOverlay() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
                 val loadingView = layout.findViewById<View>(R.id.progressStateLoading)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
                 val errorIcon = layout.findViewById<ImageView>(R.id.progressStateErrorIcon)
                 val errorText = layout.findViewById<TextView>(R.id.progressStateErrorText)
-                val errorAction = layout.findViewById<Button>(R.id.progressStateErrorAction)
+                val errorAction = layout.findViewById<MaterialButton>(R.id.progressStateErrorAction)
 
                 val drawable = ColorDrawable(0xFF0000.toInt())
                 var actionClicked = false
@@ -185,11 +197,11 @@ class ProgressLayoutInstrumentationTest {
     fun showEmpty_showsErrorStateWithoutAction() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
                 val errorIcon = layout.findViewById<ImageView>(R.id.progressStateErrorIcon)
                 val errorText = layout.findViewById<TextView>(R.id.progressStateErrorText)
-                val errorAction = layout.findViewById<Button>(R.id.progressStateErrorAction)
+                val errorAction = layout.findViewById<MaterialButton>(R.id.progressStateErrorAction)
 
                 val drawable = ColorDrawable(0xFFFF00.toInt())
                 layout.showEmpty(drawable = drawable, message = "No data available")
@@ -228,7 +240,7 @@ class ProgressLayoutInstrumentationTest {
     fun showError_afterShowLoading_endsInErrorState() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
                 val loadingView = layout.findViewById<View>(R.id.progressStateLoading)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
 
@@ -266,10 +278,10 @@ class ProgressLayoutInstrumentationTest {
     fun showEmpty_afterShowLoading_endsInErrorState() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
                 val loadingView = layout.findViewById<View>(R.id.progressStateLoading)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
-                val errorAction = layout.findViewById<Button>(R.id.progressStateErrorAction)
+                val errorAction = layout.findViewById<MaterialButton>(R.id.progressStateErrorAction)
 
                 layout.showLoading()
                 layout.showEmpty(drawable = null, message = "Nothing here")
@@ -305,8 +317,8 @@ class ProgressLayoutInstrumentationTest {
     fun error_to_content_restoresChildren() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
 
                 layout.showError(
@@ -339,10 +351,10 @@ class ProgressLayoutInstrumentationTest {
     fun showContent_withNullDrawable() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
                 val errorIcon = layout.findViewById<ImageView>(R.id.progressStateErrorIcon)
                 val errorText = layout.findViewById<TextView>(R.id.progressStateErrorText)
-                val errorAction = layout.findViewById<Button>(R.id.progressStateErrorAction)
+                val errorAction = layout.findViewById<MaterialButton>(R.id.progressStateErrorAction)
 
                 layout.showError(
                     drawable = null,
@@ -375,9 +387,9 @@ class ProgressLayoutInstrumentationTest {
     fun multipleChildren_visibilityRestored() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
-                val secondChild = activity.findViewById<Button>(TestR.id.secondContentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
+                val secondChild = activity.findViewById<Button>(R.id.secondContentChild)
 
                 // Transition to LOADING
                 layout.showLoading()
@@ -416,8 +428,8 @@ class ProgressLayoutInstrumentationTest {
     fun multipleStateTransitions_restoresContentVisibility() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
 
                 // Cycle 1: LOADING → ERROR → CONTENT
                 layout.showLoading()
@@ -475,8 +487,8 @@ class ProgressLayoutInstrumentationTest {
     fun errorThenContent_restoresChildren() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
                 val errorView = layout.findViewById<View>(R.id.progressStateError)
 
                 // Show error with null drawable (regression: icon GONE, content GONE)
@@ -511,8 +523,8 @@ class ProgressLayoutInstrumentationTest {
     fun contentVisibility_isSetSynchronously() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val layout = activity.findViewById<ProgressLayout>(TestR.id.progressLayout)
-                val contentChild = activity.findViewById<TextView>(TestR.id.contentChild)
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
 
                 layout.showLoading()
                 layout.showContent()
@@ -526,4 +538,106 @@ class ProgressLayoutInstrumentationTest {
             }
         }
     }
+
+    @Test
+    fun initialState_preservesInitiallyGoneContentChildVisibility() {
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val hiddenChild = activity.findViewById<TextView>(R.id.initiallyGoneContentChild)
+
+                assertEquals(
+                    "Initially gone child should remain GONE in content state",
+                    View.GONE,
+                    hiddenChild.visibility,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun initialState_preservesInitiallyInvisibleContentChildVisibility() {
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val hiddenChild = activity.findViewById<TextView>(R.id.initiallyInvisibleContentChild)
+
+                assertEquals(
+                    "Initially invisible child should remain INVISIBLE in content state",
+                    View.INVISIBLE,
+                    hiddenChild.visibility,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun loadingThenContent_keepsInitiallyGoneContentChildHidden() {
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val hiddenChild = activity.findViewById<TextView>(R.id.initiallyGoneContentChild)
+
+                layout.showLoading()
+                layout.showContent()
+
+                assertEquals(
+                    "Initially gone child should remain GONE after loading then content",
+                    View.GONE,
+                    hiddenChild.visibility,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun transientlyHiddenContent_isRestoredFromInitialContentState() {
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val contentChild = activity.findViewById<TextView>(R.id.contentChild)
+
+                contentChild.visibility = View.GONE
+                layout.showLoading()
+                layout.showContent()
+
+                assertEquals(
+                    "Content child should return to its initial content visibility after loading",
+                    View.VISIBLE,
+                    contentChild.visibility,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun repeatedLoadingAndErrorTransitions_keepInitiallyInvisibleContentChildHidden() {
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val layout = activity.findViewById<ProgressLayout>(R.id.progressLayout)
+                val hiddenChild = activity.findViewById<TextView>(R.id.initiallyInvisibleContentChild)
+
+                layout.showLoading()
+                layout.showError(
+                    drawable = ColorDrawable(0xFF0000.toInt()),
+                    message = "First error",
+                    actionText = "Retry",
+                    action = View.OnClickListener { },
+                )
+                layout.showLoading()
+                layout.showError(
+                    drawable = ColorDrawable(0x00FF00),
+                    message = "Second error",
+                    actionText = null,
+                    action = null,
+                )
+                layout.showContent()
+
+                assertEquals(
+                    "Initially invisible child should remain INVISIBLE after repeated loading and error transitions",
+                    View.INVISIBLE,
+                    hiddenChild.visibility,
+                )
+            }
+        }
+    }
+
 }
