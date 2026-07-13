@@ -58,6 +58,7 @@ constructor(
     private var followers: PageInfo? = null
     private var following: PageInfo? = null
     private var favourites: Int = 0
+    private var lastAppliedFollowState: Boolean? = null
 
     private var usersPresenter: WidgetPresenter<PageContainer<UserBase>>? = null
     private var favouritePresenter: WidgetPresenter<ConnectionContainer<Favourite>>? = null
@@ -293,7 +294,11 @@ constructor(
             val isStarted = lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) == true
             if (totalInfo != null) {
                 val isFollowing = consumer.changeModel?.isFollowing == true
+                if (lastAppliedFollowState == isFollowing) {
+                    return
+                }
                 totalInfo.total = totalInfo.total + if (isFollowing) 1 else -1
+                lastAppliedFollowState = isFollowing
                 if (isStarted) {
                     binding.userFollowersCount.text =
                         WidgetPresenter.valueFormatter(totalInfo.total)

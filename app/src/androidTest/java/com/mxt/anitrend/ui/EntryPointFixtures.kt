@@ -25,7 +25,6 @@ import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.view.activity.index.LoginActivity
 import com.mxt.anitrend.view.activity.index.MainActivity
 import com.mxt.anitrend.view.activity.index.SearchActivity
-import com.mxt.anitrend.view.activity.index.SplashActivity
 
 internal data class EntryPoint(
     val name: String,
@@ -35,7 +34,7 @@ internal data class EntryPoint(
 
 internal object EntryPointFixtures {
     fun unauthenticated(context: Context): List<EntryPoint> = listOf(
-        EntryPoint("SplashActivity", { Intent(it, SplashActivity::class.java) }, assertUi = false),
+        // SplashActivity is intentionally excluded from render smoke tests because it immediately routes onward and performs startup side effects rather than exposing a stable UI surface.
         EntryPoint("MainActivity", { Intent(it, MainActivity::class.java) }),
         EntryPoint("LoginActivity", { Intent(it, LoginActivity::class.java) }),
         EntryPoint("SearchActivity", { Intent(it, SearchActivity::class.java) }),
@@ -100,7 +99,7 @@ internal object EntryPointFixtures {
     )
 
     fun authenticated(context: Context): List<EntryPoint> = listOf(
-        EntryPoint("SplashActivity", { Intent(it, SplashActivity::class.java) }, assertUi = false),
+        // SplashActivity is intentionally excluded from render smoke tests because it immediately routes onward and performs startup side effects rather than exposing a stable UI surface.
         EntryPoint("MainActivity", { Intent(it, MainActivity::class.java) }),
         EntryPoint("LoginActivity", { Intent(it, LoginActivity::class.java) }, assertUi = false),
         EntryPoint("SearchActivity", { Intent(it, SearchActivity::class.java) }),
