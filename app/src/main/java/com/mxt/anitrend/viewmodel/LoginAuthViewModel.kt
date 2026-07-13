@@ -80,6 +80,9 @@ class LoginAuthViewModel(
      */
     data class AuthCallbackResult(val authorizationCode: String?, val error: String?, val errorDescription: String?)
 
+    /**
+     * Static helpers for parsing the auth callback payload.
+     */
     companion object {
         private fun parseAuthCallbackResult(authUri: String): AuthCallbackResult {
             val authenticatorUri = Uri.parse(authUri)

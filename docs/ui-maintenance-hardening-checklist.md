@@ -4,7 +4,8 @@ UI Maintenance Hardening Checklist
 Branch:
 `feat/ui-maintenance-hardening`
 
-## UI and UX concerns
+UI and UX concerns
+------------------
 
 - [x] Progress layout regression coverage expanded for loading, error, empty,
   and content transitions
@@ -18,7 +19,8 @@ Branch:
   - Fixed by excluding `SplashActivity` from generic render smoke coverage and
     switching render assertions to direct `ActivityScenario` visibility checks
 
-## Code maintenance
+Code maintenance
+----------------
 
 - [x] Introduce a typed ViewModel acquisition seam for `BottomSheetListUsers`
 - [x] Replace generic `ViewModelBase` usage in additional high-friction screens
@@ -37,11 +39,13 @@ Branch:
   - Added `AvatarIndicatorView` re-attach and `USER_CURRENT_REQ` badge refresh
     coverage
 
-## Test coverage and guard rails
+Test coverage and guard rails
+-----------------------------
 
 - [x] Instrumentation coverage added for `ProgressLayout`
 - [x] Instrumentation coverage added for compact widget spinners
-- [x] Instrumentation coverage added for `AboutPanelWidget` mutation re-attach guard
+- [x] Instrumentation coverage added for `AboutPanelWidget` mutation
+  re-attach guard
 - [x] Direct device verification completed on `Custom_API_36`
 - [x] Add follow-up unit coverage for non-UI state transitions where possible
   - Added `LoginAuthViewModelTest` coverage for callback-error, blank-code,
@@ -53,14 +57,23 @@ Branch:
     entry-point smoke coverage does not re-enter onboarding during
     connected-device runs
 
-## Verification evidence
+Verification evidence
+---------------------
 
 - `./gradlew :app:compileAppDebugKotlin :app:assembleAppDebug --no-daemon`
 - `./gradlew :app:compileAppDebugKotlin :app:test --no-daemon --stacktrace`
 - `./gradlew :app:connectedAppDebugAndroidTest --stacktrace --no-daemon`
-- `./gradlew :app:testAppDebugUnitTest --tests com.mxt.anitrend.viewmodel.LoginAuthViewModelTest --no-daemon --stacktrace`
-- `./gradlew :app:connectedAppDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mxt.anitrend.ui.EntryPointRenderUnauthTest --stacktrace --no-daemon`
-- `./gradlew :app:connectedAppDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mxt.anitrend.ui.EntryPointRenderAuthTest --stacktrace --no-daemon`
+- `./gradlew :app:testAppDebugUnitTest --tests
+  com.mxt.anitrend.viewmodel.LoginAuthViewModelTest --no-daemon
+  --stacktrace`
+- `./gradlew :app:connectedAppDebugAndroidTest`
+  `-Pandroid.testInstrumentationRunnerArguments.class=`
+  `com.mxt.anitrend.ui.EntryPointRenderUnauthTest --stacktrace`
+  `--no-daemon`
+- `./gradlew :app:connectedAppDebugAndroidTest`
+  `-Pandroid.testInstrumentationRunnerArguments.class=`
+  `com.mxt.anitrend.ui.EntryPointRenderAuthTest --stacktrace`
+  `--no-daemon`
 - Direct instrumentation:
   - `com.mxt.anitrend.ui.EntryPointRenderAuthTest`
   - `com.mxt.anitrend.ui.EntryPointRenderUnauthTest`
@@ -69,7 +82,8 @@ Branch:
   - `com.mxt.anitrend.widget.EventBusMutationStateGuardTest`
   - `com.mxt.anitrend.widget.FollowStateWidgetInstrumentationTest`
 
-## Notes
+Notes
+-----
 
 - `FragmentBase.setViewModel` local caller scan shows broad usage despite a
   misleading low-impact GitNexus result, so that seam needs separate deeper
