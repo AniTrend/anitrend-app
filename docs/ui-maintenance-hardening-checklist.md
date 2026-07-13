@@ -1,8 +1,9 @@
-Checklist branch:
+# UI Maintenance Hardening Checklist
+
+Branch:
 `feat/ui-maintenance-hardening`
 
-UI and UX concerns
-------------------
+**UI and UX concerns**
 
 - [x] Progress layout regression coverage expanded for loading, error, empty,
   and content transitions
@@ -16,8 +17,7 @@ UI and UX concerns
   - Fixed by excluding `SplashActivity` from generic render smoke coverage and
     switching render assertions to direct `ActivityScenario` visibility checks
 
-Code maintenance
-----------------
+**Code maintenance**
 
 - [x] Introduce a typed ViewModel acquisition seam for `BottomSheetListUsers`
 - [x] Replace generic `ViewModelBase` usage in additional high-friction screens
@@ -36,8 +36,7 @@ Code maintenance
   - Added `AvatarIndicatorView` re-attach and `USER_CURRENT_REQ` badge refresh
     coverage
 
-Test coverage and guard rails
------------------------------
+**Test coverage and guard rails**
 
 - [x] Instrumentation coverage added for `ProgressLayout`
 - [x] Instrumentation coverage added for compact widget spinners
@@ -54,8 +53,7 @@ Test coverage and guard rails
     entry-point smoke coverage does not re-enter onboarding during
     connected-device runs
 
-Verification evidence
----------------------
+**Verification evidence**
 
 - `./gradlew :app:compileAppDebugKotlin :app:assembleAppDebug --no-daemon`
 - `./gradlew :app:compileAppDebugKotlin :app:test --no-daemon --stacktrace`
@@ -79,8 +77,7 @@ Verification evidence
   - `com.mxt.anitrend.widget.EventBusMutationStateGuardTest`
   - `com.mxt.anitrend.widget.FollowStateWidgetInstrumentationTest`
 
-Notes
------
+**Notes**
 
 - `FragmentBase.setViewModel` local caller scan shows broad usage despite a
   misleading low-impact GitNexus result, so that seam needs separate deeper
