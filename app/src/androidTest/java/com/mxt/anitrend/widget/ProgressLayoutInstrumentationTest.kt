@@ -1,3 +1,5 @@
+@file:Suppress("UndocumentedPublicClass", "UndocumentedPublicFunction")
+
 package com.mxt.anitrend.widget
 
 import android.graphics.drawable.ColorDrawable
@@ -5,19 +7,19 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.loadingindicator.LoadingIndicator
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.loadingindicator.LoadingIndicator
+import com.mxt.anitrend.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.mxt.anitrend.R
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -639,5 +641,4 @@ class ProgressLayoutInstrumentationTest {
             }
         }
     }
-
 }

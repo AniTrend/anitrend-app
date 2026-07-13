@@ -53,7 +53,7 @@ class LoginAuthViewModelTest {
                     error = error,
                     errorDescription = errorDescription,
                 ),
-            )
+            ),
         )
     }
 

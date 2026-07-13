@@ -1,15 +1,17 @@
+@file:Suppress("UndocumentedPublicClass", "UndocumentedPublicFunction")
+
 package com.mxt.anitrend.widget
 
-import android.widget.FrameLayout
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.test.core.app.ActivityScenario
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
@@ -99,6 +101,7 @@ class EventBusMutationStateGuardTest {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun followerMutation_isAppliedOnceWhenSameFollowStateEventRepostsAfterReattach() {
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             val widgetRef = AtomicReference<AboutPanelWidget>()

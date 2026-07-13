@@ -1,3 +1,5 @@
+@file:Suppress("UndocumentedPublicClass", "UndocumentedPublicFunction")
+
 package com.mxt.anitrend.widget
 
 import android.widget.FrameLayout
@@ -6,8 +8,6 @@ import android.widget.ViewFlipper
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import okhttp3.Request
-import okio.Timeout
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
 import com.mxt.anitrend.data.DatabaseHelper
@@ -15,6 +15,8 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.Settings
+import okhttp3.Request
+import okio.Timeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -60,7 +62,6 @@ class FollowStateWidgetInstrumentationTest {
         Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = false
     }
 }
-
 
 private class NoOpUserBaseCall : retrofit2.Call<UserBase> {
     override fun execute(): Response<UserBase> = throw UnsupportedOperationException()

@@ -16,6 +16,10 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.concurrent.ExecutionException
 
+/**
+ * Owns the login authentication callback flow and exposes a coroutine-backed
+ * authentication state for the login screen.
+ */
 class LoginAuthViewModel(
     private val authUriParser: (String) -> AuthCallbackResult = ::parseAuthCallbackResult,
     private val tokenRequester: (String) -> Boolean = WebTokenRequest::getToken,
@@ -25,6 +29,10 @@ class LoginAuthViewModel(
     val authState: LiveData<LoginAuthState>
         get() = _authState
 
+    /**
+     * Parses the OAuth callback URI and updates [authState] with the resulting
+     * authentication outcome.
+     */
     fun authenticate(authUri: String) {
         _authState.value = LoginAuthState.Loading
         viewModelScope.launch {
@@ -67,11 +75,10 @@ class LoginAuthViewModel(
     }
 
     @VisibleForTesting
-    data class AuthCallbackResult(
-        val authorizationCode: String?,
-        val error: String?,
-        val errorDescription: String?,
-    )
+    /**
+     * Parsed authentication callback payload used by the ViewModel.
+     */
+    data class AuthCallbackResult(val authorizationCode: String?, val error: String?, val errorDescription: String?)
 
     companion object {
         private fun parseAuthCallbackResult(authUri: String): AuthCallbackResult {
@@ -85,11 +92,17 @@ class LoginAuthViewModel(
     }
 }
 
+/**
+ * UI state emitted while the login authentication callback is being resolved.
+ */
 sealed interface LoginAuthState {
+    /** Authentication request is currently in progress. */
     data object Loading : LoginAuthState
 
+    /** Authentication request completed successfully. */
     data object Success : LoginAuthState
 
+    /** Authentication request failed or returned an OAuth error payload. */
     data class Failure(
         val error: String?,
         val errorDescription: String?,

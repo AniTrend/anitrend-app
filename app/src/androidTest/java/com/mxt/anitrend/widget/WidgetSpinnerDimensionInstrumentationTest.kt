@@ -1,10 +1,12 @@
+@file:Suppress("UndocumentedPublicClass", "UndocumentedPublicFunction")
+
 package com.mxt.anitrend.widget
 
 import android.content.Context
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ContextThemeWrapper
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -70,8 +72,7 @@ class WidgetSpinnerDimensionInstrumentationTest {
         )
     }
 
-    private fun inflate(layoutRes: Int): View =
-        LayoutInflater.from(context).inflate(layoutRes, null, false)
+    private fun inflate(layoutRes: Int): View = LayoutInflater.from(context).inflate(layoutRes, null, false)
 
     private fun assertSpinnerDimensions(
         label: String,
