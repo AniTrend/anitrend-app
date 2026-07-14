@@ -38,7 +38,7 @@
             android:theme="@style/ThemeOverlay.AniTrend.ProgressLayout.Material3"
             app:cardBackgroundColor="?attr/cardColor"
             app:cardElevation="0dp"
-            app:strokeColor="?attr/lineColor"
+            app:strokeColor="?attr/colorOutline"
             app:strokeWidth="@dimen/divider_height">
 
             <LinearLayout

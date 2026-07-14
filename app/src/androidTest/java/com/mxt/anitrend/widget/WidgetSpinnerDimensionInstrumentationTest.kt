@@ -10,7 +10,8 @@ import android.view.ViewGroup
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.github.rahatarmanahmed.cpv.CircularProgressView
+import androidx.test.platform.app.InstrumentationRegistry
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
 import com.mxt.anitrend.base.custom.view.widget.VoteWidget
@@ -30,56 +31,66 @@ class WidgetSpinnerDimensionInstrumentationTest {
 
     @Test
     fun favouriteLayouts_useCompactSpinnerDimensions() {
-        assertSpinnerDimensions(
-            label = "widget_favourite",
-            root = inflate(R.layout.widget_favourite),
-            expectedCount = 1,
-        )
-        assertSpinnerDimensions(
-            label = "widget_toolbar_favourite",
-            root = inflate(R.layout.widget_toolbar_favourite),
-            expectedCount = 1,
-        )
+        runOnMainThread {
+            assertSpinnerDimensions(
+                label = "widget_favourite",
+                root = inflate(R.layout.widget_favourite),
+                expectedCount = 1,
+            )
+            assertSpinnerDimensions(
+                label = "widget_toolbar_favourite",
+                root = inflate(R.layout.widget_toolbar_favourite),
+                expectedCount = 1,
+            )
+        }
     }
 
     @Test
     fun voteLayout_usesCompactSpinnerDimensionsForBothStates() {
-        assertSpinnerDimensions(
-            label = "widget_vote",
-            root = inflate(R.layout.widget_vote),
-            expectedCount = 2,
-        )
+        runOnMainThread {
+            assertSpinnerDimensions(
+                label = "widget_vote",
+                root = inflate(R.layout.widget_vote),
+                expectedCount = 2,
+            )
+        }
     }
 
     @Test
     fun hostSurfaces_renderOwnedWidgetsWithCompactSpinners() {
-        val feedProgress = inflate(R.layout.adapter_feed_progress)
-        val favouriteWidget = feedProgress.findViewById<FavouriteWidget>(R.id.widget_favourite)
-        assertNotNull("adapter_feed_progress should contain widget_favourite", favouriteWidget)
-        assertSpinnerDimensions(
-            label = "adapter_feed_progress.widget_favourite",
-            root = favouriteWidget,
-            expectedCount = 1,
-        )
+        runOnMainThread {
+            val feedProgress = inflate(R.layout.adapter_feed_progress)
+            val favouriteWidget = feedProgress.findViewById<FavouriteWidget>(R.id.widget_favourite)
+            assertNotNull("adapter_feed_progress should contain widget_favourite", favouriteWidget)
+            assertSpinnerDimensions(
+                label = "adapter_feed_progress.widget_favourite",
+                root = favouriteWidget,
+                expectedCount = 1,
+            )
 
-        val review = inflate(R.layout.adapter_review)
-        val voteWidget = review.findViewById<VoteWidget>(R.id.review_vote)
-        assertNotNull("adapter_review should contain review_vote", voteWidget)
-        assertSpinnerDimensions(
-            label = "adapter_review.review_vote",
-            root = voteWidget,
-            expectedCount = 2,
-        )
+            val review = inflate(R.layout.adapter_review)
+            val voteWidget = review.findViewById<VoteWidget>(R.id.review_vote)
+            assertNotNull("adapter_review should contain review_vote", voteWidget)
+            assertSpinnerDimensions(
+                label = "adapter_review.review_vote",
+                root = voteWidget,
+                expectedCount = 2,
+            )
+        }
     }
 
     private fun inflate(layoutRes: Int): View = LayoutInflater.from(context).inflate(layoutRes, null, false)
+
+    private fun runOnMainThread(block: () -> Unit) {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(block)
+    }
 
     private fun assertSpinnerDimensions(
         label: String,
         root: View,
         expectedCount: Int,
     ) {
-        val spinners = root.findViewsOfType<CircularProgressView>()
+        val spinners = root.findViewsOfType<CircularProgressIndicator>()
         val expectedSize = context.resources.getDimensionPixelSize(R.dimen.widget_spinner_compact_size)
 
         assertEquals("Unexpected spinner count in $label", expectedCount, spinners.size)

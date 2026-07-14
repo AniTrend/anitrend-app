@@ -319,7 +319,7 @@
         <item name="colorSurfaceContainerHighest">?attr/cardColor</item>
         <item name="colorOnSurface">?attr/titleColor</item>
         <item name="colorOnSurfaceVariant">?attr/subtitleColor</item>
-        <item name="colorOutline">?attr/lineColor</item>
+        <item name="colorOutline">?attr/colorOutline</item>
         <item name="colorSecondaryContainer">?attr/cardColor</item>
         <item name="colorOnSecondaryContainer">?attr/titleColor</item>
     </style>
