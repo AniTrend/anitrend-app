@@ -2,13 +2,12 @@ package com.mxt.anitrend.base.custom.sheet
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
-import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
+import com.mxt.anitrend.base.custom.viewmodel.acquireTypedViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
@@ -135,14 +134,7 @@ abstract class BottomSheetGiphyList :
     @Suppress("UNCHECKED_CAST")
     protected fun setViewModel(stateSupported: Boolean) {
         if (viewModel == null) {
-            viewModel = ViewModelProvider(this).get(ViewModelBase::class.java) as ViewModelBase<GiphyContainer>
-            viewModel?.setContext(requireContext())
-            if (viewModel?.model?.hasActiveObservers() == false) {
-                viewModel?.model?.observe(this, this)
-            }
-            if (stateSupported) {
-                viewModel?.state = this
-            }
+            viewModel = acquireTypedViewModelBase(this, stateSupported, this)
         }
     }
 

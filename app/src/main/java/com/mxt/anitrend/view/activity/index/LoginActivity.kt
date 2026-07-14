@@ -9,10 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
+import androidx.lifecycle.ViewModelProvider
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
@@ -23,7 +20,8 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.*
-import com.mxt.anitrend.worker.AuthenticatorWorker
+import com.mxt.anitrend.viewmodel.LoginAuthState
+import com.mxt.anitrend.viewmodel.LoginAuthViewModel
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -37,24 +35,26 @@ class LoginActivity :
     View.OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var authViewModel: LoginAuthViewModel
     private var model: User? = null
 
-    private val workInfoObserver = Observer<WorkInfo?> { workInfo ->
-        if (workInfo != null && workInfo.state.isFinished) {
-            val outputData = workInfo.outputData
-            if (outputData.getBoolean(KeyUtil.arg_model, false)) {
+    private val authStateObserver = Observer<LoginAuthState> { authState ->
+        when (authState) {
+            LoginAuthState.Loading -> Unit
+            LoginAuthState.Success -> {
+                presenter.settings.isAuthenticated = true
                 viewModel?.params?.apply {
                     putBoolean(KeyUtil.arg_asHtml, false)
                 }
                 viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, applicationContext)
-            } else {
-                val error = outputData.getString(KeyUtil.arg_uri_error)
-                val errorDescription = outputData.getString(KeyUtil.arg_uri_error_description)
-                if (!TextUtils.isEmpty(error) && !TextUtils.isEmpty(errorDescription)) {
+            }
+            is LoginAuthState.Failure -> {
+                presenter.settings.isAuthenticated = false
+                if (!TextUtils.isEmpty(authState.error) && !TextUtils.isEmpty(authState.errorDescription)) {
                     NotifyUtil.createAlerter(
                         this@LoginActivity,
-                        error.orEmpty(),
-                        errorDescription.orEmpty(),
+                        authState.error.orEmpty(),
+                        authState.errorDescription.orEmpty(),
                         R.drawable.ic_warning_white_18dp,
                         R.color.colorStateOrange,
                         KeyUtil.DURATION_LONG,
@@ -62,8 +62,8 @@ class LoginActivity :
                 } else {
                     NotifyUtil.createAlerter(
                         this@LoginActivity,
-                        R.string.login_error_title,
-                        R.string.text_error_auth_login,
+                        getString(R.string.login_error_title),
+                        authState.errorDescription ?: getString(R.string.text_error_auth_login),
                         R.drawable.ic_warning_white_18dp,
                         R.color.colorStateRed,
                         KeyUtil.DURATION_LONG,
@@ -99,6 +99,8 @@ class LoginActivity :
         setContentView(binding.root)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
+        authViewModel = ViewModelProvider(this)[LoginAuthViewModel::class.java]
+        authViewModel.authState.observe(this, authStateObserver)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -239,19 +241,7 @@ class LoginActivity :
                 if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
                 }
-
-                val workerInputData = Data.Builder()
-                    .putString(KeyUtil.arg_model, intent.data.toString())
-                    .build()
-
-                val authenticatorWorker = OneTimeWorkRequest.Builder(AuthenticatorWorker::class.java)
-                    .addTag(KeyUtil.WorkAuthenticatorTag)
-                    .setInputData(workerInputData)
-                    .build()
-
-                WorkManager.getInstance(applicationContext).enqueue(authenticatorWorker)
-                WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(authenticatorWorker.id)
-                    .observe(this, workInfoObserver)
+                authViewModel.authenticate(intent.data.toString())
             }
         }
     }

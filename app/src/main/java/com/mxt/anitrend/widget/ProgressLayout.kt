@@ -4,13 +4,14 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Looper
 import android.util.AttributeSet
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.MainThread
+import com.google.android.material.button.MaterialButton
 import com.mxt.anitrend.R
 import com.mxt.anitrend.widget.progress.ProgressLayoutState
 
@@ -27,8 +28,8 @@ constructor(
     private val errorView: View
     private val errorIcon: ImageView
     private val errorMessage: TextView
-    private val errorAction: Button
-    private val contentViewVisibility = mutableMapOf<View, Int>()
+    private val errorAction: MaterialButton
+    private val initialContentVisibility = mutableMapOf<View, Int>()
     private val overlayIds = setOf(R.id.progressStateLoading, R.id.progressStateError)
 
     val isLoading: Boolean
@@ -41,13 +42,23 @@ constructor(
         get() = state == ProgressLayoutState.ERROR
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.layout_progress_state_overlay, this, true)
+        val materialContext = ContextThemeWrapper(
+            context,
+            R.style.ThemeOverlay_AniTrend_ProgressLayout_Material3,
+        )
+        LayoutInflater.from(materialContext).inflate(R.layout.layout_progress_state_overlay, this, true)
         loadingView = findViewById(R.id.progressStateLoading)
         errorView = findViewById(R.id.progressStateError)
         errorIcon = findViewById(R.id.progressStateErrorIcon)
         errorMessage = findViewById(R.id.progressStateErrorText)
         errorAction = findViewById(R.id.progressStateErrorAction)
         showContent()
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        captureContentVisibilityBaseline()
+        applyState()
     }
 
     @MainThread
@@ -111,32 +122,28 @@ constructor(
         loadingView.visibility = if (state == ProgressLayoutState.LOADING) View.VISIBLE else View.GONE
         errorView.visibility = if (state == ProgressLayoutState.ERROR) View.VISIBLE else View.GONE
 
+        forEachContentChild { child ->
+            initialContentVisibility.putIfAbsent(child, child.visibility)
+            child.visibility = when (state) {
+                ProgressLayoutState.CONTENT -> initialContentVisibility[child] ?: View.VISIBLE
+                ProgressLayoutState.LOADING,
+                ProgressLayoutState.ERROR,
+                -> View.GONE
+            }
+        }
+    }
+
+    private fun captureContentVisibilityBaseline() {
+        forEachContentChild { child ->
+            initialContentVisibility.putIfAbsent(child, child.visibility)
+        }
+    }
+
+    private inline fun forEachContentChild(action: (View) -> Unit) {
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child.id !in overlayIds) {
-                when (state) {
-                    ProgressLayoutState.CONTENT -> {
-                        val saved = contentViewVisibility.remove(child)
-                        child.visibility = saved ?: View.VISIBLE
-                    }
-                    ProgressLayoutState.LOADING,
-                    ProgressLayoutState.ERROR,
-                    -> {
-                        contentViewVisibility[child] = child.visibility
-                        child.visibility = View.GONE
-                    }
-                }
-            }
-        }
-
-        if (state == ProgressLayoutState.CONTENT) {
-            post {
-                for (i in 0 until childCount) {
-                    val child = getChildAt(i)
-                    if (child.id !in overlayIds && child.visibility != View.VISIBLE) {
-                        child.visibility = View.VISIBLE
-                    }
-                }
+                action(child)
             }
         }
     }
