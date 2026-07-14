@@ -2,9 +2,9 @@ package com.mxt.anitrend.util.media
 
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
-import androidx.appcompat.app.AlertDialog
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener
 import com.mxt.anitrend.base.interfaces.event.RetroCallback

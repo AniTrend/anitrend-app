@@ -210,7 +210,7 @@ class MainActivity :
                     visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
                     if (visibility == View.VISIBLE) {
                         findViewById<android.widget.EditText>(
-                            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+                            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
                         )?.requestFocus()
                     }
                 }

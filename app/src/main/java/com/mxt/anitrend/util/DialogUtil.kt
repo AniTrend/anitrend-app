@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.text.InputType
 import android.text.SpannedString
-import android.text.TextUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -57,8 +56,8 @@ object DialogUtil {
         val inputField = EditText(context).apply {
             inputType =
                 InputType.TYPE_CLASS_TEXT or
-                    InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE or
-                    InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE or
+                InputType.TYPE_TEXT_FLAG_MULTI_LINE
             setHint(R.string.text_enter_text)
         }
 
@@ -286,8 +285,7 @@ object DialogUtil {
      * @see FragmentActivity
      */
     @JvmStatic
-    fun createDefaultDialog(context: Context): MaterialAlertDialogBuilder =
-        MaterialAlertDialogBuilder(context)
-            .setBackgroundInsetBottom(0)
-            .setBackgroundInsetTop(0)
+    fun createDefaultDialog(context: Context): MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(context)
+        .setBackgroundInsetBottom(0)
+        .setBackgroundInsetTop(0)
 }

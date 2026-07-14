@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -18,8 +17,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 
-class BottomSheetUsers :
-    BottomSheetList<UserBase>() {
+class BottomSheetUsers : BottomSheetList<UserBase>() {
     private var binding: BottomSheetListBinding? = null
 
     companion object {
@@ -63,7 +61,7 @@ class BottomSheetUsers :
     override fun onStart() {
         super.onStart()
         val editText = searchBar?.findViewById<android.widget.EditText>(
-            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
         )
         editText?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -3,10 +3,8 @@ package com.mxt.anitrend.view.sheet
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GiphyAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -23,8 +21,7 @@ import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
  * Created by max on 2017/12/09.
  * giphy bottom sheet container
  */
-class BottomSheetGiphy :
-    BottomSheetGiphyList() {
+class BottomSheetGiphy : BottomSheetGiphyList() {
     private var binding: BottomSheetListBinding? = null
 
     @KeyUtil.RequestType
@@ -61,7 +58,7 @@ class BottomSheetGiphy :
         toolbarTitle?.text = getString(mTitle)
         toolbarSearch?.visibility = View.VISIBLE
         val editText = searchBar?.findViewById<android.widget.EditText>(
-            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
         )
         editText?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

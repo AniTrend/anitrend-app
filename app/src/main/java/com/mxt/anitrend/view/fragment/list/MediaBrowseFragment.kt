@@ -7,8 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.mxt.anitrend.util.selectedIndex
-import com.mxt.anitrend.util.selectedIndices
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -26,6 +24,8 @@ import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
+import com.mxt.anitrend.util.selectedIndex
+import com.mxt.anitrend.util.selectedIndices
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import java.util.Locale
 

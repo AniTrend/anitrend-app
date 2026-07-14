@@ -19,8 +19,8 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.util.media.MediaActionUtil
+import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
 /**

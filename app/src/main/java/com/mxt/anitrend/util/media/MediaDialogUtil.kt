@@ -1,7 +1,6 @@
 package com.mxt.anitrend.util.media
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog

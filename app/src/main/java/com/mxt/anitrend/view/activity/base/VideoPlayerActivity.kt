@@ -14,8 +14,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import timber.log.Timber
 
-class VideoPlayerActivity :
-    ActivityBase<Void, BasePresenter>() {
+class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
 
     private var contentLink: String? = null
     private var player: ExoPlayer? = null

@@ -124,11 +124,12 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         super.onPostCreate(savedInstanceState)
         mSearchBar?.apply {
             val editText = findViewById<android.widget.EditText>(
-                resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material")
+                resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
             )
             editText?.doOnTextChanged { text, _, _, _ ->
                 presenterRef?.notifyAllListeners(
-                    text?.toString()?.lowercase(Locale.getDefault()).orEmpty(), false
+                    text?.toString()?.lowercase(Locale.getDefault()).orEmpty(),
+                    false,
                 )
             }
             editText?.setOnEditorActionListener { v, actionId, _ ->
@@ -458,7 +459,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             sheet.show(supportFragmentManager, sheet.tag)
         }
     }
-
 
     companion object {
         private const val KEY_SEARCHVIEW_QUERY = "SEARCHVIEW_QUERY"
