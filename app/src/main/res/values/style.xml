@@ -312,14 +312,19 @@
         <item name="containerColor">?attr/cardColor</item>
     </style>
 
-    <style name="ThemeOverlay.AniTrend.ProgressLayout.Material3" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="ThemeOverlay.AniTrend.ProgressLayout.Material3" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Custom attrs explicitly defined so they resolve in this overlay context -->
+        <item name="colorAccent">@color/m3_light_primary</item>
+        <item name="cardColor">@color/m3_light_surfaceContainerHighest</item>
+        <item name="titleColor">@color/m3_light_onSurface</item>
+        <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
+
         <item name="colorPrimary">?attr/colorAccent</item>
         <item name="colorSecondary">?attr/colorAccent</item>
         <item name="colorSurface">?attr/cardColor</item>
         <item name="colorSurfaceContainerHighest">?attr/cardColor</item>
         <item name="colorOnSurface">?attr/titleColor</item>
         <item name="colorOnSurfaceVariant">?attr/subtitleColor</item>
-        <item name="colorOutline">?attr/colorOutline</item>
         <item name="colorSecondaryContainer">?attr/cardColor</item>
         <item name="colorOnSecondaryContainer">?attr/titleColor</item>
     </style>
