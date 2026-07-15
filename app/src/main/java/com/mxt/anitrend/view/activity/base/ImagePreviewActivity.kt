@@ -23,6 +23,7 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import timber.log.Timber
+import androidx.core.net.toUri
 
 /**
  * Created by max on 2017/11/14.
