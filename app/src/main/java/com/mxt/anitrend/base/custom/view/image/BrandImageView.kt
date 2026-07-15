@@ -21,6 +21,7 @@ import android.view.Gravity
 import androidx.appcompat.widget.AppCompatImageView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.util.CompatUtil
 
 /**
@@ -55,7 +56,7 @@ constructor(
         spanSize = resources.getInteger(R.integer.grid_giphy_x3)
         badgePadding = resources.getDimensionPixelSize(R.dimen.lg_margin)
         badge.setColorFilter(
-            CompatUtil.getColorFromAttr(context, R.attr.titleColor),
+            context.getCompatColorAttr(R.attr.colorOnSurface),
             PorterDuff.Mode.SRC_IN,
         )
     }

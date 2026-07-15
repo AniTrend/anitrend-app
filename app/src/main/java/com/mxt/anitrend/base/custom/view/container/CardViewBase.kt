@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import com.google.android.material.card.MaterialCardView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.util.CompatUtil
 
 /**
  * Created by max on 2017/11/30.
@@ -38,7 +37,7 @@ constructor(
         useCompatPadding = true
         preventCornerOverlap = false
         setContentPadding(contentPadding, contentPadding, contentPadding, contentPadding)
-        setCardBackgroundColor(CompatUtil.getColorFromAttr(context, R.attr.cardColor))
+        //setCardBackgroundColor(context.getCompatColorAttr(R.attr.colorOnSurface))
         requestLayout()
     }
 

@@ -44,7 +44,7 @@ object CompatUtil {
         message = "Use extension functions present in [AppExt]",
         replaceWith = ReplaceWith(
             expression = "activity.hideKeyboard()",
-            imports = ["com.mxt.extension.AppExt.hideKeyboard"],
+            imports = ["com.mxt.anitrend.extension.AppExt.hideKeyboard"],
         ),
         level = DeprecationLevel.ERROR,
     )
@@ -111,7 +111,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatDrawable(resource)",
-            imports = ["com.mxt.extension.getCompatDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatDrawable"],
         ),
         level = DeprecationLevel.ERROR,
     )
@@ -138,7 +138,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatTintedDrawable(resource)",
-            imports = ["com.mxt.extension.getCompatTintedDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatTintedDrawable"],
         ),
         level = DeprecationLevel.ERROR,
     )
@@ -171,7 +171,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatDrawable(resource, tint)",
-            imports = ["com.mxt.extension.getCompatDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatDrawable"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -205,7 +205,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatTintedDrawable(resource)",
-            imports = ["com.mxt.extension.getCompatTintedDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatTintedDrawable"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -230,7 +230,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatColorAttr(attr)",
-            imports = ["com.mxt.extension.getCompatColorAttr"],
+            imports = ["com.mxt.anitrend.extension.getCompatColorAttr"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -313,7 +313,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatColor(color)",
-            imports = ["com.mxt.extension.getCompatColor"],
+            imports = ["com.mxt.anitrend.extension.getCompatColor"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -323,7 +323,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getLayoutInflater()",
-            imports = ["com.mxt.extension.getLayoutInflater"],
+            imports = ["com.mxt.anitrend.extension.getLayoutInflater"],
         ),
         level = DeprecationLevel.WARNING,
     )

@@ -8,6 +8,7 @@ import android.widget.ViewFlipper
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.google.android.material.button.MaterialButton
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
 import com.mxt.anitrend.data.DatabaseHelper
@@ -52,7 +53,7 @@ class FollowStateWidgetInstrumentationTest {
                 flipper.displayedChild = WidgetPresenter.LOADING_STATE
                 widget.onResponse(call = NoOpUserBaseCall(), response = Response.success(targetUser))
 
-                val label = widget.findViewById<TextView>(R.id.button_state_text)
+                val label = widget.findViewById<MaterialButton>(R.id.button_state_text)
                 assertTrue(targetUser.isFollowing)
                 assertEquals(activity.getString(R.string.following), label.text.toString())
                 assertEquals(WidgetPresenter.CONTENT_STATE, flipper.displayedChild)

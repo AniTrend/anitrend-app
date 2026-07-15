@@ -22,15 +22,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:gravity="center"
-                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:text="@string/anitrend_sign_in" />
 
-                <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="?colorAccent"
@@ -49,31 +49,15 @@
                     android:inAnimation="@android:anim/fade_in"
                     android:outAnimation="@android:anim/fade_out">
 
-                    <com.google.android.material.card.MaterialCardView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/auth_sign_in"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?selectableItemBackground"
-                        app:cardBackgroundColor="?attr/colorPrimaryDark"
-                        app:cardPreventCornerOverlap="true"
-                        app:cardUseCompatPadding="true"
-                        app:cardCornerRadius="@dimen/lg_margin"
-                        app:contentPadding="@dimen/lg_margin">
-
-                        <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/sm_margin"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                            android:text="@string/sign_into_anilist"/>
-
-                    </com.google.android.material.card.MaterialCardView>
+                        android:text="@string/sign_into_anilist"/>
 
                     <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:layout_width="@dimen/avatar_ripple_radius"
-                        android:layout_height="@dimen/avatar_ripple_radius"
+                        android:layout_width="@dimen/widget_spinner_compact_size"
+                        android:layout_height="@dimen/widget_spinner_compact_size"
                         android:layout_gravity="center"
                         android:indeterminate="true"
                         app:indicatorColor="?colorAccent" />
@@ -92,7 +76,7 @@
                     android:gravity="center"
                     android:textAlignment="center"
                     android:textStyle="italic"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:padding="@dimen/md_margin"
                     tools:text="@string/create_account"/>
             </LinearLayout>

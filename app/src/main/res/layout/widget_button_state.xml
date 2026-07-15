@@ -11,26 +11,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/button_state_container"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_state_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:contentPadding="@dimen/lg_margin"
-            app:cardPreventCornerOverlap="true"
-            tools:cardBackgroundColor="?attr/colorAccent">
-
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                android:id="@+id/button_state_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                tools:text="@string/follow" />
-
-        </com.google.android.material.card.MaterialCardView>
+            tools:text="@string/follow" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="@dimen/xl_margin"
-            android:layout_height="@dimen/xl_margin"
+            android:layout_width="@dimen/widget_spinner_compact_size"
+            android:layout_height="@dimen/widget_spinner_compact_size"
             android:layout_gravity="center"
             android:indeterminate="true"
             app:indicatorColor="?colorAccent" />

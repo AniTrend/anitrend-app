@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
+import com.mxt.anitrend.extension.getCompatColorAttr
 
 /**
  * Created by max on 2017/07/17.
@@ -127,7 +128,7 @@ class ActionModeUtil<T>(
                 when (val itemView = viewHolder.itemView) {
                     is CardView ->
                         itemView.setCardBackgroundColor(
-                            CompatUtil.getColorFromAttr(viewHolder.getContext(), R.attr.cardColor),
+                            viewHolder.getContext().getCompatColorAttr(R.attr.colorOnSurface),
                         )
                     is CheckBox -> itemView.isChecked = false
                     else -> itemView.setBackgroundResource(0)

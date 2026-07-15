@@ -37,8 +37,8 @@ class SuggestionListFragment : MediaBrowseFragment() {
         val bundle = viewModel?.params ?: return
         bundle.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
         bundle.putBoolean(KeyUtil.arg_onList, false)
-        bundle.putStringArrayList(KeyUtil.arg_tags, ArrayList(presenter.getTopFavouriteTags(6)))
-        bundle.putStringArrayList(KeyUtil.arg_genres, ArrayList(presenter.getTopFavouriteGenres(4)))
+        bundle.putStringArrayList(KeyUtil.arg_tags, ArrayList(presenter.getTopFavouriteTags(6).orEmpty()))
+        bundle.putStringArrayList(KeyUtil.arg_genres, ArrayList(presenter.getTopFavouriteGenres(4).orEmpty()))
         bundle.putString(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)
         bundle.putInt(KeyUtil.arg_page, presenter.currentPage)
         bundle.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)

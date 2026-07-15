@@ -71,14 +71,8 @@ constructor(
     private fun setControlText() {
         val currentModel = model ?: return
         if (currentModel.isFollowing) {
-            binding.buttonStateContainer.setCardBackgroundColor(
-                context.getCompatColor(R.color.colorAccentDark),
-            )
             binding.buttonStateText.setText(R.string.following)
         } else {
-            binding.buttonStateContainer.setCardBackgroundColor(
-                context.getCompatColor(R.color.colorAccent),
-            )
             binding.buttonStateText.setText(R.string.follow)
         }
         resetFlipperState()

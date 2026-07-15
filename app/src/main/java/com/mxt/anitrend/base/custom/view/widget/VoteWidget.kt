@@ -16,9 +16,9 @@ import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetVoteBinding
 import com.mxt.anitrend.extension.getCompatColor
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.apiError
@@ -51,14 +51,6 @@ constructor(
     init {
         onInit()
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
 
     private fun setParameters(
         @KeyUtil.ReviewRating ratingType: String,
@@ -161,7 +153,7 @@ constructor(
     ) {
         if (colorStyle != 0) {
             singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(
-                CompatUtil.getDrawable(context, drawableItem, colorStyle),
+                context.getCompatDrawable(drawableItem, colorStyle),
                 null,
                 null,
                 null,
@@ -169,7 +161,7 @@ constructor(
             singleLineTextView.setTextColor(context.getCompatColor(colorStyle))
         } else {
             singleLineTextView.setCompoundDrawablesWithIntrinsicBounds(
-                CompatUtil.getDrawable(context, drawableItem, R.color.colorGrey600),
+                context.getCompatDrawable(drawableItem, R.color.colorGrey600),
                 null,
                 null,
                 null,
@@ -186,7 +178,10 @@ constructor(
         when (currentModel.userRating) {
             KeyUtil.UP_VOTE -> {
                 binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(
-                    CompatUtil.getDrawable(context, R.drawable.ic_thumb_up_grey_600_18dp, R.color.colorStateGreen),
+                    context.getCompatDrawable(
+                        R.drawable.ic_thumb_up_grey_600_18dp,
+                        R.color.colorStateGreen
+                    ),
                     null,
                     null,
                     null,
@@ -195,7 +190,10 @@ constructor(
             }
             KeyUtil.DOWN_VOTE -> {
                 binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(
-                    CompatUtil.getDrawable(context, R.drawable.ic_thumb_down_grey_600_18dp, R.color.colorStateOrange),
+                    context.getCompatDrawable(
+                        R.drawable.ic_thumb_down_grey_600_18dp,
+                        R.color.colorStateOrange
+                    ),
                     null,
                     null,
                     null,

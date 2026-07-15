@@ -12,6 +12,7 @@ import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
+import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -262,11 +263,7 @@ internal object MediaDialogUtil {
             DialogUtil
                 .createDefaultDialog(context)
                 .setIcon(
-                    CompatUtil.getDrawableTintAttr(
-                        context,
-                        if (isNewEntry) R.drawable.ic_fiber_new_white_24dp else R.drawable.ic_border_color_white_24dp,
-                        R.attr.colorAccent,
-                    ),
+                    context.getCompatTintedDrawable(if (isNewEntry) R.drawable.ic_fiber_new_white_24dp else R.drawable.ic_border_color_white_24dp),
                 ).setTitle(
                     HtmlCompat.fromHtml(
                         context.getString(
