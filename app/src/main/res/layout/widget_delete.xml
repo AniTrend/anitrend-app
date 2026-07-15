@@ -20,10 +20,11 @@
             tools:drawableStart="@drawable/ic_delete_red_600_18dp" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="@dimen/xl_margin"
-            android:layout_height="@dimen/xl_margin"
+            android:layout_width="@dimen/widget_spinner_compact_size"
+            android:layout_height="@dimen/widget_spinner_compact_size"
             android:layout_gravity="center"
             android:indeterminate="true"
-            app:indicatorColor="?colorAccent" />
+            app:indicatorColor="?colorAccent"
+            app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
     </ViewFlipper>

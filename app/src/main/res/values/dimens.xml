@@ -30,7 +30,9 @@
     <dimen name="md_margin">4dp</dimen>
     <dimen name="sm_margin">2dp</dimen>
     <dimen name="xs_margin">1dp</dimen>
-    <dimen name="widget_spinner_compact_size">12dp</dimen>
+
+    <dimen name="widget_flipper_padding">6dp</dimen>
+    <dimen name="widget_spinner_compact_size">18dp</dimen>
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->

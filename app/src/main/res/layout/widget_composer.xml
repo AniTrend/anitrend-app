@@ -152,22 +152,23 @@
                     android:foreground="?selectableItemBackground"
                     android:inAnimation="@android:anim/slide_in_left"
                     android:outAnimation="@android:anim/slide_out_right"
+                    android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                        android:padding="@dimen/md_margin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:tint="?colorAccent"
                         app:srcCompat="@drawable/ic_send_white_24dp" />
 
                     <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:layout_width="@dimen/xl_margin"
-                        android:layout_height="@dimen/xl_margin"
+                        android:layout_width="@dimen/widget_spinner_compact_size"
+                        android:layout_height="@dimen/widget_spinner_compact_size"
                         android:layout_gravity="center"
                         android:indeterminate="true"
-                        app:indicatorColor="?colorAccent" />
+                        app:indicatorColor="?colorAccent"
+                        app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
                 </ViewFlipper>
 

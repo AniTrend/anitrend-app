@@ -31,7 +31,8 @@
                 android:layout_height="@dimen/widget_spinner_compact_size"
                 android:layout_gravity="center"
                 android:indeterminate="true"
-                app:indicatorColor="?colorAccent" />
+                app:indicatorColor="?colorAccent"
+                app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
         </ViewFlipper>
 
@@ -65,7 +66,8 @@
                 android:layout_height="@dimen/widget_spinner_compact_size"
                 android:layout_gravity="center"
                 android:indeterminate="true"
-                app:indicatorColor="?colorAccent" />
+                app:indicatorColor="?colorAccent"
+                app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
         </ViewFlipper>
 
