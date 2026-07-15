@@ -568,8 +568,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Download Info!</string>
-    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
-    <string name="title_update_infodadat">Update Info!</string>
+    <string name="text_download_info">L\'élément sera téléchargé dans votre dossier de téléchargements.</string>
+    <string name="title_update_info">Update Info!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Information to share</string>

@@ -582,8 +582,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Ladda ner Info!</string>
-    <string name="text_download_info">Uppdateringsfilen sparas i din nedladdningsmapp.</string>
-    <string name="title_update_infodadat">Uppdatera information!</string>
+    <string name="text_download_info">Objektet laddas ner till din nedladdningsmapp.</string>
+    <string name="title_update_info">Uppdatera information!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Information att dela med</string>

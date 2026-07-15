@@ -494,8 +494,8 @@ Menu title for text composer -->
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">"Informationen zum Download!"</string>
-    <string name="text_download_info">"Die Update Datei wird in deinem Downloadordner gespeichert."</string>
-    <string name="title_update_infodadat">"Informationen zum Update!"</string>
+    <string name="text_download_info">"Das Objekt wird in deinen Download-Ordner heruntergeladen."</string>
+    <string name="title_update_info">"Informationen zum Update!"</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">"Geteilte Informationen"</string>

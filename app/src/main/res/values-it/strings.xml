@@ -576,8 +576,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Informazioni sul download!</string>
-    <string name="text_download_info">Il file di aggiornamento verrà salvado nella cartella dei download.</string>
-    <string name="title_update_infodadat">Informazioni sull\'aggiornamento!</string>
+    <string name="text_download_info">L\'elemento verrà scaricato nella tua cartella dei download.</string>
+    <string name="title_update_info">Informazioni sull\'aggiornamento!</string>
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Informazioni da condividere</string>
     <string name="sheet_share_title">Sistema lo status che vuoi condividere.</string>

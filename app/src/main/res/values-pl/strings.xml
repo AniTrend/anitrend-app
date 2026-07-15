@@ -586,8 +586,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Pobierz informacje!</string>
-    <string name="text_download_info">Plik aktualizacji zostanie zapisany w folderze pobierania.</string>
-    <string name="title_update_infodadat">Zaktualizuj informacje!</string>
+    <string name="text_download_info">Element zostanie pobrany do Twojego folderu pobierania.</string>
+    <string name="title_update_info">Zaktualizuj informacje!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Informacje do udostępnienia</string>

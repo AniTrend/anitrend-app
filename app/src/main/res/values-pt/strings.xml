@@ -583,8 +583,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Baixando Informações</string>
-    <string name="text_download_info">O arquivo de atualização será salvo na sua pasta de downloads.</string>
-    <string name="title_update_infodadat">Informação de Atualização!</string>
+    <string name="text_download_info">O item será baixado na sua pasta de downloads.</string>
+    <string name="title_update_info">Informação de Atualização!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Informação para compartilhar</string>
