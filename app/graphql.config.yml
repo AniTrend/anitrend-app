@@ -1,0 +1,8 @@
+schema: src/main/graphql/schema.graphql
+extensions:
+  endpoints:
+    AniList:
+      url: https://graphql.anilist.co
+      headers:
+        user-agent: JS GraphQL
+      introspect: true
