@@ -22,6 +22,7 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import timber.log.Timber
+import androidx.core.net.toUri
 
 /**
  * Created by max on 2017/11/14.
@@ -81,11 +82,17 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.image_preview_download -> {
-                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    null // Scoped storage doesn't require WRITE_EXTERNAL_STORAGE
+                } else {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }
+
+                if (permission == null || requestPermissionIfMissing(permission)) {
                     downloadAttachment()
                 } else if (ActivityCompat.shouldShowRequestPermissionRationale(
                         this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        permission,
                     )
                 ) {
                     DialogUtil.createMessage(
@@ -95,7 +102,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                     ) { _, _ ->
                         ActivityCompat.requestPermissions(
                             this,
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            arrayOf(permission),
                             REQUEST_PERMISSION,
                         )
                     }
@@ -147,10 +154,12 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     private fun downloadAttachment() {
         val currentUri = imageUri ?: return
-        val imageUri = Uri.parse(currentUri)
+        val imageUri = currentUri.toUri()
         val request =
             DownloadManager.Request(imageUri).apply {
-                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.lastPathSegment)
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) {
+                    setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.lastPathSegment)
+                }
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             }
 
@@ -179,7 +188,8 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     override fun onPermissionGranted(permission: String) {
         super.onPermissionGranted(permission)
-        if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+        val writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        if (permission == writePermission) {
             downloadAttachment()
         }
     }
