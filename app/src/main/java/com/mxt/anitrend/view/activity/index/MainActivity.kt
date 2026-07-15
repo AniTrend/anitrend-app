@@ -60,6 +60,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
+import androidx.core.view.isVisible
+import androidx.core.net.toUri
 
 /**
  * Created by max on 2017/10/04.
@@ -163,6 +165,18 @@ class MainActivity :
                 requestNotificationsPermission()
             }
         }
+        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+            override fun onQueryChanged(query: String) {
+                presenter.notifyAllListeners(query.lowercase(java.util.Locale.getDefault()), false)
+            }
+
+            override fun onSearchSubmitted(query: String) {
+                val intent = android.content.Intent(this@MainActivity, com.mxt.anitrend.view.activity.index.SearchActivity::class.java)
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra(KeyUtil.arg_search, query)
+                com.mxt.anitrend.util.CompatUtil.startRevealAnim(this@MainActivity, mSearchBar!!, intent)
+            }
+        }
         onActivityReady()
     }
 
@@ -197,7 +211,7 @@ class MainActivity :
             }
             R.id.action_discord -> {
                 val invite = getString(R.string.link_anitrend_discord)
-                intent = Intent(Intent.ACTION_VIEW, Uri.parse(invite))
+                intent = Intent(Intent.ACTION_VIEW, invite.toUri())
                 startActivity(intent)
                 return true
             }
@@ -207,11 +221,9 @@ class MainActivity :
             }
             R.id.action_search -> {
                 mSearchBar?.apply {
-                    visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
-                    if (visibility == View.VISIBLE) {
-                        findViewById<android.widget.EditText>(
-                            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
-                        )?.requestFocus()
+                    isVisible = !isVisible
+                    if (isVisible) {
+                        requestFocus()
                     }
                 }
                 return true

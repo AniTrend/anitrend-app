@@ -57,22 +57,16 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
     override fun updateUI() {
         toolbarTitle?.text = getString(mTitle)
         toolbarSearch?.visibility = View.VISIBLE
-        val editText = searchBar?.findViewById<android.widget.EditText>(
-            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
-        )
-        editText?.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {}
-        })
-        editText?.setOnEditorActionListener { v: android.widget.TextView, actionId: Int, _ ->
-            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
-                searchQuery = v.text.toString()
+        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+            override fun onQueryChanged(query: String) {
+                // Update search query logic
+                searchQuery = query
+            }
+
+            override fun onSearchSubmitted(query: String) {
+                searchQuery = query
                 stateLayout?.showLoading()
                 onRefresh()
-                true
-            } else {
-                false
             }
         }
         injectAdapter()

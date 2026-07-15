@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +25,7 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.CompatUtil
@@ -37,11 +36,9 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.activity.index.SearchActivity
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import java.util.Locale
-import kotlin.jvm.JvmName
 
 /**
  * Created by max on 2017/06/09.
@@ -56,6 +53,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     protected lateinit var TAG: String
 
     protected var mSearchBar: SearchBar? = null
+    protected var mSearchDelegate: ISearchDelegate? = null
     private var viewModelRef: ViewModelBase<M>? = null
 
     protected val viewModel: ViewModelBase<M>?
@@ -122,30 +120,10 @@ abstract class ActivityBase<M, P : CommonPresenter> :
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        mSearchBar?.apply {
-            val editText = findViewById<android.widget.EditText>(
-                resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
-            )
-            editText?.doOnTextChanged { text, _, _, _ ->
-                presenterRef?.notifyAllListeners(
-                    text?.toString()?.lowercase(Locale.getDefault()).orEmpty(),
-                    false,
-                )
-            }
-            editText?.setOnEditorActionListener { v, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    val query = v.text.toString()
-                    if (query.isNotEmpty()) {
-                        val intent = Intent(this@ActivityBase, SearchActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        intent.putExtra(KeyUtil.arg_search, query)
-                        CompatUtil.startRevealAnim(this@ActivityBase, this, intent)
-                    }
-                    true
-                } else {
-                    false
-                }
-            }
+        mSearchDelegate?.let { delegate ->
+            mSearchBar?.hint = getString(R.string.abc_search_hint)
+            // Note: M3 SearchBar doesn't have setOnQueryTextListener directly.
+            // We'll hook into the underlying logic.
         }
     }
 

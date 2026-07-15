@@ -15,6 +15,7 @@ import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -38,7 +39,7 @@ abstract class BottomSheetBase<T> :
     protected var toolbarState: AppCompatImageView? = null
     protected var toolbarSearch: AppCompatImageView? = null
     protected var searchBar: SearchBar? = null
-
+    protected var mSearchDelegate: ISearchDelegate? = null
     protected var viewModel: ViewModelBase<T>? = null
     protected var bottomSheetChoice: BottomSheetChoice? = null
 
@@ -111,7 +112,16 @@ abstract class BottomSheetBase<T> :
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
         toolbarSearch?.setOnClickListener {
-            searchBar?.visibility = if (searchBar?.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            mSearchDelegate?.let { delegate ->
+                searchBar?.apply {
+                    visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                    if (visibility == View.VISIBLE) {
+                        requestFocus()
+                    }
+                }
+            } ?: run {
+                searchBar?.visibility = if (searchBar?.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
         }
     }
 
