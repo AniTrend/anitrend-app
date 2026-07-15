@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Material3 tonal color schemes.
-    Primary seed: #D35400 (Pumpkin/Warm, hue 24)
-    Tertiary seed: #8E44AD (Warm Purple, hue 286)
+    Primary seed: #0A5CAA (Brand Blue, hue 210)
+    Tertiary seed: #5D4037 (Warm Brown/Complementary, hue 16)
     Generated via M3 tonal palette computation.
 -->
 <resources>
 
     <!-- ============================================================
          LIGHT SCHEME
-         surface background = tone 98 (near white)
+         surface background = tone 98 (near white/cool)
          ============================================================ -->
 
-    <!-- Primary: Warm Pumpkin tonal palette (seed #D35400) -->
-    <color name="m3_light_primary">#A63500</color>             <!-- tone 40 -->
-    <color name="m3_light_onPrimary">#FFFFFF</color>           <!-- tone 100 -->
-    <color name="m3_light_primaryContainer">#FFDBCC</color>    <!-- tone 90 -->
-    <color name="m3_light_onPrimaryContainer">#370C00</color>  <!-- tone 10 -->
+    <!-- Primary: Brand Blue tonal palette -->
+    <color name="m3_light_primary">#0A5CAA</color>            <!-- tone 40 -->
+    <color name="m3_light_onPrimary">#FFFFFF</color>          <!-- tone 100 -->
+    <color name="m3_light_primaryContainer">#D6E4FF</color>   <!-- tone 90 -->
+    <color name="m3_light_onPrimaryContainer">#001B3E</color> <!-- tone 10 -->
 
-    <!-- Secondary: Muted Warm Orange-Grey tonal palette -->
-    <color name="m3_light_secondary">#77574A</color>            <!-- tone 40 -->
+    <!-- Secondary: Neutral Blue-Grey tonal palette -->
+    <color name="m3_light_secondary">#555F71</color>            <!-- tone 40 -->
     <color name="m3_light_onSecondary">#FFFFFF</color>          <!-- tone 100 -->
-    <color name="m3_light_secondaryContainer">#FFDBCC</color>   <!-- tone 90 -->
-    <color name="m3_light_onSecondaryContainer">#2C160B</color> <!-- tone 10 -->
+    <color name="m3_light_secondaryContainer">#D9E3F8</color>   <!-- tone 90 -->
+    <color name="m3_light_onSecondaryContainer">#121C2B</color> <!-- tone 10 -->
 
-    <!-- Tertiary: Warm Purple tonal palette (seed #8E44AD) -->
-    <color name="m3_light_tertiary">#76468A</color>             <!-- tone 40 -->
+    <!-- Tertiary: Warm Brown complementary tonal palette -->
+    <color name="m3_light_tertiary">#835345</color>             <!-- tone 40 -->
     <color name="m3_light_onTertiary">#FFFFFF</color>           <!-- tone 100 -->
-    <color name="m3_light_tertiaryContainer">#F4DAFF</color>    <!-- tone 90 -->
-    <color name="m3_light_onTertiaryContainer">#2D0041</color>  <!-- tone 10 -->
+    <color name="m3_light_tertiaryContainer">#FFDBCE</color>    <!-- tone 90 -->
+    <color name="m3_light_onTertiaryContainer">#331107</color>  <!-- tone 10 -->
 
     <!-- Error: Standard M3 error -->
     <color name="m3_light_error">#BA1A1A</color>
@@ -36,50 +36,50 @@
     <color name="m3_light_errorContainer">#FFDAD6</color>
     <color name="m3_light_onErrorContainer">#410002</color>
 
-    <!-- Surface / Background hierarchy (neutral warm-ish ladder) -->
-    <color name="m3_light_surfaceDim">#E0D7D3</color>               <!-- tone 87 -->
-    <color name="m3_light_surface">#FFF8F6</color>                  <!-- tone 98 -->
-    <color name="m3_light_surfaceBright">#FFF8F6</color>            <!-- tone 98 -->
+    <!-- Surface / Background hierarchy -->
+    <color name="m3_light_surfaceDim">#D9D8DD</color>               <!-- tone 87 -->
+    <color name="m3_light_surface">#F9F8FC</color>                  <!-- tone 98 -->
+    <color name="m3_light_surfaceBright">#F9F8FC</color>            <!-- tone 98 -->
     <color name="m3_light_surfaceContainerLowest">#FFFFFF</color>   <!-- tone 100 -->
-    <color name="m3_light_surfaceContainerLow">#F9F1EF</color>      <!-- tone 96 -->
-    <color name="m3_light_surfaceContainer">#F3EBE9</color>         <!-- tone 94 -->
-    <color name="m3_light_surfaceContainerHigh">#EDE5E3</color>     <!-- tone 92 -->
-    <color name="m3_light_surfaceContainerHighest">#E7DFDD</color>  <!-- tone 90 -->
-    <color name="m3_light_onSurface">#201A18</color>                <!-- tone 10 -->
-    <color name="m3_light_surfaceVariant">#F4DDD7</color>           <!-- tone 90 -->
-    <color name="m3_light_onSurfaceVariant">#524440</color>         <!-- tone 30 -->
+    <color name="m3_light_surfaceContainerLow">#F3F2F6</color>      <!-- tone 96 -->
+    <color name="m3_light_surfaceContainer">#EDECF1</color>         <!-- tone 94 -->
+    <color name="m3_light_surfaceContainerHigh">#E8E6EB</color>     <!-- tone 92 -->
+    <color name="m3_light_surfaceContainerHighest">#E2E1E6</color>  <!-- tone 90 -->
+    <color name="m3_light_onSurface">#1B1B1F</color>                <!-- tone 10 -->
+    <color name="m3_light_surfaceVariant">#E4E1E6</color>           <!-- tone 90 -->
+    <color name="m3_light_onSurfaceVariant">#49454F</color>         <!-- tone 30 -->
 
     <!-- Outline -->
-    <color name="m3_light_outline">#85736E</color>         <!-- tone 50 -->
-    <color name="m3_light_outlineVariant">#D7C2BD</color>  <!-- tone 80 -->
+    <color name="m3_light_outline">#79747E</color>         <!-- tone 50 -->
+    <color name="m3_light_outlineVariant">#CAC4D0</color>  <!-- tone 80 -->
 
     <!-- Inverse -->
-    <color name="m3_light_inverseSurface">#362F2D</color>
-    <color name="m3_light_inverseOnSurface">#FBEEEC</color>
-    <color name="m3_light_inversePrimary">#FFB696</color>  <!-- tone 80 -->
+    <color name="m3_light_inverseSurface">#313033</color>
+    <color name="m3_light_inverseOnSurface">#F4EFF4</color>
+    <color name="m3_light_inversePrimary">#AAC7FF</color>  <!-- tone 80 -->
 
     <!-- ============================================================
          DARK SCHEME
-         surface background = tone 6 (deep warm dark grey)
+         surface background = tone 6 (deep dark grey/blue)
          ============================================================ -->
 
     <!-- Primary -->
-    <color name="m3_dark_primary">#FFB696</color>               <!-- tone 80 -->
-    <color name="m3_dark_onPrimary">#5D1900</color>              <!-- tone 20 -->
-    <color name="m3_dark_primaryContainer">#822800</color>       <!-- tone 30 -->
-    <color name="m3_dark_onPrimaryContainer">#FFDBCC</color>     <!-- tone 90 -->
+    <color name="m3_dark_primary">#AAC7FF</color>               <!-- tone 80 -->
+    <color name="m3_dark_onPrimary">#002F65</color>              <!-- tone 20 -->
+    <color name="m3_dark_primaryContainer">#00458E</color>       <!-- tone 30 -->
+    <color name="m3_dark_onPrimaryContainer">#D6E4FF</color>     <!-- tone 90 -->
 
     <!-- Secondary -->
-    <color name="m3_dark_secondary">#E6BEAE</color>              <!-- tone 80 -->
-    <color name="m3_dark_onSecondary">#442A1F</color>             <!-- tone 20 -->
-    <color name="m3_dark_secondaryContainer">#5D3F33</color>     <!-- tone 30 -->
-    <color name="m3_dark_onSecondaryContainer">#FFDBCC</color>   <!-- tone 90 -->
+    <color name="m3_dark_secondary">#BDC7DC</color>              <!-- tone 80 -->
+    <color name="m3_dark_onSecondary">#273141</color>             <!-- tone 20 -->
+    <color name="m3_dark_secondaryContainer">#3D4758</color>     <!-- tone 30 -->
+    <color name="m3_dark_onSecondaryContainer">#D9E3F8</color>   <!-- tone 90 -->
 
     <!-- Tertiary -->
-    <color name="m3_dark_tertiary">#E2B7F6</color>               <!-- tone 80 -->
-    <color name="m3_dark_onTertiary">#45155A</color>              <!-- tone 20 -->
-    <color name="m3_dark_tertiaryContainer">#5D2D72</color>      <!-- tone 30 -->
-    <color name="m3_dark_onTertiaryContainer">#F4DAFF</color>    <!-- tone 90 -->
+    <color name="m3_dark_tertiary">#F4B9A7</color>               <!-- tone 80 -->
+    <color name="m3_dark_onTertiary">#4E281C</color>              <!-- tone 20 -->
+    <color name="m3_dark_tertiaryContainer">#673C2F</color>      <!-- tone 30 -->
+    <color name="m3_dark_onTertiaryContainer">#FFDBCE</color>    <!-- tone 90 -->
 
     <!-- Error -->
     <color name="m3_dark_error">#FFB4AB</color>
@@ -88,32 +88,28 @@
     <color name="m3_dark_onErrorContainer">#FFDAD6</color>
 
     <!-- Surface / Background hierarchy -->
-    <color name="m3_dark_surfaceDim">#191210</color>                   <!-- tone 6 -->
-    <color name="m3_dark_surface">#191210</color>                      <!-- tone 6 -->
-    <color name="m3_dark_surfaceBright">#413835</color>                <!-- tone 24 -->
-    <color name="m3_dark_surfaceContainerLowest">#140D0B</color>       <!-- tone 4 -->
-    <color name="m3_dark_surfaceContainerLow">#201A18</color>          <!-- tone 10 -->
-    <color name="m3_dark_surfaceContainer">#251E1C</color>             <!-- tone 12 -->
-    <color name="m3_dark_surfaceContainerHigh">#302927</color>         <!-- tone 17 -->
-    <color name="m3_dark_surfaceContainerHighest">#3C3432</color>      <!-- tone 22 -->
-    <color name="m3_dark_onSurface">#F0DFDB</color>                    <!-- tone 90 -->
-    <color name="m3_dark_surfaceVariant">#524440</color>              <!-- tone 30 -->
-    <color name="m3_dark_onSurfaceVariant">#D7C2BD</color>             <!-- tone 80 -->
+    <color name="m3_dark_surfaceDim">#131318</color>                   <!-- tone 6 -->
+    <color name="m3_dark_surface">#131318</color>                      <!-- tone 6 -->
+    <color name="m3_dark_surfaceBright">#39393E</color>                <!-- tone 24 -->
+    <color name="m3_dark_surfaceContainerLowest">#0E0E13</color>       <!-- tone 4 -->
+    <color name="m3_dark_surfaceContainerLow">#1B1B1F</color>          <!-- tone 10 -->
+    <color name="m3_dark_surfaceContainer">#1F1F23</color>             <!-- tone 12 -->
+    <color name="m3_dark_surfaceContainerHigh">#2A2A2F</color>         <!-- tone 17 -->
+    <color name="m3_dark_surfaceContainerHighest">#353539</color>      <!-- tone 22 -->
+    <color name="m3_dark_onSurface">#E4E1E6</color>                    <!-- tone 90 -->
+    <color name="m3_dark_surfaceVariant">#49454F</color>              <!-- tone 30 -->
+    <color name="m3_dark_onSurfaceVariant">#CAC4D0</color>             <!-- tone 80 -->
 
     <!-- Outline -->
-    <color name="m3_dark_outline">#A08D88</color>          <!-- tone 60 -->
-    <color name="m3_dark_outlineVariant">#524440</color>   <!-- tone 30 -->
+    <color name="m3_dark_outline">#938F99</color>          <!-- tone 60 -->
+    <color name="m3_dark_outlineVariant">#49454F</color>   <!-- tone 30 -->
 
     <!-- Inverse -->
-    <color name="m3_dark_inverseSurface">#F0DFDB</color>
-    <color name="m3_dark_inverseOnSurface">#362F2D</color>
-    <color name="m3_dark_inversePrimary">#A63500</color>   <!-- tone 40 -->
+    <color name="m3_dark_inverseSurface">#E4E1E6</color>
+    <color name="m3_dark_inverseOnSurface">#313033</color>
+    <color name="m3_dark_inversePrimary">#0A5CAA</color>   <!-- tone 40 -->
 
-    <!-- ============================================================
-         AMOLED BLACK SCHEME
-         surface background = #000000
-         ============================================================ -->
-
+    <!-- AMOLED BLACK SCHEME -->
     <color name="m3_black_surfaceDim">#000000</color>
     <color name="m3_black_surface">#000000</color>
     <color name="m3_black_surfaceBright">#000000</color>
