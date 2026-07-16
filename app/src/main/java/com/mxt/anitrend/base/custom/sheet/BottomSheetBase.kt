@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.sheet
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -33,7 +34,7 @@ abstract class BottomSheetBase<T> :
     BottomSheetListener,
     ResponseCallback {
 
-    var TAG: String? = null
+    var tag: String? = null
 
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
@@ -69,6 +70,9 @@ abstract class BottomSheetBase<T> :
                         BottomSheetBehavior.STATE_HIDDEN -> dismiss()
                         BottomSheetBehavior.STATE_COLLAPSED -> onStateCollapsed()
                         BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
+                        BottomSheetBehavior.STATE_DRAGGING,
+                        BottomSheetBehavior.STATE_HALF_EXPANDED,
+                        BottomSheetBehavior.STATE_SETTLING -> Unit
                     }
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -79,7 +83,7 @@ abstract class BottomSheetBase<T> :
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TAG = toString()
+        tag = toString()
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
             mTitle = args.getInt(KeyUtil.arg_title)
@@ -112,15 +116,15 @@ abstract class BottomSheetBase<T> :
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
         toolbarSearch?.setOnClickListener {
-            mSearchDelegate?.let { delegate ->
+            mSearchDelegate?.let {
                 searchBar?.apply {
-                    visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
-                    if (visibility == View.VISIBLE) {
+                    isVisible = !isVisible
+                    if (isVisible) {
                         requestFocus()
                     }
                 }
             } ?: run {
-                searchBar?.visibility = if (searchBar?.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                searchBar?.isVisible = searchBar?.isVisible?.not() ?: false
             }
         }
     }
@@ -133,12 +137,12 @@ abstract class BottomSheetBase<T> :
     }
 
     protected fun createBottomSheetBehavior(contentView: View) {
-        val parentView = contentView.parent as? View ?: return
-        val layoutParams = parentView.layoutParams as? CoordinatorLayout.LayoutParams ?: return
-        val coordinatorBehavior = layoutParams.behavior as? BottomSheetBehavior<*> ?: return
+        val parentView = (contentView.parent as? View) ?: return
+        val layoutParams = (parentView.layoutParams as? CoordinatorLayout.LayoutParams) ?: return
+        val coordinatorBehavior = (layoutParams.behavior as? BottomSheetBehavior<*>) ?: return
 
         bottomSheetBehavior = coordinatorBehavior
-        bottomSheetBehavior?.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT))
+        bottomSheetBehavior?.peekHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
         bottomSheetCallback?.let { callback ->
             bottomSheetBehavior?.addBottomSheetCallback(callback)
         }
@@ -207,10 +211,10 @@ abstract class BottomSheetBase<T> :
     }
 
     override fun showError(error: String) {
-        Timber.tag(TAG ?: javaClass.simpleName).e(error)
+        Timber.tag(tag ?: javaClass.simpleName).e(error)
     }
 
     override fun showEmpty(message: String) {
-        Timber.tag(TAG ?: javaClass.simpleName).d(message)
+        Timber.tag(tag ?: javaClass.simpleName).d(message)
     }
 }
