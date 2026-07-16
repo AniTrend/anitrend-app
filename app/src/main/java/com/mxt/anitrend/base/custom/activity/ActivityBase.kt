@@ -291,7 +291,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
      * @param permission the current permission granted
      */
     protected open fun onPermissionGranted(permission: String) {
-        Timber.tag(TAG).d("Granted %s", permission)
+        Timber.d("Granted %s", permission)
     }
 
     /**
@@ -397,12 +397,12 @@ abstract class ActivityBase<M, P : CommonPresenter> :
      * @param model The new data
      */
     override fun onChanged(model: M?) {
-        Timber.tag(TAG).v("onChanged() from view model has received data")
+        Timber.v("onChanged() from view model has received data")
     }
 
     override fun showError(error: String) {
         if (error.isNotEmpty()) {
-            Timber.tag(TAG).w(error)
+            Timber.w(error)
         }
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             NotifyUtil.createAlerter(
@@ -418,7 +418,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
 
     override fun showEmpty(message: String) {
         if (message.isNotEmpty()) {
-            Timber.tag(TAG).v(message)
+            Timber.v(message)
         }
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             NotifyUtil.createAlerter(

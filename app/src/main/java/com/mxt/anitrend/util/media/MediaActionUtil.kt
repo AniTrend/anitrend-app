@@ -80,7 +80,7 @@ class MediaActionUtil private constructor(
             if (response.isSuccessful && mediaBase != null) {
                 showActionDialog(mediaBase)
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
             }
             dismissProgress()
@@ -93,7 +93,7 @@ class MediaActionUtil private constructor(
     ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress()
-            Timber.tag(tagName).e(throwable)
+            Timber.e(throwable)
             throwable.printStackTrace()
             NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
         }

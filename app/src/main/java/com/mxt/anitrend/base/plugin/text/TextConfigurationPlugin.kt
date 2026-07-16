@@ -30,7 +30,7 @@ internal class TextConfigurationPlugin private constructor() : AbstractMarkwonPl
                             .setText(decodeDataIn(link))
                             .setTitle(R.string.title_bottom_sheet_spoiler)
                             .build()
-                        sheet.show(context.supportFragmentManager, sheet.TAG)
+                        sheet.show(context.supportFragmentManager, sheet.tag)
                     }
                 } else {
                     val mediaType = MimeTypeMap.getFileExtensionFromUrl(link)

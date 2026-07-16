@@ -213,7 +213,7 @@ constructor(
                 characterBase?.toggleFavourite()
                 setIconType()
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 NotifyUtil
                     .makeText(
                         context,

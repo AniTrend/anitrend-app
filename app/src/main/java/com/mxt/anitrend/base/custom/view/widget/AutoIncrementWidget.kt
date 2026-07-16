@@ -157,7 +157,7 @@ constructor(
                 }
             } else {
                 resetFlipperState()
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {

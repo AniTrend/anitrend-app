@@ -246,10 +246,10 @@ constructor(
         throwable: Throwable,
     ) {
         try {
-            Timber.tag(tagName).e(throwable)
+            Timber.e(throwable)
             resetFlipperState()
         } catch (e: Exception) {
-            Timber.tag(tagName).e(throwable)
+            Timber.e(throwable)
         }
     }
 }

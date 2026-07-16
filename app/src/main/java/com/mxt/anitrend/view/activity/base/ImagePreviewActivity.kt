@@ -129,7 +129,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                     startActivity(intent)
                     true
                 } catch (e: Exception) {
-                    Timber.tag(TAG).e(e.localizedMessage)
+                    Timber.e(e.localizedMessage)
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
                     true
                 }

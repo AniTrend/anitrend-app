@@ -202,19 +202,19 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun showError(error: String) {
         if (!TextUtils.isEmpty(error)) {
-            Timber.tag(TAG).d(error)
+            Timber.d(error)
         }
     }
 
     override fun showEmpty(message: String) {
         if (!TextUtils.isEmpty(message)) {
-            Timber.tag(TAG).i(message)
+            Timber.i(message)
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         if (key != null) {
-            Timber.tag(TAG).i(key)
+            Timber.i(key)
         }
     }
 

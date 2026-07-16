@@ -178,7 +178,7 @@ constructor(
                     updateUI()
                 }
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
             }
         } catch (e: Exception) {
             Timber.e(e)
@@ -190,9 +190,9 @@ constructor(
         throwable: Throwable,
     ) {
         try {
-            Timber.tag(tagName).w(throwable)
+            Timber.w(throwable)
         } catch (e: Exception) {
-            Timber.tag(tagName).e(e)
+            Timber.e(e)
         }
     }
 

@@ -128,7 +128,7 @@ constructor(
                 model?.let { presenter?.notifyAllListeners(BaseConsumer(KeyUtil.MUT_TOGGLE_FOLLOW, it), false) }
                 setControlText()
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 setControlText()
             }
         } catch (e: Exception) {

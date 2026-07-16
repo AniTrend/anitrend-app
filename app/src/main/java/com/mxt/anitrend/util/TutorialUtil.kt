@@ -103,7 +103,7 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return null
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
@@ -131,7 +131,7 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return null
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
@@ -159,7 +159,7 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return null
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
@@ -183,7 +183,7 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
@@ -211,7 +211,7 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
@@ -239,7 +239,7 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {

@@ -61,16 +61,16 @@ object WebTokenRequest {
         if (token == null || (token?.expires ?: 0) < now) {
             val authCode = presenter.database.authCode?.code
             if (authCode == null) {
-                Timber.tag(TAG).e("Token had an invalid instance from context: %s", context)
+                Timber.e("Token had an invalid instance from context: %s", context)
                 return
             }
             val response = WebFactory.requestCodeTokenSync(authCode)
             if (response != null) {
                 createNewTokenReference(response)
                 presenter.database.webToken = response
-                Timber.tag(TAG).d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L)
+                Timber.d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L)
             } else {
-                Timber.tag(TAG).e("Token had an invalid instance from context: %s", context)
+                Timber.e("Token had an invalid instance from context: %s", context)
             }
         }
     }
@@ -121,7 +121,7 @@ object WebTokenRequest {
             webToken.calculateExpires()
             token = webToken.clone()
         } catch (e: CloneNotSupportedException) {
-            Timber.tag(TAG).e(e, "createNewTokenReference failed")
+            Timber.e(e, "createNewTokenReference failed")
         }
     }
 

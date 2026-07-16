@@ -172,7 +172,7 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
     fun checkValidAuth() {
         if (settings.isAuthenticated) {
             if (database.currentUser == null) {
-                Timber.tag(TAG).w("Last attempt to authenticate failed, refreshing session!")
+                Timber.w("Last attempt to authenticate failed, refreshing session!")
                 WebTokenRequest.invalidateInstance(context)
             }
         }

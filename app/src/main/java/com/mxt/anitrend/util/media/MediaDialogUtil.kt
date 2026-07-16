@@ -119,7 +119,7 @@ internal object MediaDialogUtil {
                                     Toast.LENGTH_SHORT,
                                 ).show()
                         } else {
-                            Timber.tag(tagName).w(response.apiError())
+                            Timber.w(response.apiError())
                             NotifyUtil
                                 .makeText(
                                     context,
@@ -203,7 +203,7 @@ internal object MediaDialogUtil {
                                     ).show()
                             }
                         } else {
-                            Timber.tag(tagName).w(response.apiError())
+                            Timber.w(response.apiError())
                             NotifyUtil
                                 .makeText(
                                     context,
