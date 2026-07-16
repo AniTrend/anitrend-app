@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.databinding.BottomSheetSpoilerBinding
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.util.KeyUtil
 
 class BottomSheetSpoiler : BottomSheetBase<Unit>() {
@@ -23,7 +23,7 @@ class BottomSheetSpoiler : BottomSheetBase<Unit>() {
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        binding = BottomSheetSpoilerBinding.inflate(CompatUtil.getLayoutInflater(requireContext()))
+        binding = BottomSheetSpoilerBinding.inflate(requireContext().getLayoutInflater())
         dialog.setContentView(requireNotNull(binding).root)
         bindToolbarViews(requireNotNull(binding).root)
         createBottomSheetBehavior(requireNotNull(binding).root)

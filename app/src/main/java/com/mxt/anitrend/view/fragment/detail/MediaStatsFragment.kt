@@ -319,10 +319,10 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding.seriesStats.invalidate()
     }
 
-    override fun onChanged(model: Media?) {
+    override fun onChanged(value: Media?) {
         val binding = binding ?: return
-        if (model != null) {
-            this.model = model
+        if (value != null) {
+            this.model = value
             updateUI()
         } else {
             binding.stateLayout.showError(

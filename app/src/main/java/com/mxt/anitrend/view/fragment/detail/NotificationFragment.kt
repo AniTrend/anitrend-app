@@ -78,6 +78,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
 
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_mark_all).isVisible = true
     }
@@ -96,6 +97,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 return true
             }
         }
+        @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
@@ -106,15 +108,16 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
     }
 
-    override fun onChanged(content: PageContainer<Notification>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<Notification>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
+            if (!value.isEmpty) {
+                @Suppress("DEPRECATION")
                 val notifications = GraphUtil.filterNotificationList(
                     presenter,
-                    content.pageData,
+                    value.pageData,
                 )
                 onPostProcessed(notifications)
             } else {

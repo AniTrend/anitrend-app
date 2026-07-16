@@ -29,6 +29,7 @@ class Media() :
     var stats: MediaStats? = null
     var rankings: List<MediaRank>? = null
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         description = parcel.readString()
         synonyms = parcel.createStringArrayList()

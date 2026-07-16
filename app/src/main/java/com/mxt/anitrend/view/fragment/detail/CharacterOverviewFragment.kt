@@ -87,16 +87,16 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
         viewModel?.requestData(KeyUtil.CHARACTER_OVERVIEW_REQ, ctx)
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
+    override fun onClick(v: View) {
+        when (v.id) {
             R.id.character_img -> {
                 CompatUtil.imagePreview(
-                    view,
+                    v,
                     model?.image?.large,
                     R.string.image_preview_error_character_image,
                 )
             }
-            else -> super.onClick(view)
+            else -> super.onClick(v)
         }
     }
 
@@ -105,9 +105,9 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
         binding = null
     }
 
-    override fun onChanged(model: MediaCharacter?) {
-        if (model != null) {
-            this.model = model
+    override fun onChanged(value: MediaCharacter?) {
+        if (value != null) {
+            this.model = value
         }
         updateUI()
     }

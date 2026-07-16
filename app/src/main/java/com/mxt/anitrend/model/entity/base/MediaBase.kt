@@ -44,6 +44,7 @@ open class MediaBase() :
     var nextAiringEpisode: AiringSchedule? = null
     var mediaListEntry: MediaList? = null
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         idMal = parcel.readLong()

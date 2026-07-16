@@ -88,10 +88,12 @@ open class MediaListFragment :
             }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -100,6 +102,8 @@ open class MediaListFragment :
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -227,13 +231,13 @@ open class MediaListFragment :
         }
     }
 
-    override fun onChanged(content: PageContainer<MediaListCollection>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<MediaListCollection>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                val mediaListCollection = content.pageData.firstOrNull()
+            if (!value.isEmpty) {
+                val mediaListCollection = value.pageData.firstOrNull()
                 if (mediaListCollection != null) {
                     val entries = mediaListCollection.entries.orEmpty()
                     val mediaListSort = presenter.settings.mediaListSort ?: KeyUtil.PROGRESS

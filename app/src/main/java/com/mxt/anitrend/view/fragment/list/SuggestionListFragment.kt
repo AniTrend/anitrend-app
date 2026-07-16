@@ -46,10 +46,12 @@ class SuggestionListFragment : MediaBrowseFragment() {
         viewModel?.requestData(KeyUtil.MEDIA_BROWSE_REQ, ctx)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -58,6 +60,8 @@ class SuggestionListFragment : MediaBrowseFragment() {
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {

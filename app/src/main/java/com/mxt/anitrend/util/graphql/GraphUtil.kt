@@ -26,7 +26,7 @@ object GraphUtil {
     ): List<FeedList> {
         val filteredList =
             feedLists
-                .filter { f -> !f?.type.isNullOrBlank() }
+                .filter { f -> !f.type.isNullOrBlank() }
         presenter.getPageInfo()?.perPage = filteredList.size
         return filteredList
     }
@@ -41,7 +41,7 @@ object GraphUtil {
     ): List<Notification> {
         val filteredList =
             notifications
-                .filter { f -> !f?.type.isNullOrBlank() }
+                .filter { f -> !f.type.isNullOrBlank() }
         if (presenter.getPageInfo() != null) {
             presenter.getPageInfo()?.perPage = filteredList.size
         }

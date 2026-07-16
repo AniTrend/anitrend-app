@@ -3,7 +3,7 @@ package com.mxt.anitrend.base.custom.view.text
 import android.content.Context
 import android.util.AttributeSet
 import com.mxt.anitrend.R
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.extension.getCompatColor
 
 class SpoilerTagTextView
 @JvmOverloads
@@ -19,7 +19,7 @@ constructor(
             isSpoiler: Boolean?,
         ) {
             if (isSpoiler == true) {
-                view.setTextColor(CompatUtil.getColor(view.context, R.color.colorStateOrange))
+                view.setTextColor(view.context.getCompatColor(R.color.colorStateOrange))
             }
         }
     }

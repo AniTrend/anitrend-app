@@ -9,6 +9,7 @@ import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.Typeface
@@ -55,7 +56,7 @@ constructor(
         CompatUtil.getScreenDimens(deviceDimens, context)
         spanSize = resources.getInteger(R.integer.grid_giphy_x3)
         badgePadding = resources.getDimensionPixelSize(R.dimen.lg_margin)
-        badge.setColorFilter(
+        badge.colorFilter = PorterDuffColorFilter(
             context.getCompatColorAttr(R.attr.colorOnSurface),
             PorterDuff.Mode.SRC_IN,
         )
@@ -133,6 +134,7 @@ constructor(
             paint.colorFilter = colorFilter
         }
 
+        @Deprecated("Deprecated in Java")
         override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
         companion object {
@@ -158,6 +160,7 @@ constructor(
             if (bitmap == null) {
                 val dm: DisplayMetrics = context.resources.displayMetrics
                 val density = dm.density
+                @Suppress("DEPRECATION")
                 val scaledDensity = dm.scaledDensity
                 val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)
                 textPaint.typeface = Typeface.create(TYPEFACE, TYPEFACE_STYLE)

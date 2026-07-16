@@ -53,16 +53,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
      * `position`. Type codes need not be contiguous.
      */
     override fun getItemViewType(position: Int): Int {
-        val notification = data[position]
-        return when (notification.user) {
-            null -> {
-                when (notification?.type) {
-                    KeyUtil.AIRING, KeyUtil.RELATED_MEDIA_ADDITION, KeyUtil.MEDIA_DATA_CHANGE, KeyUtil.MEDIA_DELETION, KeyUtil.MEDIA_MERGE -> KeyUtil.RECYCLER_TYPE_CONTENT
-                    else -> KeyUtil.RECYCLER_TYPE_ERROR
-                }
-            }
-            else -> KeyUtil.RECYCLER_TYPE_CONTENT
-        }
+        return KeyUtil.RECYCLER_TYPE_CONTENT
     }
 
     /**
@@ -112,8 +103,8 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
 
             binding.notificationTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
 
-            if (model.user?.avatar?.large != null) {
-                AspectImageView.setImage(binding.notificationImg, model.user?.avatar?.large)
+            if (model.user.avatar?.large != null) {
+                AspectImageView.setImage(binding.notificationImg, model.user.avatar?.large)
             } else if (model.media?.coverImage?.extraLarge != null) {
                 AspectImageView.setImage(binding.notificationImg, model.media?.coverImage?.extraLarge)
             }
@@ -121,32 +112,32 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
             when (model.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
                     binding.notificationSubject.setText(R.string.notification_user_activity_message)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.FOLLOWING -> {
                     binding.notificationSubject.setText(R.string.notification_user_follow_activity)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
                     binding.notificationSubject.setText(R.string.notification_user_activity_mention)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.THREAD_COMMENT_MENTION -> {
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.THREAD_SUBSCRIBED -> {
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.THREAD_COMMENT_REPLY -> {
                     binding.notificationSubject.setText(R.string.notification_user_comment_forum)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.AIRING -> {
@@ -160,12 +151,12 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     binding.notificationSubject.setText(R.string.notification_user_like_activity)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
                     binding.notificationSubject.setText(R.string.notification_user_reply_activity)
-                    binding.notificationHeader.text = model.user?.name.orEmpty()
+                    binding.notificationHeader.text = model.user.name.orEmpty()
                     binding.notificationContent.text = model.context
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {

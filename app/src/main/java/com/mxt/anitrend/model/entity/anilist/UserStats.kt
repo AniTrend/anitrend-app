@@ -16,6 +16,7 @@ import kotlinx.parcelize.Parcelize
 @Deprecated("Deprecated in Java")
 @Parcelize
 class UserStats
+@Suppress("DEPRECATION")
 @JvmOverloads
 constructor(
     var watchedTime: Int = 0,

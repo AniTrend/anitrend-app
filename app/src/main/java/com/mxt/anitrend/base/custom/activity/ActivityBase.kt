@@ -111,9 +111,9 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             val settings = KoinExt.get(Settings::class.java)
             if (CompatUtil.isLightTheme(settings)) {
                 WindowCompat.getInsetsController(window, window.decorView)
-                    ?.setAppearanceLightStatusBars(true)
+                    .setAppearanceLightStatusBars(true)
                 WindowCompat.getInsetsController(window, window.decorView)
-                    ?.setAppearanceLightNavigationBars(true)
+                    .setAppearanceLightNavigationBars(true)
             }
         }
     }
@@ -175,6 +175,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
+    @Suppress("DEPRECATION")
     protected fun setTransparentStatusBar() {
         val window = window
         window.decorView.systemUiVisibility =
@@ -183,6 +184,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         window.statusBarColor = color
     }
 
+    @Suppress("DEPRECATION")
     protected fun setTransparentStatusBarWithColor() {
         val window = window
         val color = ContextCompat.getColor(this, R.color.colorTransparent)
@@ -236,6 +238,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean = super.onCreateOptionsMenu(menu)
 
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -328,6 +331,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
      * Take care of popping the fragment back stack or finishing the activity
      * as appropriate.
      */
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (mFragment?.onBackPress() == true) {
             return
@@ -346,6 +350,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             isClosing = true
             return
         }
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 
@@ -394,9 +399,9 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     /**
      * Called when the model state is changed.
      *
-     * @param model The new data
+     * @param value The new data
      */
-    override fun onChanged(model: M?) {
+    override fun onChanged(value: M?) {
         Timber.v("onChanged() from view model has received data")
     }
 

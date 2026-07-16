@@ -232,11 +232,13 @@ private val networkModule = module {
             .build()
     }
     single {
+        @Suppress("DEPRECATION")
+        val gson = GsonBuilder()
+            .enableComplexMapKeySerialization()
+            .setLenient()
+            .create()
         AniGraphConverter(
-            gson = GsonBuilder()
-                .enableComplexMapKeySerialization()
-                .setLenient()
-                .create(),
+            gson = gson,
             registry = get(),
         )
     }

@@ -28,6 +28,7 @@ class Review() : Parcelable {
     var user: UserBase = UserBase()
     var media: MediaBase = MediaBase()
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         summary = parcel.readString()

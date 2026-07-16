@@ -91,7 +91,7 @@ object DialogUtil {
                 .setNegativeButton(R.string.Cancel, null)
                 .show()
 
-        (dialog as? AlertDialog)?.getButton(DialogInterface.BUTTON_POSITIVE)?.setOnClickListener {
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
             if (inputField.text.isNullOrBlank()) {
                 NotifyUtil
                     .makeText(
@@ -115,7 +115,7 @@ object DialogUtil {
                 dialog.dismiss()
             }
         }
-        (dialog as? AlertDialog)?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setOnClickListener {
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener {
             dialog.dismiss()
         }
     }

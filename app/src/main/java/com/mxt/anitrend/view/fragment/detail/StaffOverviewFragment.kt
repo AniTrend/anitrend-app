@@ -86,16 +86,16 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
         viewModel?.requestData(KeyUtil.STAFF_OVERVIEW_REQ, ctx)
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
+    override fun onClick(v: View) {
+        when (v.id) {
             R.id.staff_img -> {
                 CompatUtil.imagePreview(
-                    view,
+                    v,
                     model?.image?.large,
                     R.string.image_preview_error_staff_image,
                 )
             }
-            else -> super.onClick(view)
+            else -> super.onClick(v)
         }
     }
 
@@ -104,9 +104,9 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
         binding = null
     }
 
-    override fun onChanged(model: StaffBase?) {
-        if (model != null) {
-            this.model = model
+    override fun onChanged(value: StaffBase?) {
+        if (value != null) {
+            this.model = value
         }
         updateUI()
     }

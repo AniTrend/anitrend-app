@@ -83,10 +83,12 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
             }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         if (mediaBrowseUtil?.isBasicFilter == true) {
             menu.findItem(R.id.action_type).isVisible = false
@@ -97,6 +99,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -345,13 +349,13 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         }
     }
 
-    override fun onChanged(content: PageContainer<MediaBase>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<MediaBase>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                onPostProcessed(content.pageData)
+            if (!value.isEmpty) {
+                onPostProcessed(value.pageData)
             } else {
                 onPostProcessed(emptyList())
             }

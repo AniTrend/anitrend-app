@@ -307,7 +307,7 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         }
     }
 
-    abstract override fun onChanged(content: C?)
+    abstract override fun onChanged(value: C?)
 
     abstract override fun onItemClick(
         target: View,

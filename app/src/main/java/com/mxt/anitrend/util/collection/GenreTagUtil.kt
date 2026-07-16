@@ -20,7 +20,7 @@ class GenreTagUtil : PreferenceConverter<Map<Int, String>> {
             selectedIndices: Array<Int>?,
         ): Map<Int, String>? {
             if (selectedIndices != null) {
-                val tagMap: MutableMap<Int, String> = WeakHashMap()
+                val tagMap: MutableMap<Int, String> = HashMap()
                 for (index in selectedIndices) {
                     tagMap[index] = mediaTags[index].name.orEmpty()
                 }
@@ -35,7 +35,7 @@ class GenreTagUtil : PreferenceConverter<Map<Int, String>> {
             selectedIndices: Array<Int>?,
         ): Map<Int, String>? {
             if (selectedIndices != null) {
-                val genreMap: MutableMap<Int, String> = WeakHashMap()
+                val genreMap: MutableMap<Int, String> = HashMap()
                 for (index in selectedIndices) {
                     genreMap[index] = genres[index].genre.orEmpty()
                 }
@@ -57,7 +57,7 @@ class GenreTagUtil : PreferenceConverter<Map<Int, String>> {
 
     override fun convertToEntity(json: String?): Map<Int, String> {
         if (json == null) {
-            return WeakHashMap()
+            return HashMap()
         }
         val targetType: Type = object : TypeToken<Map<Int, String>>() {}.type
         return WebFactory.gson.fromJson(json, targetType)
@@ -65,7 +65,7 @@ class GenreTagUtil : PreferenceConverter<Map<Int, String>> {
 
     override fun convertToJson(entity: Map<Int, String>?): String {
         if (entity == null) {
-            WebFactory.gson.toJson(WeakHashMap<Int, String>())
+            return WebFactory.gson.toJson(HashMap<Int, String>())
         }
         return WebFactory.gson.toJson(entity)
     }

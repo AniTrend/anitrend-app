@@ -110,6 +110,7 @@ object NotifyUtil {
     /**
      * Create a custom toast
      */
+    @Suppress("DEPRECATION")
     fun createLoginToast(context: FragmentActivity, user: User) {
         val notification = Toast(context)
         val binding = CustomAuthToastBinding.inflate(context.layoutInflater)
@@ -121,6 +122,7 @@ object NotifyUtil {
         notification.show()
     }
 
+    @Suppress("DEPRECATION")
     fun makeText(context: Context, @StringRes stringRes: Int, @DrawableRes drawableRes: Int, duration: Int): Toast {
         val toast = Toast(context)
         val binding = CustomToastBinding.inflate(context.getLayoutInflater())
@@ -132,6 +134,7 @@ object NotifyUtil {
         return toast
     }
 
+    @Suppress("DEPRECATION")
     fun makeText(context: Context, @StringRes stringRes: Int, duration: Int): Toast {
         val toast = Toast(context)
         val binding = CustomToastBinding.inflate(context.getLayoutInflater())
@@ -143,6 +146,7 @@ object NotifyUtil {
         return toast
     }
 
+    @Suppress("DEPRECATION")
     fun makeText(context: Context, stringRes: String, @DrawableRes drawableRes: Int, duration: Int): Toast {
         val toast = Toast(context)
         val binding = CustomToastBinding.inflate(context.getLayoutInflater())
@@ -154,6 +158,7 @@ object NotifyUtil {
         return toast
     }
 
+    @Suppress("DEPRECATION")
     fun makeText(context: Context, stringRes: String, duration: Int): Toast {
         val toast = Toast(context)
         val binding = CustomToastBinding.inflate(context.getLayoutInflater())

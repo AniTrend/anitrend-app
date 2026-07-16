@@ -110,7 +110,7 @@ class MaterialProgressDrawable(
     private var rotation = 0f
 
     private val resources: Resources = context.resources
-    private lateinit var animation: Animation
+    private val animation: Animation
     private var rotationCount = 0f
     private var width = 0.0
     private var height = 0.0
@@ -225,6 +225,7 @@ class MaterialProgressDrawable(
 
     private fun getRotation(): Float = rotation
 
+    @Deprecated("Deprecated in Java")
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
     override fun isRunning(): Boolean {

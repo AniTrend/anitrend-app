@@ -66,14 +66,17 @@ class CommentFragment :
         setViewModel(true)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_favourite).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (feedList != null) {
             when (item.itemId) {
@@ -91,6 +94,7 @@ class CommentFragment :
                 NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
             }
         }
+        @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
@@ -303,10 +307,10 @@ class CommentFragment :
         super.onDestroyView()
     }
 
-    override fun onChanged(content: FeedList?) {
-        super.onChanged(content)
-        if (content != null) {
-            feedList = content
+    override fun onChanged(value: FeedList?) {
+        super.onChanged(value)
+        if (value != null) {
+            feedList = value
             initExtraComponents()
         } else {
             activity?.let {

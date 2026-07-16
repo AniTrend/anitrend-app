@@ -38,6 +38,7 @@ class MediaList() :
     var createdAt: Long = 0
     var media: MediaBase = MediaBase()
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         mediaId = parcel.readLong()

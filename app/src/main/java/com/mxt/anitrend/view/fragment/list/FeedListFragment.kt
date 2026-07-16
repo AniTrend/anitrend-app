@@ -57,6 +57,7 @@ open class FeedListFragment :
         setViewModel(true)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_post -> {
@@ -70,6 +71,7 @@ open class FeedListFragment :
                 return true
             }
         }
+        @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
@@ -147,13 +149,13 @@ open class FeedListFragment :
         }
     }
 
-    override fun onChanged(content: PageContainer<FeedList>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<FeedList>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                onPostProcessed(GraphUtil.filterFeedList(presenter, content.pageData))
+            if (!value.isEmpty) {
+                onPostProcessed(GraphUtil.filterFeedList(presenter, value.pageData))
             } else {
                 onPostProcessed(emptyList())
             }

@@ -98,6 +98,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (!EventBus.getDefault().isRegistered(this) && hasSubscriber) {
             EventBus.getDefault().register(this)
         }
+        @Suppress("DEPRECATION")
         if (!isMenuDisabled) {
             setHasOptionsMenu(true)
         }
@@ -126,6 +127,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         presenterRef?.onResume(this)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (inflateMenu != 0) {
             inflater.inflate(inflateMenu, menu)

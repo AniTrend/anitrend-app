@@ -32,13 +32,13 @@ class AiringListFragment : MediaListFragment() {
         injectAdapter()
     }
 
-    override fun onChanged(content: PageContainer<MediaListCollection>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<MediaListCollection>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                val mediaListCollection = content.pageData.firstOrNull()
+            if (!value.isEmpty) {
+                val mediaListCollection = value.pageData.firstOrNull()
                 if (mediaListCollection != null) {
                     val mediaList =
                         mediaListCollection.entries

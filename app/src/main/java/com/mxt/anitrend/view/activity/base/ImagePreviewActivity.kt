@@ -33,6 +33,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     private var imageUri: String? = null
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(

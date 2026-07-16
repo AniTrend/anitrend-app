@@ -272,8 +272,8 @@ abstract class FragmentBaseComment :
         }
     }
 
-    override fun onChanged(content: FeedList?) {
-        val replies = content?.replies
+    override fun onChanged(value: FeedList?) {
+        val replies = value?.replies
         if (!CompatUtil.isEmpty(replies)) {
             val items = replies ?: emptyList()
             if (isPager && !swipeRefreshLayout.isRefreshing()) {

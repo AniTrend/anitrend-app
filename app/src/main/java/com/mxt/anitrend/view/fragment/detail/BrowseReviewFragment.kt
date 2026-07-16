@@ -61,10 +61,12 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
         setViewModel(true)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -73,6 +75,8 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -124,13 +128,13 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
         viewModel?.requestData(KeyUtil.MEDIA_REVIEWS_REQ, ctx)
     }
 
-    override fun onChanged(content: PageContainer<Review>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<Review>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                onPostProcessed(content.pageData)
+            if (!value.isEmpty) {
+                onPostProcessed(value.pageData)
             } else {
                 onPostProcessed(emptyList())
             }

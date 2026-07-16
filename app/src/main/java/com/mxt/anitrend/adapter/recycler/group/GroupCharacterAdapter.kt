@@ -63,12 +63,12 @@ class GroupCharacterAdapter(
             bindClickListeners(R.id.container)
         }
 
-        override fun onBindViewHolder(recyclerItem: RecyclerItem) {
-            val model = recyclerItem as? CharacterBase ?: return
-            AspectImageView.setImage(binding.characterImg, model.image)
-            binding.characterNameText.text = model.name?.fullName
+        override fun onBindViewHolder(model: RecyclerItem) {
+            val character = model as? CharacterBase ?: return
+            AspectImageView.setImage(binding.characterImg, character.image)
+            binding.characterNameText.text = character.name?.fullName
             binding.favouriteIndicator.visibility =
-                if (model.isFavourite) View.VISIBLE else View.GONE
+                if (character.isFavourite) View.VISIBLE else View.GONE
         }
 
         override fun onViewRecycled() {

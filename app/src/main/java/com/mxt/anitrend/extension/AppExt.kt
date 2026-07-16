@@ -47,7 +47,7 @@ fun FragmentActivity.startSharedTransitionActivity(
         val transitionActivityOptions =
             ActivityOptionsCompat
                 .makeSceneTransitionAnimation(this, participants)
-        ActivityCompat.startActivity(this, data, transitionActivityOptions.toBundle())
+        startActivity(data, transitionActivityOptions.toBundle())
     } catch (e: Exception) {
         Timber.tag("SharedTransition").e(e)
     }
@@ -75,6 +75,7 @@ fun <T : Any> FragmentActivity.extras(
     default: T,
 ) = lazy(LAZY_MODE_PUBLICATION) {
     try {
+        @Suppress("DEPRECATION")
         val value = if (intent?.extras?.containsKey(key) == true) intent?.extras?.get(key) else null
         (value as? T) ?: default
     } catch (e: Exception) {
@@ -97,6 +98,7 @@ fun <T : Any> Fragment.extras(
     default: T,
 ) = lazy(LAZY_MODE_PUBLICATION) {
     try {
+        @Suppress("DEPRECATION")
         val value = if (arguments?.containsKey(key) == true) arguments?.get(key) else null
         (value as? T) ?: default
     } catch (e: Exception) {

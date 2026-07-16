@@ -27,16 +27,16 @@ class GroupMediaViewHolder(
         bindLongClickListeners(R.id.container)
     }
 
-    override fun onBindViewHolder(recyclerItem: RecyclerItem) {
-        val model = recyclerItem as? MediaBase ?: return
-        boundModel = model
-        AspectImageView.setImage(binding.seriesImage, model.coverImage)
-        SeriesStatusWidget.setStatus(binding.seriesStatus, model)
-        binding.seriesTitle.setTitle(model)
-        val subGroupTitle = model.subGroupTitle
+    override fun onBindViewHolder(model: RecyclerItem) {
+        val media = model as? MediaBase ?: return
+        boundModel = media
+        AspectImageView.setImage(binding.seriesImage, media.coverImage)
+        SeriesStatusWidget.setStatus(binding.seriesStatus, media)
+        binding.seriesTitle.setTitle(media)
+        val subGroupTitle = media.subGroupTitle
         binding.seriesSubgroupTitle.text =
             if (subGroupTitle.isNullOrBlank()) "" else CompatUtil.capitalizeWords(subGroupTitle)
-        val format = model.format
+        val format = media.format
         binding.seriesFormat.text =
             if (format.isNullOrBlank()) "" else CompatUtil.capitalizeWords(format)
     }

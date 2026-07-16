@@ -288,12 +288,12 @@ abstract class FragmentChannelBase :
         }
     }
 
-    override fun onChanged(content: Rss?) {
+    override fun onChanged(value: Rss?) {
         try {
-            val channel = content?.channel
+            val channel = value?.channel
             val episodes = channel?.episode
             if (episodes != null) {
-                copyright = channel?.copyright
+                copyright = channel.copyright
                 mAdapter?.onItemsInserted(episodes)
                 updateUI()
             } else {

@@ -319,7 +319,7 @@ class AboutFragment : FragmentBase<Void, BasePresenter, Void>() {
     override fun makeRequest() {
     }
 
-    override fun onChanged(model: Void?) {
+    override fun onChanged(value: Void?) {
     }
 
     companion object {

@@ -30,6 +30,7 @@ class ConfigurationUtil(private val settings: Settings) {
     /**
      * Checks if the previously set theme is the same as the current when the activity resumes it's state
      */
+    @Suppress("DEPRECATION")
     fun onResumeAttach(base: ActivityBase<*, *>) {
         if (currentTheme != settings.theme || currentLocale != settings.userLanguage) {
             with(base) {

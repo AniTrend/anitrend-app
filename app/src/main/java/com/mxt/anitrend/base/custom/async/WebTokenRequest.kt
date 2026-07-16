@@ -100,6 +100,7 @@ object WebTokenRequest {
      */
     @JvmStatic
     @Throws(ExecutionException::class, InterruptedException::class)
+    @Suppress("DEPRECATION")
     fun getToken(code: String): Boolean {
         val authenticatedToken = AuthenticationCodeAsync().execute(code).get()
         if (authenticatedToken != null) {
@@ -125,7 +126,9 @@ object WebTokenRequest {
         }
     }
 
+    @Suppress("DEPRECATION")
     private class AuthenticationCodeAsync : AsyncTask<String, Void, WebToken>() {
+        @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg codes: String): WebToken? = WebFactory.requestCodeTokenSync(codes[0])
     }
 }

@@ -38,6 +38,7 @@ class User() :
 
     var unreadNotificationCount: Int = 0
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         about = parcel.readString()
         options = parcel.readParcelable(UserOptions::class.java.classLoader)

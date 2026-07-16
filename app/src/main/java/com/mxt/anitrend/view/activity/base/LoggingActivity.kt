@@ -147,6 +147,7 @@ class LoggingActivity :
     private suspend fun printLog() {
         withContext(Dispatchers.Main) {
             updateUI()
+            @Suppress("DEPRECATION")
             reportLogTextView.text = Html.fromHtml(spannableLogBuilder.toHtml())
         }
     }

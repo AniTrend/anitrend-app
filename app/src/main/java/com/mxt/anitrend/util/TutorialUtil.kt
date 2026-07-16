@@ -6,6 +6,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
+import com.mxt.anitrend.extension.getCompatColor
 import timber.log.Timber
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.PromptStateChangeListener
@@ -110,7 +111,7 @@ class TutorialUtil {
             return TapTargetUtil
                 .buildDefault(activity, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
         }
         return null
     }
@@ -138,7 +139,7 @@ class TutorialUtil {
             return TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
         }
         return null
     }
@@ -166,7 +167,7 @@ class TutorialUtil {
             return TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
         }
         return null
     }
@@ -190,7 +191,7 @@ class TutorialUtil {
             TapTargetUtil
                 .buildDefault(activity, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
                 .show()
         }
     }
@@ -218,7 +219,7 @@ class TutorialUtil {
             TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
                 .show()
         }
     }
@@ -246,7 +247,7 @@ class TutorialUtil {
             TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
                 .show()
         }
     }

@@ -141,7 +141,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
             addView(circleViews[i])
         }
 
-        ViewCompat.setChildrenDrawingOrderEnabled(this, true)
+        isChildrenDrawingOrderEnabled = true
 
         setNestedScrollingEnabled(true)
 
@@ -265,7 +265,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         ensureTarget()
 
-        val action = MotionEventCompat.getActionMasked(ev)
+        val action = ev.actionMasked
 
         if (returningToStart && action == MotionEvent.ACTION_DOWN) {
             returningToStart = false
@@ -317,7 +317,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        val action = MotionEventCompat.getActionMasked(ev)
+        val action = ev.actionMasked
 
         if (returningToStart && action == MotionEvent.ACTION_DOWN) {
             returningToStart = false
@@ -390,8 +390,8 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         }
 
         if (!scale) {
-            ViewCompat.setScaleX(circleViews[dir], 1f)
-            ViewCompat.setScaleY(circleViews[dir], 1f)
+            circleViews[dir].scaleX = 1f
+            circleViews[dir].scaleY = 1f
         }
 
         if (scale) {
@@ -450,9 +450,9 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
     private fun isAnimationRunning(animation: Animation?): Boolean = animation != null && animation.hasStarted() && !animation.hasEnded()
 
-    fun canChildScrollUp(): Boolean = target?.let { ViewCompat.canScrollVertically(it, -1) } ?: false
+    fun canChildScrollUp(): Boolean = target?.let { it.canScrollVertically(-1) } ?: false
 
-    fun canChildScrollDown(): Boolean = target?.let { ViewCompat.canScrollVertically(it, 1) } ?: false
+    fun canChildScrollDown(): Boolean = target?.let { it.canScrollVertically(1) } ?: false
 
     override fun requestDisallowInterceptTouchEvent(b: Boolean) {
         val targetView = target
@@ -694,7 +694,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
     private fun startScaleDownReturnToTopStartAnimation(from: Int, listener: Animation.AnimationListener?) {
         this.from = from
-        startingScale = ViewCompat.getScaleX(circleViews[DIRECTION_TOP])
+        startingScale = circleViews[DIRECTION_TOP].scaleX
         scaleDownToStartAnimation = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
                 val targetScale = startingScale + (-startingScale * interpolatedTime)
@@ -712,7 +712,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
     private fun startScaleDownReturnToBottomStartAnimation(from: Int, listener: Animation.AnimationListener?) {
         this.from = from
-        startingScale = ViewCompat.getScaleX(circleViews[DIRECTION_BOTTOM])
+        startingScale = circleViews[DIRECTION_BOTTOM].scaleX
         scaleDownToStartAnimation = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
                 val targetScale = startingScale + (-startingScale * interpolatedTime)
@@ -747,8 +747,8 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
     }
 
     private fun setAnimationProgress(dir: Int, progressAmount: Float) {
-        ViewCompat.setScaleX(circleViews[dir], progressAmount)
-        ViewCompat.setScaleY(circleViews[dir], progressAmount)
+        circleViews[dir].scaleX = progressAmount
+        circleViews[dir].scaleY = progressAmount
     }
 
     private fun startScaleDownAnimation(dir: Int, listener: Animation.AnimationListener?) {

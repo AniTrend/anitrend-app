@@ -721,6 +721,7 @@ class RequestHandler<T>(
         else -> null
     }
 
+    @Suppress("DEPRECATION")
     private fun value(key: String): Any? = if (param.containsKey(key)) param.get(key) else null
 
     private fun Any?.asInt(): Int? = when (this) {

@@ -2,7 +2,9 @@ package com.mxt.anitrend.view.activity.index
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivitySplashBinding
@@ -12,6 +14,7 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.view.activity.base.WelcomeActivity
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Created by max on 2017/10/04.
@@ -46,11 +49,13 @@ class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
      * N.B. Must be called after onPostCreate
      */
     override fun onActivityReady() {
-        lifecycleScope.launchWhenResumed {
-            presenter.checkForUpdates(true)
-            presenter.checkValidAuth()
-            delay(500)
-            makeRequest()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                presenter.checkForUpdates(true)
+                presenter.checkValidAuth()
+                delay(500)
+                makeRequest()
+            }
         }
     }
 

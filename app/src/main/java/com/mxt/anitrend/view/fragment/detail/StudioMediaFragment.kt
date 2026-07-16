@@ -51,10 +51,12 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         setViewModel(true)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -63,6 +65,8 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -114,8 +118,8 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         viewModel?.requestData(KeyUtil.STUDIO_MEDIA_REQ, ctx)
     }
 
-    override fun onChanged(content: ConnectionContainer<PageContainer<MediaBase>>?) {
-        val pageContainer = content?.connection
+    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) {
+        val pageContainer = value?.connection
         if (pageContainer != null) {
             if (!pageContainer.isEmpty) {
                 if (pageContainer.hasPageInfo()) {

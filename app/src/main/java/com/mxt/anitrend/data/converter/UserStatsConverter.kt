@@ -8,6 +8,7 @@ import io.objectbox.converter.PropertyConverter
  * Created by max on 2017/11/04.
  * Entity Converter
  */
+@Suppress("DEPRECATION")
 class UserStatsConverter : PropertyConverter<UserStats, String> {
     @Synchronized
     override fun convertToEntityProperty(databaseValue: String?): UserStats? = databaseValue?.let { WebFactory.gson.fromJson(it, UserStats::class.java) }

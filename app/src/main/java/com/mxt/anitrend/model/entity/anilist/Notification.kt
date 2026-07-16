@@ -25,6 +25,7 @@ class Notification() :
     var deletedMediaTitle: String? = null
     var deletedMediaTitles: List<String> = emptyList()
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         activityId = parcel.readLong()
         commentId = parcel.readLong()

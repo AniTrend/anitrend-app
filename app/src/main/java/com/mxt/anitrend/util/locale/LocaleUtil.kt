@@ -40,6 +40,7 @@ object LocaleUtil {
         return context.createConfigurationContext(configuration)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateResourcesLegacy(context: Context, locale: Locale): Context {
         Locale.setDefault(locale)
         val resources = context.resources
@@ -55,6 +56,7 @@ object LocaleUtil {
         return context
     }
 
+    @Suppress("DEPRECATION")
     fun scopeLocale(settings: Settings): Locale = settings.userLanguage?.let { language ->
         Locale(language)
     } ?: Locale.getDefault()

@@ -37,6 +37,7 @@ import java.io.File
 fun Context?.isLowRamDevice(): Boolean {
     val targetContext = this ?: return false
     val activityManager = targetContext.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager ?: return false
+        @Suppress("DEPRECATION")
     return ActivityManagerCompat.isLowRamDevice(activityManager)
 }
 
@@ -84,6 +85,7 @@ fun Context.getLayoutInflater(): LayoutInflater = getSystemService(Context.LAYOU
  */
 fun Context.getScreenDimens(): Point {
     val deviceDimens = Point()
+    @Suppress("DEPRECATION")
     (getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.apply {
         defaultDisplay?.getSize(deviceDimens)
     }

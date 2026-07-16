@@ -240,9 +240,9 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
      *
      * @param model The new data
      */
-    override fun onChanged(model: Media?) {
-        if (model != null) {
-            this.model = model
+    override fun onChanged(value: Media?) {
+        if (value != null) {
+            this.model = value
             updateUI()
         } else {
             binding?.stateLayout?.showError(
