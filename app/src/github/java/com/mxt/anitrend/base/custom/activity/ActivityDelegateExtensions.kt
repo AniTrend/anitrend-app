@@ -17,7 +17,7 @@ import com.mxt.anitrend.view.sheet.BottomSheetMessage
 private fun FragmentActivity.onLatestUpdateInstalled() {
     NotifyUtil.createAlerter(
         this,
-        getString(R.string.title_update_infodadat),
+        getString(R.string.title_update_info),
         getString(R.string.app_no_date),
         R.drawable.ic_cloud_done_white_24dp,
         R.color.colorStateGreen,
