@@ -62,6 +62,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
+import androidx.core.view.isVisible
+import androidx.core.net.toUri
 
 /**
  * Created by max on 2017/10/04.
