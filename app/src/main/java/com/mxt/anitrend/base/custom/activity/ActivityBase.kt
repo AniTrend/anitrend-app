@@ -401,7 +401,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
      *
      * @param value The new data
      */
-    override fun onChanged(model: M?) {
+    override fun onChanged(value: M?) {
         Timber.v("onChanged() from view model has received data")
     }
 
