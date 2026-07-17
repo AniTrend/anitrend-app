@@ -52,9 +52,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
      * @return integer value identifying the type of the view needed to represent the item at
      * `position`. Type codes need not be contiguous.
      */
-    override fun getItemViewType(position: Int): Int {
-        return KeyUtil.RECYCLER_TYPE_CONTENT
-    }
+    override fun getItemViewType(position: Int): Int = KeyUtil.RECYCLER_TYPE_CONTENT
 
     /**
      *

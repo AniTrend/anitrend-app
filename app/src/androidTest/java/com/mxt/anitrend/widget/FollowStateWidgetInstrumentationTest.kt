@@ -3,7 +3,6 @@
 package com.mxt.anitrend.widget
 
 import android.widget.FrameLayout
-import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4

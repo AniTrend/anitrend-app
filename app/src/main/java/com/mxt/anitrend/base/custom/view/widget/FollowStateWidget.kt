@@ -10,7 +10,6 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetButtonStateBinding
-import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter

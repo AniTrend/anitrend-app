@@ -37,7 +37,7 @@ constructor(
         useCompatPadding = true
         preventCornerOverlap = false
         setContentPadding(contentPadding, contentPadding, contentPadding, contentPadding)
-        //setCardBackgroundColor(context.getCompatColorAttr(R.attr.colorOnSurface))
+        // setCardBackgroundColor(context.getCompatColorAttr(R.attr.colorOnSurface))
         requestLayout()
     }
 

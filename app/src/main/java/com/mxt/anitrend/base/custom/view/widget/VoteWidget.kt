@@ -1,7 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.RequiresApi
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
@@ -180,7 +178,7 @@ constructor(
                 binding.widgetThumbUp.setCompoundDrawablesWithIntrinsicBounds(
                     context.getCompatDrawable(
                         R.drawable.ic_thumb_up_grey_600_18dp,
-                        R.color.colorStateGreen
+                        R.color.colorStateGreen,
                     ),
                     null,
                     null,
@@ -192,7 +190,7 @@ constructor(
                 binding.widgetThumbDown.setCompoundDrawablesWithIntrinsicBounds(
                     context.getCompatDrawable(
                         R.drawable.ic_thumb_down_grey_600_18dp,
-                        R.color.colorStateOrange
+                        R.color.colorStateOrange,
                     ),
                     null,
                     null,

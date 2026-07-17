@@ -126,6 +126,7 @@ object WebFactory {
                 addNetworkInterceptor(NetworkCacheInterceptor(appContext, true))
                 cache(cacheProvider(appContext))
             }
+
         @Suppress("DEPRECATION")
         val converterFactory = SimpleXmlConverterFactory.createNonStrict()
         val retrofit =

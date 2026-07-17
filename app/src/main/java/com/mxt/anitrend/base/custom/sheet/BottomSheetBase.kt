@@ -3,10 +3,10 @@ package com.mxt.anitrend.base.custom.sheet
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -70,7 +70,8 @@ abstract class BottomSheetBase<T> :
                         BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
                         BottomSheetBehavior.STATE_DRAGGING,
                         BottomSheetBehavior.STATE_HALF_EXPANDED,
-                        BottomSheetBehavior.STATE_SETTLING -> Unit
+                        BottomSheetBehavior.STATE_SETTLING,
+                        -> Unit
                     }
                 } catch (e: Exception) {
                     Timber.e(e)

@@ -160,6 +160,7 @@ constructor(
             if (bitmap == null) {
                 val dm: DisplayMetrics = context.resources.displayMetrics
                 val density = dm.density
+
                 @Suppress("DEPRECATION")
                 val scaledDensity = dm.scaledDensity
                 val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG)

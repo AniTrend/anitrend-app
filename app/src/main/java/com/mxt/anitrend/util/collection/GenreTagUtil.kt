@@ -6,7 +6,6 @@ import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import java.lang.reflect.Type
-import java.util.WeakHashMap
 
 /**
  * Created by max on 2018/09/01.
