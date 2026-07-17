@@ -35,8 +35,6 @@ abstract class BottomSheetBase<T> :
     BottomSheetListener,
     ResponseCallback {
 
-    var tag: String? = null
-
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
     protected var toolbarSearch: AppCompatImageView? = null
@@ -84,7 +82,6 @@ abstract class BottomSheetBase<T> :
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        tag = toString()
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
             mTitle = args.getInt(KeyUtil.arg_title)
@@ -212,10 +209,10 @@ abstract class BottomSheetBase<T> :
     }
 
     override fun showError(error: String) {
-        Timber.tag(tag ?: javaClass.simpleName).e(error)
+        Timber.e(error)
     }
 
     override fun showEmpty(message: String) {
-        Timber.tag(tag ?: javaClass.simpleName).d(message)
+        Timber.d(message)
     }
 }
