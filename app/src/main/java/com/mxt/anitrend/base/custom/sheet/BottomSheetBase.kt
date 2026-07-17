@@ -3,6 +3,7 @@ package com.mxt.anitrend.base.custom.sheet
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -33,6 +34,8 @@ abstract class BottomSheetBase<T> :
     BottomSheetDialogFragment(),
     BottomSheetListener,
     ResponseCallback {
+
+    var tag: String? = null
 
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
@@ -70,8 +73,7 @@ abstract class BottomSheetBase<T> :
                         BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
                         BottomSheetBehavior.STATE_DRAGGING,
                         BottomSheetBehavior.STATE_HALF_EXPANDED,
-                        BottomSheetBehavior.STATE_SETTLING,
-                        -> Unit
+                        BottomSheetBehavior.STATE_SETTLING -> Unit
                     }
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -82,6 +84,7 @@ abstract class BottomSheetBase<T> :
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        tag = toString()
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
             mTitle = args.getInt(KeyUtil.arg_title)
@@ -209,10 +212,10 @@ abstract class BottomSheetBase<T> :
     }
 
     override fun showError(error: String) {
-        Timber.e(error)
+        Timber.tag(tag ?: javaClass.simpleName).e(error)
     }
 
     override fun showEmpty(message: String) {
-        Timber.d(message)
+        Timber.tag(tag ?: javaClass.simpleName).d(message)
     }
 }
