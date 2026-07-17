@@ -7,8 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -22,6 +20,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
+import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 
 /**
@@ -52,10 +51,12 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         setViewModel(true)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -64,6 +65,8 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -74,11 +77,9 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(mediaSortTypes, presenter.settings.mediaSort),
                     CompatUtil.capitalizeWords(mediaSortTypes),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaSort =
-                            mediaSortTypes.getOrNull(dialog.selectedIndex)
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaSort =
+                        mediaSortTypes.getOrNull(dialog.selectedIndex)
                 }
                 return true
             }
@@ -89,12 +90,10 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }
@@ -119,8 +118,8 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         viewModel?.requestData(KeyUtil.STUDIO_MEDIA_REQ, ctx)
     }
 
-    override fun onChanged(content: ConnectionContainer<PageContainer<MediaBase>>?) {
-        val pageContainer = content?.connection
+    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) {
+        val pageContainer = value?.connection
         if (pageContainer != null) {
             if (!pageContainer.isEmpty) {
                 if (pageContainer.hasPageInfo()) {
@@ -142,15 +141,15 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
 
     override fun onItemClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.id)
-                        putExtra(KeyUtil.arg_mediaType, data.second.type)
+                        putExtra(KeyUtil.arg_id, data.value.id)
+                        putExtra(KeyUtil.arg_mediaType, data.value.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -159,7 +158,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
@@ -168,7 +167,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.id)
+                            .setId(data.value.id)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

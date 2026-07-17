@@ -132,8 +132,8 @@ abstract class BottomSheetList<T : android.os.Parcelable> :
 
     abstract fun makeRequest()
 
-    override fun onChanged(data: List<T>?) {
-        Timber.tag(TAG ?: javaClass.simpleName).d("onChanged(@Nullable List<T> data) invoked")
+    override fun onChanged(value: List<T>?) {
+        Timber.d("onChanged(@Nullable List<T> data) invoked")
     }
 
     override fun showError(error: String) {

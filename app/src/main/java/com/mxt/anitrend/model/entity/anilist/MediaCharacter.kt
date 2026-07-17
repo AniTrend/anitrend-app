@@ -16,11 +16,11 @@ class MediaCharacter : CharacterBase {
     }
 
     override fun writeToParcel(
-        parcel: Parcel,
+        dest: Parcel,
         flags: Int,
     ) {
-        super.writeToParcel(parcel, flags)
-        parcel.writeString(description)
+        super.writeToParcel(dest, flags)
+        dest.writeString(description)
     }
 
     override fun describeContents(): Int = 0

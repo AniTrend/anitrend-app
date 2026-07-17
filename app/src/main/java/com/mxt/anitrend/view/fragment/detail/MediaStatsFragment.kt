@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.annimon.stream.IntPair
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -137,34 +136,34 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
                         object : ItemClickListener<MediaRank> {
                             override fun onItemClick(
                                 target: View,
-                                data: IntPair<MediaRank>,
+                                data: IndexedValue<MediaRank>,
                             ) {
                                 val host = activity ?: return
                                 val intent = Intent(host, MediaBrowseActivity::class.java)
                                 val args = Bundle()
                                 args.putString(KeyUtil.arg_mediaType, mediaType)
-                                args.putString(KeyUtil.arg_format, data.second.format)
+                                args.putString(KeyUtil.arg_format, data.value.format)
                                 args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                                 if (!presenter.settings.displayAdultContent) {
                                     args.putBoolean(KeyUtil.arg_isAdult, false)
                                 }
 
                                 if (MediaUtil.isAnimeType(model)) {
-                                    args.putString(KeyUtil.arg_season, data.second.season)
+                                    args.putString(KeyUtil.arg_season, data.value.season)
                                 }
 
-                                if (!data.second.isAllTime) {
+                                if (!data.value.isAllTime) {
                                     if (MediaUtil.isAnimeType(model)) {
-                                        args.putInt(KeyUtil.arg_seasonYear, data.second.year)
+                                        args.putInt(KeyUtil.arg_seasonYear, data.value.year)
                                     } else {
                                         args.putString(
                                             KeyUtil.arg_startDateLike,
-                                            String.format(Locale.getDefault(), "%d%%", data.second.year),
+                                            String.format(Locale.getDefault(), "%d%%", data.value.year),
                                         )
                                     }
                                 }
 
-                                when (data.second.type) {
+                                when (data.value.type) {
                                     KeyUtil.RATED ->
                                         args.putString(KeyUtil.arg_sort, KeyUtil.SCORE + KeyUtil.DESC)
                                     KeyUtil.POPULAR ->
@@ -174,14 +173,14 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
                                     KeyUtil.arg_media_util,
                                     MediaBrowseUtil().setCompactType(true).setFilterEnabled(false),
                                 )
-                                args.putString(KeyUtil.arg_activity_tag, data.second.typeHtmlPlainTitle)
+                                args.putString(KeyUtil.arg_activity_tag, data.value.typeHtmlPlainTitle)
                                 intent.putExtras(args)
                                 startActivity(intent)
                             }
 
                             override fun onItemLongClick(
                                 target: View,
-                                data: IntPair<MediaRank>,
+                                data: IndexedValue<MediaRank>,
                             ) = Unit
                         },
                     )
@@ -196,21 +195,21 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
                         object : ItemClickListener<ExternalLink> {
                             override fun onItemClick(
                                 target: View,
-                                data: IntPair<ExternalLink>,
+                                data: IndexedValue<ExternalLink>,
                             ) {
                                 val intent =
                                     Intent(Intent.ACTION_VIEW).apply {
-                                        setData(Uri.parse(data.second.url))
+                                        setData(Uri.parse(data.value.url))
                                     }
                                 startActivity(intent)
                             }
 
                             override fun onItemLongClick(
                                 target: View,
-                                data: IntPair<ExternalLink>,
+                                data: IndexedValue<ExternalLink>,
                             ) {
                                 clipboardManager?.setPrimaryClip(
-                                    ClipData.newPlainText("", data.second.url),
+                                    ClipData.newPlainText("", data.value.url),
                                 )
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                                     context?.let {
@@ -320,10 +319,10 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding.seriesStats.invalidate()
     }
 
-    override fun onChanged(model: Media?) {
+    override fun onChanged(value: Media?) {
         val binding = binding ?: return
-        if (model != null) {
-            this.model = model
+        if (value != null) {
+            this.model = value
             updateUI()
         } else {
             binding.stateLayout.showError(

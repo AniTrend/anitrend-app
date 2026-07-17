@@ -2,9 +2,9 @@ package com.mxt.anitrend.util.media
 
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
-import com.afollestad.materialdialogs.MaterialDialog
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
@@ -27,7 +27,7 @@ class MediaActionUtil private constructor(
     private val context: FragmentActivity,
 ) : RetroCallback<MediaBase>,
     LifecycleListener {
-    private var progressDialog: MaterialDialog? = null
+    private var progressDialog: AlertDialog? = null
     private val presenter = WidgetPresenter<MediaBase>(context)
     private val lifecycle: Lifecycle = context.lifecycle
     private var mediaId: Long = 0
@@ -80,7 +80,7 @@ class MediaActionUtil private constructor(
             if (response.isSuccessful && mediaBase != null) {
                 showActionDialog(mediaBase)
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
             }
             dismissProgress()
@@ -93,7 +93,7 @@ class MediaActionUtil private constructor(
     ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress()
-            Timber.tag(tagName).e(throwable)
+            Timber.e(throwable)
             throwable.printStackTrace()
             NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
         }

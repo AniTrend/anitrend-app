@@ -10,7 +10,6 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetButtonStateBinding
-import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
@@ -71,14 +70,8 @@ constructor(
     private fun setControlText() {
         val currentModel = model ?: return
         if (currentModel.isFollowing) {
-            binding.buttonStateContainer.setCardBackgroundColor(
-                context.getCompatColor(R.color.colorAccentDark),
-            )
             binding.buttonStateText.setText(R.string.following)
         } else {
-            binding.buttonStateContainer.setCardBackgroundColor(
-                context.getCompatColor(R.color.colorAccent),
-            )
             binding.buttonStateText.setText(R.string.follow)
         }
         resetFlipperState()
@@ -134,7 +127,7 @@ constructor(
                 model?.let { presenter?.notifyAllListeners(BaseConsumer(KeyUtil.MUT_TOGGLE_FOLLOW, it), false) }
                 setControlText()
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 setControlText()
             }
         } catch (e: Exception) {

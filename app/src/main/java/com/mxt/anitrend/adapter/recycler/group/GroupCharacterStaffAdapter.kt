@@ -63,13 +63,13 @@ class GroupCharacterStaffAdapter(
             bindClickListeners(R.id.container)
         }
 
-        override fun onBindViewHolder(recyclerItem: RecyclerItem) {
-            val model = recyclerItem as? CharacterStaffBase ?: return
-            AspectImageView.setImage(binding.characterImg, model.character.image)
-            binding.characterName.text = model.character.name?.fullName
-            binding.mediaTitle.text = model.media.title?.userPreferred
+        override fun onBindViewHolder(model: RecyclerItem) {
+            val characterStaff = model as? CharacterStaffBase ?: return
+            AspectImageView.setImage(binding.characterImg, characterStaff.character.image)
+            binding.characterName.text = characterStaff.character.name?.fullName
+            binding.mediaTitle.text = characterStaff.media.title?.userPreferred
             binding.favouriteIndicator.visibility =
-                if (model.character.isFavourite) View.VISIBLE else View.GONE
+                if (characterStaff.character.isFavourite) View.VISIBLE else View.GONE
         }
 
         override fun onViewRecycled() {

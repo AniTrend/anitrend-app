@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import com.afollestad.materialdialogs.DialogAction
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.selectedIndex
 
 /**
  * Created by max on 2017/11/04.
@@ -37,8 +37,8 @@ class SuggestionListFragment : MediaBrowseFragment() {
         val bundle = viewModel?.params ?: return
         bundle.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
         bundle.putBoolean(KeyUtil.arg_onList, false)
-        bundle.putStringArrayList(KeyUtil.arg_tags, ArrayList(presenter.getTopFavouriteTags(6)))
-        bundle.putStringArrayList(KeyUtil.arg_genres, ArrayList(presenter.getTopFavouriteGenres(4)))
+        bundle.putStringArrayList(KeyUtil.arg_tags, ArrayList(presenter.getTopFavouriteTags(6).orEmpty()))
+        bundle.putStringArrayList(KeyUtil.arg_genres, ArrayList(presenter.getTopFavouriteGenres(4).orEmpty()))
         bundle.putString(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)
         bundle.putInt(KeyUtil.arg_page, presenter.currentPage)
         bundle.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
@@ -46,10 +46,12 @@ class SuggestionListFragment : MediaBrowseFragment() {
         viewModel?.requestData(KeyUtil.MEDIA_BROWSE_REQ, ctx)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -58,6 +60,8 @@ class SuggestionListFragment : MediaBrowseFragment() {
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -67,10 +71,8 @@ class SuggestionListFragment : MediaBrowseFragment() {
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaSortType, presenter.settings.mediaSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
                 }
                 return true
             }
@@ -81,12 +83,10 @@ class SuggestionListFragment : MediaBrowseFragment() {
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }

@@ -113,10 +113,6 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.anitrend.retrofit.graphql.runtime)
     dependencies.implementation(libs.anitrend.retrofit.graphql.api)
 
-    /** Smart Tab Layout */
-    dependencies.implementation(libs.smarttablayout.library)
-    dependencies.implementation(libs.smarttablayout.utils)
-
     /** Testing-only dependencies */
     dependencies.testImplementation(libs.junit)
     dependencies.testImplementation(libs.hamcrest)

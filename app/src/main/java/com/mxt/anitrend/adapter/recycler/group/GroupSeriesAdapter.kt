@@ -52,13 +52,13 @@ class GroupSeriesAdapter(
             bindLongClickListeners(R.id.container)
         }
 
-        override fun onBindViewHolder(recyclerItem: RecyclerItem) {
-            val model = recyclerItem as? MediaBase ?: return
-            AspectImageView.setImage(binding.seriesImage, model.coverImage)
-            SeriesStatusWidget.setStatus(binding.seriesStatus, model)
-            SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
-            binding.customRatingWidget.setAverageRating(model)
-            binding.seriesTitle.setTitle(model)
+        override fun onBindViewHolder(model: RecyclerItem) {
+            val media = model as? MediaBase ?: return
+            AspectImageView.setImage(binding.seriesImage, media.coverImage)
+            SeriesStatusWidget.setStatus(binding.seriesStatus, media)
+            SeriesYearTypeTextView.htmlText(binding.seriesYearType, media)
+            binding.customRatingWidget.setAverageRating(media)
+            binding.seriesTitle.setTitle(media)
         }
 
         override fun onViewRecycled() {

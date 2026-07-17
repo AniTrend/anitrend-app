@@ -19,9 +19,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
-import com.annimon.stream.IntPair
-import com.annimon.stream.Optional
-import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.extension.getCompatColor
@@ -47,7 +44,7 @@ object CompatUtil {
         message = "Use extension functions present in [AppExt]",
         replaceWith = ReplaceWith(
             expression = "activity.hideKeyboard()",
-            imports = ["com.mxt.extension.AppExt.hideKeyboard"],
+            imports = ["com.mxt.anitrend.extension.AppExt.hideKeyboard"],
         ),
         level = DeprecationLevel.ERROR,
     )
@@ -114,7 +111,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatDrawable(resource)",
-            imports = ["com.mxt.extension.getCompatDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatDrawable"],
         ),
         level = DeprecationLevel.ERROR,
     )
@@ -141,7 +138,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatTintedDrawable(resource)",
-            imports = ["com.mxt.extension.getCompatTintedDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatTintedDrawable"],
         ),
         level = DeprecationLevel.ERROR,
     )
@@ -174,7 +171,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatDrawable(resource, tint)",
-            imports = ["com.mxt.extension.getCompatDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatDrawable"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -208,7 +205,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatTintedDrawable(resource)",
-            imports = ["com.mxt.extension.getCompatTintedDrawable"],
+            imports = ["com.mxt.anitrend.extension.getCompatTintedDrawable"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -233,7 +230,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatColorAttr(attr)",
-            imports = ["com.mxt.extension.getCompatColorAttr"],
+            imports = ["com.mxt.anitrend.extension.getCompatColorAttr"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -316,7 +313,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatColor(color)",
-            imports = ["com.mxt.extension.getCompatColor"],
+            imports = ["com.mxt.anitrend.extension.getCompatColor"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -326,7 +323,7 @@ object CompatUtil {
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getLayoutInflater()",
-            imports = ["com.mxt.extension.getLayoutInflater"],
+            imports = ["com.mxt.anitrend.extension.getLayoutInflater"],
         ),
         level = DeprecationLevel.WARNING,
     )
@@ -417,10 +414,9 @@ object CompatUtil {
      */
     fun <T> getIndexOf(collection: Collection<T>?, target: T?): Int {
         if (collection != null && target != null) {
-            val pairOptional = Stream.of(collection)
-                .findIndexed { _, value -> value != null && value == target }
-            if (pairOptional.isPresent) {
-                return pairOptional.get().first
+            val indexed = collection.withIndex().find { (_, value) -> value != null && value == target }
+            if (indexed != null) {
+                return indexed.index
             }
         }
         return 0
@@ -436,10 +432,9 @@ object CompatUtil {
      */
     fun <T> getIndexOf(collection: Array<T>?, target: T?): Int {
         if (collection != null && target != null) {
-            val pairOptional = Stream.of(*collection)
-                .findIndexed { _, value -> value != null && value == target }
-            if (pairOptional.isPresent) {
-                return pairOptional.get().first
+            val indexed = collection.withIndex().find { (_, value) -> value != null && value == target }
+            if (indexed != null) {
+                return indexed.index
             }
         }
         return 0
@@ -452,18 +447,15 @@ object CompatUtil {
      * @see Object.equals
      * @param collection the child collection item to search
      * @param target the item to search
-     * @return Optional result object
+     * @return nullable IndexedValue result object
      * <br></br>
      *
-     * @see Optional<T> for information on how to handle return
-     *
-     * @see IntPair
+     * @see IndexedValue
      </T> */
-    fun <T> findIndexOf(collection: Collection<T>, target: T?): Optional<IntPair<T>> = if (!isEmpty(collection) && target != null) {
-        Stream.of(collection)
-            .findIndexed { _, value -> value != null && value == target }
+    fun <T> findIndexOf(collection: Collection<T>, target: T?): IndexedValue<T>? = if (!isEmpty(collection) && target != null) {
+        collection.withIndex().find { (_, value) -> value != null && value == target }
     } else {
-        Optional.empty()
+        null
     }
 
     /**
@@ -473,25 +465,22 @@ object CompatUtil {
      * @see Object.equals
      * @param collection the child collection item to search
      * @param target the item to search
-     * @return Optional result object
+     * @return nullable IndexedValue result object
      * <br></br>
      *
-     * @see Optional<T> for information on how to handle return
-     *
-     * @see IntPair
+     * @see IndexedValue
      </T> */
-    fun <T> findIndexOf(collection: Array<T>?, target: T?): Optional<IntPair<T>> = if (collection != null && target != null) {
-        Stream.of(*collection)
-            .findIndexed { _, value -> value != null && value == target }
+    fun <T> findIndexOf(collection: Array<T>?, target: T?): IndexedValue<T>? = if (collection != null && target != null) {
+        collection.withIndex().find { (_, value) -> value != null && value == target }
     } else {
-        Optional.empty()
+        null
     }
 
     /**
      * Sorts a given map by the order of the of the keys in the map in descending order
      * @see ComparatorUtil.getKeyComparator
      */
-    fun <T> getKeyFilteredMap(map: Map<String, T>): List<Map.Entry<String, T>> = Stream.of(map).sorted(ComparatorUtil.getKeyComparator()).toList()
+    fun <T> getKeyFilteredMap(map: Map<String, T>): List<Map.Entry<String, T>> = map.asSequence().sortedWith(ComparatorUtil.getKeyComparator()).toList()
 
     fun isLowRamDevice(context: Context?): Boolean {
         val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager

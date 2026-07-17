@@ -59,7 +59,7 @@ class AnalyticsLogging(
         priority: Int,
         tag: String?,
         message: String,
-        throwable: Throwable?,
+        t: Throwable?,
     ) {
         if (priority < Log.INFO) {
             return
@@ -71,12 +71,13 @@ class AnalyticsLogging(
             crashlytics?.setCustomKey(MESSAGE, message)
         }.exceptionOrNull()?.printStackTrace()
 
-        when (throwable) {
+        when (t) {
             null -> log(priority, tag, message)
-            else -> logException(throwable)
+            else -> logException(t)
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun logCurrentScreen(
         context: FragmentActivity,
         tag: String,

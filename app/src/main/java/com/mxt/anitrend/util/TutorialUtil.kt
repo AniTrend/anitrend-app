@@ -6,6 +6,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
+import com.mxt.anitrend.extension.getCompatColor
 import timber.log.Timber
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.PromptStateChangeListener
@@ -103,14 +104,14 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return null
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
             return TapTargetUtil
                 .buildDefault(activity, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
         }
         return null
     }
@@ -131,14 +132,14 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return null
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
             return TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
         }
         return null
     }
@@ -159,14 +160,14 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return null
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
             return TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
         }
         return null
     }
@@ -183,14 +184,14 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
             TapTargetUtil
                 .buildDefault(activity, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
                 .show()
         }
     }
@@ -211,14 +212,14 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
             TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
                 .show()
         }
     }
@@ -239,14 +240,14 @@ class TutorialUtil {
         val activity = context
         val target = tapTarget
         if (prefs == null) {
-            Timber.tag(tagName).i("Did you forget to set the current application preferences?")
+            Timber.i("Did you forget to set the current application preferences?")
             return
         }
         if (activity != null && target != null && !TapTargetUtil.isActive(target) && prefs.shouldShowTipFor(target)) {
             TapTargetUtil
                 .buildDefault(activity, primary, secondary, resource)
                 .setPromptStateChangeListener(defaultStateChangeListener)
-                .setFocalColour(CompatUtil.getColor(activity, focalColour))
+                .setFocalColour(activity.getCompatColor(focalColour))
                 .show()
         }
     }

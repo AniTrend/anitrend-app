@@ -7,6 +7,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.FragmentActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.mxt.anitrend.R
+import com.mxt.anitrend.extension.getCompatColorAttr
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence
 
@@ -37,11 +38,11 @@ object TapTargetUtil {
         .Builder(context)
         .setTarget(context.findViewById(resource))
         .setAnimationInterpolator(FastOutSlowInInterpolator())
-        .setPrimaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.titleColor))
-        .setSecondaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.subtitleColor))
+        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.titleColor))
+        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.subtitleColor))
         .setBackgroundColour(
             ColorUtils.setAlphaComponent(
-                CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark),
+                context.getCompatColorAttr(R.attr.colorOnSurface),
                 0xF2,
             ),
         )
@@ -57,11 +58,11 @@ object TapTargetUtil {
         .setPrimaryText(primary)
         .setSecondaryText(secondary)
         .setAnimationInterpolator(FastOutSlowInInterpolator())
-        .setPrimaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.titleColor))
-        .setSecondaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.subtitleColor))
+        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.titleColor))
+        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.subtitleColor))
         .setBackgroundColour(
             ColorUtils.setAlphaComponent(
-                CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark),
+                context.getCompatColorAttr(R.attr.colorOnSurface),
                 0xF2,
             ),
         )
@@ -77,11 +78,11 @@ object TapTargetUtil {
         .setPrimaryText(primary)
         .setSecondaryText(secondary)
         .setAnimationInterpolator(FastOutSlowInInterpolator())
-        .setPrimaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.titleColor))
-        .setSecondaryTextColour(CompatUtil.getColorFromAttr(context, R.attr.subtitleColor))
+        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.titleColor))
+        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.subtitleColor))
         .setBackgroundColour(
             ColorUtils.setAlphaComponent(
-                CompatUtil.getColorFromAttr(context, R.attr.colorPrimaryDark),
+                context.getCompatColorAttr(R.attr.colorOnSurface),
                 0xF2,
             ),
         )

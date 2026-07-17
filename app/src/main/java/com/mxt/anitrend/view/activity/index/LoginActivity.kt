@@ -207,7 +207,7 @@ class LoginActivity :
                 KeyUtil.DURATION_LONG,
             )
             binding.widgetFlipper.showPrevious()
-            Timber.tag(TAG).e(error)
+            Timber.e(error)
         }
     }
 
@@ -223,7 +223,7 @@ class LoginActivity :
                 KeyUtil.DURATION_LONG,
             )
             binding.widgetFlipper.showPrevious()
-            Timber.tag(TAG).w(message)
+            Timber.w(message)
         }
     }
 

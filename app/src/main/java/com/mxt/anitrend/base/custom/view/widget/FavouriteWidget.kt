@@ -144,7 +144,7 @@ constructor(
                 }
                 setIconType()
             } else {
-                Timber.tag(tagName).w(response.apiError())
+                Timber.w(response.apiError())
                 resetFlipperState()
             }
         } catch (e: Exception) {

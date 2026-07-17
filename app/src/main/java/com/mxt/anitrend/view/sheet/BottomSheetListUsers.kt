@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
@@ -90,7 +89,7 @@ class BottomSheetListUsers :
     override fun onStart() {
         super.onStart()
         toolbarTitle?.text = getString(mTitle, count)
-        searchView?.visibility = View.GONE
+        searchBar?.visibility = View.GONE
         stateLayout?.showLoading()
         if (mAdapter.itemCount < 1) {
             onRefresh()
@@ -245,7 +244,7 @@ class BottomSheetListUsers :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<UserBase>,
+        data: IndexedValue<UserBase>,
     ) {
         when (target.id) {
             R.id.container -> {
@@ -253,7 +252,7 @@ class BottomSheetListUsers :
                 val intent =
                     Intent(host, ProfileActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, data.second.id)
+                        putExtra(KeyUtil.arg_id, data.value.id)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -262,7 +261,7 @@ class BottomSheetListUsers :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<UserBase>,
+        data: IndexedValue<UserBase>,
     ) = Unit
 
     class Builder : BottomSheetBuilder() {

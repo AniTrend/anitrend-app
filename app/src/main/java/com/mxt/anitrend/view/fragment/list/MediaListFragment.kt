@@ -9,8 +9,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
@@ -30,6 +28,7 @@ import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.media.MediaUtil
+import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -89,10 +88,12 @@ open class MediaListFragment :
             }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_genre).isVisible = false
         menu.findItem(R.id.action_tag).isVisible = false
@@ -101,6 +102,8 @@ open class MediaListFragment :
         menu.findItem(R.id.action_status).isVisible = false
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -110,10 +113,8 @@ open class MediaListFragment :
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaListSortType, presenter.settings.mediaListSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaListSort = KeyUtil.MediaListSortType[dialog.selectedIndex]
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaListSort = KeyUtil.MediaListSortType[dialog.selectedIndex]
                 }
                 return true
             }
@@ -124,12 +125,10 @@ open class MediaListFragment :
                     R.string.app_filter_order,
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }
@@ -203,9 +202,9 @@ open class MediaListFragment :
                     onRefresh()
                     return
                 }
-                val pair = CompatUtil.findIndexOf(mAdapter.data, changeModel).orElse(null)
+                val pair = CompatUtil.findIndexOf(mAdapter.data, changeModel)
                 if (pair != null) {
-                    val pairIndex = pair.first
+                    val pairIndex = pair.index
                     when (consumer.requestMode) {
                         KeyUtil.MUT_SAVE_MEDIA_LIST -> {
                             if (mediaListCollectionBase == null ||
@@ -232,13 +231,13 @@ open class MediaListFragment :
         }
     }
 
-    override fun onChanged(content: PageContainer<MediaListCollection>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<MediaListCollection>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                val mediaListCollection = content.pageData.firstOrNull()
+            if (!value.isEmpty) {
+                val mediaListCollection = value.pageData.firstOrNull()
                 if (mediaListCollection != null) {
                     val entries = mediaListCollection.entries.orEmpty()
                     val mediaListSort = presenter.settings.mediaListSort ?: KeyUtil.PROGRESS
@@ -264,17 +263,17 @@ open class MediaListFragment :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<MediaList>,
+        data: IndexedValue<MediaList>,
     ) {
         when (target.id) {
             R.id.container,
             R.id.series_image,
             -> {
                 val host = activity ?: return
-                val mediaBase = data.second.media
+                val mediaBase = data.value.media
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.mediaId)
+                        putExtra(KeyUtil.arg_id, data.value.mediaId)
                         putExtra(KeyUtil.arg_mediaType, mediaBase.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
@@ -284,7 +283,7 @@ open class MediaListFragment :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<MediaList>,
+        data: IndexedValue<MediaList>,
     ) {
         when (target.id) {
             R.id.container,
@@ -295,7 +294,7 @@ open class MediaListFragment :
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.mediaId)
+                            .setId(data.value.mediaId)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit
  */
 object WebFactory {
     @JvmField
+    @Suppress("DEPRECATION")
     val gson =
         GsonBuilder()
             .enableComplexMapKeySerialization()
@@ -125,11 +126,14 @@ object WebFactory {
                 addNetworkInterceptor(NetworkCacheInterceptor(appContext, true))
                 cache(cacheProvider(appContext))
             }
+
+        @Suppress("DEPRECATION")
+        val converterFactory = SimpleXmlConverterFactory.createNonStrict()
         val retrofit =
             Retrofit
                 .Builder()
                 .baseUrl(if (feeds) BuildConfig.FEEDS_LINK else BuildConfig.CRUNCHY_LINK)
-                .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
+                .addConverterFactory(converterFactory)
                 .client(httpClient.build())
                 .build()
         return retrofit.create(EpisodeModel::class.java)

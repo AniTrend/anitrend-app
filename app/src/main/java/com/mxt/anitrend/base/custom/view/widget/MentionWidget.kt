@@ -23,7 +23,7 @@ constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        val padding = resources.getDimensionPixelSize(R.dimen.spacing_small)
+        val padding = resources.getDimensionPixelSize(R.dimen.lg_margin)
         setPadding(padding, padding, padding, padding)
         setImageDrawable(context.getCompatDrawable(R.drawable.ic_reply_blue_600_18dp))
     }

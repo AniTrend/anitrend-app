@@ -365,8 +365,8 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="text_notification">%d Notificación</string>
     <string name="text_notifications">%d Notificaciones</string>
 
-    <string name="alerter_notification_title">Notificaciones disponibles</string>
-    <string name="alerter_notification_text">Tienes una o más notificaciones sin leer</string>
+    <string name="notification_alert_title">Notificaciones disponibles</string>
+    <string name="notification_alert_text">Tienes una o más notificaciones sin leer</string>
 
     <string name="title_new_features">¡Novedades!</string>
 
@@ -585,8 +585,8 @@ elementos de tus favoritos al presionar en el icono del corazón .
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">¡Información de la descarga!</string>
-    <string name="text_download_info"> La actualización será almacenada en tu carpeta de descargas.</string>
-    <string name="title_update_infodadat">¡Novedades de la actualización!</string>
+    <string name="text_download_info">El elemento se descargará en tu carpeta de descargas.</string>
+    <string name="title_update_info">¡Novedades de la actualización!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Información para compartir</string>

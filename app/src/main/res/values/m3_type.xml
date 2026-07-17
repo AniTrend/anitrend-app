@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Material3 typography.
+    Uses the app's established sans-serif-condensed font family
+    on top of the M3 type scale sizes/weights/line-heights.
+    Only the scales actually used by the app are defined.
+-->
+<resources>
+
+    <!-- Title: section headers, card titles, dialog titles -->
+    <style name="TextAppearance.AniTrend.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <!-- Body: paragraph text, descriptions, content -->
+    <style name="TextAppearance.AniTrend.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <!-- Label: buttons, chips, tabs, captions -->
+    <style name="TextAppearance.AniTrend.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <!-- Headline: large section headers, hero text -->
+    <style name="TextAppearance.AniTrend.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="TextAppearance.AniTrend.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">sans-serif-condensed</item>
+    </style>
+
+</resources>

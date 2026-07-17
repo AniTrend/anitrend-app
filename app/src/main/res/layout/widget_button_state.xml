@@ -11,29 +11,17 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/button_state_container"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_state_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:contentPadding="@dimen/lg_margin"
-            app:cardPreventCornerOverlap="true"
-            tools:cardBackgroundColor="?attr/colorAccent">
+            tools:text="@string/follow" />
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                android:id="@+id/button_state_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                tools:text="@string/follow" />
-
-        </androidx.cardview.widget.CardView>
-
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:layout_width="@dimen/xl_margin"
-            android:layout_height="@dimen/xl_margin"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="@dimen/widget_spinner_compact_size"
+            android:layout_height="@dimen/widget_spinner_compact_size"
             android:layout_gravity="center"
-            app:cpv_animAutostart="true"
-            app:cpv_color="?colorAccent"
-            app:cpv_indeterminate="true" />
+            android:indeterminate="true"
+            app:indicatorColor="?colorAccent" />
 
     </ViewFlipper>

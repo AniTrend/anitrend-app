@@ -53,7 +53,7 @@ class AvatarIndicatorView :
     private val presenter: WidgetPresenter<Any> by inject()
 
     private val currentUser: User?
-        get() = presenter.database?.currentUser
+        get() = presenter.database.currentUser
 
     private lateinit var binding: WidgetAvatarIndicatorBinding
 
@@ -64,7 +64,7 @@ class AvatarIndicatorView :
     }
 
     private fun checkLastSyncTime() {
-        if (presenter.settings?.isAuthenticated == true) {
+        if (presenter.settings.isAuthenticated == true) {
             if (currentUser != null) {
                 binding.userAvatar.setImage(currentUser?.avatar)
                 if ((currentUser?.unreadNotificationCount ?: 0) > 0) {

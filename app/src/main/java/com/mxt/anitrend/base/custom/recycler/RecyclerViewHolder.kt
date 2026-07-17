@@ -3,7 +3,6 @@ package com.mxt.anitrend.base.custom.recycler
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.util.ActionModeUtil
 
@@ -52,12 +51,12 @@ abstract class RecyclerViewHolder<T>(
     }
 
     /**
-     * Constructs an int pair container with a boolean representing a valid adapter position
-     * @return IntPair
+     * Constructs an indexed value container with a boolean representing a valid adapter position
+     * @return IndexedValue
      */
-    protected fun isValidIndexPair(): IntPair<Boolean> {
+    protected fun isValidIndexPair(): IndexedValue<Boolean> {
         val index = bindingAdapterPosition
-        return IntPair(index, index != RecyclerView.NO_POSITION)
+        return IndexedValue(index, index != RecyclerView.NO_POSITION)
     }
 
     /**
@@ -75,10 +74,10 @@ abstract class RecyclerViewHolder<T>(
             return
         }
         val pair = isValidIndexPair()
-        if (pair.second) {
-            val model = data[pair.first]
+        if (pair.value) {
+            val model = data[pair.index]
             if (isClickable(model)) {
-                clickListener.onItemClick(v, IntPair(pair.first, model))
+                clickListener.onItemClick(v, IndexedValue(pair.index, model))
             }
         }
     }
@@ -98,10 +97,10 @@ abstract class RecyclerViewHolder<T>(
             return false
         }
         val pair = isValidIndexPair()
-        if (pair.second) {
-            val model = data[pair.first]
+        if (pair.value) {
+            val model = data[pair.index]
             if (isLongClickable(model)) {
-                clickListener.onItemLongClick(v, IntPair(pair.first, model))
+                clickListener.onItemLongClick(v, IndexedValue(pair.index, model))
                 return true
             }
         }

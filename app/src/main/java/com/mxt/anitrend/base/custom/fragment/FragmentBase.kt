@@ -15,7 +15,6 @@ import androidx.annotation.MenuRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.annimon.stream.IntPair
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
@@ -99,6 +98,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (!EventBus.getDefault().isRegistered(this) && hasSubscriber) {
             EventBus.getDefault().register(this)
         }
+        @Suppress("DEPRECATION")
         if (!isMenuDisabled) {
             setHasOptionsMenu(true)
         }
@@ -127,6 +127,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         presenterRef?.onResume(this)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (inflateMenu != 0) {
             inflater.inflate(inflateMenu, menu)
@@ -203,19 +204,19 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun showError(error: String) {
         if (!TextUtils.isEmpty(error)) {
-            Timber.tag(TAG).d(error)
+            Timber.d(error)
         }
     }
 
     override fun showEmpty(message: String) {
         if (!TextUtils.isEmpty(message)) {
-            Timber.tag(TAG).i(message)
+            Timber.i(message)
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         if (key != null) {
-            Timber.tag(TAG).i(key)
+            Timber.i(key)
         }
     }
 
@@ -225,7 +226,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         }
     }
 
-    override fun onItemClick(target: View, data: IntPair<M>) = Unit
+    override fun onItemClick(target: View, data: IndexedValue<M>) = Unit
 
-    override fun onItemLongClick(target: View, data: IntPair<M>) = Unit
+    override fun onItemLongClick(target: View, data: IndexedValue<M>) = Unit
 }

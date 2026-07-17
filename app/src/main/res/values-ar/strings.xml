@@ -367,8 +367,8 @@
     <string name="text_notification">%d إشعار</string>
     <string name="text_notifications">%dإشعارات</string>
 
-    <string name="alerter_notification_title">إشعارات متوفرة</string>
-    <string name="alerter_notification_text">لديك إشعار أو اكثر غير مقروء</string>
+    <string name="notification_alert_title">إشعارات متوفرة</string>
+    <string name="notification_alert_text">لديك إشعار أو اكثر غير مقروء</string>
 
     <string name="title_new_features">خواص جديدة!</string>
 
@@ -587,8 +587,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">حالة التحميل!</string>
-    <string name="text_download_info">سيتم حفظ ملف التحديث في مجلد التنزيلات.</string>
-    <string name="title_update_infodadat">حالة التحديث!</string>
+    <string name="text_download_info">سيتم تحميل العنصر في مجلد التنزيلات الخاص بك.</string>
+    <string name="title_update_info">حالة التحديث!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">معلومات لمشاركتها</string>

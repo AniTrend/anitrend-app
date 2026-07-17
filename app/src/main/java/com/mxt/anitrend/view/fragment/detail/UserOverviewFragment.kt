@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.binding.richMarkDown
@@ -128,10 +127,10 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      *
      * @param model The new data
      */
-    override fun onChanged(model: User?) {
+    override fun onChanged(value: User?) {
         val viewBinding = _binding ?: return
-        if (model != null) {
-            this.model = model
+        if (value != null) {
+            this.model = value
             updateUI()
         } else {
             viewBinding.stateLayout.showError(
@@ -165,15 +164,13 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         val statistics = model?.statistics
         val genres = statistics?.anime?.genres
         if (statistics != null && genres != null && genres.isNotEmpty()) {
-            val highestValue = Stream.of(genres)
-                .max { o1, o2 -> if (o1.count > o2.count) 1 else 0 }
-                .get().count
+            val highestValue = genres.maxByOrNull { it.count }?.count ?: 0
 
-            userGenreStats = Stream.of(genres)
-                .sortBy { s -> -s.count }.map { genreStats ->
+            userGenreStats = genres
+                .sortedByDescending { it.count }.map { genreStats ->
                     val percentage = genreStats.count.toFloat() / highestValue.toFloat() * 100f
                     StatsRing(percentage.toInt(), genreStats.genre, genreStats.count.toString())
-                }.limit(5).toList()
+                }.take(5)
         }
 
         return userGenreStats
@@ -198,10 +195,10 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
      *
      * @param view The view that was clicked.
      */
-    override fun onClick(view: View) {
+    override fun onClick(v: View) {
         val viewBinding = _binding ?: return
-        when (view.id) {
-            R.id.user_avatar -> CompatUtil.imagePreview(view, model?.avatar?.large, R.string.image_preview_error_user_avatar)
+        when (v.id) {
+            R.id.user_avatar -> CompatUtil.imagePreview(v, model?.avatar?.large, R.string.image_preview_error_user_avatar)
             R.id.user_stats_container -> {
                 val ringList = generateStatsData()
                 if (ringList.size > 1) {

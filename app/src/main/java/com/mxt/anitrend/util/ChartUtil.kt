@@ -75,6 +75,7 @@ class ChartUtil {
          * @param axis  the axis the value belongs to
          * @return formatted label value
          */
+        @Deprecated("Deprecated in Java")
         override fun getFormattedValue(
             value: Float,
             axis: AxisBase,

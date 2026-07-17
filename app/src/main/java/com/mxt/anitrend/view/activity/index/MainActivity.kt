@@ -12,7 +12,9 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withResumed
@@ -142,7 +144,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mSearchView = binding.appBarMain.customToolbar.searchView
+        mSearchBar = binding.appBarMain.customToolbar.searchBar
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
@@ -163,13 +165,23 @@ class MainActivity :
                 requestNotificationsPermission()
             }
         }
+        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+            override fun onQueryChanged(query: String) {
+                presenter.notifyAllListeners(query.lowercase(java.util.Locale.getDefault()), false)
+            }
+
+            override fun onSearchSubmitted(query: String) {
+                val intent = android.content.Intent(this@MainActivity, com.mxt.anitrend.view.activity.index.SearchActivity::class.java)
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra(KeyUtil.arg_search, query)
+                com.mxt.anitrend.util.CompatUtil.startRevealAnim(this@MainActivity, mSearchBar!!, intent)
+            }
+        }
         onActivityReady()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        val searchItem = menu.findItem(R.id.action_search)
-        mSearchView?.setMenuItem(searchItem)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -199,12 +211,21 @@ class MainActivity :
             }
             R.id.action_discord -> {
                 val invite = getString(R.string.link_anitrend_discord)
-                intent = Intent(Intent.ACTION_VIEW, Uri.parse(invite))
+                intent = Intent(Intent.ACTION_VIEW, invite.toUri())
                 startActivity(intent)
                 return true
             }
             R.id.action_report -> {
                 startActivity(Intent(this@MainActivity, LoggingActivity::class.java))
+                return true
+            }
+            R.id.action_search -> {
+                mSearchBar?.apply {
+                    isVisible = !isVisible
+                    if (isVisible) {
+                        requestFocus()
+                    }
+                }
                 return true
             }
         }
@@ -559,8 +580,8 @@ class MainActivity :
         ) {
             NotifyUtil.createAlerter(
                 this,
-                R.string.alerter_notification_title,
-                R.string.alerter_notification_text,
+                R.string.notification_alert_title,
+                R.string.notification_alert_text,
                 R.drawable.ic_notifications_active_white_24dp,
                 R.color.colorAccent,
             )

@@ -1,6 +1,6 @@
 package com.mxt.anitrend
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.crash.runtime.UncaughtExceptionHandler
 import org.koin.android.ext.android.get
@@ -11,7 +11,7 @@ import timber.log.Timber
  * Application class
  */
 
-class App : MultiDexApplication() {
+class App : Application() {
     /**
      * Timber logging tree depending on the build type we plant the appropriate tree
      */

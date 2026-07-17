@@ -151,6 +151,7 @@ class MarkdownInputEditor :
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
         val ic = super.onCreateInputConnection(outAttrs)
         EditorInfoCompat.setContentMimeTypes(outAttrs, arrayOf("image/png", "image/gif"))
+        @Suppress("DEPRECATION")
         return ic?.let {
             InputConnectionCompat.createWrapper(ic, outAttrs, this)
         }

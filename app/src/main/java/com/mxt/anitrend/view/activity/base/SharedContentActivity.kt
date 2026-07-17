@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Lifecycle
-import com.annimon.stream.IntPair
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter
@@ -92,7 +91,7 @@ class SharedContentActivity :
         bottomSheetBehavior = BottomSheetBehavior.from(binding.designBottomSheet)
         setPresenter(BasePresenter(applicationContext))
         toolbarBinding = binding.customSheetToolbar
-        mSearchView = toolbarBinding.searchView
+        mSearchBar = toolbarBinding.searchBar
         binding.sheetSharePostTypeApprove.setOnClickListener { getItemSelected() }
         setViewModel(true)
     }
@@ -207,7 +206,7 @@ class SharedContentActivity :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<Any>,
+        data: IndexedValue<Any>,
     ) {
         when (target.id) {
             R.id.insert_emoticon -> Unit
@@ -233,7 +232,7 @@ class SharedContentActivity :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<Any>,
+        data: IndexedValue<Any>,
     ) {
     }
 }

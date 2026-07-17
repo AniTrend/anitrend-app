@@ -162,16 +162,16 @@ abstract class BottomSheetGiphyList :
 
     abstract fun makeRequest()
 
-    override fun onChanged(content: GiphyContainer?) {
-        if (content != null && !content.data.isNullOrEmpty()) {
+    override fun onChanged(value: GiphyContainer?) {
+        if (value != null && !value.data.isNullOrEmpty()) {
             if (isPager) {
                 if (mAdapter.itemCount < 1) {
-                    mAdapter.onItemsInserted(content.data)
+                    mAdapter.onItemsInserted(value.data)
                 } else {
-                    mAdapter.onItemRangeInserted(content.data)
+                    mAdapter.onItemRangeInserted(value.data)
                 }
             } else {
-                mAdapter.onItemsInserted(content.data)
+                mAdapter.onItemsInserted(value.data)
             }
             updateUI()
         } else {

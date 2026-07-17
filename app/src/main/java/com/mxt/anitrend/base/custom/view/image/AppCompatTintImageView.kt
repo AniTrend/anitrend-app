@@ -6,9 +6,9 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
-import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.extension.getCompatDrawable
+import com.mxt.anitrend.extension.getCompatTintedDrawable
 
 /**
  * Created by max on 2017/12/03.
@@ -29,14 +29,14 @@ constructor(
         @DrawableRes drawable: Int,
         @ColorRes colorTint: Int,
     ) {
-        setImageDrawable(CompatUtil.getDrawable(context, drawable, colorTint))
+        setImageDrawable(context.getCompatDrawable(drawable, colorTint))
     }
 
     fun setTintDrawableAttr(
         @DrawableRes drawable: Int,
         @AttrRes colorAttribute: Int,
     ) {
-        setImageDrawable(CompatUtil.getDrawableTintAttr(context, drawable, colorAttribute))
+        setImageDrawable(context.getCompatTintedDrawable(drawable))
     }
 
     companion object {
@@ -46,7 +46,7 @@ constructor(
             @DrawableRes drawable: Int,
         ) {
             imageView.setImageDrawable(
-                CompatUtil.getDrawableTintAttr(imageView.context, drawable, R.attr.colorAccent),
+                imageView.context.getCompatTintedDrawable(drawable),
             )
         }
     }

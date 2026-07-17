@@ -5,7 +5,7 @@
     android:id="@+id/widget_flipper"
     android:inAnimation="@android:anim/slide_in_left"
     android:outAnimation="@android:anim/slide_out_right"
-    android:padding="@dimen/lg_margin"
+    android:padding="@dimen/widget_flipper_padding"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
@@ -19,12 +19,12 @@
             android:layout_height="wrap_content"
             tools:drawableStart="@drawable/ic_delete_red_600_18dp" />
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:layout_width="@dimen/xl_margin"
-            android:layout_height="@dimen/xl_margin"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="@dimen/widget_spinner_compact_size"
+            android:layout_height="@dimen/widget_spinner_compact_size"
             android:layout_gravity="center"
-            app:cpv_animAutostart="true"
-            app:cpv_color="?colorAccent"
-            app:cpv_indeterminate="true" />
+            android:indeterminate="true"
+            app:indicatorColor="?colorAccent"
+            app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
     </ViewFlipper>

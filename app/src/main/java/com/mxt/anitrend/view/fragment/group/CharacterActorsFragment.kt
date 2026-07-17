@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupActorAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -55,11 +54,11 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
             object : ItemClickListener<RecyclerItem> {
                 override fun onItemClick(
                     target: View,
-                    data: IntPair<RecyclerItem>,
+                    data: IndexedValue<RecyclerItem>,
                 ) {
                     when (target.id) {
                         R.id.container -> {
-                            val media = data.second as? MediaBase ?: return
+                            val media = data.value as? MediaBase ?: return
                             val host = activity ?: return
                             val intent =
                                 Intent(host, MediaActivity::class.java).apply {
@@ -73,12 +72,12 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
 
                 override fun onItemLongClick(
                     target: View,
-                    data: IntPair<RecyclerItem>,
+                    data: IndexedValue<RecyclerItem>,
                 ) {
                     when (target.id) {
                         R.id.container -> {
                             if (presenter.settings.isAuthenticated) {
-                                val media = data.second as? MediaBase ?: return
+                                val media = data.value as? MediaBase ?: return
                                 val host = activity ?: return
                                 mediaActionUtil =
                                     MediaActionUtil
@@ -142,11 +141,11 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
 
     override fun onItemClick(
         target: View,
-        data: IntPair<RecyclerItem>,
+        data: IndexedValue<RecyclerItem>,
     ) {
         when (target.id) {
             R.id.container -> {
-                val staff = data.second as? StaffBase ?: return
+                val staff = data.value as? StaffBase ?: return
                 val host = activity ?: return
                 val intent =
                     Intent(host, StaffActivity::class.java).apply {
@@ -159,6 +158,6 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<RecyclerItem>,
+        data: IndexedValue<RecyclerItem>,
     ) = Unit
 }

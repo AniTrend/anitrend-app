@@ -31,7 +31,7 @@ class MediaListActivity : ActivityBase<User, BasePresenter>() {
         binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPresenter(BasePresenter(this))
-        mSearchView = binding.customToolbar.searchView
+        mSearchBar = binding.customToolbar.searchBar
         setSupportActionBar(binding.customToolbar.toolbar)
         setViewModel(true)
         mediaType = bundle?.getString(KeyUtil.arg_mediaType)
@@ -56,7 +56,6 @@ class MediaListActivity : ActivityBase<User, BasePresenter>() {
         menu.findItem(R.id.action_settings).isVisible = false
         menu.findItem(R.id.action_extra).isVisible = false
         menu.findItem(R.id.action_share).isVisible = false
-        mSearchView?.setMenuItem(menu.findItem(R.id.action_search))
         return super.onCreateOptionsMenu(menu)
     }
 

@@ -6,15 +6,17 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.google.android.material.search.SearchBar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -32,13 +34,11 @@ abstract class BottomSheetBase<T> :
     BottomSheetListener,
     ResponseCallback {
 
-    var TAG: String? = null
-
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
     protected var toolbarSearch: AppCompatImageView? = null
-    protected var searchView: MaterialSearchView? = null
-
+    protected var searchBar: SearchBar? = null
+    protected var mSearchDelegate: ISearchDelegate? = null
     protected var viewModel: ViewModelBase<T>? = null
     protected var bottomSheetChoice: BottomSheetChoice? = null
 
@@ -68,6 +68,10 @@ abstract class BottomSheetBase<T> :
                         BottomSheetBehavior.STATE_HIDDEN -> dismiss()
                         BottomSheetBehavior.STATE_COLLAPSED -> onStateCollapsed()
                         BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
+                        BottomSheetBehavior.STATE_DRAGGING,
+                        BottomSheetBehavior.STATE_HALF_EXPANDED,
+                        BottomSheetBehavior.STATE_SETTLING,
+                        -> Unit
                     }
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -78,7 +82,6 @@ abstract class BottomSheetBase<T> :
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TAG = toString()
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
             mTitle = args.getInt(KeyUtil.arg_title)
@@ -110,8 +113,18 @@ abstract class BottomSheetBase<T> :
             }
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
-        toolbarSearch?.setOnClickListener { searchView?.showSearch(true) }
-        searchView?.setCursorDrawable(R.drawable.material_search_cursor)
+        toolbarSearch?.setOnClickListener {
+            mSearchDelegate?.let {
+                searchBar?.apply {
+                    isVisible = !isVisible
+                    if (isVisible) {
+                        requestFocus()
+                    }
+                }
+            } ?: run {
+                searchBar?.isVisible = searchBar?.isVisible?.not() ?: false
+            }
+        }
     }
 
     override fun onStop() {
@@ -122,12 +135,12 @@ abstract class BottomSheetBase<T> :
     }
 
     protected fun createBottomSheetBehavior(contentView: View) {
-        val parentView = contentView.parent as? View ?: return
-        val layoutParams = parentView.layoutParams as? CoordinatorLayout.LayoutParams ?: return
-        val coordinatorBehavior = layoutParams.behavior as? BottomSheetBehavior<*> ?: return
+        val parentView = (contentView.parent as? View) ?: return
+        val layoutParams = (parentView.layoutParams as? CoordinatorLayout.LayoutParams) ?: return
+        val coordinatorBehavior = (layoutParams.behavior as? BottomSheetBehavior<*>) ?: return
 
         bottomSheetBehavior = coordinatorBehavior
-        bottomSheetBehavior?.setPeekHeight(CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT))
+        bottomSheetBehavior?.peekHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
         bottomSheetCallback?.let { callback ->
             bottomSheetBehavior?.addBottomSheetCallback(callback)
         }
@@ -137,7 +150,7 @@ abstract class BottomSheetBase<T> :
         toolbarTitle = rootView.findViewById(R.id.toolbar_title)
         toolbarState = rootView.findViewById(R.id.toolbar_state)
         toolbarSearch = rootView.findViewById(R.id.toolbar_search)
-        searchView = rootView.findViewById(R.id.search_view)
+        searchBar = rootView.findViewById(R.id.search_bar)
     }
 
     fun closeDialog(): Boolean {
@@ -196,10 +209,10 @@ abstract class BottomSheetBase<T> :
     }
 
     override fun showError(error: String) {
-        Timber.tag(TAG ?: javaClass.simpleName).e(error)
+        Timber.e(error)
     }
 
     override fun showEmpty(message: String) {
-        Timber.tag(TAG ?: javaClass.simpleName).d(message)
+        Timber.d(message)
     }
 }

@@ -11,7 +11,7 @@
             android:focusable="true"
             android:inAnimation="@android:anim/slide_in_left"
             android:outAnimation="@android:anim/slide_out_right"
-            android:padding="@dimen/spacing_small"
+            android:padding="@dimen/lg_margin"
             android:foreground="?selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -26,19 +26,18 @@
                 tools:drawableStart="@drawable/ic_thumb_up_grey_600_18dp"
                 tools:text=" 5"
                 />
-
-            <com.github.rahatarmanahmed.cpv.CircularProgressView
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="@dimen/widget_spinner_compact_size"
                 android:layout_height="@dimen/widget_spinner_compact_size"
                 android:layout_gravity="center"
-                app:cpv_animAutostart="true"
-                app:cpv_color="?colorAccent"
-                app:cpv_indeterminate="true" />
+                android:indeterminate="true"
+                app:indicatorColor="?colorAccent"
+                app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
         </ViewFlipper>
 
         <androidx.legacy.widget.Space
-            android:layout_width="@dimen/spacing_medium"
+            android:layout_width="@dimen/spacing_xs"
             android:layout_height="wrap_content" />
 
         <ViewFlipper
@@ -47,7 +46,7 @@
             android:focusable="true"
             android:inAnimation="@android:anim/slide_in_left"
             android:outAnimation="@android:anim/slide_out_right"
-            android:padding="@dimen/spacing_small"
+            android:padding="@dimen/lg_margin"
             android:foreground="?selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -62,14 +61,13 @@
                 tools:drawableStart="@drawable/ic_thumb_down_grey_600_18dp"
                 tools:text=" 5"
                 />
-
-            <com.github.rahatarmanahmed.cpv.CircularProgressView
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="@dimen/widget_spinner_compact_size"
                 android:layout_height="@dimen/widget_spinner_compact_size"
                 android:layout_gravity="center"
-                app:cpv_animAutostart="true"
-                app:cpv_color="?colorAccent"
-                app:cpv_indeterminate="true" />
+                android:indeterminate="true"
+                app:indicatorColor="?colorAccent"
+                app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
         </ViewFlipper>
 

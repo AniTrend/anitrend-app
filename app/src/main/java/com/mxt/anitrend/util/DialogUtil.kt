@@ -1,29 +1,46 @@
 package com.mxt.anitrend.util
 
 import android.content.Context
-import android.graphics.Typeface
+import android.content.DialogInterface
 import android.text.InputType
 import android.text.SpannedString
-import android.text.TextUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
-import com.afollestad.materialdialogs.DialogAction
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.binding.richMarkDown
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import timber.log.Timber
 import java.io.IOException
+
+/**
+ * Extension properties to replace MaterialDialog.selectedIndex/selectedIndices
+ * on Android's AlertDialog (which backs MaterialAlertDialogBuilder).
+ */
+val DialogInterface.selectedIndex: Int
+    get() = (this as? AlertDialog)?.listView?.checkedItemPosition ?: -1
+
+val DialogInterface.selectedIndices: Array<Int>
+    get() {
+        val listView = (this as? AlertDialog)?.listView ?: return emptyArray()
+        val checked = listView.checkedItemPositions ?: return emptyArray()
+        val result = mutableListOf<Int>()
+        for (i in 0 until checked.size()) {
+            if (checked.valueAt(i)) {
+                result.add(checked.keyAt(i))
+            }
+        }
+        return result.toTypedArray()
+    }
 
 /**
  * Created by max on 2017/09/16.
@@ -36,142 +53,71 @@ object DialogUtil {
         editor: EditText,
         context: Context,
     ) {
-        val builder =
-            createDefaultDialog(context)
-                .positiveText(R.string.Ok)
-                .negativeText(R.string.Cancel)
-                .autoDismiss(false)
-                .inputType(
-                    InputType.TYPE_CLASS_TEXT or
-                        InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE or
-                        InputType.TYPE_TEXT_FLAG_MULTI_LINE,
-                ).input(context.getString(R.string.text_enter_text), null) { _, _ ->
-                    // on input
-                }
+        val inputField = EditText(context).apply {
+            inputType =
+                InputType.TYPE_CLASS_TEXT or
+                InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE or
+                InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            setHint(R.string.text_enter_text)
+        }
+
+        val builder = createDefaultDialog(context)
 
         when (action) {
             R.id.insert_link ->
                 builder
-                    .title(R.string.attach_link_title)
-                    .content(R.string.attach_link_text)
-                    .onAny { dialog, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                val editText = dialog.getInputEditText()
-                                if (editText != null) {
-                                    if (!TextUtils.isEmpty(editText.text)) {
-                                        val start = editor.selectionStart
-                                        editor.editableText.insert(
-                                            start,
-                                            MarkDownUtil.convertLink(editText.text.toString()),
-                                        )
-                                        dialog.dismiss()
-                                    } else {
-                                        NotifyUtil
-                                            .makeText(
-                                                context,
-                                                R.string.input_empty_warning,
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
-                                    }
-                                }
-                            }
-                            DialogAction.NEUTRAL -> Unit
-                            DialogAction.NEGATIVE -> dialog.dismiss()
-                        }
-                    }
+                    .setTitle(R.string.attach_link_title)
+                    .setMessage(context.getString(R.string.attach_link_text))
             R.id.insert_image ->
                 builder
-                    .title(R.string.attach_image_title)
-                    .content(R.string.attach_image_text)
-                    .onAny { dialog, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                val editText = dialog.getInputEditText()
-                                if (editText != null) {
-                                    if (!TextUtils.isEmpty(editText.text)) {
-                                        val start = editor.selectionStart
-                                        editor.editableText.insert(
-                                            start,
-                                            MarkDownUtil.convertImage(editText.text.toString()),
-                                        )
-                                        dialog.dismiss()
-                                    } else {
-                                        NotifyUtil
-                                            .makeText(
-                                                context,
-                                                R.string.input_empty_warning,
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
-                                    }
-                                }
-                            }
-                            DialogAction.NEUTRAL -> Unit
-                            DialogAction.NEGATIVE -> dialog.dismiss()
-                        }
-                    }
+                    .setTitle(R.string.attach_image_title)
+                    .setMessage(context.getString(R.string.attach_image_text))
             R.id.insert_youtube ->
                 builder
-                    .title(R.string.attach_youtube_title)
-                    .content(R.string.attach_youtube_text)
-                    .onAny { dialog, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                val editText = dialog.getInputEditText()
-                                if (editText != null) {
-                                    if (!TextUtils.isEmpty(editText.text)) {
-                                        val start = editor.selectionStart
-                                        editor.editableText.insert(
-                                            start,
-                                            MarkDownUtil.convertYoutube(editText.text.toString()),
-                                        )
-                                        dialog.dismiss()
-                                    } else {
-                                        NotifyUtil
-                                            .makeText(
-                                                context,
-                                                R.string.input_empty_warning,
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
-                                    }
-                                }
-                            }
-                            DialogAction.NEUTRAL -> Unit
-                            DialogAction.NEGATIVE -> dialog.dismiss()
-                        }
-                    }
+                    .setTitle(R.string.attach_youtube_title)
+                    .setMessage(context.getString(R.string.attach_youtube_text))
             R.id.insert_webm ->
                 builder
-                    .title(R.string.attach_webm_title)
-                    .content(R.string.attach_webm_text)
-                    .onAny { dialog, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                val editText = dialog.getInputEditText()
-                                if (editText != null) {
-                                    if (!TextUtils.isEmpty(editText.text)) {
-                                        val start = editor.selectionStart
-                                        editor.editableText.insert(
-                                            start,
-                                            MarkDownUtil.convertVideo(editText.text.toString()),
-                                        )
-                                        dialog.dismiss()
-                                    } else {
-                                        NotifyUtil
-                                            .makeText(
-                                                context,
-                                                R.string.input_empty_warning,
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
-                                    }
-                                }
-                            }
-                            DialogAction.NEUTRAL -> Unit
-                            DialogAction.NEGATIVE -> dialog.dismiss()
-                        }
-                    }
+                    .setTitle(R.string.attach_webm_title)
+                    .setMessage(context.getString(R.string.attach_webm_text))
         }
-        builder.show()
+
+        val processedAction = action
+
+        val dialog =
+            builder
+                .setView(inputField)
+                .setPositiveButton(R.string.Ok, null)
+                .setNegativeButton(R.string.Cancel, null)
+                .show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            if (inputField.text.isNullOrBlank()) {
+                NotifyUtil
+                    .makeText(
+                        context,
+                        R.string.input_empty_warning,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            } else {
+                val text = inputField.text.toString()
+                val start = editor.selectionStart
+                when (processedAction) {
+                    R.id.insert_link ->
+                        editor.editableText.insert(start, MarkDownUtil.convertLink(text))
+                    R.id.insert_image ->
+                        editor.editableText.insert(start, MarkDownUtil.convertImage(text))
+                    R.id.insert_youtube ->
+                        editor.editableText.insert(start, MarkDownUtil.convertYoutube(text))
+                    R.id.insert_webm ->
+                        editor.editableText.insert(start, MarkDownUtil.convertVideo(text))
+                }
+                dialog.dismiss()
+            }
+        }
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     @JvmStatic
@@ -180,16 +126,16 @@ object DialogUtil {
         @StringRes title: Int,
         selectedIndex: Int,
         selectableItems: Collection<T>,
-        singleButtonCallback: MaterialDialog.SingleButtonCallback,
+        singleButtonCallback: DialogInterface.OnClickListener,
     ) {
         createDefaultDialog(context)
-            .title(title)
-            .items(selectableItems)
-            .positiveText(R.string.Ok)
-            .negativeText(R.string.Cancel)
-            .itemsCallbackSingleChoice(selectedIndex) { _, _, _, _ -> false }
-            .autoDismiss(true)
-            .onAny(singleButtonCallback)
+            .setTitle(title)
+            .setSingleChoiceItems(
+                selectableItems.map { it.toString() }.toTypedArray(),
+                selectedIndex,
+            ) { _, _ -> }
+            .setPositiveButton(R.string.Ok, singleButtonCallback)
+            .setNegativeButton(R.string.Cancel) { d, _ -> d.dismiss() }
             .show()
     }
 
@@ -198,16 +144,14 @@ object DialogUtil {
         context: Context,
         @StringRes title: Int,
         @StringRes content: Int,
-        singleButtonCallback: MaterialDialog.SingleButtonCallback,
+        singleButtonCallback: DialogInterface.OnClickListener,
     ) {
         createDefaultDialog(context)
-            .title(title)
-            .positiveText(R.string.Ok)
-            .negativeText(R.string.Cancel)
-            .icon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
-            .content(SpannedString(context.getString(content)))
-            .autoDismiss(true)
-            .onAny(singleButtonCallback)
+            .setTitle(title)
+            .setMessage(SpannedString(context.getString(content)))
+            .setPositiveButton(R.string.Ok, singleButtonCallback)
+            .setNegativeButton(R.string.Cancel) { d, _ -> d.dismiss() }
+            .setIcon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
             .show()
     }
 
@@ -218,11 +162,10 @@ object DialogUtil {
         content: String,
     ) {
         createDefaultDialog(context)
-            .title(title)
-            .positiveText(R.string.Close)
-            .icon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
-            .content(MarkDownUtil.convert(content))
-            .autoDismiss(true)
+            .setTitle(title)
+            .setMessage(MarkDownUtil.convert(context, content))
+            .setPositiveButton(R.string.Close) { d, _ -> d.dismiss() }
+            .setIcon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
             .show()
     }
 
@@ -234,17 +177,15 @@ object DialogUtil {
         @StringRes positive: Int,
         @StringRes negative: Int,
         @StringRes neutral: Int,
-        singleButtonCallback: MaterialDialog.SingleButtonCallback,
+        singleButtonCallback: DialogInterface.OnClickListener,
     ) {
         createDefaultDialog(context)
-            .title(title)
-            .positiveText(positive)
-            .negativeText(negative)
-            .neutralText(neutral)
-            .icon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
-            .content(MarkDownUtil.convert(content))
-            .autoDismiss(true)
-            .onAny(singleButtonCallback)
+            .setTitle(title)
+            .setMessage(MarkDownUtil.convert(context, content))
+            .setPositiveButton(positive, singleButtonCallback)
+            .setNegativeButton(negative) { d, _ -> d.dismiss() }
+            .setNeutralButton(neutral) { d, _ -> d.dismiss() }
+            .setIcon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
             .show()
     }
 
@@ -255,16 +196,14 @@ object DialogUtil {
         content: String,
         @StringRes positive: Int,
         @StringRes negative: Int,
-        singleButtonCallback: MaterialDialog.SingleButtonCallback,
+        singleButtonCallback: DialogInterface.OnClickListener,
     ) {
         createDefaultDialog(context)
-            .title(title)
-            .positiveText(positive)
-            .negativeText(negative)
-            .icon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
-            .content(MarkDownUtil.convert(content))
-            .autoDismiss(true)
-            .onAny(singleButtonCallback)
+            .setTitle(title)
+            .setMessage(MarkDownUtil.convert(context, content))
+            .setPositiveButton(positive, singleButtonCallback)
+            .setNegativeButton(negative) { d, _ -> d.dismiss() }
+            .setIcon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
             .show()
     }
 
@@ -276,22 +215,19 @@ object DialogUtil {
         isSpoiler: Boolean?,
         @StringRes positive: Int,
         @StringRes negative: Int,
-        singleButtonCallback: MaterialDialog.SingleButtonCallback,
+        singleButtonCallback: DialogInterface.OnClickListener,
     ) {
         val builder =
             createDefaultDialog(context)
-                .title(title)
-                .positiveText(positive)
-                .negativeText(negative)
-                .icon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
-                .content(MarkDownUtil.convert(content))
-                .autoDismiss(true)
-                .onAny(singleButtonCallback)
+                .setTitle(title)
+                .setMessage(MarkDownUtil.convert(context, content))
+                .setPositiveButton(positive, singleButtonCallback)
+                .setNegativeButton(negative) { d, _ -> d.dismiss() }
 
         if (isSpoiler == true) {
-            builder.icon(requireNotNull(context.getCompatDrawable(R.drawable.ic_spoiler_tag)))
+            builder.setIcon(requireNotNull(context.getCompatDrawable(R.drawable.ic_spoiler_tag)))
         } else {
-            builder.icon(requireNotNull(context.getCompatDrawable(R.drawable.ic_loyalty_white_24dp)))
+            builder.setIcon(requireNotNull(context.getCompatDrawable(R.drawable.ic_loyalty_white_24dp)))
         }
 
         builder.show()
@@ -303,32 +239,30 @@ object DialogUtil {
         @StringRes title: Int,
         selectableItems: Collection<T>,
         selectedIndices: Array<Int>,
-        listCallbackMultiChoice: MaterialDialog.ListCallbackMultiChoice,
-        singleButtonCallback: MaterialDialog.SingleButtonCallback,
+        listCallbackMultiChoice: DialogInterface.OnMultiChoiceClickListener,
+        singleButtonCallback: DialogInterface.OnClickListener,
     ) {
+        val items = selectableItems.map { it.toString() }.toTypedArray()
+        val checkedItems = BooleanArray(items.size) { i -> i in selectedIndices }
         createDefaultDialog(context)
-            .title(title)
-            .items(selectableItems)
-            .positiveText(R.string.Ok)
-            .negativeText(R.string.Reset)
-            .neutralText(R.string.Cancel)
-            .icon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
-            .itemsCallbackMultiChoice(selectedIndices, listCallbackMultiChoice)
-            .autoDismiss(true)
-            .onAny(singleButtonCallback)
+            .setTitle(title)
+            .setMultiChoiceItems(items, checkedItems, listCallbackMultiChoice)
+            .setPositiveButton(R.string.Ok, singleButtonCallback)
+            .setNegativeButton(R.string.Reset) { d, _ -> d.dismiss() }
+            .setNeutralButton(R.string.Cancel) { d, _ -> d.dismiss() }
+            .setIcon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
             .show()
     }
 
     @JvmStatic
     fun createChangeLog(context: Context) {
         try {
-            val materialDialog =
-                createDefaultDialog(context)
-                    .customView(R.layout.dialog_changelog, true)
-                    .build()
+            val dialog = createDefaultDialog(context)
+                .setView(R.layout.dialog_changelog)
+                .show()
 
             val singleLineTextView =
-                materialDialog.findViewById(R.id.changelog_version) as? SingleLineTextView
+                dialog.findViewById<SingleLineTextView>(R.id.changelog_version)
             singleLineTextView?.setText(String.format("v%s", BuildConfig.versionName))
 
             val changelog =
@@ -337,10 +271,8 @@ object DialogUtil {
                     .bufferedReader()
                     .use { it.readText() }
             val richMarkdownTextView =
-                materialDialog.findViewById(R.id.changelog_information) as? RichMarkdownTextView
+                dialog.findViewById<RichMarkdownTextView>(R.id.changelog_information)
             richMarkdownTextView?.richMarkDown(changelog)
-
-            materialDialog.show()
         } catch (e: IOException) {
             Timber.e(e)
         }
@@ -353,18 +285,7 @@ object DialogUtil {
      * @see FragmentActivity
      */
     @JvmStatic
-    fun createDefaultDialog(context: Context): MaterialDialog.Builder = MaterialDialog
-        .Builder(context)
-        .typeface(Typeface.SANS_SERIF, Typeface.SANS_SERIF)
-        .buttonRippleColorRes(R.color.colorAccentDark)
-        .positiveColorRes(R.color.colorStateGreen)
-        .negativeColorRes(R.color.colorStateOrange)
-        .neutralColorRes(R.color.colorStateBlue)
-        .theme(
-            if (CompatUtil.isLightTheme(KoinExt.get(Settings::class.java))) {
-                Theme.LIGHT
-            } else {
-                Theme.DARK
-            },
-        )
+    fun createDefaultDialog(context: Context): MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(context)
+        .setBackgroundInsetBottom(0)
+        .setBackgroundInsetTop(0)
 }

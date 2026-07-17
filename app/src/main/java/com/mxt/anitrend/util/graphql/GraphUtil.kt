@@ -1,6 +1,5 @@
 package com.mxt.anitrend.util.graphql
 
-import com.annimon.stream.Stream
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -26,10 +25,8 @@ object GraphUtil {
         feedLists: List<FeedList>,
     ): List<FeedList> {
         val filteredList =
-            Stream
-                .of(feedLists)
-                .filter { f -> !f?.type.isNullOrBlank() }
-                .toList()
+            feedLists
+                .filter { f -> !f.type.isNullOrBlank() }
         presenter.getPageInfo()?.perPage = filteredList.size
         return filteredList
     }
@@ -43,10 +40,8 @@ object GraphUtil {
         notifications: List<Notification>,
     ): List<Notification> {
         val filteredList =
-            Stream
-                .of(notifications)
-                .filter { f -> !f?.type.isNullOrBlank() }
-                .toList()
+            notifications
+                .filter { f -> !f.type.isNullOrBlank() }
         if (presenter.getPageInfo() != null) {
             presenter.getPageInfo()?.perPage = filteredList.size
         }

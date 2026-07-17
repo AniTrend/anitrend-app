@@ -20,6 +20,7 @@ open class StaffBase() :
     var language: String? = null
     var siteUrl: String? = null
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         name = parcel.readParcelable(TitleBase::class.java.classLoader)

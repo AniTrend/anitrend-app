@@ -3,12 +3,10 @@ package com.mxt.anitrend.base.custom.activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +19,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.google.android.material.search.SearchBar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.CompatUtil
@@ -37,11 +36,9 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.activity.index.SearchActivity
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import java.util.Locale
-import kotlin.jvm.JvmName
 
 /**
  * Created by max on 2017/06/09.
@@ -51,13 +48,12 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     AppCompatActivity(),
     Observer<M?>,
     CommonPresenter.AbstractPresenter<P>,
-    ResponseCallback,
-    MaterialSearchView.SearchViewListener,
-    MaterialSearchView.OnQueryTextListener {
+    ResponseCallback {
 
     protected lateinit var TAG: String
 
-    protected var mSearchView: MaterialSearchView? = null
+    protected var mSearchBar: SearchBar? = null
+    protected var mSearchDelegate: ISearchDelegate? = null
     private var viewModelRef: ViewModelBase<M>? = null
 
     protected val viewModel: ViewModelBase<M>?
@@ -115,27 +111,26 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             val settings = KoinExt.get(Settings::class.java)
             if (CompatUtil.isLightTheme(settings)) {
                 WindowCompat.getInsetsController(window, window.decorView)
-                    ?.setAppearanceLightStatusBars(true)
+                    .setAppearanceLightStatusBars(true)
                 WindowCompat.getInsetsController(window, window.decorView)
-                    ?.setAppearanceLightNavigationBars(true)
+                    .setAppearanceLightNavigationBars(true)
             }
         }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        mSearchView?.apply {
-            setVoiceSearch(true)
-            setOnQueryTextListener(this@ActivityBase)
-            setOnSearchViewListener(this@ActivityBase)
-            setCursorDrawable(R.drawable.material_search_cursor)
+        mSearchDelegate?.let { delegate ->
+            mSearchBar?.hint = getString(R.string.abc_search_hint)
+            // Note: M3 SearchBar doesn't have setOnQueryTextListener directly.
+            // We'll hook into the underlying logic.
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        val text = mSearchView?.findViewById<TextView>(R.id.searchTextView)?.text
+        val text = mSearchBar?.text
         if (!text.isNullOrEmpty()) {
             outState.putCharSequence(KEY_SEARCHVIEW_QUERY, text)
         }
@@ -145,7 +140,9 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         super.onRestoreInstanceState(savedInstanceState)
 
         if (savedInstanceState.containsKey(KEY_SEARCHVIEW_QUERY)) {
-            onQueryTextChange(savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY).toString())
+            val savedQuery = savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY)
+            mSearchBar?.setText(savedQuery)
+            presenterRef?.notifyAllListeners(savedQuery.toString().lowercase(Locale.getDefault()), false)
         }
     }
 
@@ -178,6 +175,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
+    @Suppress("DEPRECATION")
     protected fun setTransparentStatusBar() {
         val window = window
         window.decorView.systemUiVisibility =
@@ -186,6 +184,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         window.statusBarColor = color
     }
 
+    @Suppress("DEPRECATION")
     protected fun setTransparentStatusBarWithColor() {
         val window = window
         val color = ContextCompat.getColor(this, R.color.colorTransparent)
@@ -239,6 +238,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean = super.onCreateOptionsMenu(menu)
 
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -294,7 +294,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
      * @param permission the current permission granted
      */
     protected open fun onPermissionGranted(permission: String) {
-        Timber.tag(TAG).d("Granted %s", permission)
+        Timber.d("Granted %s", permission)
     }
 
     /**
@@ -331,14 +331,16 @@ abstract class ActivityBase<M, P : CommonPresenter> :
      * Take care of popping the fragment back stack or finishing the activity
      * as appropriate.
      */
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (mFragment?.onBackPress() == true) {
             return
         }
-        if (mSearchView?.isSearchOpen == true) {
-            mSearchView?.closeSearch()
+        if (mSearchBar?.visibility == View.VISIBLE) {
+            mSearchBar?.visibility = View.GONE
             return
-        } else if (this is MainActivity && !isClosing) {
+        }
+        if (this is MainActivity && !isClosing) {
             NotifyUtil.makeText(
                 this,
                 R.string.text_confirm_exit,
@@ -348,6 +350,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             isClosing = true
             return
         }
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 
@@ -362,14 +365,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     protected abstract fun makeRequest()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
-            val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-            val searchWord = matches?.firstOrNull()
-            if (!searchWord.isNullOrEmpty() && mSearchView != null) {
-                mSearchView?.setQuery(searchWord, false)
-            }
-            return
-        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -404,15 +399,15 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     /**
      * Called when the model state is changed.
      *
-     * @param model The new data
+     * @param value The new data
      */
-    override fun onChanged(model: M?) {
-        Timber.tag(TAG).v("onChanged() from view model has received data")
+    override fun onChanged(value: M?) {
+        Timber.v("onChanged() from view model has received data")
     }
 
     override fun showError(error: String) {
         if (error.isNotEmpty()) {
-            Timber.tag(TAG).w(error)
+            Timber.w(error)
         }
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             NotifyUtil.createAlerter(
@@ -428,7 +423,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
 
     override fun showEmpty(message: String) {
         if (message.isNotEmpty()) {
-            Timber.tag(TAG).v(message)
+            Timber.v(message)
         }
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             NotifyUtil.createAlerter(
@@ -446,49 +441,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         mBottomSheet?.let { sheet ->
             sheet.show(supportFragmentManager, sheet.tag)
         }
-    }
-
-    /**
-     * Called when the user submits the query. This could be due to a key press on the
-     * keyboard or due to pressing a submit button.
-     * The listener can override the standard behavior by returning true
-     * to indicate that it has handled the submit request. Otherwise return false to
-     * let the SearchView handle the submission by launching any associated intent.
-     *
-     * @param query the query text that is to be submitted
-     * @return true if the query has been handled by the listener, false to let the
-     * SearchView perform the default action.
-     */
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        if (!query.isNullOrEmpty()) {
-            val intent = Intent(this, SearchActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(KeyUtil.arg_search, query)
-            mSearchView?.let { searchView ->
-                CompatUtil.startRevealAnim(this, searchView, intent)
-            } ?: startActivity(intent)
-            return true
-        }
-        NotifyUtil.makeText(this, R.string.text_search_empty, Toast.LENGTH_SHORT).show()
-        return false
-    }
-
-    /**
-     * Called when the query text is changed by the user.
-     *
-     * @param newText the new content of the query text field.
-     * @return false if the SearchView should perform the default action of showing any
-     * suggestions if available, true if the action was handled by the listener.
-     */
-    override fun onQueryTextChange(newText: String?): Boolean {
-        presenterRef?.notifyAllListeners(newText?.lowercase(Locale.getDefault()).orEmpty(), false)
-        return false
-    }
-
-    override fun onSearchViewShown() {}
-
-    override fun onSearchViewClosed() {
-        presenterRef?.notifyAllListeners("", false)
     }
 
     companion object {

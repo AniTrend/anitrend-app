@@ -18,6 +18,7 @@ open class CharacterBase() :
     var isFavourite: Boolean = false
     var siteUrl: String? = null
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         name = parcel.readParcelable(TitleBase::class.java.classLoader)

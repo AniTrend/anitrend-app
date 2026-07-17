@@ -169,7 +169,7 @@ constructor(
                     throwable: Throwable,
                 ) {
                     if (lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) == true) {
-                        Timber.tag(tag).e(throwable)
+                        Timber.e(throwable)
                     }
                 }
             },
@@ -265,7 +265,7 @@ constructor(
                 }
             }
             R.id.user_following_container -> {
-                if (following == null || following?.total ?: 0 < 1) {
+                if (following == null || (following?.total ?: 0) < 1) {
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
                 } else {
                     val manager = fragmentManager ?: return

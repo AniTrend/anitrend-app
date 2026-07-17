@@ -47,7 +47,7 @@ constructor(
     fun setMarkDownText(markDownText: String?) {
         if (!settings.experimentalMarkdown) {
             val strippedText = RegexUtil.removeTags(markDownText)
-            val markdownSpan = MarkDownUtil.convert(strippedText)
+            val markdownSpan = MarkDownUtil.convert(context, strippedText)
             setText(markdownSpan, BufferType.SPANNABLE)
         } else {
             markwon.setMarkdown(this, markDownText ?: "**No content available**")

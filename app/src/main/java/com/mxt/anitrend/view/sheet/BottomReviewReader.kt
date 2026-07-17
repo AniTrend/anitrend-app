@@ -50,17 +50,17 @@ class BottomReviewReader : BottomSheetBase<Review>() {
         super.onStart()
         val review = model ?: return
         val reviewTemplate = binding?.reviewTemplate ?: return
-        reviewTemplate.userAvatar.setImage(review.user?.avatar)
-        reviewTemplate.userName.text = review.user?.name
+        reviewTemplate.userAvatar.setImage(review.user.avatar)
+        reviewTemplate.userName.text = review.user.name
         reviewTemplate.reviewDate.text = DateUtil.convertDate(review.createdAt)
         reviewTemplate.seriesTitle.setTitle(review)
         reviewTemplate.reviewSummary.markDown(review.summary)
         CustomRatingBar.setAverageScore(reviewTemplate.reviewScore, review.score)
-        AspectImageView.setImage(reviewTemplate.reviewCover, review.media?.coverImage)
+        AspectImageView.setImage(reviewTemplate.reviewCover, review.media.coverImage)
         binding?.reviewBody?.richMarkDown(review.body)
         reviewTemplate.userAvatar.setOnClickListener { view ->
             val host = activity ?: return@setOnClickListener
-            val userId = review.user?.id ?: return@setOnClickListener
+            val userId = review.user.id
             val intent =
                 Intent(host, ProfileActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK

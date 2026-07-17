@@ -61,16 +61,16 @@ object WebTokenRequest {
         if (token == null || (token?.expires ?: 0) < now) {
             val authCode = presenter.database.authCode?.code
             if (authCode == null) {
-                Timber.tag(TAG).e("Token had an invalid instance from context: %s", context)
+                Timber.e("Token had an invalid instance from context: %s", context)
                 return
             }
             val response = WebFactory.requestCodeTokenSync(authCode)
             if (response != null) {
                 createNewTokenReference(response)
                 presenter.database.webToken = response
-                Timber.tag(TAG).d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L)
+                Timber.d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L)
             } else {
-                Timber.tag(TAG).e("Token had an invalid instance from context: %s", context)
+                Timber.e("Token had an invalid instance from context: %s", context)
             }
         }
     }
@@ -100,6 +100,7 @@ object WebTokenRequest {
      */
     @JvmStatic
     @Throws(ExecutionException::class, InterruptedException::class)
+    @Suppress("DEPRECATION")
     fun getToken(code: String): Boolean {
         val authenticatedToken = AuthenticationCodeAsync().execute(code).get()
         if (authenticatedToken != null) {
@@ -121,11 +122,13 @@ object WebTokenRequest {
             webToken.calculateExpires()
             token = webToken.clone()
         } catch (e: CloneNotSupportedException) {
-            Timber.tag(TAG).e(e, "createNewTokenReference failed")
+            Timber.e(e, "createNewTokenReference failed")
         }
     }
 
+    @Suppress("DEPRECATION")
     private class AuthenticationCodeAsync : AsyncTask<String, Void, WebToken>() {
+        @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg codes: String): WebToken? = WebFactory.requestCodeTokenSync(codes[0])
     }
 }

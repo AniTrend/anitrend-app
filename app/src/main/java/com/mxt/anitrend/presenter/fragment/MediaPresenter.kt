@@ -26,6 +26,7 @@ import java.util.Locale
 class MediaPresenter(
     context: Context,
 ) : BasePresenter(context) {
+    @Suppress("DEPRECATION")
     fun getHashTag(media: Media?): Spanned {
         val hashTag = media?.hashTag
         return if (!hashTag.isNullOrEmpty()) {
@@ -54,6 +55,7 @@ class MediaPresenter(
         return studioContainer?.connection?.firstOrNull()
     }
 
+    @Suppress("DEPRECATION")
     fun getMediaStats(statusDistribution: List<StatusDistribution>): List<PieEntry> {
         val highestStatus = statusDistribution.maxOfOrNull { it.amount } ?: 0
         if (highestStatus > 0) {
@@ -99,7 +101,7 @@ class MediaPresenter(
     fun getMediaSource(media: Media?): String {
         val ctx = requireNotNull(context)
         return if (!media?.source.isNullOrEmpty()) {
-            CompatUtil.capitalizeWords(media?.source)
+            CompatUtil.capitalizeWords(media.source)
         } else {
             ctx.getString(R.string.TBA)
         }
@@ -108,7 +110,7 @@ class MediaPresenter(
     fun getMediaStatus(media: Media?): String {
         val ctx = requireNotNull(context)
         return if (!media?.status.isNullOrEmpty()) {
-            CompatUtil.capitalizeWords(media?.status)
+            CompatUtil.capitalizeWords(media.status)
         } else {
             ctx.getString(R.string.TBA)
         }
@@ -150,7 +152,7 @@ class MediaPresenter(
     fun getMediaFormat(media: MediaBase?): String {
         val ctx = requireNotNull(context)
         return if (!media?.format.isNullOrEmpty()) {
-            CompatUtil.capitalizeWords(media?.format)
+            CompatUtil.capitalizeWords(media.format)
         } else {
             ctx.getString(R.string.tba_placeholder)
         }

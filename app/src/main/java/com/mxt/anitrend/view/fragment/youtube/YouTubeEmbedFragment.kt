@@ -99,7 +99,7 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
         updateUI()
     }
 
-    override fun onChanged(model: MediaTrailer?) = Unit
+    override fun onChanged(value: MediaTrailer?) = Unit
 
     override fun onDestroyView() {
         super.onDestroyView()

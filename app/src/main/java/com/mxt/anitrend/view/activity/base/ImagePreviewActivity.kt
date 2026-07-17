@@ -13,7 +13,7 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.afollestad.materialdialogs.DialogAction
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.activity.ActivityBase
@@ -33,6 +33,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     private var imageUri: String? = null
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
@@ -82,34 +83,29 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.image_preview_download -> {
-                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    null // Scoped storage doesn't require WRITE_EXTERNAL_STORAGE
+                } else {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }
+
+                if (permission == null || requestPermissionIfMissing(permission)) {
                     downloadAttachment()
                 } else if (ActivityCompat.shouldShowRequestPermissionRationale(
                         this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        permission,
                     )
                 ) {
                     DialogUtil.createMessage(
                         this,
                         R.string.title_permission_write,
                         R.string.text_permission_write,
-                    ) { _, which ->
-                        when (which) {
-                            DialogAction.POSITIVE ->
-                                ActivityCompat.requestPermissions(
-                                    this,
-                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                    REQUEST_PERMISSION,
-                                )
-                            DialogAction.NEGATIVE ->
-                                NotifyUtil
-                                    .makeText(
-                                        this,
-                                        R.string.canceled_by_user,
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            else -> Unit
-                        }
+                    ) { _, _ ->
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(permission),
+                            REQUEST_PERMISSION,
+                        )
                     }
                 }
                 return true
@@ -134,7 +130,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                     startActivity(intent)
                     true
                 } catch (e: Exception) {
-                    Timber.tag(TAG).e(e.localizedMessage)
+                    Timber.e(e.localizedMessage)
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
                     true
                 }
@@ -159,10 +155,12 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     private fun downloadAttachment() {
         val currentUri = imageUri ?: return
-        val imageUri = Uri.parse(currentUri)
+        val imageUri = currentUri.toUri()
         val request =
             DownloadManager.Request(imageUri).apply {
-                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.lastPathSegment)
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) {
+                    setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, imageUri.lastPathSegment)
+                }
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             }
 
@@ -191,7 +189,8 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     override fun onPermissionGranted(permission: String) {
         super.onPermissionGranted(permission)
-        if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+        val writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        if (permission == writePermission) {
             downloadAttachment()
         }
     }

@@ -38,11 +38,11 @@
             android:theme="@style/ThemeOverlay.AniTrend.ProgressLayout.Material3"
             app:cardBackgroundColor="?attr/cardColor"
             app:cardElevation="0dp"
-            app:strokeColor="?attr/lineColor"
+            app:strokeColor="?attr/colorOutline"
             app:strokeWidth="@dimen/divider_height">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -52,11 +52,12 @@
                     android:id="@+id/progressStateErrorIcon"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:gravity="center"
                     android:visibility="gone" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/progressStateErrorText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/lg_margin"
                     android:gravity="center"
@@ -70,6 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/lg_margin"
+                    android:gravity="center"
                     android:visibility="gone" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

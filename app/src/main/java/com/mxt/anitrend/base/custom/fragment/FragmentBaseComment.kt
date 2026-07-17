@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.annimon.stream.IntPair
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
@@ -273,8 +272,8 @@ abstract class FragmentBaseComment :
         }
     }
 
-    override fun onChanged(content: FeedList?) {
-        val replies = content?.replies
+    override fun onChanged(value: FeedList?) {
+        val replies = value?.replies
         if (!CompatUtil.isEmpty(replies)) {
             val items = replies ?: emptyList()
             if (isPager && !swipeRefreshLayout.isRefreshing()) {
@@ -299,11 +298,11 @@ abstract class FragmentBaseComment :
 
     abstract override fun onItemClick(
         target: View,
-        data: IntPair<FeedReply>,
+        data: IndexedValue<FeedReply>,
     )
 
     abstract override fun onItemLongClick(
         target: View,
-        data: IntPair<FeedReply>,
+        data: IndexedValue<FeedReply>,
     )
 }

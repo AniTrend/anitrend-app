@@ -1,7 +1,6 @@
 package com.mxt.anitrend.adapter.recycler.shared
 
 import android.view.View
-import com.annimon.stream.IntPair
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
@@ -28,16 +27,16 @@ class GroupMediaViewHolder(
         bindLongClickListeners(R.id.container)
     }
 
-    override fun onBindViewHolder(recyclerItem: RecyclerItem) {
-        val model = recyclerItem as? MediaBase ?: return
-        boundModel = model
-        AspectImageView.setImage(binding.seriesImage, model.coverImage)
-        SeriesStatusWidget.setStatus(binding.seriesStatus, model)
-        binding.seriesTitle.setTitle(model)
-        val subGroupTitle = model.subGroupTitle
+    override fun onBindViewHolder(model: RecyclerItem) {
+        val media = model as? MediaBase ?: return
+        boundModel = media
+        AspectImageView.setImage(binding.seriesImage, media.coverImage)
+        SeriesStatusWidget.setStatus(binding.seriesStatus, media)
+        binding.seriesTitle.setTitle(media)
+        val subGroupTitle = media.subGroupTitle
         binding.seriesSubgroupTitle.text =
             if (subGroupTitle.isNullOrBlank()) "" else CompatUtil.capitalizeWords(subGroupTitle)
-        val format = model.format
+        val format = media.format
         binding.seriesFormat.text =
             if (format.isNullOrBlank()) "" else CompatUtil.capitalizeWords(format)
     }
@@ -50,16 +49,16 @@ class GroupMediaViewHolder(
     override fun onClick(v: View) {
         val pair = isValidIndexPair()
         val model = boundModel
-        if (model != null && isClickable(model) && pair.second) {
-            clickListener.onItemClick(v, IntPair(pair.first, model))
+        if (model != null && isClickable(model) && pair.value) {
+            clickListener.onItemClick(v, IndexedValue(pair.index, model))
         }
     }
 
     override fun onLongClick(v: View): Boolean {
         val pair = isValidIndexPair()
         val model = boundModel
-        if (model != null && isLongClickable(model) && pair.second) {
-            clickListener.onItemLongClick(v, IntPair(pair.first, model))
+        if (model != null && isLongClickable(model) && pair.value) {
+            clickListener.onItemLongClick(v, IndexedValue(pair.index, model))
             return true
         }
         return false

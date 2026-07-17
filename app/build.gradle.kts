@@ -15,17 +15,15 @@ android {
 
 dependencies {
 
-    /** Material Dialogs */
-    implementation(libs.material.dialogs.core)
-
     /** Tap Target Prompt */
     implementation(libs.material.tap.target.prompt)
 
     /** Pretty Time */
     implementation(libs.prettyTime)
 
-    /** Highly Customizable Video Player */
-    implementation(libs.jiaozivideoplayer)
+    /** Media3 ExoPlayer */
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
 
     /** Photo View */
     implementation(libs.photoview)
@@ -36,27 +34,6 @@ dependencies {
     /** Charts */
     implementation(libs.mpandroidchart)
 
-    /** About Library */
-    implementation(libs.android.about.page)
-
-    /** Multi Dex */
-    implementation(libs.androidx.multidex)
-
-    /** Material Search View */
-    implementation(libs.materialsearchview)
-
     /** Event Bus Library */
     implementation(libs.eventbus)
-
-    /** Alerter */
-    implementation(libs.alerter)
-
-    /** Stream */
-    implementation(libs.stream)
-
-    /** Circular Progress View */
-    implementation(libs.circularprogressview)
-
-    /** Txtmark */
-    implementation(libs.txtmark)
 }

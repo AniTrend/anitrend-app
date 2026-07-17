@@ -19,9 +19,7 @@
 package com.mxt.anitrend.buildsrc.components
 
 import com.android.build.api.dsl.ApplicationBuildType
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.android.build.api.dsl.ApplicationExtension
 import com.mxt.anitrend.buildsrc.extensions.*
 import org.gradle.api.JavaVersion
 import org.gradle.api.NamedDomainObjectContainer
@@ -41,7 +39,7 @@ private fun Properties.applyToBuildConfigForBuild(buildType: ApplicationBuildTyp
     }
 }
 
-private fun Project.createSigningConfiguration(extension: BaseExtension) {
+private fun Project.createSigningConfiguration(extension: ApplicationExtension) {
     val keyStoreFile = project.file(".config/keystore.properties")
     if (keyStoreFile.exists()) {
         keyStoreFile.inputStream().use { fis ->
@@ -50,10 +48,10 @@ private fun Project.createSigningConfiguration(extension: BaseExtension) {
             extension.signingConfigs {
                 create("release") {
                     logger.lifecycle("Creating signing configuration for $name")
-                    storeFile(file(properties["STORE_FILE"] as String))
-                    storePassword(properties["STORE_PASSWORD"] as String)
-                    keyAlias(properties["STORE_KEY_ALIAS"] as String)
-                    keyPassword(properties["STORE_KEY_PASSWORD"] as String)
+                    storeFile = file(properties["STORE_FILE"] as String)
+                    storePassword = properties["STORE_PASSWORD"] as String
+                    keyAlias = properties["STORE_KEY_ALIAS"] as String
+                    keyPassword = properties["STORE_KEY_PASSWORD"] as String
                 }
             }
         }
@@ -96,22 +94,8 @@ private fun NamedDomainObjectContainer<ApplicationBuildType>.applyConfiguration(
     }
 }
 
-private fun BaseExtension.setUpWith(project: Project) {
-    compileSdkVersion(37)
-    defaultConfig {
-        applicationId = "com.mxt.anitrend"
-        minSdk = 23
-        targetSdk = 36
-        versionCode = project.props[PropertyTypes.CODE].toInt()
-        versionName = project.props[PropertyTypes.VERSION]
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled = true
-    }
-}
-
-private fun BaseAppModuleExtension.configureBuildFlavours(logger: Logger) {
-    flavorDimensions.add("version")
+private fun ApplicationExtension.configureBuildFlavours(logger: Logger) {
+    flavorDimensions += "version"
 
     productFlavors {
         create("app") {
@@ -124,22 +108,21 @@ private fun BaseAppModuleExtension.configureBuildFlavours(logger: Logger) {
             resValue("string", "flavor_description", "Github")
         }
     }
-
-    applicationVariants.all {
-        outputs.map { it as BaseVariantOutputImpl }.forEach { output ->
-            val original = output.outputFileName
-            val destination = if (output.name != "github-release") {
-                original.substring(4)
-            } else {
-                original
-            }
-            logger.lifecycle("Configuring build output build -> name: ${output.name} | output: $destination")
-            output.outputFileName = destination
-        }
-    }
 }
 
-private fun BaseAppModuleExtension.setUpWith(project: Project) {
+private fun ApplicationExtension.setUpWith(project: Project) {
+    compileSdkVersion(37)
+    defaultConfig {
+        applicationId = "com.mxt.anitrend"
+        minSdk = 23
+        targetSdk = 36
+        versionCode = project.props[PropertyTypes.CODE].toInt()
+        versionName = project.props[PropertyTypes.VERSION]
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
+    }
+
     project.createSigningConfiguration(this)
     buildFeatures {
         dataBinding = false
@@ -147,6 +130,8 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
         buildConfig = true
         resValues = true
     }
+
+    val releaseSigningConfig = signingConfigs.findByName("release")
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -154,9 +139,9 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            if (project.file(".config/keystore.properties").exists()) {
+            if (releaseSigningConfig != null) {
                 project.logger.lifecycle("Applying signing configuration for to build type: $name")
-                signingConfig = signingConfigs.getByName("release")
+                (this as com.android.build.gradle.internal.dsl.BuildType).signingConfig = releaseSigningConfig
             }
         }
 
@@ -185,10 +170,8 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
     }
 
     sourceSets {
-        map { androidSourceSet ->
-            androidSourceSet.java.srcDir(
-                "src/${androidSourceSet.name}/kotlin",
-            )
+        all {
+            kotlin.directories.add("src/$name/kotlin")
         }
     }
 
@@ -210,11 +193,22 @@ private fun BaseAppModuleExtension.setUpWith(project: Project) {
 }
 
 internal fun Project.applyAndroidConfiguration() {
-    val baseExtension = baseExtension()
-    val appExtension = baseAppExtension()
+    val extension = baseExtension()
 
-    baseExtension.setUpWith(this)
-    appExtension.setUpWith(this)
+    extension.setUpWith(this)
+
+    androidComponents().onVariants { variant ->
+        variant.outputs.forEach { output ->
+            val original = output.outputFileName.get()
+            val destination = if (variant.name != "github-release") {
+                original.substring(4)
+            } else {
+                original
+            }
+            logger.lifecycle("Configuring build output build -> name: ${variant.name} | output: $destination")
+            output.outputFileName.set(destination)
+        }
+    }
 
     configurations.all {
         exclude("org.jetbrains", "annotations-java5")

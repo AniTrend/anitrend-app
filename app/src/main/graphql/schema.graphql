@@ -12,7 +12,7 @@ union ActivityUnion = ListActivity | MessageActivity | TextActivity
 union LikeableUnion = ActivityReply | ListActivity | MessageActivity | TextActivity | Thread | ThreadComment
 
 "Notification union type"
-union NotificationUnion = ActivityLikeNotification | ActivityMentionNotification | ActivityMessageNotification | ActivityReplyLikeNotification | ActivityReplyNotification | ActivityReplySubscribedNotification | AiringNotification | FollowingNotification | MediaDataChangeNotification | MediaDeletionNotification | MediaMergeNotification | RelatedMediaAdditionNotification | ThreadCommentLikeNotification | ThreadCommentMentionNotification | ThreadCommentReplyNotification | ThreadCommentSubscribedNotification | ThreadLikeNotification
+union NotificationUnion = ActivityLikeNotification | ActivityMentionNotification | ActivityMessageNotification | ActivityReplyLikeNotification | ActivityReplyNotification | ActivityReplySubscribedNotification | AiringNotification | CharacterSubmissionUpdateNotification | FollowingNotification | MediaDataChangeNotification | MediaDeletionNotification | MediaMergeNotification | MediaSubmissionUpdateNotification | RelatedMediaAdditionNotification | StaffSubmissionUpdateNotification | ThreadCommentLikeNotification | ThreadCommentMentionNotification | ThreadCommentReplyNotification | ThreadCommentSubscribedNotification | ThreadLikeNotification
 
 "Notification for when a activity is liked"
 type ActivityLikeNotification {
@@ -360,6 +360,24 @@ type CharacterSubmissionEdge {
     voiceActors: [Staff]
 }
 
+"Notification for when a character submission is accepted, partially accepted, or rejected"
+type CharacterSubmissionUpdateNotification {
+    "The character that was modified."
+    character: Character
+    "The notification context text"
+    contexts: [String]
+    "The time the notification was created at"
+    createdAt: Int
+    "The id of the Notification"
+    id: Int!
+    "The notes of the submission"
+    notes: String
+    "The status of the submission"
+    status: String
+    "The type of notification"
+    type: NotificationType
+}
+
 "Deleted data type"
 type Deleted {
     "If an item has been successfully deleted"
@@ -446,7 +464,7 @@ type GenreStats {
     timeWatched: Int
 }
 
-"Page of data (Used for internal use only)"
+"Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter."
 type InternalPage {
     activities(
         "Filter by the time the activity was created"
@@ -461,47 +479,47 @@ type InternalPage {
         hasRepliesOrTypeText: Boolean,
         "Filter by the activity id"
         id: Int,
-        "Filter by the activity id"
+        "Filter by the activity id (max 10,000 items)"
         id_in: [Int],
         "Filter by the activity id"
         id_not: Int,
-        "Filter by the activity id"
+        "Filter by the activity id (max 10,000 items)"
         id_not_in: [Int],
         "Filter activity to users who are being followed by the authenticated user"
         isFollowing: Boolean,
         "Filter by the associated media id of the activity"
         mediaId: Int,
-        "Filter by the associated media id of the activity"
+        "Filter by the associated media id of the activity (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the associated media id of the activity"
         mediaId_not: Int,
-        "Filter by the associated media id of the activity"
+        "Filter by the associated media id of the activity (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by the id of the user who sent a message"
         messengerId: Int,
-        "Filter by the id of the user who sent a message"
+        "Filter by the id of the user who sent a message (max 10,000 items)"
         messengerId_in: [Int],
         "Filter by the id of the user who sent a message"
         messengerId_not: Int,
-        "Filter by the id of the user who sent a message"
+        "Filter by the id of the user who sent a message (max 10,000 items)"
         messengerId_not_in: [Int],
         "The order the results will be returned in"
         sort: [ActivitySort],
         "Filter by the type of activity"
         type: ActivityType,
-        "Filter by the type of activity"
+        "Filter by the type of activity (max 10,000 items)"
         type_in: [ActivityType],
         "Filter by the type of activity"
         type_not: ActivityType,
-        "Filter by the type of activity"
+        "Filter by the type of activity (max 10,000 items)"
         type_not_in: [ActivityType],
         "Filter by the owner user id"
         userId: Int,
-        "Filter by the owner user id"
+        "Filter by the owner user id (max 10,000 items)"
         userId_in: [Int],
         "Filter by the owner user id"
         userId_not: Int,
-        "Filter by the owner user id"
+        "Filter by the owner user id (max 10,000 items)"
         userId_not_in: [Int]
     ): [ActivityUnion]
     activityReplies(
@@ -521,29 +539,29 @@ type InternalPage {
         episode: Int,
         "Filter by the airing episode number"
         episode_greater: Int,
-        "Filter by the airing episode number"
+        "Filter by the airing episode number (max 10,000 items)"
         episode_in: [Int],
         "Filter by the airing episode number"
         episode_lesser: Int,
         "Filter by the airing episode number"
         episode_not: Int,
-        "Filter by the airing episode number"
+        "Filter by the airing episode number (max 10,000 items)"
         episode_not_in: [Int],
         "Filter by the id of the airing schedule item"
         id: Int,
-        "Filter by the id of the airing schedule item"
+        "Filter by the id of the airing schedule item (max 10,000 items)"
         id_in: [Int],
         "Filter by the id of the airing schedule item"
         id_not: Int,
-        "Filter by the id of the airing schedule item"
+        "Filter by the id of the airing schedule item (max 10,000 items)"
         id_not_in: [Int],
         "Filter by the id of associated media"
         mediaId: Int,
-        "Filter by the id of associated media"
+        "Filter by the id of associated media (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the id of associated media"
         mediaId_not: Int,
-        "Filter by the id of associated media"
+        "Filter by the id of associated media (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter to episodes that haven't yet aired"
         notYetAired: Boolean,
@@ -563,11 +581,11 @@ type InternalPage {
     characters(
         "Filter by character id"
         id: Int,
-        "Filter by character id"
+        "Filter by character id (max 10,000 items)"
         id_in: [Int],
         "Filter by character id"
         id_not: Int,
-        "Filter by character id"
+        "Filter by character id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by character by if its their birthday today"
         isBirthday: Boolean,
@@ -611,6 +629,10 @@ type InternalPage {
         chapters_lesser: Int,
         "Filter by the media's country of origin"
         countryOfOrigin: CountryCode,
+        "Filter by the media's country of origin (max 10,000 items)"
+        countryOfOrigin_in: [CountryCode],
+        "Filter by the media's country of origin (max 10,000 items)"
+        countryOfOrigin_not_in: [CountryCode],
         "Filter by the media's episode length"
         duration: Int,
         "Filter by the media's episode length"
@@ -633,33 +655,33 @@ type InternalPage {
         episodes_lesser: Int,
         "Filter by the media's format"
         format: MediaFormat,
-        "Filter by the media's format"
+        "Filter by the media's format (max 10,000 items)"
         format_in: [MediaFormat],
         "Filter by the media's format"
         format_not: MediaFormat,
-        "Filter by the media's format"
+        "Filter by the media's format (max 10,000 items)"
         format_not_in: [MediaFormat],
         "Filter by the media's genres"
         genre: String,
-        "Filter by the media's genres"
+        "Filter by the media's genres (max 10,000 items)"
         genre_in: [String],
-        "Filter by the media's genres"
+        "Filter by the media's genres (max 10,000 items)"
         genre_not_in: [String],
         "Filter by the media id"
         id: Int,
         "Filter by the media's MyAnimeList id"
         idMal: Int,
-        "Filter by the media's MyAnimeList id"
+        "Filter by the media's MyAnimeList id (max 10,000 items)"
         idMal_in: [Int],
         "Filter by the media's MyAnimeList id"
         idMal_not: Int,
-        "Filter by the media's MyAnimeList id"
+        "Filter by the media's MyAnimeList id (max 10,000 items)"
         idMal_not_in: [Int],
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         id_in: [Int],
         "Filter by the media id"
         id_not: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by if the media's intended for 18+ adult audiences"
         isAdult: Boolean,
@@ -669,9 +691,9 @@ type InternalPage {
         licensedBy: String,
         "Filter media by sites id with a online streaming or reading license"
         licensedById: Int,
-        "Filter media by sites id with a online streaming or reading license"
+        "Filter media by sites id with a online streaming or reading license (max 10,000 items)"
         licensedById_in: [Int],
-        "Filter media by sites name with a online streaming or reading license"
+        "Filter media by sites name with a online streaming or reading license (max 10,000 items)"
         licensedBy_in: [String],
         "Only apply the tags filter argument to tags above this rank. Default: 18"
         minimumTagRank: Int,
@@ -695,7 +717,7 @@ type InternalPage {
         sort: [MediaSort],
         "Filter by the source type of the media"
         source: MediaSource,
-        "Filter by the source type of the media"
+        "Filter by the source type of the media (max 10,000 items)"
         source_in: [MediaSource],
         "Filter by the start date of the media"
         startDate: FuzzyDateInt,
@@ -707,23 +729,23 @@ type InternalPage {
         startDate_like: String,
         "Filter by the media's current release status"
         status: MediaStatus,
-        "Filter by the media's current release status"
+        "Filter by the media's current release status (max 10,000 items)"
         status_in: [MediaStatus],
         "Filter by the media's current release status"
         status_not: MediaStatus,
-        "Filter by the media's current release status"
+        "Filter by the media's current release status (max 10,000 items)"
         status_not_in: [MediaStatus],
         "Filter by the media's tags"
         tag: String,
         "Filter by the media's tags with in a tag category"
         tagCategory: String,
-        "Filter by the media's tags with in a tag category"
+        "Filter by the media's tags with in a tag category (max 10,000 items)"
         tagCategory_in: [String],
-        "Filter by the media's tags with in a tag category"
+        "Filter by the media's tags with in a tag category (max 10,000 items)"
         tagCategory_not_in: [String],
-        "Filter by the media's tags"
+        "Filter by the media's tags (max 10,000 items)"
         tag_in: [String],
-        "Filter by the media's tags"
+        "Filter by the media's tags (max 10,000 items)"
         tag_not_in: [String],
         "Filter by the media's type"
         type: MediaType,
@@ -751,9 +773,9 @@ type InternalPage {
         isFollowing: Boolean,
         "Filter by the media id of the list entry"
         mediaId: Int,
-        "Filter by the media id of the list entry"
+        "Filter by the media id of the list entry (max 10,000 items)"
         mediaId_in: [Int],
-        "Filter by the media id of the list entry"
+        "Filter by the media id of the list entry (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by note words and #tags"
         notes: String,
@@ -771,17 +793,17 @@ type InternalPage {
         startedAt_like: String,
         "Filter by the watching/reading status"
         status: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_in: [MediaListStatus],
         "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_not_in: [MediaListStatus],
         "Filter by the list entries media type"
         type: MediaType,
         "Filter by a user's id"
         userId: Int,
-        "Filter by a user's id"
+        "Filter by a user's id (max 10,000 items)"
         userId_in: [Int],
         "Filter by a user's name"
         userName: String
@@ -822,11 +844,11 @@ type InternalPage {
         episode_not: Int,
         "Filter by the media id"
         mediaId: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the media id"
         mediaId_not: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by popularity"
         popularity: Int,
@@ -849,13 +871,21 @@ type InternalPage {
         "Filter by trending amount"
         trending_not: Int
     ): [MediaTrend]
-    modActions(modId: Int, userId: Int): [ModAction]
+    modActions(
+        modId: Int,
+        "(max 10,000 items)"
+        modId_in: [Int],
+        modId_not: Int,
+        "(max 10,000 items)"
+        modId_not_in: [Int],
+        userId: Int
+    ): [ModAction]
     notifications(
         "Reset the unread notification count to 0 on load"
         resetNotificationCount: Boolean,
         "Filter by the type of notifications"
         type: NotificationType,
-        "Filter by the type of notifications"
+        "Filter by the type of notifications (max 10,000 items)"
         type_in: [NotificationType]
     ): [NotificationUnion]
     "The pagination information"
@@ -908,11 +938,11 @@ type InternalPage {
     staff(
         "Filter by the staff id"
         id: Int,
-        "Filter by the staff id"
+        "Filter by the staff id (max 10,000 items)"
         id_in: [Int],
         "Filter by the staff id"
         id_not: Int,
-        "Filter by the staff id"
+        "Filter by the staff id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by staff by if its their birthday today"
         isBirthday: Boolean,
@@ -934,11 +964,11 @@ type InternalPage {
     studios(
         "Filter by the studio id"
         id: Int,
-        "Filter by the studio id"
+        "Filter by the studio id (max 10,000 items)"
         id_in: [Int],
         "Filter by the studio id"
         id_not: Int,
-        "Filter by the studio id"
+        "Filter by the studio id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by search query"
         search: String,
@@ -960,7 +990,7 @@ type InternalPage {
         categoryId: Int,
         "Filter by the thread id"
         id: Int,
-        "Filter by the thread id"
+        "Filter by the thread id (max 10,000 items)"
         id_in: [Int],
         "Filter by thread media id category"
         mediaCategoryId: Int,
@@ -1544,6 +1574,26 @@ type MediaSubmissionEdge {
     voiceActorSubmission: Staff
 }
 
+"Notification for when a media submission is accepted, partially accepted, or rejected"
+type MediaSubmissionUpdateNotification {
+    "The notification context text"
+    contexts: [String]
+    "The time the notification was created at"
+    createdAt: Int
+    "The id of the Notification"
+    id: Int!
+    "The media that was created or modified. If this submission was to create a new media and it was rejected, this will be null."
+    media: Media
+    "The notes of the submission"
+    notes: String
+    "The status of the submission"
+    status: String
+    "The title of the media that was submitted. If this submission was to edit an existing media, this will be null."
+    submittedTitle: String
+    "The type of notification"
+    type: NotificationType
+}
+
 "A tag that describes a theme or element of the media"
 type MediaTag {
     "The categories of tags this tag belongs to"
@@ -1632,6 +1682,8 @@ type MessageActivity {
     isLiked: Boolean
     "If the activity is locked and can receive replies"
     isLocked: Boolean
+    "If the activity is pinned to the top of the users activity feed"
+    isPinned: Boolean
     "If the message is private and only viewable to the sender and recipients"
     isPrivate: Boolean
     "If the currently authenticated user is subscribed to the activity"
@@ -1728,7 +1780,7 @@ type Mutation {
         asMod: Boolean,
         "The activity reply id, required for updating"
         id: Int,
-        "The reply text"
+        "The reply text (Min: 2, Max: 8000)"
         text: String
     ): ActivityReply
     "Update list activity (Mod Only)"
@@ -1740,7 +1792,7 @@ type Mutation {
     ): ListActivity
     "Create or update a media list entry"
     SaveMediaListEntry(
-        "Array of advanced scores"
+        "Array of advanced scores (Min: 0, Max: 100)"
         advancedScores: [Float],
         "When the entry was completed by the user"
         completedAt: FuzzyDateInput,
@@ -1752,21 +1804,21 @@ type Mutation {
         id: Int,
         "The id of the media the entry is of"
         mediaId: Int,
-        "Text notes"
+        "Text notes (Min: 0, Max: 6000)"
         notes: String,
-        "Priority of planning"
+        "Priority of planning (Min: 0, Max: 255)"
         priority: Int,
         "If the entry should only be visible to authenticated user"
         private: Boolean,
-        "The amount of episodes/chapters consumed by the user"
+        "The amount of episodes/chapters consumed by the user (Min: 0)"
         progress: Int,
-        "The amount of volumes read by the user"
+        "The amount of volumes read by the user (Min: 0)"
         progressVolumes: Int,
-        "The amount of times the user has rewatched/read the media"
+        "The amount of times the user has rewatched/read the media (Min: 0, Max: 1000)"
         repeat: Int,
-        "The score of the media in the user's chosen scoring method"
+        "The score of the media in the user's chosen scoring method (Min: 0, Max: 100)"
         score: Float,
-        "The score of the media in 100 point"
+        "The score of the media in 100 point (Min: 0, Max: 100)"
         scoreRaw: Int,
         "When the entry was started by the user"
         startedAt: FuzzyDateInput,
@@ -1781,7 +1833,7 @@ type Mutation {
         id: Int,
         "If the activity should be locked. (Mod Only)"
         locked: Boolean,
-        "The activity message text"
+        "The activity message text (Min: 2, Max: 10000)"
         message: String,
         "If the activity should be private"
         private: Boolean,
@@ -1799,7 +1851,7 @@ type Mutation {
     ): Recommendation
     "Create or update a review"
     SaveReview(
-        "The main review text. Min:2200 characters"
+        "The main review text (Min: 2600)"
         body: String,
         "The review id, required for updating"
         id: Int,
@@ -1807,9 +1859,9 @@ type Mutation {
         mediaId: Int,
         "If the review should only be visible to its creator"
         private: Boolean,
-        "A short summary/preview of the review. Min:20, Max:120 characters"
+        "The score of the review (Min: 0, Max: 100)"
         score: Int,
-        "A short summary/preview of the review. Min:20, Max:120 characters"
+        "A short summary/preview of the review (Min: 20, Max: 120)"
         summary: String
     ): Review
     "Create or update text activity for the currently authenticated user"
@@ -1818,12 +1870,12 @@ type Mutation {
         id: Int,
         "If the activity should be locked. (Mod Only)"
         locked: Boolean,
-        "The activity text"
+        "The activity text (Min: 5, Max: 10000)"
         text: String
     ): TextActivity
     "Create or update a forum thread"
     SaveThread(
-        "The main text body of the thread"
+        "The main text body of the thread (Max: 30000)"
         body: String,
         "Forum categories the thread should be within"
         categories: [Int],
@@ -1835,12 +1887,12 @@ type Mutation {
         mediaCategories: [Int],
         "If the thread should be stickied. (Mod Only)"
         sticky: Boolean,
-        "The title of the thread"
+        "The title of the thread (Min: 6, Max: 120)"
         title: String
     ): Thread
     "Create or update a thread comment"
     SaveThreadComment(
-        "The comment markdown text"
+        "The comment markdown text (Min: 1, Max: 12000)"
         comment: String,
         "The comment id, required for updating"
         id: Int,
@@ -1935,7 +1987,7 @@ type Mutation {
     ): Favourites
     "Update multiple media list entries to the same values"
     UpdateMediaListEntries(
-        "Array of advanced scores"
+        "Array of advanced scores (Min: 0, Max: 100)"
         advancedScores: [Float],
         "When the entry was completed by the user"
         completedAt: FuzzyDateInput,
@@ -1943,21 +1995,21 @@ type Mutation {
         hiddenFromStatusLists: Boolean,
         "The list entries ids to update"
         ids: [Int],
-        "Text notes"
+        "Text notes (Min: 0, Max: 6000)"
         notes: String,
-        "Priority of planning"
+        "Priority of planning (Min: 0, Max: 255)"
         priority: Int,
         "If the entry should only be visible to authenticated user"
         private: Boolean,
-        "The amount of episodes/chapters consumed by the user"
+        "The amount of episodes/chapters consumed by the user (Min: 0)"
         progress: Int,
-        "The amount of volumes read by the user"
+        "The amount of volumes read by the user (Min: 0)"
         progressVolumes: Int,
-        "The amount of times the user has rewatched/read the media"
+        "The amount of times the user has rewatched/read the media (Min: 0, Max: 1000)"
         repeat: Int,
-        "The score of the media in the user's chosen scoring method"
+        "The score of the media in the user's chosen scoring method (Min: 0, Max: 100)"
         score: Float,
-        "The score of the media in 100 point"
+        "The score of the media in 100 point (Min: 0, Max: 100)"
         scoreRaw: Int,
         "When the entry was started by the user"
         startedAt: FuzzyDateInput,
@@ -1967,7 +2019,7 @@ type Mutation {
     UpdateUser(
         "User's about/bio text"
         about: String,
-        "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always."
+        "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always. (Min: 0)"
         activityMergeTime: Int,
         "If the user should get notifications when a show they are watching aires"
         airingNotifications: Boolean,
@@ -1976,7 +2028,7 @@ type Mutation {
         disabledListActivity: [ListActivityOptionInput],
         "If the user should see media marked as adult-only"
         displayAdultContent: Boolean,
-        "Profile highlight color"
+        "Profile highlight color (Max: 24)"
         donatorBadge: String,
         "The user's anime list options"
         mangaListOptions: MediaListOptionsInput,
@@ -2007,7 +2059,7 @@ type NotificationOption {
     type: NotificationType
 }
 
-"Page of data"
+"Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter."
 type Page {
     activities(
         "Filter by the time the activity was created"
@@ -2022,47 +2074,47 @@ type Page {
         hasRepliesOrTypeText: Boolean,
         "Filter by the activity id"
         id: Int,
-        "Filter by the activity id"
+        "Filter by the activity id (max 10,000 items)"
         id_in: [Int],
         "Filter by the activity id"
         id_not: Int,
-        "Filter by the activity id"
+        "Filter by the activity id (max 10,000 items)"
         id_not_in: [Int],
         "Filter activity to users who are being followed by the authenticated user"
         isFollowing: Boolean,
         "Filter by the associated media id of the activity"
         mediaId: Int,
-        "Filter by the associated media id of the activity"
+        "Filter by the associated media id of the activity (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the associated media id of the activity"
         mediaId_not: Int,
-        "Filter by the associated media id of the activity"
+        "Filter by the associated media id of the activity (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by the id of the user who sent a message"
         messengerId: Int,
-        "Filter by the id of the user who sent a message"
+        "Filter by the id of the user who sent a message (max 10,000 items)"
         messengerId_in: [Int],
         "Filter by the id of the user who sent a message"
         messengerId_not: Int,
-        "Filter by the id of the user who sent a message"
+        "Filter by the id of the user who sent a message (max 10,000 items)"
         messengerId_not_in: [Int],
         "The order the results will be returned in"
         sort: [ActivitySort],
         "Filter by the type of activity"
         type: ActivityType,
-        "Filter by the type of activity"
+        "Filter by the type of activity (max 10,000 items)"
         type_in: [ActivityType],
         "Filter by the type of activity"
         type_not: ActivityType,
-        "Filter by the type of activity"
+        "Filter by the type of activity (max 10,000 items)"
         type_not_in: [ActivityType],
         "Filter by the owner user id"
         userId: Int,
-        "Filter by the owner user id"
+        "Filter by the owner user id (max 10,000 items)"
         userId_in: [Int],
         "Filter by the owner user id"
         userId_not: Int,
-        "Filter by the owner user id"
+        "Filter by the owner user id (max 10,000 items)"
         userId_not_in: [Int]
     ): [ActivityUnion]
     activityReplies(
@@ -2082,29 +2134,29 @@ type Page {
         episode: Int,
         "Filter by the airing episode number"
         episode_greater: Int,
-        "Filter by the airing episode number"
+        "Filter by the airing episode number (max 10,000 items)"
         episode_in: [Int],
         "Filter by the airing episode number"
         episode_lesser: Int,
         "Filter by the airing episode number"
         episode_not: Int,
-        "Filter by the airing episode number"
+        "Filter by the airing episode number (max 10,000 items)"
         episode_not_in: [Int],
         "Filter by the id of the airing schedule item"
         id: Int,
-        "Filter by the id of the airing schedule item"
+        "Filter by the id of the airing schedule item (max 10,000 items)"
         id_in: [Int],
         "Filter by the id of the airing schedule item"
         id_not: Int,
-        "Filter by the id of the airing schedule item"
+        "Filter by the id of the airing schedule item (max 10,000 items)"
         id_not_in: [Int],
         "Filter by the id of associated media"
         mediaId: Int,
-        "Filter by the id of associated media"
+        "Filter by the id of associated media (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the id of associated media"
         mediaId_not: Int,
-        "Filter by the id of associated media"
+        "Filter by the id of associated media (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter to episodes that haven't yet aired"
         notYetAired: Boolean,
@@ -2114,11 +2166,11 @@ type Page {
     characters(
         "Filter by character id"
         id: Int,
-        "Filter by character id"
+        "Filter by character id (max 10,000 items)"
         id_in: [Int],
         "Filter by character id"
         id_not: Int,
-        "Filter by character id"
+        "Filter by character id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by character by if its their birthday today"
         isBirthday: Boolean,
@@ -2162,6 +2214,10 @@ type Page {
         chapters_lesser: Int,
         "Filter by the media's country of origin"
         countryOfOrigin: CountryCode,
+        "Filter by the media's country of origin (max 10,000 items)"
+        countryOfOrigin_in: [CountryCode],
+        "Filter by the media's country of origin (max 10,000 items)"
+        countryOfOrigin_not_in: [CountryCode],
         "Filter by the media's episode length"
         duration: Int,
         "Filter by the media's episode length"
@@ -2184,33 +2240,33 @@ type Page {
         episodes_lesser: Int,
         "Filter by the media's format"
         format: MediaFormat,
-        "Filter by the media's format"
+        "Filter by the media's format (max 10,000 items)"
         format_in: [MediaFormat],
         "Filter by the media's format"
         format_not: MediaFormat,
-        "Filter by the media's format"
+        "Filter by the media's format (max 10,000 items)"
         format_not_in: [MediaFormat],
         "Filter by the media's genres"
         genre: String,
-        "Filter by the media's genres"
+        "Filter by the media's genres (max 10,000 items)"
         genre_in: [String],
-        "Filter by the media's genres"
+        "Filter by the media's genres (max 10,000 items)"
         genre_not_in: [String],
         "Filter by the media id"
         id: Int,
         "Filter by the media's MyAnimeList id"
         idMal: Int,
-        "Filter by the media's MyAnimeList id"
+        "Filter by the media's MyAnimeList id (max 10,000 items)"
         idMal_in: [Int],
         "Filter by the media's MyAnimeList id"
         idMal_not: Int,
-        "Filter by the media's MyAnimeList id"
+        "Filter by the media's MyAnimeList id (max 10,000 items)"
         idMal_not_in: [Int],
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         id_in: [Int],
         "Filter by the media id"
         id_not: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by if the media's intended for 18+ adult audiences"
         isAdult: Boolean,
@@ -2220,9 +2276,9 @@ type Page {
         licensedBy: String,
         "Filter media by sites id with a online streaming or reading license"
         licensedById: Int,
-        "Filter media by sites id with a online streaming or reading license"
+        "Filter media by sites id with a online streaming or reading license (max 10,000 items)"
         licensedById_in: [Int],
-        "Filter media by sites name with a online streaming or reading license"
+        "Filter media by sites name with a online streaming or reading license (max 10,000 items)"
         licensedBy_in: [String],
         "Only apply the tags filter argument to tags above this rank. Default: 18"
         minimumTagRank: Int,
@@ -2246,7 +2302,7 @@ type Page {
         sort: [MediaSort],
         "Filter by the source type of the media"
         source: MediaSource,
-        "Filter by the source type of the media"
+        "Filter by the source type of the media (max 10,000 items)"
         source_in: [MediaSource],
         "Filter by the start date of the media"
         startDate: FuzzyDateInt,
@@ -2258,23 +2314,23 @@ type Page {
         startDate_like: String,
         "Filter by the media's current release status"
         status: MediaStatus,
-        "Filter by the media's current release status"
+        "Filter by the media's current release status (max 10,000 items)"
         status_in: [MediaStatus],
         "Filter by the media's current release status"
         status_not: MediaStatus,
-        "Filter by the media's current release status"
+        "Filter by the media's current release status (max 10,000 items)"
         status_not_in: [MediaStatus],
         "Filter by the media's tags"
         tag: String,
         "Filter by the media's tags with in a tag category"
         tagCategory: String,
-        "Filter by the media's tags with in a tag category"
+        "Filter by the media's tags with in a tag category (max 10,000 items)"
         tagCategory_in: [String],
-        "Filter by the media's tags with in a tag category"
+        "Filter by the media's tags with in a tag category (max 10,000 items)"
         tagCategory_not_in: [String],
-        "Filter by the media's tags"
+        "Filter by the media's tags (max 10,000 items)"
         tag_in: [String],
-        "Filter by the media's tags"
+        "Filter by the media's tags (max 10,000 items)"
         tag_not_in: [String],
         "Filter by the media's type"
         type: MediaType,
@@ -2302,9 +2358,9 @@ type Page {
         isFollowing: Boolean,
         "Filter by the media id of the list entry"
         mediaId: Int,
-        "Filter by the media id of the list entry"
+        "Filter by the media id of the list entry (max 10,000 items)"
         mediaId_in: [Int],
-        "Filter by the media id of the list entry"
+        "Filter by the media id of the list entry (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by note words and #tags"
         notes: String,
@@ -2322,17 +2378,17 @@ type Page {
         startedAt_like: String,
         "Filter by the watching/reading status"
         status: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_in: [MediaListStatus],
         "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_not_in: [MediaListStatus],
         "Filter by the list entries media type"
         type: MediaType,
         "Filter by a user's id"
         userId: Int,
-        "Filter by a user's id"
+        "Filter by a user's id (max 10,000 items)"
         userId_in: [Int],
         "Filter by a user's name"
         userName: String
@@ -2362,11 +2418,11 @@ type Page {
         episode_not: Int,
         "Filter by the media id"
         mediaId: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the media id"
         mediaId_not: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by popularity"
         popularity: Int,
@@ -2394,7 +2450,7 @@ type Page {
         resetNotificationCount: Boolean,
         "Filter by the type of notifications"
         type: NotificationType,
-        "Filter by the type of notifications"
+        "Filter by the type of notifications (max 10,000 items)"
         type_in: [NotificationType]
     ): [NotificationUnion]
     "The pagination information"
@@ -2434,11 +2490,11 @@ type Page {
     staff(
         "Filter by the staff id"
         id: Int,
-        "Filter by the staff id"
+        "Filter by the staff id (max 10,000 items)"
         id_in: [Int],
         "Filter by the staff id"
         id_not: Int,
-        "Filter by the staff id"
+        "Filter by the staff id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by staff by if its their birthday today"
         isBirthday: Boolean,
@@ -2450,11 +2506,11 @@ type Page {
     studios(
         "Filter by the studio id"
         id: Int,
-        "Filter by the studio id"
+        "Filter by the studio id (max 10,000 items)"
         id_in: [Int],
         "Filter by the studio id"
         id_not: Int,
-        "Filter by the studio id"
+        "Filter by the studio id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by search query"
         search: String,
@@ -2476,7 +2532,7 @@ type Page {
         categoryId: Int,
         "Filter by the thread id"
         id: Int,
-        "Filter by the thread id"
+        "Filter by the thread id (max 10,000 items)"
         id_in: [Int],
         "Filter by thread media id category"
         mediaCategoryId: Int,
@@ -2539,47 +2595,47 @@ type Query {
         hasRepliesOrTypeText: Boolean,
         "Filter by the activity id"
         id: Int,
-        "Filter by the activity id"
+        "Filter by the activity id (max 10,000 items)"
         id_in: [Int],
         "Filter by the activity id"
         id_not: Int,
-        "Filter by the activity id"
+        "Filter by the activity id (max 10,000 items)"
         id_not_in: [Int],
         "Filter activity to users who are being followed by the authenticated user"
         isFollowing: Boolean,
         "Filter by the associated media id of the activity"
         mediaId: Int,
-        "Filter by the associated media id of the activity"
+        "Filter by the associated media id of the activity (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the associated media id of the activity"
         mediaId_not: Int,
-        "Filter by the associated media id of the activity"
+        "Filter by the associated media id of the activity (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by the id of the user who sent a message"
         messengerId: Int,
-        "Filter by the id of the user who sent a message"
+        "Filter by the id of the user who sent a message (max 10,000 items)"
         messengerId_in: [Int],
         "Filter by the id of the user who sent a message"
         messengerId_not: Int,
-        "Filter by the id of the user who sent a message"
+        "Filter by the id of the user who sent a message (max 10,000 items)"
         messengerId_not_in: [Int],
         "The order the results will be returned in"
         sort: [ActivitySort],
         "Filter by the type of activity"
         type: ActivityType,
-        "Filter by the type of activity"
+        "Filter by the type of activity (max 10,000 items)"
         type_in: [ActivityType],
         "Filter by the type of activity"
         type_not: ActivityType,
-        "Filter by the type of activity"
+        "Filter by the type of activity (max 10,000 items)"
         type_not_in: [ActivityType],
         "Filter by the owner user id"
         userId: Int,
-        "Filter by the owner user id"
+        "Filter by the owner user id (max 10,000 items)"
         userId_in: [Int],
         "Filter by the owner user id"
         userId_not: Int,
-        "Filter by the owner user id"
+        "Filter by the owner user id (max 10,000 items)"
         userId_not_in: [Int]
     ): ActivityUnion
     "Activity reply query"
@@ -2601,29 +2657,29 @@ type Query {
         episode: Int,
         "Filter by the airing episode number"
         episode_greater: Int,
-        "Filter by the airing episode number"
+        "Filter by the airing episode number (max 10,000 items)"
         episode_in: [Int],
         "Filter by the airing episode number"
         episode_lesser: Int,
         "Filter by the airing episode number"
         episode_not: Int,
-        "Filter by the airing episode number"
+        "Filter by the airing episode number (max 10,000 items)"
         episode_not_in: [Int],
         "Filter by the id of the airing schedule item"
         id: Int,
-        "Filter by the id of the airing schedule item"
+        "Filter by the id of the airing schedule item (max 10,000 items)"
         id_in: [Int],
         "Filter by the id of the airing schedule item"
         id_not: Int,
-        "Filter by the id of the airing schedule item"
+        "Filter by the id of the airing schedule item (max 10,000 items)"
         id_not_in: [Int],
         "Filter by the id of associated media"
         mediaId: Int,
-        "Filter by the id of associated media"
+        "Filter by the id of associated media (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the id of associated media"
         mediaId_not: Int,
-        "Filter by the id of associated media"
+        "Filter by the id of associated media (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter to episodes that haven't yet aired"
         notYetAired: Boolean,
@@ -2635,11 +2691,11 @@ type Query {
     Character(
         "Filter by character id"
         id: Int,
-        "Filter by character id"
+        "Filter by character id (max 10,000 items)"
         id_in: [Int],
         "Filter by character id"
         id_not: Int,
-        "Filter by character id"
+        "Filter by character id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by character by if its their birthday today"
         isBirthday: Boolean,
@@ -2655,14 +2711,14 @@ type Query {
         mediaType: ExternalLinkMediaType,
         type: ExternalLinkType
     ): [MediaExternalLink]
-    "Follow query"
+    "Follower query"
     Follower(
         "The order the results will be returned in"
         sort: [UserSort],
         "User id of the follower/followed"
         userId: Int!
     ): User
-    "Follow query"
+    "Following query"
     Following(
         "The order the results will be returned in"
         sort: [UserSort],
@@ -2701,6 +2757,10 @@ type Query {
         chapters_lesser: Int,
         "Filter by the media's country of origin"
         countryOfOrigin: CountryCode,
+        "Filter by the media's country of origin (max 10,000 items)"
+        countryOfOrigin_in: [CountryCode],
+        "Filter by the media's country of origin (max 10,000 items)"
+        countryOfOrigin_not_in: [CountryCode],
         "Filter by the media's episode length"
         duration: Int,
         "Filter by the media's episode length"
@@ -2723,33 +2783,33 @@ type Query {
         episodes_lesser: Int,
         "Filter by the media's format"
         format: MediaFormat,
-        "Filter by the media's format"
+        "Filter by the media's format (max 10,000 items)"
         format_in: [MediaFormat],
         "Filter by the media's format"
         format_not: MediaFormat,
-        "Filter by the media's format"
+        "Filter by the media's format (max 10,000 items)"
         format_not_in: [MediaFormat],
         "Filter by the media's genres"
         genre: String,
-        "Filter by the media's genres"
+        "Filter by the media's genres (max 10,000 items)"
         genre_in: [String],
-        "Filter by the media's genres"
+        "Filter by the media's genres (max 10,000 items)"
         genre_not_in: [String],
         "Filter by the media id"
         id: Int,
         "Filter by the media's MyAnimeList id"
         idMal: Int,
-        "Filter by the media's MyAnimeList id"
+        "Filter by the media's MyAnimeList id (max 10,000 items)"
         idMal_in: [Int],
         "Filter by the media's MyAnimeList id"
         idMal_not: Int,
-        "Filter by the media's MyAnimeList id"
+        "Filter by the media's MyAnimeList id (max 10,000 items)"
         idMal_not_in: [Int],
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         id_in: [Int],
         "Filter by the media id"
         id_not: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by if the media's intended for 18+ adult audiences"
         isAdult: Boolean,
@@ -2759,9 +2819,9 @@ type Query {
         licensedBy: String,
         "Filter media by sites id with a online streaming or reading license"
         licensedById: Int,
-        "Filter media by sites id with a online streaming or reading license"
+        "Filter media by sites id with a online streaming or reading license (max 10,000 items)"
         licensedById_in: [Int],
-        "Filter media by sites name with a online streaming or reading license"
+        "Filter media by sites name with a online streaming or reading license (max 10,000 items)"
         licensedBy_in: [String],
         "Only apply the tags filter argument to tags above this rank. Default: 18"
         minimumTagRank: Int,
@@ -2785,7 +2845,7 @@ type Query {
         sort: [MediaSort],
         "Filter by the source type of the media"
         source: MediaSource,
-        "Filter by the source type of the media"
+        "Filter by the source type of the media (max 10,000 items)"
         source_in: [MediaSource],
         "Filter by the start date of the media"
         startDate: FuzzyDateInt,
@@ -2797,23 +2857,23 @@ type Query {
         startDate_like: String,
         "Filter by the media's current release status"
         status: MediaStatus,
-        "Filter by the media's current release status"
+        "Filter by the media's current release status (max 10,000 items)"
         status_in: [MediaStatus],
         "Filter by the media's current release status"
         status_not: MediaStatus,
-        "Filter by the media's current release status"
+        "Filter by the media's current release status (max 10,000 items)"
         status_not_in: [MediaStatus],
         "Filter by the media's tags"
         tag: String,
         "Filter by the media's tags with in a tag category"
         tagCategory: String,
-        "Filter by the media's tags with in a tag category"
+        "Filter by the media's tags with in a tag category (max 10,000 items)"
         tagCategory_in: [String],
-        "Filter by the media's tags with in a tag category"
+        "Filter by the media's tags with in a tag category (max 10,000 items)"
         tagCategory_not_in: [String],
-        "Filter by the media's tags"
+        "Filter by the media's tags (max 10,000 items)"
         tag_in: [String],
-        "Filter by the media's tags"
+        "Filter by the media's tags (max 10,000 items)"
         tag_not_in: [String],
         "Filter by the media's type"
         type: MediaType,
@@ -2842,9 +2902,9 @@ type Query {
         isFollowing: Boolean,
         "Filter by the media id of the list entry"
         mediaId: Int,
-        "Filter by the media id of the list entry"
+        "Filter by the media id of the list entry (max 10,000 items)"
         mediaId_in: [Int],
-        "Filter by the media id of the list entry"
+        "Filter by the media id of the list entry (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by note words and #tags"
         notes: String,
@@ -2862,17 +2922,17 @@ type Query {
         startedAt_like: String,
         "Filter by the watching/reading status"
         status: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_in: [MediaListStatus],
         "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_not_in: [MediaListStatus],
         "Filter by the list entries media type"
         type: MediaType,
         "Filter by a user's id"
         userId: Int,
-        "Filter by a user's id"
+        "Filter by a user's id (max 10,000 items)"
         userId_in: [Int],
         "Filter by a user's name"
         userName: String
@@ -2909,11 +2969,11 @@ type Query {
         startedAt_like: String,
         "Filter by the watching/reading status"
         status: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_in: [MediaListStatus],
         "Filter by the watching/reading status"
         status_not: MediaListStatus,
-        "Filter by the watching/reading status"
+        "Filter by the watching/reading status (max 10,000 items)"
         status_not_in: [MediaListStatus],
         "Filter by the list entries media type"
         type: MediaType,
@@ -2953,11 +3013,11 @@ type Query {
         episode_not: Int,
         "Filter by the media id"
         mediaId: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         mediaId_in: [Int],
         "Filter by the media id"
         mediaId_not: Int,
-        "Filter by the media id"
+        "Filter by the media id (max 10,000 items)"
         mediaId_not_in: [Int],
         "Filter by popularity"
         popularity: Int,
@@ -2986,7 +3046,7 @@ type Query {
         resetNotificationCount: Boolean,
         "Filter by the type of notifications"
         type: NotificationType,
-        "Filter by the type of notifications"
+        "Filter by the type of notifications (max 10,000 items)"
         type_in: [NotificationType]
     ): NotificationUnion
     Page(
@@ -3035,11 +3095,11 @@ type Query {
     Staff(
         "Filter by the staff id"
         id: Int,
-        "Filter by the staff id"
+        "Filter by the staff id (max 10,000 items)"
         id_in: [Int],
         "Filter by the staff id"
         id_not: Int,
-        "Filter by the staff id"
+        "Filter by the staff id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by staff by if its their birthday today"
         isBirthday: Boolean,
@@ -3052,11 +3112,11 @@ type Query {
     Studio(
         "Filter by the studio id"
         id: Int,
-        "Filter by the studio id"
+        "Filter by the studio id (max 10,000 items)"
         id_in: [Int],
         "Filter by the studio id"
         id_not: Int,
-        "Filter by the studio id"
+        "Filter by the studio id (max 10,000 items)"
         id_not_in: [Int],
         "Filter by search query"
         search: String,
@@ -3069,7 +3129,7 @@ type Query {
         categoryId: Int,
         "Filter by the thread id"
         id: Int,
-        "Filter by the thread id"
+        "Filter by the thread id (max 10,000 items)"
         id_in: [Int],
         "Filter by thread media id category"
         mediaCategoryId: Int,
@@ -3484,6 +3544,24 @@ type StaffSubmission {
     submitter: User
 }
 
+"Notification for when a staff submission is accepted, partially accepted, or rejected"
+type StaffSubmissionUpdateNotification {
+    "The notification context text"
+    contexts: [String]
+    "The time the notification was created at"
+    createdAt: Int
+    "The id of the Notification"
+    id: Int!
+    "The notes of the submission"
+    notes: String
+    "The staff that was modified."
+    staff: Staff
+    "The status of the submission"
+    status: String
+    "The type of notification"
+    type: NotificationType
+}
+
 "The distribution of the watching/reading status of media or a user's list"
 type StatusDistribution {
     "The amount of entries with this status"
@@ -3808,6 +3886,7 @@ type User {
     avatar: UserAvatar
     "The user's banner images"
     bannerImage: String
+    "List of active bans. Mod-only"
     bans: Json
     "When the user's account was created. (Does not exist for accounts created before 2020)"
     createdAt: Int
@@ -3852,7 +3931,7 @@ type User {
     updatedAt: Int
 }
 
-"A user's activity history stats."
+"A user's activity history stats for the previous 6 months. Refreshes only periodically"
 type UserActivityHistory {
     "The amount of activity on the day"
     amount: Int
@@ -4269,13 +4348,13 @@ enum MediaRelation {
 }
 
 enum MediaSeason {
-    "Months September to November"
+    "Predominantly started airing between October and November"
     FALL
-    "Months March to May"
+    "Predominantly started airing between April and June"
     SPRING
-    "Months June to August"
+    "Predominantly started airing between July and September"
     SUMMER
-    "Months December to February"
+    "Predominantly started airing between January and March"
     WINTER
 }
 
@@ -4455,6 +4534,8 @@ enum NotificationType {
     ACTIVITY_REPLY_SUBSCRIBED
     "An anime you are currently watching has aired"
     AIRING
+    "A user's character submission has been accepted, partially accepted, or rejected"
+    CHARACTER_SUBMISSION_UPDATE
     "A user has followed you"
     FOLLOWING
     "An anime or manga has had a data change that affects how a user may track it in their lists"
@@ -4463,8 +4544,12 @@ enum NotificationType {
     MEDIA_DELETION
     "Anime or manga entries on the user's list have been merged into a single entry"
     MEDIA_MERGE
+    "A user's submission has been accepted, partially accepted, or rejected"
+    MEDIA_SUBMISSION_UPDATE
     "A new anime or manga has been added to the site where its related media is on the user's list"
     RELATED_MEDIA_ADDITION
+    "A user's staff submission has been accepted, partially accepted, or rejected"
+    STAFF_SUBMISSION_UPDATE
     "A user has liked your forum comment"
     THREAD_COMMENT_LIKE
     "A user has mentioned you in a forum comment"
@@ -4501,8 +4586,8 @@ enum ReviewRating {
 
 "Review sort enums"
 enum ReviewSort {
-    CREATED_AT
-    CREATED_AT_DESC
+    CREATED_AT @deprecated(reason: "Use ID instead")
+    CREATED_AT_DESC @deprecated(reason: "Use ID_DESC instead")
     ID
     ID_DESC
     RATING
@@ -4615,8 +4700,8 @@ enum ThreadCommentSort {
 
 "Thread sort enums"
 enum ThreadSort {
-    CREATED_AT
-    CREATED_AT_DESC
+    CREATED_AT @deprecated(reason: "Use ID instead")
+    CREATED_AT_DESC @deprecated(reason: "Use ID_DESC instead")
     ID
     ID_DESC
     IS_STICKY

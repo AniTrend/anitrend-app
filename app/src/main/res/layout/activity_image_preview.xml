@@ -26,8 +26,6 @@
             android:layout_alignParentTop="true"
             android:background="@color/toolbar_transparent"
             android:minHeight="?attr/actionBarSize"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
             android:theme="@style/ImagePreviewToolbar">
 
         </androidx.appcompat.widget.Toolbar>

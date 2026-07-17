@@ -23,7 +23,7 @@ class MediaBrowseActivity : ActivityBase<MediaBase, MediaPresenter>() {
         super.onCreate(savedInstanceState)
         binding = ActivityFrameGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mSearchView = binding.customToolbar.searchView
+        mSearchBar = binding.customToolbar.searchBar
         setSupportActionBar(binding.customToolbar.toolbar)
         setViewModel(true)
         setPresenter(MediaPresenter(this))
@@ -32,7 +32,7 @@ class MediaBrowseActivity : ActivityBase<MediaBase, MediaPresenter>() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         intent.getStringExtra(KeyUtil.arg_activity_tag)?.let { tag ->
-            val activityTitle = MarkDownUtil.convert(tag)
+            val activityTitle = MarkDownUtil.convert(this, tag)
             mActionBar?.title = activityTitle
         }
         onActivityReady()

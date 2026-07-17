@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
@@ -76,7 +76,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_language"/>
 
-                            <androidx.appcompat.widget.AppCompatTextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/staff_language_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
 
                     </LinearLayout>
 
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.mxt.anitrend.base.custom.view.container.CardViewBase
                     android:clickable="true"

@@ -10,8 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
@@ -33,7 +31,6 @@ import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
-import com.mxt.anitrend.view.activity.index.SearchActivity
 import com.mxt.anitrend.widget.ProgressLayout
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -291,12 +288,12 @@ abstract class FragmentChannelBase :
         }
     }
 
-    override fun onChanged(content: Rss?) {
+    override fun onChanged(value: Rss?) {
         try {
-            val channel = content?.channel
+            val channel = value?.channel
             val episodes = channel?.episode
             if (episodes != null) {
-                copyright = channel?.copyright
+                copyright = channel.copyright
                 mAdapter?.onItemsInserted(episodes)
                 updateUI()
             } else {
@@ -312,11 +309,11 @@ abstract class FragmentChannelBase :
         object : ItemClickListener<Episode> {
             override fun onItemClick(
                 target: View,
-                data: IntPair<Episode>,
+                data: IndexedValue<Episode>,
             ) {
                 if (target.id == R.id.series_image) {
                     val host = activity ?: return
-                    val episode = data.second
+                    val episode = data.value
                     DialogUtil.createMessage(
                         host,
                         episode.title,
@@ -324,22 +321,12 @@ abstract class FragmentChannelBase :
                         R.string.Watch,
                         R.string.Dismiss,
                         R.string.action_search,
-                    ) { _, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                if (episode.link != null) {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(episode.link))
-                                    startActivity(intent)
-                                } else {
-                                    NotifyUtil.makeText(host, R.string.text_premium_show, Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                            DialogAction.NEUTRAL -> {
-                                val intent = Intent(host, SearchActivity::class.java)
-                                intent.putExtra(KeyUtil.arg_search, EpisodeUtil.getActualTile(episode.title))
-                                host.startActivity(intent)
-                            }
-                            else -> Unit
+                    ) { _, _ ->
+                        if (episode.link != null) {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(episode.link))
+                            startActivity(intent)
+                        } else {
+                            NotifyUtil.makeText(host, R.string.text_premium_show, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -347,7 +334,7 @@ abstract class FragmentChannelBase :
 
             override fun onItemLongClick(
                 target: View,
-                data: IntPair<Episode>,
+                data: IndexedValue<Episode>,
             ) = Unit
         }
 }

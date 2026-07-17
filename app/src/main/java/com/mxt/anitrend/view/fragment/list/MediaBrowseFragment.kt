@@ -7,8 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -26,9 +24,10 @@ import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
+import com.mxt.anitrend.util.selectedIndex
+import com.mxt.anitrend.util.selectedIndices
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import java.util.Locale
-import java.util.WeakHashMap
 
 /**
  * Created by max on 2018/02/03.
@@ -84,10 +83,12 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
             }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
         inflater: MenuInflater,
     ) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         if (mediaBrowseUtil?.isBasicFilter == true) {
             menu.findItem(R.id.action_type).isVisible = false
@@ -98,6 +99,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
@@ -107,10 +110,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     R.string.app_filter_sort,
                     CompatUtil.getIndexOf(KeyUtil.MediaSortType, presenter.settings.mediaSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
                 }
                 return true
             }
@@ -122,11 +123,9 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSortOrder(
-                            sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
-                        )
-                    }
+                    presenter.settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    )
                 }
                 return true
             }
@@ -148,22 +147,14 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                         R.string.app_filter_genres,
                         genres,
                         selectedGenres,
-                        { _, _, _ -> false },
-                    ) { dialog, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                val selectedIndices =
-                                    GenreTagUtil.createGenreSelectionMap(
-                                        genres,
-                                        dialog.selectedIndices,
-                                    )
-                                presenter.settings.selectedGenres = selectedIndices
-                            }
-                            DialogAction.NEGATIVE -> {
-                                presenter.settings.selectedGenres = WeakHashMap()
-                            }
-                            else -> Unit
-                        }
+                        { _, _, _ -> },
+                    ) { dialog, _ ->
+                        val selectedIndices =
+                            GenreTagUtil.createGenreSelectionMap(
+                                genres,
+                                dialog.selectedIndices,
+                            )
+                        presenter.settings.selectedGenres = selectedIndices
                     }
                 }
                 return true
@@ -186,22 +177,14 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                         R.string.app_filter_tags,
                         tagList,
                         selectedTags,
-                        { _, _, _ -> false },
-                    ) { dialog, which ->
-                        when (which) {
-                            DialogAction.POSITIVE -> {
-                                val selectedIndices =
-                                    GenreTagUtil.createTagSelectionMap(
-                                        tagList,
-                                        dialog.selectedIndices,
-                                    )
-                                presenter.settings.selectedTags = selectedIndices
-                            }
-                            DialogAction.NEGATIVE -> {
-                                presenter.settings.selectedTags = WeakHashMap()
-                            }
-                            else -> Unit
-                        }
+                        { _, _, _ -> },
+                    ) { dialog, _ ->
+                        val selectedIndices =
+                            GenreTagUtil.createTagSelectionMap(
+                                tagList,
+                                dialog.selectedIndices,
+                            )
+                        presenter.settings.selectedTags = selectedIndices
                     }
                 }
                 return true
@@ -231,10 +214,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                         R.string.app_filter_show_type,
                         CompatUtil.getIndexOf(animeFormats, presenter.settings.animeFormat),
                         CompatUtil.getStringList(ctx, R.array.anime_formats),
-                    ) { dialog, which ->
-                        if (which == DialogAction.POSITIVE) {
-                            presenter.settings.animeFormat = animeFormats.getOrNull(dialog.selectedIndex)
-                        }
+                    ) { dialog, _ ->
+                        presenter.settings.animeFormat = animeFormats.getOrNull(dialog.selectedIndex)
                     }
                 } else {
                     DialogUtil.createSelection(
@@ -242,10 +223,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                         R.string.app_filter_show_type,
                         CompatUtil.getIndexOf(mangaFormats, presenter.settings.mangaFormat),
                         CompatUtil.getStringList(ctx, R.array.manga_formats),
-                    ) { dialog, which ->
-                        if (which == DialogAction.POSITIVE) {
-                            presenter.settings.mangaFormat = mangaFormats.getOrNull(dialog.selectedIndex)
-                        }
+                    ) { dialog, _ ->
+                        presenter.settings.mangaFormat = mangaFormats.getOrNull(dialog.selectedIndex)
                     }
                 }
                 return true
@@ -257,10 +236,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     R.string.app_filter_year,
                     CompatUtil.getIndexOf(yearRanges, presenter.settings.seasonYear),
                     yearRanges,
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.saveSeasonYear(yearRanges[dialog.selectedIndex])
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.saveSeasonYear(yearRanges[dialog.selectedIndex])
                 }
                 return true
             }
@@ -278,10 +255,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     R.string.anime,
                     CompatUtil.getIndexOf(mediaStatuses, presenter.settings.mediaStatus),
                     CompatUtil.getStringList(ctx, R.array.media_status),
-                ) { dialog, which ->
-                    if (which == DialogAction.POSITIVE) {
-                        presenter.settings.mediaStatus = mediaStatuses.getOrNull(dialog.selectedIndex)
-                    }
+                ) { dialog, _ ->
+                    presenter.settings.mediaStatus = mediaStatuses.getOrNull(dialog.selectedIndex)
                 }
                 return true
             }
@@ -374,13 +349,13 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         }
     }
 
-    override fun onChanged(content: PageContainer<MediaBase>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<MediaBase>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
-                onPostProcessed(content.pageData)
+            if (!value.isEmpty) {
+                onPostProcessed(value.pageData)
             } else {
                 onPostProcessed(emptyList())
             }
@@ -394,15 +369,15 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
     override fun onItemClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.id)
-                        putExtra(KeyUtil.arg_mediaType, data.second.type)
+                        putExtra(KeyUtil.arg_id, data.value.id)
+                        putExtra(KeyUtil.arg_mediaType, data.value.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -411,7 +386,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<MediaBase>,
+        data: IndexedValue<MediaBase>,
     ) {
         when (target.id) {
             R.id.container -> {
@@ -420,7 +395,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.second.id)
+                            .setId(data.value.id)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

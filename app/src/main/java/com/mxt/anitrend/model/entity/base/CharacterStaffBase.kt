@@ -18,6 +18,7 @@ open class CharacterStaffBase() :
         this.media = media
     }
 
+    @Suppress("DEPRECATION")
     protected constructor(parcel: Parcel) : this() {
         character = parcel.readParcelable(CharacterBase::class.java.classLoader) ?: CharacterBase()
         media = parcel.readParcelable(MediaBase::class.java.classLoader) ?: MediaBase()

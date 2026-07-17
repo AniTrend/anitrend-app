@@ -71,6 +71,7 @@ class WelcomeActivity : AhoyOnboarderActivity() {
         CompatUtil.startRevealAnim(this, target, Intent(this, MainActivity::class.java), true)
     }
 
+    @Suppress("DEPRECATION")
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && hasFocus) {

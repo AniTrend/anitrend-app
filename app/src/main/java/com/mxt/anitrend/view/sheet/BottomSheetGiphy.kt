@@ -3,12 +3,8 @@ package com.mxt.anitrend.view.sheet
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.annimon.stream.IntPair
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GiphyAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -25,10 +21,7 @@ import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
  * Created by max on 2017/12/09.
  * giphy bottom sheet container
  */
-class BottomSheetGiphy :
-    BottomSheetGiphyList(),
-    MaterialSearchView.OnQueryTextListener,
-    MaterialSearchView.SearchViewListener {
+class BottomSheetGiphy : BottomSheetGiphyList() {
     private var binding: BottomSheetListBinding? = null
 
     @KeyUtil.RequestType
@@ -64,8 +57,18 @@ class BottomSheetGiphy :
     override fun updateUI() {
         toolbarTitle?.text = getString(mTitle)
         toolbarSearch?.visibility = View.VISIBLE
-        searchView?.setOnSearchViewListener(this)
-        searchView?.setOnQueryTextListener(this)
+        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+            override fun onQueryChanged(query: String) {
+                // Update search query logic
+                searchQuery = query
+            }
+
+            override fun onSearchSubmitted(query: String) {
+                searchQuery = query
+                stateLayout?.showLoading()
+                onRefresh()
+            }
+        }
         injectAdapter()
         if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
             activity?.let {
@@ -94,24 +97,6 @@ class BottomSheetGiphy :
         viewModel?.requestData(requestType, ctx)
     }
 
-    override fun onQueryTextSubmit(query: String): Boolean {
-        searchQuery = query
-        stateLayout?.showLoading()
-        onRefresh()
-        return false
-    }
-
-    override fun onQueryTextChange(newText: String): Boolean = false
-
-    override fun onSearchViewShown() {
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-        if (!TextUtils.isEmpty(searchQuery)) {
-            searchView?.setQuery(searchQuery, false)
-        }
-    }
-
-    override fun onSearchViewClosed() = Unit
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -119,7 +104,7 @@ class BottomSheetGiphy :
 
     override fun onItemClick(
         target: View,
-        data: IntPair<Giphy>,
+        data: IndexedValue<Giphy>,
     ) {
         presenter.notifyAllListeners(data, false)
         closeDialog()
@@ -127,11 +112,11 @@ class BottomSheetGiphy :
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<Giphy>,
+        data: IndexedValue<Giphy>,
     ) {
         activity?.let { host ->
             val index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE
-            val giphySample: Gif? = data.second.images[index]
+            val giphySample: Gif? = data.value.images[index]
             val intent =
                 Intent(host, GiphyPreviewActivity::class.java).apply {
                     putExtra(KeyUtil.arg_model, giphySample?.url)

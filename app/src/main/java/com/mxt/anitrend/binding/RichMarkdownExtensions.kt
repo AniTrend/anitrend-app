@@ -11,7 +11,7 @@ import io.noties.markwon.utils.NoCopySpannableFactory
 fun RichMarkdownTextView.markDown(markdown: String?) {
     if (!settings.experimentalMarkdown) {
         val strippedText = RegexUtil.removeTags(markdown)
-        val markdownSpan = MarkDownUtil.convert(strippedText)
+        val markdownSpan = MarkDownUtil.convert(context, strippedText)
         setText(markdownSpan, TextView.BufferType.SPANNABLE)
     } else {
         richMarkDown(markdown)
@@ -20,7 +20,7 @@ fun RichMarkdownTextView.markDown(markdown: String?) {
 
 fun RichMarkdownTextView.htmlText(html: String?) {
     if (!settings.experimentalMarkdown) {
-        val markdownSpan = MarkDownUtil.convert(html)
+        val markdownSpan = MarkDownUtil.convert(context, html)
         setText(markdownSpan, TextView.BufferType.SPANNABLE)
     } else {
         richMarkDown(html)
@@ -41,7 +41,7 @@ fun RichMarkdownTextView.htmlText(
 ) {
     if (!settings.experimentalMarkdown) {
         val text = context.getString(resId)
-        val markdownSpan = MarkDownUtil.convert(text)
+        val markdownSpan = MarkDownUtil.convert(context, text)
         setText(markdownSpan, TextView.BufferType.SPANNABLE)
     } else {
         richMarkDown(context.getString(resId))

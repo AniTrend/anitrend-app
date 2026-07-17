@@ -368,8 +368,8 @@
     <string name="text_notification">%d Notification</string>
     <string name="text_notifications">%d Notifications</string>
 
-    <string name="alerter_notification_title">Notifications Available</string>
-    <string name="alerter_notification_text">You have one or more unread notifications!</string>
+    <string name="notification_alert_title">Notifications Available</string>
+    <string name="notification_alert_text">You have one or more unread notifications!</string>
 
     <string name="title_new_features">New Features!</string>
 
@@ -592,8 +592,8 @@
 
     <!-- Dialogs for check updates, etc -->
     <string name="title_download_info">Download Info!</string>
-    <string name="text_download_info">The update file will be saved in your downloads folder.</string>
-    <string name="title_update_infodadat">Update Info!</string>
+    <string name="text_download_info">Item will be downloaded into your downloads folder.</string>
+    <string name="title_update_info">Update Info!</string>
 
     <!-- Sliding dialog that helps you select content type -->
     <string name="sheet_share_hint">Information to share</string>

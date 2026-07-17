@@ -8,8 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.annimon.stream.IntPair
-import com.annimon.stream.Stream
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter
 import com.mxt.anitrend.base.custom.async.ThreadPool
@@ -80,6 +78,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
 
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         menu.findItem(R.id.action_mark_all).isVisible = true
     }
@@ -98,6 +97,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 return true
             }
         }
+        @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
@@ -108,15 +108,16 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
     }
 
-    override fun onChanged(content: PageContainer<Notification>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
+    override fun onChanged(value: PageContainer<Notification>?) {
+        if (value != null) {
+            if (value.hasPageInfo()) {
+                presenter.setPageInfo(value.pageInfo)
             }
-            if (!content.isEmpty) {
+            if (!value.isEmpty) {
+                @Suppress("DEPRECATION")
                 val notifications = GraphUtil.filterNotificationList(
                     presenter,
-                    content.pageData,
+                    value.pageData,
                 )
                 onPostProcessed(notifications)
             } else {
@@ -152,10 +153,9 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
             val isNotificationRead = presenter.database.getBoxStore(NotificationHistory::class.java)
                 .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
             if (!isNotificationRead) {
-                val dismissibleNotifications = Stream.of(mAdapter.data)
+                val dismissibleNotifications = mAdapter.data
                     .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
                     .map { item -> NotificationHistory(item.id) }
-                    .toList()
 
                 if (!CompatUtil.isEmpty(dismissibleNotifications)) {
                     presenter.database.getBoxStore(NotificationHistory::class.java)
@@ -173,9 +173,8 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * @see ThreadPool
      */
     private fun markAllNotificationsAsRead() {
-        val notificationHistories = Stream.of(mAdapter.data)
+        val notificationHistories = mAdapter.data
             .map { notification -> NotificationHistory(notification.id) }
-            .toList()
 
         presenter.database.getBoxStore(NotificationHistory::class.java)
             .put(notificationHistories)
@@ -194,35 +193,35 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * @param target view that has been clicked
      * @param data   the model that at the click index
      */
-    override fun onItemClick(target: View, data: IntPair<Notification>) {
+    override fun onItemClick(target: View, data: IndexedValue<Notification>) {
         val host = activity ?: return
         val intent: Intent
-        setItemAsRead(data.second)
+        setItemAsRead(data.value)
         if (target.id == R.id.notification_img &&
-            !CompatUtil.equals(data.second.type, KeyUtil.AIRING) &&
-            !CompatUtil.equals(data.second.type, KeyUtil.RELATED_MEDIA_ADDITION) &&
-            !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DATA_CHANGE) &&
-            !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_DELETION) &&
-            !CompatUtil.equals(data.second.type, KeyUtil.MEDIA_MERGE)
+            !CompatUtil.equals(data.value.type, KeyUtil.AIRING) &&
+            !CompatUtil.equals(data.value.type, KeyUtil.RELATED_MEDIA_ADDITION) &&
+            !CompatUtil.equals(data.value.type, KeyUtil.MEDIA_DATA_CHANGE) &&
+            !CompatUtil.equals(data.value.type, KeyUtil.MEDIA_DELETION) &&
+            !CompatUtil.equals(data.value.type, KeyUtil.MEDIA_MERGE)
         ) {
             intent = Intent(host, ProfileActivity::class.java)
-            intent.putExtra(KeyUtil.arg_id, data.second.user.id)
+            intent.putExtra(KeyUtil.arg_id, data.value.user.id)
             startActivity(intent)
         } else {
-            when (data.second.type) {
+            when (data.value.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.FOLLOWING -> {
                     intent = Intent(host, ProfileActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.user.id)
+                    intent.putExtra(KeyUtil.arg_id, data.value.user.id)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.AIRING,
@@ -232,26 +231,26 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 KeyUtil.MEDIA_MERGE,
                 -> {
                     intent = Intent(host, MediaActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.media?.id)
-                    intent.putExtra(KeyUtil.arg_mediaType, data.second.media?.type)
+                    intent.putExtra(KeyUtil.arg_id, data.value.media?.id)
+                    intent.putExtra(KeyUtil.arg_mediaType, data.value.media?.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    if (data.second.media != null) {
+                    if (data.value.media != null) {
                         startActivity(intent)
                     }
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.second.activityId)
+                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
                     startActivity(intent)
                 }
                 KeyUtil.THREAD_SUBSCRIBED,
@@ -260,7 +259,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     intent = Intent(Intent.ACTION_VIEW)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     intent.data = Uri.parse(
-                        "https://anilist.co/forum/thread/${data.second.thread.id}",
+                        "https://anilist.co/forum/thread/${data.value.thread.id}",
                     )
                     startActivity(intent)
                 }
@@ -270,7 +269,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 -> {
                     intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(
-                        "https://anilist.co/forum/thread/${data.second.thread.id}/comment/${data.second.commentId}",
+                        "https://anilist.co/forum/thread/${data.value.thread.id}/comment/${data.value.commentId}",
                     )
                     startActivity(intent)
                 }
@@ -285,10 +284,10 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      * @param target view that has been long clicked
      * @param data   the model that at the long click index
      */
-    override fun onItemLongClick(target: View, data: IntPair<Notification>) {
-        if (CompatUtil.equals(data.second.type, KeyUtil.AIRING)) {
-            setItemAsRead(data.second)
-            data.second.media?.also {
+    override fun onItemLongClick(target: View, data: IndexedValue<Notification>) {
+        if (CompatUtil.equals(data.value.type, KeyUtil.AIRING)) {
+            setItemAsRead(data.value)
+            data.value.media?.also {
                 if (presenter.settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil = MediaActionUtil.Builder()

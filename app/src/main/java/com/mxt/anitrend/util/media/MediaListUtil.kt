@@ -1,7 +1,6 @@
 package com.mxt.anitrend.util.media
 
 import android.os.Bundle
-import com.annimon.stream.Stream
 import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.model.entity.anilist.MediaList
@@ -40,11 +39,10 @@ object MediaListUtil {
 
         val customLists = model.customLists.orEmpty()
         if (!CompatUtil.isEmpty(customLists)) {
-            val enabledCustomLists = Stream.of(customLists)
+            val enabledCustomLists = customLists
                 .filter { it.isEnabled }
                 .map { it.name.orEmpty() }
                 .filter { it.isNotEmpty() }
-                .toList()
             putStringArrayList(KeyUtil.arg_listCustom, ArrayList(enabledCustomLists))
         }
 

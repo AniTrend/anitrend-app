@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.fragment.favourite
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.StaffAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -85,14 +84,14 @@ class StaffFavouriteFragment : FragmentBaseList<StaffBase, ConnectionContainer<F
 
     override fun onItemClick(
         target: View,
-        data: IntPair<StaffBase>,
+        data: IndexedValue<StaffBase>,
     ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
                 val intent =
                     Intent(host, StaffActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.id)
+                        putExtra(KeyUtil.arg_id, data.value.id)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -101,6 +100,6 @@ class StaffFavouriteFragment : FragmentBaseList<StaffBase, ConnectionContainer<F
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<StaffBase>,
+        data: IndexedValue<StaffBase>,
     ) = Unit
 }

@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.fragment.search
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.annimon.stream.IntPair
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.StudioAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -75,14 +74,14 @@ class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBa
 
     override fun onItemClick(
         target: View,
-        data: IntPair<StudioBase>,
+        data: IndexedValue<StudioBase>,
     ) {
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
                 val intent =
                     Intent(host, StudioActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.second.id)
+                        putExtra(KeyUtil.arg_id, data.value.id)
                     }
                 startActivity(intent)
             }
@@ -91,6 +90,6 @@ class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBa
 
     override fun onItemLongClick(
         target: View,
-        data: IntPair<StudioBase>,
+        data: IndexedValue<StudioBase>,
     ) = Unit
 }
