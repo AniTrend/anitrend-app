@@ -17,9 +17,8 @@
 
 package com.mxt.anitrend.buildsrc.extensions
 
+import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.mxt.anitrend.buildsrc.components.PropertiesReader
 import com.diffplug.gradle.spotless.SpotlessExtension
 import org.gradle.accessors.dm.LibrariesForLibs
@@ -33,21 +32,20 @@ internal val Project.props: PropertiesReader
 internal val Project.libs: LibrariesForLibs get() =
     extensions.getByType<LibrariesForLibs>()
 
-internal fun Project.baseExtension() = extensions.getByType<BaseExtension>()
+internal fun Project.baseExtension() = extensions.getByType<ApplicationExtension>()
 
 internal fun Project.androidComponents() = extensions.getByType<ApplicationAndroidComponentsExtension>()
 
-internal fun Project.baseAppExtension() = extensions.getByType<BaseAppModuleExtension>()
+internal fun Project.baseAppExtension() = extensions.getByType<ApplicationExtension>()
 
-internal fun Project.containsAndroidPlugin(): Boolean = project.plugins.toList().any { plugin ->
-    plugin is BaseAppModuleExtension
-}
+internal fun Project.containsAndroidPlugin(): Boolean =
+    project.extensions.findByType(ApplicationExtension::class.java) != null
 
 internal fun Project.versionCatalogExtension() = extensions.getByType<VersionCatalogsExtension>()
 
 internal fun Project.spotlessExtension() = extensions.getByType<SpotlessExtension>()
 
-internal fun Project.runIfAppModule(body: BaseAppModuleExtension.() -> Unit) {
+internal fun Project.runIfAppModule(body: ApplicationExtension.() -> Unit) {
     if (containsAndroidPlugin()) {
         body(baseAppExtension())
     }
