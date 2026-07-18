@@ -49,7 +49,7 @@ chuncker = "4.3.1"
 
 anitrend-android-emoji = "2.2.0"
 
-androidx-media3 = "1.7.0"
+androidx-media3 = "1.10.1"
 
 [libraries]
 spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
