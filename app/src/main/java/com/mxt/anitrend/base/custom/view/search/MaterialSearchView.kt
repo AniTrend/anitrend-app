@@ -19,10 +19,8 @@ package com.mxt.anitrend.base.custom.view.search
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.speech.RecognizerIntent
@@ -30,7 +28,6 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -41,13 +38,13 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.FrameLayout
 import android.widget.ListAdapter
-import com.mxt.anitrend.R
-import com.mxt.anitrend.databinding.SearchViewBinding
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.trimmedLength
-import timber.log.Timber
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.mxt.anitrend.R
+import com.mxt.anitrend.databinding.SearchViewBinding
+import timber.log.Timber
 
 /**
  * @author Miguel Catalan Banuls
@@ -56,7 +53,8 @@ class MaterialSearchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : FrameLayout(context, attrs), Filter.FilterListener {
+) : FrameLayout(context, attrs),
+    Filter.FilterListener {
 
     companion object {
         const val REQUEST_VOICE = 9999
@@ -105,9 +103,8 @@ class MaterialSearchView @JvmOverloads constructor(
             set = attrs,
             attrs = R.styleable.MaterialSearchView,
             defStyleAttr = defStyleAttr,
-            defStyleRes = 0
+            defStyleRes = 0,
         ) {
-
             runCatching {
                 if (hasValue(R.styleable.MaterialSearchView_searchBackground)) {
                     background = getDrawable(R.styleable.MaterialSearchView_searchBackground)
@@ -167,12 +164,11 @@ class MaterialSearchView @JvmOverloads constructor(
                     setInputType(
                         getInt(
                             R.styleable.MaterialSearchView_android_inputType,
-                            EditorInfo.TYPE_NULL
-                        )
+                            EditorInfo.TYPE_NULL,
+                        ),
                     )
                 }
             }.onFailure { Timber.w(it) }
-
         }
     }
 
@@ -275,7 +271,8 @@ class MaterialSearchView @JvmOverloads constructor(
         }
         val pm = context.packageManager
         val activities = pm.queryIntentActivities(
-            Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0
+            Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH),
+            0,
         )
         return activities.isEmpty()
     }
@@ -388,7 +385,7 @@ class MaterialSearchView @JvmOverloads constructor(
                 suggestions,
                 suggestionIcon,
                 ellipsize,
-                filterSuggestionsWhenSearchEmpty
+                filterSuggestionsWhenSearchEmpty,
             )
             setAdapter(searchAdapter)
 

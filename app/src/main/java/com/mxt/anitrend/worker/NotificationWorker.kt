@@ -98,5 +98,4 @@ class NotificationWorker(
             notificationUtil.createNotification(user, notificationsContainer)
         }
     }
-
 }

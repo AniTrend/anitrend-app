@@ -12,7 +12,6 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
@@ -28,8 +27,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 
-class LoggingActivity :
-    ActivityBase<Void, BasePresenter>() {
+class LoggingActivity : ActivityBase<Void, BasePresenter>() {
 
     private lateinit var binding: ActivityLoggingBinding
 
@@ -52,11 +50,10 @@ class LoggingActivity :
             this,
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    LoggingViewModel(
-                        logFileProvider = { applicationContext.logFile() },
-                        metadataProvider = { buildSupportMetadata() },
-                    ) as T
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = LoggingViewModel(
+                    logFileProvider = { applicationContext.logFile() },
+                    metadataProvider = { buildSupportMetadata() },
+                ) as T
             },
         )[LoggingViewModel::class.java]
 
@@ -119,8 +116,7 @@ class LoggingActivity :
             "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
     }
 
-    private fun buildSupportVersion(): String =
-        "v${BuildConfig.VERSION_NAME} (build ${BuildConfig.VERSION_CODE})"
+    private fun buildSupportVersion(): String = "v${BuildConfig.VERSION_NAME} (build ${BuildConfig.VERSION_CODE})"
 
     private fun buildSupportMetadata(): String {
         val version = buildSupportVersion()

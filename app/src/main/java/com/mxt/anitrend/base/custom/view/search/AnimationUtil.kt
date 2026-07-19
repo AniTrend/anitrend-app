@@ -97,7 +97,7 @@ object AnimationUtil {
             val cx = view.width - TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 24f,
-                view.resources.displayMetrics
+                view.resources.displayMetrics,
             ).toInt()
             val cy = view.height / 2
             val finalRadius = maxOf(view.width, view.height)

@@ -38,7 +38,8 @@ class SearchAdapter(
     private val suggestionIcon: Drawable? = null,
     private val ellipsize: Boolean = false,
     private val filterSuggestionsWhenSearchEmpty: Boolean = true,
-) : BaseAdapter(), Filterable {
+) : BaseAdapter(),
+    Filterable {
 
     private var data: ArrayList<String> = ArrayList()
     private val inflater: LayoutInflater = LayoutInflater.from(context)

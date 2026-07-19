@@ -31,7 +31,6 @@ import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.ActivityBase
-import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
@@ -39,6 +38,7 @@ import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
+import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
@@ -48,8 +48,8 @@ import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
@@ -58,13 +58,13 @@ import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
-import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
+import java.util.Locale
 
 /**
  * Created by max on 2017/10/04.

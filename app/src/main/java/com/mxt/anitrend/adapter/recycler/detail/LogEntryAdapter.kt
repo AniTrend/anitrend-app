@@ -15,14 +15,13 @@ import com.mxt.anitrend.util.KeyUtil
 
 class LogEntryAdapter(context: Context) : RecyclerViewAdapter<LogEntry>(context) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<LogEntry> =
-        LogEntryHolder(
-            AdapterLogEntryBinding.inflate(
-                parent.context.getLayoutInflater(),
-                parent,
-                false,
-            ),
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<LogEntry> = LogEntryHolder(
+        AdapterLogEntryBinding.inflate(
+            parent.context.getLayoutInflater(),
+            parent,
+            false,
+        ),
+    )
 
     override fun getItemViewType(position: Int): Int = KeyUtil.RECYCLER_TYPE_CONTENT
 

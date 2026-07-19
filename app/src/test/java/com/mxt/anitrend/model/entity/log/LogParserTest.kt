@@ -263,6 +263,5 @@ class LogParserTest {
 
     // ── helpers ──
 
-    private fun inputStream(s: String) =
-        ByteArrayInputStream(s.toByteArray(StandardCharsets.UTF_8))
+    private fun inputStream(s: String) = ByteArrayInputStream(s.toByteArray(StandardCharsets.UTF_8))
 }

@@ -107,8 +107,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         }
     }
 
-
-
     /**
      * Set a [Toolbar] to act as the
      * [ActionBar] for this Activity window.
