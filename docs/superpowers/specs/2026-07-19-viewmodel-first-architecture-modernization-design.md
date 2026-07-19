@@ -101,10 +101,9 @@ UI -> ViewModel -> interactor/use case -> repository/data source
 ### Phase 2: LoggingActivity refactor target
 - Move log loading, `LogParser` invocation, filter state, current-filter tracking, and share/export metadata assembly out of `LoggingActivity` into a dedicated `LoggingViewModel` extending `androidx.lifecycle.ViewModel` directly.
 - `LoggingActivity` continues extending `ActivityBase<Void, BasePresenter>` for toolbar and progress layout behavior.
-- `LoggingActivity` observes `LoggingViewModel` state:
-  - `entries: StateFlow<List<LogEntry>>` (filtered)
-  - `currentFilter: StateFlow<LogFilter>`
-  - `isLoading: StateFlow<Boolean>`
+- `LoggingActivity` observes `LoggingViewModel.state: StateFlow<LogUiState>`:
+  - `LogUiState` is a sealed interface with `Loading`, `Success(entries, filter)`, and `Error(message)`
+  - Mutually exclusive states; no intermediate "loading + non-empty entries" combinations
 - Replace the current header treatment (app icon + version text) with a Material 3 card summarizing app version, build info, and device metadata for support sharing.
 - Remove the activity-level `MAX_DISPLAY_LINES` constant. The file logger already bounds file size at 800 KB and uses a single file. Keep the `LogParser` default of 5,000 lines as the single defensive safety net unless the ViewModel passes a different explicit cap with a documented reason.
 - Design a share/export flow so shared log files carry useful build, app, and device context for bug reports. Decide at the start of Phase 2 whether metadata is prepended to the shared file or generated as a separate attachment.
