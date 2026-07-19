@@ -27,7 +27,7 @@
             android:layout_height="?attr/actionBarSize"
             android:focusableInTouchMode="true">
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/action_up_btn"
                 style="@style/MSV_ImageButton"
                 android:layout_width="wrap_content"
@@ -53,32 +53,11 @@
                 android:textCursorDrawable="@drawable/material_search_cursor"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/filter_btn"
+                app:layout_constraintStart_toEndOf="@id/action_up_btn"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                android:id="@+id/action_empty_btn"
-                style="@style/MSV_ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_msv_close"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/action_voice_btn"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/action_voice_btn"
-                style="@style/MSV_ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_msv_voice"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/filter_btn"
                 style="@style/MSV_ImageButton"
                 android:layout_width="wrap_content"

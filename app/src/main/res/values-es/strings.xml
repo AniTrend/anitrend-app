@@ -610,7 +610,7 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="anitrend_sign_in">Inicio de sesión de AniTrend</string>
     <string name="please_sing_in">Por favor, inicia sesión</string>
 
-    <string name="action_donate">Donar</string>
+    <string name="action_support">Apoyar</string>
 
     <string name="dialog_title_increment_chapters">Aumentar capítulos</string>
 

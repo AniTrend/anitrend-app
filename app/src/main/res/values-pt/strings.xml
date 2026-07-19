@@ -608,7 +608,7 @@
     <string name="anitrend_sign_in">Registrar no AniTrend</string>
     <string name="please_sing_in">Por favor, registre-se</string>
 
-    <string name="action_donate">Doar</string>
+    <string name="action_support">Doar</string>
 
     <string name="dialog_title_increment_chapters">Increment Chapters</string>
 

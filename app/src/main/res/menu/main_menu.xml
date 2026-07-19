@@ -44,10 +44,10 @@
                 app:showAsAction="ifRoom" />
 
             <item
-                android:id="@+id/action_donate"
+                android:id="@+id/action_support"
                 android:icon="@drawable/ic_patreon_logo"
                 android:orderInCategory="105"
-                android:title="@string/action_donate"
+                android:title="@string/action_support"
                 app:showAsAction="ifRoom" />
 
             <item

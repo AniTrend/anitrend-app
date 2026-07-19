@@ -16,7 +16,6 @@
 
 package com.mxt.anitrend.base.custom.view.search
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -88,8 +87,24 @@ class MaterialSearchView @JvmOverloads constructor(
     private var savedState: SavedState? = null
     private var submitOnClick = false
     private var ellipsize = false
-    private var allowVoiceSearch = false
     private var suggestionIcon: Drawable? = null
+
+    private val clickListener = OnClickListener { v ->
+        if (v == binding.actionUpBtn) {
+            onClickBackListeners?.forEach { it.onClickBack() }
+            closeSearch()
+            return@OnClickListener
+        }
+        if (isSearchOpen) {
+            when (v) {
+                binding.searchTextView -> showSuggestions()
+                binding.transparentView -> {
+                    dismissSuggestions()
+                    hideKeyboard(this@MaterialSearchView)
+                }
+            }
+        }
+    }
 
     init {
         initStyle(attrs, defStyleAttr)
@@ -126,18 +141,6 @@ class MaterialSearchView @JvmOverloads constructor(
             runCatching {
                 if (hasValue(R.styleable.MaterialSearchView_android_hint)) {
                     setHint(getString(R.styleable.MaterialSearchView_android_hint))
-                }
-            }.onFailure { Timber.w(it) }
-
-            runCatching {
-                if (hasValue(R.styleable.MaterialSearchView_searchVoiceIcon)) {
-                    setVoiceIcon(getDrawable(R.styleable.MaterialSearchView_searchVoiceIcon))
-                }
-            }.onFailure { Timber.w(it) }
-
-            runCatching {
-                if (hasValue(R.styleable.MaterialSearchView_searchCloseIcon)) {
-                    setCloseIcon(getDrawable(R.styleable.MaterialSearchView_searchCloseIcon))
                 }
             }.onFailure { Timber.w(it) }
 
@@ -199,13 +202,8 @@ class MaterialSearchView @JvmOverloads constructor(
         }
 
         binding.actionUpBtn.setOnClickListener(clickListener)
-        binding.actionVoiceBtn.setOnClickListener(clickListener)
-        binding.actionEmptyBtn.setOnClickListener(clickListener)
         binding.searchTextView.setOnClickListener(clickListener)
         binding.transparentView.setOnClickListener(clickListener)
-
-        allowVoiceSearch = false
-        showVoice(true)
     }
 
     private fun startFilter(s: CharSequence?) {
@@ -213,41 +211,9 @@ class MaterialSearchView @JvmOverloads constructor(
         filterable?.filter?.filter(s, this)
     }
 
-    private val clickListener = OnClickListener { v ->
-        when (v) {
-            binding.actionUpBtn -> {
-                onClickBackListeners?.forEach { it.onClickBack() }
-                closeSearch()
-            }
-            binding.actionVoiceBtn -> onVoiceClicked()
-            binding.actionEmptyBtn -> {
-                binding.searchTextView.setText(null)
-                onSearchClearedListener?.onSearchCleared()
-            }
-            binding.searchTextView -> showSuggestions()
-            binding.transparentView -> {
-                dismissSuggestions()
-                hideKeyboard(this@MaterialSearchView)
-            }
-        }
-    }
-
-    private fun onVoiceClicked() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)
-            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-        }
-        if (context is Activity) {
-            (context as Activity).startActivityForResult(intent, REQUEST_VOICE)
-        }
-    }
-
     private fun onTextChanged(newText: CharSequence?) {
         val text = binding.searchTextView.text
         userQuery = text
-        val hasText = !TextUtils.isEmpty(text)
-        binding.actionEmptyBtn.isVisible = hasText
-        showVoice(!hasText)
 
         if (onQueryChangeListener != null && !TextUtils.equals(newText, oldQueryText)) {
             onQueryChangeListener?.onQueryTextChange(newText?.toString().orEmpty())
@@ -309,14 +275,6 @@ class MaterialSearchView @JvmOverloads constructor(
         binding.searchTextView.hint = hint
     }
 
-    fun setVoiceIcon(drawable: Drawable?) {
-        binding.actionVoiceBtn.setImageDrawable(drawable)
-    }
-
-    fun setCloseIcon(drawable: Drawable?) {
-        binding.actionEmptyBtn.setImageDrawable(drawable)
-    }
-
     fun setBackIcon(drawable: Drawable?) {
         binding.actionUpBtn.setImageDrawable(drawable)
     }
@@ -331,10 +289,6 @@ class MaterialSearchView @JvmOverloads constructor(
 
     fun setSuggestionBackground(background: Drawable?) {
         binding.suggestionList.background = background
-    }
-
-    fun setVoiceSearch(voiceSearch: Boolean) {
-        allowVoiceSearch = voiceSearch
     }
 
     /**
@@ -424,14 +378,6 @@ class MaterialSearchView @JvmOverloads constructor(
     }
 
     /**
-     * If show is true, this will enable voice search. If voice is not available on the device,
-     * this method call has no effect.
-     */
-    fun showVoice(show: Boolean) {
-        binding.actionVoiceBtn.isVisible = show && isVoiceAvailable() && allowVoiceSearch
-    }
-
-    /**
      * Call this method and pass the menu item so this class can handle click events for the Menu Item.
      */
     fun setMenuItem(menuItem: MenuItem?) {
@@ -464,6 +410,8 @@ class MaterialSearchView @JvmOverloads constructor(
             return
         }
 
+        isSearchOpen = true
+
         if (hasFocusWhenOpened) {
             binding.searchTextView.setText(null)
             binding.searchTextView.requestFocus()
@@ -475,7 +423,6 @@ class MaterialSearchView @JvmOverloads constructor(
             binding.root.isVisible = true
             searchViewListeners?.forEach { it.onSearchViewShown() }
         }
-        isSearchOpen = true
     }
 
     private fun setVisibleWithAnimation() {

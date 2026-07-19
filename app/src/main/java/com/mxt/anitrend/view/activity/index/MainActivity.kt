@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.activity.index
 
 import android.Manifest
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.Menu
@@ -175,7 +174,6 @@ class MainActivity :
             }
         }
         searchView?.apply {
-            setVoiceSearch(false)
             setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     searchDelegate.onSearchSubmitted(query)
@@ -228,8 +226,8 @@ class MainActivity :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val intent: Intent
         when (item.itemId) {
-            R.id.action_donate -> {
-                intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.patreon.com/wax911"))
+            R.id.action_support -> {
+                intent = Intent(Intent.ACTION_VIEW, getString(R.string.patreon).toUri())
                 startActivity(intent)
                 return true
             }
@@ -240,8 +238,7 @@ class MainActivity :
             R.id.action_share -> {
                 intent = Intent()
                 intent.action = Intent.ACTION_SEND
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.campaign_link))
-                intent.type = "text/plain"
+                intent.setDataAndType(getString(R.string.campaign_link).toUri(), "text/plain")
                 startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
                 return true
             }
@@ -323,6 +320,7 @@ class MainActivity :
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
@@ -626,6 +624,10 @@ class MainActivity :
 
     override fun onDestroy() {
         mUserAvatar.onViewRecycled()
+        searchView?.apply {
+            setOnQueryTextListener(null)
+            setOnSearchViewListener(null)
+        }
         super.onDestroy()
     }
 
@@ -653,6 +655,6 @@ class MainActivity :
     }
 
     companion object {
-        private const val KEY_SEARCH_VIEW_QUERY = "SEARCHVIEW_QUERY"
+        private const val KEY_SEARCH_VIEW_QUERY = "SEARCH_VIEW_QUERY"
     }
 }
