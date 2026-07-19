@@ -111,7 +111,7 @@ private fun ApplicationExtension.configureBuildFlavours(logger: Logger) {
 }
 
 private fun ApplicationExtension.setUpWith(project: Project) {
-    compileSdkVersion(37)
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = 23
@@ -120,7 +120,6 @@ private fun ApplicationExtension.setUpWith(project: Project) {
         versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled = true
     }
 
     project.createSigningConfiguration(this)
@@ -140,8 +139,8 @@ private fun ApplicationExtension.setUpWith(project: Project) {
                 "proguard-rules.pro",
             )
             if (releaseSigningConfig != null) {
-                project.logger.lifecycle("Applying signing configuration for to build type: $name")
-                (this as com.android.build.gradle.internal.dsl.BuildType).signingConfig = releaseSigningConfig
+                project.logger.lifecycle("Applying signing configuration to build type: $name")
+                signingConfig = releaseSigningConfig
             }
         }
 

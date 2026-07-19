@@ -7,10 +7,9 @@ internal fun Project.configurePlugins() {
     plugins.apply("com.android.application")
     plugins.apply("com.diffplug.spotless")
     plugins.apply("co.anitrend.retrofit.graphql.codegen")
-    plugins.apply("kotlin-android")
     plugins.apply("kotlinx-serialization")
     plugins.apply("kotlin-parcelize")
-    plugins.apply("kotlin-kapt")
+    plugins.apply("com.android.legacy-kapt")
     plugins.apply("io.objectbox")
 
     tasks.matching { it.name.startsWith("objectbox") }.configureEach {
