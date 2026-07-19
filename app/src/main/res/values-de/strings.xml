@@ -516,7 +516,7 @@ These are the anime time labels in your profile -->
     <string name="sign_into_anilist">"Bei AniList einloggen"</string>
     <string name="anitrend_sign_in">"AniTrend Login"</string>
     <string name="please_sing_in">"Bitte einloggen"</string>
-    <string name="action_donate">"Spenden"</string>
+    <string name="action_support">"Spenden"</string>
     <string name="dialog_title_increment_chapters">"Kapitel erhöhen"</string>
     <string name="title_activity_staff">"Besetzung"</string>
     <string name="title_activity_character">"Charakter"</string>

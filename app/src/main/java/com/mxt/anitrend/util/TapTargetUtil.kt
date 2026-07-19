@@ -38,11 +38,11 @@ object TapTargetUtil {
         .Builder(context)
         .setTarget(context.findViewById(resource))
         .setAnimationInterpolator(FastOutSlowInInterpolator())
-        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.titleColor))
-        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.subtitleColor))
+        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.colorOnSurface))
+        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.colorOnSurface))
         .setBackgroundColour(
             ColorUtils.setAlphaComponent(
-                context.getCompatColorAttr(R.attr.colorOnSurface),
+                context.getCompatColorAttr(R.attr.colorSurface),
                 0xF2,
             ),
         )
@@ -58,11 +58,11 @@ object TapTargetUtil {
         .setPrimaryText(primary)
         .setSecondaryText(secondary)
         .setAnimationInterpolator(FastOutSlowInInterpolator())
-        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.titleColor))
-        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.subtitleColor))
+        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.colorOnSurface))
+        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.colorOnSurface))
         .setBackgroundColour(
             ColorUtils.setAlphaComponent(
-                context.getCompatColorAttr(R.attr.colorOnSurface),
+                context.getCompatColorAttr(R.attr.colorSurface),
                 0xF2,
             ),
         )
@@ -78,11 +78,11 @@ object TapTargetUtil {
         .setPrimaryText(primary)
         .setSecondaryText(secondary)
         .setAnimationInterpolator(FastOutSlowInInterpolator())
-        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.titleColor))
-        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.subtitleColor))
+        .setPrimaryTextColour(context.getCompatColorAttr(R.attr.colorOnSurface))
+        .setSecondaryTextColour(context.getCompatColorAttr(R.attr.colorOnSurface))
         .setBackgroundColour(
             ColorUtils.setAlphaComponent(
-                context.getCompatColorAttr(R.attr.colorOnSurface),
+                context.getCompatColorAttr(R.attr.colorSurface),
                 0xF2,
             ),
         )
