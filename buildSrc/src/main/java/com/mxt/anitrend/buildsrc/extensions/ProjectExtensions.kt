@@ -36,8 +36,6 @@ internal fun Project.baseExtension() = extensions.getByType<ApplicationExtension
 
 internal fun Project.androidComponents() = extensions.getByType<ApplicationAndroidComponentsExtension>()
 
-internal fun Project.baseAppExtension() = extensions.getByType<ApplicationExtension>()
-
 internal fun Project.containsAndroidPlugin(): Boolean =
     project.extensions.findByType(ApplicationExtension::class.java) != null
 
@@ -47,6 +45,6 @@ internal fun Project.spotlessExtension() = extensions.getByType<SpotlessExtensio
 
 internal fun Project.runIfAppModule(body: ApplicationExtension.() -> Unit) {
     if (containsAndroidPlugin()) {
-        body(baseAppExtension())
+        body(baseExtension())
     }
 }
