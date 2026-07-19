@@ -196,7 +196,10 @@ fun Context.logDirectory(): File {
 
 fun Context.logFile(): File {
     val log = File(logDirectory(), "$packageName.log")
-    if (!log.exists()) log.mkdirs()
+    if (log.exists() && log.isDirectory) {
+        log.deleteRecursively()
+    }
+    log.parentFile?.mkdirs()
     return log
 }
 

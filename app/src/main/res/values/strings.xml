@@ -737,6 +737,12 @@
     <string name="save_bug_report">Save Bug Report</string>
     <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
 
+    <string name="log_filter_all">All</string>
+    <string name="log_filter_error">Error</string>
+    <string name="log_filter_warning">Warning</string>
+    <string name="log_filter_info">Info</string>
+    <string name="log_filter_debug">Debug</string>
+
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
 
@@ -772,4 +778,6 @@
     <string name="notification_action_mark_as_read">Mark as read</string>
     <string name="pref_title_experimental_markdown">Experimental markdown support</string>
     <string name="pref_summary_experimental_markdown">Allows the application to render AniList specific markdown better but does have some issues</string>
+
+    <string name="search_hint">Search</string>
 </resources>

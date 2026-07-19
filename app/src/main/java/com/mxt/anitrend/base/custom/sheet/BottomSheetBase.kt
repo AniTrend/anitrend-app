@@ -6,11 +6,9 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.search.SearchBar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
@@ -37,8 +35,9 @@ abstract class BottomSheetBase<T> :
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
     protected var toolbarSearch: AppCompatImageView? = null
-    protected var searchBar: SearchBar? = null
+
     protected var mSearchDelegate: ISearchDelegate? = null
+
     protected var viewModel: ViewModelBase<T>? = null
     protected var bottomSheetChoice: BottomSheetChoice? = null
 
@@ -68,10 +67,6 @@ abstract class BottomSheetBase<T> :
                         BottomSheetBehavior.STATE_HIDDEN -> dismiss()
                         BottomSheetBehavior.STATE_COLLAPSED -> onStateCollapsed()
                         BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
-                        BottomSheetBehavior.STATE_DRAGGING,
-                        BottomSheetBehavior.STATE_HALF_EXPANDED,
-                        BottomSheetBehavior.STATE_SETTLING,
-                        -> Unit
                     }
                 } catch (e: Exception) {
                     Timber.e(e)
@@ -113,18 +108,6 @@ abstract class BottomSheetBase<T> :
             }
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
-        toolbarSearch?.setOnClickListener {
-            mSearchDelegate?.let {
-                searchBar?.apply {
-                    isVisible = !isVisible
-                    if (isVisible) {
-                        requestFocus()
-                    }
-                }
-            } ?: run {
-                searchBar?.isVisible = searchBar?.isVisible?.not() ?: false
-            }
-        }
     }
 
     override fun onStop() {
@@ -135,9 +118,9 @@ abstract class BottomSheetBase<T> :
     }
 
     protected fun createBottomSheetBehavior(contentView: View) {
-        val parentView = (contentView.parent as? View) ?: return
-        val layoutParams = (parentView.layoutParams as? CoordinatorLayout.LayoutParams) ?: return
-        val coordinatorBehavior = (layoutParams.behavior as? BottomSheetBehavior<*>) ?: return
+        val parentView = contentView.parent as? View ?: return
+        val layoutParams = parentView.layoutParams as? CoordinatorLayout.LayoutParams ?: return
+        val coordinatorBehavior = layoutParams.behavior as? BottomSheetBehavior<*> ?: return
 
         bottomSheetBehavior = coordinatorBehavior
         bottomSheetBehavior?.peekHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
@@ -150,7 +133,6 @@ abstract class BottomSheetBase<T> :
         toolbarTitle = rootView.findViewById(R.id.toolbar_title)
         toolbarState = rootView.findViewById(R.id.toolbar_state)
         toolbarSearch = rootView.findViewById(R.id.toolbar_search)
-        searchBar = rootView.findViewById(R.id.search_bar)
     }
 
     fun closeDialog(): Boolean {

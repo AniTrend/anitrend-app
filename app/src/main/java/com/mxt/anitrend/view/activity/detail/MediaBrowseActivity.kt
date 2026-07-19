@@ -23,7 +23,6 @@ class MediaBrowseActivity : ActivityBase<MediaBase, MediaPresenter>() {
         super.onCreate(savedInstanceState)
         binding = ActivityFrameGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mSearchBar = binding.customToolbar.searchBar
         setSupportActionBar(binding.customToolbar.toolbar)
         setViewModel(true)
         setPresenter(MediaPresenter(this))

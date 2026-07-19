@@ -31,7 +31,6 @@ class MediaListActivity : ActivityBase<User, BasePresenter>() {
         binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPresenter(BasePresenter(this))
-        mSearchBar = binding.customToolbar.searchBar
         setSupportActionBar(binding.customToolbar.toolbar)
         setViewModel(true)
         mediaType = bundle?.getString(KeyUtil.arg_mediaType)

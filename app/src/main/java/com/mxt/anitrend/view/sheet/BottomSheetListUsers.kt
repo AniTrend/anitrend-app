@@ -3,15 +3,19 @@ package com.mxt.anitrend.view.sheet
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
+import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.custom.viewmodel.acquireTypedViewModelBase
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.databinding.BottomSheetListBinding
@@ -45,6 +49,8 @@ class BottomSheetListUsers :
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
+
+    private var searchView: MaterialSearchView? = null
 
     private val stateLayoutOnClick =
         View.OnClickListener {
@@ -81,6 +87,7 @@ class BottomSheetListUsers :
         bindToolbarViews(binding.root)
         stateLayout = binding.stateLayout
         recyclerView = binding.recyclerView
+        searchView = binding.customSheetToolbar.searchView
         createBottomSheetBehavior(binding.root)
         mLayoutManager = StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL)
         return dialog
@@ -89,7 +96,25 @@ class BottomSheetListUsers :
     override fun onStart() {
         super.onStart()
         toolbarTitle?.text = getString(mTitle, count)
-        searchBar?.visibility = View.GONE
+        mSearchDelegate = object : ISearchDelegate {
+            override fun onQueryChanged(query: String?) {
+                searchQuery = query
+            }
+
+            override fun onSearchSubmitted(query: String?) {
+                searchQuery = query
+                stateLayout?.showLoading()
+                onRefresh()
+            }
+
+            override fun onSearchShown() {
+                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                if (!TextUtils.isEmpty(searchQuery)) {
+                    searchView?.setQuery(searchQuery, false)
+                }
+            }
+        }
+        searchView?.visibility = View.GONE
         stateLayout?.showLoading()
         if (mAdapter.itemCount < 1) {
             onRefresh()
