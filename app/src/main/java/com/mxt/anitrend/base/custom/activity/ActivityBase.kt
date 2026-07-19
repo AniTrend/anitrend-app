@@ -1,9 +1,7 @@
 package com.mxt.anitrend.base.custom.activity
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
@@ -19,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.search.SearchBar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
@@ -35,10 +32,8 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
-import com.mxt.anitrend.view.activity.index.MainActivity
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
-import java.util.Locale
 
 /**
  * Created by max on 2017/06/09.
@@ -50,10 +45,8 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     CommonPresenter.AbstractPresenter<P>,
     ResponseCallback {
 
-    protected lateinit var TAG: String
-
-    protected var mSearchBar: SearchBar? = null
     protected var mSearchDelegate: ISearchDelegate? = null
+
     private var viewModelRef: ViewModelBase<M>? = null
 
     protected val viewModel: ViewModelBase<M>?
@@ -68,9 +61,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     protected var id: Long = 0
 
     protected var offScreenLimit = 3
-    protected var disableNavigationStyle = false
-
-    private var isClosing = false
 
     private var presenterRef: P? = null
     protected var configurationUtil: ConfigurationUtil? = null
@@ -89,7 +79,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TAG = javaClass.simpleName
         configureActivity()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -110,41 +99,15 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         if (configurationUtil != null) {
             val settings = KoinExt.get(Settings::class.java)
             if (CompatUtil.isLightTheme(settings)) {
-                WindowCompat.getInsetsController(window, window.decorView)
-                    .setAppearanceLightStatusBars(true)
-                WindowCompat.getInsetsController(window, window.decorView)
-                    .setAppearanceLightNavigationBars(true)
+                WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                    true
+                WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars =
+                    true
             }
         }
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        mSearchDelegate?.let { delegate ->
-            mSearchBar?.hint = getString(R.string.abc_search_hint)
-            // Note: M3 SearchBar doesn't have setOnQueryTextListener directly.
-            // We'll hook into the underlying logic.
-        }
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        val text = mSearchBar?.text
-        if (!text.isNullOrEmpty()) {
-            outState.putCharSequence(KEY_SEARCHVIEW_QUERY, text)
-        }
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        if (savedInstanceState.containsKey(KEY_SEARCHVIEW_QUERY)) {
-            val savedQuery = savedInstanceState.getCharSequence(KEY_SEARCHVIEW_QUERY)
-            mSearchBar?.setText(savedQuery)
-            presenterRef?.notifyAllListeners(savedQuery.toString().lowercase(Locale.getDefault()), false)
-        }
-    }
 
     /**
      * Set a [Toolbar] to act as the
@@ -235,8 +198,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             windowInsets
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean = super.onCreateOptionsMenu(menu)
 
     @Suppress("DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -336,20 +297,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         if (mFragment?.onBackPress() == true) {
             return
         }
-        if (mSearchBar?.visibility == View.VISIBLE) {
-            mSearchBar?.visibility = View.GONE
-            return
-        }
-        if (this is MainActivity && !isClosing) {
-            NotifyUtil.makeText(
-                this,
-                R.string.text_confirm_exit,
-                R.drawable.ic_home_white_24dp,
-                Toast.LENGTH_SHORT,
-            ).show()
-            isClosing = true
-            return
-        }
         @Suppress("DEPRECATION")
         super.onBackPressed()
     }
@@ -363,10 +310,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     protected abstract fun updateUI()
 
     protected abstract fun makeRequest()
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     @get:JvmName("presenterInstance")
     internal val presenter: P
@@ -399,7 +342,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     /**
      * Called when the model state is changed.
      *
-     * @param value The new data
+     * @param model The new data
      */
     override fun onChanged(value: M?) {
         Timber.v("onChanged() from view model has received data")
@@ -444,7 +387,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     }
 
     companion object {
-        private const val KEY_SEARCHVIEW_QUERY = "SEARCHVIEW_QUERY"
         protected const val REQUEST_PERMISSION = 102
     }
 }

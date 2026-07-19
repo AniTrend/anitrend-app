@@ -32,15 +32,19 @@ class GenreSyncWorker(
                     ),
                 ).execute()
 
-        val data = response.body()?.data?.result
-
-        if (response.isSuccessful && !data.isNullOrEmpty()) {
-            return data.map(::Genre)
-        } else {
+        if (!response.isSuccessful) {
             Timber.e(response.apiError())
+            return emptyList()
         }
 
-        return emptyList()
+        val data: List<String>? = unwrapBody(response.body())
+
+        return if (data.isNullOrEmpty()) {
+            Timber.e("GenreCollection returned empty data")
+            emptyList()
+        } else {
+            data.map(::Genre)
+        }
     }
 
     /**

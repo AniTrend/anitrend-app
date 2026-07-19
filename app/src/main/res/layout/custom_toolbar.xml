@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="?attr/actionBarSize">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,13 +13,17 @@
         android:theme="?attr/toolbarColor"
         app:popupTheme="@style/AppThemeLight.PopupOverlay" />
 
-    <com.google.android.material.search.SearchBar
-        android:id="@+id/search_bar"
+    <com.mxt.anitrend.base.custom.view.search.MaterialSearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/lg_margin"
-        android:layout_marginBottom="@dimen/lg_margin"
-        android:visibility="gone"
-        android:hint="Search..." />
+        android:layout_height="match_parent"
+        android:textColor="?titleColor"
+        android:textColorHint="?subtitleColor"
+        app:searchVoiceIcon="?voiceDrawable"
+        app:searchSuggestionIcon="?suggestionDrawable"
+        app:searchSuggestionBackground="?colorSurface"
+        app:searchCloseIcon="?closeDrawable"
+        app:searchBackIcon="?backDrawable"
+        app:searchBackground="?colorSurface" />
 
-</LinearLayout>
+</FrameLayout>

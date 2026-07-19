@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +15,6 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withResumed
@@ -31,6 +31,7 @@ import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.ActivityBase
+import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
@@ -48,6 +49,7 @@ import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
@@ -56,6 +58,7 @@ import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -104,6 +107,9 @@ class MainActivity :
         )
     }
 
+    private var searchView: MaterialSearchView? = null
+    private var isClosing = false
+
     @IdRes
     private var redirectShortcut: Int = 0
 
@@ -144,7 +150,50 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mSearchBar = binding.appBarMain.customToolbar.searchBar
+        searchView = binding.appBarMain.customToolbar.searchView
+        val searchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+            override fun onQueryChanged(query: String?) {
+                presenter.notifyAllListeners(query?.lowercase(Locale.getDefault()).orEmpty(), false)
+            }
+
+            override fun onSearchSubmitted(query: String?) {
+                if (!query.isNullOrEmpty()) {
+                    val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    intent.putExtra(KeyUtil.arg_search, query)
+                    searchView?.let { sv ->
+                        CompatUtil.startRevealAnim(this@MainActivity, sv, intent)
+                    } ?: startActivity(intent)
+                } else {
+                    NotifyUtil.makeText(this@MainActivity, R.string.text_search_empty, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onSearchClosed() {
+                presenter.notifyAllListeners("", false)
+            }
+        }
+        searchView?.apply {
+            setVoiceSearch(false)
+            setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchDelegate.onSearchSubmitted(query)
+                    return true
+                }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    searchDelegate.onQueryChanged(newText)
+                    return false
+                }
+            })
+            setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
+                override fun onSearchViewShown() {
+                    searchDelegate.onSearchShown()
+                }
+                override fun onSearchViewClosed() {
+                    searchDelegate.onSearchClosed()
+                }
+            })
+        }
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
         setViewModel(true)
@@ -165,23 +214,13 @@ class MainActivity :
                 requestNotificationsPermission()
             }
         }
-        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
-            override fun onQueryChanged(query: String) {
-                presenter.notifyAllListeners(query.lowercase(java.util.Locale.getDefault()), false)
-            }
-
-            override fun onSearchSubmitted(query: String) {
-                val intent = android.content.Intent(this@MainActivity, com.mxt.anitrend.view.activity.index.SearchActivity::class.java)
-                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra(KeyUtil.arg_search, query)
-                com.mxt.anitrend.util.CompatUtil.startRevealAnim(this@MainActivity, mSearchBar!!, intent)
-            }
-        }
         onActivityReady()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        searchView?.setMenuItem(searchItem)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -219,15 +258,6 @@ class MainActivity :
                 startActivity(Intent(this@MainActivity, LoggingActivity::class.java))
                 return true
             }
-            R.id.action_search -> {
-                mSearchBar?.apply {
-                    isVisible = !isVisible
-                    if (isVisible) {
-                        requestFocus()
-                    }
-                }
-                return true
-            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -263,6 +293,10 @@ class MainActivity :
         outState.putInt(KeyUtil.arg_redirect, redirectShortcut)
         outState.putInt(KeyUtil.key_navigation_selected, selectedItem)
         outState.putInt(KeyUtil.key_navigation_title, selectedTitle)
+        val text = searchView?.findViewById<TextView>(R.id.searchTextView)?.text
+        if (!text.isNullOrEmpty()) {
+            outState.putCharSequence(KEY_SEARCH_VIEW_QUERY, text)
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -271,11 +305,40 @@ class MainActivity :
         redirectShortcut = savedInstanceState.getInt(KeyUtil.arg_redirect)
         selectedItem = savedInstanceState.getInt(KeyUtil.key_navigation_selected)
         selectedTitle = savedInstanceState.getInt(KeyUtil.key_navigation_title)
+        if (savedInstanceState.containsKey(KEY_SEARCH_VIEW_QUERY)) {
+            searchView?.setQuery(savedInstanceState.getCharSequence(KEY_SEARCH_VIEW_QUERY).toString(), false)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
+            val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val searchWord = matches?.firstOrNull()
+            if (!searchWord.isNullOrEmpty()) {
+                searchView?.setQuery(searchWord, false)
+            }
+            return
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
+            return
+        }
+        if (searchView?.isSearchOpen == true) {
+            searchView?.closeSearch()
+            return
+        }
+        if (!isClosing) {
+            NotifyUtil.makeText(
+                this,
+                R.string.text_confirm_exit,
+                R.drawable.ic_home_white_24dp,
+                Toast.LENGTH_SHORT,
+            ).show()
+            isClosing = true
             return
         }
         super.onBackPressed()
@@ -586,5 +649,9 @@ class MainActivity :
                 R.color.colorAccent,
             )
         }
+    }
+
+    companion object {
+        private const val KEY_SEARCH_VIEW_QUERY = "SEARCHVIEW_QUERY"
     }
 }

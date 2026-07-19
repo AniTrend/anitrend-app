@@ -11,7 +11,6 @@ import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
@@ -100,10 +99,4 @@ class NotificationWorker(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> unwrapBody(body: Any?): T? = when (body) {
-        null -> null
-        is AniListContainer<*> -> body.data?.result as? T
-        else -> body as? T
-    }
 }

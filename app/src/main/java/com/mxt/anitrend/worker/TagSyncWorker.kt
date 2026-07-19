@@ -32,15 +32,19 @@ class TagSyncWorker(
                     ),
                 ).execute()
 
-        val data = response.body()?.data?.result
-
-        if (response.isSuccessful && !data.isNullOrEmpty()) {
-            return data
-        } else {
+        if (!response.isSuccessful) {
             Timber.e(response.apiError())
+            return emptyList()
         }
 
-        return emptyList()
+        val data: List<MediaTag>? = unwrapBody(response.body())
+
+        return if (data.isNullOrEmpty()) {
+            Timber.e("MediaTagCollection returned empty data")
+            emptyList()
+        } else {
+            data
+        }
     }
 
     /**

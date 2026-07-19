@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -53,26 +54,27 @@ class BottomSheetUsers : BottomSheetList<UserBase>() {
     override fun updateUI() {
         toolbarTitle?.text = getString(mTitle, mAdapter.itemCount)
         toolbarSearch?.visibility = View.VISIBLE
+        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+            override fun onQueryChanged(query: String?) {
+                if (!TextUtils.isEmpty(query) && mAdapter.filter != null) {
+                    mAdapter.filter.filter(query)
+                }
+            }
+
+            override fun onSearchSubmitted(query: String?) = Unit
+
+            override fun onSearchShown() {
+                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            override fun onSearchClosed() {
+                mAdapter.filter?.filter("")
+            }
+        }
         injectAdapter()
     }
 
     override fun makeRequest() = Unit
-
-    override fun onStart() {
-        super.onStart()
-        val editText = searchBar?.findViewById<android.widget.EditText>(
-            resources.getIdentifier("search_bar_text_input", "id", "com.google.android.material"),
-        )
-        editText?.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!TextUtils.isEmpty(s) && mAdapter.filter != null) {
-                    mAdapter.filter.filter(s)
-                }
-            }
-            override fun afterTextChanged(s: android.text.Editable?) {}
-        })
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
