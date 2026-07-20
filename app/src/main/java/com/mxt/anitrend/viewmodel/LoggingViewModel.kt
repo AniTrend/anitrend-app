@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import android.os.Environment
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -152,6 +153,32 @@ class LoggingViewModel(
         }
     }
 
+    /**
+     * Copies the log file to the device Downloads directory.
+     * Callers should show user-facing feedback on success/failure.
+     */
+    suspend fun saveToDownloads(): Result<Unit> = runCatching {
+        withContext(ioDispatcher) {
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS,
+            )
+            val destination = File(downloadsDir, DOWNLOADS_FILE_NAME)
+            destination.parentFile?.mkdirs()
+            logFileProvider().copyTo(destination, overwrite = true)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        runCatching {
+            val shareFile = File(
+                logFileProvider().parentFile,
+                SHARE_FILE_NAME,
+            )
+            if (shareFile.exists()) shareFile.delete()
+        }
+    }
+
     // ── private helpers ──
 
     private fun applyFilter(
@@ -169,5 +196,6 @@ class LoggingViewModel(
 
     companion object {
         const val SHARE_FILE_NAME = "anitrend-log-share.tmp"
+        private const val DOWNLOADS_FILE_NAME = "AniTrend Logcat.txt"
     }
 }

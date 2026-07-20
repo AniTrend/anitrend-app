@@ -2,32 +2,37 @@ package com.mxt.anitrend.view.activity.base
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityLoggingBinding
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.model.entity.log.LogFilter
 import com.mxt.anitrend.model.entity.log.LogUiState
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.viewmodel.LoggingViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.io.File
 
-class LoggingActivity : ActivityBase<Void, BasePresenter>() {
+class LoggingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoggingBinding
 
@@ -41,10 +46,22 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>() {
     internal lateinit var loggingViewModel: LoggingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Replicates ActivityBase.configureActivity() theme behaviour via
+        // ConfigurationUtil.onCreateAttach. Must run before super.onCreate() so
+        // the correct theme resource is locked in before setContentView().
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
+
         binding = ActivityLoggingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggingViewModel = ViewModelProvider(
             this,
@@ -60,6 +77,7 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>() {
         configureRecycler()
         configureFilterChips()
         observeViewModel()
+        bindMetadataCard()
     }
 
     private fun configureRecycler() {
@@ -73,7 +91,6 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>() {
     }
 
     private fun configureFilterChips() {
-        // Check "All" chip by default
         binding.contentLogging.filterAll.isChecked = true
 
         filterGroup.setOnCheckedStateChangeListener { group, _ ->
@@ -90,22 +107,19 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            loggingViewModel.state.collect { state ->
-                when (state) {
-                    is LogUiState.Loading -> progressLayout.showLoading()
-                    is LogUiState.Success -> {
-                        logAdapter.onItemsInserted(state.entries)
-                        updateUI()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loggingViewModel.state.collect { state ->
+                    when (state) {
+                        is LogUiState.Loading -> progressLayout.showLoading()
+                        is LogUiState.Success -> {
+                            logAdapter.onItemsInserted(state.entries)
+                            progressLayout.showContent()
+                        }
+                        is LogUiState.Error -> progressLayout.showContent()
                     }
-                    is LogUiState.Error -> updateUI()
                 }
             }
         }
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        bindMetadataCard()
     }
 
     private fun bindMetadataCard() {
@@ -137,30 +151,17 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
             R.id.action_clear_log -> {
                 loggingViewModel.clear()
             }
             R.id.action_save_log -> {
-                if (requestPermissionIfMissing(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    runCatching {
-                        val root = File(
-                            Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_DOWNLOADS,
-                            ),
-                            "AniTrend Logcat.txt",
-                        )
-                        applicationContext.logFile().copyTo(root, true)
-                    }.onFailure {
-                        Timber.e(it)
-                    }.onSuccess {
-                        NotifyUtil.createAlerter(
-                            this@LoggingActivity,
-                            R.string.text_post_information,
-                            R.string.bug_report_saved,
-                            R.drawable.ic_insert_emoticon_white_24dp,
-                            R.color.colorStateGreen,
-                        )
-                    }
+                if (requestWritePermission()) {
+                    // Permission already granted — save immediately.
+                    performSaveToDownloads()
                 }
             }
             R.id.action_share_log -> {
@@ -191,29 +192,75 @@ class LoggingActivity : ActivityBase<Void, BasePresenter>() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_PERMISSION &&
+            grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            performSaveToDownloads()
+        }
+    }
+
+    /**
+     * Copies the log file to Downloads and notifies the user on completion.
+     * Extracted so both the already-granted branch and the permission-result
+     * callback can invoke it without duplicating the coroutine + notification block.
+     */
+    private fun performSaveToDownloads() {
+        // TODO (API 29+): migrate from WRITE_EXTERNAL_STORAGE / Environment to
+        // scoped storage (MediaStore / SAF). The current path is deprecated and
+        // may stop working on future SDK levels.
+        lifecycleScope.launch {
+            loggingViewModel.saveToDownloads()
+                .onFailure { Timber.e(it) }
+                .onSuccess {
+                    NotifyUtil.createAlerter(
+                        this@LoggingActivity,
+                        R.string.text_post_information,
+                        R.string.bug_report_saved,
+                        R.drawable.ic_insert_emoticon_white_24dp,
+                        R.color.colorStateGreen,
+                    )
+                }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        onActivityReady()
+        if (!loggingViewModel.isLogLoadComplete) {
+            loggingViewModel.load()
+        }
     }
 
-    override fun onActivityReady() {
-        loggingViewModel.load()
+    private fun requestWritePermission(): Boolean {
+        return if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            true
+        } else if (!ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            )
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_PERMISSION,
+            )
+            false
+        } else {
+            false
+        }
     }
 
-    override fun updateUI() {
-        progressLayout.showContent()
-    }
-
-    override fun makeRequest() {
-        // No-op: ViewModel owns the load lifecycle
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val shareFile = File(
-            applicationContext.logFile().parentFile,
-            LoggingViewModel.SHARE_FILE_NAME,
-        )
-        if (shareFile.exists()) shareFile.delete()
+    companion object {
+        private const val REQUEST_PERMISSION = 102
     }
 }
