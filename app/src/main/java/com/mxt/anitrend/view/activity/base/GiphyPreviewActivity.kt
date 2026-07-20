@@ -1,11 +1,14 @@
 package com.mxt.anitrend.view.activity.base
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -27,6 +30,42 @@ import com.mxt.anitrend.util.NotifyUtil
 class GiphyPreviewActivity :
     ActivityBase<Void, BasePresenter>(),
     RequestListener<Drawable> {
+
+    /**
+     * Navigation args for [GiphyPreviewActivity]. Use [newIntent] to build and
+     * [fromIntent] to read. Wire format key: [KeyUtil.arg_model].
+     */
+    data class Args(val modelUrl: String)
+
+    companion object {
+        /**
+         * Builds an [Intent] for [GiphyPreviewActivity] with the image URL as the
+         * [KeyUtil.arg_model] extra.
+         */
+        fun newIntent(context: Context, modelUrl: String): Intent =
+            Intent(context, GiphyPreviewActivity::class.java).apply {
+                putExtra(KeyUtil.arg_model, modelUrl)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+        /**
+         * Reads [Args] from an intent that was built with [newIntent].
+         * Returns `null` for missing or empty model URLs (preserving the existing
+         * graceful-degrade behaviour).
+         */
+        fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
+
+        /**
+         * Pure parsing helper: converts a raw model URL string to [Args], returning
+         * `null` for null / empty input. Extracted so tests can exercise the
+         * production parsing logic without needing a real [Intent].
+         */
+        @VisibleForTesting
+        internal fun parseArgs(raw: String?): Args? {
+            return if (!raw.isNullOrEmpty()) Args(raw) else null
+        }
+    }
+
     private lateinit var binding: ActivityGiphyPreviewBinding
 
     @Suppress("DEPRECATION")
@@ -44,11 +83,11 @@ class GiphyPreviewActivity :
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        val modelUrl = intent.getStringExtra(KeyUtil.arg_model)
-        if (!modelUrl.isNullOrEmpty()) {
+        val args = fromIntent(intent)
+        if (args != null) {
             Glide
                 .with(this)
-                .load(modelUrl)
+                .load(args.modelUrl)
                 .listener(this)
                 .into(binding.previewImage)
         } else {

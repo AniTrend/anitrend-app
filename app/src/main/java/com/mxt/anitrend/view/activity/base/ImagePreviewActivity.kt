@@ -13,6 +13,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
@@ -54,9 +55,16 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
          * Returns `null` for missing or empty model URLs (preserving the existing
          * graceful-degrade behaviour).
          */
-        fun fromIntent(intent: Intent): Args? {
-            val modelUrl = intent.getStringExtra(KeyUtil.arg_model)
-            return if (!modelUrl.isNullOrEmpty()) Args(modelUrl) else null
+        fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
+
+        /**
+         * Pure parsing helper: converts a raw model URL string to [Args], returning
+         * `null` for null / empty input. Extracted so tests can exercise the
+         * production parsing logic without needing a real [Intent].
+         */
+        @VisibleForTesting
+        internal fun parseArgs(raw: String?): Args? {
+            return if (!raw.isNullOrEmpty()) Args(raw) else null
         }
     }
 

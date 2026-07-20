@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -41,9 +42,16 @@ class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
          * Returns `null` for missing or empty content links (preserving the existing
          * graceful-degrade behaviour).
          */
-        fun fromIntent(intent: Intent): Args? {
-            val contentLink = intent.getStringExtra(KeyUtil.arg_model)
-            return if (!contentLink.isNullOrEmpty()) Args(contentLink) else null
+        fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
+
+        /**
+         * Pure parsing helper: converts a raw content-link string to [Args],
+         * returning `null` for null / empty input. Extracted so tests can exercise
+         * the production parsing logic without needing a real [Intent].
+         */
+        @VisibleForTesting
+        internal fun parseArgs(raw: String?): Args? {
+            return if (!raw.isNullOrEmpty()) Args(raw) else null
         }
     }
 

@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -129,10 +128,10 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
         activity?.let { host ->
             val index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE
             val giphySample: Gif? = data.value.images[index]
-            val intent =
-                Intent(host, GiphyPreviewActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_model, giphySample?.url)
-                }
+            // Empty-string sentinel: when giphySample?.url is null, the
+            // empty string triggers fromIntent → null → error toast in
+            // GiphyPreviewActivity, preserving pre-existing behaviour.
+            val intent = GiphyPreviewActivity.newIntent(host, giphySample?.url ?: "")
             host.startActivity(intent)
         }
     }
