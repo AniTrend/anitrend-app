@@ -163,11 +163,7 @@ constructor(
         val content = data.value
         when (type) {
             RegexUtil.KEY_IMG -> {
-                val intent =
-                    Intent(context, ImagePreviewActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_model, content)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
+                val intent = ImagePreviewActivity.newIntent(context, content)
                 context.startActivity(intent)
             }
             RegexUtil.KEY_WEB -> {

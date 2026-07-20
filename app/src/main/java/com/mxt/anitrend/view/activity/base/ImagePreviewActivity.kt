@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.activity.base
 
 import android.Manifest
 import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -29,6 +30,36 @@ import timber.log.Timber
  * ImagePreviewActivity
  */
 class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
+
+    /**
+     * Navigation args for [ImagePreviewActivity]. Use [newIntent] to build and
+     * [fromIntent] to read. Wire format key: [KeyUtil.arg_model].
+     */
+    data class Args(val modelUrl: String)
+
+    companion object {
+        /**
+         * Builds an [Intent] for [ImagePreviewActivity] with the image URL as the
+         * [KeyUtil.arg_model] extra. Includes [Intent.FLAG_ACTIVITY_NEW_TASK] so
+         * callers from non-Activity contexts (custom views, widgets) work correctly.
+         */
+        fun newIntent(context: Context, modelUrl: String): Intent =
+            Intent(context, ImagePreviewActivity::class.java).apply {
+                putExtra(KeyUtil.arg_model, modelUrl)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+        /**
+         * Reads [Args] from an intent that was built with [newIntent].
+         * Returns `null` for missing or empty model URLs (preserving the existing
+         * graceful-degrade behaviour).
+         */
+        fun fromIntent(intent: Intent): Args? {
+            val modelUrl = intent.getStringExtra(KeyUtil.arg_model)
+            return if (!modelUrl.isNullOrEmpty()) Args(modelUrl) else null
+        }
+    }
+
     private lateinit var binding: ActivityImagePreviewBinding
 
     private var imageUri: String? = null
@@ -58,10 +89,10 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        val modelUrl = intent.getStringExtra(KeyUtil.arg_model)
-        if (!modelUrl.isNullOrEmpty()) {
-            imageUri = modelUrl
-            Glide.with(this).load(modelUrl).into(binding.previewImage)
+        val args = fromIntent(intent)
+        if (args != null) {
+            imageUri = args.modelUrl
+            Glide.with(this).load(args.modelUrl).into(binding.previewImage)
         } else {
             NotifyUtil
                 .makeText(

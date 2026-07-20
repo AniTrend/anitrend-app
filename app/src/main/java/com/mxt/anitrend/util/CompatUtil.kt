@@ -76,11 +76,7 @@ object CompatUtil {
     fun imagePreview(view: View, imageUri: String) {
         if (imageUri.isNotBlank()) {
             val context = view.context
-            val intent = Intent(context, ImagePreviewActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(KeyUtil.arg_model, imageUri)
-            // if (context is FragmentActivity)
-            //    startSharedImageTransition(context, view, intent, R.string.transition_image_preview)
+            val intent = ImagePreviewActivity.newIntent(context, imageUri)
             context.startActivity(intent)
         }
     }
