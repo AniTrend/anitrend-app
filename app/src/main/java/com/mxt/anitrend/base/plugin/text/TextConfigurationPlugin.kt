@@ -1,12 +1,10 @@
 package com.mxt.anitrend.base.plugin.text
 
-import android.content.Intent
 import android.view.View
 import android.webkit.MimeTypeMap
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
 import com.mxt.anitrend.view.sheet.BottomSheetSpoiler
 import io.noties.markwon.*
@@ -35,9 +33,7 @@ internal class TextConfigurationPlugin private constructor() : AbstractMarkwonPl
                 } else {
                     val mediaType = MimeTypeMap.getFileExtensionFromUrl(link)
                     if (mediaType.matches(regex)) {
-                        val intent = Intent(view.context, VideoPlayerActivity::class.java)
-                        intent.putExtra(KeyUtil.arg_model, link)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        val intent = VideoPlayerActivity.newIntent(view.context, link)
                         view.context.startActivity(intent)
                     } else {
                         super.resolve(view, link)

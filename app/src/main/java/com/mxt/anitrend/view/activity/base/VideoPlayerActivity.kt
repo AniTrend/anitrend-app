@@ -1,5 +1,7 @@
 package com.mxt.anitrend.view.activity.base
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.media3.common.MediaItem
@@ -16,6 +18,35 @@ import timber.log.Timber
 
 class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
 
+    /**
+     * Navigation args for [VideoPlayerActivity]. Use [newIntent] to build and
+     * [fromIntent] to read. Wire format key: [KeyUtil.arg_model].
+     */
+    data class Args(val contentLink: String)
+
+    companion object {
+        /**
+         * Builds an [Intent] for [VideoPlayerActivity] with the content URL as the
+         * [KeyUtil.arg_model] extra. Includes [Intent.FLAG_ACTIVITY_NEW_TASK] so
+         * callers from non-Activity contexts (custom views, widgets) work correctly.
+         */
+        fun newIntent(context: Context, contentLink: String): Intent =
+            Intent(context, VideoPlayerActivity::class.java).apply {
+                putExtra(KeyUtil.arg_model, contentLink)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+        /**
+         * Reads [Args] from an intent that was built with [newIntent].
+         * Returns `null` for missing or empty content links (preserving the existing
+         * graceful-degrade behaviour).
+         */
+        fun fromIntent(intent: Intent): Args? {
+            val contentLink = intent.getStringExtra(KeyUtil.arg_model)
+            return if (!contentLink.isNullOrEmpty()) Args(contentLink) else null
+        }
+    }
+
     private var contentLink: String? = null
     private var player: ExoPlayer? = null
     private lateinit var binding: ActivityVideoPlayerBinding
@@ -25,8 +56,9 @@ class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (intent.hasExtra(KeyUtil.arg_model)) {
-            contentLink = intent.getStringExtra(KeyUtil.arg_model)
+        val args = fromIntent(intent)
+        if (args != null) {
+            contentLink = args.contentLink
             onActivityReady()
         } else {
             NotifyUtil.makeText(
