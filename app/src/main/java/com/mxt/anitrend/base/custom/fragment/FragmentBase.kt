@@ -20,6 +20,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
@@ -116,7 +117,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onPause(null)
         }
-        presenterRef?.onPause(this)
+        KoinExt.get(Settings::class.java).unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onResume() {
@@ -124,7 +125,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onResume(null)
         }
-        presenterRef?.onResume(this)
+        KoinExt.get(Settings::class.java).registerOnSharedPreferenceChangeListener(this)
     }
 
     @Deprecated("Deprecated in Java")

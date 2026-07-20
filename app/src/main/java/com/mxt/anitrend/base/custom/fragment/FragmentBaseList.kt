@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
+import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.databinding.FragmentListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -46,6 +48,13 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
 
     protected lateinit var mAdapter: RecyclerViewAdapter<M>
     protected lateinit var mLayoutManager: StaggeredGridLayoutManager
+
+    /**
+     * Standalone pagination collaborator for scroll detection and page tracking.
+     * Replaces the presenter-as-scroll-listener coupling.
+     * Initialized at declaration to survive view recreation across back-stack transitions.
+     */
+    protected val mScrollListener: RecyclerScrollListener = RecyclerScrollListener()
 
     private val stateLayoutOnClick =
         View.OnClickListener {
@@ -113,8 +122,8 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         super.onSaveInstanceState(outState)
         outState.putBoolean(KeyUtil.key_pagination, isPager)
         outState.putInt(KeyUtil.key_columns, mColumnSize)
-        outState.putInt(KeyUtil.arg_page, presenter.currentPage)
-        outState.putInt(KeyUtil.arg_page_offset, presenter.currentOffset)
+        outState.putInt(KeyUtil.arg_page, mScrollListener.currentPage)
+        outState.putInt(KeyUtil.arg_page_offset, mScrollListener.currentOffset)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -122,16 +131,20 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         savedInstanceState?.let { state ->
             isPager = state.getBoolean(KeyUtil.key_pagination)
             mColumnSize = state.getInt(KeyUtil.key_columns)
-            presenter.currentPage = state.getInt(KeyUtil.arg_page)
-            presenter.currentOffset = state.getInt(KeyUtil.arg_page_offset)
+            mScrollListener.currentPage = state.getInt(KeyUtil.arg_page)
+            mScrollListener.currentOffset = state.getInt(KeyUtil.arg_page_offset)
+            // Compatibility shim: sync restored pagination state to presenter
+            // so concrete subclasses reading presenter.currentPage still work
+            presenter.currentPage = mScrollListener.currentPage
+            presenter.currentOffset = mScrollListener.currentOffset
         }
     }
 
     protected fun addScrollLoadTrigger() {
         if (isPager) {
             if (!recyclerView.hasOnScrollListener()) {
-                presenter.initListener(mLayoutManager, this)
-                recyclerView.addOnScrollListener(presenter)
+                mScrollListener.initListener(mLayoutManager, this)
+                recyclerView.addOnScrollListener(mScrollListener)
             }
         }
     }
@@ -160,7 +173,7 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         if (swipeRefreshLayout.isLoading()) {
             swipeRefreshLayout.setLoading(false)
         }
-        if (presenter.currentPage > 1 && isPager) {
+        if (mScrollListener.currentPage > 1 && isPager) {
             if (stateLayout.isLoading) {
                 stateLayout.showContent()
             }
@@ -188,7 +201,7 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         if (swipeRefreshLayout.isLoading()) {
             swipeRefreshLayout.setLoading(false)
         }
-        if (presenter.currentPage > 1 && isPager) {
+        if (mScrollListener.currentPage > 1 && isPager) {
             if (stateLayout.isLoading) {
                 stateLayout.showContent()
             }
@@ -212,12 +225,27 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
         stateLayout.showContent()
     }
 
+    /**
+     * Migration seam: sets page info on both the standalone scroll listener and the
+     * presenter. Prefer this over calling [CommonPresenter.setPageInfo] directly when
+     * setting page info outside [onPostProcessed] (e.g. in [onChanged] overrides that
+     * bypass the standard data pipeline). The central sync in [onPostProcessed] already
+     * covers the standard path.
+     *
+     * @param pageInfo The page info from the API response, or null to reset.
+     */
+    protected fun setPageInfo(pageInfo: PageInfo?) {
+        mScrollListener.setPageInfo(pageInfo)
+        // Keep presenter in sync for backward compat with concrete subclasses
+        presenter.setPageInfo(pageInfo)
+    }
+
     fun showLoading() {
         stateLayout.showLoading()
     }
 
     fun setLimitReached() {
-        if (presenter.currentPage != 0) {
+        if (mScrollListener.currentPage != 0) {
             swipeRefreshLayout.setLoading(false)
             isLimit = true
         }
@@ -236,6 +264,9 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
 
     override fun onRefresh() {
         isLimit = false
+        mScrollListener.onRefreshPage()
+        // Compatibility shim: keep presenter pagination in sync for concrete subclasses
+        // that still read presenter.currentPage in makeRequest()
         presenter.onRefreshPage()
         makeRequest()
     }
@@ -243,6 +274,11 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     override fun onLoad() = Unit
 
     override fun onLoadMore() {
+        // Compatibility shim: sync pagination state from standalone scroll listener
+        // to presenter so concrete subclasses reading presenter.currentPage in makeRequest()
+        // get the correct page number after a scroll-triggered page advance.
+        presenter.currentPage = mScrollListener.currentPage
+        presenter.currentOffset = mScrollListener.currentOffset
         swipeRefreshLayout.setLoading(true)
         makeRequest()
     }
@@ -285,6 +321,11 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     }
 
     protected fun onPostProcessed(content: List<M>?) {
+        // Centrally sync pageInfo from presenter to standalone scroll listener.
+        // Concrete subclasses call presenter.setPageInfo(...) in onChanged() before
+        // reaching this method. This ensures mScrollListener knows when the last
+        // page is reached for correct scroll-stop behaviour.
+        mScrollListener.setPageInfo(presenter.getPageInfo())
         if (!CompatUtil.isEmpty(content)) {
             val items = content ?: emptyList()
             if (isPager && !swipeRefreshLayout.isRefreshing()) {

@@ -265,7 +265,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
             EventBus.getDefault().unregister(this)
         }
         mediaActionUtil?.onPause(null)
-        presenterRef?.onPause(null)
     }
 
     /**
@@ -277,7 +276,6 @@ abstract class ActivityBase<M, P : CommonPresenter> :
         super.onResume()
         configurationUtil?.onResumeAttach(this)
         mediaActionUtil?.onResume(null)
-        presenterRef?.onResume(null)
     }
 
     override fun onDestroy() {
