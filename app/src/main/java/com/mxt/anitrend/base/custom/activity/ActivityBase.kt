@@ -314,10 +314,21 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     @Suppress("UNCHECKED_CAST")
     override fun getPresenter(): P = presenter
 
+    @Deprecated(
+        "Inject collaborators into concrete activities instead of attaching presenters. " +
+            "See LoggingActivity as the proven activity-side migration shape.",
+        level = DeprecationLevel.WARNING,
+    )
     fun setPresenter(presenter: P) {
         presenterRef = presenter
     }
 
+    @Deprecated(
+        "Use direct androidx.lifecycle.ViewModel subclasses with ViewModelProvider " +
+            "(or later Koin by viewModel()) instead of the legacy ViewModelBase wrapper. " +
+            "See LoggingActivity for the proven pattern.",
+        level = DeprecationLevel.WARNING,
+    )
     @Suppress("UNCHECKED_CAST")
     protected fun setViewModel(stateSupported: Boolean) {
         if (viewModelRef == null) {

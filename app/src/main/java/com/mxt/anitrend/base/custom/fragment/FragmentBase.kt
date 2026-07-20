@@ -157,10 +157,22 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onClick(v: View) = Unit
 
+    @Deprecated(
+        "Do not attach a presenter in new fragments. Inject collaborators instead. " +
+            "See AGENTS.md (ViewModel-first architecture) for the migration direction.",
+        level = DeprecationLevel.WARNING,
+    )
     fun setPresenter(presenter: P) {
         presenterRef = presenter
     }
 
+    @Deprecated(
+        "Use direct androidx.lifecycle.ViewModel subclasses with ViewModelProvider " +
+            "(or later Koin by viewModel() / activityViewModel()) instead of the " +
+            "legacy ViewModelBase wrapper. See AGENTS.md (ViewModel-first architecture) " +
+            "for the migration direction.",
+        level = DeprecationLevel.WARNING,
+    )
     @Suppress("UNCHECKED_CAST")
     protected fun setViewModel(stateSupported: Boolean) {
         if (viewModelRef == null) {
