@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -14,58 +15,39 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityImagePreviewBinding
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import timber.log.Timber
 
-/**
- * Created by max on 2017/11/14.
- * ImagePreviewActivity
- */
-class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
+class ImagePreviewActivity : AppCompatActivity() {
 
-    /**
-     * Navigation args for [ImagePreviewActivity]. Use [newIntent] to build and
-     * [fromIntent] to read. Wire format key: [KeyUtil.arg_model].
-     */
     data class Args(val modelUrl: String)
 
     companion object {
-        /**
-         * Builds an [Intent] for [ImagePreviewActivity] with the image URL as the
-         * [KeyUtil.arg_model] extra. Includes [Intent.FLAG_ACTIVITY_NEW_TASK] so
-         * callers from non-Activity contexts (custom views, widgets) work correctly.
-         */
         fun newIntent(context: Context, modelUrl: String): Intent =
             Intent(context, ImagePreviewActivity::class.java).apply {
                 putExtra(KeyUtil.arg_model, modelUrl)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 
-        /**
-         * Reads [Args] from an intent that was built with [newIntent].
-         * Returns `null` for missing or empty model URLs (preserving the existing
-         * graceful-degrade behaviour).
-         */
         fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
 
-        /**
-         * Pure parsing helper: converts a raw model URL string to [Args], returning
-         * `null` for null / empty input. Extracted so tests can exercise the
-         * production parsing logic without needing a real [Intent].
-         */
         @VisibleForTesting
         internal fun parseArgs(raw: String?): Args? {
             return if (!raw.isNullOrEmpty()) Args(raw) else null
         }
+
+        private const val REQUEST_PERMISSION = 102
     }
 
     private lateinit var binding: ActivityImagePreviewBinding
@@ -79,7 +61,16 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
+        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
+
         binding = ActivityImagePreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -93,22 +84,18 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                 .setDuration(500)
                 .setInterpolator(DecelerateInterpolator())
         }
-    }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
         val args = fromIntent(intent)
         if (args != null) {
             imageUri = args.modelUrl
             Glide.with(this).load(args.modelUrl).into(binding.previewImage)
         } else {
-            NotifyUtil
-                .makeText(
-                    this,
-                    R.string.layout_empty_response,
-                    R.drawable.ic_warning_white_18dp,
-                    Toast.LENGTH_SHORT,
-                ).show()
+            NotifyUtil.makeText(
+                this,
+                R.string.layout_empty_response,
+                R.drawable.ic_warning_white_18dp,
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 
@@ -123,18 +110,13 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
         when (item.itemId) {
             R.id.image_preview_download -> {
                 val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    null // Scoped storage doesn't require WRITE_EXTERNAL_STORAGE
+                    null
                 } else {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 }
-
-                if (permission == null || requestPermissionIfMissing(permission)) {
+                if (permission == null || requestWritePermission(permission)) {
                     downloadAttachment()
-                } else if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        this,
-                        permission,
-                    )
-                ) {
+                } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                     DialogUtil.createMessage(
                         this,
                         R.string.title_permission_write,
@@ -162,10 +144,7 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
             }
             R.id.image_preview_link -> {
                 return try {
-                    val intent =
-                        Intent(Intent.ACTION_VIEW).apply {
-                            data = Uri.parse(imageUri)
-                        }
+                    val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(imageUri) }
                     startActivity(intent)
                     true
                 } catch (e: Exception) {
@@ -178,18 +157,31 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
         return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
-        updateUI()
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_PERMISSION &&
+            grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+            permissions.isNotEmpty() &&
+            permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) {
+            downloadAttachment()
+        }
     }
 
-    override fun updateUI() {
-    }
-
-    override fun makeRequest() {
+    private fun requestWritePermission(permission: String): Boolean {
+        return if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+            true
+        } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_PERMISSION)
+            false
+        } else {
+            false
+        }
     }
 
     private fun downloadAttachment() {
@@ -223,14 +215,6 @@ class ImagePreviewActivity : ActivityBase<Void, BasePresenter>() {
                 R.color.colorStateRed,
                 KeyUtil.DURATION_SHORT,
             )
-        }
-    }
-
-    override fun onPermissionGranted(permission: String) {
-        super.onPermissionGranted(permission)
-        val writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-        if (permission == writePermission) {
-            downloadAttachment()
         }
     }
 }

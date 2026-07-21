@@ -5,19 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityVideoPlayerBinding
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import timber.log.Timber
 
-class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
+class VideoPlayerActivity : AppCompatActivity() {
 
     /**
      * Navigation args for [VideoPlayerActivity]. Use [newIntent] to build and
@@ -26,29 +27,14 @@ class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
     data class Args(val contentLink: String)
 
     companion object {
-        /**
-         * Builds an [Intent] for [VideoPlayerActivity] with the content URL as the
-         * [KeyUtil.arg_model] extra. Includes [Intent.FLAG_ACTIVITY_NEW_TASK] so
-         * callers from non-Activity contexts (custom views, widgets) work correctly.
-         */
         fun newIntent(context: Context, contentLink: String): Intent =
             Intent(context, VideoPlayerActivity::class.java).apply {
                 putExtra(KeyUtil.arg_model, contentLink)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 
-        /**
-         * Reads [Args] from an intent that was built with [newIntent].
-         * Returns `null` for missing or empty content links (preserving the existing
-         * graceful-degrade behaviour).
-         */
         fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
 
-        /**
-         * Pure parsing helper: converts a raw content-link string to [Args],
-         * returning `null` for null / empty input. Extracted so tests can exercise
-         * the production parsing logic without needing a real [Intent].
-         */
         @VisibleForTesting
         internal fun parseArgs(raw: String?): Args? {
             return if (!raw.isNullOrEmpty()) Args(raw) else null
@@ -60,14 +46,23 @@ class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
     private lateinit var binding: ActivityVideoPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
+
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val args = fromIntent(intent)
         if (args != null) {
             contentLink = args.contentLink
-            onActivityReady()
+            startPlayer(args.contentLink)
         } else {
             NotifyUtil.makeText(
                 this,
@@ -78,24 +73,7 @@ class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        player?.playWhenReady = true
-    }
-
-    override fun onStop() {
-        super.onStop()
-        player?.playWhenReady = false
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        player?.release()
-        player = null
-    }
-
-    override fun onActivityReady() {
-        val link = contentLink ?: return
+    private fun startPlayer(link: String) {
         player = ExoPlayer.Builder(this).build().also { exoPlayer ->
             binding.videoPlayer.player = exoPlayer
             val mediaItem = MediaItem.fromUri(link)
@@ -123,11 +101,19 @@ class VideoPlayerActivity : ActivityBase<Void, BasePresenter>() {
         }
     }
 
-    override fun updateUI() {
-        // Player starts automatically when prepared
+    override fun onStart() {
+        super.onStart()
+        player?.playWhenReady = true
     }
 
-    override fun makeRequest() {}
+    override fun onStop() {
+        super.onStop()
+        player?.playWhenReady = false
+    }
 
-    override fun onChanged(model: Void?) {}
+    override fun onDestroy() {
+        super.onDestroy()
+        player?.release()
+        player = null
+    }
 }
