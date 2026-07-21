@@ -57,7 +57,6 @@ import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -99,11 +98,6 @@ class MainActivity :
 
     /** @see ActivityBase.showBottomSheet */
     internal var mBottomSheet: BottomSheetBase<*>? = null
-
-    private var mPresenter: BasePresenter? = null
-
-    /** Local presenter field for remaining call sites; kept internal for flavor extension functions. */
-    internal val presenter get() = requireNotNull(mPresenter)
 
     private val offScreenLimit = 3
 
@@ -230,7 +224,6 @@ class MainActivity :
             })
         }
         setSupportActionBar(mToolbar)
-        mPresenter = BasePresenter(applicationContext)
         mainViewModel = ViewModelProvider(
             this,
             object : ViewModelProvider.Factory {
@@ -728,7 +721,6 @@ class MainActivity :
             setOnSearchViewListener(null)
         }
         mediaActionUtil?.onDestroy()
-        mPresenter?.onDestroy()
         super.onDestroy()
     }
 
