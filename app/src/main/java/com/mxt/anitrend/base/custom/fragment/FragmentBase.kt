@@ -169,8 +169,8 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     @Deprecated(
         "Use direct androidx.lifecycle.ViewModel subclasses with ViewModelProvider " +
             "(or later Koin by viewModel() / activityViewModel()) instead of the " +
-            "legacy ViewModelBase wrapper. See AGENTS.md (ViewModel-first architecture) " +
-            "for the migration direction.",
+            "legacy ViewModelBase wrapper. " +
+            "See StaffOverviewFragment and StudioMediaFragment for proven fragment-side patterns.",
         level = DeprecationLevel.WARNING,
     )
     @Suppress("UNCHECKED_CAST")

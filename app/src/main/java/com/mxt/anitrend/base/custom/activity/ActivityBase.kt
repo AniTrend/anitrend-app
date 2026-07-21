@@ -326,7 +326,7 @@ abstract class ActivityBase<M, P : CommonPresenter> :
     @Deprecated(
         "Use direct androidx.lifecycle.ViewModel subclasses with ViewModelProvider " +
             "(or later Koin by viewModel()) instead of the legacy ViewModelBase wrapper. " +
-            "See LoggingActivity for the proven pattern.",
+            "See StudioActivity and LoggingActivity for proven activity-side patterns.",
         level = DeprecationLevel.WARNING,
     )
     @Suppress("UNCHECKED_CAST")

@@ -17,8 +17,19 @@ import timber.log.Timber
 /**
  * Created by max on 2017/10/14.
  * View model abstraction contains the generic data model
+ *
+ * @deprecated Use direct [androidx.lifecycle.ViewModel] subclasses with [StateFlow] instead.
+ * Proven replacements in this repo:
+ * - [com.mxt.anitrend.viewmodel.LoggingViewModel] for local-activity pattern
+ * - [com.mxt.anitrend.viewmodel.StudioViewModel] for API-backed activity pattern
+ * - [com.mxt.anitrend.viewmodel.StaffOverviewViewModel] and
+ *   [com.mxt.anitrend.viewmodel.StudioMediaViewModel] for fragment-side patterns
  */
-
+@Deprecated(
+    "Use direct ViewModel with StateFlow. See LoggingViewModel, StudioViewModel, " +
+        "StaffOverviewViewModel, StudioMediaViewModel for proven patterns.",
+    level = DeprecationLevel.WARNING,
+)
 class ViewModelBase<T> :
     ViewModel(),
     RetroCallback<T> {
