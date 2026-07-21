@@ -5,47 +5,122 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
+import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
 import com.mxt.anitrend.model.entity.base.CharacterBase
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.viewmodel.CharacterViewModel
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
  * Created by max on 2017/12/14.
  * character activity
  */
-class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
+class CharacterActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityPagerGenericBinding
 
+    private var model: CharacterBase? = null
+    private var characterId: Long = 0
     private var favouriteWidget: FavouriteToolbarWidget? = null
+    private lateinit var characterViewModel: CharacterViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
+
+        // Process deep links (e.g. anilist.co/character/{id}) so arg_id is injected
+        // into the intent before we read it. Previously handled by
+        // ActivityBase.onCreate -> IntentBundleUtil.checkIntentData.
+        IntentBundleUtil(intent).checkIntentData(this)
+
         binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
-        setPresenter(BasePresenter(this))
-        setViewModel(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         if (intent.hasExtra(KeyUtil.arg_id)) {
-            id = intent.getLongExtra(KeyUtil.arg_id, -1)
+            characterId = intent.getLongExtra(KeyUtil.arg_id, -1)
+        }
+
+        characterViewModel = ViewModelProvider(
+            this,
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
+                    CharacterViewModel(
+                        characterService = WebFactory.createService(
+                            CharacterModel::class.java,
+                            applicationContext,
+                        ),
+                    ) as T
+            },
+        )[CharacterViewModel::class.java]
+
+        observeViewModel()
+        setUpPager()
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                characterViewModel.state.collect { state ->
+                    when (state) {
+                        is CharacterViewModel.UiState.Loading -> { /* content loads below */ }
+                        is CharacterViewModel.UiState.Success -> {
+                            model = state.character
+                            updateUI()
+                        }
+                        is CharacterViewModel.UiState.Error -> {
+                            NotifyUtil.makeText(
+                                this@CharacterActivity,
+                                state.message,
+                                R.drawable.ic_warning_white_18dp,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
+                    }
+                }
+            }
         }
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        viewModel?.params?.putLong(KeyUtil.arg_id, id)
-        onActivityReady()
+    private fun setUpPager() {
+        val pageAdapter =
+            CharacterPageAdapter(this, applicationContext).apply {
+                params = intent.extras ?: Bundle.EMPTY
+            }
+        binding.contentMain.pageContainer.adapter = pageAdapter
+        binding.contentMain.pageContainer.offscreenPageLimit = 3
+        TabLayoutMediator(binding.customTab.smartTab, binding.contentMain.pageContainer) { tab, position ->
+            tab.text = pageAdapter.getPageTitle(position)
+        }.attach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val isAuth = presenter.settings.isAuthenticated
+        val isAuth = KoinExt.get(Settings::class.java).isAuthenticated
         menuInflater.inflate(R.menu.custom_menu, menu)
         menu.findItem(R.id.action_favourite).isVisible = isAuth
         if (isAuth) {
@@ -53,18 +128,18 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
             favouriteWidget = favouriteMenuItem.actionView as? FavouriteToolbarWidget
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
-            } else {
-                getModel()?.let { model ->
-                    favouriteWidget?.setModel(model)
-                }
             }
         }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val model = getModel()
-        if (model != null) {
+        if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            return true
+        }
+        val current = model
+        if (current != null) {
             when (item.itemId) {
                 R.id.action_share -> {
                     val intent =
@@ -74,13 +149,19 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
                                 String.format(
                                     Locale.getDefault(),
                                     "%s - %s",
-                                    model.name?.fullName ?: "",
-                                    model.siteUrl ?: "",
+                                    current.name?.fullName ?: "",
+                                    current.siteUrl ?: "",
                                 ),
                             )
                             type = "text/plain"
                         }
-                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
+                    startActivity(
+                        Intent.createChooser(
+                            intent,
+                            getString(R.string.abc_shareactionprovider_share_with),
+                        ),
+                    )
+                    return true
                 }
             }
         } else {
@@ -94,46 +175,14 @@ class CharacterActivity : ActivityBase<CharacterBase, BasePresenter>() {
         return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
-        val pageAdapter =
-            CharacterPageAdapter(this, applicationContext).apply {
-                params = viewModel?.params ?: Bundle.EMPTY
-            }
-        binding.contentMain.pageContainer.adapter = pageAdapter
-        binding.contentMain.pageContainer.offscreenPageLimit = offScreenLimit
-        TabLayoutMediator(binding.customTab.smartTab, binding.contentMain.pageContainer) { tab, position ->
-            tab.text = pageAdapter.getPageTitle(position)
-        }.attach()
-    }
-
     override fun onResume() {
         super.onResume()
-        if (getModel() == null) {
-            makeRequest()
-        } else {
-            updateUI()
-        }
+        characterViewModel.load(characterId)
     }
 
-    override fun updateUI() {
-        getModel()?.let { model ->
-            favouriteWidget?.setModel(model)
+    private fun updateUI() {
+        model?.let { current ->
+            favouriteWidget?.setModel(current)
         }
-    }
-
-    override fun makeRequest() {
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-        }
-        viewModel?.requestData(KeyUtil.CHARACTER_BASE_REQ, applicationContext)
-    }
-
-    override fun onChanged(model: CharacterBase?) {
-        super.onChanged(model)
-        updateUI()
     }
 }
