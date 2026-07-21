@@ -26,7 +26,6 @@ class NotificationActivity : ActivityBase<Void, BasePresenter>() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        setPresenter(BasePresenter(this))
         onActivityReady()
     }
 

@@ -89,10 +89,8 @@ class SharedContentActivity :
         binding = ActivityShareContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bottomSheetBehavior = BottomSheetBehavior.from(binding.designBottomSheet)
-        setPresenter(BasePresenter(applicationContext))
         toolbarBinding = binding.customSheetToolbar
         binding.sheetSharePostTypeApprove.setOnClickListener { getItemSelected() }
-        setViewModel(true)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

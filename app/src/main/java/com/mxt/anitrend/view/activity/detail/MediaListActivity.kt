@@ -30,9 +30,7 @@ class MediaListActivity : ActivityBase<User, BasePresenter>() {
         super.onCreate(savedInstanceState)
         binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setPresenter(BasePresenter(this))
         setSupportActionBar(binding.customToolbar.toolbar)
-        setViewModel(true)
         mediaType = bundle?.getString(KeyUtil.arg_mediaType)
     }
 

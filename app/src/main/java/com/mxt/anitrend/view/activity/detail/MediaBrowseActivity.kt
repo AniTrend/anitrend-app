@@ -24,8 +24,6 @@ class MediaBrowseActivity : ActivityBase<MediaBase, MediaPresenter>() {
         binding = ActivityFrameGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
-        setViewModel(true)
-        setPresenter(MediaPresenter(this))
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

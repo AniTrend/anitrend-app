@@ -21,8 +21,6 @@ class FavouriteActivity : ActivityBase<Favourite, BasePresenter>() {
         binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
-        setPresenter(BasePresenter(this))
-        setViewModel(true)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

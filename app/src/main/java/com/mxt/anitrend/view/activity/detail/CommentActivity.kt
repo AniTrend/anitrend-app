@@ -26,7 +26,6 @@ class CommentActivity : ActivityBase<FeedList, BasePresenter>() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        setPresenter(BasePresenter(this))
         onActivityReady()
     }
 

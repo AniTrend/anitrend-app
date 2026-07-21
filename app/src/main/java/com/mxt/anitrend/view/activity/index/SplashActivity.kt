@@ -29,7 +29,6 @@ class SplashActivity : ActivityBase<Nothing, BasePresenter>() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setPresenter(BasePresenter(this))
-        setViewModel(true)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
