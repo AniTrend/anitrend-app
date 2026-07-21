@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
@@ -32,20 +33,23 @@ import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
-import com.mxt.anitrend.base.custom.activity.ActivityBase
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
-import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
+import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
@@ -60,6 +64,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
+import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
@@ -80,11 +85,27 @@ import java.util.Locale
  */
 
 class MainActivity :
-    ActivityBase<User, BasePresenter>(),
+    AppCompatActivity(),
     View.OnClickListener,
     BaseConsumer.onRequestModelChange<User>,
     NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+
+    // --- Fields carried over from ActivityBase shell ---
+    private var mediaActionUtil: MediaActionUtil? = null
+
+    private var currentTheme: String? = null
+    private var currentLocale: String? = null
+
+    /** @see ActivityBase.showBottomSheet */
+    internal var mBottomSheet: BottomSheetBase<*>? = null
+
+    private var mPresenter: BasePresenter? = null
+
+    /** Local presenter field for remaining call sites; kept internal for flavor extension functions. */
+    internal val presenter get() = requireNotNull(mPresenter)
+
+    private val offScreenLimit = 3
 
     private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
         binding.appBarMain.customToolbar.toolbar
@@ -160,13 +181,15 @@ class MainActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        configureActivity()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         searchView = binding.appBarMain.customToolbar.searchView
         val searchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
             override fun onQueryChanged(query: String?) {
-                presenter.notifyAllListeners(query?.lowercase(Locale.getDefault()).orEmpty(), false)
+                EventBus.getDefault().post(query?.lowercase(Locale.getDefault()).orEmpty())
             }
 
             override fun onSearchSubmitted(query: String?) {
@@ -183,7 +206,7 @@ class MainActivity :
             }
 
             override fun onSearchClosed() {
-                presenter.notifyAllListeners("", false)
+                EventBus.getDefault().post("")
             }
         }
         searchView?.apply {
@@ -207,7 +230,7 @@ class MainActivity :
             })
         }
         setSupportActionBar(mToolbar)
-        setPresenter(BasePresenter(applicationContext))
+        mPresenter = BasePresenter(applicationContext)
         mainViewModel = ViewModelProvider(
             this,
             object : ViewModelProvider.Factory {
@@ -317,12 +340,12 @@ class MainActivity :
      * Make decisions, check for permissions or fire background threads from this method
      * N.B. Must be called after onPostCreate
      */
-    override fun onActivityReady() {
+    fun onActivityReady() {
         if (selectedItem == 0) {
             selectedItem =
                 if (settings.isAuthenticated) {
                     if (redirectShortcut == 0) {
-                        presenter.getNavigationItem()
+                        getNavigationItem()
                     } else {
                         redirectShortcut
                     }
@@ -398,6 +421,10 @@ class MainActivity :
 
     override fun onPause() {
         super.onPause()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+        mediaActionUtil?.onPause(null)
         mDrawerLayout.removeDrawerListener(mDrawerToggle)
     }
 
@@ -412,6 +439,8 @@ class MainActivity :
      */
     override fun onResume() {
         super.onResume()
+        onResumeThemeCheck()
+        mediaActionUtil?.onResume(null)
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -559,8 +588,7 @@ class MainActivity :
      *
      * @param permission the current permission granted
      */
-    override fun onPermissionGranted(permission: String) {
-        super.onPermissionGranted(permission)
+    private fun onPermissionGranted(permission: String) {
         try {
             if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                 onNavigate(R.id.nav_check_update)
@@ -570,7 +598,7 @@ class MainActivity :
         }
     }
 
-    override fun updateUI() {
+    fun updateUI() {
         headerContainer
             .findViewById<View>(R.id.banner_clickable)
             .setOnClickListener(this)
@@ -589,7 +617,7 @@ class MainActivity :
         checkNewInstallation()
     }
 
-    override fun makeRequest() {
+    fun makeRequest() {
         launchUpdateWorker(menuItems)
     }
 
@@ -616,10 +644,31 @@ class MainActivity :
 
     private fun requestCurrentUser() {
         if (settings.isAuthenticated) {
-            presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
+            refreshCurrentUserIfStale {
                 mainViewModel.loadCurrentUser()
             }
         }
+    }
+
+    private inline fun refreshCurrentUserIfStale(action: () -> Unit) {
+        val lastSyncedAt = settings.lastUserSyncTime
+        if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, lastSyncedAt, 5)) {
+            action()
+            settings.lastUserSyncTime = System.currentTimeMillis()
+        }
+    }
+
+    private fun getNavigationItem(): Int = when (settings.startupPage) {
+        "0" -> R.id.nav_home_feed
+        "1" -> R.id.nav_anime
+        "2" -> R.id.nav_manga
+        "3" -> R.id.nav_trending
+        "4" -> R.id.nav_airing
+        "5" -> R.id.nav_myanime
+        "6" -> R.id.nav_mymanga
+        "7" -> R.id.nav_hub
+        "8" -> R.id.nav_reviews
+        else -> R.id.nav_airing
     }
 
     private fun setupUserItems() {
@@ -678,6 +727,8 @@ class MainActivity :
             setOnQueryTextListener(null)
             setOnSearchViewListener(null)
         }
+        mediaActionUtil?.onDestroy()
+        mPresenter?.onDestroy()
         super.onDestroy()
     }
 
@@ -696,6 +747,50 @@ class MainActivity :
             )
         }
     }
+
+    // region ActivityBase shell replacements
+
+    private fun configureActivity() {
+        currentTheme = settings.theme
+        currentLocale = settings.userLanguage ?: Locale.getDefault().language
+        @StyleRes val theme = when (currentTheme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(theme)
+    }
+
+    private fun enableEdgeToEdge() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (CompatUtil.isLightTheme(settings)) {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                true
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars =
+                true
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun onResumeThemeCheck() {
+        if (currentTheme != settings.theme || currentLocale != settings.userLanguage) {
+            applyConfiguredTheme()
+            val currentIntent = intent
+            finish()
+            overridePendingTransition(0, 0)
+            startActivity(currentIntent)
+            overridePendingTransition(0, 0)
+        }
+    }
+
+    /** @see ActivityBase.showBottomSheet */
+    internal fun showBottomSheet() {
+        mBottomSheet?.let { sheet ->
+            sheet.show(supportFragmentManager, sheet.tag)
+        }
+    }
+
+    // endregion
 
     companion object {
         private const val KEY_SEARCH_VIEW_QUERY = "SEARCH_VIEW_QUERY"
