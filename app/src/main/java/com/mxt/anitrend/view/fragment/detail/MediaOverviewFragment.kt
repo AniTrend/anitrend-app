@@ -269,8 +269,7 @@ class MediaOverviewFragment : FragmentBase<Media, MediaPresenter, Media>() {
                 val studioBase = presenter.getMainStudioObject(model)
                 if (studioBase != null) {
                     val host = activity ?: return
-                    intent = Intent(host, StudioActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, studioBase.id)
+                    val intent = StudioActivity.newIntent(host, studioBase.id)
                     startActivity(intent)
                 }
             }

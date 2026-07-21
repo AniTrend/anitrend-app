@@ -1,54 +1,144 @@
 package com.mxt.anitrend.view.activity.detail
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
+import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.StudioBase
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
+import com.mxt.anitrend.viewmodel.StudioViewModel
+import kotlinx.coroutines.launch
 import java.util.Locale
 
-/**
- * Created by max on 2017/12/14.
- * StudioActivity
- */
-class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
-    private lateinit var binding: ActivityFrameGenericBinding
+class StudioActivity : AppCompatActivity() {
 
-    private var model: StudioBase? = null
+    data class Args(val id: Long)
 
-    private var favouriteWidget: FavouriteToolbarWidget? = null
+    companion object {
+        fun newIntent(context: Context, id: Long): Intent =
+            Intent(context, StudioActivity::class.java).apply {
+                putExtra(KeyUtil.arg_id, id)
+            }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityFrameGenericBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setSupportActionBar(binding.customToolbar.toolbar)
-        setViewModel(true)
-        setPresenter(BasePresenter(this))
-        if (intent.hasExtra(KeyUtil.arg_id)) {
-            id = intent.getLongExtra(KeyUtil.arg_id, -1)
+        fun fromIntent(intent: Intent): Args? {
+            if (!intent.hasExtra(KeyUtil.arg_id)) return null
+            val id = intent.getLongExtra(KeyUtil.arg_id, -1)
+            return if (id > 0) Args(id) else null
         }
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        viewModel?.params?.putLong(KeyUtil.arg_id, id)
-        onActivityReady()
+    private lateinit var binding: ActivityFrameGenericBinding
+
+    private var model: StudioBase? = null
+    private var studioId: Long = 0
+    private var favouriteWidget: FavouriteToolbarWidget? = null
+    private lateinit var studioViewModel: StudioViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
+        super.onCreate(savedInstanceState)
+
+        // Process deep links (e.g. anilist.co/studio/{id}) so arg_id is injected
+        // into the intent before fromIntent reads it. Previously handled by
+        // ActivityBase.onCreate → IntentBundleUtil.checkIntentData.
+        IntentBundleUtil(intent).checkIntentData(this)
+
+        binding = ActivityFrameGenericBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.customToolbar.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val args = fromIntent(intent)
+        if (args == null) {
+            NotifyUtil.makeText(
+                this,
+                R.string.text_error_request,
+                R.drawable.ic_warning_white_18dp,
+                Toast.LENGTH_SHORT,
+            ).show()
+            finish()
+            return
+        }
+        studioId = args.id
+
+        studioViewModel = ViewModelProvider(
+            this,
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
+                    StudioViewModel(
+                        studioService = WebFactory.createService(
+                            StudioModel::class.java,
+                            applicationContext,
+                        ),
+                    ) as T
+            },
+        )[StudioViewModel::class.java]
+
+        observeViewModel()
+        addStudioMediaFragment(intent.extras ?: Bundle.EMPTY)
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                studioViewModel.state.collect { state ->
+                    when (state) {
+                        is StudioViewModel.UiState.Loading -> { /* content loads below */ }
+                        is StudioViewModel.UiState.Success -> {
+                            model = state.studio
+                            updateUI()
+                        }
+                        is StudioViewModel.UiState.Error -> {
+                            NotifyUtil.makeText(
+                                this@StudioActivity,
+                                state.message,
+                                R.drawable.ic_warning_white_18dp,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addStudioMediaFragment(args: Bundle) {
+        val fragment = StudioMediaFragment.newInstance(args)
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.content_frame, fragment, fragment.TAG)
+        fragmentTransaction.commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val isAuth = presenter.settings.isAuthenticated
+        val isAuth = KoinExt.get(Settings::class.java).isAuthenticated
         menuInflater.inflate(R.menu.custom_menu, menu)
         menu.findItem(R.id.action_favourite).isVisible = isAuth
         if (isAuth) {
@@ -62,6 +152,10 @@ class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            return true
+        }
         val current = model
         if (current != null) {
             when (item.itemId) {
@@ -79,7 +173,13 @@ class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
                             )
                             type = "text/plain"
                         }
-                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
+                    startActivity(
+                        Intent.createChooser(
+                            intent,
+                            getString(R.string.abc_shareactionprovider_share_with),
+                        ),
+                    )
+                    return true
                 }
             }
         } else {
@@ -95,44 +195,13 @@ class StudioActivity : ActivityBase<StudioBase, BasePresenter>() {
 
     override fun onResume() {
         super.onResume()
-        if (model == null) {
-            makeRequest()
-        } else {
-            updateUI()
-        }
+        studioViewModel.load(studioId)
     }
 
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
-        mFragment = StudioMediaFragment.newInstance(intent.extras ?: Bundle.EMPTY)
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        mFragment?.let { fragment ->
-            fragmentTransaction.replace(R.id.content_frame, fragment, fragment.TAG)
-            fragmentTransaction.commit()
-        }
-    }
-
-    override fun updateUI() {
+    private fun updateUI() {
         model?.let { current ->
             favouriteWidget?.setModel(current)
-            mActionBar?.title = current.name
+            supportActionBar?.title = current.name
         }
-    }
-
-    override fun makeRequest() {
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-        }
-        viewModel?.requestData(KeyUtil.STUDIO_BASE_REQ, applicationContext)
-    }
-
-    override fun onChanged(model: StudioBase?) {
-        super.onChanged(model)
-        this.model = model
-        updateUI()
     }
 }

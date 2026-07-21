@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.mxt.anitrend.R
@@ -79,10 +78,7 @@ class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBa
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent =
-                    Intent(host, StudioActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                    }
+                val intent = StudioActivity.newIntent(host, data.value.id)
                 startActivity(intent)
             }
         }
