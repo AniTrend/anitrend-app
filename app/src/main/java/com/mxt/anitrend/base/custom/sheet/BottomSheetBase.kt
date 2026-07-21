@@ -11,7 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
@@ -38,7 +37,6 @@ abstract class BottomSheetBase<T> :
 
     protected var mSearchDelegate: ISearchDelegate? = null
 
-    protected var viewModel: ViewModelBase<T>? = null
     protected var bottomSheetChoice: BottomSheetChoice? = null
 
     @StringRes
