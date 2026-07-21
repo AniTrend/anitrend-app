@@ -45,6 +45,7 @@ import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
@@ -57,6 +58,7 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
@@ -132,6 +134,9 @@ class MainActivity :
     private var hasCheckedInstallation = false
 
     private lateinit var mainViewModel: MainViewModel
+
+    private val settings by lazy { KoinExt.get(Settings::class.java) }
+    private val currentUser get() = koinOf<BoxQuery>().currentUser
 
     private lateinit var menuItems: Menu
 
@@ -315,7 +320,7 @@ class MainActivity :
     override fun onActivityReady() {
         if (selectedItem == 0) {
             selectedItem =
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     if (redirectShortcut == 0) {
                         presenter.getNavigationItem()
                     } else {
@@ -470,8 +475,8 @@ class MainActivity :
             R.id.nav_myanime -> {
                 val animeParams = Bundle()
                 animeParams.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                animeParams.putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
-                animeParams.putLong(KeyUtil.arg_id, presenter.database.currentUser?.id ?: 0)
+                animeParams.putString(KeyUtil.arg_userName, currentUser?.name)
+                animeParams.putLong(KeyUtil.arg_id, currentUser?.id ?: 0)
 
                 val animeListPageAdapter =
                     MediaListPageAdapter(this, applicationContext)
@@ -485,8 +490,8 @@ class MainActivity :
             R.id.nav_mymanga -> {
                 val mangaParams = Bundle()
                 mangaParams.putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                mangaParams.putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
-                mangaParams.putLong(KeyUtil.arg_id, presenter.database.currentUser?.id ?: 0)
+                mangaParams.putString(KeyUtil.arg_userName, currentUser?.name)
+                mangaParams.putLong(KeyUtil.arg_id, currentUser?.id ?: 0)
 
                 val mangaListPageAdapter =
                     MediaListPageAdapter(this, applicationContext)
@@ -575,7 +580,7 @@ class MainActivity :
         mSignOutProfile = menuItems.findItem(R.id.nav_sign_out)
         mManageMenu = menuItems.findItem(R.id.nav_header_manage)
 
-        if (presenter.settings.isAuthenticated) {
+        if (settings.isAuthenticated) {
             setupUserItems()
         } else {
             mHeaderView.setImageResource(R.drawable.reg_bg)
@@ -591,8 +596,8 @@ class MainActivity :
     private fun checkNewInstallation() {
         if (hasCheckedInstallation) return
         hasCheckedInstallation = true
-        if (presenter.settings.isFreshInstall) {
-            presenter.settings.isFreshInstall = false
+        if (settings.isFreshInstall) {
+            settings.isFreshInstall = false
             mBottomSheet =
                 BottomSheetMessage
                     .Builder()
@@ -603,14 +608,14 @@ class MainActivity :
             showBottomSheet()
             return
         }
-        if (presenter.settings.isUpdated) {
+        if (settings.isUpdated) {
             DialogUtil.createChangeLog(this)
-            presenter.settings.setUpdated()
+            settings.setUpdated()
         }
     }
 
     private fun requestCurrentUser() {
-        if (presenter.settings.isAuthenticated) {
+        if (settings.isAuthenticated) {
             presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
                 mainViewModel.loadCurrentUser()
             }
@@ -618,13 +623,13 @@ class MainActivity :
     }
 
     private fun setupUserItems() {
-        presenter.database.currentUser?.apply {
+        currentUser?.apply {
             mUserName.text = name.orEmpty()
             mUserAvatar.onInit()
             mHeaderView.setImage(bannerImage.orEmpty())
-            if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
+            if (settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(this@MainActivity, this)
-                presenter.settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
+                settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
                 mBottomSheet =
                     BottomSheetMessage
                         .Builder()
@@ -645,12 +650,12 @@ class MainActivity :
 
     override fun onClick(view: View) {
         if (view.id == R.id.banner_clickable) {
-            if (presenter.settings.isAuthenticated) {
-                val user = presenter.database.currentUser
+            if (settings.isAuthenticated) {
+                val user = currentUser
                 if (user != null) {
                     startNewActivity<ProfileActivity>(
                         Bundle().apply {
-                            putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
+                            putString(KeyUtil.arg_userName, currentUser?.name)
                         },
                     )
                 } else {
