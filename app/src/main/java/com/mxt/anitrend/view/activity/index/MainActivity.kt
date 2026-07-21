@@ -16,7 +16,9 @@ import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,6 +35,7 @@ import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
@@ -46,6 +49,8 @@ import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.extension.startNewActivity
+import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
@@ -58,6 +63,7 @@ import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
+import com.mxt.anitrend.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -124,6 +130,8 @@ class MainActivity :
     private var tabMediator: TabLayoutMediator? = null
 
     private var hasCheckedInstallation = false
+
+    private lateinit var mainViewModel: MainViewModel
 
     private lateinit var menuItems: Menu
 
@@ -195,7 +203,47 @@ class MainActivity :
         }
         setSupportActionBar(mToolbar)
         setPresenter(BasePresenter(applicationContext))
-        setViewModel(true)
+        mainViewModel = ViewModelProvider(
+            this,
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
+                    MainViewModel(
+                        userService = WebFactory.createService(
+                            UserModel::class.java,
+                            applicationContext,
+                        ),
+                    ) as T
+            },
+        )[MainViewModel::class.java]
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.state.collect { state ->
+                    when (state) {
+                        is MainViewModel.UiState.Loading -> Unit
+                        is MainViewModel.UiState.Success -> {
+                            koinOf<BoxQuery>().currentUser = state.user
+                            updateUI()
+                        }
+                        is MainViewModel.UiState.Error -> {
+                            Timber.e(state.message, "MainViewModel current user fetch failed")
+                            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                                NotifyUtil.createAlerter(
+                                    this@MainActivity,
+                                    getString(R.string.text_error_request),
+                                    state.message,
+                                    R.drawable.ic_warning_white_18dp,
+                                    R.color.colorStateOrange,
+                                    KeyUtil.DURATION_MEDIUM,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if (savedInstanceState == null) {
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
         }
@@ -564,10 +612,7 @@ class MainActivity :
     private fun requestCurrentUser() {
         if (presenter.settings.isAuthenticated) {
             presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
-                viewModel?.params?.apply {
-                    putBoolean(KeyUtil.arg_asHtml, false)
-                }
-                viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, this)
+                mainViewModel.loadCurrentUser()
             }
         }
     }
@@ -629,13 +674,6 @@ class MainActivity :
             setOnSearchViewListener(null)
         }
         super.onDestroy()
-    }
-
-    override fun onChanged(model: User?) {
-        if (model != null && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            presenter.database.currentUser = model
-            updateUI()
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
